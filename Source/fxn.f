@@ -687,7 +687,7 @@ c ======================================================================
         rMlCT=sqrt(rMlCT2)
       end if
 
-      
+      write(*,*)'bork end of transverse variables'
 
 ! Calculate pseudorapidity (eta)        
       rps3=(q(3,3))/sqrt(q(1,3)**2+q(2,3)**2+q(3,3)**2)
