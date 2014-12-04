@@ -31,7 +31,9 @@ parser.add_option("-P", "--pdf",    default=4,type="int", help="PDF set: 1=CTEQ6
 parser.add_option("-y", "--ytcut",  default=100,type="float", help="rapidity cut")
 parser.add_option("-Y", "--yttcut", default=0,type="float", help="top pair rapidity cut")
 parser.add_option("-s", "--iseed",  action="store_true", default=False, help="used fixed seed for random number generator")
-parser.add_option("-d", "--dists",  action="store_const", const=0, default=1, help="Remove distributions to log file")
+parser.add_option("-D", "--idist",  action="store_const", const=0, default=1, help="Do not make standard distributions.")
+parser.add_option("-T", "--itdist",  action="store_const", const=0, default=1, help="Do not make transverse mass distributions.")
+parser.add_option("-A", "--iadist",  action="store_const", const=0, default=1, help="Do not make asymmetry distributions.")
 parser.add_option("-m", "--itmx",   type="int",default=5, help="Maximum number of VEGAS iterations.")
 parser.add_option("-l", "--ilhe",   default=0,action="store_const",const=1, help="Output in lhe format.")
 
@@ -76,8 +78,11 @@ print >> config, '%s ! ncall' % ncall
 print >> config, '%s ! itmx' % options.itmx
 print >> config, '-1.d0 ! acc'
 print >> config, '%s ! iseed' % seed
-print >> config, '%s ! idist' % options.dists
+print >> config, '%s ! idist' % options.idist
+print >> config, '%s ! itdist' % options.itdist
+print >> config, '%s ! iadist' % options.iadist
 print >> config, '%s ! ilhe' % options.ilhe
+
 
 # Filename
 filename = '%s_%s%s%s_%s_%s%s' % (name,model,sector,interference,emc_col,ncall,options.tag)

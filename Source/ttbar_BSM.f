@@ -272,8 +272,12 @@
       read(5,*) acc
 !   Random number seed
       read(5,*) iseed
-!   Distributions flag
+!   Standard distributions flag
       read(5,*) idist
+!   Transverse mass distributions flag
+      read(5,*) itdist
+!   Asymmetry distributions flag
+      read(5,*) iadist
 !   Outout in lhe format
       read(5,*) ilhe
 ! !   Manually sum over costheta
@@ -296,6 +300,11 @@
       do while(model(imodel:imodel).eq.'') 
         imodel = imodel-1
       end do
+!   Standard dists necessary for other dists
+      if(idist.eq.1)then
+        itdist=1
+        iadist=1
+      end if
 
 ! Read model file
       open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
@@ -330,7 +339,12 @@
         phimax(i)=2*pi
         phimin(i)=0.d0
         ndiv_phi(i)=100
-      end do  
+      end do
+!   missing transverse momentum
+      m_ETmiss=idist
+      ETmissmax=7000.d0/(1+icoll*6)
+      ETmissmin=0.d0
+      ndiv_ETmiss=175      
 !   top transverse momentum
       m_pT356=idist
       pT356max=7000.d0/(1+icoll*6)
@@ -341,11 +355,6 @@
       pT478max=7000.d0/(1+icoll*6)
       pT478min=0.d0
       ndiv_pT478=175
-!   missing transverse momentum
-      m_ETmiss=idist
-      ETmissmax=7000.d0/(1+icoll*6)
-      ETmissmin=0.d0
-      ndiv_ETmiss=175
 !   top/bottom pseudorapidity
       m_eta3=idist
       eta3max=+10
@@ -391,16 +400,6 @@
       rmassmax=14000.d0/(1+icoll*6)
       rmassmin=0.d0
       ndiv_rmass=500
-!   invarient mass of the visible decay products of the tt pair
-      m_rmvis=idist
-      rmvismax=14000.d0/(1+icoll*6)
-      rmvismin=0.d0
-      ndiv_rmvis=500
-!   pseudorapidity
-      m_eta=idist
-      etamax=1000.d0
-      etamin=0.d0
-      ndiv_eta=100
 !   boost of parton CoM
       m_beta=idist
       betamax=1000.d0
@@ -420,47 +419,52 @@
       m_HT=idist
       HTmax=7000.d0/(1+icoll*6)
       HTmin=0.d0
-      ndiv_HT=175   
+      ndiv_HT=175
+!   invarient mass of the visible decay products of the tt pair
+      m_rmvis=itdist
+      rmvismax=14000.d0/(1+icoll*6)
+      rmvismin=0.d0
+      ndiv_rmvis=500   
 !   transverse mass
-      m_rM_T=idist
+      m_rM_T=itdist
       rM_Tmax=14000.d0/(1+icoll*6)
       rM_Tmin=0.d0
       ndiv_rM_T=175
 !   contransverse mass 1
-      m_rM_CT=idist
+      m_rM_CT=itdist
       rM_CTmax=14000.d0/(1+icoll*6)
       rM_CTmin=0.d0
       ndiv_rM_CT=175    
 !   contransverse mass 2
-      m_rMlCT=idist
+      m_rMlCT=itdist
       rMlCTmax=500.d0/(1+icoll*6)
       rMlCTmin=0.d0
       ndiv_rMlCT=175      
 
 !   phi_l
-      m_fl=idist
+      m_fl=iadist
       flmax=+2*pi
       flmin=0
       ndiv_fl=100
 !   cosphi_l
-      m_cosfl=idist
+      m_cosfl=iadist
       cosflmax=+1.d0
       cosflmin=-1.d0
       ndiv_cosfl=100
 !   sigp
-      m_sigp=m_rmass
+      m_sigp=iadist
       sigpmax=rmassmax
       sigpmin=rmassmin
       ndiv_sigp=ndiv_rmass/10
 !   sigm
-      m_sigm=m_rmass
+      m_sigm=iadist
       sigmmax=rmassmax
       sigmmin=rmassmin
       ndiv_sigm=ndiv_rmass/10      
 
 !   asymmetries
       do i_asym=1,8 ! N_asym
-        m_asy(i_asym)=idist
+        m_asy(i_asym)=adist
       end do
 
 !   Turn off 2->6 only distributions
