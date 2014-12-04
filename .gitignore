@@ -1,0 +1,15 @@
+.dropbox
+Analysis/Superpose/superpose
+Analysis/Superpose1/superpose1
+Analysis/Superpose3/superpose3
+Analysis/log2root/log2root
+Config/*
+Feynman/*
+Models/*
+Output/*
+Plots/*
+Results/*
+ttbar_BSM
+*.o
+*.dat
+*.tbl
