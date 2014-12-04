@@ -11,7 +11,7 @@
 ! ----------------------------------------------------------------------
       implicit real*8 (a-h,o-z)
 
-!  LHE
+!  LHE format
 !   Initialization information
       integer maxpup
       parameter (maxpup=100)
@@ -39,7 +39,7 @@
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifs
+      common/final/ifinal
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -248,8 +248,8 @@
       read(5,*) iBSM
 !   Interference flag
       read(5,*) iint
-!   Final state flag (ifs=0: no top decay; ifs=1: dileptonic top decay)      
-      read(5,*) ifs
+!   Final state flag (ifinal=0: no top decay; ifinal=1: dileptonic top decay)      
+      read(5,*) ifinal
 !   NWA flag (iNWA = 0: Actual top widths; iNWA = 1: tops in NWA)
       read(5,*) iNWA
 !   Name of model file
@@ -281,7 +281,7 @@
 
 ! Modify config
 !   NWA only for six-body final state.
-      if(ifs.eq.0) iNWA=0
+      if(ifinal.eq.0) iNWA=0
 !   itmx no more than 20.      
       if(itmx.gt.20)then
         write(*,*)'itmx does not have to exceed 20!'
@@ -464,7 +464,7 @@
       end do
 
 !   Turn off 2->6 only distributions
-      if (ifs.eq.0)then
+      if (ifinal.eq.0)then
         do i=5,8
           m_pT(i)   = 0
           m_phi(i)  = 0
@@ -488,7 +488,7 @@
         m_asy(8) = 0
       end if
 !   Turn off 2->2 only distributions
-      if (ifs.eq.1)then
+      if (ifinal.eq.1)then
         m_asy(1) = 0
         m_asy(2) = 0
         m_asy(3) = 0
@@ -558,14 +558,14 @@
       end do
 
 ! VEGAS parameters
-      if(ifs.eq.0)then
+      if(ifinal.eq.0)then
         ndim=3
-      else if(ifs.eq.1)then
+      else if(ifinal.eq.1)then
         ndim=15
       end if
 !   (If nprn<0 no print-out.)
       nprn=0
-      if(ifs.eq.0)then
+      if(ifinal.eq.0)then
 !   Final state masses     
         rm3=rmt
         rm4=rmt
@@ -596,7 +596,7 @@
         end do
 !         end if
 
-      else if(ifs.eq.1)then
+      else if(ifinal.eq.1)then
 !   Final state masses
         rm3=rmb
         rm4=rmb
@@ -831,18 +831,18 @@
       write(*,*)'-----------------------------------------------------'
       write(*,*)'PROCESS'
       if(icoll.eq.0)then
-        if(ifs.eq.0)
+        if(ifinal.eq.0)
      &    write(*,*)'pp #rightarrow t#bar{t}',
      &               ' #times BR(t#rightarrow bl#nu)^{2}'
-        if(ifs.eq.1)
+        if(ifinal.eq.1)
      &    write(*,*)'pp #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
       else if(icoll.eq.1)then
-        if(ifs.eq.0)
+        if(ifinal.eq.0)
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
      &               ' #times BR(t#rightarrow bl#nu)^{2}'
-        if(ifs.eq.1) 
+        if(ifinal.eq.1) 
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
@@ -860,8 +860,8 @@
       if(istructure.eq.7)write(*,*)'PDFs: mrs99 (cor03).'
       if(istructure.eq.8)write(*,*)'PDFs: mrs99 (cor04).'
       if(istructure.eq.9)write(*,*)'PDFs: mrs99 (cor05).'
-      if((ifs.eq.1).and.(iNWA.eq.0))write(*,*)'Tops: off-shell.'
-      if((ifs.eq.1).and.(iNWA.eq.1))write(*,*)'Tops: NWA.'
+      if((ifinal.eq.1).and.(iNWA.eq.0))write(*,*)'Tops: off-shell.'
+      if((ifinal.eq.1).and.(iNWA.eq.1))write(*,*)'Tops: NWA.'
       write(*,*)'BSM model: ',model
       if(iQCD.eq.1)write(*,*)'QCD: On '
       if(iQCD.eq.0)write(*,*)'QCD: Off'
@@ -913,7 +913,7 @@
 !   Reset counter
       npoints=0  
 !   Reset various iterative quantities
-      if(ifs.eq.0)then
+      if(ifinal.eq.0)then
         do i=1,20
           resl(i)=0.d0
           standdevl(i)=0.d0
@@ -935,8 +935,8 @@
 !   Integrate
       it=0
       call vegas(ndim,fxn,avgi,sd,chi2a)
-      if(ifs.eq.0)then
-!   Multiply by branching ratios (if ifs = 0)      
+      if(ifinal.eq.0)then
+!   Multiply by branching ratios (if ifinal = 0)      
         avgi=avgi*(BRtbln)**2
         sd=sd*(BRtbln)**2
       end if
@@ -968,7 +968,7 @@
         cnorm(i)=resl(i)*standdevl(i)
       end do
 
-      if(ifs.eq.0)then  
+      if(ifinal.eq.0)then  
 ! Collect polarised cross sections.
         do iphel=-1,+1,2
           do jphel=-1,+1,2
@@ -1031,7 +1031,7 @@
       end do
 
 ! Define asymmetries
-      if(ifs.eq.0)then
+      if(ifinal.eq.0)then
 ! ALL
         Atot(1)=
      &          +(poltot(+1,+1)-poltot(+1,-1)
@@ -1101,7 +1101,7 @@
 
 ! Print Asymmetries     
       write(*,*)'TOTAL ASYMMETRIES'
-      if(ifs.eq.0)then
+      if(ifinal.eq.0)then
         write(*,*)'ALL:                  uncertainty (same units):'
         write(*,*)Atot(1),Atoterr(1) 
         write(*,*)'AL:                   uncertainty (same units):'
@@ -1116,7 +1116,7 @@
         write(*,*)Atot(6),Atoterr(6)
         write(*,*)"A':                    uncertainty (same units):"
         write(*,*)Atot(7),Atoterr(7)
-      else if(ifs.gt.0)then
+      else if(ifinal.gt.0)then
         write(*,*)'A_l:                  uncertainty (same units):'
         write(*,*)Atot(6),Atoterr(6) 
       end if
@@ -1228,8 +1228,8 @@
         write(*,*)'HISTOGRAM'
         write(*,*)'eta3'
         write(*,*)'d#sigma-/d#eta--[pb]'
-        if(ifs.eq.0) write(*,*)'#eta(t)'
-        if(ifs.eq.1) write(*,*)'#eta(b)'
+        if(ifinal.eq.0) write(*,*)'#eta(t)'
+        if(ifinal.eq.1) write(*,*)'#eta(b)'
         do i=1,ndiv_eta3
           write(*,*)xeta3(i),fxeta3tot(i)
         end do
@@ -1250,8 +1250,8 @@
         write(*,*)'HISTOGRAM'
         write(*,*)'eta4'
         write(*,*)'d#sigma-/d#eta--[pb]'
-        if(ifs.eq.0)write(*,*)'#eta(#bar{t})'
-        if(ifs.eq.1)write(*,*)'#eta(#bar{b})'
+        if(ifinal.eq.0)write(*,*)'#eta(#bar{t})'
+        if(ifinal.eq.1)write(*,*)'#eta(#bar{b})'
         do i=1,ndiv_eta4
           write(*,*)xeta4(i),fxeta4tot(i)
         end do

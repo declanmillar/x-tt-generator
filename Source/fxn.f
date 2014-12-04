@@ -28,7 +28,7 @@ c ======================================================================
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifs
+      common/final/ifinal ! final state
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -224,12 +224,12 @@ c ======================================================================
 !   Maximum centre of mass energy
       Ecm_max=Ecm_coll 
 !   Centre of mass energy
-      Ecm=x(2+12*ifs)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
+      Ecm=x(2+12*ifinal ! final state)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
      &                        +rm3+rm4+rm5+rm6+rm7+rm8
       shat=Ecm*Ecm
       tau=shat/s
 !   x1 and x2 of the partons      
-      x1=x(3+12*ifs)*(1.d0-tau)+tau
+      x1=x(3+12*ifinal ! final state)*(1.d0-tau)+tau
       x2=tau/x1
 
 ! Structure functions
@@ -401,7 +401,7 @@ c ======================================================================
       q(1,2)=0.d0
 
 !   Outgoing momenta for 2 body final state.  
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
         phit=2.d0*pi*ran(jseed)
         ct=x(1)
         st=sqrt(1.d0-ct*ct)
@@ -429,7 +429,7 @@ c ======================================================================
         end do
 
 ! Outgoing momenta for 6 body final state
-      else if(ifs.eq.1)then
+      else if(ifinal ! final state.eq.1)then
         phit=2.d0*pi*ran(jseed)
         rm356min=rm3+rm5+rm6
         rm356max=Ecm-rm4-rm7-rm8
@@ -611,7 +611,7 @@ c ======================================================================
 ! Boost initial and final state momenta to the collider CM
       vcol=(x1-x2)/(x1+x2)
       gcol=(x1+x2)/2.d0/sqrt(x1*x2)
-      imax=4+ifs*4
+      imax=4+ifinal ! final state*4
       do i=1,imax
         qcol(4,i)=gcol*(q(4,i)+vcol*q(3,i))
         qcol(3,i)=gcol*(q(3,i)+vcol*q(4,i))
@@ -633,7 +633,7 @@ c ======================================================================
         end if
       end do
 
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
 ! calculate truth level top pair momenta
         pT356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2
      &           +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
@@ -697,8 +697,8 @@ c ======================================================================
       arg3=tan(rpl3/2d0)
       if(arg3.le.0.d0)arg3=1.d-9
       eta3=-log(arg3)
-!   Cut on this if ifs=0
-      if(ifs.eq.0)then        
+!   Cut on this if ifinal ! final state=0
+      if(ifinal ! final state.eq.0)then        
         if(abs(eta3).gt.ytcut)then
           fxn=0.d0
           return
@@ -715,7 +715,7 @@ c ======================================================================
       if(arg4.le.0.d0)arg4=1.d-9
       eta4=-log(arg4) ! no cuts on pseudorapidity yet
 
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
 
         rps5=q(3,5)/sqrt(q(1,5)**2+q(2,5)**2+q(3,5)**2)
         if(rps5.lt.-1.d0)rps=-1.d0
@@ -751,19 +751,19 @@ c ======================================================================
       end if
 
 ! calculate phi's
-      if(ifs.eq.0)ipmax=4
-      if(ifs.gt.0)ipmax=8
+      if(ifinal ! final state.eq.0)ipmax=4
+      if(ifinal ! final state.gt.0)ipmax=8
       do ip=1,ipmax
         phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
       end do
 
 ! calculate delta phi
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
         dphi=abs(phi(5)-phi(7))
       end if
 
 ! calculate top pseudorapidity     
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
         rps356=(q(3,3)+q(3,5)+q(3,6))
      &       /sqrt((q(1,3)+q(1,5)+q(1,6))**2
      &            +(q(2,3)+q(2,5)+q(2,6))**2
@@ -795,10 +795,10 @@ c ======================================================================
 
 ! Calculate top rapidities (y)
 
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3))) 
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
-      else if(ifs.gt.0)then
+      else if(ifinal ! final state.gt.0)then
         yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6)
      &               +qcol(3,3)+qcol(3,5)+qcol(3,6))
      &              /(qcol(4,3)+qcol(4,5)+qcol(4,6)
@@ -817,7 +817,7 @@ c ======================================================================
       ytt = 0.5d0*log(x1/x2)      
 
 ! calculate cos(theta^*_t)
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
           costcm=+(q(1,3)*q(1,1)
      &         +q(2,3)*q(2,1)  
      &         +q(3,3)*q(3,1))
@@ -827,7 +827,7 @@ c ======================================================================
      &    /sqrt(q(1,1)*q(1,1) 
      &         +q(2,1)*q(2,1)
      &         +q(3,1)*q(3,1))
-      else if(ifs.gt.0)then
+      else if(ifinal ! final state.gt.0)then
         costcm=
      &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
      &    +(q(2,3)+q(2,5)+q(2,6))*q(2,1)
@@ -844,7 +844,7 @@ c ======================================================================
       end if      
 
 ! calculate cos(theta_l+)
-      if(ifs.gt.0)then
+      if(ifinal ! final state.gt.0)then
           cost5=+(q(1,5)*q(1,1)
      &         +q(2,5)*q(2,1)  
      &         +q(3,5)*q(3,1))
@@ -857,7 +857,7 @@ c ======================================================================
       end if
 
 ! ! calculate cos(theta_l-)
-      if(ifs.gt.0)then
+      if(ifinal ! final state.gt.0)then
           cost7=+(q(1,7)*q(1,1)
      &         +q(2,7)*q(2,1)  
      &         +q(3,7)*q(3,1))
@@ -870,7 +870,7 @@ c ======================================================================
       end if
 
 ! calculate cos(theta_t)
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
           cost=
      &     (qcol(1,3)*qcol(1,1)
      &     +qcol(2,3)*qcol(2,1)
@@ -881,7 +881,7 @@ c ======================================================================
      &/sqrt(qcol(1,1)*qcol(1,1)
      &     +qcol(2,1)*qcol(2,1)
      &     +qcol(3,1)*qcol(3,1))
-        else if(ifs.eq.1)then
+        else if(ifinal ! final state.eq.1)then
           cost=
      &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
      &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
@@ -899,7 +899,7 @@ c ======================================================================
 
 
 ! Calculate cos(phi_l) (lepton azimuthal angle)
-      if(ifs.gt.0)then
+      if(ifinal ! final state.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
 
         ! p(1)^ is z^
@@ -945,7 +945,7 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Assign to madgraph momenta
 
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
 ! Assign 2to2 MadGraph momenta      
         do i=1,3
           p1(i)=q(i,1)
@@ -993,7 +993,7 @@ c ======================================================================
 !         write(*,*) 'rm_4 =',rmassa4
 
 
-      else if(ifs.eq.1)then
+      else if(ifinal ! final state.eq.1)then
 ! Assign 2to6 MadGraph momenta      
         do i=1,3
           p1(i)=q(i,1)
@@ -1096,7 +1096,7 @@ c ======================================================================
 
 ! 2-body MEs      
 !   Add QCD Matrix Elements
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
         if(iQCD.eq.0)then
           continue
         else if(iQCD.eq.1)then
@@ -1126,7 +1126,7 @@ c ======================================================================
       end if
 ! 6-body MEs
 !   Add QCD Matrix Elements
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
         if(iQCD.eq.0)then
           continue
         else if(iQCD.eq.1)then
@@ -1148,7 +1148,7 @@ c ======================================================================
         end if
       end if
 ! if no gauge sectors are active, fxn = 0
-      if(ifs.eq.1)then
+      if(ifinal ! final state.eq.1)then
         if((resqq+resgg+resuu+resdd).eq.0.d0)then
           fxn=0.d0
           return
@@ -1165,7 +1165,7 @@ c ======================================================================
 
 ! sum over all polarised Matrix elements
       pfxtot=0.d0
-      if(ifs.eq.0) then
+      if(ifinal ! final state.eq.0) then
 
         do lam3=-1,1,2
           do lam4=-1,1,2
@@ -1185,7 +1185,7 @@ c ======================================================================
      &            +pfx(lam3,lam4)
           end do
         end do
-      else if(ifs.eq.1) then
+      else if(ifinal ! final state.eq.1) then
         qqd=fx1( 1)*fx2( 7)*( resqq + resdd ) ! d+db QCD + EW
      &     +fx1( 2)*fx2( 8)*( resqq + resuu ) ! u+ub
      &     +fx1( 3)*fx2( 9)*( resqq + resdd ) ! s+sb
@@ -1204,7 +1204,7 @@ c ======================================================================
         return
       end if
 ! for distributions,
-      if(ifs.eq.0)then 
+      if(ifinal ! final state.eq.0)then 
         do lam3=-1,1,2
           do lam4=-1,1,2
             pfx(lam3,lam4)=pfx(lam3,lam4)/pfxtot
@@ -1229,11 +1229,11 @@ c ======================================================================
       fxn=pfxtot
 ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
       fxn=fxn*fac
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
 ! 2-body phase space factor     
         fxn=fxn*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fxn=fxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
-      else if(ifs.eq.1)then
+      else if(ifinal ! final state.eq.1)then
 ! 6-body flux factor, pi's and phase space integral
         fxn=fxn*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
      &     /(2.d0*rm356)
@@ -1267,7 +1267,7 @@ c ======================================================================
 ! Polarised differential cross sections
 !   Polarised cross section for each point is calculated. 
 !   (Note that above pfx was divided by fxn.)
-      if(ifs.eq.0)then
+      if(ifinal ! final state.eq.0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             polcross(it,iphel,jphel)=polcross(it,iphel,jphel)
@@ -1370,7 +1370,7 @@ c ======================================================================
       if(m_asy(8).eq.0)then
         continue
       else
-        if (ifs.gt.0)then      
+        if (ifinal ! final state.gt.0)then      
           if(cosfl.eq.0.d0)then
             continue
           else if(cosfl.gt.0.d0)then
@@ -1543,12 +1543,12 @@ c ======================================================================
 
       if(m_rmass.eq.1)then
 !   generate distribution in rmass.
-        if(ifs.eq.0)then
+        if(ifinal ! final state.eq.0)then
           rmass2=(qcol(4,3)+qcol(4,4))**2
           do i=1,3
             rmass2=rmass2-(qcol(i,3)+qcol(i,4))**2
           end do
-        else if(ifs.eq.1)then
+        else if(ifinal ! final state.eq.1)then
           rmass2=(qcol(4,3)+qcol(4,4)
      &           +qcol(4,5)+qcol(4,6)
      &           +qcol(4,7)+qcol(4,8))**2
@@ -1603,7 +1603,7 @@ c ======================================================================
 
       if(m_cost.eq.1)then
 !   generate distribution in cost.
-        if(ifs.eq.0)then
+        if(ifinal ! final state.eq.0)then
           cost=
      &     (qcol(1,3)*qcol(1,1)
      &     +qcol(2,3)*qcol(2,1)
@@ -1614,7 +1614,7 @@ c ======================================================================
      &/sqrt(qcol(1,1)*qcol(1,1)
      &     +qcol(2,1)*qcol(2,1)
      &     +qcol(3,1)*qcol(3,1))
-        else if(ifs.eq.1)then
+        else if(ifinal ! final state.eq.1)then
           cost=
      &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
      &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
@@ -1640,9 +1640,9 @@ c ======================================================================
       end if
 
       if(m_Et.eq.1)then ! generate distribution in Et.
-        if(ifs.eq.0)then
+        if(ifinal ! final state.eq.0)then
           Et=qcol(4,3)
-        else if(ifs.eq.1)then
+        else if(ifinal ! final state.eq.1)then
           Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
         end if
         nbin=int((Et-Etmin)/Etw)+1
