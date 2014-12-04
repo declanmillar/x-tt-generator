@@ -385,7 +385,7 @@ c ======================================================================
         fx2(i)=fx2(i)/x2
       end do
 
-!       write(*,*)'bork end pdfs'
+      write(*,*)'bork end pdfs'
 ! ----------------------------------------------------------------------
 ! Kinematics
 
@@ -619,7 +619,7 @@ c ======================================================================
         qcol(1,i)=q(1,i)
       end do
 
-!       write(*,*)'bork end kinematics'
+      write(*,*)'bork end kinematics'
 ! ----------------------------------------------------------------------
 ! Additional Kinematics
 !   (These aren't required for the integration, but are used for
@@ -1068,7 +1068,7 @@ c ======================================================================
 !         write(*,*)'pT(v+v):',pT68
       end if
 
-!       write(*,*)'bork end additional kinematics'
+      write(*,*)'bork end additional kinematics'
 
 ! Square Matrix elements
 !   Calculate strong coupling
@@ -1218,7 +1218,7 @@ c ======================================================================
 !       write(*,*)'resdd =',resdd
 !       write(*,*)'pfxtot =',pfxtot
 
-!       write(*,*)'bork end matrix elements'
+      write(*,*)'bork end matrix elements'
 
       
 ! ---------------------------------------------------------------------- 
@@ -1260,7 +1260,7 @@ c ======================================================================
         fxn=fxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
 
-!       write(*,*)'bork end final factors'
+      write(*,*)'bork end final factors'
 ! ---------------------------------------------------------------------- 
 ! Categorised cross sections / Asymmetries
    
@@ -1390,7 +1390,7 @@ c ======================================================================
       end if
 
 
-!       write(*,*)'bork end categorised cross sections.'
+      write(*,*)'bork end categorised cross sections.'
 
 ! ----------------------------------------------------------------------
 ! Binning
@@ -1948,7 +1948,7 @@ c ======================================================================
 
 ! Statistics
       npoints=npoints+1
-!       write(*,*)'bork end binning' 
+      write(*,*)'bork end binning' 
       return
       end
 ! ======================================================================    
