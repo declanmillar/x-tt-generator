@@ -670,6 +670,15 @@ c ======================================================================
         end if        
         rmass=sqrt(abs(rmass2))
 
+! calculate invarient mass of visible decay products
+        rMvis2=(qcol(4,3)+qcol(4,4)
+     &         +qcol(4,5)+qcol(4,7))**2
+        do i=1,3
+          rMvis2=rMvis2-(qcol(i,3)+qcol(i,4)
+     &                  +qcol(i,5)+qcol(i,7))**2
+        end do      
+        rMvis=sqrt(abs(rMvis2))
+
 !   calculate HT
         ET3=sqrt(rm3**2+pT2(3))
         ET4=sqrt(rm4**2+pT2(4))
@@ -1571,13 +1580,6 @@ c ======================================================================
 
       if(m_rMvis.eq.1)then
 !   generate distribution in rMvis.
-        rMvis2=(qcol(4,3)+qcol(4,4)
-     &         +qcol(4,5)+qcol(4,7))**2
-        do i=1,3
-          rMvis2=rMvis2-(qcol(i,3)+qcol(i,4)
-     &                  +qcol(i,5)+qcol(i,7))**2
-        end do      
-        rMvis=sqrt(abs(rMvis2))
         nbin=int((rMvis-rMvismin)/rMvisw)+1
         if(nbin.ge.(ndiv_rMvis+1))then
           continue
