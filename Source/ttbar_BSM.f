@@ -300,11 +300,6 @@
       do while(model(imodel:imodel).eq.'') 
         imodel = imodel-1
       end do
-!   Standard dists necessary for other dists
-      if(idist.eq.1)then
-        itdist=1
-        iadist=1
-      end if
 
 ! Read model file
       open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
@@ -395,8 +390,8 @@
       eta478max=+10
       eta478min=-10
       ndiv_eta478=50
-!   invarient mass of tt pair
-      m_rmass=idist
+!   invarient mass of tt pair (always on)
+      m_rmass=1
       rmassmax=14000.d0/(1+icoll*6)
       rmassmin=0.d0
       ndiv_rmass=500
@@ -416,7 +411,7 @@
       Etmin=0.d0
       ndiv_Et=175
 !   sum of tranvserse energy
-      m_HT=idist
+      m_HT=itdist
       HTmax=7000.d0/(1+icoll*6)
       HTmin=0.d0
       ndiv_HT=175
@@ -440,7 +435,6 @@
       rMlCTmax=500.d0/(1+icoll*6)
       rMlCTmin=0.d0
       ndiv_rMlCT=175      
-
 !   phi_l
       m_fl=iadist
       flmax=+2*pi
@@ -464,7 +458,7 @@
 
 !   asymmetries
       do i_asym=1,8 ! N_asym
-        m_asy(i_asym)=adist
+        m_asy(i_asym)=iadist
       end do
 
 !   Turn off 2->6 only distributions
@@ -489,13 +483,13 @@
         m_rMvis  = 0
         m_fl     = 0
         m_cosfl  = 0
-        m_asy(8) = 0
+        m_asy(8) = 0 ! turn off A_l
       end if
 !   Turn off 2->2 only distributions
       if (ifinal.eq.1)then
-        m_asy(1) = 0
-        m_asy(2) = 0
-        m_asy(3) = 0
+        m_asy(1) = 0 ! turn off A_LL
+        m_asy(2) = 0 ! turn off A_L
+        m_asy(3) = 0 ! turn off A_PV
       end if    
 
 ! Initialize MadGraph for MEs
@@ -1700,42 +1694,6 @@
 ! Check distributions
       diff_max=1E-12
       n_error=0
-!       if(m_pT3.eq.1)then
-!         if(abs(cross-sfxpT3tot)>diff_max)then
-!           write(*,*)'pT3 Integration Error:',sfxpT3tot
-!           n_error=n_error+1
-!         end if
-!       end if
-!       if(m_pT4.eq.1)then
-!         if(abs(cross-sfxpT4tot)>diff_max)then
-!           write(*,*)'pT4 Integration Error:',sfxpT4tot
-!           n_error=n_error+1
-!         end if
-!       end if
-!       if(m_pT5.eq.1)then
-!         if(abs(cross-sfxpT5tot)>diff_max)then
-!           write(*,*)'pT5 Integration Error:',sfxpT5tot
-!           n_error=n_error+1
-!         end if
-!       end if
-!       if(m_pT6.eq.1)then
-!         if(abs(cross-sfxpT6tot)>diff_max)then
-!           write(*,*)'pT6 Integration Error:',sfxpT6tot
-!           n_error=n_error+1
-!         end if
-!       end if
-!       if(m_pT7.eq.1)then
-!         if(abs(cross-sfxpT7tot)>diff_max)then
-!           write(*,*)'pT7 Integration Error:',sfxpT7tot
-!           n_error=n_error+1
-!         end if
-!       end if
-!       if(m_pT8.eq.1)then
-!         if(abs(cross-sfxpT8tot)>diff_max)then
-!           write(*,*)'pT8 Integration Error:',sfxpT8tot
-!           n_error=n_error+1
-!         end if
-!       end if
       if(m_pT356.eq.1)then
         if(abs(cross-sfxpT356tot)>diff_max)then
           write(*,*)'pT356 Integration Error:',sfxpT356tot

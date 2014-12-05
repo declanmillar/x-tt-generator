@@ -652,7 +652,23 @@ c ======================================================================
         ETvis=sqrt(ETvis2)
         ETmiss=sqrt(ETmiss2)
 
-        
+! calculate rmass
+        if(ifinal.eq.0)then
+          rmass2=(qcol(4,3)+qcol(4,4))**2
+          do i=1,3
+            rmass2=rmass2-(qcol(i,3)+qcol(i,4))**2
+          end do
+        else if(ifinal.eq.1)then
+          rmass2=(qcol(4,3)+qcol(4,4)
+     &           +qcol(4,5)+qcol(4,6)
+     &           +qcol(4,7)+qcol(4,8))**2
+          do i=1,3
+            rmass2=rmass2-(qcol(i,3)+qcol(i,4)
+     &                    +qcol(i,5)+qcol(i,6)
+     &                    +qcol(i,7)+qcol(i,8))**2
+          end do
+        end if        
+        rmass=sqrt(abs(rmass2))
 
 !   calculate HT
         ET3=sqrt(rm3**2+pT2(3))
@@ -1543,22 +1559,6 @@ c ======================================================================
 
       if(m_rmass.eq.1)then
 !   generate distribution in rmass.
-        if(ifinal.eq.0)then
-          rmass2=(qcol(4,3)+qcol(4,4))**2
-          do i=1,3
-            rmass2=rmass2-(qcol(i,3)+qcol(i,4))**2
-          end do
-        else if(ifinal.eq.1)then
-          rmass2=(qcol(4,3)+qcol(4,4)
-     &           +qcol(4,5)+qcol(4,6)
-     &           +qcol(4,7)+qcol(4,8))**2
-          do i=1,3
-            rmass2=rmass2-(qcol(i,3)+qcol(i,4)
-     &                    +qcol(i,5)+qcol(i,6)
-     &                    +qcol(i,7)+qcol(i,8))**2
-          end do
-        end if        
-        rmass=sqrt(abs(rmass2))
         nbin=int((rmass-rmassmin)/rmassw)+1
         if(nbin.ge.(ndiv_rmass+1))then
           continue
