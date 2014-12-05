@@ -1,18 +1,22 @@
 ! ======================================================================
       program ppbbllnn_BSM
-! Authors: Declan Millar, Stefano Moretti.
-
-! Calculates the cross section and generates distributions for
-!   pp -> tt,
-!   pp -> tt -> bW^+bbarW^- -> bbbare^+nue^-nubarc
-! (Future:) pp -> bW^+bbarW^- -> b bbar e^+ nu qqbar'
-! Uses adapted Madgraph functions.
-! Uses cteq6 and mrs99 PDF subroutines.
 ! ----------------------------------------------------------------------
+! Header
+  ! Authors: Declan Millar, Stefano Moretti.
+
+  ! Calculates the cross section and generates distributions for
+  !   pp -> tt,
+  !   pp -> tt -> bW^+bbarW^- -> bbbare^+nue^-nubarc
+  ! (Future:) pp -> bW^+bbarW^- -> b bbar e^+ nu qqbar'
+  ! Uses adapted Madgraph functions.
+  ! Uses cteq6 and mrs99 PDF subroutines.
+! ----------------------------------------------------------------------
+! Declarations
+  ! implicit
       implicit real*8 (a-h,o-z)
 
-!  LHE format
-!   Initialization information
+  !  LHE format
+  !   Initialization information
       integer maxpup
       parameter (maxpup=100)
       integer idbmup,pdfgup,pdfsup,idwtup,nprup,lprup 
@@ -20,7 +24,7 @@
       common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
      & idwtup,nprup,xsecup(maxpup),xerrup(maxpup),
      & xmaxup(maxpup),lprup(maxpup)
-!   Information on each separate event
+  !   Information on each separate event
       integer maxnup
       parameter (maxnup=500)
       integer nup,idprup,idup,istup,mothup,icolup
@@ -29,13 +33,13 @@
      & idup(maxnup),istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),
      & pup(5,maxnup),vtimup(maxnup),spinup(maxnup)
 
-! Global variables     
-!   vegas
+  ! Global variables     
+  !   vegas
       common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
       common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
       common/rndm/iseed
       common/reslocal/resl(20),standdevl(20)
-!   Kinematics
+  !   Kinematics
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
@@ -47,169 +51,151 @@
       common/stat/npoints
       common/coll/ecm_coll
       common/cuts/ytcut,yttcut
-!   Polarised/Spatial cross sections
+  !   Polarised/Spatial cross sections
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
-      common/spatial/asycross(5,20,-1:1),asyerror(5,20,-1:1) !nasy -3
-!   Permitted gauge sectors
+      common/spatial/asycross(5,20,-1:1),asyerror(5,20,-1:1)  !nasy -3
+  !   Permitted gauge sectors
       common/igauge/iQCD,iEW,iBSM
-!   Interference       
+  !   Interference       
       common/interference/iint      
-!   Z' masses and VA/LR couplings
+  !   Z' masses and VA/LR couplings
       common/Zp/rmZp(5),gamZp(5)
       common/Zpparam/paramZp(5)
       common/ZpAVcoup/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
       common/ZpLRcoup/gZpd(2,5),gZpu(2,5)
-!   Narrow width approximation (NWA)
+  !   Narrow width approximation (NWA)
       common/NWA/gNWA
-!   Structure functions
+  !   Structure functions
       common/partdist/istructure
       common/ALFASTRONG/rlambdaQCD4,nloops
       common/collider/icoll
-!   Switch for all distributions
+  !   Switch for all distributions
       common/distros/idist
-!   Distributions in pTs of external particles
+  !   Distributions in pTs of external particles
       common/ext_pT/pTmax(8),pTmin(8),pTw(8)
       common/dist_pT/xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
       common/inp_pT/m_pT(8)
       common/div_pT/ndiv_pT(8)
-!   Distributions in phis of external particles
+  !   Distributions in phis of external particles
       common/ext_phi/phimax(8),phimin(8),phiw(8)
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
       common/inp_phi/m_phi(8)
       common/div_phi/ndiv_phi(8)
-!   Distribution in pT of the top
+  !   Distribution in pT of the top
       common/ext_pT356/pT356max,pT356min,pT356w
       common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
       common/inp_pT356/m_pT356
       common/div_pT356/ndiv_pT356
-!   Distribution in pT of the anti-top
+  !   Distribution in pT of the anti-top
       common/ext_pT478/pT478max,pT478min,pT478w
       common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
       common/inp_pT478/m_pT478
       common/div_pT478/ndiv_pT478
-!   Distribution in ETmiss
+  !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
       common/inp_ETmiss/m_ETmiss
       common/div_ETmiss/ndiv_ETmiss
-!   Distribution in eta of the top / bottom
+  !   Distribution in eta of the top / bottom
       common/ext_eta3/eta3max,eta3min,eta3w
       common/dist_eta3/xeta3(500),fxeta3(500,20),fxeta3tot(500)
       common/inp_eta3/m_eta3
       common/div_eta3/ndiv_eta3
-!   Distribution in eta of the anti-top / bottom
+  !   Distribution in eta of the anti-top / bottom
       common/ext_eta4/eta4max,eta4min,eta4w
       common/dist_eta4/xeta4(500),fxeta4(500,20),fxeta4tot(500)
       common/inp_eta4/m_eta4
       common/div_eta4/ndiv_eta4
-!   Distribution in eta of the anti-leetaon
+  !   Distribution in eta of the anti-leetaon
       common/ext_eta5/eta5max,eta5min,eta5w
       common/dist_eta5/xeta5(500),fxeta5(500,20),fxeta5tot(500)
       common/inp_eta5/m_eta5
       common/div_eta5/ndiv_eta5
-!   Distribution in eta of the neutrino
+  !   Distribution in eta of the neutrino
       common/ext_eta6/eta6max,eta6min,eta6w
       common/dist_eta6/xeta6(500),fxeta6(500,20),fxeta6tot(500)
       common/inp_eta6/m_eta6
       common/div_eta6/ndiv_eta6
-!   Distribution in eta of the leetaon
+  !   Distribution in eta of the leetaon
       common/ext_eta7/eta7max,eta7min,eta7w
       common/dist_eta7/xeta7(500),fxeta7(500,20),fxeta7tot(500)
       common/inp_eta7/m_eta7
       common/div_eta7/ndiv_eta7
-!   Distribution in eta of the anti-neutrino
+  !   Distribution in eta of the anti-neutrino
       common/ext_eta8/eta8max,eta8min,eta8w
       common/dist_eta8/xeta8(500),fxeta8(500,20),fxeta8tot(500)
       common/inp_eta8/m_eta8
       common/div_eta8/ndiv_eta8
-!   Distribution in eta of the top
+  !   Distribution in eta of the top
       common/ext_eta356/eta356max,eta356min,eta356w
       common/dist_eta356/xeta356(500),fxeta356(500,20),fxeta356tot(500)
       common/inp_eta356/m_eta356
       common/div_eta356/ndiv_eta356
-!   Distribution in eta of the anti-top
+  !   Distribution in eta of the anti-top
       common/ext_eta478/eta478max,eta478min,eta478w
       common/dist_eta478/xeta478(500),fxeta478(500,20),fxeta478tot(500)
       common/inp_eta478/m_eta478
       common/div_eta478/ndiv_eta478
-!   Distribution in invarient mass of the top pair
+  !   Distribution in invarient mass of the top pair
       common/ext_rmass/rmassmax,rmassmin,rmassw
       common/dist_rmass/xrmass(500),fxrmass(500,20),fxrmasstot(500)
       common/inp_rmass/m_rmass
       common/div_rmass/ndiv_rmass
-!   Distribution in invarient mass of all visible decay products
-      common/ext_rmvis/rmvismax,rmvismin,rmvisw
-      common/dist_rmvis/xrmvis(500),fxrmvis(500,20),fxrmvistot(500)
-      common/inp_rmvis/m_rmvis
-      common/div_rmvis/ndiv_rmvis  
-!   Distribution in  boost of top pair centre of mass frame
+  !   Distribution in boost of top pair centre of mass frame
       common/ext_beta/betamax,betamin,betaw
       common/dist_beta/xbeta(500),fxbeta(500,20),fxbetatot(500)
       common/inp_beta/m_beta
       common/div_beta/ndiv_beta
-!   Distribution in cos(theta_t)
+  !   Distribution in cos(theta_t)
       common/ext_cost/costmax,costmin,costw
       common/dist_cost/xcost(500),fxcost(500,20),fxcosttot(500)
       common/inp_cost/m_cost
       common/div_cost/ndiv_cost
-!   Distribution in top energy
+  !   Distribution in top energy
       common/ext_Et/Etmax,Etmin,Etw
       common/dist_Et/xEt(500),fxEt(500,20),fxEttot(500)
       common/inp_Et/m_Et
       common/div_Et/ndiv_Et
-!   Distribution in sum of ET
-      common/ext_HT/HTmax,HTmin,HTw
-      common/dist_HT/xHT(500),fxHT(500,20),fxHTtot(500)
-      common/inp_HT/m_HT
-      common/div_HT/ndiv_HT
-!   Distribution in transverse mass
-      common/ext_rM_T/rM_Tmax,rM_Tmin,rM_Tw
-      common/dist_rM_T/xrM_T(500),fxrM_T(500,20),fxrM_Ttot(500)
-      common/inp_rM_T/m_rM_T
-      common/div_rM_T/ndiv_rM_T
-!   Distribution in *total* contransverse mass
-      common/ext_rM_CT/rM_CTmax,rM_CTmin,rM_CTw
-      common/dist_rM_CT/xrM_CT(500),fxrM_CT(500,20),fxrM_CTtot(500)
-      common/inp_rM_CT/m_rM_CT
-      common/div_rM_CT/ndiv_rM_CT
-!   Distribution in lepton contransverse mass
-      common/ext_rMlCT/rMlCTmax,rMlCTmin,rMlCTw
-      common/dist_rMlCT/xrMlCT(500),fxrMlCT(500,20),fxrMlCTtot(500)
-      common/inp_rMlCT/m_rMlCT
-      common/div_rMlCT/ndiv_rMlCT
-!   Distribution in phi_l (lepton azimuthal angle)
+  !   Distributions in transverse variables
+      integer ntrans
+      parameter (ntrans=10)
+      common/ext_trans/transmax(ntrans),transmin(ntrans),transw(ntrans)
+      common/dist_trans/xtrans(ntrans,500),fxtrans(ntrans,500,20)
+     &                                           ,fxtranstot(ntrans,500)
+      common/inp_trans/m_trans(ntrans)
+      common/div_trans/ndiv_trans(ntrans)
+      dimension sfxtranstot(ntrans)
+  !   Distribution in phi_l (lepton azimuthal angle)
       common/ext_fl/flmax,flmin,flw
       common/dist_fl/xfl(500),fxfl(500,20),fxfltot(500)
       common/inp_fl/m_fl
       common/div_fl/ndiv_fl
-!   Distribution in cos_phi_l
+  !   Distribution in cos_phi_l
       common/ext_cosfl/cosflmax,cosflmin,cosflw
       common/dist_cosfl/xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
       common/inp_cosfl/m_cosfl
       common/div_cosfl/ndiv_cosfl
-!   Distribution in sigp
+  !   Distributions in asymmetries
+      common/inp_asym/m_asy(8)  ! nasy      
+  !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
       common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
       common/inp_sigp/m_sigp
       common/div_sigp/ndiv_sigp
-!   Distribution in sigm
+  !   Distribution in sigm
       common/ext_sigm/sigmmax,sigmmin,sigmw
       common/dist_sigm/xsigm(1000),fxsigm(8,1000,20),fxsigmtot(8,1000)
       common/inp_sigm/m_sigm
       common/div_sigm/ndiv_sigm
-!   Distributions in transverse variables
-      common/inp_tran/m_tran(8) ! nasy
-!   Distributions in asymmetries
-      common/inp_asym/m_asy(8) ! nasy
 
-! Local variables
-!   Flag for Zp width specification
+  ! Local variables
+  !   Flag for Zp width specification
       dimension iwidth(5)
-!   Model name
+  !   Model name
       character*50 model
-!   Polarised/hemispherised cross sections
+  !   Polarised/hemispherised cross sections
       dimension cnorm(20)
-      dimension snorm(6) !,ave(4) 
+      dimension snorm(6)  !,ave(4) 
       dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
       dimension asytot(5,-1:1),asychi(5,-1:1)
       dimension sfxpTtot(8)
@@ -217,91 +203,92 @@
       dimension asym_int(8)
       dimension Atot(8),Atoterr(8)
 
-! Local constants
-!   pi
+  ! Local constants
+  !   pi
       parameter (pi=3.14159265358979323846d0)
-!   Unit conversion GeV -> nb
+  !   Unit conversion GeV -> nb
       parameter (conv=0.38937966d9)
-!   Date and time
+  !   Date and time
       integer today(3), now(3)      
-!   Quark masses
+  !   Quark masses
       data rmu/0.00d0/,
      &     rmd/0.00d0/,
      &     rms/0.00d0/,
      &     rmc/0.00d0/,
      &     rmb/4.25d0/
-!   Higgs/gauge boson masses and widths
+  !   Higgs/gauge boson masses and widths
       data              gamW/2.08d0/
       data rmZ/91.19d0/,gamZ/2.50d0/
       data rmH/125.0d0/,gamH/0.31278d-2/
-!   Branching ratio for t->bln      
+  !   Branching ratio for t->bln      
       real*8 BRtbln/0.10779733d0/
-!       real*8 BRtbln/1d0/
+  !       real*8 BRtbln/1d0/
 
-! External procedures
+  ! External procedures
       external fxn
 ! ----------------------------------------------------------------------
-! Read config file
-!   Permitted gauge sector flags
+! Read input files
+  ! Read config file
+  !   Permitted gauge sector flags
       read(5,*) iQCD
       read(5,*) iEW
       read(5,*) iBSM
-!   Interference flag
+  !   Interference flag
       read(5,*) iint
-!   Final state flag (ifinal=0: no top decay; ifinal=1: dileptonic top decay)      
+  !   Final state flag (ifinal=0: no top decay; ifinal=1: dileptonic top decay)      
       read(5,*) ifinal
-!   NWA flag (iNWA = 0: Actual top widths; iNWA = 1: tops in NWA)
+  !   NWA flag (iNWA = 0: Actual top widths; iNWA = 1: tops in NWA)
       read(5,*) iNWA
-!   Name of model file
+  !   Name of model file
       read(5,*) model
-!   Collider energy     
+  !   Collider energy     
       read(5,*) ecm_coll
-!   Collider flag (icoll=0: pp; icoll=1: ppbar)
+  !   Collider flag (icoll=0: pp; icoll=1: ppbar)
       read(5,*) icoll
-!   PDFs
+  !   PDFs
       read(5,*) istructure
-!   Cut on top rapidity 
+  !   Cut on top rapidity 
       read(5,*) ytcut
-!   Cut on top pair boost
+  !   Cut on top pair boost
       read(5,*) yttcut
-!   Number of Vegas calls per iteration
+  !   Number of Vegas calls per iteration
       read(5,*) ncall
-!   Maximum number of Vegas iterations
+  !   Maximum number of Vegas iterations
       read(5,*) itmx
-!   Desired Accuracy (If negative, run maximum iterations.)
+  !   Desired Accuracy (If negative, run maximum iterations.)
       read(5,*) acc
-!   Random number seed
+  !   Random number seed
       read(5,*) iseed
-!   Standard distributions flag
+  !   Standard distributions flag
       read(5,*) idist
-!   Transverse mass distributions flag
+  !   Transverse mass distributions flag
       read(5,*) itdist
-!   Asymmetry distributions flag
+  !   Asymmetry distributions flag
       read(5,*) iadist
-!   Outout in lhe format
+  !   Outout in lhe format
       read(5,*) ilhe
-! !   Manually sum over costheta
-!       read(5,*) isycost
+  !   !   Manually sum over costheta
+  !       read(5,*) isycost
 
-! Modify config
-!   NWA only for six-body final state.
+  ! Modify config
+  !   NWA only for six-body final state.
       if(ifinal.eq.0) iNWA=0
-!   itmx no more than 20.      
+  !   itmx no more than 20.      
       if(itmx.gt.20)then
-        write(*,*)'itmx does not have to exceed 20!'
+        write(*,*)'itmx does not have to exceed 20  !'
         stop
       end if
-!   No event weighting for *true* event generation
+  !   No event weighting for *true* event generation
       if(ilhe.eq.1)then
         itmx=1
       end if
-!   Extract model filename (Remove white space.)
+  !   Extract model filename (Remove white space.)
       imodel = len(model)
       do while(model(imodel:imodel).eq.'') 
         imodel = imodel-1
       end do
 
-! Read model file
+  ! Read model file
       open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
       read(42,*) rmZp
       read(42,*) gamZp      
@@ -311,8 +298,8 @@
       read(42,*) gA_u
       read(42,*) gV_d
       read(42,*) gA_d      
-!   Check whether width has been specified
-!   (If gamZp is zero, the function widthZp is used instead.)
+  !   Check whether width has been specified
+  !   (If gamZp is zero, the function widthZp is used instead.)
       do i=1,5
         if ((gamZp(i).eq.0d0).and.(rmZp(i).gt.0d0)) then
           iwidth(i) = 0
@@ -320,148 +307,169 @@
           iwidth(i) = 1
         end if
       enddo
-
+! ----------------------------------------------------------------------
 ! Distributions Setup
-! (Set flags, binning range and divisions.)
-! pT distributions
+  ! (Set flags, binning range and divisions.)
+  ! pT distributions
       do i=1,8
         m_pT(i)=idist
         pTmax(i)=7000.d0/(1+icoll*6)
         pTmin(i)=0.d0
         ndiv_pT(i)=175
-! phi distributions
+  ! phi distributions
         m_phi(i)=idist
         phimax(i)=2*pi
         phimin(i)=0.d0
         ndiv_phi(i)=100
       end do
-!   missing transverse momentum
+  !   missing transverse momentum
       m_ETmiss=idist
       ETmissmax=7000.d0/(1+icoll*6)
       ETmissmin=0.d0
       ndiv_ETmiss=175      
-!   top transverse momentum
+  !   top transverse momentum
       m_pT356=idist
       pT356max=7000.d0/(1+icoll*6)
       pT356min=0.d0
       ndiv_pT356=175
-!   anti-top transverse momentum
+  !   anti-top transverse momentum
       m_pT478=idist
       pT478max=7000.d0/(1+icoll*6)
       pT478min=0.d0
       ndiv_pT478=175
-!   top/bottom pseudorapidity
+  !   top/bottom pseudorapidity
       m_eta3=idist
       eta3max=+10
       eta3min=-10
       ndiv_eta3=50
-!   anti-top/bottom pseudorapidity
+  !   anti-top/bottom pseudorapidity
       m_eta4=idist
       eta4max=+10
       eta4min=-10
       ndiv_eta4=50
-!   anti-leetaon pseudorapidity
+  !   anti-leetaon pseudorapidity
       m_eta5=idist
       eta5max=+10
       eta5min=-10
       ndiv_eta5=50
-!   neutrino pseudorapidity
+  !   neutrino pseudorapidity
       m_eta6=idist
       eta6max=+10
       eta6min=-10
       ndiv_eta6=50
-!   lepton pseudorapidity
+  !   lepton pseudorapidity
       m_eta7=idist
       eta7max=+10
       eta7min=-10
       ndiv_eta7=50
-!   neutrino pseudorapidity
+  !   neutrino pseudorapidity
       m_eta8=idist
       eta8max=+10
       eta8min=-10
       ndiv_eta8=50
-!   top pseudorapidity
+  !   top pseudorapidity
       m_eta356=idist
       eta356max=+10
       eta356min=-10
       ndiv_eta356=50
-!   anti-top pseudorapidity
+  !   anti-top pseudorapidity
       m_eta478=idist
       eta478max=+10
       eta478min=-10
       ndiv_eta478=50
-!   invarient mass of tt pair (always on)
+  !   invarient mass of tt pair (always on)
       m_rmass=1
       rmassmax=14000.d0/(1+icoll*6)
       rmassmin=0.d0
       ndiv_rmass=500
-!   boost of parton CoM
+  !   boost of parton CoM
       m_beta=idist
       betamax=1000.d0
       betamin=0.d0
       ndiv_beta=100
-!   costheta
+  !   costheta
       m_cost=idist
       costmax=+1.d0
       costmin=-1.d0
       ndiv_cost=50
-!   top energy
+  !   top energy
       m_Et=idist
       Etmax=7000.d0/(1+icoll*6)
       Etmin=0.d0
       ndiv_Et=175
-!   sum of tranvserse energy
-      m_HT=itdist
-      HTmax=7000.d0/(1+icoll*6)
-      HTmin=0.d0
-      ndiv_HT=175
-!   invarient mass of the visible decay products of the tt pair
-      m_rmvis=itdist
-      rmvismax=14000.d0/(1+icoll*6)
-      rmvismin=0.d0
-      ndiv_rmvis=500   
-!   transverse mass
-      m_rM_T=itdist
-      rM_Tmax=14000.d0/(1+icoll*6)
-      rM_Tmin=0.d0
-      ndiv_rM_T=175
-!   contransverse mass 1
-      m_rM_CT=itdist
-      rM_CTmax=14000.d0/(1+icoll*6)
-      rM_CTmin=0.d0
-      ndiv_rM_CT=175    
-!   contransverse mass 2
-      m_rMlCT=itdist
-      rMlCTmax=500.d0/(1+icoll*6)
-      rMlCTmin=0.d0
-      ndiv_rMlCT=175      
-!   phi_l
+
+  !   transverse variables
+      do itrans=1,8
+        m_trans(itrans)=itdist
+      end do
+  !   sum of tranvserse energy
+      transmax(1)=ecm_col/2/(1+icoll*6)
+      transmin(1)=0.d0
+      ndiv_trans(1)=175
+  !   invarient mass of the visible decay products of the tt pair
+      transmax(2)=ecm_coll/(1+icoll*6)
+      transmin(2)=0.d0
+      ndiv_trans(2)=500   
+  !   transverse mass
+      transmax(3)=ecm_coll/(1+icoll*6)
+      transmin(3)=0.d0
+      ndiv_trans(3)=175
+  !   transverse mass
+      transmax(4)=ecm_coll/(1+icoll*6)
+      transmin(4)=0.d0
+      ndiv_trans(4)=175
+  !   transverse mass
+      transmax(5)=ecm_coll/(1+icoll*6)
+      transmin(5)=0.d0
+      ndiv_trans(5)=175
+  !   contransverse mass 1
+      transmax(6)=ecm_coll/(1+icoll*6)
+      transmin(6)=0.d0
+      ndiv_trans(6)=175     
+  !   contransverse mass 2
+      transmax(7)=ecm_coll/(1+icoll*6)
+      transmin(7)=0.d0
+      ndiv_trans(7)=175    
+  !   contransverse mass 3
+      transmax(8)=ecm_coll/(1+icoll*6)
+      transmin(8)=0.d0
+      ndiv_trans(8)=175            
+  !   lepton transverse mass 
+      transmax(9)=500.d0/(1+icoll*6)
+      transmin(9)=0.d0
+      ndiv_trans(9)=175
+  !   lepton contransverse mass 
+      transmax(10)=500.d0/(1+icoll*6)
+      transmin(10)=0.d0
+      ndiv_trans(10)=175      
+
+  !   phi_l
       m_fl=iadist
       flmax=+2*pi
       flmin=0
       ndiv_fl=100
-!   cosphi_l
+  !   cosphi_l
       m_cosfl=iadist
       cosflmax=+1.d0
       cosflmin=-1.d0
       ndiv_cosfl=100
-!   sigp
+  !   sigp
       m_sigp=iadist
       sigpmax=rmassmax
       sigpmin=rmassmin
       ndiv_sigp=ndiv_rmass/10
-!   sigm
+  !   sigm
       m_sigm=iadist
       sigmmax=rmassmax
       sigmmin=rmassmin
       ndiv_sigm=ndiv_rmass/10      
 
-!   asymmetries
-      do i_asym=1,8 ! N_asym
+  !   asymmetries
+      do i_asym=1,8   ! N_asym
         m_asy(i_asym)=iadist
       end do
 
-!   Turn off 2->6 only distributions
+  !   Turn off 2->6 only distributions
       if (ifinal.eq.0)then
         do i=5,8
           m_pT(i)   = 0
@@ -483,27 +491,28 @@
         m_rMvis  = 0
         m_fl     = 0
         m_cosfl  = 0
-        m_asy(8) = 0 ! turn off A_l
+        m_asy(8) = 0  ! turn off A_l
       end if
-!   Turn off 2->2 only distributions
+  !   Turn off 2->2 only distributions
       if (ifinal.eq.1)then
         m_asy(1) = 0 ! turn off A_LL
         m_asy(2) = 0 ! turn off A_L
         m_asy(3) = 0 ! turn off A_PV
       end if    
+! ----------------------------------------------------------------------
+! Set-up physics
 
-! Initialize MadGraph for MEs
-      rmt=175.d0
-      gamt=1.55d0
-      gNWA=gamt
-      if(iNWA.eq.1)gamt=1.d-5
-      call initialize(rmt,gamt)
-
-! Collider CM energy squared.      
+  ! Collider CM energy squared.      
       s=ecm_coll*ecm_coll
 
-! QCDL4 is QCD LAMBDA4 (to match PDF fits).
-! (PDFs are intrinsically linked to the value of lamda_QCD; alpha_QCD) 
+  ! Factor outside integration
+  !   Conversion GeV^-2 -> pb
+      fac=conv
+  !   Azimuthal angle integrated out (No initial transverse polarisation.)
+      fac=fac*2.d0*pi      
+
+  ! QCDL4 is QCD LAMBDA4 (to match PDF fits).
+  ! (PDFs are intrinsically linked to the value of lamda_QCD; alpha_QCD) 
       if(istructure.eq.1)qcdl4=0.326d0
       if(istructure.eq.2)qcdl4=0.326d0
       if(istructure.eq.3)qcdl4=0.326d0
@@ -515,13 +524,13 @@
       if(istructure.eq.9)qcdl4=0.383d0
       rlambdaQCD4=QCDL4
 
-! Initialise CTEQ grids.
+  ! Initialise CTEQ grids.
       if(istructure.le.4)then
         icteq=istructure
         call SetCtq6(ICTEQ)
       end if
 
-! Use appropriately evolved alphas.
+  ! Use appropriately evolved alphas.
       if(istructure.eq.1)nloops=2
       if(istructure.eq.2)nloops=2
       if(istructure.eq.3)nloops=1
@@ -532,13 +541,14 @@
       if(istructure.eq.8)nloops=1
       if(istructure.eq.9)nloops=1
 
-! Factor outside integration
-!   Conversion GeV^-2 -> pb
-      fac=conv
-!   Azimuthal angle integrated out (No initial transverse polarisation.)
-      fac=fac*2.d0*pi
+  ! Initialize MadGraph for MEs
+      rmt=175.d0
+      gamt=1.55d0
+      gNWA=gamt
+      if(iNWA.eq.1)gamt=1.d-5
+      call initialize(rmt,gamt)
 
-! some EW parameters.
+  ! some EW parameters.
       a_em=1.d0/128.d0
       s2w=.2320d0
       rmW=rmZ*sqrt(1.d0-s2w)
@@ -546,85 +556,86 @@
       c2w=1.d0-s2w
       cw=sqrt(c2w)
 
-! Calculate Zp couplings
+  ! Calculate Zp couplings
       call coupZp
 
-! Calculate sequential Zp widths
+  ! Calculate sequential Zp widths
       do i=1,5
         if (iwidth(i).eq.0) gamZp(i)=
      &               widthZp(rmW,rmZ,rmZp(i),a_em,s2w,rlambdaQCD4,nloop)
       end do
-
+! ---------------------------------------------------------------------- 
 ! VEGAS parameters
+  ! Dimensions of integration
       if(ifinal.eq.0)then
         ndim=3
       else if(ifinal.eq.1)then
         ndim=15
       end if
-!   (If nprn<0 no print-out.)
+  !   (If nprn<0 no print-out.)
       nprn=0
       if(ifinal.eq.0)then
-!   Final state masses     
+  !   Final state masses     
         rm3=rmt
         rm4=rmt
         rm5=0.d0
         rm6=0.d0
         rm7=0.d0
         rm8=0.d0
-!   Integrates on:
-!   x(3)=(x1-tau)/(1-tau),
-!   x(2)=(ecm-rm3-rm4)/(ecm_max-rm3-rm4),
-!   x(1)=cos(theta3_cm)
-!   Limits:
+  !   Integrates on:
+  !   x(3)=(x1-tau)/(1-tau),
+  !   x(2)=(ecm-rm3-rm4)/(ecm_max-rm3-rm4),
+  !   x(1)=cos(theta3_cm)
+  !   Limits:
         do i=3,2,-1
           xl(i)=0.d0
           xu(i)=1.d0
         end do
-!         if(isycost.eq.1)then ! might not work
-!           nctpoints = 200
-!           do i=1,1
-!             xl(i)=0.d0
-!             xu(i)=0.d0
-!           end do
-!         else
-!           nctpoints = 0
+  !         if(isycost.eq.1)then  ! might not work
+  !           nctpoints = 200
+  !           do i=1,1
+  !             xl(i)=0.d0
+  !             xu(i)=0.d0
+  !           end do
+  !         else
+  !           nctpoints = 0
         do i=1,1
           xl(i)=-1.d0
           xu(i)=1.d0
         end do
-!         end if
+  !         end if
 
       else if(ifinal.eq.1)then
-!   Final state masses
+  !   Final state masses
         rm3=rmb
         rm4=rmb
         rm5=0.d0
         rm6=0.d0
         rm7=0.d0
         rm8=0.d0
-!   Integrates on:
-!   x(9)=cos(theta_cm_356)=-cos(theta_cm_478),
-!   x(15)=(x1-tau)/(1-tau),
-!   x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
-!        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
-!   x(13)=(XX356-XX356min)/(XX356max-XX356min),
-!   where XX356=arctg((rm356**2-rmt**2)/rmt/gamt),
-!   x(12)=(XX478-XX478min)/(XX478max-XX478min),
-!   where XX478=arctg((rm478**2-rmt**2)/rmt/gamt),
-!   x(11)=(XX56-XX56min)/(XX56max-XX56min),
-!   where XX56=arctg((rm56**2-rmW**2)/rmW/gamW),
-!   x(10)=(XX78-XX78min)/(XX78max-XX78min),
-!   where XX78=arctg((rm78**2-rmW**2)/rmW/gamW),
-!   
-!   x(8)=cos(theta56_cm_356),
-!   x(7)=cos(theta78_cm_478),
-!   x(6)=cos(theta5_cm_56),
-!   x(5)=cos(theta7_cm_78),
-!   x(4)=fi56_cm_356,
-!   x(3)=fi78_cm_478,
-!   x(2)=fi5_cm_56,
-!   x(1)=fi8_cm_78;
-!   Limits:
+  !   Integrates on:
+  !   x(9)=cos(theta_cm_356)=-cos(theta_cm_478),
+  !   x(15)=(x1-tau)/(1-tau),
+  !   x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
+  !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
+  !   x(13)=(XX356-XX356min)/(XX356max-XX356min),
+  !   where XX356=arctg((rm356**2-rmt**2)/rmt/gamt),
+  !   x(12)=(XX478-XX478min)/(XX478max-XX478min),
+  !   where XX478=arctg((rm478**2-rmt**2)/rmt/gamt),
+  !   x(11)=(XX56-XX56min)/(XX56max-XX56min),
+  !   where XX56=arctg((rm56**2-rmW**2)/rmW/gamW),
+  !   x(10)=(XX78-XX78min)/(XX78max-XX78min),
+  !   where XX78=arctg((rm78**2-rmW**2)/rmW/gamW),
+  !   
+  !   x(8)=cos(theta56_cm_356),
+  !   x(7)=cos(theta78_cm_478),
+  !   x(6)=cos(theta5_cm_56),
+  !   x(5)=cos(theta7_cm_78),
+  !   x(4)=fi56_cm_356,
+  !   x(3)=fi78_cm_478,
+  !   x(2)=fi5_cm_56,
+  !   x(1)=fi8_cm_78;
+  !   Limits:
         do i=15,14,-1
           xl(i)=0.d0
           xu(i)=1.d0
@@ -642,8 +653,9 @@
           xu(i)=2.d0*pi
         end do
       end if
+! ----------------------------------------------------------------------
 ! Generate bins
-! (Finds bin width, finds midpoints.)
+  ! (Finds bin width, finds midpoints.)
 
       do i=1,8
         if(m_pT(i).eq.1)then
@@ -738,13 +750,6 @@
         end do
       end if
 
-      if(m_rMvis.eq.1)then
-        rMvisw=(rMvismax-rMvismin)/ndiv_rMvis
-        do i=1,ndiv_rMvis
-          xrMvis(i)=rMvismin+rMvisw*(i-1)+rMvisw/2.d0
-        end do
-      end if
-
       if(m_beta.eq.1)then
         betaw=(betamax-betamin)/ndiv_beta
         do i=1,ndiv_beta
@@ -765,33 +770,16 @@
         end do
       end if
 
-      if(m_HT.eq.1)then
-        HTw=(HTmax-HTmin)/ndiv_HT
-        do i=1,ndiv_HT
-          xHT(i)=HTmin+HTw*(i-1)+HTw/2.d0
-        end do
-      end if
-
-      if(m_rM_T.eq.1)then
-        rM_Tw=(rM_Tmax-rM_Tmin)/ndiv_rM_T
-        do i=1,ndiv_rM_T
-          xrM_T(i)=rM_Tmin+rM_Tw*(i-1)+rM_Tw/2.d0
-        end do
-      end if
-
-      if(m_rM_CT.eq.1)then
-        rM_CTw=(rM_CTmax-rM_CTmin)/ndiv_rM_CT
-        do i=1,ndiv_rM_CT
-          xrM_CT(i)=rM_CTmin+rM_CTw*(i-1)+rM_CTw/2.d0
-        end do
-      end if
-
-      if(m_rMlCT.eq.1)then
-        rMlCTw=(rMlCTmax-rMlCTmin)/ndiv_rMlCT
-        do i=1,ndiv_rMlCT
-          xrMlCT(i)=rMlCTmin+rMlCTw*(i-1)+rMlCTw/2.d0
-        end do
-      end if
+      do itrans=1,ntrans
+        if(m_trans(itrans).eq.1)then
+          transw(itrans)=(transmax(itrans)-transmin(itrans))
+     &                                               /ndiv_trans(itrans)
+          do i=1,ndiv_trans(itrans)
+            xtrans(itrans,i)=transmin(itrans)+transw(itrans)*(i-1)
+     &                                              +transw(itrans)/2.d0
+          end do
+        end if
+      end do
 
       if(m_fl.eq.1)then
         flw=(flmax-flmin)/ndiv_fl
@@ -820,6 +808,7 @@
           xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
         end do
       end if
+! ----------------------------------------------------------------------
 ! Output information before integration
       write(*,*)'====================================================='
       call idate(today)   ! today(1)=day, (2)=month, (3)=year
@@ -904,13 +893,14 @@
           write(*,*)         
         end if
       end do
+! ----------------------------------------------------------------------
+! Integration
+  ! Section header
       write(*,*)'-----------------------------------------------------'
       write(*,*)'INTEGRATION'
-
-! Integration     
-!   Reset counter
+  !   Reset counter
       npoints=0  
-!   Reset various iterative quantities
+  !   Reset various iterative quantities
       if(ifinal.eq.0)then
         do i=1,20
           resl(i)=0.d0
@@ -922,7 +912,7 @@
               polerror(i,iphel,jphel)=0.d0
             end do
           end do
-          do jasy=1,5 ! nasy-3
+          do jasy=1,5   ! nasy-3
             do iasy=-1,+1,2
               asycross(jasy,i,iasy)=0.d0
               asyerror(jasy,i,iasy)=0.d0
@@ -930,19 +920,20 @@
           end do 
         end do
       end if
-!   Integrate
+  !   Integrate
       it=0
       call vegas(ndim,fxn,avgi,sd,chi2a)
       if(ifinal.eq.0)then
-!   Multiply by branching ratios (if ifinal = 0)      
+  !   Multiply by branching ratios (if ifinal = 0)      
         avgi=avgi*(BRtbln)**2
         sd=sd*(BRtbln)**2
       end if
-!  Collect total cross-section
+  !  Collect total cross-section
       cross=avgi
       error=sd
 
-! Integration output
+
+    ! Print integrated cross section
       write(*,*)'-----------------------------------------------------'
       write(*,*)'INTEGRATED CROSS-SECTION'
       if(cross.eq.0d0)then
@@ -953,8 +944,9 @@
         write(*,*)cross,error
         write(*,*)'(using ',npoints,' points)'
       end if
-
-! Re-weight distributions for different iterations      
+! ----------------------------------------------------------------------
+! Total asymmetries
+  ! Re-weight distributions for different iterations      
       stantot=0.d0
       do i=1,it
         stantot=stantot+1.d0/standdevl(i)/standdevl(i)
@@ -967,7 +959,7 @@
       end do
 
       if(ifinal.eq.0)then  
-! Collect polarised cross sections.
+  ! Collect polarised cross sections.
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             do i=1,it
@@ -986,17 +978,17 @@
             end do
             polchi(iphel,jphel)=polchi(iphel,jphel)
      &                         /poltot(iphel,jphel)
-!          polchi(iphel,jphel)=
-!     & sqrt(abs(polchi(iphel,jphel)
-!     &         -poltot(iphel,jphel)**2*dfloat(ncall)))
-!     & /dfloat(ncall)
+  !          polchi(iphel,jphel)=
+  !     & sqrt(abs(polchi(iphel,jphel)
+  !     &         -poltot(iphel,jphel)**2*dfloat(ncall)))
+  !     & /dfloat(ncall)
           end do
         end do
       end if
 
-! Collect unpolarised spatial asymmetry
-      do iasy=1,5 ! nasy-3
-!         write(*,*)iasy,m_asy(iasy+3)
+  ! Collect unpolarised spatial asymmetry
+      do iasy=1,5   ! nasy-3
+  !         write(*,*)iasy,m_asy(iasy+3)
         if(m_asy(iasy+3).eq.0)then
           continue
         else
@@ -1010,27 +1002,27 @@
             end do        
             asytot(iasy,iAB)=0.d0
             asychi(iasy,iAB)=0.d0
-            do i=1,it ! add up each iteration
+            do i=1,it   ! add up each iteration
               asytot(iasy,iAB)=asytot(iasy,iAB)
      &                      +asycross(iasy,i,iAB)
               asychi(iasy,iAB)=asychi(iasy,iAB)
      &                      +asyerror(iasy,i,iAB)
             end do
-!             write(*,*)'bork1011'
+  !             write(*,*)'bork1011'
             asychi(iasy,iAB)=asychi(iasy,iAB)
      &                        /asytot(iasy,iAB)
-!             write(*,*)'bork1014'
-!           asychi(iasy)=
-!        & sqrt(abs(asychi(iasy)
-!        &         -asytot(iasy)**2*dfloat(ncall)))
-!        & /dfloat(ncall)
+  !             write(*,*)'bork1014'
+  !           asychi(iasy)=
+  !        & sqrt(abs(asychi(iasy)
+  !        &         -asytot(iasy)**2*dfloat(ncall)))
+  !        & /dfloat(ncall)
           end do
         end if
       end do
 
-! Define asymmetries
+  ! Define asymmetries
       if(ifinal.eq.0)then
-! ALL
+  ! ALL
         Atot(1)=
      &          +(poltot(+1,+1)-poltot(+1,-1)
      &           -poltot(-1,+1)+poltot(-1,-1))
@@ -1039,7 +1031,7 @@
      &             +(polchi(+1,+1)+polchi(+1,-1)
      &              +polchi(-1,+1)+polchi(-1,-1))
      &             /4.d0*Atot(1)
-! AL
+  ! AL
         Atot(2)=
      &          +(poltot(-1,-1)-poltot(+1,-1) 
      &           +poltot(-1,+1)-poltot(+1,+1))
@@ -1048,7 +1040,7 @@
      &            +(polchi(-1,-1)+polchi(+1,-1) 
      &             +polchi(-1,+1)+polchi(+1,+1))
      &            /4.d0*Atot(2)
-! APV
+  ! APV
         Atot(3)=
      &          +(poltot(-1,-1)-poltot(+1,+1))
      &          /cross/2.d0
@@ -1056,13 +1048,13 @@
      &             +(polchi(-1,-1)+polchi(+1,+1))
      &             /2.d0*Atot(3)
       end if
-! AFBcm
+  ! AFBcm
       Atot(4)=
      &          +(asytot(1,+1)-asytot(1,-1))
      &          /cross
         Atoterr(4)=
      &            +sd/avgi*Atot(4)
-! AtFB
+  ! AtFB
       Atot(5)=
      &          +(asytot(2,+1)-asytot(2,-1))
      &          /cross
@@ -1070,7 +1062,7 @@
      &            +sd/avgi*Atot(5)
 
       if(m_asy(6).gt.0)then
-! A
+  ! A
         Atot(6)=
      &          +(asytot(3,+1)-asytot(3,-1))
      &          /cross
@@ -1079,7 +1071,7 @@
       end if
 
       if(m_asy(7).gt.0)then
-! A'
+  ! A'
         Atot(7)=
      &          +(asytot(4,+1)-asytot(4,-1))
      &          /cross
@@ -1089,7 +1081,7 @@
 
       
       if(m_asy(8).gt.0)then
-! A_l
+  ! A_l
         Atot(8)=
      &          +(asytot(5,+1)-asytot(5,-1))
      &          /cross
@@ -1097,7 +1089,7 @@
      &            +sd/avgi*Atot(8)
       end if
 
-! Print Asymmetries     
+  ! Print Asymmetries     
       write(*,*)'TOTAL ASYMMETRIES'
       if(ifinal.eq.0)then
         write(*,*)'ALL:                  uncertainty (same units):'
@@ -1118,12 +1110,12 @@
         write(*,*)'A_l:                  uncertainty (same units):'
         write(*,*)Atot(6),Atoterr(6) 
       end if
-
+! ----------------------------------------------------------------------
 ! Plot Distributions
+  ! Section header
       write(*,*)'-----------------------------------------------------'
       write(*,*)'HISTOGRAMS'
-
-!  plot distributions in transverse momentum
+  ! Plot distributions in pT
       do ip=1,8
         if(m_pT(ip).eq.0)then
           continue
@@ -1148,9 +1140,9 @@
           write(*,*)'(Integrated cross-section:',sfxpTtot(ip),')'
         end if
       end do
-
+  ! Plot distribution in pT356
       if(m_pT356.eq.1)then
-!   plot distribution in pT356
+
         sfxpT356tot=0d0
         do j=1,ndiv_pT356
           fxpT356tot(j)=0.d0
@@ -1169,9 +1161,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in pT478
       if(m_pT478.eq.1)then
-!   plot distribution in pT478
+  
         sfxpT478tot=0d0
         do j=1,ndiv_pT478
           fxpT478tot(j)=0.d0
@@ -1189,10 +1181,9 @@
           write(*,*)xpT478(i),fxpT478tot(i)
         end do
         write(*,*)'END'
-      end if
-
+      end if      
+  ! Plot distribution in ETmiss
       if(m_ETmiss.eq.1)then
-!   plot distribution in ETmiss
         sfxETmisstot=0d0
         do j=1,ndiv_ETmiss
           fxETmisstot(j)=0.d0
@@ -1211,9 +1202,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta3
       if(m_eta3.eq.1)then
-!   plot distdistribution in eta3
+
         sfxeta3tot=0d0
         do j=1,ndiv_eta3
           fxeta3tot(j)=0.d0
@@ -1233,9 +1224,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta4
       if(m_eta4.eq.1)then
-!   plot distribution in eta4
+
         sfxeta4tot=0d0
         do j=1,ndiv_eta4
           fxeta4tot(j)=0.d0
@@ -1255,9 +1246,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta5
       if(m_eta5.eq.1)then
-!   plot distribution in eta5
+
         sfxeta5tot=0d0
         do j=1,ndiv_eta5
           fxeta5tot(j)=0.d0
@@ -1276,9 +1267,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta6
       if(m_eta6.eq.1)then
-!   plot distribution in eta6
+
         sfxeta6tot=0d0
         do j=1,ndiv_eta6
           fxeta6tot(j)=0.d0
@@ -1297,9 +1288,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta7
       if(m_eta7.eq.1)then
-!   plot distribution in eta7
+
         sfxeta7tot=0d0
         do j=1,ndiv_eta7
           fxeta7tot(j)=0.d0
@@ -1318,9 +1309,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta8
       if(m_eta8.eq.1)then
-!   plot distribution in eta8
+
         sfxeta8tot=0d0
         do j=1,ndiv_eta8
           fxeta8tot(j)=0.d0
@@ -1339,9 +1330,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta356
       if(m_eta356.eq.1)then
-!   plot distribution in eta356
+
         do j=1,ndiv_eta356
           do i=1,it
             fxeta356(j,i)=fxeta356(j,i)*avgi/cnorm(i)/eta356w
@@ -1362,9 +1353,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in eta478
       if(m_eta478.eq.1)then
-!   plot distribution in eta478
+
         sfxeta478tot=0d0
         do j=1,ndiv_eta478
           fxeta478tot(j)=0.d0
@@ -1383,9 +1374,9 @@
         end do
         write(*,*)'END'
       end if      
-
+  ! Plot distribution in Mtt
       if(m_rmass.eq.1)then
-!   plot distribution in rmass.
+
         sfxrmasstot=0d0
         do j=1,ndiv_rmass
           fxrmasstot(j)=0.d0
@@ -1404,30 +1395,9 @@
         end do
         write(*,*)'END'
       end if
-
-      if(m_rMvis.eq.1)then
-!   plot distribution in rMvis.
-        sfxrMvistot=0d0
-        do j=1,ndiv_rMvis
-          fxrMvistot(j)=0.d0
-          do i=1,it
-            fxrMvis(j,i)=fxrMvis(j,i)*avgi/cnorm(i)/rMvisw
-            fxrMvistot(j)=fxrMvistot(j)+fxrMvis(j,i)            
-          end do
-          sfxrMvistot=sfxrMvistot+fxrMvistot(j)*rMvisw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'Mvis'
-        write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
-        write(*,*)'M_{vis}--[GeV]'
-        do i=1,ndiv_rMvis
-          write(*,*)xrMvis(i),fxrMvistot(i)
-        end do
-        write(*,*)'END'
-      end if
-
+  ! Plot distribution in beta.
       if(m_beta.eq.1)then
-!   plot distribution in beta.
+
         sfxbetatot=0d0
         do j=1,ndiv_beta
           fxbetatot(j)=0.d0
@@ -1446,9 +1416,9 @@
         end do
         write(*,*)'END'
       end if  
-
+  ! Plot distribution in cost
       if(m_cost.eq.1)then
-!   plot distribution in cost.
+
         sfxcosttot=0d0
         do j=1,ndiv_cost
           fxcosttot(j)=0.d0
@@ -1467,9 +1437,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in fl
       if(m_fl.eq.1)then
-!   plot distribution in fl.
+
         sfxfltot=0d0
         do j=1,ndiv_fl
           fxfltot(j)=0.d0
@@ -1488,9 +1458,9 @@
         end do
         write(*,*)'END'
       end if 
-
+  ! Plot distribution in cosfl
       if(m_cosfl.eq.1)then
-!   plot distribution in cosfl.
+
         sfxcosfltot=0d0
         do j=1,ndiv_cosfl
           fxcosfltot(j)=0.d0
@@ -1509,9 +1479,9 @@
         end do
         write(*,*)'END'
       end if
-
+  ! Plot distribution in Et
       if(m_Et.eq.1)then
-!   plot distribution in Et.
+
         sfxEttot=0d0
         do j=1,ndiv_Et
           fxEttot(j)=0.d0
@@ -1530,99 +1500,78 @@
         end do
         write(*,*)'END'
       end if
-
-      if(m_HT.eq.1)then
-!   plot distribution in scalar sum of ET: HT.
-        sfxHTtot=0d0
-        do j=1,ndiv_HT
-          fxHTtot(j)=0.d0
-          do i=1,it
-            fxHT(j,i)=fxHT(j,i)*avgi/cnorm(i)/HTw
-            fxHTtot(j)=fxHTtot(j)+fxHT(j,i)            
+  ! Plot distributions in all transverse variables
+      do itrans=1,ntrans
+        if(m_trans(itrans).eq.1)then
+          sfxtranstot(itrans)=0d0
+          do j=1,ndiv_trans(itrans)
+            fxtranstot(itrans,j)=0.d0
+            do i=1,it
+              fxtrans(itrans,j,i)=fxtrans(itrans,j,i)
+     &                           *avgi/cnorm(i)/transw(itrans)
+              fxtranstot(itrans,j)=fxtranstot(itrans,j)
+     &                            +fxtrans(itrans,j,i)            
+            end do
+            sfxtranstot(itrans)=sfxtranstot(itrans)+
+     &                               fxtranstot(itrans,j)*transw(itrans)
           end do
-          sfxHTtot=sfxHTtot+fxHTtot(j)*HTw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'HT'
-        write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
-        write(*,*)'H_{T}--[GeV]'
-        do i=1,ndiv_HT
-          write(*,*)xHT(i),fxHTtot(i)
-        end do
-        write(*,*)'END'
-      end if
-
-      if(m_rM_T.eq.1)then
-!   plot distribution in M_T.
-        sfxrM_Ttot=0d0
-        do j=1,ndiv_rM_T
-          fxrM_Ttot(j)=0.d0
-          do i=1,it
-            fxrM_T(j,i)=fxrM_T(j,i)*avgi/cnorm(i)/rM_Tw
-            fxrM_Ttot(j)=fxrM_Ttot(j)+fxrM_T(j,i)            
+          write(*,*)'HISTOGRAM'
+          if (itrans.eq.1)then
+            write(*,*)'Mvis'
+            write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.2)then
+            write(*,*)'HT'
+            write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
+            write(*,*)'H_{T}--[GeV]'          
+          else if (itrans.eq.3)then
+            write(*,*)'M_T1'
+            write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.4)then
+            write(*,*)'M_T2'
+            write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.5)then
+            write(*,*)'M_T3'
+            write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.6)then
+            write(*,*)'MlT'
+            write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.7)then
+            write(*,*)'M_CT1'
+            write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.8)then
+            write(*,*)'M_CT2'
+            write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.9)then
+            write(*,*)'M_CT3'
+            write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.10)then
+            write(*,*)'MlCT'
+            write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+            write(*,*)'M^{l}_{CT}--[GeV]'
+          else
+            continue
+          end if
+          do i=1,ndiv_trans(itrans)
+            write(*,*)xtrans(itrans,i),fxtranstot(itrans,i)
           end do
-          sfxrM_Ttot=sfxrM_Ttot+fxrM_Ttot(j)*rM_Tw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'M_T'
-        write(*,*)'d#sigma-/dM_{T}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
-        do i=1,ndiv_rM_T
-          write(*,*)xrM_T(i),fxrM_Ttot(i)
-        end do
-        write(*,*)'END'
-      end if
-
-      if(m_rM_CT.eq.1)then
-!   plot distribution in Mcon.
-        sfxrM_CTtot=0d0
-        do j=1,ndiv_rM_CT
-          fxrM_CTtot(j)=0.d0
-          do i=1,it
-            fxrM_CT(j,i)=fxrM_CT(j,i)*avgi/cnorm(i)/rM_CTw
-            fxrM_CTtot(j)=fxrM_CTtot(j)+fxrM_CT(j,i)            
-          end do
-          sfxrM_CTtot=sfxrM_CTtot+fxrM_CTtot(j)*rM_CTw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'M_CT'
-        write(*,*)'d#sigma-/dM_{CT}--[pb/GeV]'
-        write(*,*)'M_{CT}--[GeV]'
-        do i=1,ndiv_rM_CT
-          write(*,*)xrM_CT(i),fxrM_CTtot(i)
-        end do
-        write(*,*)'END'
-      end if
-
-      if(m_rMlCT.eq.1)then
-!   plot distribution in Mcon.
-        sfxrMlCTtot=0d0
-        do j=1,ndiv_rMlCT
-          fxrMlCTtot(j)=0.d0
-          do i=1,it
-            fxrMlCT(j,i)=fxrMlCT(j,i)*avgi/cnorm(i)/rMlCTw
-            fxrMlCTtot(j)=fxrMlCTtot(j)+fxrMlCT(j,i)            
-          end do
-          sfxrMlCTtot=sfxrMlCTtot+fxrMlCTtot(j)*rMlCTw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'MlCT'
-        write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
-        write(*,*)'M^{l}_{CT}--[GeV]'
-        do i=1,ndiv_rMlCT
-          write(*,*)xrMlCT(i),fxrMlCTtot(i)
-        end do
-        write(*,*)'END'
-      end if
-
-
-!   plot distributions in all asymmetries.
+          write(*,*)'END'
+        end if
+      end do
+  ! Plot distributions in all asymmetries
       if((m_sigp.eq.1).and.(m_sigm.eq.1))then
         do jasy=1,8
           if(m_asy(jasy).eq.0)then
             continue
           else
-  !           snorm(jasy)=0.d0
+            ! snorm(jasy)=0.d0
             sfxsigptot(jasy)=0d0
             do j=1,ndiv_sigp
               fxsigptot(jasy,j)=0.d0
@@ -1671,26 +1620,26 @@
             do i=1,ndiv_sig
               if(fxsigptot(jasy,i)+fxsigmtot(jasy,i).eq.0.d0)then
                 write(*,*)(xsigm(i)+xsigp(i))/2.d0,0.d0
-  !               snorm(jasy)=snorm(jasy)+0.d0
+      !             snorm(jasy)=snorm(jasy)+0.d0
               else  
                 write(*,*)(xsigm(i)+xsigp(i))/2.d0,
      &                   (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
      &                   (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-  !               snorm(jasy)=snorm(jasy)+
-  !      &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
-  !      &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-  !      &               *fxrmasstot(i)*rmassw/avgi      
+      !               snorm(jasy)=snorm(jasy)+
+      !      &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
+      !      &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
+      !      &               *fxrmasstot(i)*rmassw/avgi      
               end if
             end do
             asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/
      &                     (sfxsigptot(jasy)+sfxsigmtot(jasy))          
             write(*,*)'END'
-  !           write(*,*)'(Total Asymmetry:',asym_int(jasy),')'
-  !           write(*,*)'(Integrated Asymmetry:',snorm(jasy),' )'
+      !           write(*,*)'(Total Asymmetry:',asym_int(jasy),')'
+      !           write(*,*)'(Integrated Asymmetry:',snorm(jasy),' )'
           end if
         end do
       end if
-
+! ----------------------------------------------------------------------
 ! Check distributions
       diff_max=1E-12
       n_error=0
@@ -1754,12 +1703,6 @@
           n_error=n_error+1
         end if
       end if
-      if(m_rMvis.eq.1)then
-        if(abs(cross-sfxrMvistot)>diff_max)then
-          write(*,*)'rMvis Integration Error:',sfxrMvistot
-          n_error=n_error+1
-        end if
-      end if
       if(m_beta.eq.1)then
         if(abs(cross-sfxbetatot)>diff_max*10)then
           write(*,*)'beta Integration Error:',sfxbetatot
@@ -1775,24 +1718,6 @@
       if(m_Et.eq.1)then
         if(abs(cross-sfxEttot)>diff_max)then
           write(*,*)'Et Integration Error:',sfxEttot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_rM_T.eq.1)then
-        if(abs(cross-sfxrM_Ttot)>diff_max)then
-          write(*,*)'M_T Integration Error:',sfxrM_Ttot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_rM_CT.eq.1)then
-        if(abs(cross-sfxrM_CTtot)>diff_max)then
-          write(*,*)'M_CT1 Integration Error:',sfxrM_CTtot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_rMlCT.eq.1)then
-        if(abs(cross-sfxrMlCTtot)>diff_max)then
-          write(*,*)'M_CT2 Integration Error:',sfxrMlCTtot
           n_error=n_error+1
         end if
       end if
@@ -1819,6 +1744,8 @@
         end if
       end do
       write(*,*)'INTEGRATION ERRORS:',n_error
+! ----------------------------------------------------------------------
+! End program
       write(*,*)'CLOSE'
       write(*,*)'======================================================'
       stop
