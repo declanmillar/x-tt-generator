@@ -378,7 +378,6 @@ c ======================================================================
         fx2(i)=fx2(i)/x2
       end do
 
-  !       write(*,*)'bork end pdfs'
 ! ----------------------------------------------------------------------
 ! Kinematics
 
@@ -612,18 +611,17 @@ c ======================================================================
         qcol(1,i)=q(1,i)
       end do
 
-  !       write(*,*)'bork end kinematics'
 ! ----------------------------------------------------------------------
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
   ! distributions and cuts.
+      if(ifinal.eq.0)ipmax=4
+      if(ifinal.gt.0)ipmax=8
       
   ! calculate transverse momenta
-      do ip=1,8
-        if (m_pT(ip).eq.1)then
+      do ip=1,ipmax
           pT2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
           pT(ip)=sqrt(pT2(ip))
-        end if
       end do
 
   ! Calculate pseudorapidity (eta)        
@@ -687,8 +685,6 @@ c ======================================================================
       end if
 
   ! calculate phi's
-      if(ifinal.eq.0)ipmax=4
-      if(ifinal.gt.0)ipmax=8
       do ip=1,ipmax
         phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
       end do
@@ -737,7 +733,6 @@ c ======================================================================
         end do
       end if        
       rmass=sqrt(abs(rmass2))
-
   ! calculate invariant mass of visible decay products
       if(m_trans(1).eq.1)then
         rMvis2=(qcol(4,3)+qcol(4,4)
@@ -748,7 +743,6 @@ c ======================================================================
         end do      
         trans(1)=sqrt(abs(rMvis2))
       end if
-
   ! calculate HT
       if(m_trans(2).eq.1)then
         ET3=sqrt(rm3**2+pT2(3))
@@ -757,7 +751,6 @@ c ======================================================================
         ET7=sqrt(rm6**2+pT2(7))
         trans(2)=ET3+ET4+ET5+ET7+ETmiss
       end if
-
   ! calculate *full* transverse mass 1
       if(m_trans(3).eq.1)then
         rM_T12=(ETvis+ETmiss)**2
@@ -1006,7 +999,7 @@ c ======================================================================
 
         cosfl=cos(fl)
       end if
-! ----------------------------------------------------------------------
+! ----------------------------------------------------------------------    
 ! Matrix elements
   ! Assign 2to2 MadGraph momenta
       if(ifinal.eq.0)then
@@ -1132,7 +1125,6 @@ c ======================================================================
   !         write(*,*)'pT(v+v):',pT68
       end if
 
-  !       write(*,*)'bork end additional kinematics'
 
   ! Square Matrix elements
   !   Calculate strong coupling
@@ -1282,7 +1274,6 @@ c ======================================================================
   !       write(*,*)'resdd =',resdd
   !       write(*,*)'pfxtot =',pfxtot
 
-  !       write(*,*)'bork end matrix elements'      
 ! ----------------------------------------------------------------------
 ! Phase space volume
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
@@ -1323,7 +1314,6 @@ c ======================================================================
         fxn=fxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
 
-  !       write(*,*)'bork end final factors'
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
    
@@ -1453,7 +1443,6 @@ c ======================================================================
       end if
 
 
-  !       write(*,*)'bork end categorised cross sections.'
 ! ----------------------------------------------------------------------
 ! Binning
   ! scale by weight

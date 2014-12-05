@@ -18,8 +18,7 @@ OUT = ..
 F = gfortran
 
 # Flags
-FFLAGS = -g 
-# -ffpe-trap=invalid,zero,overflow,underflow,denormal
+FFLAGS = -g -ffpe-trap=invalid,zero,overflow,underflow,denormal
 # -Wall
 # ------------------------------------------------------------------------------
 # Commands
