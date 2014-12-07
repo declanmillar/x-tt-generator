@@ -745,7 +745,7 @@ c ======================================================================
   ! calculate *full* transverse mass 1
       if(m_trans(3).eq.1)then
         rM_T12=(ET3+ET4+ET5+ET7+ETmiss)**2
-     &        -(pT(3)+pT(4)+pT(5)+pT(7)+ETmiss)**2
+     &        +(pT(3)+pT(4)+pT(5)+pT(7)+ETmiss)**2
         trans(3)=sqrt(abs(rM_T12))
       end if
   ! calculate *full* transverse mass 2
@@ -777,8 +777,8 @@ c ======================================================================
   ! calculate *full* contranverse mass 1
       if(m_trans(7).eq.1)then
         rM_CT12=(ET3+ET4+ET5+ET7+ETmiss)**2
-     &        -(pT(3)+pT(4)+pT(5)+pT(7)-ETmiss)**2
-        trans(7)=sqrt(abs(rM_CT2))
+     &        +(pT(3)+pT(4)+pT(5)+pT(7)-ETmiss)**2
+        trans(7)=sqrt(abs(rM_CT12))
       end if
   ! calculate *full* contranverse mass 2
       if(m_trans(8).eq.1)then
@@ -1569,19 +1569,7 @@ c ======================================================================
         else
           fxrmass(nbin,it)=fxrmass(nbin,it)+hist
         end if
-      end if  
-
-      if(m_rMvis.eq.1)then
-  ! generate distribution in rMvis.
-        nbin=int((rMvis-rMvismin)/rMvisw)+1
-        if(nbin.ge.(ndiv_rMvis+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxrMvis(nbin,it)=fxrMvis(nbin,it)+hist
-        end if
-      end if  
+      end if
 
       if(m_beta.eq.1)then
   ! generate distribution in beta.

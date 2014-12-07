@@ -378,47 +378,51 @@
       ndiv_Et=175
 
   !   transverse variables
-      do itrans=1,8
-        m_trans(itrans)=itdist
+      do itrans=1,ntrans
+        if(ifinal.eq.0)then
+          m_trans(itrans)=0
+        else 
+          m_trans(itrans)=itdist
+        end if
       end do
-  !   sum of tranvserse energy
-      transmax(1)=ecm_col/2/(1+icoll*6)
+  !   invarient mass of the visible decay products of the tt pair
+      transmax(1)=4000
       transmin(1)=0.d0
       ndiv_trans(1)=175
-  !   invarient mass of the visible decay products of the tt pair
-      transmax(2)=ecm_coll/(1+icoll*6)
+  !   sum of tranvserse energy  
+      transmax(2)=4000
       transmin(2)=0.d0
       ndiv_trans(2)=500   
-  !   transverse mass
-      transmax(3)=ecm_coll/(1+icoll*6)
+  !   transverse mass 1
+      transmax(3)=4000
       transmin(3)=0.d0
       ndiv_trans(3)=175
-  !   transverse mass
-      transmax(4)=ecm_coll/(1+icoll*6)
+  !   transverse mass 2
+      transmax(4)=4000
       transmin(4)=0.d0
       ndiv_trans(4)=175
-  !   transverse mass
-      transmax(5)=ecm_coll/(1+icoll*6)
+  !   transverse mass 3
+      transmax(5)=4000
       transmin(5)=0.d0
       ndiv_trans(5)=175
-  !   contransverse mass 1
-      transmax(6)=ecm_coll/(1+icoll*6)
+   !  lepton transverse mass
+      transmax(6)=500
       transmin(6)=0.d0
       ndiv_trans(6)=175     
-  !   contransverse mass 2
-      transmax(7)=ecm_coll/(1+icoll*6)
+  !   contransverse mass 1
+      transmax(7)=4000
       transmin(7)=0.d0
       ndiv_trans(7)=175    
-  !   contransverse mass 3
-      transmax(8)=ecm_coll/(1+icoll*6)
+  !   contransverse mass 2
+      transmax(8)=4000
       transmin(8)=0.d0
       ndiv_trans(8)=175            
-  !   lepton transverse mass 
-      transmax(9)=500.d0/(1+icoll*6)
+  !   contransverse mass 3
+      transmax(9)=4000
       transmin(9)=0.d0
       ndiv_trans(9)=175
   !   lepton contransverse mass 
-      transmax(10)=500.d0/(1+icoll*6)
+      transmax(10)=500
       transmin(10)=0.d0
       ndiv_trans(10)=175      
 
@@ -461,10 +465,6 @@
         m_eta478 = 0
         m_ETmiss = 0
         m_HT     = 0
-        m_rM_T   = 0
-        m_rM_CT  = 0
-        m_rMlCT  = 0
-        m_rMvis  = 0
         m_fl     = 0
         m_cosfl  = 0
         m_asy(8) = 0  ! turn off A_l
