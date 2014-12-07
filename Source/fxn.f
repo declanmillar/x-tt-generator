@@ -662,6 +662,39 @@ c ======================================================================
         pT478=sqrt((qcol(1,4)+qcol(1,7)+qcol(1,8))**2
      &           +(qcol(2,4)+qcol(2,7)+qcol(2,8))**2)
       end if
+  ! Calculate cos(theta_t)
+      if(ifinal.eq.0)then
+          cost=
+     &     (qcol(1,3)*qcol(1,1)
+     &     +qcol(2,3)*qcol(2,1)
+     &     +qcol(3,3)*qcol(3,1))
+     &/sqrt(qcol(1,3)*qcol(1,3)
+     &     +qcol(2,3)*qcol(2,3)
+     &     +qcol(3,3)*qcol(3,3))
+     &/sqrt(qcol(1,1)*qcol(1,1)
+     &     +qcol(2,1)*qcol(2,1)
+     &     +qcol(3,1)*qcol(3,1))
+        else if(ifinal.eq.1)then
+          cost=
+     &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
+     &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
+     &    +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1))
+     &/sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))
+     &     *(qcol(1,3)+qcol(1,5)+qcol(1,6))
+     &     +(qcol(2,3)+qcol(2,5)+qcol(2,6))
+     &     *(qcol(2,3)+qcol(2,5)+qcol(2,6))
+     &     +(qcol(3,3)+qcol(3,5)+qcol(3,6))
+     &     *(qcol(3,3)+qcol(3,5)+qcol(3,6)))
+     &/sqrt(qcol(1,1)*qcol(1,1)
+     &     +qcol(2,1)*qcol(2,1)
+     &     +qcol(3,1)*qcol(3,1))
+      end if
+  ! calculate the energy of the top
+      if(ifinal.eq.0)then
+        Et=qcol(4,3)
+      else if(ifinal.eq.1)then
+        Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
+      end if
   ! calculate rmass
       if(ifinal.eq.0)then
         rmass2=(qcol(4,3)+qcol(4,4))**2
@@ -1400,8 +1433,8 @@ c ======================================================================
       hist=fxn*wgt
 
       do ip=3,ipmax
-        if(m_pT(ip).eq.1)then
-  !   generate distribution in pT     
+  ! generate distribution in pT      
+        if(m_pT(ip).eq.1)then      
           nbin=int((pT(ip)-pTmin(ip))/pTw(ip))+1
           if(nbin.ge.(ndiv_pT(ip)+1))then
             continue
@@ -1411,8 +1444,8 @@ c ======================================================================
             fxpT(ip,nbin,it)=fxpT(ip,nbin,it)+hist
           end if
         end if
-        if(m_eta(ip).eq.1)then
-  !   generate distribution in eta       
+  ! generate distribution in eta      
+        if(m_eta(ip).eq.1)then         
           nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
           if(nbin.ge.(ndiv_eta(ip)+1))then
             continue
@@ -1422,8 +1455,8 @@ c ======================================================================
             fxeta(ip,nbin,it)=fxeta(ip,nbin,it)+hist
           end if
         end if
-        if(m_phi(ip).eq.1)then
-  !   generate distribution in phi       
+  ! generate distribution in phi            
+        if(m_phi(ip).eq.1)then   
           nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
           if(nbin.ge.(ndiv_phi(ip)+1))then
             continue
@@ -1434,9 +1467,8 @@ c ======================================================================
           end if
         end if
       end do
-
-      if(m_pT356.eq.1)then
-  !   generate distribution in pT356. 
+  ! generate distribution in pT356. 
+      if(m_pT356.eq.1)then  
         nbin=int((pT356-pT356min)/pT356w)+1
         if(nbin.ge.(ndiv_pT356+1))then
           continue
@@ -1448,7 +1480,7 @@ c ======================================================================
       end if
 
       if(m_pT478.eq.1)then
-  !   generate distribution in pT478. 
+  ! generate distribution in pT478. 
         nbin=int((pT478-pT478min)/pT478w)+1
         if(nbin.ge.(ndiv_pT478+1))then
           continue
@@ -1460,7 +1492,7 @@ c ======================================================================
       end if
 
       if(m_eta356.eq.1)then
-  !   generate distribution in eta356. 
+  ! generate distribution in eta356. 
         nbin=int((eta356-eta356min)/eta356w)+1
         if(nbin.ge.(ndiv_eta356+1))then
           continue
@@ -1472,7 +1504,7 @@ c ======================================================================
       end if
 
       if(m_eta478.eq.1)then
-  !   generate distribution in eta478. 
+  ! generate distribution in eta478. 
         nbin=int((eta478-eta478min)/eta478w)+1
         if(nbin.ge.(ndiv_eta478+1))then
           continue
@@ -1484,7 +1516,7 @@ c ======================================================================
       end if
 
       if(m_ETmiss.eq.1)then
-  !   generate distribution in ETmiss. 
+  ! generate distribution in ETmiss. 
         nbin=int((ETmiss-ETmissmin)/ETmissw)+1
         if(nbin.ge.(ndiv_ETmiss+1))then
           continue
@@ -1496,7 +1528,7 @@ c ======================================================================
       end if
 
       if(m_rmass.eq.1)then
-  !   generate distribution in rmass.
+  ! generate distribution in rmass.
         nbin=int((rmass-rmassmin)/rmassw)+1
         if(nbin.ge.(ndiv_rmass+1))then
           continue
@@ -1508,7 +1540,7 @@ c ======================================================================
       end if  
 
       if(m_rMvis.eq.1)then
-  !   generate distribution in rMvis.
+  ! generate distribution in rMvis.
         nbin=int((rMvis-rMvismin)/rMvisw)+1
         if(nbin.ge.(ndiv_rMvis+1))then
           continue
@@ -1520,7 +1552,7 @@ c ======================================================================
       end if  
 
       if(m_beta.eq.1)then
-  !   generate distribution in beta.
+  ! generate distribution in beta.
         beta=shat/4.d0/rmt**2-1.d0
         nbin=int((beta-betamin)/betaw)+1
         if(nbin.ge.(ndiv_beta+1))then
@@ -1533,33 +1565,7 @@ c ======================================================================
       end if  
 
       if(m_cost.eq.1)then
-  !   generate distribution in cost.
-        if(ifinal.eq.0)then
-          cost=
-     &     (qcol(1,3)*qcol(1,1)
-     &     +qcol(2,3)*qcol(2,1)
-     &     +qcol(3,3)*qcol(3,1))
-     &/sqrt(qcol(1,3)*qcol(1,3)
-     &     +qcol(2,3)*qcol(2,3)
-     &     +qcol(3,3)*qcol(3,3))
-     &/sqrt(qcol(1,1)*qcol(1,1)
-     &     +qcol(2,1)*qcol(2,1)
-     &     +qcol(3,1)*qcol(3,1))
-        else if(ifinal.eq.1)then
-          cost=
-     &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
-     &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
-     &    +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1))
-     &/sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))
-     &     *(qcol(1,3)+qcol(1,5)+qcol(1,6))
-     &     +(qcol(2,3)+qcol(2,5)+qcol(2,6))
-     &     *(qcol(2,3)+qcol(2,5)+qcol(2,6))
-     &     +(qcol(3,3)+qcol(3,5)+qcol(3,6))
-     &     *(qcol(3,3)+qcol(3,5)+qcol(3,6)))
-     &/sqrt(qcol(1,1)*qcol(1,1)
-     &     +qcol(2,1)*qcol(2,1)
-     &     +qcol(3,1)*qcol(3,1))
-        end if
+  ! generate distribution in cost.
         nbin=int((cost-costmin)/costw)+1
         if(nbin.ge.(ndiv_cost+1))then
           continue
@@ -1570,12 +1576,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_Et.eq.1)then   ! generate distribution in Et.
-        if(ifinal.eq.0)then
-          Et=qcol(4,3)
-        else if(ifinal.eq.1)then
-          Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
-        end if
+      if(m_Et.eq.1)then   !enerate distribution in Et.
         nbin=int((Et-Etmin)/Etw)+1
         if(nbin.ge.(ndiv_Et+1))then
           continue
@@ -1588,7 +1589,7 @@ c ======================================================================
 
       do itrans=1,ntrans
         if(m_trans(itrans).eq.1)then
-    !   generate distribution in trans.
+  ! generate distribution in trans.
           nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
           if(nbin.ge.(ndiv_trans(itrans)+1))then
             continue
@@ -1601,7 +1602,7 @@ c ======================================================================
       end do
 
       if(m_fl.eq.1)then
-  !   generate distribution in fl.
+  ! generate distribution in fl.
         nbin=int((fl-flmin)/flw)+1
         if(nbin.ge.(ndiv_fl+1))then
           continue
@@ -1613,7 +1614,7 @@ c ======================================================================
       end if
 
       if(m_cosfl.eq.1)then
-  !   generate distribution in cosfl.
+  ! generate distribution in cosfl.
         nbin=int((cosfl-cosflmin)/cosflw)+1
         if(nbin.ge.(ndiv_cosfl+1))then
           continue
@@ -1626,7 +1627,7 @@ c ======================================================================
 
       if(m_asy(1).eq.1)then
         if(m_sigp.eq.1)then
-  !   generate distribution in sigp for ALL.
+  ! generate distribution in sigp for ALL.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1635,11 +1636,11 @@ c ======================================================================
             continue
           else
             fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+
-     &    (weight(it,+1,+1)+weight(it,-1,-1))   ! action happens
+     &    (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
           end if
         end if  
         if(m_sigm.eq.1)then
-  !   generate distribution in sigm for ALL.
+  ! generate distribution in sigm for ALL.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1655,7 +1656,7 @@ c ======================================================================
 
       if(m_asy(2).eq.1)then
         if(m_sigp.eq.1)then
-  !   generate distribution in sigp for AL.
+  ! generate distribution in sigp for AL.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1668,7 +1669,7 @@ c ======================================================================
           end if
         end if  
         if(m_sigm.eq.1)then
-  !   generate distribution in sigm for AL.
+  ! generate distribution in sigm for AL.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1684,7 +1685,7 @@ c ======================================================================
 
       if(m_asy(3).eq.1)then
         if(m_sigp.eq.1)then
-  !   generate distribution in sigp for APV.
+  ! generate distribution in sigp for APV.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1697,7 +1698,7 @@ c ======================================================================
           end if
         end if  
         if(m_sigm.eq.1)then
-  !   generate distribution in sigm for APV.
+  ! generate distribution in sigm for APV.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1713,7 +1714,7 @@ c ======================================================================
 
       if(m_asy(4).eq.1)then
         if((m_sigp.eq.1).and.(costcm.gt.0.d0))then
-  !   generate distribution in sigp for AFBcm.
+  ! generate distribution in sigp for AFBcm.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1725,7 +1726,7 @@ c ======================================================================
           end if
         end if  
         if((m_sigm.eq.1).and.(costcm.lt.0.d0))then
-  !   generate distribution in sigm for AFBcm.
+  ! generate distribution in sigm for AFBcm.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1740,7 +1741,7 @@ c ======================================================================
 
       if(m_asy(5).eq.1)then
         if((m_sigp.eq.1).and.(yt.gt.0.d0))then
-  !   generate distribution in sigp for AtFB.
+  ! generate distribution in sigp for AtFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1752,7 +1753,7 @@ c ======================================================================
           end if
         end if  
         if((m_sigm.eq.1).and.(yt.lt.0.d0))then
-  !   generate distribution in sigm for AtFB.
+  ! generate distribution in sigm for AtFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1767,7 +1768,7 @@ c ======================================================================
 
       if(m_asy(6).eq.1)then
         if((m_sigp.eq.1).and.(yt.ge.0.d0))then
-  !   generate distribution in sigp for A.
+  ! generate distribution in sigp for A.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1779,7 +1780,7 @@ c ======================================================================
           end if
         end if  
         if((m_sigm.eq.1).and.(ytb.ge.0.d0))then
-  !   generate distribution in sigm for A.
+  ! generate distribution in sigm for A.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1794,7 +1795,7 @@ c ======================================================================
 
       if((m_asy(7).eq.1).and.(abs(ytt).gt.yttcut))then
         if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
-  !   generate distribution in sigp for Ap.
+  ! generate distribution in sigp for Ap.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1806,7 +1807,7 @@ c ======================================================================
           end if
         end if  
         if((m_sigm.eq.1).and.(del_y.lt.0.d0))then
-  !   generate distribution in sigm for Ap.
+  ! generate distribution in sigm for Ap.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1822,7 +1823,7 @@ c ======================================================================
 
       if(m_asy(8).eq.1)then
         if((m_sigp.eq.1).and.(cosfl.gt.0.d0))then
-  !   generate distribution in sigp for A_l.
+  ! generate distribution in sigp for A_l.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1834,7 +1835,7 @@ c ======================================================================
           end if
         end if
         if((m_sigm.eq.1).and.(cosfl.lt.0.d0))then
-  !   generate distribution in sigm for A_l.
+  ! generate distribution in sigm for A_l.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
