@@ -86,31 +86,41 @@
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
       common/inp_phi/m_phi(8)
       common/div_phi/ndiv_phi(8)
-  !   Distribution in pT of the top
-      common/ext_pT356/pT356max,pT356min,pT356w
-      common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
-      common/inp_pT356/m_pT356
-      common/div_pT356/ndiv_pT356
-  !   Distribution in pT of the anti-top
-      common/ext_pT478/pT478max,pT478min,pT478w
-      common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
-      common/inp_pT478/m_pT478
-      common/div_pT478/ndiv_pT478
   !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
       common/inp_ETmiss/m_ETmiss
       common/div_ETmiss/ndiv_ETmiss
+  !   Distribution in pT of the top
+      common/ext_pT356/pT356max,pT356min,pT356w
+      common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
+      common/inp_pT356/m_pT356
+      common/div_pT356/ndiv_pT356
   !   Distribution in eta of the top
       common/ext_eta356/eta356max,eta356min,eta356w
       common/dist_eta356/xeta356(500),fxeta356(500,20),fxeta356tot(500)
       common/inp_eta356/m_eta356
       common/div_eta356/ndiv_eta356
+  !   Distribution in phi of the top
+      common/ext_phi356/phi356max,phi356min,phi356w
+      common/dist_phi356/xphi356(500),fxphi356(500,20),fxphi356tot(500)
+      common/inp_phi356/m_phi356
+      common/div_phi356/ndiv_phi356
+  !   Distribution in pT of the anti-top
+      common/ext_pT478/pT478max,pT478min,pT478w
+      common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
+      common/inp_pT478/m_pT478
+      common/div_pT478/ndiv_pT478
   !   Distribution in eta of the anti-top
       common/ext_eta478/eta478max,eta478min,eta478w
       common/dist_eta478/xeta478(500),fxeta478(500,20),fxeta478tot(500)
       common/inp_eta478/m_eta478
       common/div_eta478/ndiv_eta478
+  !   Distribution in phi of the anti-top
+      common/ext_phi478/phi478max,phi478min,phi478w
+      common/dist_phi478/xphi478(500),fxphi478(500,20),fxphi478tot(500)
+      common/inp_phi478/m_phi478
+      common/div_phi478/ndiv_phi478     
   !   Distribution in invarient mass of the top pair
       common/ext_rmass/rmassmax,rmassmin,rmassw
       common/dist_rmass/xrmass(500),fxrmass(500,20),fxrmasstot(500)
@@ -321,21 +331,31 @@
       pT356max=7000.d0/(1+icoll*6)
       pT356min=0.d0
       ndiv_pT356=175
+  !   2to6 top pseudorapidity
+      m_eta356=idist
+      eta356max=+10
+      eta356min=-10
+      ndiv_eta356=50 
+  !   2to6 top pseudorapidity
+      m_phi356=idist
+      phi356max=+pi
+      phi356min=-pi
+      ndiv_phi356=100           
   !   anti-top transverse momentum
       m_pT478=idist
       pT478max=7000.d0/(1+icoll*6)
       pT478min=0.d0
       ndiv_pT478=175
-  !   2to6 top pseudorapidity
-      m_eta356=idist
-      eta356max=+10
-      eta356min=-10
-      ndiv_eta356=50
   !   2to6 anti-top pseudorapidity
       m_eta478=idist
       eta478max=+10
       eta478min=-10
       ndiv_eta478=50
+  !   2to6 top pseudorapidity
+      m_phi478=idist
+      phi478max=+pi
+      phi478min=-pi
+      ndiv_phi478=100  
   !   invarient mass of tt pair (always on)
       m_rmass=1
       rmassmax=14000.d0/(1+icoll*6)
@@ -648,13 +668,6 @@
         end do
       end if
 
-      if(m_pT478.eq.1)then
-        pT478w=(pT478max-pT478min)/ndiv_pT478
-        do i=1,ndiv_pT478
-          xpT478(i)=pT478min+pT478w*(i-1)+pT478w/2.d0
-        end do
-      end if      
-
       if(m_eta356.eq.1)then
         eta356w=(eta356max-eta356min)/ndiv_eta356
         do i=1,ndiv_eta356
@@ -662,10 +675,31 @@
         end do
       end if
 
+      if(m_phi356.eq.1)then
+        phi356w=(phi356max-phi356min)/ndiv_phi356
+        do i=1,ndiv_phi356
+          xphi356(i)=phi356min+phi356w*(i-1)+phi356w/2.d0
+        end do
+      end if
+
+      if(m_pT478.eq.1)then
+        pT478w=(pT478max-pT478min)/ndiv_pT478
+        do i=1,ndiv_pT478
+          xpT478(i)=pT478min+pT478w*(i-1)+pT478w/2.d0
+        end do
+      end if      
+
       if(m_eta478.eq.1)then
         eta478w=(eta478max-eta478min)/ndiv_eta478
         do i=1,ndiv_eta478
           xeta478(i)=eta478min+eta478w*(i-1)+eta478w/2.d0
+        end do
+      end if
+
+      if(m_phi478.eq.1)then
+        phi478w=(phi478max-phi478min)/ndiv_phi478
+        do i=1,ndiv_phi478
+          xphi478(i)=phi478min+phi478w*(i-1)+phi478w/2.d0
         end do
       end if
 
@@ -1148,6 +1182,46 @@
         end do
         write(*,*)'END'
       end if
+  ! Plot distribution in eta356
+      if(m_eta356.eq.1)then
+        sfxeta356tot=0d0
+        do j=1,ndiv_eta356
+          fxeta356tot(j)=0.d0
+          do i=1,it
+            fxeta356(j,i)=fxeta356(j,i)*avgi/cnorm(i)/eta356w
+            fxeta356tot(j)=fxeta356tot(j)+fxeta356(j,i)            
+          end do
+          sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'eta356'
+        write(*,*)'d#sigma-/d#eta--[pb]'
+        write(*,*)'#eta(#bar{t})'
+        do i=1,ndiv_eta356
+          write(*,*)xeta356(i),fxeta356tot(i)
+        end do
+        write(*,*)'END'
+      end if  
+  ! Plot distribution in phi356
+      if(m_phi356.eq.1)then
+        sfxphi356tot=0d0
+        do j=1,ndiv_phi356
+          fxphi356tot(j)=0.d0
+          do i=1,it
+            fxphi356(j,i)=fxphi356(j,i)*avgi/cnorm(i)/phi356w
+            fxphi356tot(j)=fxphi356tot(j)+fxphi356(j,i)            
+          end do
+          sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'phi356'
+        write(*,*)'d#sigma-/d#phi--[pb]'
+        write(*,*)'#phi(#bar{t})'
+        do i=1,ndiv_phi356
+          write(*,*)xphi356(i),fxphi356tot(i)
+        end do
+        write(*,*)'END'
+      end if       
   ! Plot distribution in pT478
       if(m_pT478.eq.1)then  
         sfxpT478tot=0d0
@@ -1167,34 +1241,9 @@
           write(*,*)xpT478(i),fxpT478tot(i)
         end do
         write(*,*)'END'
-      end if      
-  
-  ! Plot distribution in eta356
-      if(m_eta356.eq.1)then
-
-        do j=1,ndiv_eta356
-          do i=1,it
-            fxeta356(j,i)=fxeta356(j,i)*avgi/cnorm(i)/eta356w
-          end do
-        end do
-        do j=1,ndiv_eta356
-          fxeta356tot(j)=0.d0 
-          do i=1,it
-            fxeta356tot(j)=fxeta356tot(j)+fxeta356(j,i)
-          end do
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta356'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        write(*,*)'#eta(t)'
-        do i=1,ndiv_eta356
-          write(*,*)xeta356(i),fxeta356tot(i)
-        end do
-        write(*,*)'END'
       end if
   ! Plot distribution in eta478
       if(m_eta478.eq.1)then
-
         sfxeta478tot=0d0
         do j=1,ndiv_eta478
           fxeta478tot(j)=0.d0
@@ -1213,6 +1262,26 @@
         end do
         write(*,*)'END'
       end if      
+  ! Plot distribution in phi478
+      if(m_phi478.eq.1)then
+        sfxphi478tot=0d0
+        do j=1,ndiv_phi478
+          fxphi478tot(j)=0.d0
+          do i=1,it
+            fxphi478(j,i)=fxphi478(j,i)*avgi/cnorm(i)/phi478w
+            fxphi478tot(j)=fxphi478tot(j)+fxphi478(j,i)            
+          end do
+          sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'phi478'
+        write(*,*)'d#sigma-/d#phi--[pb]'
+        write(*,*)'#phi(#bar{t})'
+        do i=1,ndiv_phi478
+          write(*,*)xphi478(i),fxphi478tot(i)
+        end do
+        write(*,*)'END'
+      end if    
   ! Plot distribution in Mtt
       if(m_rmass.eq.1)then
 
@@ -1501,10 +1570,28 @@
             n_error=n_error+1
           end if
         end if
-      end do
+      end do      
+      if(m_ETmiss.eq.1)then
+        if(abs(cross-sfxETmisstot)>diff_max)then
+          write(*,*)'ETmiss Error:',sfxETmisstot
+          n_error=n_error+1
+        end if
+      end if
       if(m_pT356.eq.1)then
         if(abs(cross-sfxpT356tot)>diff_max)then
           write(*,*)'pT356 Error:',sfxpT356tot
+          n_error=n_error+1
+        end if
+      end if
+      if(m_eta356.eq.1)then
+        if(abs(cross-sfxeta356tot)>diff_max)then
+          write(*,*)'eta356 Error:',sfxeta356tot
+          n_error=n_error+1
+        end if
+      end if
+      if(m_phi356.eq.1)then
+        if(abs(cross-sfxphi356tot)>diff_max)then
+          write(*,*)'phi356 Error:',sfxphi356tot
           n_error=n_error+1
         end if
       end if
@@ -1514,9 +1601,15 @@
           n_error=n_error+1
         end if
       end if
-      if(m_ETmiss.eq.1)then
-        if(abs(cross-sfxETmisstot)>diff_max)then
-          write(*,*)'ETmiss Error:',sfxETmisstot
+      if(m_eta478.eq.1)then
+        if(abs(cross-sfxeta478tot)>diff_max)then
+          write(*,*)'eta478 Error:',sfxeta478tot
+          n_error=n_error+1
+        end if
+      end if
+      if(m_phi478.eq.1)then
+        if(abs(cross-sfxphi478tot)>diff_max)then
+          write(*,*)'phi478 Error:',sfxphi478tot
           n_error=n_error+1
         end if
       end if

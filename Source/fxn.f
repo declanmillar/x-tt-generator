@@ -74,61 +74,41 @@ c ======================================================================
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
       common/inp_phi/m_phi(8)
       common/div_phi/ndiv_phi(8)
-  !   Distribution in pT of the top
-      common/ext_pT356/pT356max,pT356min,pT356w
-      common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
-      common/inp_pT356/m_pT356
-      common/div_pT356/ndiv_pT356
-  !   Distribution in pT of the anti-top
-      common/ext_pT478/pT478max,pT478min,pT478w
-      common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
-      common/inp_pT478/m_pT478
-      common/div_pT478/ndiv_pT478
   !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
       common/inp_ETmiss/m_ETmiss
       common/div_ETmiss/ndiv_ETmiss
-  !   Distribution in eta of the top / bottom
-      common/ext_eta3/eta3max,eta3min,eta3w
-      common/dist_eta3/xeta3(500),fxeta3(500,20),fxeta3tot(500)
-      common/inp_eta3/m_eta3
-      common/div_eta3/ndiv_eta3
-  !   Distribution in eta of the anti-top / bottom
-      common/ext_eta4/eta4max,eta4min,eta4w
-      common/dist_eta4/xeta4(500),fxeta4(500,20),fxeta4tot(500)
-      common/inp_eta4/m_eta4
-      common/div_eta4/ndiv_eta4
-  !   Distribution in eta of the anti-leetaon
-      common/ext_eta5/eta5max,eta5min,eta5w
-      common/dist_eta5/xeta5(500),fxeta5(500,20),fxeta5tot(500)
-      common/inp_eta5/m_eta5
-      common/div_eta5/ndiv_eta5
-  !   Distribution in eta of the neutrino
-      common/ext_eta6/eta6max,eta6min,eta6w
-      common/dist_eta6/xeta6(500),fxeta6(500,20),fxeta6tot(500)
-      common/inp_eta6/m_eta6
-      common/div_eta6/ndiv_eta6
-  !   Distribution in eta of the leetaon
-      common/ext_eta7/eta7max,eta7min,eta7w
-      common/dist_eta7/xeta7(500),fxeta7(500,20),fxeta7tot(500)
-      common/inp_eta7/m_eta7
-      common/div_eta7/ndiv_eta7
-  !   Distribution in eta of the anti-neutrino
-      common/ext_eta8/eta8max,eta8min,eta8w
-      common/dist_eta8/xeta8(500),fxeta8(500,20),fxeta8tot(500)
-      common/inp_eta8/m_eta8
-      common/div_eta8/ndiv_eta8
+  !   Distribution in pT of the top
+      common/ext_pT356/pT356max,pT356min,pT356w
+      common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
+      common/inp_pT356/m_pT356
+      common/div_pT356/ndiv_pT356
   !   Distribution in eta of the top
       common/ext_eta356/eta356max,eta356min,eta356w
       common/dist_eta356/xeta356(500),fxeta356(500,20),fxeta356tot(500)
       common/inp_eta356/m_eta356
       common/div_eta356/ndiv_eta356
+  !   Distribution in phi of the top
+      common/ext_phi356/phi356max,phi356min,phi356w
+      common/dist_phi356/xphi356(500),fxphi356(500,20),fxphi356tot(500)
+      common/inp_phi356/m_phi356
+      common/div_phi356/ndiv_phi356
+  !   Distribution in pT of the anti-top
+      common/ext_pT478/pT478max,pT478min,pT478w
+      common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
+      common/inp_pT478/m_pT478
+      common/div_pT478/ndiv_pT478
   !   Distribution in eta of the anti-top
       common/ext_eta478/eta478max,eta478min,eta478w
       common/dist_eta478/xeta478(500),fxeta478(500,20),fxeta478tot(500)
       common/inp_eta478/m_eta478
       common/div_eta478/ndiv_eta478
+  !   Distribution in phi of the anti-top
+      common/ext_phi478/phi478max,phi478min,phi478w
+      common/dist_phi478/xphi478(500),fxphi478(500,20),fxphi478tot(500)
+      common/inp_phi478/m_phi478
+      common/div_phi478/ndiv_phi478 
   !   Distribution in invarient mass of the top pair
       common/ext_rmass/rmassmax,rmassmin,rmassw
       common/dist_rmass/xrmass(500),fxrmass(500,20),fxrmasstot(500)
@@ -655,13 +635,44 @@ c ======================================================================
         ETvis=sqrt(ETvis2)
         ETmiss=sqrt(ETmiss2) 
       end if            
-  ! calculate truth level top pair momenta in 2to6
+  ! calculate truth level top/antitop pT, eta and phi
       if(ifinal.eq.1)then
         pT356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2
      &           +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
+
         pT478=sqrt((qcol(1,4)+qcol(1,7)+qcol(1,8))**2
-     &           +(qcol(2,4)+qcol(2,7)+qcol(2,8))**2)
+     &           +(qcol(2,4)+qcol(2,7)+qcol(2,8))**2)    
+
+        rps356=(q(3,3)+q(3,5)+q(3,6))
+     &       /sqrt((q(1,3)+q(1,5)+q(1,6))**2
+     &            +(q(2,3)+q(2,5)+q(2,6))**2
+     &            +(q(3,3)+q(3,5)+q(3,6))**2)
+        if(rps356.lt.-1.d0)rps=-1.d0
+        if(rps356.gt.+1.d0)rps=+1.d0
+        rpl356=dacos(rps356)
+        arg356=tan(rpl356/2d0)
+        if(arg356.le.0.d0)arg356=1.d-9
+        eta356=-log(arg356)      
+
+        rps478=(q(3,4)+q(3,7)+q(3,8))
+     &       /sqrt((q(1,4)+q(1,7)+q(1,8))**2
+     &            +(q(2,4)+q(2,7)+q(2,8))**2
+     &            +(q(3,4)+q(3,7)+q(3,8))**2)
+        if(rps478.lt.-1.d0)rps=-1.d0
+        if(rps478.gt.+1.d0)rps=+1.d0
+        rpl478=dacos(rps478)
+        arg478=tan(rpl478/2d0)
+        if(arg478.le.0.d0)arg478=1.d-9
+        eta478=-log(arg478) 
+
+        phi356=atan2(qcol(2,3)+qcol(2,5)+qcol(2,6)
+     &              ,qcol(1,3)+qcol(1,5)+qcol(1,6))
+        phi478=atan2(qcol(2,4)+qcol(2,7)+qcol(2,8)
+     &              ,qcol(1,4)+qcol(1,7)+qcol(1,8))
+      else
+        continue
       end if
+
   ! Calculate cos(theta_t)
       if(ifinal.eq.0)then
           cost=
@@ -722,29 +733,28 @@ c ======================================================================
         end do      
         trans(1)=sqrt(abs(rMvis2))
       end if
+  ! calculate transverse energy energies of visible particles
+      ET3=sqrt(rm3**2+pT2(3))
+      ET4=sqrt(rm4**2+pT2(4))
+      ET5=sqrt(rm5**2+pT2(5))
+      ET7=sqrt(rm6**2+pT2(7)) 
   ! calculate HT
       if(m_trans(2).eq.1)then
-        ET3=sqrt(rm3**2+pT2(3))
-        ET4=sqrt(rm4**2+pT2(4))
-        ET5=sqrt(rm5**2+pT2(5))
-        ET7=sqrt(rm6**2+pT2(7))
         trans(2)=ET3+ET4+ET5+ET7+ETmiss
       end if
   ! calculate *full* transverse mass 1
       if(m_trans(3).eq.1)then
-        rM_T12=(ETvis+ETmiss)**2
-        do i=1,2
-          rM_T12=rM_T12-(pTvis(i)+pTmiss(i))**2
-        end do
-        trans(3)=sqrt(rM_T12)
+        rM_T12=(ET3+ET4+ET5+ET7+ETmiss)**2
+     &        -(pT(3)+pT(4)+pT(5)+pT(7)+ETmiss)**2
+        trans(3)=sqrt(abs(rM_T12))
       end if
   ! calculate *full* transverse mass 2
       if(m_trans(4).eq.1)then
-        rM_T22=(ETvis+ETmiss)**2
+        rM_T22=(ET3+ET4+ET5+ET7+ETmiss)**2
         do i=1,2
           rM_T22=rM_T22-(pTvis(i)+pTmiss(i))**2
         end do
-        trans(4)=sqrt(rM_T22)
+        trans(4)=sqrt(abs(rM_T22))
       end if
   ! calculate *full* transverse mass 3
       if(m_trans(5).eq.1)then
@@ -752,7 +762,7 @@ c ======================================================================
         do i=1,2
           rM_T32=rM_T32-(pTvis(i)+pTmiss(i))**2
         end do
-        trans(5)=sqrt(rM_T32)    
+        trans(5)=sqrt(abs(rM_T32))    
       end if
   ! calculate lepton transverse mass
       if(m_trans(6).eq.1)then
@@ -762,19 +772,17 @@ c ======================================================================
         do i=1,2
           rMlT2=rMlT2-(qcol(i,5)+qcol(i,7))**2
         end do
-        trans(6)=sqrt(rMlT2)
+        trans(6)=sqrt(abs(rMlT2))
       end if
   ! calculate *full* contranverse mass 1
       if(m_trans(7).eq.1)then
-        rM_CT12=(ETvis+ETmiss)**2
-        do i=1,2
-          rM_CT12=rM_CT12-(pTvis(i)-pTmiss(i))**2
-        end do
+        rM_CT12=(ET3+ET4+ET5+ET7+ETmiss)**2
+     &        -(pT(3)+pT(4)+pT(5)+pT(7)-ETmiss)**2
         trans(7)=sqrt(abs(rM_CT2))
       end if
   ! calculate *full* contranverse mass 2
       if(m_trans(8).eq.1)then
-        rM_CT22=(ETvis+ETmiss)**2
+        rM_CT22=(ET3+ET4+ET5+ET7+ETmiss)**2
         do i=1,2
           rM_CT22=rM_CT22-(pTvis(i)-pTmiss(i))**2
         end do
@@ -796,7 +804,7 @@ c ======================================================================
         do i=1,2
           rMlCT2=rMlCT2-(qcol(i,5)-qcol(i,7))**2
         end do
-        trans(10)=sqrt(rMlCT2)
+        trans(10)=sqrt(abs(rMlCT2))
       end if
   ! calculate top pseudorapidity     
       if(ifinal.eq.1)then
@@ -1477,19 +1485,7 @@ c ======================================================================
         else
           fxpT356(nbin,it)=fxpT356(nbin,it)+hist
         end if
-      end if
-
-      if(m_pT478.eq.1)then
-  ! generate distribution in pT478. 
-        nbin=int((pT478-pT478min)/pT478w)+1
-        if(nbin.ge.(ndiv_pT478+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxpT478(nbin,it)=fxpT478(nbin,it)+hist
-        end if
-      end if
+      end if      
 
       if(m_eta356.eq.1)then
   ! generate distribution in eta356. 
@@ -1503,6 +1499,30 @@ c ======================================================================
         end if
       end if
 
+      if(m_phi356.eq.1)then
+  ! generate distribution in phi356. 
+        nbin=int((phi356-phi356min)/phi356w)+1
+        if(nbin.ge.(ndiv_phi356+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxphi356(nbin,it)=fxphi356(nbin,it)+hist
+        end if
+      end if
+
+        if(m_pT478.eq.1)then
+  ! generate distribution in pT478. 
+        nbin=int((pT478-pT478min)/pT478w)+1
+        if(nbin.ge.(ndiv_pT478+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxpT478(nbin,it)=fxpT478(nbin,it)+hist
+        end if
+      end if
+
       if(m_eta478.eq.1)then
   ! generate distribution in eta478. 
         nbin=int((eta478-eta478min)/eta478w)+1
@@ -1512,6 +1532,18 @@ c ======================================================================
           continue
         else
           fxeta478(nbin,it)=fxeta478(nbin,it)+hist
+        end if
+      end if
+
+      if(m_phi478.eq.1)then
+  ! generate distribution in phi478. 
+        nbin=int((phi478-phi478min)/phi478w)+1
+        if(nbin.ge.(ndiv_phi478+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxphi478(nbin,it)=fxphi478(nbin,it)+hist
         end if
       end if
 
