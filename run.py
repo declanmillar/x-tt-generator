@@ -85,7 +85,7 @@ print >> config, '%s ! ilhe' % options.ilhe
 
 
 # Filename
-filename = '%s_%s%s%s_%s_%s%s' % (name,model,sector,interference,emc_col,ncall,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s' % (name,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

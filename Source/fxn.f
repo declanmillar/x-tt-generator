@@ -32,7 +32,7 @@ c ======================================================================
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifinal
+      common/final/ifinal,ipmax
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -64,6 +64,11 @@ c ======================================================================
       common/dist_pT/xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
       common/inp_pT/m_pT(8)
       common/div_pT/ndiv_pT(8)
+  !   Distributions in etas of external particles
+      common/ext_eta/etamax(8),etamin(8),etaw(8)
+      common/dist_eta/xeta(8,500),fxeta(8,500,20),fxetatot(8,500)
+      common/inp_eta/m_eta(8)
+      common/div_eta/ndiv_eta(8)
   !   Distributions in phis of external particles
       common/ext_phi/phimax(8),phimin(8),phiw(8)
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
@@ -189,7 +194,7 @@ c ======================================================================
       dimension q(4,8),qcol(4,8)
       dimension p1(0:3),p2(0:3),
      &          p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
-      dimension pT2(8),pT(8),phi(8)
+      dimension pT2(8),pT(8),rps(8),rpl(8),arg(8),eta(8),phi(8)
       dimension pTvis(2),pTmiss(2)
   ! Lepton azimuthal angle coordinate system
       dimension xp(3),yp(3),zp(3)
@@ -612,86 +617,31 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
-  ! distributions and cuts.
-      if(ifinal.eq.0)ipmax=4
-      if(ifinal.gt.0)ipmax=8
+  ! distributions and cuts.  
       
-  ! calculate transverse momenta
+  ! Calculate transverse momenta (pT)
       do ip=1,ipmax
-          pT2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
-          pT(ip)=sqrt(pT2(ip))
+        pT2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
+        pT(ip)=sqrt(pT2(ip))
       end do
-
-  ! Calculate pseudorapidity (eta)        
-      rps3=(q(3,3))/sqrt(q(1,3)**2+q(2,3)**2+q(3,3)**2)
-      if(rps3.lt.-1.d0)rps=-1.d0
-      if(rps3.gt.+1.d0)rps=+1.d0
-      rpl3=dacos(rps3)
-      arg3=tan(rpl3/2d0)
-      if(arg3.le.0.d0)arg3=1.d-9
-      eta3=-log(arg3)    
-      if(ifinal.eq.0)then ! Cut on this if ifinal=0       
-        if(abs(eta3).gt.ytcut)then
-          fxn=0.d0
-          return
-        end if
-      else
-        continue
-      end if
-
-      rps4=(q(3,4))/sqrt(q(1,4)**2+q(2,4)**2+q(3,4)**2)
-      if(rps4.lt.-1.d0)rps=-1.d0
-      if(rps4.gt.+1.d0)rps=+1.d0
-      rpl4=dacos(rps4)
-      arg4=tan(rpl4/2d0)
-      if(arg4.le.0.d0)arg4=1.d-9
-      eta4=-log(arg4) ! no cuts on pseudorapidity yet
-
-      if(ifinal.eq.1)then
-
-        rps5=q(3,5)/sqrt(q(1,5)**2+q(2,5)**2+q(3,5)**2)
-        if(rps5.lt.-1.d0)rps=-1.d0
-        if(rps5.gt.+1.d0)rps=+1.d0
-        rpl5=dacos(rps5)
-        arg5=tan(rpl5/2d0)
-        if(arg5.le.0.d0)arg5=1.d-9
-        eta5=-log(arg5) ! no cuts on pseudorapidity yet
-
-        rps6=q(3,6)/sqrt(q(1,6)**2+q(2,6)**2+q(3,6)**2)
-        if(rps6.lt.-1.d0)rps=-1.d0
-        if(rps6.gt.+1.d0)rps=+1.d0
-        rpl6=dacos(rps6)
-        arg6=tan(rpl6/2d0)
-        if(arg6.le.0.d0)arg6=1.d-9
-        eta6=-log(arg6) ! no cuts on pseudorapidity yet
-
-        rps7=q(3,7)/sqrt(q(1,7)**2+q(2,7)**2+q(3,7)**2)
-        if(rps7.lt.-1.d0)rps=-1.d0
-        if(rps7.gt.+1.d0)rps=+1.d0
-        rpl7=dacos(rps7)
-        arg7=tan(rpl7/2d0)
-        if(arg7.le.0.d0)arg7=1.d-9
-        eta7=-log(arg7) ! no cuts on pseudorapidity yet
-
-        rps8=q(3,8)/sqrt(q(1,8)**2+q(2,8)**2+q(3,8)**2)
-        if(rps8.lt.-1.d0)rps=-1.d0
-        if(rps8.gt.+1.d0)rps=+1.d0
-        rpl8=dacos(rps8)
-        arg8=tan(rpl8/2d0)
-        if(arg8.le.0.d0)arg8=1.d-9
-        eta8=-log(arg8) ! no cuts on pseudorapidity yet
-      end if
-
-  ! calculate phi's
+  ! Calculate pseudorapidity (eta)
+      do ip=1,ipmax
+        rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
+        if(rps(ip).lt.-1.d0)rps=-1.d0
+        if(rps(ip).gt.+1.d0)rps=+1.d0
+        rpl(ip)=dacos(rps(ip))
+        arg(ip)=tan(rpl(ip)/2d0)
+        if(arg(ip).le.0.d0)arg(ip)=1.d-9
+        eta(ip)=-log(arg(ip))
+      end do
+  ! Calculate azimuthal angle (phi)
       do ip=1,ipmax
         phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
       end do
-
   ! calculate delta phi
       if(ifinal.eq.1)then
         dphi=abs(phi(5)-phi(7))
       end if
-
   ! calculate visible and missing transverse momentum
       if(ifinal.eq.1)then  
         ETvis2=0d0
@@ -704,16 +654,14 @@ c ======================================================================
         end do
         ETvis=sqrt(ETvis2)
         ETmiss=sqrt(ETmiss2) 
-      end if   
-            
-  ! calculate truth level top pair momenta
+      end if            
+  ! calculate truth level top pair momenta in 2to6
       if(ifinal.eq.1)then
         pT356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2
      &           +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
         pT478=sqrt((qcol(1,4)+qcol(1,7)+qcol(1,8))**2
      &           +(qcol(2,4)+qcol(2,7)+qcol(2,8))**2)
       end if
-
   ! calculate rmass
       if(ifinal.eq.0)then
         rmass2=(qcol(4,3)+qcol(4,4))**2
@@ -817,7 +765,6 @@ c ======================================================================
         end do
         trans(10)=sqrt(rMlCT2)
       end if
-
   ! calculate top pseudorapidity     
       if(ifinal.eq.1)then
         rps356=(q(3,3)+q(3,5)+q(3,6))
@@ -830,10 +777,6 @@ c ======================================================================
         arg356=tan(rpl356/2d0)
         if(arg356.le.0.d0)arg356=1.d-9
         eta356=-log(arg356)      
-        if(abs(eta356).gt.ytcut)then
-          fxn=0.d0
-          return
-        end if
 
         rps478=(q(3,4)+q(3,7)+q(3,8))
      &       /sqrt((q(1,4)+q(1,7)+q(1,8))**2
@@ -997,7 +940,21 @@ c ======================================================================
 
         cosfl=cos(fl)
       end if
-! ----------------------------------------------------------------------    
+! ----------------------------------------------------------------------
+! Selections
+  ! Cut on top pT
+      if(ifinal.eq.0)then       
+        if(abs(eta(3)).gt.ytcut)then
+          fxn=0.d0
+          return
+        end if
+      else if(abs(eta356).gt.ytcut)then
+        fxn=0.d0
+        return
+      else
+        continue
+      end if !
+!-----------------------------------------------------------------------    
 ! Matrix elements
   ! Assign 2to2 MadGraph momenta
       if(ifinal.eq.0)then
@@ -1441,9 +1398,10 @@ c ======================================================================
 ! Binning
   ! scale by weight
       hist=fxn*wgt
-      do ip=1,8
+
+      do ip=3,ipmax
         if(m_pT(ip).eq.1)then
-  !   generate distribution in pT       
+  !   generate distribution in pT     
           nbin=int((pT(ip)-pTmin(ip))/pTw(ip))+1
           if(nbin.ge.(ndiv_pT(ip)+1))then
             continue
@@ -1451,6 +1409,28 @@ c ======================================================================
             continue
           else
             fxpT(ip,nbin,it)=fxpT(ip,nbin,it)+hist
+          end if
+        end if
+        if(m_eta(ip).eq.1)then
+  !   generate distribution in eta       
+          nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
+          if(nbin.ge.(ndiv_eta(ip)+1))then
+            continue
+          else if(nbin.lt.1)then
+            continue
+          else
+            fxeta(ip,nbin,it)=fxeta(ip,nbin,it)+hist
+          end if
+        end if
+        if(m_phi(ip).eq.1)then
+  !   generate distribution in phi       
+          nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
+          if(nbin.ge.(ndiv_phi(ip)+1))then
+            continue
+          else if(nbin.lt.1)then
+            continue
+          else
+            fxphi(ip,nbin,it)=fxphi(ip,nbin,it)+hist
           end if
         end if
       end do
@@ -1476,78 +1456,6 @@ c ======================================================================
           continue
         else
           fxpT478(nbin,it)=fxpT478(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta3.eq.1)then
-  !   generate distribution in eta3. 
-        nbin=int((eta3-eta3min)/eta3w)+1
-        if(nbin.ge.(ndiv_eta3+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta3(nbin,it)=fxeta3(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta4.eq.1)then
-  !   generate distribution in eta4. 
-        nbin=int((eta4-eta4min)/eta4w)+1
-        if(nbin.ge.(ndiv_eta4+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta4(nbin,it)=fxeta4(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta5.eq.1)then
-  !   generate distribution in eta5. 
-        nbin=int((eta5-eta5min)/eta5w)+1
-        if(nbin.ge.(ndiv_eta5+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta5(nbin,it)=fxeta5(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta6.eq.1)then
-  !   generate distribution in eta6. 
-        nbin=int((eta6-eta6min)/eta6w)+1
-        if(nbin.ge.(ndiv_eta6+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta6(nbin,it)=fxeta6(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta7.eq.1)then
-  !   generate distribution in eta7. 
-        nbin=int((eta7-eta7min)/eta7w)+1
-        if(nbin.ge.(ndiv_eta7+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta7(nbin,it)=fxeta7(nbin,it)+hist
-        end if
-      end if
-
-      if(m_eta8.eq.1)then
-  !   generate distribution in eta8. 
-        nbin=int((eta8-eta8min)/eta8w)+1
-        if(nbin.ge.(ndiv_eta8+1))then
-          continue
-        else if(nbin.lt.1)then
-          continue
-        else
-          fxeta8(nbin,it)=fxeta8(nbin,it)+hist
         end if
       end if
 

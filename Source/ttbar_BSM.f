@@ -16,7 +16,7 @@
       implicit real*8 (a-h,o-z)
 
   !  LHE format
-  !   Initialization information
+    ! Initialization information
       integer maxpup
       parameter (maxpup=100)
       integer idbmup,pdfgup,pdfsup,idwtup,nprup,lprup 
@@ -24,7 +24,7 @@
       common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
      & idwtup,nprup,xsecup(maxpup),xerrup(maxpup),
      & xmaxup(maxpup),lprup(maxpup)
-  !   Information on each separate event
+    ! Information on each separate event
       integer maxnup
       parameter (maxnup=500)
       integer nup,idprup,idup,istup,mothup,icolup
@@ -43,7 +43,7 @@
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifinal
+      common/final/ifinal,ipmax
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -76,6 +76,11 @@
       common/dist_pT/xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
       common/inp_pT/m_pT(8)
       common/div_pT/ndiv_pT(8)
+  !   Distributions in etas of external particles
+      common/ext_eta/etamax(8),etamin(8),etaw(8)
+      common/dist_eta/xeta(8,500),fxeta(8,500,20),fxetatot(8,500)
+      common/inp_eta/m_eta(8)
+      common/div_eta/ndiv_eta(8)
   !   Distributions in phis of external particles
       common/ext_phi/phimax(8),phimin(8),phiw(8)
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
@@ -96,36 +101,6 @@
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
       common/inp_ETmiss/m_ETmiss
       common/div_ETmiss/ndiv_ETmiss
-  !   Distribution in eta of the top / bottom
-      common/ext_eta3/eta3max,eta3min,eta3w
-      common/dist_eta3/xeta3(500),fxeta3(500,20),fxeta3tot(500)
-      common/inp_eta3/m_eta3
-      common/div_eta3/ndiv_eta3
-  !   Distribution in eta of the anti-top / bottom
-      common/ext_eta4/eta4max,eta4min,eta4w
-      common/dist_eta4/xeta4(500),fxeta4(500,20),fxeta4tot(500)
-      common/inp_eta4/m_eta4
-      common/div_eta4/ndiv_eta4
-  !   Distribution in eta of the anti-leetaon
-      common/ext_eta5/eta5max,eta5min,eta5w
-      common/dist_eta5/xeta5(500),fxeta5(500,20),fxeta5tot(500)
-      common/inp_eta5/m_eta5
-      common/div_eta5/ndiv_eta5
-  !   Distribution in eta of the neutrino
-      common/ext_eta6/eta6max,eta6min,eta6w
-      common/dist_eta6/xeta6(500),fxeta6(500,20),fxeta6tot(500)
-      common/inp_eta6/m_eta6
-      common/div_eta6/ndiv_eta6
-  !   Distribution in eta of the leetaon
-      common/ext_eta7/eta7max,eta7min,eta7w
-      common/dist_eta7/xeta7(500),fxeta7(500,20),fxeta7tot(500)
-      common/inp_eta7/m_eta7
-      common/div_eta7/ndiv_eta7
-  !   Distribution in eta of the anti-neutrino
-      common/ext_eta8/eta8max,eta8min,eta8w
-      common/dist_eta8/xeta8(500),fxeta8(500,20),fxeta8tot(500)
-      common/inp_eta8/m_eta8
-      common/div_eta8/ndiv_eta8
   !   Distribution in eta of the top
       common/ext_eta356/eta356max,eta356min,eta356w
       common/dist_eta356/xeta356(500),fxeta356(500,20),fxeta356tot(500)
@@ -198,7 +173,7 @@
       dimension snorm(6)  !,ave(4) 
       dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
       dimension asytot(5,-1:1),asychi(5,-1:1)
-      dimension sfxpTtot(8)
+      dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8)
       dimension sfxsigptot(8),sfxsigmtot(8)
       dimension asym_int(8)
       dimension Atot(8),Atoterr(8)
@@ -270,19 +245,28 @@
   !   !   Manually sum over costheta
   !       read(5,*) isycost
 
-  ! Modify config
-  !   NWA only for six-body final state.
-      if(ifinal.eq.0) iNWA=0
-  !   itmx no more than 20.      
-      if(itmx.gt.20)then
-        write(*,*)'itmx does not have to exceed 20  !'
+  ! Interpret config
+    ! Number of external lines
+      if(ifinal.eq.0)then 
+        ipmax=4
+      else if(ifinal.eq.1)then 
+        ipmax=8
+      else 
+        write(*,*)'Invalid final state identifier!'
         stop
       end if
-  !   No event weighting for *true* event generation
+    ! NWA only for six-body final state
+      if(ifinal.eq.0) iNWA=0
+    ! itmx no more than 20.      
+      if(itmx.gt.20)then
+        write(*,*)'itmx does not have to exceed 20!'
+        stop
+      end if
+    ! No event weighting for *true* event generation
       if(ilhe.eq.1)then
         itmx=1
       end if
-  !   Extract model filename (Remove white space.)
+    ! Extract model filename (Remove white space.)
       imodel = len(model)
       do while(model(imodel:imodel).eq.'') 
         imodel = imodel-1
@@ -311,16 +295,21 @@
 ! Distributions Setup
   ! (Set flags, binning range and divisions.)
   ! pT distributions
-      do i=1,8
-        m_pT(i)=idist
-        pTmax(i)=7000.d0/(1+icoll*6)
-        pTmin(i)=0.d0
-        ndiv_pT(i)=175
+      do ip=1,ipmax
+        m_pT(ip)=idist
+        pTmax(ip)=7000.d0/(1+icoll*6)
+        pTmin(ip)=0.d0
+        ndiv_pT(ip)=175
+  ! eta distributions
+        m_eta(ip)=idist
+        etamax(ip)=+10
+        etamin(ip)=-10
+        ndiv_eta(ip)=50
   ! phi distributions
-        m_phi(i)=idist
-        phimax(i)=2*pi
-        phimin(i)=0.d0
-        ndiv_phi(i)=100
+        m_phi(ip)=idist
+        phimax(ip)=+pi
+        phimin(ip)=-pi
+        ndiv_phi(ip)=100
       end do
   !   missing transverse momentum
       m_ETmiss=idist
@@ -337,42 +326,12 @@
       pT478max=7000.d0/(1+icoll*6)
       pT478min=0.d0
       ndiv_pT478=175
-  !   top/bottom pseudorapidity
-      m_eta3=idist
-      eta3max=+10
-      eta3min=-10
-      ndiv_eta3=50
-  !   anti-top/bottom pseudorapidity
-      m_eta4=idist
-      eta4max=+10
-      eta4min=-10
-      ndiv_eta4=50
-  !   anti-leetaon pseudorapidity
-      m_eta5=idist
-      eta5max=+10
-      eta5min=-10
-      ndiv_eta5=50
-  !   neutrino pseudorapidity
-      m_eta6=idist
-      eta6max=+10
-      eta6min=-10
-      ndiv_eta6=50
-  !   lepton pseudorapidity
-      m_eta7=idist
-      eta7max=+10
-      eta7min=-10
-      ndiv_eta7=50
-  !   neutrino pseudorapidity
-      m_eta8=idist
-      eta8max=+10
-      eta8min=-10
-      ndiv_eta8=50
-  !   top pseudorapidity
+  !   2to6 top pseudorapidity
       m_eta356=idist
       eta356max=+10
       eta356min=-10
       ndiv_eta356=50
-  !   anti-top pseudorapidity
+  !   2to6 anti-top pseudorapidity
       m_eta478=idist
       eta478max=+10
       eta478min=-10
@@ -471,14 +430,11 @@
 
   !   Turn off 2->6 only distributions
       if (ifinal.eq.0)then
-        do i=5,8
+        do ip=5,8
           m_pT(i)   = 0
+          m_eta(i)  = 0
           m_phi(i)  = 0
         end do
-        m_eta5   = 0
-        m_eta6   = 0
-        m_eta7   = 0
-        m_eta8   = 0
         m_pT356  = 0
         m_eta356 = 0
         m_pT478  = 0
@@ -657,14 +613,33 @@
 ! Generate bins
   ! (Finds bin width, finds midpoints.)
 
-      do i=1,8
-        if(m_pT(i).eq.1)then
-          pTw(i)=(pTmax(i)-pTmin(i))/ndiv_pT(i)
-          do j=1,ndiv_pT(i)
-            xpT(i,j)=pTmin(i)+pTw(i)*(j-1)+pTw(i)/2.d0
+      do ip=3,ipmax
+        if(m_pT(ip).eq.1)then
+          pTw(ip)=(pTmax(ip)-pTmin(ip))/ndiv_pT(ip)
+          do j=1,ndiv_pT(ip)
+            xpT(ip,j)=pTmin(ip)+pTw(ip)*(j-1)+pTw(ip)/2.d0
+          end do
+        end if
+        if(m_eta(ip).eq.1)then
+          etaw(ip)=(etamax(ip)-etamin(ip))/ndiv_eta(ip)
+          do j=1,ndiv_eta(ip)
+            xeta(ip,j)=etamin(ip)+etaw(ip)*(j-1)+etaw(ip)/2.d0
+          end do
+        end if
+        if(m_phi(ip).eq.1)then
+          phiw(ip)=(phimax(ip)-phimin(ip))/ndiv_phi(ip)
+          do j=1,ndiv_phi(ip)
+            xphi(ip,j)=phimin(ip)+phiw(ip)*(j-1)+phiw(ip)/2.d0
           end do
         end if
       end do
+
+      if(m_ETmiss.eq.1)then
+        ETmissw=(ETmissmax-ETmissmin)/ndiv_ETmiss
+        do i=1,ndiv_ETmiss
+          xETmiss(i)=ETmissmin+ETmissw*(i-1)+ETmissw/2.d0
+        end do
+      end if
 
       if(m_pT356.eq.1)then
         pT356w=(pT356max-pT356min)/ndiv_pT356
@@ -678,56 +653,7 @@
         do i=1,ndiv_pT478
           xpT478(i)=pT478min+pT478w*(i-1)+pT478w/2.d0
         end do
-      end if
-
-      if(m_ETmiss.eq.1)then
-        ETmissw=(ETmissmax-ETmissmin)/ndiv_ETmiss
-        do i=1,ndiv_ETmiss
-          xETmiss(i)=ETmissmin+ETmissw*(i-1)+ETmissw/2.d0
-        end do
-      end if
-
-      if(m_eta3.eq.1)then
-        eta3w=(eta3max-eta3min)/ndiv_eta3
-        do i=1,ndiv_eta3
-          xeta3(i)=eta3min+eta3w*(i-1)+eta3w/2.d0
-        end do
-      end if
-
-      if(m_eta4.eq.1)then
-        eta4w=(eta4max-eta4min)/ndiv_eta4
-        do i=1,ndiv_eta4
-          xeta4(i)=eta4min+eta4w*(i-1)+eta4w/2.d0
-        end do
-      end if
-
-      if(m_eta5.eq.1)then
-        eta5w=(eta5max-eta5min)/ndiv_eta5
-        do i=1,ndiv_eta5
-          xeta5(i)=eta5min+eta5w*(i-1)+eta5w/2.d0
-        end do
-      end if
-
-      if(m_eta6.eq.1)then
-        eta6w=(eta6max-eta6min)/ndiv_eta6
-        do i=1,ndiv_eta6
-          xeta6(i)=eta6min+eta6w*(i-1)+eta6w/2.d0
-        end do
-      end if
-
-      if(m_eta7.eq.1)then
-        eta7w=(eta7max-eta7min)/ndiv_eta7
-        do i=1,ndiv_eta7
-          xeta7(i)=eta7min+eta7w*(i-1)+eta7w/2.d0
-        end do
-      end if
-
-      if(m_eta8.eq.1)then
-        eta8w=(eta8max-eta8min)/ndiv_eta8
-        do i=1,ndiv_eta8
-          xeta8(i)=eta8min+eta8w*(i-1)+eta7w/2.d0
-        end do
-      end if
+      end if      
 
       if(m_eta356.eq.1)then
         eta356w=(eta356max-eta356min)/ndiv_eta356
@@ -1118,13 +1044,11 @@
   ! Section header
       write(*,*)'-----------------------------------------------------'
       write(*,*)'HISTOGRAMS'
+      do ip=3,8
   ! Plot distributions in pT
-      do ip=1,8
-        if(m_pT(ip).eq.0)then
-          continue
-        else        
+        if(m_pT(ip).eq.1)then        
           sfxpTtot(ip)=0d0
-          do j=1,ndiv_sigpT
+          do j=1,ndiv_pT(ip)
             fxpTtot(ip,j)=0.d0
             do i=1,it
               fxpT(ip,j,i)=fxpT(ip,j,i)*avgi/cnorm(i)/pTw(ip)
@@ -1140,9 +1064,70 @@
             write(*,*)xpT(ip,i),fxpTtot(ip,i)
           end do
           write(*,*)'END'
-          write(*,*)'(Integrated cross-section:',sfxpTtot(ip),')'
+        end if
+  ! Plot distributions in eta
+        if(m_eta(ip).eq.1)then
+          sfxetatot(ip)=0d0
+          do j=1,ndiv_eta(ip)
+            fxetatot(ip,j)=0.d0
+            do i=1,it
+              fxeta(ip,j,i)=fxeta(ip,j,i)*avgi/cnorm(i)/etaw(ip)
+              fxetatot(ip,j)=fxetatot(ip,j)+fxeta(ip,j,i)            
+            end do
+            sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
+          end do
+          write(*,*)'HISTOGRAM'
+          write(*,'(A,I1)')'eta',ip
+          write(*,'(A,I1,A)')'d#sigma-/d#eta(',ip,')--[pb]'
+          write(*,'(A,I1,A)')'#eta(',ip,')'          
+          do i=1,ndiv_eta(ip)
+            write(*,*)xeta(ip,i),fxetatot(ip,i)
+          end do
+          write(*,*)'END'
+        end if
+  ! Plot distributions in phi        
+        if(m_phi(ip).eq.1)then
+          sfxphitot(ip)=0d0
+          do j=1,ndiv_phi(ip)
+            fxphitot(ip,j)=0.d0
+            do i=1,it
+              fxphi(ip,j,i)=fxphi(ip,j,i)*avgi/cnorm(i)/phiw(ip)
+              fxphitot(ip,j)=fxphitot(ip,j)+fxphi(ip,j,i)            
+            end do
+            sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
+          end do
+          write(*,*)'HISTOGRAM'
+          write(*,'(A,I1)')'phi',ip
+          write(*,'(A,I1,A)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
+          write(*,'(A,I1,A)')'#phi(',ip,')--[rad]'          
+          do i=1,ndiv_phi(ip)
+            write(*,*)xphi(ip,i),fxphitot(ip,i)
+          end do
+          write(*,*)'END'
         end if
       end do
+  
+  ! Plot distribution in ETmiss
+      if(m_ETmiss.eq.1)then
+        sfxETmisstot=0d0
+        do j=1,ndiv_ETmiss
+          fxETmisstot(j)=0.d0
+          do i=1,it
+            fxETmiss(j,i)=fxETmiss(j,i)*avgi/cnorm(i)/ETmissw
+            fxETmisstot(j)=fxETmisstot(j)+fxETmiss(j,i)            
+          end do
+          sfxETmisstot=sfxETmisstot+fxETmisstot(j)*ETmissw
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'ETmiss'
+        write(*,*)'d#sigma-/dp_{Tmiss}--[pb/GeV]'
+        write(*,*)'p_{T}(miss)--[GeV]'
+        do i=1,ndiv_ETmiss
+          write(*,*)xETmiss(i),fxETmisstot(i)
+        end do
+        write(*,*)'END'
+      end if
+
   ! Plot distribution in pT356
       if(m_pT356.eq.1)then
         sfxpT356tot=0d0
@@ -1164,8 +1149,7 @@
         write(*,*)'END'
       end if
   ! Plot distribution in pT478
-      if(m_pT478.eq.1)then
-  
+      if(m_pT478.eq.1)then  
         sfxpT478tot=0d0
         do j=1,ndiv_pT478
           fxpT478tot(j)=0.d0
@@ -1184,154 +1168,7 @@
         end do
         write(*,*)'END'
       end if      
-  ! Plot distribution in ETmiss
-      if(m_ETmiss.eq.1)then
-        sfxETmisstot=0d0
-        do j=1,ndiv_ETmiss
-          fxETmisstot(j)=0.d0
-          do i=1,it
-            fxETmiss(j,i)=fxETmiss(j,i)*avgi/cnorm(i)/ETmissw
-            fxETmisstot(j)=fxETmisstot(j)+fxETmiss(j,i)            
-          end do
-          sfxETmisstot=sfxETmisstot+fxETmisstot(j)*ETmissw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'ETmiss'
-        write(*,*)'d#sigma-/dp_{Tmiss}--[pb/GeV]'
-        write(*,*)'p_{T}(miss)--[GeV]'
-        do i=1,ndiv_ETmiss
-          write(*,*)xETmiss(i),fxETmisstot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta3
-      if(m_eta3.eq.1)then
-
-        sfxeta3tot=0d0
-        do j=1,ndiv_eta3
-          fxeta3tot(j)=0.d0
-          do i=1,it
-            fxeta3(j,i)=fxeta3(j,i)*avgi/cnorm(i)/eta3w
-            fxeta3tot(j)=fxeta3tot(j)+fxeta3(j,i)            
-          end do
-          sfxeta3tot=sfxeta3tot+fxeta3tot(j)*eta3w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta3'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        if(ifinal.eq.0) write(*,*)'#eta(t)'
-        if(ifinal.eq.1) write(*,*)'#eta(b)'
-        do i=1,ndiv_eta3
-          write(*,*)xeta3(i),fxeta3tot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta4
-      if(m_eta4.eq.1)then
-
-        sfxeta4tot=0d0
-        do j=1,ndiv_eta4
-          fxeta4tot(j)=0.d0
-          do i=1,it
-            fxeta4(j,i)=fxeta4(j,i)*avgi/cnorm(i)/eta4w
-            fxeta4tot(j)=fxeta4tot(j)+fxeta4(j,i)            
-          end do
-          sfxeta4tot=sfxeta4tot+fxeta4tot(j)*eta4w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta4'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        if(ifinal.eq.0)write(*,*)'#eta(#bar{t})'
-        if(ifinal.eq.1)write(*,*)'#eta(#bar{b})'
-        do i=1,ndiv_eta4
-          write(*,*)xeta4(i),fxeta4tot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta5
-      if(m_eta5.eq.1)then
-
-        sfxeta5tot=0d0
-        do j=1,ndiv_eta5
-          fxeta5tot(j)=0.d0
-          do i=1,it
-            fxeta5(j,i)=fxeta5(j,i)*avgi/cnorm(i)/eta5w
-            fxeta5tot(j)=fxeta5tot(j)+fxeta5(j,i)            
-          end do
-          sfxeta5tot=sfxeta5tot+fxeta5tot(j)*eta5w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta5'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        write(*,*)'#eta(l^{+})'
-        do i=1,ndiv_eta5
-          write(*,*)xeta5(i),fxeta5tot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta6
-      if(m_eta6.eq.1)then
-
-        sfxeta6tot=0d0
-        do j=1,ndiv_eta6
-          fxeta6tot(j)=0.d0
-          do i=1,it
-            fxeta6(j,i)=fxeta6(j,i)*avgi/cnorm(i)/eta6w
-            fxeta6tot(j)=fxeta6tot(j)+fxeta6(j,i)            
-          end do
-          sfxeta6tot=sfxeta6tot+fxeta6tot(j)*eta6w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta6'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        write(*,*)'#eta(#bar{#nu})'
-        do i=1,ndiv_eta6
-          write(*,*)xeta6(i),fxeta6tot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta7
-      if(m_eta7.eq.1)then
-
-        sfxeta7tot=0d0
-        do j=1,ndiv_eta7
-          fxeta7tot(j)=0.d0
-          do i=1,it
-            fxeta7(j,i)=fxeta7(j,i)*avgi/cnorm(i)/eta7w
-            fxeta7tot(j)=fxeta7tot(j)+fxeta7(j,i)            
-          end do
-          sfxeta7tot=sfxeta7tot+fxeta7tot(j)*eta7w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta7'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        write(*,*)'#eta(l^{-})'
-        do i=1,ndiv_eta7
-          write(*,*)xeta7(i),fxeta7tot(i)
-        end do
-        write(*,*)'END'
-      end if
-  ! Plot distribution in eta8
-      if(m_eta8.eq.1)then
-
-        sfxeta8tot=0d0
-        do j=1,ndiv_eta8
-          fxeta8tot(j)=0.d0
-          do i=1,it
-            fxeta8(j,i)=fxeta8(j,i)*avgi/cnorm(i)/eta8w
-            fxeta8tot(j)=fxeta8tot(j)+fxeta8(j,i)            
-          end do
-          sfxeta8tot=sfxeta8tot+fxeta8tot(j)*eta8w
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'eta8'
-        write(*,*)'d#sigma-/d#eta--[pb]'
-        write(*,*)'#eta(#bar{#nu})'
-        do i=1,ndiv_eta8
-          write(*,*)xeta8(i),fxeta8tot(i)
-        end do
-        write(*,*)'END'
-      end if
+  
   ! Plot distribution in eta356
       if(m_eta356.eq.1)then
 
@@ -1645,93 +1482,77 @@
 ! Check distributions
       diff_max=1E-12
       n_error=0
+      do ip=3,ipmax
+        if(m_pT(ip).eq.1)then
+          if(abs(cross-sfxpTtot(ip))>diff_max)then
+            write(*,*)'pT',ip,' Error:',sfxpTtot(ip)
+            n_error=n_error+1
+          end if
+        end if
+        if(m_eta(ip).eq.1)then
+          if(abs(cross-sfxetatot(ip))>diff_max)then
+            write(*,*)'eta',ip,' Error:',sfxetatot(ip)
+            n_error=n_error+1
+          end if
+        end if
+        if(m_phi(ip).eq.1)then
+          if(abs(cross-sfxphitot(ip))>diff_max)then
+            write(*,*)'phi',ip,' Error:',sfxphitot(ip)
+            n_error=n_error+1
+          end if
+        end if
+      end do
       if(m_pT356.eq.1)then
         if(abs(cross-sfxpT356tot)>diff_max)then
-          write(*,*)'pT356 Integration Error:',sfxpT356tot
+          write(*,*)'pT356 Error:',sfxpT356tot
           n_error=n_error+1
         end if
       end if
       if(m_pT478.eq.1)then
         if(abs(cross-sfxpT478tot)>diff_max)then
-          write(*,*)'pT478 Integration Error:',sfxpT478tot
+          write(*,*)'pT478 Error:',sfxpT478tot
           n_error=n_error+1
         end if
       end if
       if(m_ETmiss.eq.1)then
         if(abs(cross-sfxETmisstot)>diff_max)then
-          write(*,*)'ETmiss Integration Error:',sfxETmisstot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta3.eq.1)then
-        if(abs(cross-sfxeta3tot)>diff_max)then
-          write(*,*)'eta3 Integration Error:',sfxeta3tot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta4.eq.1)then
-        if(abs(cross-sfxeta4tot)>diff_max)then
-          write(*,*)'eta4 Integration Error:',sfxeta4tot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta5.eq.1)then
-        if(abs(cross-sfxeta5tot)>diff_max)then
-          write(*,*)'eta5 Integration Error:',sfxeta5tot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta6.eq.1)then
-        if(abs(cross-sfxeta6tot)>diff_max)then
-          write(*,*)'eta6 Integration Error:',sfxeta6tot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta7.eq.1)then
-        if(abs(cross-sfxeta7tot)>diff_max)then
-          write(*,*)'eta7 Integration Error:',sfxeta7tot
-          n_error=n_error+1
-        end if
-      end if
-      if(m_eta8.eq.1)then
-        if(abs(cross-sfxeta8tot)>diff_max)then
-          write(*,*)'eta8 Integration Error:',sfxeta8tot
+          write(*,*)'ETmiss Error:',sfxETmisstot
           n_error=n_error+1
         end if
       end if
       if(m_rmass.eq.1)then
         if(abs(cross-sfxrmasstot)>diff_max)then
-          write(*,*)'rmass Integration Error:',sfxrmasstot
+          write(*,*)'rmass Error:',sfxrmasstot
           n_error=n_error+1
         end if
       end if
       if(m_beta.eq.1)then
         if(abs(cross-sfxbetatot)>diff_max*10)then
-          write(*,*)'beta Integration Error:',sfxbetatot
+          write(*,*)'beta Error:',sfxbetatot
           n_error=n_error+1
         end if
       end if
       if(m_cost.eq.1)then
         if(abs(cross-sfxcosttot)>diff_max)then
-          write(*,*)'cost Integration Error:',sfxcosttot
+          write(*,*)'cost Error:',sfxcosttot
           n_error=n_error+1
         end if
       end if
       if(m_Et.eq.1)then
         if(abs(cross-sfxEttot)>diff_max)then
-          write(*,*)'Et Integration Error:',sfxEttot
+          write(*,*)'Et Error:',sfxEttot
           n_error=n_error+1
         end if
       end if
       if(m_fl.eq.1)then
         if(abs(cross-sfxfltot)>diff_max)then
-          write(*,*)'fl Integration Error:',sfxfltot
+          write(*,*)'fl Error:',sfxfltot
           n_error=n_error+1
         end if
       end if
       if(m_cosfl.eq.1)then
         if(abs(cross-sfxcosfltot)>diff_max)then
-          write(*,*)'cosfl Integration Error:',sfxcosfltot
+          write(*,*)'cosfl Error:',sfxcosfltot
           n_error=n_error+1
         end if
       end if
@@ -1740,7 +1561,7 @@
           continue
         else
           if(abs(Atot(iasy)-asym_int(iasy))>diff_max)then
-            write(*,*)'A Integration Error:',iasy,asym_int(iasy)
+            write(*,*)'A Error:',iasy,asym_int(iasy)
             n_error=n_error+1
           end if
         end if
