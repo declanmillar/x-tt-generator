@@ -944,171 +944,174 @@
         write(*,*)cross,error
         write(*,*)'(using ',npoints,' points)'
       end if
+  ! Re-weight distributions for different iterations     
+      stantot=0.d0
+        do i=1,it
+          stantot=stantot+1.d0/standdevl(i)/standdevl(i)
+        end do
+        do i=1,it
+          standdevl(i)=standdevl(i)*standdevl(i)*stantot
+        end do
+        do i=1,it
+          cnorm(i)=resl(i)*standdevl(i)
+        end do
 ! ----------------------------------------------------------------------
 ! Total asymmetries
-  ! Re-weight distributions for different iterations      
-      stantot=0.d0
-      do i=1,it
-        stantot=stantot+1.d0/standdevl(i)/standdevl(i)
-      end do
-      do i=1,it
-        standdevl(i)=standdevl(i)*standdevl(i)*stantot
-      end do
-      do i=1,it
-        cnorm(i)=resl(i)*standdevl(i)
-      end do
-
-      if(ifinal.eq.0)then  
   ! Collect polarised cross sections.
-        do iphel=-1,+1,2
-          do jphel=-1,+1,2
-            do i=1,it
-              polcross(i,iphel,jphel)=polcross(i,iphel,jphel)
+      if(iadist.eq.1)then
+        if(ifinal.eq.0)then  
+    
+          do iphel=-1,+1,2
+            do jphel=-1,+1,2
+              do i=1,it
+                polcross(i,iphel,jphel)=polcross(i,iphel,jphel)
      &                               *avgi/cnorm(i)
-              polerror(i,iphel,jphel)=polcross(i,iphel,jphel)
+                polerror(i,iphel,jphel)=polcross(i,iphel,jphel)
      &                               *sd/cnorm(i)
-            end do
-            poltot(iphel,jphel)=0.d0
-            polchi(iphel,jphel)=0.d0
-            do i=1,it
-              poltot(iphel,jphel)=poltot(iphel,jphel)
+              end do
+              poltot(iphel,jphel)=0.d0
+              polchi(iphel,jphel)=0.d0
+              do i=1,it
+                poltot(iphel,jphel)=poltot(iphel,jphel)
      &                       +polcross(i,iphel,jphel)
-              polchi(iphel,jphel)=polchi(iphel,jphel)
+                polchi(iphel,jphel)=polchi(iphel,jphel)
      &                       +polerror(i,iphel,jphel)
-            end do
-            polchi(iphel,jphel)=polchi(iphel,jphel)
+              end do
+              polchi(iphel,jphel)=polchi(iphel,jphel)
      &                         /poltot(iphel,jphel)
-  !          polchi(iphel,jphel)=
-  !     & sqrt(abs(polchi(iphel,jphel)
-  !     &         -poltot(iphel,jphel)**2*dfloat(ncall)))
-  !     & /dfloat(ncall)
-          end do
-        end do
-      end if
-
-  ! Collect unpolarised spatial asymmetry
-      do iasy=1,5   ! nasy-3
-  !         write(*,*)iasy,m_asy(iasy+3)
-        if(m_asy(iasy+3).eq.0)then
-          continue
-        else
-          do iAB=-1,+1,2
-            do i=1,it
-              asycross(iasy,i,iAB)=asycross(iasy,i,iAB)
-     &                            *avgi/cnorm(i)
-              asyerror(iasy,i,iAB)=asycross(iasy,i,iAB)
-     &                            *sd/cnorm(i)
-              write(*,*)asycross(iasy,i,iAB)
-            end do        
-            asytot(iasy,iAB)=0.d0
-            asychi(iasy,iAB)=0.d0
-            do i=1,it   ! add up each iteration
-              asytot(iasy,iAB)=asytot(iasy,iAB)
-     &                      +asycross(iasy,i,iAB)
-              asychi(iasy,iAB)=asychi(iasy,iAB)
-     &                      +asyerror(iasy,i,iAB)
+    !          polchi(iphel,jphel)=
+    !   & sqrt(abs(polchi(iphel,jphel)
+    !   &         -poltot(iphel,jphel)**2*dfloat(ncall)))
+    !   & /dfloat(ncall)
             end do
-  !             write(*,*)'bork1011'
-            asychi(iasy,iAB)=asychi(iasy,iAB)
-     &                        /asytot(iasy,iAB)
-  !             write(*,*)'bork1014'
-  !           asychi(iasy)=
-  !        & sqrt(abs(asychi(iasy)
-  !        &         -asytot(iasy)**2*dfloat(ncall)))
-  !        & /dfloat(ncall)
           end do
         end if
-      end do
 
-  ! Define asymmetries
-      if(ifinal.eq.0)then
-  ! ALL
-        Atot(1)=
+    ! Collect unpolarised spatial asymmetry
+        do iasy=1,5   ! nasy-3
+    !         write(*,*)iasy,m_asy(iasy+3)
+          if(m_asy(iasy+3).eq.0)then
+            continue
+          else
+            do iAB=-1,+1,2
+              do i=1,it
+                asycross(iasy,i,iAB)=asycross(iasy,i,iAB)
+     &                            *avgi/cnorm(i)
+                asyerror(iasy,i,iAB)=asycross(iasy,i,iAB)
+     &                            *sd/cnorm(i)
+                write(*,*)asycross(iasy,i,iAB)
+              end do        
+              asytot(iasy,iAB)=0.d0
+              asychi(iasy,iAB)=0.d0
+              do i=1,it   ! add up each iteration
+                asytot(iasy,iAB)=asytot(iasy,iAB)
+     &                      +asycross(iasy,i,iAB)
+                asychi(iasy,iAB)=asychi(iasy,iAB)
+     &                      +asyerror(iasy,i,iAB)
+              end do
+    !             write(*,*)'bork1011'
+              asychi(iasy,iAB)=asychi(iasy,iAB)
+     &                        /asytot(iasy,iAB)
+    !             write(*,*)'bork1014'
+    !           asychi(iasy)=
+    !      & sqrt(abs(asychi(iasy)
+    !      &         -asytot(iasy)**2*dfloat(ncall)))
+    !      & /dfloat(ncall)
+            end do
+          end if
+        end do
+
+    ! Define asymmetries
+        if(ifinal.eq.0)then
+    ! ALL
+          Atot(1)=
      &          +(poltot(+1,+1)-poltot(+1,-1)
      &           -poltot(-1,+1)+poltot(-1,-1))
      &          /cross
-        Atoterr(1)=
+          Atoterr(1)=
      &             +(polchi(+1,+1)+polchi(+1,-1)
      &              +polchi(-1,+1)+polchi(-1,-1))
      &             /4.d0*Atot(1)
-  ! AL
-        Atot(2)=
+    ! AL
+          Atot(2)=
      &          +(poltot(-1,-1)-poltot(+1,-1) 
      &           +poltot(-1,+1)-poltot(+1,+1))
      &          /cross
-        Atoterr(2)=
+          Atoterr(2)=
      &            +(polchi(-1,-1)+polchi(+1,-1) 
      &             +polchi(-1,+1)+polchi(+1,+1))
      &            /4.d0*Atot(2)
-  ! APV
-        Atot(3)=
+    ! APV
+          Atot(3)=
      &          +(poltot(-1,-1)-poltot(+1,+1))
      &          /cross/2.d0
-        Atoterr(3)=
+          Atoterr(3)=
      &             +(polchi(-1,-1)+polchi(+1,+1))
      &             /2.d0*Atot(3)
-      end if
-  ! AFBcm
-      Atot(4)=
+        end if
+    ! AFBcm
+        Atot(4)=
      &          +(asytot(1,+1)-asytot(1,-1))
      &          /cross
-        Atoterr(4)=
+          Atoterr(4)=
      &            +sd/avgi*Atot(4)
-  ! AtFB
-      Atot(5)=
+    ! AtFB
+        Atot(5)=
      &          +(asytot(2,+1)-asytot(2,-1))
      &          /cross
-      Atoterr(5)=
+        Atoterr(5)=
      &            +sd/avgi*Atot(5)
 
-      if(m_asy(6).gt.0)then
-  ! A
-        Atot(6)=
+        if(m_asy(6).gt.0)then
+    ! A
+          Atot(6)=
      &          +(asytot(3,+1)-asytot(3,-1))
      &          /cross
-        Atoterr(6)=
+          Atoterr(6)=
      &            +sd/avgi*Atot(6)
-      end if
+        end if
 
-      if(m_asy(7).gt.0)then
-  ! A'
-        Atot(7)=
+        if(m_asy(7).gt.0)then
+    ! A'
+          Atot(7)=
      &          +(asytot(4,+1)-asytot(4,-1))
      &          /cross
-        Atoterr(7)=
+          Atoterr(7)=
      &            +sd/avgi*Atot(7)
-      end if
+        end if
 
-      
-      if(m_asy(8).gt.0)then
-  ! A_l
-        Atot(8)=
+        
+        if(m_asy(8).gt.0)then
+    ! A_l
+          Atot(8)=
      &          +(asytot(5,+1)-asytot(5,-1))
      &          /cross
-        Atoterr(8)=
+          Atoterr(8)=
      &            +sd/avgi*Atot(8)
-      end if
+        end if
+      
 
   ! Print Asymmetries     
-      write(*,*)'TOTAL ASYMMETRIES'
-      if(ifinal.eq.0)then
-        write(*,*)'ALL:                  uncertainty (same units):'
-        write(*,*)Atot(1),Atoterr(1) 
-        write(*,*)'AL:                   uncertainty (same units):'
-        write(*,*)Atot(2),Atoterr(2) 
-        write(*,*)'APV:                  uncertainty (same units):'
-        write(*,*)Atot(3),Atoterr(3) 
-        write(*,*)'AFB*:                 uncertainty (same units):'
-        write(*,*)Atot(4),Atoterr(4)
-        write(*,*)'AtFB:                    uncertainty (same units):'
-        write(*,*)Atot(5),Atoterr(5)
-        write(*,*)'A:                    uncertainty (same units):'
-        write(*,*)Atot(6),Atoterr(6)
-        write(*,*)"A':                    uncertainty (same units):"
-        write(*,*)Atot(7),Atoterr(7)
-      else if(ifinal.gt.0)then
-        write(*,*)'A_l:                  uncertainty (same units):'
-        write(*,*)Atot(6),Atoterr(6) 
+        write(*,*)'TOTAL ASYMMETRIES'
+        if(ifinal.eq.0)then
+          write(*,*)'ALL:                  uncertainty (same units):'
+          write(*,*)Atot(1),Atoterr(1) 
+          write(*,*)'AL:                   uncertainty (same units):'
+          write(*,*)Atot(2),Atoterr(2) 
+          write(*,*)'APV:                  uncertainty (same units):'
+          write(*,*)Atot(3),Atoterr(3) 
+          write(*,*)'AFB*:                 uncertainty (same units):'
+          write(*,*)Atot(4),Atoterr(4)
+          write(*,*)'AtFB:                    uncertainty (same units):'
+          write(*,*)Atot(5),Atoterr(5)
+          write(*,*)'A:                    uncertainty (same units):'
+          write(*,*)Atot(6),Atoterr(6)
+          write(*,*)"A':                    uncertainty (same units):"
+          write(*,*)Atot(7),Atoterr(7)
+        else if(ifinal.gt.0)then
+          write(*,*)'A_l:                  uncertainty (same units):'
+          write(*,*)Atot(6),Atoterr(6) 
+        end if
       end if
 ! ----------------------------------------------------------------------
 ! Plot Distributions
@@ -1119,9 +1122,9 @@
       do ip=1,8
         if(m_pT(ip).eq.0)then
           continue
-        else
+        else        
           sfxpTtot(ip)=0d0
-          do j=1,ndiv_sigp
+          do j=1,ndiv_sigpT
             fxpTtot(ip,j)=0.d0
             do i=1,it
               fxpT(ip,j,i)=fxpT(ip,j,i)*avgi/cnorm(i)/pTw(ip)
@@ -1142,7 +1145,6 @@
       end do
   ! Plot distribution in pT356
       if(m_pT356.eq.1)then
-
         sfxpT356tot=0d0
         do j=1,ndiv_pT356
           fxpT356tot(j)=0.d0
