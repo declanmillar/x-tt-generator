@@ -160,6 +160,11 @@
       common/dist_cosfl/xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
       common/inp_cosfl/m_cosfl
       common/div_cosfl/ndiv_cosfl
+  !   Distribution in delta phi
+      common/ext_dphi/dphimax,dphimin,dphiw
+      common/dist_dphi/xdphi(500),fxdphi(500,20),fxdphitot(500)
+      common/inp_dphi/m_dphi
+      common/div_dphi/ndiv_dphi
   !   Distributions in asymmetries
       common/inp_asym/m_asy(8)  ! nasy      
   !   Distribution in sigp
@@ -436,6 +441,11 @@
       cosflmax=+1.d0
       cosflmin=-1.d0
       ndiv_cosfl=100
+  !   delta phi
+      m_dphi=iadist
+      dphimax=+pi
+      dphimin=0
+      ndiv_dphi=100     
   !   sigp
       m_sigp=iadist
       sigpmax=rMttmax
@@ -752,6 +762,13 @@
         cosflw=(cosflmax-cosflmin)/ndiv_cosfl
         do i=1,ndiv_cosfl
           xcosfl(i)=cosflmin+cosflw*(i-1)+cosflw/2.d0
+        end do
+      end if
+
+      if(m_dphi.eq.1)then
+        dphiw=(dphimax-dphimin)/ndiv_dphi
+        do i=1,ndiv_dphi
+          xdphi(i)=dphimin+dphiw*(i-1)+dphiw/2.d0
         end do
       end if
 
@@ -1344,49 +1361,7 @@
           write(*,*)xcost(i),fxcosttot(i)
         end do
         write(*,*)'END'
-      end if
-  ! Plot distribution in fl
-      if(m_fl.eq.1)then
-
-        sfxfltot=0d0
-        do j=1,ndiv_fl
-          fxfltot(j)=0.d0
-          do i=1,it
-            fxfl(j,i)=fxfl(j,i)*avgi/cnorm(i)/flw
-            fxfltot(j)=fxfltot(j)+fxfl(j,i)            
-          end do
-          sfxfltot=sfxfltot+fxfltot(j)*flw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'fl'
-        write(*,*)'d#sigma-/d#phi_{l}--[pb]'
-        write(*,*)'#phi_{l}--[-rad-]'
-        do i=1,ndiv_fl
-          write(*,*)xfl(i),fxfltot(i)
-        end do
-        write(*,*)'END'
       end if 
-  ! Plot distribution in cosfl
-      if(m_cosfl.eq.1)then
-
-        sfxcosfltot=0d0
-        do j=1,ndiv_cosfl
-          fxcosfltot(j)=0.d0
-          do i=1,it
-            fxcosfl(j,i)=fxcosfl(j,i)*avgi/cnorm(i)/cosflw
-            fxcosfltot(j)=fxcosfltot(j)+fxcosfl(j,i)            
-          end do
-          sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
-        end do
-        write(*,*)'HISTOGRAM'
-        write(*,*)'cosfl'
-        write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
-        write(*,*)'cos#phi_{l}'
-        do i=1,ndiv_cosfl
-          write(*,*)xcosfl(i),fxcosfltot(i)
-        end do
-        write(*,*)'END'
-      end if
   ! Plot distribution in Et
       if(m_Et.eq.1)then
 
@@ -1408,6 +1383,8 @@
         end do
         write(*,*)'END'
       end if
+
+
   ! Plot distributions in all transverse variables
       do itrans=1,ntrans
         if(m_trans(itrans).eq.1)then
@@ -1473,6 +1450,67 @@
           write(*,*)'END'
         end if
       end do
+  ! Plot distribution in fl
+      if(m_fl.eq.1)then
+
+        sfxfltot=0d0
+        do j=1,ndiv_fl
+          fxfltot(j)=0.d0
+          do i=1,it
+            fxfl(j,i)=fxfl(j,i)*avgi/cnorm(i)/flw
+            fxfltot(j)=fxfltot(j)+fxfl(j,i)            
+          end do
+          sfxfltot=sfxfltot+fxfltot(j)*flw
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'fl'
+        write(*,*)'d#sigma-/d#phi_{l}--[pb]'
+        write(*,*)'#phi_{l}--[-rad-]'
+        do i=1,ndiv_fl
+          write(*,*)xfl(i),fxfltot(i)
+        end do
+        write(*,*)'END'
+      end if 
+  ! Plot distribution in cosfl
+      if(m_cosfl.eq.1)then
+        sfxcosfltot=0d0
+        do j=1,ndiv_cosfl
+          fxcosfltot(j)=0.d0
+          do i=1,it
+            fxcosfl(j,i)=fxcosfl(j,i)*avgi/cnorm(i)/cosflw
+            fxcosfltot(j)=fxcosfltot(j)+fxcosfl(j,i)            
+          end do
+          sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'cosfl'
+        write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
+        write(*,*)'cos#phi_{l}'
+        do i=1,ndiv_cosfl
+          write(*,*)xcosfl(i),fxcosfltot(i)
+        end do
+        write(*,*)'END'
+      end if
+  ! Plot distribution in delta phi
+      if(m_dphi.eq.1)then
+        sfxdphitot=0d0
+        do j=1,ndiv_dphi
+          fxdphitot(j)=0.d0
+          do i=1,it
+            fxdphi(j,i)=fxdphi(j,i)*avgi/cnorm(i)/dphiw
+            fxdphitot(j)=fxdphitot(j)+fxdphi(j,i)            
+          end do
+          sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'dphi'
+        write(*,*)'d#sigma-/d#Delta#phi--[pb]'
+        write(*,*)'#Delta#phi'
+        do i=1,ndiv_dphi
+          write(*,*)xdphi(i),fxdphitot(i)
+        end do
+        write(*,*)'END'
+      end if
   ! Plot distributions in all asymmetries
       if((m_sigp.eq.1).and.(m_sigm.eq.1))then
         do jasy=1,8
@@ -1646,6 +1684,12 @@
       if(m_cosfl.eq.1)then
         if(abs(cross-sfxcosfltot)>diff_max)then
           write(*,*)'cosfl Error:',sfxcosfltot
+          n_error=n_error+1
+        end if
+      end if
+      if(m_dphi.eq.1)then
+        if(abs(cross-sfxdphitot)>diff_max)then
+          write(*,*)'dphi Error:',sfxdphitot
           n_error=n_error+1
         end if
       end if
