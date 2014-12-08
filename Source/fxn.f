@@ -153,6 +153,11 @@ c ======================================================================
       common/dist_cosfl/xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
       common/inp_cosfl/m_cosfl
       common/div_cosfl/ndiv_cosfl
+  !   Distribution in delta phi
+      common/ext_dphi/dphimax,dphimin,dphiw
+      common/dist_dphi/xdphi(500),fxdphi(500,20),fxdphitot(500)
+      common/inp_dphi/m_dphi
+      common/div_dphi/ndiv_dphi
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
       common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
@@ -1642,6 +1647,18 @@ c ======================================================================
           continue
         else
           fxcosfl(nbin,it)=fxcosfl(nbin,it)+hist
+        end if
+      end if
+
+      if(m_dphi.eq.1)then
+  ! generate distribution in dphi.
+        nbin=int((dphi-dphimin)/dphiw)+1
+        if(nbin.ge.(ndiv_dphi+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxdphi(nbin,it)=fxdphi(nbin,it)+hist
         end if
       end if
 
