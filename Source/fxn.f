@@ -110,10 +110,10 @@ c ======================================================================
       common/inp_phi478/m_phi478
       common/div_phi478/ndiv_phi478 
   !   Distribution in invarient mass of the top pair
-      common/ext_rmass/rmassmax,rmassmin,rmassw
-      common/dist_rmass/xrmass(500),fxrmass(500,20),fxrmasstot(500)
-      common/inp_rmass/m_rmass
-      common/div_rmass/ndiv_rmass
+      common/ext_rMtt/rMttmax,rMttmin,rMttw
+      common/dist_rMtt/xrMtt(500),fxrMtt(500,20),fxrMtttot(500)
+      common/inp_rMtt/m_rMtt
+      common/div_rMtt/ndiv_rMtt
   !   Distribution in invarient mass of all visible decay products
       common/ext_rmvis/rmvismax,rmvismin,rmvisw
       common/dist_rmvis/xrmvis(500),fxrmvis(500,20),fxrmvistot(500)
@@ -706,23 +706,23 @@ c ======================================================================
       else if(ifinal.eq.1)then
         Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
-  ! calculate rmass
+  ! calculate rMtt
       if(ifinal.eq.0)then
-        rmass2=(qcol(4,3)+qcol(4,4))**2
+        rMtt2=(qcol(4,3)+qcol(4,4))**2
         do i=1,3
-          rmass2=rmass2-(qcol(i,3)+qcol(i,4))**2
+          rMtt2=rMtt2-(qcol(i,3)+qcol(i,4))**2
         end do
       else if(ifinal.eq.1)then
-        rmass2=(qcol(4,3)+qcol(4,4)
+        rMtt2=(qcol(4,3)+qcol(4,4)
      &         +qcol(4,5)+qcol(4,6)
      &         +qcol(4,7)+qcol(4,8))**2
         do i=1,3
-          rmass2=rmass2-(qcol(i,3)+qcol(i,4)
+          rMtt2=rMtt2-(qcol(i,3)+qcol(i,4)
      &                  +qcol(i,5)+qcol(i,6)
      &                  +qcol(i,7)+qcol(i,8))**2
         end do
       end if        
-      rmass=sqrt(abs(rmass2))
+      rMtt=sqrt(abs(rMtt2))
   ! calculate invariant mass of visible decay products
       if(m_trans(1).eq.1)then
         rMvis2=(qcol(4,3)+qcol(4,4)
@@ -1559,15 +1559,15 @@ c ======================================================================
         end if
       end if
 
-      if(m_rmass.eq.1)then
-  ! generate distribution in rmass.
-        nbin=int((rmass-rmassmin)/rmassw)+1
-        if(nbin.ge.(ndiv_rmass+1))then
+      if(m_rMtt.eq.1)then
+  ! generate distribution in rMtt.
+        nbin=int((rMtt-rMttmin)/rMttw)+1
+        if(nbin.ge.(ndiv_rMtt+1))then
           continue
         else if(nbin.lt.1)then
           continue
         else
-          fxrmass(nbin,it)=fxrmass(nbin,it)+hist
+          fxrMtt(nbin,it)=fxrMtt(nbin,it)+hist
         end if
       end if
 

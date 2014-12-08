@@ -122,10 +122,10 @@
       common/inp_phi478/m_phi478
       common/div_phi478/ndiv_phi478     
   !   Distribution in invarient mass of the top pair
-      common/ext_rmass/rmassmax,rmassmin,rmassw
-      common/dist_rmass/xrmass(500),fxrmass(500,20),fxrmasstot(500)
-      common/inp_rmass/m_rmass
-      common/div_rmass/ndiv_rmass
+      common/ext_rMtt/rMttmax,rMttmin,rMttw
+      common/dist_rMtt/xrMtt(500),fxrMtt(500,20),fxrMtttot(500)
+      common/inp_rMtt/m_rMtt
+      common/div_rMtt/ndiv_rMtt
   !   Distribution in boost of top pair centre of mass frame
       common/ext_beta/betamax,betamin,betaw
       common/dist_beta/xbeta(500),fxbeta(500,20),fxbetatot(500)
@@ -357,10 +357,10 @@
       phi478min=-pi
       ndiv_phi478=100  
   !   invarient mass of tt pair (always on)
-      m_rmass=1
-      rmassmax=14000.d0/(1+icoll*6)
-      rmassmin=0.d0
-      ndiv_rmass=500
+      m_rMtt=1
+      rMttmax=14000.d0/(1+icoll*6)
+      rMttmin=0.d0
+      ndiv_rMtt=500
   !   boost of parton CoM
       m_beta=idist
       betamax=1000.d0
@@ -438,14 +438,14 @@
       ndiv_cosfl=100
   !   sigp
       m_sigp=iadist
-      sigpmax=rmassmax
-      sigpmin=rmassmin
-      ndiv_sigp=ndiv_rmass/10
+      sigpmax=rMttmax
+      sigpmin=rMttmin
+      ndiv_sigp=ndiv_rMtt/10
   !   sigm
       m_sigm=iadist
-      sigmmax=rmassmax
-      sigmmin=rmassmin
-      ndiv_sigm=ndiv_rmass/10      
+      sigmmax=rMttmax
+      sigmmin=rMttmin
+      ndiv_sigm=ndiv_rMtt/10      
 
   !   asymmetries
       do i_asym=1,8   ! N_asym
@@ -703,10 +703,10 @@
         end do
       end if
 
-      if(m_rmass.eq.1)then
-        rmassw=(rmassmax-rmassmin)/ndiv_rmass
-        do i=1,ndiv_rmass
-          xrmass(i)=rmassmin+rmassw*(i-1)+rmassw/2.d0
+      if(m_rMtt.eq.1)then
+        rMttw=(rMttmax-rMttmin)/ndiv_rMtt
+        do i=1,ndiv_rMtt
+          xrMtt(i)=rMttmin+rMttw*(i-1)+rMttw/2.d0
         end do
       end if
 
@@ -1283,23 +1283,23 @@
         write(*,*)'END'
       end if    
   ! Plot distribution in Mtt
-      if(m_rmass.eq.1)then
+      if(m_rMtt.eq.1)then
 
-        sfxrmasstot=0d0
-        do j=1,ndiv_rmass
-          fxrmasstot(j)=0.d0
+        sfxrMtttot=0d0
+        do j=1,ndiv_rMtt
+          fxrMtttot(j)=0.d0
           do i=1,it
-            fxrmass(j,i)=fxrmass(j,i)*avgi/cnorm(i)/rmassw
-            fxrmasstot(j)=fxrmasstot(j)+fxrmass(j,i)            
+            fxrMtt(j,i)=fxrMtt(j,i)*avgi/cnorm(i)/rMttw
+            fxrMtttot(j)=fxrMtttot(j)+fxrMtt(j,i)            
           end do
-          sfxrmasstot=sfxrmasstot+fxrmasstot(j)*rmassw
+          sfxrMtttot=sfxrMtttot+fxrMtttot(j)*rMttw
         end do
         write(*,*)'HISTOGRAM'
         write(*,*)'Mtt'
         write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
         write(*,*)'M_{tt}--[GeV]'
-        do i=1,ndiv_rmass
-          write(*,*)xrmass(i),fxrmasstot(i)
+        do i=1,ndiv_rMtt
+          write(*,*)xrMtt(i),fxrMtttot(i)
         end do
         write(*,*)'END'
       end if
@@ -1536,7 +1536,7 @@
       !               snorm(jasy)=snorm(jasy)+
       !      &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
       !      &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-      !      &               *fxrmasstot(i)*rmassw/avgi      
+      !      &               *fxrMtttot(i)*rMttw/avgi      
               end if
             end do
             asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/
@@ -1613,9 +1613,9 @@
           n_error=n_error+1
         end if
       end if
-      if(m_rmass.eq.1)then
-        if(abs(cross-sfxrmasstot)>diff_max)then
-          write(*,*)'rmass Error:',sfxrmasstot
+      if(m_rMtt.eq.1)then
+        if(abs(cross-sfxrMtttot)>diff_max)then
+          write(*,*)'rMtt Error:',sfxrMtttot
           n_error=n_error+1
         end if
       end if
