@@ -677,7 +677,6 @@ c ======================================================================
       else
         continue
       end if
-
   ! Calculate cos(theta_t)
       if(ifinal.eq.0)then
           cost=
@@ -704,13 +703,42 @@ c ======================================================================
      &/sqrt(qcol(1,1)*qcol(1,1)
      &     +qcol(2,1)*qcol(2,1)
      &     +qcol(3,1)*qcol(3,1))
-      end if
+      end if     
+  ! calculate cos(theta^*_t)
+      if(ifinal.eq.0)then
+          costcm=+(q(1,3)*q(1,1)
+     &         +q(2,3)*q(2,1)  
+     &         +q(3,3)*q(3,1))
+     &    /sqrt(q(1,3)*q(1,3) 
+     &         +q(2,3)*q(2,3)
+     &         +q(3,3)*q(3,3))
+     &    /sqrt(q(1,1)*q(1,1) 
+     &         +q(2,1)*q(2,1)
+     &         +q(3,1)*q(3,1))
+      else if(ifinal.gt.0)then
+        costcm=
+     &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
+     &    +(q(2,3)+q(2,5)+q(2,6))*q(2,1)
+     &    +(q(3,3)+q(3,5)+q(3,6))*q(3,1))
+     &/sqrt((q(1,3)+q(1,5)+q(1,6))
+     &     *(q(1,3)+q(1,5)+q(1,6))
+     &     +(q(2,3)+q(2,5)+q(2,6))
+     &     *(q(2,3)+q(2,5)+q(2,6))
+     &     +(q(3,3)+q(3,5)+q(3,6))
+     &     *(q(3,3)+q(3,5)+q(3,6)))
+     &/sqrt(q(1,1)*q(1,1)
+     &     +q(2,1)*q(2,1)
+     &     +q(3,1)*q(3,1))
+      end if      
   ! calculate the energy of the top
       if(ifinal.eq.0)then
         Et=qcol(4,3)
       else if(ifinal.eq.1)then
         Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
+  ! calculate boost of the tt system
+
+      ytt = 0.5d0*log(x1/x2)
   ! calculate rMtt
       if(ifinal.eq.0)then
         rMtt2=(qcol(4,3)+qcol(4,4))**2
@@ -801,7 +829,7 @@ c ======================================================================
         end do
         trans(9)=sqrt(abs(rM_CT32))      
       end if
-  !   calculate lepton contransverse mass
+  ! calculate lepton contransverse mass
       if(m_trans(10).eq.1)then
         ET5=sqrt(rm5**2+pT2(5))
         ET7=sqrt(rm7**2+pT2(7))
@@ -811,7 +839,7 @@ c ======================================================================
         end do
         trans(10)=sqrt(abs(rMlCT2))
       end if
-  ! calculate top pseudorapidity     
+  ! calculate top pseudorapidity
       if(ifinal.eq.1)then
         rps356=(q(3,3)+q(3,5)+q(3,6))
      &       /sqrt((q(1,3)+q(1,5)+q(1,6))**2
@@ -837,9 +865,7 @@ c ======================================================================
       else
         continue
       end if
-
   ! Calculate top rapidities (y)
-
       if(ifinal.eq.0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3))) 
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
@@ -852,42 +878,8 @@ c ======================================================================
      &               +qcol(3,4)+qcol(3,7)+qcol(3,8))
      &              /(qcol(4,4)+qcol(4,7)+qcol(4,8)
      &               -qcol(3,4)+qcol(3,7)+qcol(3,8)))
-
-
       end if
-
       del_y=abs(yt)-abs(ytb)
-
-  ! calculate boost of the tt system
-      ytt = 0.5d0*log(x1/x2)      
-
-  ! calculate cos(theta^*_t)
-      if(ifinal.eq.0)then
-          costcm=+(q(1,3)*q(1,1)
-     &         +q(2,3)*q(2,1)  
-     &         +q(3,3)*q(3,1))
-     &    /sqrt(q(1,3)*q(1,3) 
-     &         +q(2,3)*q(2,3)
-     &         +q(3,3)*q(3,3))
-     &    /sqrt(q(1,1)*q(1,1) 
-     &         +q(2,1)*q(2,1)
-     &         +q(3,1)*q(3,1))
-      else if(ifinal.gt.0)then
-        costcm=
-     &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
-     &    +(q(2,3)+q(2,5)+q(2,6))*q(2,1)
-     &    +(q(3,3)+q(3,5)+q(3,6))*q(3,1))
-     &/sqrt((q(1,3)+q(1,5)+q(1,6))
-     &     *(q(1,3)+q(1,5)+q(1,6))
-     &     +(q(2,3)+q(2,5)+q(2,6))
-     &     *(q(2,3)+q(2,5)+q(2,6))
-     &     +(q(3,3)+q(3,5)+q(3,6))
-     &     *(q(3,3)+q(3,5)+q(3,6)))
-     &/sqrt(q(1,1)*q(1,1)
-     &     +q(2,1)*q(2,1)
-     &     +q(3,1)*q(3,1))
-      end if      
-
   ! calculate cos(theta_l+)
       if(ifinal.gt.0)then
           cost5=+(q(1,5)*q(1,1)
@@ -900,8 +892,7 @@ c ======================================================================
      &         +q(2,1)*q(2,1)
      &         +q(3,1)*q(3,1))
       end if
-
-  ! ! calculate cos(theta_l-)
+  ! calculate cos(theta_l-)
       if(ifinal.gt.0)then
           cost7=+(q(1,7)*q(1,1)
      &         +q(2,7)*q(2,1)  
@@ -913,36 +904,6 @@ c ======================================================================
      &         +q(2,1)*q(2,1)
      &         +q(3,1)*q(3,1))
       end if
-
-  ! calculate cos(theta_t)
-      if(ifinal.eq.0)then
-          cost=
-     &     (qcol(1,3)*qcol(1,1)
-     &     +qcol(2,3)*qcol(2,1)
-     &     +qcol(3,3)*qcol(3,1))
-     &/sqrt(qcol(1,3)*qcol(1,3)
-     &     +qcol(2,3)*qcol(2,3)
-     &     +qcol(3,3)*qcol(3,3))
-     &/sqrt(qcol(1,1)*qcol(1,1)
-     &     +qcol(2,1)*qcol(2,1)
-     &     +qcol(3,1)*qcol(3,1))
-        else if(ifinal.eq.1)then
-          cost=
-     &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
-     &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
-     &    +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1))
-     &/sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))
-     &     *(qcol(1,3)+qcol(1,5)+qcol(1,6))
-     &     +(qcol(2,3)+qcol(2,5)+qcol(2,6))
-     &     *(qcol(2,3)+qcol(2,5)+qcol(2,6))
-     &     +(qcol(3,3)+qcol(3,5)+qcol(3,6))
-     &     *(qcol(3,3)+qcol(3,5)+qcol(3,6)))
-     &/sqrt(qcol(1,1)*qcol(1,1)
-     &     +qcol(2,1)*qcol(2,1)
-     &     +qcol(3,1)*qcol(3,1))
-        end if
-
-
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
