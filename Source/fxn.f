@@ -158,6 +158,16 @@ c ======================================================================
       common/dist_dphi/xdphi(500),fxdphi(500,20),fxdphitot(500)
       common/inp_dphi/m_dphi
       common/div_dphi/ndiv_dphi
+  !   Distribution in cost5
+      common/ext_cost5/cost5max,cost5min,cost5w
+      common/dist_cost5/xcost5(500),fxcost5(500,20),fxcost5tot(500)
+      common/inp_cost5/m_cost5
+      common/div_cost5/ndiv_cost5
+  !   Distribution in cost7
+      common/ext_cost7/cost7max,cost7min,cost7w
+      common/dist_cost7/xcost7(500),fxcost7(500,20),fxcost7tot(500)
+      common/inp_cost7/m_cost7
+      common/div_cost7/ndiv_cost7
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
       common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
@@ -883,26 +893,26 @@ c ======================================================================
   ! calculate cos(theta_l+)
       if(ifinal.gt.0)then
           cost5=+(q(1,5)*q(1,1)
-     &         +q(2,5)*q(2,1)  
-     &         +q(3,5)*q(3,1))
-     &    /sqrt(q(1,5)*q(1,5) 
-     &         +q(2,5)*q(2,5)
-     &         +q(3,5)*q(3,5))
-     &    /sqrt(q(1,1)*q(1,1) 
-     &         +q(2,1)*q(2,1)
-     &         +q(3,1)*q(3,1))
+     &           +q(2,5)*q(2,1)  
+     &           +q(3,5)*q(3,1))
+     &      /sqrt(q(1,5)*q(1,5) 
+     &           +q(2,5)*q(2,5)
+     &           +q(3,5)*q(3,5))
+     &      /sqrt(q(1,1)*q(1,1) 
+     &           +q(2,1)*q(2,1)
+     &           +q(3,1)*q(3,1))
       end if
   ! calculate cos(theta_l-)
       if(ifinal.gt.0)then
           cost7=+(q(1,7)*q(1,1)
-     &         +q(2,7)*q(2,1)  
-     &         +q(3,7)*q(3,1))
-     &    /sqrt(q(1,7)*q(1,7) 
-     &         +q(2,7)*q(2,7)
-     &         +q(3,7)*q(3,7))
-     &    /sqrt(q(1,1)*q(1,1) 
-     &         +q(2,1)*q(2,1)
-     &         +q(3,1)*q(3,1))
+     &           +q(2,7)*q(2,1)  
+     &           +q(3,7)*q(3,1))
+     &      /sqrt(q(1,7)*q(1,7) 
+     &           +q(2,7)*q(2,7)
+     &           +q(3,7)*q(3,7))
+     &      /sqrt(q(1,1)*q(1,1) 
+     &           +q(2,1)*q(2,1)
+     &           +q(3,1)*q(3,1))
       end if
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
@@ -1620,6 +1630,31 @@ c ======================================================================
           continue
         else
           fxdphi(nbin,it)=fxdphi(nbin,it)+hist
+        end if
+      end if
+
+
+      if(m_cost5.eq.1)then
+  ! generate distribution in cost5.
+        nbin=int((cost5-cost5min)/cost5w)+1
+        if(nbin.ge.(ndiv_cost5+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxcost5(nbin,it)=fxcost5(nbin,it)+hist
+        end if
+      end if
+
+      if(m_cost7.eq.1)then
+  ! generate distribution in cost7.
+        nbin=int((cost7-cost7min)/cost7w)+1
+        if(nbin.ge.(ndiv_cost7+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxcost7(nbin,it)=fxcost7(nbin,it)+hist
         end if
       end if
 

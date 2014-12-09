@@ -165,6 +165,16 @@
       common/dist_dphi/xdphi(500),fxdphi(500,20),fxdphitot(500)
       common/inp_dphi/m_dphi
       common/div_dphi/ndiv_dphi
+  !   Distribution in cost5
+      common/ext_cost5/cost5max,cost5min,cost5w
+      common/dist_cost5/xcost5(500),fxcost5(500,20),fxcost5tot(500)
+      common/inp_cost5/m_cost5
+      common/div_cost5/ndiv_cost5
+  !   Distribution in cost7
+      common/ext_cost7/cost7max,cost7min,cost7w
+      common/dist_cost7/xcost7(500),fxcost7(500,20),fxcost7tot(500)
+      common/inp_cost7/m_cost7
+      common/div_cost7/ndiv_cost7
   !   Distributions in asymmetries
       common/inp_asym/m_asy(8)  ! nasy      
   !   Distribution in sigp
@@ -445,7 +455,17 @@
       m_dphi=iadist
       dphimax=+pi
       dphimin=0
-      ndiv_dphi=100     
+      ndiv_dphi=10
+  !   cost5
+      m_cost5=iadist
+      cost5max=+1
+      cost5min=-1
+      ndiv_cost5=10
+  !   cost7
+      m_cost7=iadist
+      cost7max=+1
+      cost7min=-1
+      ndiv_cost7=10     
   !   sigp
       m_sigp=iadist
       sigpmax=rMttmax
@@ -769,6 +789,20 @@
         dphiw=(dphimax-dphimin)/ndiv_dphi
         do i=1,ndiv_dphi
           xdphi(i)=dphimin+dphiw*(i-1)+dphiw/2.d0
+        end do
+      end if
+
+      if(m_cost5.eq.1)then
+        cost5w=(cost5max-cost5min)/ndiv_cost5
+        do i=1,ndiv_cost5
+          xcost5(i)=cost5min+cost5w*(i-1)+cost5w/2.d0
+        end do
+      end if
+
+      if(m_cost7.eq.1)then
+        cost7w=(cost7max-cost7min)/ndiv_cost7
+        do i=1,ndiv_cost7
+          xcost7(i)=cost7min+cost7w*(i-1)+cost7w/2.d0
         end do
       end if
 
@@ -1301,7 +1335,6 @@
       end if    
   ! Plot distribution in Mtt
       if(m_rMtt.eq.1)then
-
         sfxrMtttot=0d0
         do j=1,ndiv_rMtt
           fxrMtttot(j)=0.d0
@@ -1322,7 +1355,6 @@
       end if
   ! Plot distribution in beta.
       if(m_beta.eq.1)then
-
         sfxbetatot=0d0
         do j=1,ndiv_beta
           fxbetatot(j)=0.d0
@@ -1343,7 +1375,6 @@
       end if  
   ! Plot distribution in cost
       if(m_cost.eq.1)then
-
         sfxcosttot=0d0
         do j=1,ndiv_cost
           fxcosttot(j)=0.d0
@@ -1452,7 +1483,6 @@
       end do
   ! Plot distribution in fl
       if(m_fl.eq.1)then
-
         sfxfltot=0d0
         do j=1,ndiv_fl
           fxfltot(j)=0.d0
@@ -1508,6 +1538,46 @@
         write(*,*)'#Delta#phi'
         do i=1,ndiv_dphi
           write(*,*)xdphi(i),fxdphitot(i)
+        end do
+        write(*,*)'END'
+      end if
+  ! Plot distribution in delta phi
+      if(m_cost5.eq.1)then
+        sfxcost5tot=0d0
+        do j=1,ndiv_cost5
+          fxcost5tot(j)=0.d0
+          do i=1,it
+            fxcost5(j,i)=fxcost5(j,i)*avgi/cnorm(i)/cost5w
+            fxcost5tot(j)=fxcost5tot(j)+fxcost5(j,i)            
+          end do
+          sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'cost5'
+        write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
+        write(*,*)'cos#theta_{+}'
+        do i=1,ndiv_cost5
+          write(*,*)xcost5(i),fxcost5tot(i)
+        end do
+        write(*,*)'END'
+      end if
+  ! Plot distribution in delta phi
+      if(m_cost7.eq.1)then
+        sfxcost7tot=0d0
+        do j=1,ndiv_cost7
+          fxcost7tot(j)=0.d0
+          do i=1,it
+            fxcost7(j,i)=fxcost7(j,i)*avgi/cnorm(i)/cost7w
+            fxcost7tot(j)=fxcost7tot(j)+fxcost7(j,i)            
+          end do
+          sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'cost7'
+        write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
+        write(*,*)'cos#theta_{-}'
+        do i=1,ndiv_cost7
+          write(*,*)xcost7(i),fxcost7tot(i)
         end do
         write(*,*)'END'
       end if
