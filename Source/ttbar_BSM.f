@@ -324,7 +324,7 @@
         m_pT(ip)=idist
         pTmax(ip)=7000.d0/(1+icoll*6)
         pTmin(ip)=0.d0
-        ndiv_pT(ip)=175
+        ndiv_pT(ip)=70
   ! eta distributions
         m_eta(ip)=idist
         etamax(ip)=+10
@@ -334,18 +334,18 @@
         m_phi(ip)=idist
         phimax(ip)=+pi
         phimin(ip)=-pi
-        ndiv_phi(ip)=100
+        ndiv_phi(ip)=2*pi/100
       end do
   !   missing transverse momentum
       m_ETmiss=idist
       ETmissmax=7000.d0/(1+icoll*6)
       ETmissmin=0.d0
-      ndiv_ETmiss=175      
+      ndiv_ETmiss=70      
   !   top transverse momentum
       m_pT356=idist
       pT356max=7000.d0/(1+icoll*6)
       pT356min=0.d0
-      ndiv_pT356=175
+      ndiv_pT356=70
   !   2to6 top pseudorapidity
       m_eta356=idist
       eta356max=+10
@@ -355,12 +355,12 @@
       m_phi356=idist
       phi356max=+pi
       phi356min=-pi
-      ndiv_phi356=100           
+      ndiv_phi356=2*pi/50          
   !   anti-top transverse momentum
       m_pT478=idist
       pT478max=7000.d0/(1+icoll*6)
       pT478min=0.d0
-      ndiv_pT478=175
+      ndiv_pT478=70
   !   2to6 anti-top pseudorapidity
       m_eta478=idist
       eta478max=+10
@@ -370,12 +370,12 @@
       m_phi478=idist
       phi478max=+pi
       phi478min=-pi
-      ndiv_phi478=100  
+      ndiv_phi478=2*pi/50
   !   invarient mass of tt pair (always on)
       m_rMtt=1
       rMttmax=14000.d0/(1+icoll*6)
       rMttmin=0.d0
-      ndiv_rMtt=500
+      ndiv_rMtt=140
   !   boost of parton CoM
       m_beta=idist
       betamax=1000.d0
@@ -390,7 +390,7 @@
       m_Et=idist
       Etmax=7000.d0/(1+icoll*6)
       Etmin=0.d0
-      ndiv_Et=175
+      ndiv_Et=70
 
   !   transverse variables
       do itrans=1,ntrans
@@ -403,7 +403,7 @@
   !   invarient mass of the visible decay products of the tt pair
       transmax(1)=4000
       transmin(1)=0.d0
-      ndiv_trans(1)=175
+      ndiv_trans(1)=40
   !   sum of tranvserse energy  
       transmax(2)=4000
       transmin(2)=0.d0
@@ -411,35 +411,35 @@
   !   transverse mass 1
       transmax(3)=4000
       transmin(3)=0.d0
-      ndiv_trans(3)=175
+      ndiv_trans(3)=40
   !   transverse mass 2
       transmax(4)=4000
       transmin(4)=0.d0
-      ndiv_trans(4)=175
+      ndiv_trans(4)=40
   !   transverse mass 3
       transmax(5)=4000
       transmin(5)=0.d0
-      ndiv_trans(5)=175
+      ndiv_trans(5)=40
    !  lepton transverse mass
       transmax(6)=500
       transmin(6)=0.d0
-      ndiv_trans(6)=175     
+      ndiv_trans(6)=40     
   !   contransverse mass 1
       transmax(7)=4000
       transmin(7)=0.d0
-      ndiv_trans(7)=175    
+      ndiv_trans(7)=40    
   !   contransverse mass 2
       transmax(8)=4000
       transmin(8)=0.d0
-      ndiv_trans(8)=175            
+      ndiv_trans(8)=40            
   !   contransverse mass 3
       transmax(9)=4000
       transmin(9)=0.d0
-      ndiv_trans(9)=175
+      ndiv_trans(9)=40
   !   lepton contransverse mass 
       transmax(10)=500
       transmin(10)=0.d0
-      ndiv_trans(10)=175      
+      ndiv_trans(10)=50     
 
   !   phi_l
       m_fl=iadist
