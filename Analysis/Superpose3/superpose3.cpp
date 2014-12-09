@@ -147,7 +147,8 @@ int main(int argc, char *argv[])
   // 1st root file
   TFile f1( fileName1.c_str() ,"READ" );
   TH1D *h1 = ( TH1D* )f1.Get( histName.c_str() );
-  h1->SetTitle(fileName1.c_str());
+  // h1->SetTitle(fileName1.c_str());
+  h1->SetTitle("Z' (M=1500 GeV, #Gamma=150 GeV)");
   // h1->SetTitle("pp #rightarrow t#bar{t}#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}");
   h1->Draw();
   // h1->SetLineColor( kAzure-7 );
@@ -158,7 +159,8 @@ int main(int argc, char *argv[])
   // 2nd root file
   TFile f2( fileName2.c_str() ,"READ" );
   TH1D *h2 = ( TH1D* )f2.Get( histName.c_str() );
-  h2->SetTitle(fileName2.c_str());
+  // h2->SetTitle(fileName2.c_str());
+  h2->SetTitle("Z' (M=2500 GeV, #Gamma=250 GeV)");
   // h2->SetTitle("pp #rightarrow t#bar{t}#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu} (NWA)");
   h2->Draw( "SAME" );
   h2->SetLineColor( kRed );
@@ -167,7 +169,8 @@ int main(int argc, char *argv[])
   TFile f3( fileName3.c_str() ,"READ" );
   TH1D *h3 = ( TH1D* )f3.Get( histName.c_str() );  
   // h3->SetTitle("pp #rightarrow t#bar{t} #times BR(t#rightarrow bl#nu)^{2}");
-  h3->SetTitle(fileName3.c_str());
+  // h3->SetTitle(fileName3.c_str());
+  h3->SetTitle("SM");
   h3->Draw( "SAME" ); 
   h3->SetLineColor( kGreen );  
   // h3->SetLineColor( kPink-8 );    
@@ -175,6 +178,10 @@ int main(int argc, char *argv[])
   // normalize histograms
   if ( normalize == true )
   { 
+    std::string yTitle;
+    yTitle=h1->GetYaxis()->GetTitle();
+    yTitle="1/#sigma #times " + yTitle;
+    h1->GetYaxis()->SetTitle(yTitle.c_str());
     h1->Scale( 1.0 / h1->Integral() );
     h2->Scale( 1.0 / h2->Integral() );
     h3->Scale( 1.0 / h3->Integral() );

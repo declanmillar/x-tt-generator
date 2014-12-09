@@ -1404,7 +1404,7 @@
           if (itrans.eq.1)then
             write(*,*)'Mvis'
             write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
-            write(*,*)'M_{T}--[GeV]'
+            write(*,*)'M_{vis}--[GeV]'
           else if (itrans.eq.2)then
             write(*,*)'HT'
             write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
