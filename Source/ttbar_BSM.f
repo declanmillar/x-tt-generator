@@ -334,7 +334,7 @@
         m_phi(ip)=idist
         phimax(ip)=+pi
         phimin(ip)=-pi
-        ndiv_phi(ip)=2*pi/100
+        ndiv_phi(ip)=50
       end do
   !   missing transverse momentum
       m_ETmiss=idist
@@ -355,7 +355,7 @@
       m_phi356=idist
       phi356max=+pi
       phi356min=-pi
-      ndiv_phi356=2*pi/50          
+      ndiv_phi356=50        
   !   anti-top transverse momentum
       m_pT478=idist
       pT478max=7000.d0/(1+icoll*6)
@@ -370,7 +370,7 @@
       m_phi478=idist
       phi478max=+pi
       phi478min=-pi
-      ndiv_phi478=2*pi/50
+      ndiv_phi478=50
   !   invarient mass of tt pair (always on)
       m_rMtt=1
       rMttmax=14000.d0/(1+icoll*6)
@@ -819,6 +819,8 @@
           xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
         end do
       end if
+
+      write(*,*)'bork'
 ! ----------------------------------------------------------------------
 ! Output information before integration
       write(*,*)'====================================================='
