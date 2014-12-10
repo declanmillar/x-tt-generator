@@ -497,16 +497,26 @@
         do ip=5,8
           m_pT(i)   = 0
           m_eta(i)  = 0
-          m_phi(i)  = 0
+          m_phi(i)  = 0          
         end do
+        do itrans=1,ntrans
+          m_trans(itrans)=0
+        end do
+        m_trans  = 0
         m_pT356  = 0
         m_eta356 = 0
+        m_phi356 = 0
         m_pT478  = 0
         m_eta478 = 0
+        m_phi478 = 0
         m_ETmiss = 0
         m_HT     = 0
         m_fl     = 0
+        m_dphi   = 0
         m_cosfl  = 0
+        m_cost7  = 0
+        m_cost5  = 0
+        m_ct7ct5 = 0
         m_asy(8) = 0  ! turn off A_l
       end if
   !   Turn off 2->2 only distributions
@@ -514,7 +524,7 @@
         m_asy(1) = 0 ! turn off A_LL
         m_asy(2) = 0 ! turn off A_L
         m_asy(3) = 0 ! turn off A_PV
-      end if    
+      end if
 ! ----------------------------------------------------------------------
 ! Set-up physics
 
@@ -837,7 +847,6 @@
         end do
       end if
 
-      write(*,*)'bork'
 ! ----------------------------------------------------------------------
 ! Output information before integration
       write(*,*)'====================================================='
@@ -1039,10 +1048,8 @@
                 asychi(iasy,iAB)=asychi(iasy,iAB)
      &                      +asyerror(iasy,i,iAB)
               end do
-    !             write(*,*)'bork1011'
               asychi(iasy,iAB)=asychi(iasy,iAB)
      &                        /asytot(iasy,iAB)
-    !             write(*,*)'bork1014'
     !           asychi(iasy)=
     !      & sqrt(abs(asychi(iasy)
     !      &         -asytot(iasy)**2*dfloat(ncall)))

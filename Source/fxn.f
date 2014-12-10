@@ -1593,6 +1593,7 @@ c ======================================================================
         end if
       end if
 
+
       do itrans=1,ntrans
         if(m_trans(itrans).eq.1)then
   ! generate distribution in trans.
@@ -1619,6 +1620,7 @@ c ======================================================================
         end if
       end if
 
+
       if(m_cosfl.eq.1)then
   ! generate distribution in cosfl.
         nbin=int((cosfl-cosflmin)/cosflw)+1
@@ -1631,6 +1633,7 @@ c ======================================================================
         end if
       end if
 
+
       if(m_dphi.eq.1)then
   ! generate distribution in dphi.
         nbin=int((dphi-dphimin)/dphiw)+1
@@ -1642,7 +1645,6 @@ c ======================================================================
           fxdphi(nbin,it)=fxdphi(nbin,it)+hist
         end if
       end if
-
 
       if(m_cost5.eq.1)then
   ! generate distribution in cost5.
