@@ -168,6 +168,11 @@ c ======================================================================
       common/dist_cost7/xcost7(500),fxcost7(500,20),fxcost7tot(500)
       common/inp_cost7/m_cost7
       common/div_cost7/ndiv_cost7
+  !   Distribution in ct7ct5
+      common/ext_ct7ct5/ct7ct5max,ct7ct5min,ct7ct5w
+      common/dist_ct7ct5/xct7ct5(500),fxct7ct5(500,20),fxct7ct5tot(500)
+      common/inp_ct7ct5/m_ct7ct5
+      common/div_ct7ct5/ndiv_ct7ct5
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
       common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
@@ -914,6 +919,11 @@ c ======================================================================
      &           +q(2,1)*q(2,1)
      &           +q(3,1)*q(3,1))
       end if
+
+      if(ifinal.gt.0)then
+          ct7ct5=cost7*cost5
+      end if
+
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
@@ -1655,6 +1665,17 @@ c ======================================================================
           continue
         else
           fxcost7(nbin,it)=fxcost7(nbin,it)+hist
+        end if
+      end if
+
+      if(m_ct7ct5.eq.1)then
+        nbin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
+        if(nbin.ge.(ndiv_ct7ct5+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+            fxct7ct5(nbin,it)=fxct7ct5(nbin,it)+hist
         end if
       end if
 

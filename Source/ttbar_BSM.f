@@ -175,6 +175,11 @@
       common/dist_cost7/xcost7(500),fxcost7(500,20),fxcost7tot(500)
       common/inp_cost7/m_cost7
       common/div_cost7/ndiv_cost7
+  !   Distribution in cost7
+      common/ext_ct7ct5/ct7ct5max,ct7ct5min,ct7ct5w
+      common/dist_ct7ct5/xct7ct5(500),fxct7ct5(500,20),fxct7ct5tot(500)
+      common/inp_ct7ct5/m_ct7ct5
+      common/div_ct7ct5/ndiv_ct7ct5  
   !   Distributions in asymmetries
       common/inp_asym/m_asy(8)  ! nasy      
   !   Distribution in sigp
@@ -465,7 +470,12 @@
       m_cost7=iadist
       cost7max=+1
       cost7min=-1
-      ndiv_cost7=10     
+      ndiv_cost7=10
+   !  ct7ct5
+      m_ct7ct5=iadist
+      ct7ct5max=+1
+      ct7ct5min=-1
+      ndiv_ct7ct5=10   
   !   sigp
       m_sigp=iadist
       sigpmax=rMttmax
@@ -806,6 +816,13 @@
         end do
       end if
 
+      if(m_ct7ct5.eq.1)then
+        ct7ct5w=(ct7ct5max-ct7ct5min)/ndiv_ct7ct5
+        do i=1,ndiv_ct7ct5
+          xct7ct5(i)=ct7ct5min+ct7ct5w*(i-1)+ct7ct5w/2.d0
+        end do
+      end if
+
       if(m_sigp.eq.1)then
         sigpw=(sigpmax-sigpmin)/ndiv_sigp
         do i=1,ndiv_sigp
@@ -1125,7 +1142,7 @@
           write(*,*)'A_l:                  uncertainty (same units):'
           write(*,*)Atot(6),Atoterr(6) 
         end if
-      end if
+      end if 
 ! ----------------------------------------------------------------------
 ! Plot Distributions
   ! Section header
@@ -1416,8 +1433,6 @@
         end do
         write(*,*)'END'
       end if
-
-
   ! Plot distributions in all transverse variables
       do itrans=1,ntrans
         if(m_trans(itrans).eq.1)then
@@ -1543,7 +1558,7 @@
         end do
         write(*,*)'END'
       end if
-  ! Plot distribution in delta phi
+  ! Plot distribution in cost5
       if(m_cost5.eq.1)then
         sfxcost5tot=0d0
         do j=1,ndiv_cost5
@@ -1563,7 +1578,7 @@
         end do
         write(*,*)'END'
       end if
-  ! Plot distribution in delta phi
+  ! Plot distribution in cost7
       if(m_cost7.eq.1)then
         sfxcost7tot=0d0
         do j=1,ndiv_cost7
@@ -1580,6 +1595,27 @@
         write(*,*)'cos#theta_{-}'
         do i=1,ndiv_cost7
           write(*,*)xcost7(i),fxcost7tot(i)
+        end do
+        write(*,*)'END'
+      end if
+  ! Plot distribution in ct7ct5
+      if(m_ct7ct5.eq.1)then
+        sfxct7ct5tot=0d0
+        do j=1,ndiv_ct7ct5
+          fxct7ct5tot(j)=0.d0
+          do i=1,it
+            fxct7ct5(j,i)=fxct7ct5(j,i)*avgi/cnorm(i)/ct7ct5w
+            fxct7ct5tot(j)=fxct7ct5tot(j)+fxct7ct5(j,i)            
+          end do
+          sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
+        end do
+        write(*,*)'HISTOGRAM'
+        write(*,*)'ct7ct5'
+        write(*,*)
+     &      'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
+        write(*,*)'cos#theta_{+}cos#theta_{-}'
+        do i=1,ndiv_ct7ct5
+          write(*,*)xct7ct5(i),fxct7ct5tot(i)
         end do
         write(*,*)'END'
       end if
