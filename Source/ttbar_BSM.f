@@ -412,7 +412,7 @@
   !   sum of tranvserse energy  
       transmax(2)=4000
       transmin(2)=0.d0
-      ndiv_trans(2)=500   
+      ndiv_trans(2)=40   
   !   transverse mass 1
       transmax(3)=4000
       transmin(3)=0.d0
