@@ -40,7 +40,10 @@ parser.add_option("-l", "--ilhe",   default=0,action="store_const",const=1, help
 (options, args) = parser.parse_args()
 
 # Collect arguments
-model=args[0]
+if   options.ibsm==1:
+	model = args[0]
+elif options.ibsm==0:
+	model = ""
 emc_col=args[1]
 ifs=args[2]
 ncall=args[3]
@@ -51,7 +54,24 @@ seed = 12345 if options.iseed else random.randint(0,100000)
 executable="ttbar_BSM"
 name = "2to2" if (ifs=="0") else "2to6"
 config=StringIO.StringIO()
-sector = "_EW" if (options.iqcd==0) else ""
+
+# Gauge sectors
+if   options.iqcd==1 and options.iew==1 and options.ibsm==1:
+	sector = ""
+elif options.iqcd==1 and options.iew==1 and options.ibsm==0:
+	sector = "SM"
+elif options.iqcd==1 and options.iew==0 and options.ibsm==1:
+	sector = "_QCD-Zp"	
+elif options.iqcd==0 and options.iew==1 and options.ibsm==1:
+	sector = "_EW-Zp"	
+elif options.iqcd==1 and options.iew==0 and options.ibsm==0:
+	sector = "QCD"		
+elif options.iqcd==0 and options.iew==1 and options.ibsm==0:
+	sector = "EW"
+elif options.iqcd==0 and options.iew==0 and options.ibsm==1:
+	sector = "_Zp"
+
+# Interference	
 if   options.iint==0:
 	interference="_int0"
 elif options.iint==1:
@@ -85,7 +105,7 @@ print >> config, '%s ! ilhe' % options.ilhe
 
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s' % (name,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
+filename = '%s%s%s%s_%s_%sx%s%s' % (name,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())
