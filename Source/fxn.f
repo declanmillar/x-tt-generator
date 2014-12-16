@@ -205,6 +205,7 @@ c ======================================================================
       dimension pfx(-1:1,-1:1)
   !   PDFs
       dimension fx1(13),fx2(13)
+      dimension x1x2(2,2)
 
   ! Local constants
   !   pi
@@ -227,9 +228,20 @@ c ======================================================================
       shat=Ecm*Ecm
       tau=shat/s
   !   x1 and x2 of the partons      
-      x1=x(3+12*ifinal)*(1.d0-tau)+tau
-      x2=tau/x1
-
+      xx1=x(3+12*ifinal)*(1.d0-tau)+tau
+      xx2=tau/xx1
+      x1x2(1,1)=xx1
+      x1x2(1,2)=xx2
+      x1x2(2,1)=xx2
+      x1x2(2,2)=xx1
+  ! Loop over x1 and x2
+      fxn=0
+      ixmax=1 ! for testing
+      do ix=1,ixmax
+      ffxn=0.d0 
+      x1=x1x2(ix,1)
+      x2=x1x2(ix,2)
+      
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt
@@ -237,15 +249,15 @@ c ======================================================================
       if(istructure.le.4)then
         q2=QQ*QQ
         if((x1.le.1.d-6).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-6).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ.le.1.3d0).or.(QQ.ge.1.d4))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
   !   (Note that for cteq PDFs we multiply by x1 below and then divide by 
@@ -269,15 +281,15 @@ c ======================================================================
       else if(istructure.eq.5)then
         imode=1
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -285,15 +297,15 @@ c ======================================================================
       else if(istructure.eq.6)then
         imode=2
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -301,15 +313,15 @@ c ======================================================================
       else if(istructure.eq.7)then
         imode=3
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -317,15 +329,15 @@ c ======================================================================
       else if(istructure.eq.8)then
         imode=4
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -333,15 +345,15 @@ c ======================================================================
       else if(istructure.eq.9)then
         imode=5
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -404,7 +416,7 @@ c ======================================================================
         qcm2=((Ecm*Ecm-rm3*rm3-rm4*rm4)**2-(2.d0*rm3*rm4)**2)/
      &    (4.d0*Ecm*Ecm)
         if (qcm2.lt.0.d0) then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           qcm=sqrt(qcm2)
@@ -435,7 +447,7 @@ c ======================================================================
         rl356=dtan(xx)*rmt*gamt                        
         rm356_2=(rmt**2+rl356)                         
         if(rm356_2.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rm356=sqrt(rm356_2)
@@ -448,7 +460,7 @@ c ======================================================================
         rl478=dtan(xx)*rmt*gamt
         rm478_2=(rmt**2+rl478)
         if(rm478_2.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rm478=sqrt(rm478_2)
@@ -461,7 +473,7 @@ c ======================================================================
         rl56=dtan(xx)*rmW*gamW
         rm56_2=(rmW**2+rl56)
         if(rm56_2.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rm56=sqrt(rm56_2)
@@ -474,7 +486,7 @@ c ======================================================================
         rl78=dtan(xx)*rmW*gamW
         rm78_2=(rmW**2+rl78)
         if(rm78_2.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rm78=sqrt(rm78_2)
@@ -501,7 +513,7 @@ c ======================================================================
      &     -(2.d0*rm356*rm478)**2)/
      &      (4.d0*Ecm*Ecm)
         if(rq2.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rq=sqrt(rq2)
@@ -513,7 +525,7 @@ c ======================================================================
         rq562=((rm356*rm356-rm3*rm3-rm56*rm56)**2-(2.d0*rm3*rm56)**2)/
      &      (4.d0*rm356*rm356)
         if(rq562.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rq56=sqrt(rq562)
@@ -539,7 +551,7 @@ c ======================================================================
         rq782=((rm478*rm478-rm4*rm4-rm78*rm78)**2-(2.d0*rm4*rm78)**2)/
      &      (4.d0*rm478*rm478)
         if(rq782.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rq78=sqrt(rq782)
@@ -561,7 +573,7 @@ c ======================================================================
         rq52=((rm56*rm56-rm5*rm5-rm6*rm6)**2-(2.d0*rm5*rm6)**2)/
      &       (4.d0*rm56*rm56)
         if(rq52.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rq5=sqrt(rq52)
@@ -583,7 +595,7 @@ c ======================================================================
         rq72=((rm78*rm78-rm7*rm7-rm8*rm8)**2-(2.d0*rm7*rm8)**2)/
      &       (4.d0*rm78*rm78)
         if(rq72.lt.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         else
           rq7=sqrt(rq72)
@@ -972,11 +984,11 @@ c ======================================================================
   ! Cut on top pT
       if(ifinal.eq.0)then       
         if(abs(eta(3)).gt.ytcut)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
       else if(abs(eta356).gt.ytcut)then
-        fxn=0.d0
+        ffxn=0.d0
         return
       else
         continue
@@ -1185,10 +1197,10 @@ c ======================================================================
           continue
         end if
       end if
-  ! if no gauge sectors are active, fxn = 0
+  ! if no gauge sectors are active, ffxn = 0
       if(ifinal.eq.1)then
         if((resqq+resgg+resuu+resdd).eq.0.d0)then
-          fxn=0.d0
+          ffxn=0.d0
           return
         end if
       end if
@@ -1238,7 +1250,7 @@ c ======================================================================
         pfxtot=(qqd+ggd)/x1
       end if
       if(pfxtot.eq.0.d0)then
-        fxn=0.d0
+        ffxn=0.d0
         return
       end if
   ! for distributions,
@@ -1260,54 +1272,54 @@ c ======================================================================
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
       pfxtot=pfxtot*(1.d0-tau)*2.d0*Ecm/s
      &      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
-  ! fxn is now M*M*PDFs
-      fxn=pfxtot
+  ! ffxn is now M*M*PDFs
+      ffxn=pfxtot
   ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
-      fxn=fxn*fac
+      ffxn=ffxn*fac
       if(ifinal.eq.0)then
   ! 2-body phase space factor     
-        fxn=fxn*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        fxn=fxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
+        ffxn=ffxn*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
+        ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
       else if(ifinal.eq.1)then
   ! 6-body flux factor, pi's and phase space integral
-        fxn=fxn*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
+        ffxn=ffxn*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
      &     /(2.d0*rm356)
      &     /rmt/gamt
      &     *((rm356*rm356-rmt*rmt)**2+rmt**2*gamt**2)
-        fxn=fxn*(XX356max-XX356min)
+        ffxn=ffxn*(XX356max-XX356min)
      &     /(2.d0*rm478)
      &     /rmt/gamt
      &     *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
-        fxn=fxn*(XX478max-XX478min)
+        ffxn=ffxn*(XX478max-XX478min)
      &     /(2.d0*rm56)
      &     /rmW/gamW
      &     *((rm56*rm56-rmW*rmW)**2+rmW**2*gamW**2)
-        fxn=fxn*(XX56max-XX56min)
+        ffxn=ffxn*(XX56max-XX56min)
      &     /(2.d0*rm78)
      &     /rmW/gamW
      &     *((rm78*rm78-rmW*rmW)**2+rmW**2*gamW**2)
-        fxn=fxn*(XX78max-XX78min)
+        ffxn=ffxn*(XX78max-XX78min)
   !   NWA
-        fxn=fxn
+        ffxn=ffxn
      &     *gamt/gNWA
      &     *gamt/gNWA
   !   flux and pi factors.
-        fxn=fxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
+        ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
    
   ! Polarised differential cross sections
   !   Polarised cross section for each point is calculated. 
-  !   (Note that above pfx was divided by fxn.)
+  !   (Note that above pfx was divided by ffxn.)
       if(ifinal.eq.0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             polcross(it,iphel,jphel)=polcross(it,iphel,jphel)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt          
      &                              *pfx(iphel,jphel)
-            weight(it,iphel,jphel)=+fxn
+            weight(it,iphel,jphel)=+ffxn
      &                             *wgt
      &                             *pfx(iphel,jphel)
             polerror(it,iphel,jphel)=polerror(it,iphel,jphel)
@@ -1324,13 +1336,13 @@ c ======================================================================
           continue
         else if(costcm.gt.0.d0)then
           asycross(1,it,+1)=asycross(1,it,+1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(1,it,+1)=asyerror(1,it,+1)
      &                   +asycross(1,it,+1)**2
         else if(costcm.lt.0.d0)then
           asycross(1,it,-1)=asycross(1,it,-1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(1,it,-1)=asyerror(1,it,-1)
      &                   +asycross(1,it,-1)**2
@@ -1346,13 +1358,13 @@ c ======================================================================
           continue
         else if(yt.gt.0.d0)then
           asycross(2,it,+1)=asycross(2,it,+1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(2,it,+1)=asyerror(2,it,+1)
      &                   +asycross(2,it,+1)**2
         else if(yt.lt.0.d0)then
           asycross(2,it,-1)=asycross(2,it,-1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(2,it,-1)=asyerror(2,it,-1)
      &                   +asycross(2,it,-1)**2
@@ -1365,14 +1377,14 @@ c ======================================================================
       else
         if(yt.ge.0.d0)then
           asycross(3,it,+1)=asycross(3,it,+1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(3,it,+1)=asyerror(3,it,+1)
      &                   +asycross(3,it,+1)**2
         end if
         if(ytb.gt.0.d0)then
           asycross(3,it,-1)=asycross(3,it,-1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(3,it,-1)=asyerror(3,it,-1)
      &                   +asycross(3,it,-1)**2
@@ -1386,13 +1398,13 @@ c ======================================================================
           continue
         else if(del_y.ge.0.d0)then
           asycross(4,it,+1)=asycross(4,it,+1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(4,it,+1)=asyerror(4,it,+1)
      &                   +asycross(4,it,+1)**2
         else if(del_y.lt.0.d0)then
           asycross(4,it,-1)=asycross(4,it,-1)
-     &                              +fxn
+     &                              +ffxn
      &                              *wgt
           asyerror(4,it,-1)=asyerror(4,it,-1)
      &                   +asycross(4,it,-1)**2
@@ -1408,13 +1420,13 @@ c ======================================================================
             continue
           else if(cosfl.gt.0.d0)then
             asycross(5,it,+1)=asycross(5,it,+1)
-     &                                +fxn
+     &                                +ffxn
      &                                *wgt
             asyerror(5,it,+1)=asyerror(5,it,+1)
      &                     +asycross(5,it,+1)**2
           else if(cosfl.lt.0.d0)then
             asycross(5,it,-1)=asycross(5,it,-1)
-     &                                +fxn
+     &                                +ffxn
      &                                *wgt
             asyerror(5,it,-1)=asyerror(5,it,-1)
      &                     +asycross(5,it,-1)**2
@@ -1424,7 +1436,7 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Binning
   ! scale by weight
-      hist=fxn*wgt
+      hist=ffxn*wgt
 
       do ip=3,ipmax
   ! generate distribution in pT      
@@ -1905,7 +1917,11 @@ c ======================================================================
       end if
 ! ----------------------------------------------------------------------
 ! End functions
-      npoints=npoints+1  
+  ! stats
+      npoints=npoints+1
+      fxn=fxn+ffxn
+  ! end loop over x1 and x2 
+      end do 
       return
       end
 ! ======================================================================

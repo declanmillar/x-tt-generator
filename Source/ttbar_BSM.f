@@ -846,7 +846,6 @@
           xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
         end do
       end if
-
 ! ----------------------------------------------------------------------
 ! Output information before integration
       write(*,*)'====================================================='
