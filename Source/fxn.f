@@ -241,6 +241,8 @@ c ======================================================================
       ffxn=0.d0 
       x1=x1x2(ix,1)
       x2=x1x2(ix,2)
+
+      write(*,*)'bork 245'
       
   ! Structure functions
   !   Scale for the PDFs
@@ -394,6 +396,8 @@ c ======================================================================
       do i=1,13
         fx2(i)=fx2(i)/x2
       end do
+
+      write(*,*)'bork 400'
 ! ----------------------------------------------------------------------
 ! Kinematics
 
@@ -629,7 +633,8 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
-  ! distributions and cuts.  
+  ! distributions and cuts.
+      write(*,*)'bork 637'
       
   ! Calculate transverse momenta (pT)
       do ip=1,ipmax
@@ -981,6 +986,7 @@ c ======================================================================
       end if
 ! ----------------------------------------------------------------------
 ! Selections
+      write(*,*)'bork 989'
   ! Cut on top pT
       if(ifinal.eq.0)then       
         if(abs(eta(3)).gt.ytcut)then
@@ -994,8 +1000,9 @@ c ======================================================================
         continue
       end if !
 !-----------------------------------------------------------------------    
-! Matrix elements
+! Matrix elements   
   ! Assign 2to2 MadGraph momenta
+      write(*,*)'bork 1003'
       if(ifinal.eq.0)then
         
         do i=1,3
@@ -1268,8 +1275,9 @@ c ======================================================================
   !       write(*,*)'resdd =',resdd
   !       write(*,*)'pfxtot =',pfxtot
 ! ----------------------------------------------------------------------
-! Phase space volume
+! Phase space volume      
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
+      write(*,*)'bork 1277'
       pfxtot=pfxtot*(1.d0-tau)*2.d0*Ecm/s
      &      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
   ! ffxn is now M*M*PDFs
@@ -1437,6 +1445,7 @@ c ======================================================================
 ! Binning
   ! scale by weight
       hist=ffxn*wgt
+      write(*,*)'bork 1445'
 
       do ip=3,ipmax
   ! generate distribution in pT      
@@ -1918,6 +1927,7 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! End functions
   ! stats
+      write(*,*)'bork 1926'
       npoints=npoints+1
       fxn=fxn+ffxn
   ! end loop over x1 and x2 
