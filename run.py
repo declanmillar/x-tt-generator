@@ -5,7 +5,7 @@
 
 # Arguments:
 # 	0 = executable e.g. ttbar_BSM. see makefile
-#   1 = mdl: Name of model file in Models directory
+#   1 = mdl: name of model file in Models directory
 # 	2 = ecm: centre of mass energy input:TeV, output: GeV
 #   3 = final: final state
 # 	4 = ncall: number of vegas calls (monte carlo points)
@@ -52,7 +52,7 @@ seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="ttbar_BSM"
-name = "2to2" if (ifs=="0") else "2to6"
+final = "2to2" if (ifs=="0") else "2to6"
 config=StringIO.StringIO()
 
 # Gauge sectors
@@ -105,7 +105,7 @@ print >> config, '%s ! ilhe' % options.ilhe
 
 
 # Filename
-filename = '%s%s%s%s_%s_%sx%s%s' % (name,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s' % (name,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())
