@@ -36,14 +36,16 @@ parser.add_option("-T", "--itdist",  action="store_const", const=0, default=1, h
 parser.add_option("-A", "--iadist",  action="store_const", const=0, default=1, help="Do not make asymmetry distributions.")
 parser.add_option("-m", "--itmx",   type="int",default=5, help="Maximum number of VEGAS iterations.")
 parser.add_option("-l", "--ilhe",   default=0,action="store_const",const=1, help="Output in lhe format.")
+parser.add_option("-x", "--isymx1x2",   default=0,action="store_const",const=1, help="Symmatrise phase space over x1 and x2.")
 
 (options, args) = parser.parse_args()
 
 # Collect arguments
+model = args[0]
 if   options.ibsm==1:
-	model = args[0]
+	smodel = args[0]
 elif options.ibsm==0:
-	model = ""
+	smodel = ""
 emc_col=args[1]
 ifs=args[2]
 ncall=args[3]
@@ -102,10 +104,10 @@ print >> config, '%s ! idist' % options.idist
 print >> config, '%s ! itdist' % options.itdist
 print >> config, '%s ! iadist' % options.iadist
 print >> config, '%s ! ilhe' % options.ilhe
-
+print >> config, '%s ! isymx1x2' % options.isymx1x2
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s' % (final,model,sector,interference,emc_col,options.itmx,ncall,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s' % (final,smodel,sector,interference,emc_col,options.itmx,ncall,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

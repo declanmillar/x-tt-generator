@@ -272,8 +272,8 @@
       read(5,*) iadist
   !   Outout in lhe format
       read(5,*) ilhe
-  !   !   Manually sum over costheta
-  !       read(5,*) isycost
+  !   Symmatrise of x1 and x2
+      read(5,*) isymx1x2
 
   ! Interpret config
     ! Number of external lines
@@ -295,6 +295,13 @@
     ! No event weighting for *true* event generation
       if(ilhe.eq.1)then
         itmx=1
+      end if
+    ! For every point in phase space with x1 and x2, include the point
+    ! in phase space with x1<->x2
+      if(isymx1x2.eq.1)then
+        ixmax=2
+      else
+        ixmax=1
       end if
     ! Extract model filename (Remove white space.)
       imodel = len(model)
@@ -1108,7 +1115,7 @@
         end if
 
         if(m_asy(7).gt.0)then
-    ! A'
+    ! A'/ARFB
           Atot(7)=
      &          +(asytot(4,+1)-asytot(4,-1))
      &          /cross

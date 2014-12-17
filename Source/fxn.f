@@ -235,15 +235,12 @@ c ======================================================================
       x1x2(2,1)=xx2
       x1x2(2,2)=xx1
   ! Loop over x1 and x2
-      fxn=0
-      ixmax=1 ! for testing
+      fxn=0.d0
       do ix=1,ixmax
       ffxn=0.d0 
       x1=x1x2(ix,1)
       x2=x1x2(ix,2)
 
-      write(*,*)'bork 245'
-      
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt
@@ -396,8 +393,6 @@ c ======================================================================
       do i=1,13
         fx2(i)=fx2(i)/x2
       end do
-
-      write(*,*)'bork 400'
 ! ----------------------------------------------------------------------
 ! Kinematics
 
@@ -634,7 +629,6 @@ c ======================================================================
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
   ! distributions and cuts.
-      write(*,*)'bork 637'
       
   ! Calculate transverse momenta (pT)
       do ip=1,ipmax
@@ -799,14 +793,17 @@ c ======================================================================
         trans(1)=sqrt(abs(rMvis2))
       end if
   ! calculate transverse energy energies of visible particles
-      ET3=sqrt(rm3**2+pT2(3))
-      ET4=sqrt(rm4**2+pT2(4))
-      ET5=sqrt(rm5**2+pT2(5))
-      ET7=sqrt(rm6**2+pT2(7)) 
+      if(ifinal.eq.1)then
+        ET3=sqrt(rm3**2+pT2(3))
+        ET4=sqrt(rm4**2+pT2(4))
+        ET5=sqrt(rm5**2+pT2(5))
+        ET7=sqrt(rm6**2+pT2(7))
+      end if
   ! calculate HT
       if(m_trans(2).eq.1)then
         trans(2)=ET3+ET4+ET5+ET7+ETmiss
       end if
+
   ! calculate *full* transverse mass 1
       if(m_trans(3).eq.1)then
         rM_T12=(ET3+ET4+ET5+ET7+ETmiss)**2
@@ -986,7 +983,6 @@ c ======================================================================
       end if
 ! ----------------------------------------------------------------------
 ! Selections
-      write(*,*)'bork 989'
   ! Cut on top pT
       if(ifinal.eq.0)then       
         if(abs(eta(3)).gt.ytcut)then
@@ -1002,7 +998,6 @@ c ======================================================================
 !-----------------------------------------------------------------------    
 ! Matrix elements   
   ! Assign 2to2 MadGraph momenta
-      write(*,*)'bork 1003'
       if(ifinal.eq.0)then
         
         do i=1,3
@@ -1237,7 +1232,11 @@ c ======================================================================
      &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 9)*fx2( 3)
      &  +(respolqq(lam3,lam4)+respoluu(lam3,lam4))*fx1(10)*fx2( 4)
      &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1(11)*fx2( 5)
-            pfx(lam3,lam4)=pfx(lam3,lam4)/x1
+            if(ix.eq.1)then
+              pfx(lam3,lam4)=pfx(lam3,lam4)/x1
+            else if(ix.eq.2)then
+              pfx(lam3,lam4)=pfx(lam3,lam4)/x2
+            end if
             pfxtot=pfxtot
      &            +pfx(lam3,lam4)
           end do
@@ -1254,8 +1253,13 @@ c ======================================================================
      &     +fx1(10)*fx2( 4)*( resqq + resuu )   ! cb+ !
      &     +fx1(11)*fx2( 5)*( resqq + resdd )   ! bb+b
         ggd=fx1(13)*fx2(13)*resgg
-        pfxtot=(qqd+ggd)/x1
+        if(ix.eq.1)then
+          pfxtot=(qqd+ggd)/x1
+        else if(ix.eq.2)then
+          pfxtot=(qqd+ggd)/x2
+        end if
       end if
+
       if(pfxtot.eq.0.d0)then
         ffxn=0.d0
         return
@@ -1277,7 +1281,6 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Phase space volume      
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
-      write(*,*)'bork 1277'
       pfxtot=pfxtot*(1.d0-tau)*2.d0*Ecm/s
      &      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
   ! ffxn is now M*M*PDFs
@@ -1314,6 +1317,8 @@ c ======================================================================
   !   flux and pi factors.
         ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
+  !   account for x1x2 loop
+      ffxn=ffxn/ixmax
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
    
@@ -1445,7 +1450,6 @@ c ======================================================================
 ! Binning
   ! scale by weight
       hist=ffxn*wgt
-      write(*,*)'bork 1445'
 
       do ip=3,ipmax
   ! generate distribution in pT      
@@ -1927,10 +1931,9 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! End functions
   ! stats
-      write(*,*)'bork 1926'
       npoints=npoints+1
-      fxn=fxn+ffxn
-  ! end loop over x1 and x2 
+      fxn=fxn+ffxn/float(ixmax) ! 2 x number of phase space points
+  ! end loop x1 <-> x2 
       end do 
       return
       end
