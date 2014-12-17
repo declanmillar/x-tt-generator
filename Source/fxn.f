@@ -38,6 +38,7 @@ c ======================================================================
       common/Z/rmZ,gamZ
       common/H/rmH,gamH      
       common/stat/npoints
+      common/symint/ixmax,jxmax
       common/coll/ecm_coll
       common/cuts/ytcut,yttcut
   !   Narrow Width Approximation (NWA)
@@ -240,7 +241,6 @@ c ======================================================================
       ffxn=0.d0 
       x1=x1x2(ix,1)
       x2=x1x2(ix,2)
-
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt

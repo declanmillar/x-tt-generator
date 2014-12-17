@@ -49,6 +49,7 @@
       common/Z/rmZ,gamZ
       common/H/rmH,gamH      
       common/stat/npoints
+      common/symint/ixmax,jxmax
       common/coll/ecm_coll
       common/cuts/ytcut,yttcut
   !   Polarised/Spatial cross sections
@@ -647,7 +648,7 @@
         rm7=0.d0
         rm8=0.d0
   !   Integrates on:
-  !   x(9)=cos(theta_cm_356)=-cos(theta_cm_478),
+ 
   !   x(15)=(x1-tau)/(1-tau),
   !   x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
   !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
@@ -659,7 +660,7 @@
   !   where XX56=arctg((rm56**2-rmW**2)/rmW/gamW),
   !   x(10)=(XX78-XX78min)/(XX78max-XX78min),
   !   where XX78=arctg((rm78**2-rmW**2)/rmW/gamW),
-  !   
+  !   x(9)=cos(theta_cm_356)=-cos(theta_cm_478)  
   !   x(8)=cos(theta56_cm_356),
   !   x(7)=cos(theta78_cm_478),
   !   x(6)=cos(theta5_cm_56),
