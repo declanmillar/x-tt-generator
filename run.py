@@ -37,7 +37,7 @@ parser.add_option("-A", "--iadist",  action="store_const", const=0, default=1, h
 parser.add_option("-m", "--itmx",   type="int",default=5, help="Maximum number of VEGAS iterations.")
 parser.add_option("-l", "--ilhe",   default=0,action="store_const",const=1, help="Output in lhe format.")
 parser.add_option("-x", "--isymx1x2",   default=0,action="store_const",const=1, help="Symmatrise phase space over x1 and x2.")
-
+parser.add_option("-j", "--isymcost",   default=0,action="store_const",const=1, help="Symmatrise phase space over costheta_t.")
 (options, args) = parser.parse_args()
 
 # Collect arguments
@@ -105,6 +105,7 @@ print >> config, '%s ! itdist' % options.itdist
 print >> config, '%s ! iadist' % options.iadist
 print >> config, '%s ! ilhe' % options.ilhe
 print >> config, '%s ! isymx1x2' % options.isymx1x2
+print >> config, '%s ! isymcost' % options.isymcost
 
 # Filename
 filename = '%s_%s%s%s_%s_%sx%s%s' % (final,smodel,sector,interference,emc_col,options.itmx,ncall,options.tag)

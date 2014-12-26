@@ -275,7 +275,8 @@
       read(5,*) ilhe
   !   Symmatrise of x1 and x2
       read(5,*) isymx1x2
-
+  !   Symmatrise of x1 and x2
+      read(5,*) isymcost
   ! Interpret config
     ! Number of external lines
       if(ifinal.eq.0)then 
@@ -303,6 +304,12 @@
         ixmax=2
       else
         ixmax=1
+      end if
+    ! in phase space with cost->-cost
+      if(isymcost.eq.1)then
+        jxmax=2
+      else
+        jxmax=1
       end if
     ! Extract model filename (Remove white space.)
       imodel = len(model)
@@ -488,12 +495,12 @@
       m_sigp=iadist
       sigpmax=rMttmax
       sigpmin=rMttmin
-      ndiv_sigp=ndiv_rMtt/10
+      ndiv_sigp=ndiv_rMtt/5
   !   sigm
       m_sigm=iadist
       sigmmax=rMttmax
       sigmmin=rMttmin
-      ndiv_sigm=ndiv_rMtt/10      
+      ndiv_sigm=ndiv_rMtt/5      
 
   !   asymmetries
       do i_asym=1,8   ! N_asym

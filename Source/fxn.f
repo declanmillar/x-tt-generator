@@ -241,6 +241,8 @@ c ======================================================================
       ffxn=0.d0 
       x1=x1x2(ix,1)
       x2=x1x2(ix,2)
+      do jx=1,jxmax
+      fffxn=0.d0
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt
@@ -410,7 +412,13 @@ c ======================================================================
   !   Outgoing momenta for 2 body final state.  
       if(ifinal.eq.0)then
         phit=2.d0*pi*ran(jseed)
-        ct=x(1)
+        if(jx.eq.1)then
+          ct=x(1)
+        else if(jx.eq.2)then
+          ct=-x(1)
+        else
+          write(*,*)'Invalid jx.'
+        end if
         st=sqrt(1.d0-ct*ct)
         qcm2=((Ecm*Ecm-rm3*rm3-rm4*rm4)**2-(2.d0*rm3*rm4)**2)/
      &    (4.d0*Ecm*Ecm)
@@ -490,7 +498,13 @@ c ======================================================================
         else
           rm78=sqrt(rm78_2)
         endif
-        ct=x(9)
+        if(jx.eq.1)then
+          ct=x(9)
+        else if(jx.eq.2)then
+          ct=-x(9)
+        else
+          write(*,*)'Invalid jx.'
+        end if
         st=sqrt(abs(1.d0-ct*ct))
         ct56=x(8)
         st56=sqrt(1.d0-ct56*ct56)
@@ -1317,8 +1331,6 @@ c ======================================================================
   !   flux and pi factors.
         ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
-  !   account for x1x2 loop
-      ffxn=ffxn/ixmax
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
    
@@ -1341,7 +1353,7 @@ c ======================================================================
         end do
       end if
 
-  ! AFB*    
+  ! AFB    
       if(m_asy(4).eq.0)then
         continue
       else
@@ -1362,6 +1374,27 @@ c ======================================================================
         end if
       end if
 
+  ! AFBstar   
+      if(m_asy(5).eq.0)then
+        continue
+      else
+        if(costcm.eq.0.d0)then
+          continue
+        else if(costcm.gt.0.d0)then
+          asycross(2,it,+1)=asycross(2,it,+1)
+     &                              +ffxn
+     &                              *wgt
+          asyerror(2,it,+1)=asyerror(2,it,+1)
+     &                   +asycross(2,it,+1)**2
+        else if(costcm.lt.0.d0)then
+          asycross(2,it,-1)=asycross(2,it,-1)
+     &                              +ffxn
+     &                              *wgt
+          asyerror(2,it,-1)=asyerror(2,it,-1)
+     &                   +asycross(2,it,-1)**2
+        end if
+      end if
+
   ! AtFB
 
       if(m_asy(5).eq.0)then
@@ -1370,17 +1403,17 @@ c ======================================================================
         if(yt.eq.0.d0)then
           continue
         else if(yt.gt.0.d0)then
-          asycross(2,it,+1)=asycross(2,it,+1)
+          asycross(3,it,+1)=asycross(3,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(2,it,+1)=asyerror(2,it,+1)
-     &                   +asycross(2,it,+1)**2
+          asyerror(3,it,+1)=asyerror(3,it,+1)
+     &                   +asycross(3,it,+1)**2
         else if(yt.lt.0.d0)then
-          asycross(2,it,-1)=asycross(2,it,-1)
+          asycross(3,it,-1)=asycross(3,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(2,it,-1)=asyerror(2,it,-1)
-     &                   +asycross(2,it,-1)**2
+          asyerror(3,it,-1)=asyerror(3,it,-1)
+     &                   +asycross(3,it,-1)**2
         end if
       end if
 
@@ -1932,6 +1965,9 @@ c ======================================================================
 ! End functions
   ! stats
       npoints=npoints+1
+  ! end loop (cost)+(-cost)
+      ffxn=ffxn+fffxn/float(jxmax) ! 2 x number of phase space points
+      end do
       fxn=fxn+ffxn/float(ixmax) ! 2 x number of phase space points
   ! end loop x1 <-> x2 
       end do 
