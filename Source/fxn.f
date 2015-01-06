@@ -52,12 +52,16 @@ c ======================================================================
       common/polarqq/polqq(-1:1,-1:1)
       common/polargg/polgg(-1:1,-1:1)
   !   structure functions
-      COMMON/PARTDIST/ISTRUCTURE
-      common/ALFASTRONG/rlambdaQCD4,nloops
+      common/partdist/istructure
+      common/alfastrong/rlambdaQCD4,nloops
       common/collider/icoll
-  !   Polarised cross sections
+  ! Polarised/Spatial cross sections
+      integer nasy
+      parameter (nasy=9)
+      integer nspat
+      parameter (nspat=6) !nasy-3
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
-      common/spatial/asycross(5,20,-1:1),asyerror(5,20,-1:1)  !nasy-3
+      common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
   !   Switch for all distributions
       common/distros/idist
   !   Distributions in pTs of particles
@@ -176,16 +180,18 @@ c ======================================================================
       common/div_ct7ct5/ndiv_ct7ct5
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
-      common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
+      common/dist_sigp/xsigp(1000),fxsigp(nasy,1000,20)
+     &,fxsigptot(nasy,1000)
       common/inp_sigp/m_sigp
       common/div_sigp/ndiv_sigp
   !   Distribution in sigm
       common/ext_sigm/sigmmax,sigmmin,sigmw
-      common/dist_sigm/xsigm(1000),fxsigm(8,1000,20),fxsigmtot(8,1000)
+      common/dist_sigm/xsigm(1000),fxsigm(nasy,1000,20)
+     &,fxsigmtot(nasy,1000)
       common/inp_sigm/m_sigm
       common/div_sigm/ndiv_sigm
   !   Distributions in asymmetries
-      common/inp_asym/m_asy(8)  ! nasy
+      common/inp_asym/m_asy(nasy)  ! nasy
 
   ! Local arrays    
   !   phase space vectors.
@@ -776,9 +782,10 @@ c ======================================================================
       else if(ifinal.eq.1)then
         Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
-  ! calculate boost of the tt system
 
+  ! calculate boost of the tt system
       ytt = 0.5d0*log(x1/x2)
+
   ! calculate rMtt
       if(ifinal.eq.0)then
         rMtt2=(qcol(4,3)+qcol(4,4))**2
@@ -951,6 +958,9 @@ c ======================================================================
       if(ifinal.gt.0)then
           ct7ct5=cost7*cost5
       end if
+
+  ! calculate costst
+      costst=int(ytt/abs(ytt))*costcm
 
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
@@ -1360,17 +1370,17 @@ c ======================================================================
         if(costcm.eq.0.d0)then
           continue
         else if(costcm.gt.0.d0)then
-          asycross(1,it,+1)=asycross(1,it,+1)
+          spatcross(1,it,+1)=spatcross(1,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(1,it,+1)=asyerror(1,it,+1)
-     &                   +asycross(1,it,+1)**2
+          spaterror(1,it,+1)=spaterror(1,it,+1)
+     &                   +spatcross(1,it,+1)**2
         else if(costcm.lt.0.d0)then
-          asycross(1,it,-1)=asycross(1,it,-1)
+          spatcross(1,it,-1)=spatcross(1,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(1,it,-1)=asyerror(1,it,-1)
-     &                   +asycross(1,it,-1)**2
+          spaterror(1,it,-1)=spaterror(1,it,-1)
+     &                   +spatcross(1,it,-1)**2
         end if
       end if
 
@@ -1378,104 +1388,104 @@ c ======================================================================
       if(m_asy(5).eq.0)then
         continue
       else
-        if(costcm.eq.0.d0)then
+        if(costst.eq.0.d0)then
           continue
-        else if(costcm.gt.0.d0)then
-          asycross(2,it,+1)=asycross(2,it,+1)
+        else if(costst.gt.0.d0)then
+          spatcross(2,it,+1)=spatcross(2,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(2,it,+1)=asyerror(2,it,+1)
-     &                   +asycross(2,it,+1)**2
-        else if(costcm.lt.0.d0)then
-          asycross(2,it,-1)=asycross(2,it,-1)
+          spaterror(2,it,+1)=spaterror(2,it,+1)
+     &                   +spatcross(2,it,+1)**2
+        else if(costst.lt.0.d0)then
+          spatcross(2,it,-1)=spatcross(2,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(2,it,-1)=asyerror(2,it,-1)
-     &                   +asycross(2,it,-1)**2
+          spaterror(2,it,-1)=spaterror(2,it,-1)
+     &                   +spatcross(2,it,-1)**2
         end if
       end if
 
-  ! AtFB
+  ! AtRFB
 
-      if(m_asy(5).eq.0)then
+      if(m_asy(6).eq.0)then
         continue
       else
         if(yt.eq.0.d0)then
           continue
         else if(yt.gt.0.d0)then
-          asycross(3,it,+1)=asycross(3,it,+1)
+          spatcross(3,it,+1)=spatcross(3,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(3,it,+1)=asyerror(3,it,+1)
-     &                   +asycross(3,it,+1)**2
+          spaterror(3,it,+1)=spaterror(3,it,+1)
+     &                   +spatcross(3,it,+1)**2
         else if(yt.lt.0.d0)then
-          asycross(3,it,-1)=asycross(3,it,-1)
+          spatcross(3,it,-1)=spatcross(3,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(3,it,-1)=asyerror(3,it,-1)
-     &                   +asycross(3,it,-1)**2
+          spaterror(3,it,-1)=spaterror(3,it,-1)
+     &                   +spatcross(3,it,-1)**2
         end if
       end if
 
-  ! A
-      if(m_asy(6).eq.0)then
+  ! AttbRFB/A
+      if(m_asy(7).eq.0)then
         continue
       else
         if(yt.ge.0.d0)then
-          asycross(3,it,+1)=asycross(3,it,+1)
+          spatcross(4,it,+1)=spatcross(4,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(3,it,+1)=asyerror(3,it,+1)
-     &                   +asycross(3,it,+1)**2
+          spaterror(4,it,+1)=spaterror(4,it,+1)
+     &                   +spatcross(4,it,+1)**2
         end if
         if(ytb.gt.0.d0)then
-          asycross(3,it,-1)=asycross(3,it,-1)
+          spatcross(4,it,-1)=spatcross(4,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(3,it,-1)=asyerror(3,it,-1)
-     &                   +asycross(3,it,-1)**2
+          spaterror(4,it,-1)=spaterror(4,it,-1)
+     &                   +spatcross(4,it,-1)**2
         end if
       end if
 
-  ! A'/ARFB
+  ! ARFB/A'
 
-      if((m_asy(7).eq.1).and.(abs(ytt).gt.yttcut))then
+      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
         if(del_y.eq.0.d0)then
           continue
         else if(del_y.ge.0.d0)then
-          asycross(4,it,+1)=asycross(4,it,+1)
+          spatcross(5,it,+1)=spatcross(5,it,+1)
      &                              +ffxn
      &                              *wgt
-          asyerror(4,it,+1)=asyerror(4,it,+1)
-     &                   +asycross(4,it,+1)**2
+          spaterror(5,it,+1)=spaterror(5,it,+1)
+     &                   +spatcross(5,it,+1)**2
         else if(del_y.lt.0.d0)then
-          asycross(4,it,-1)=asycross(4,it,-1)
+          spatcross(5,it,-1)=spatcross(5,it,-1)
      &                              +ffxn
      &                              *wgt
-          asyerror(4,it,-1)=asyerror(4,it,-1)
-     &                   +asycross(4,it,-1)**2
+          spaterror(5,it,-1)=spaterror(5,it,-1)
+     &                   +spatcross(5,it,-1)**2
         end if
       end if
 
   ! A_l
-      if(m_asy(8).eq.0)then
+      if(m_asy(9).eq.0)then
         continue
       else
         if (ifinal.gt.0)then      
           if(cosfl.eq.0.d0)then
             continue
           else if(cosfl.gt.0.d0)then
-            asycross(5,it,+1)=asycross(5,it,+1)
+            spatcross(6,it,+1)=spatcross(6,it,+1)
      &                                +ffxn
      &                                *wgt
-            asyerror(5,it,+1)=asyerror(5,it,+1)
-     &                     +asycross(5,it,+1)**2
+            spaterror(6,it,+1)=spaterror(6,it,+1)
+     &                     +spatcross(6,it,+1)**2
           else if(cosfl.lt.0.d0)then
-            asycross(5,it,-1)=asycross(5,it,-1)
+            spatcross(6,it,-1)=spatcross(6,it,-1)
      &                                +ffxn
      &                                *wgt
-            asyerror(5,it,-1)=asyerror(5,it,-1)
-     &                     +asycross(5,it,-1)**2
+            spaterror(6,it,-1)=spaterror(6,it,-1)
+     &                     +spatcross(6,it,-1)**2
           end if
         end if
       end if
@@ -1854,8 +1864,8 @@ c ======================================================================
       end if
 
       if(m_asy(5).eq.1)then
-        if((m_sigp.eq.1).and.(yt.gt.0.d0))then
-  ! generate distribution in sigp for AtFB.
+        if((m_sigp.eq.1).and.(costst.gt.0.d0))then
+  ! generate distribution in sigp for AFBcm.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1866,8 +1876,8 @@ c ======================================================================
             fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(yt.lt.0.d0))then
-  ! generate distribution in sigm for AtFB.
+        if((m_sigm.eq.1).and.(costst.lt.0.d0))then
+  ! generate distribution in sigm for AFBcm.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1881,8 +1891,8 @@ c ======================================================================
       end if
 
       if(m_asy(6).eq.1)then
-        if((m_sigp.eq.1).and.(yt.ge.0.d0))then
-  ! generate distribution in sigp for A.
+        if((m_sigp.eq.1).and.(yt.gt.0.d0))then
+  ! generate distribution in sigp for AtFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1893,8 +1903,8 @@ c ======================================================================
             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(ytb.ge.0.d0))then
-  ! generate distribution in sigm for A.
+        if((m_sigm.eq.1).and.(yt.lt.0.d0))then
+  ! generate distribution in sigm for AtFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1907,9 +1917,9 @@ c ======================================================================
         end if
       end if
 
-      if((m_asy(7).eq.1).and.(abs(ytt).gt.yttcut))then
-        if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
-  ! generate distribution in sigp for Ap.
+      if(m_asy(7).eq.1)then
+        if((m_sigp.eq.1).and.(yt.ge.0.d0))then
+  ! generate distribution in sigp for A.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1920,8 +1930,8 @@ c ======================================================================
             fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(del_y.lt.0.d0))then
-  ! generate distribution in sigm for Ap.
+        if((m_sigm.eq.1).and.(ytb.ge.0.d0))then
+  ! generate distribution in sigm for A.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -1934,8 +1944,35 @@ c ======================================================================
         end if
       end if
 
+      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
+        if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
+  ! generate distribution in sigp for Ap.
+          sigp=Ecm
+          nbin=int((sigp-sigpmin)/sigpw)+1
+          if(nbin.ge.(ndiv_sigp+1))then
+            continue
+          else if(nbin.lt.1)then
+            continue
+          else
+            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+          end if
+        end if  
+        if((m_sigm.eq.1).and.(del_y.lt.0.d0))then
+  ! generate distribution in sigm for Ap.
+          sigm=Ecm
+          nbin=int((sigm-sigmmin)/sigmw)+1
+          if(nbin.ge.(ndiv_sigm+1))then
+            continue
+          else if(nbin.lt.1)then
+            continue
+          else
+            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+          end if
+        end if
+      end if
 
-      if(m_asy(8).eq.1)then
+
+      if(m_asy(9).eq.1)then
         if((m_sigp.eq.1).and.(cosfl.gt.0.d0))then
   ! generate distribution in sigp for A_l.
           sigp=Ecm
@@ -1945,7 +1982,7 @@ c ======================================================================
           else if(nbin.lt.1)then
             continue
           else
-            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+            fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
           end if
         end if
         if((m_sigm.eq.1).and.(cosfl.lt.0.d0))then
@@ -1957,7 +1994,7 @@ c ======================================================================
           else if(nbin.lt.1)then
             continue
           else
-            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+            fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
           end if
         end if
       end if

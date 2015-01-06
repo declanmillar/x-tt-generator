@@ -53,8 +53,12 @@
       common/coll/ecm_coll
       common/cuts/ytcut,yttcut
   !   Polarised/Spatial cross sections
+      integer nasy
+      parameter (nasy=9)
+      integer nspat
+      parameter (nspat=6) !nasy-3
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
-      common/spatial/asycross(5,20,-1:1),asyerror(5,20,-1:1)  !nasy -3
+      common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
   !   Permitted gauge sectors
       common/igauge/iQCD,iEW,iBSM
   !   Interference       
@@ -182,15 +186,17 @@
       common/inp_ct7ct5/m_ct7ct5
       common/div_ct7ct5/ndiv_ct7ct5  
   !   Distributions in asymmetries
-      common/inp_asym/m_asy(8)  ! nasy      
+      common/inp_asym/m_asy(nasy)    
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
-      common/dist_sigp/xsigp(1000),fxsigp(8,1000,20),fxsigptot(8,1000)
+      common/dist_sigp/xsigp(1000),fxsigp(nasy,1000,20)
+     &,fxsigptot(nasy,1000)
       common/inp_sigp/m_sigp
       common/div_sigp/ndiv_sigp
   !   Distribution in sigm
       common/ext_sigm/sigmmax,sigmmin,sigmw
-      common/dist_sigm/xsigm(1000),fxsigm(8,1000,20),fxsigmtot(8,1000)
+      common/dist_sigm/xsigm(1000),fxsigm(nasy,1000,20)
+     &,fxsigmtot(nasy,1000)
       common/inp_sigm/m_sigm
       common/div_sigm/ndiv_sigm
 
@@ -205,9 +211,9 @@
       dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
       dimension asytot(5,-1:1),asychi(5,-1:1)
       dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8)
-      dimension sfxsigptot(8),sfxsigmtot(8)
-      dimension asym_int(8)
-      dimension Atot(8),Atoterr(8)
+      dimension sfxsigptot(nasy),sfxsigmtot(nasy)
+      dimension asym_int(nasy)
+      dimension Atot(nasy),Atoterr(nasy)
 
   ! Local constants
   !   pi
@@ -503,8 +509,8 @@
       ndiv_sigm=ndiv_rMtt/5      
 
   !   asymmetries
-      do i_asym=1,8   ! N_asym
-        m_asy(i_asym)=iadist
+      do iasy=1,nasy
+        m_asy(iasy)=iadist
       end do
 
   !   Turn off 2->6 only distributions
@@ -532,7 +538,7 @@
         m_cost7  = 0
         m_cost5  = 0
         m_ct7ct5 = 0
-        m_asy(8) = 0  ! turn off A_l
+        m_asy(9) = 0  ! turn off A_l
       end if
   !   Turn off 2->2 only distributions
       if (ifinal.eq.1)then
@@ -965,10 +971,10 @@
               polerror(i,iphel,jphel)=0.d0
             end do
           end do
-          do jasy=1,5   ! nasy-3
+          do ispat=1,nspat
             do iasy=-1,+1,2
-              asycross(jasy,i,iasy)=0.d0
-              asyerror(jasy,i,iasy)=0.d0
+              spatcross(ispat,i,iasy)=0.d0
+              spaterror(ispat,i,iasy)=0.d0
             end do
           end do 
         end do
@@ -1041,26 +1047,24 @@
         end if
 
     ! Collect unpolarised spatial asymmetry
-        do iasy=1,5   ! nasy-3
-    !         write(*,*)iasy,m_asy(iasy+3)
+        do iasy=1,nspat
           if(m_asy(iasy+3).eq.0)then
             continue
           else
             do iAB=-1,+1,2
               do i=1,it
-                asycross(iasy,i,iAB)=asycross(iasy,i,iAB)
+                spatcross(iasy,i,iAB)=spatcross(iasy,i,iAB)
      &                            *avgi/cnorm(i)
-                asyerror(iasy,i,iAB)=asycross(iasy,i,iAB)
+                spaterror(iasy,i,iAB)=spatcross(iasy,i,iAB)
      &                            *sd/cnorm(i)
-                write(*,*)asycross(iasy,i,iAB)
               end do        
               asytot(iasy,iAB)=0.d0
               asychi(iasy,iAB)=0.d0
               do i=1,it   ! add up each iteration
                 asytot(iasy,iAB)=asytot(iasy,iAB)
-     &                      +asycross(iasy,i,iAB)
+     &                      +spatcross(iasy,i,iAB)
                 asychi(iasy,iAB)=asychi(iasy,iAB)
-     &                      +asyerror(iasy,i,iAB)
+     &                      +spaterror(iasy,i,iAB)
               end do
               asychi(iasy,iAB)=asychi(iasy,iAB)
      &                        /asytot(iasy,iAB)
@@ -1100,47 +1104,17 @@
      &             +(polchi(-1,-1)+polchi(+1,+1))
      &             /2.d0*Atot(3)
         end if
-    ! AFBcm
-        Atot(4)=
-     &          +(asytot(1,+1)-asytot(1,-1))
-     &          /cross
-          Atoterr(4)=
-     &            +sd/avgi*Atot(4)
-    ! AtFB
-        Atot(5)=
-     &          +(asytot(2,+1)-asytot(2,-1))
-     &          /cross
-        Atoterr(5)=
-     &            +sd/avgi*Atot(5)
 
-        if(m_asy(6).gt.0)then
-    ! A
-          Atot(6)=
-     &          +(asytot(3,+1)-asytot(3,-1))
-     &          /cross
-          Atoterr(6)=
-     &            +sd/avgi*Atot(6)
-        end if
-
-        if(m_asy(7).gt.0)then
-    ! A'/ARFB
-          Atot(7)=
-     &          +(asytot(4,+1)-asytot(4,-1))
-     &          /cross
-          Atoterr(7)=
-     &            +sd/avgi*Atot(7)
-        end if
-
-        
-        if(m_asy(8).gt.0)then
-    ! A_l
-          Atot(8)=
-     &          +(asytot(5,+1)-asytot(5,-1))
-     &          /cross
-          Atoterr(8)=
-     &            +sd/avgi*Atot(8)
-        end if
-      
+        do iasy=4,nasy
+          ispat=iasy-3
+          if(m_asy(iasy).gt.0)then
+            Atot(iasy)=
+     &             +(asytot(ispat,+1)-asytot(ispat,-1))
+     &             /cross
+            Atoterr(iasy)=
+     &               +sd/avgi*Atot(iasy)
+           end if
+        end do
 
   ! Print Asymmetries     
         write(*,*)'TOTAL ASYMMETRIES'
@@ -1151,17 +1125,19 @@
           write(*,*)Atot(2),Atoterr(2) 
           write(*,*)'APV:                  uncertainty (same units):'
           write(*,*)Atot(3),Atoterr(3) 
-          write(*,*)'AFB*:                 uncertainty (same units):'
+          write(*,*)'AFB:                 uncertainty (same units):'
           write(*,*)Atot(4),Atoterr(4)
-          write(*,*)'AtFB:                    uncertainty (same units):'
+          write(*,*)'AFB*:                   uncertainty (same units):'
           write(*,*)Atot(5),Atoterr(5)
-          write(*,*)'A:                    uncertainty (same units):'
+          write(*,*)'AtRFB:                  uncertainty (same units):'
           write(*,*)Atot(6),Atoterr(6)
-          write(*,*)"A':                    uncertainty (same units):"
+          write(*,*)"AttbRFB/A:              uncertainty (same units):"
           write(*,*)Atot(7),Atoterr(7)
+          write(*,*)"ARFB/A':              uncertainty (same units):"
+          write(*,*)Atot(8),Atoterr(8)
         else if(ifinal.gt.0)then
           write(*,*)'A_l:                  uncertainty (same units):'
-          write(*,*)Atot(6),Atoterr(6) 
+          write(*,*)Atot(9),Atoterr(9) 
         end if
       end if 
 ! ----------------------------------------------------------------------
@@ -1642,7 +1618,7 @@
       end if
   ! Plot distributions in all asymmetries
       if((m_sigp.eq.1).and.(m_sigm.eq.1))then
-        do jasy=1,8
+        do jasy=1,nasy
           if(m_asy(jasy).eq.0)then
             continue
           else
@@ -1675,18 +1651,21 @@
                 write(*,*)'APV'
                 write(*,*)'A_{PV}'
             else if(jasy.eq.4)then
-                write(*,*)'AFBcm'
-                write(*,*)'A_{FB^{*}}'
+                write(*,*)'AFB'
+                write(*,*)'A_{FB}'
             else if(jasy.eq.5)then
-                write(*,*)'AtFB'
-                write(*,*)'A^{t}_{FB}'
+                write(*,*)'AFBst'
+                write(*,*)'A_{FB^*}'
             else if(jasy.eq.6)then
-                write(*,*)'A'
-                write(*,*)'A'
+                write(*,*)'AtRFB'
+                write(*,*)'A^t_{RFB}'
             else if(jasy.eq.7)then
-                write(*,*)'Ap'
-                write(*,*)"A'"
+                write(*,*)'AttbRFB'
+                write(*,*)"A^{b\bar{b}}_{RFB}"
             else if(jasy.eq.8)then
+                write(*,*)'ARFB'
+                write(*,*)"A_{RFB}"  
+            else if(jasy.eq.9)then
                 write(*,*)'A_l'
                 write(*,*)'A_{l}'
             end if            
@@ -1822,7 +1801,7 @@
           n_error=n_error+1
         end if
       end if
-      do iasy=1,8 !nasy
+      do iasy=1,nasy
         if(m_asy(iasy).eq.0)then
           continue
         else
