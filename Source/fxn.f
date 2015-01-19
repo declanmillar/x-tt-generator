@@ -247,6 +247,7 @@ c ======================================================================
       ffxn=0.d0 
       x1=x1x2(ix,1)
       x2=x1x2(ix,2)
+  ! Loop over costheta_cm
       do jx=1,jxmax
       fffxn=0.d0
   ! Structure functions
@@ -752,15 +753,15 @@ c ======================================================================
       end if     
   ! calculate cos(theta^*_t)
       if(ifinal.eq.0)then
-          costcm=+(q(1,3)*q(1,1)
-     &         +q(2,3)*q(2,1)  
-     &         +q(3,3)*q(3,1))
-     &    /sqrt(q(1,3)*q(1,3) 
-     &         +q(2,3)*q(2,3)
-     &         +q(3,3)*q(3,3))
-     &    /sqrt(q(1,1)*q(1,1) 
-     &         +q(2,1)*q(2,1)
-     &         +q(3,1)*q(3,1))
+          costcm=(q(1,3)*q(1,1)
+     &           +q(2,3)*q(2,1)  
+     &           +q(3,3)*q(3,1))
+     &      /sqrt(q(1,3)*q(1,3) 
+     &           +q(2,3)*q(2,3)
+     &           +q(3,3)*q(3,3))
+     &      /sqrt(q(1,1)*q(1,1) 
+     &           +q(2,1)*q(2,1)
+     &           +q(3,1)*q(3,1))
       else if(ifinal.gt.0)then
         costcm=
      &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
@@ -915,21 +916,23 @@ c ======================================================================
       else
         continue
       end if
-  ! Calculate top rapidities (y)
+  ! Calculate rapdity (y) of top and antitop
       if(ifinal.eq.0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3))) 
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
+        write(*,*)yt,ytb
       else if(ifinal.gt.0)then
         yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6)
      &               +qcol(3,3)+qcol(3,5)+qcol(3,6))
      &              /(qcol(4,3)+qcol(4,5)+qcol(4,6)
-     &               -qcol(3,3)+qcol(3,5)+qcol(3,6)))
+     &               -qcol(3,3)-qcol(3,5)-qcol(3,6)))
         ytb=0.5*log((qcol(4,4)+qcol(4,7)+qcol(4,8)
      &               +qcol(3,4)+qcol(3,7)+qcol(3,8))
      &              /(qcol(4,4)+qcol(4,7)+qcol(4,8)
-     &               -qcol(3,4)+qcol(3,7)+qcol(3,8)))
+     &               -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
-      del_y=abs(yt)-abs(ytb)
+!       del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
+      del_y=yt-ytb ! this is A' from Bernreuther's paper
   ! calculate cos(theta_l+)
       if(ifinal.gt.0)then
           cost5=+(q(1,5)*q(1,1)
@@ -956,12 +959,12 @@ c ======================================================================
       end if
 
       if(ifinal.gt.0)then
-          ct7ct5=cost7*cost5
+        ct7ct5=cost7*cost5
       end if
 
   ! calculate costst
       costst=int(ytt/abs(ytt))*costcm
-
+!       write(*,*)'del_y',del_y,'; costst',costst
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
@@ -1396,12 +1399,14 @@ c ======================================================================
      &                              *wgt
           spaterror(2,it,+1)=spaterror(2,it,+1)
      &                   +spatcross(2,it,+1)**2
+!           write(*,*)'asy(5)=+1'
         else if(costst.lt.0.d0)then
           spatcross(2,it,-1)=spatcross(2,it,-1)
      &                              +ffxn
      &                              *wgt
           spaterror(2,it,-1)=spaterror(2,it,-1)
      &                   +spatcross(2,it,-1)**2
+!           write(*,*)'asy(5)=-1'
         end if
       end if
 
@@ -1438,7 +1443,7 @@ c ======================================================================
           spaterror(4,it,+1)=spaterror(4,it,+1)
      &                   +spatcross(4,it,+1)**2
         end if
-        if(ytb.gt.0.d0)then
+        if(ytb.ge.0.d0)then
           spatcross(4,it,-1)=spatcross(4,it,-1)
      &                              +ffxn
      &                              *wgt
@@ -1452,18 +1457,20 @@ c ======================================================================
       if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
         if(del_y.eq.0.d0)then
           continue
-        else if(del_y.ge.0.d0)then
+        else if(del_y.gt.0.d0)then
           spatcross(5,it,+1)=spatcross(5,it,+1)
      &                              +ffxn
      &                              *wgt
           spaterror(5,it,+1)=spaterror(5,it,+1)
      &                   +spatcross(5,it,+1)**2
+!           write(*,*)'asy(8)=+1'
         else if(del_y.lt.0.d0)then
           spatcross(5,it,-1)=spatcross(5,it,-1)
      &                              +ffxn
      &                              *wgt
           spaterror(5,it,-1)=spaterror(5,it,-1)
      &                   +spatcross(5,it,-1)**2
+!           write(*,*)'asy(8)=-1'
         end if
       end if
 
@@ -1946,7 +1953,7 @@ c ======================================================================
 
       if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
         if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
-  ! generate distribution in sigp for Ap.
+  ! generate distribution in sigp for ARFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1958,7 +1965,7 @@ c ======================================================================
           end if
         end if  
         if((m_sigm.eq.1).and.(del_y.lt.0.d0))then
-  ! generate distribution in sigm for Ap.
+  ! generate distribution in sigm for ARFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then

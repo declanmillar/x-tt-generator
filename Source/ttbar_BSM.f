@@ -207,9 +207,9 @@
       character*50 model
   !   Polarised/hemispherised cross sections
       dimension cnorm(20)
-      dimension snorm(6)  !,ave(4) 
+      !dimension snorm(6)  !,ave(4) 
       dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
-      dimension asytot(5,-1:1),asychi(5,-1:1)
+      dimension spattot(nspat,-1:1),spatchi(nspat,-1:1)
       dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8)
       dimension sfxsigptot(nasy),sfxsigmtot(nasy)
       dimension asym_int(nasy)
@@ -1047,30 +1047,30 @@
         end if
 
     ! Collect unpolarised spatial asymmetry
-        do iasy=1,nspat
-          if(m_asy(iasy+3).eq.0)then
+        do ispat=1,nspat
+          if(m_asy(ispat+3).eq.0)then
             continue
           else
             do iAB=-1,+1,2
               do i=1,it
-                spatcross(iasy,i,iAB)=spatcross(iasy,i,iAB)
+                spatcross(ispat,i,iAB)=spatcross(ispat,i,iAB)
      &                            *avgi/cnorm(i)
-                spaterror(iasy,i,iAB)=spatcross(iasy,i,iAB)
+                spaterror(ispat,i,iAB)=spatcross(ispat,i,iAB)
      &                            *sd/cnorm(i)
               end do        
-              asytot(iasy,iAB)=0.d0
-              asychi(iasy,iAB)=0.d0
+              spattot(ispat,iAB)=0.d0
+              spatchi(ispat,iAB)=0.d0
               do i=1,it   ! add up each iteration
-                asytot(iasy,iAB)=asytot(iasy,iAB)
-     &                      +spatcross(iasy,i,iAB)
-                asychi(iasy,iAB)=asychi(iasy,iAB)
-     &                      +spaterror(iasy,i,iAB)
+                spattot(ispat,iAB)=spattot(ispat,iAB)
+     &                      +spatcross(ispat,i,iAB)
+                spatchi(ispat,iAB)=spatchi(ispat,iAB)
+     &                      +spaterror(ispat,i,iAB)
               end do
-              asychi(iasy,iAB)=asychi(iasy,iAB)
-     &                        /asytot(iasy,iAB)
-    !           asychi(iasy)=
-    !      & sqrt(abs(asychi(iasy)
-    !      &         -asytot(iasy)**2*dfloat(ncall)))
+              spatchi(ispat,iAB)=spatchi(ispat,iAB)
+     &                        /spattot(ispat,iAB)
+    !           spatchi(iasy)=
+    !      & sqrt(abs(spatchi(iasy)
+    !      &         -spattot(iasy)**2*dfloat(ncall)))
     !      & /dfloat(ncall)
             end do
           end if
@@ -1109,7 +1109,7 @@
           ispat=iasy-3
           if(m_asy(iasy).gt.0)then
             Atot(iasy)=
-     &             +(asytot(ispat,+1)-asytot(ispat,-1))
+     &             +(spattot(ispat,+1)-spattot(ispat,-1))
      &             /cross
             Atoterr(iasy)=
      &               +sd/avgi*Atot(iasy)
@@ -1655,10 +1655,10 @@
                 write(*,*)'A_{FB}'
             else if(jasy.eq.5)then
                 write(*,*)'AFBst'
-                write(*,*)'A_{FB^*}'
+                write(*,*)'A_{FB^{*}}'
             else if(jasy.eq.6)then
                 write(*,*)'AtRFB'
-                write(*,*)'A^t_{RFB}'
+                write(*,*)'A^{t}_{RFB}'
             else if(jasy.eq.7)then
                 write(*,*)'AttbRFB'
                 write(*,*)"A^{b\bar{b}}_{RFB}"

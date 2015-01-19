@@ -117,10 +117,10 @@ except IOError:
       sys.exit()
 
 # Logfile      
-write = '' if options.output else '> Output/%s.log' % (filename)
+write = '' if options.output else '> Output/%s.log &' % (filename)
 
 # Command
-command = './%s < Config/%s.com %s &' % (executable,filename,write)
+command = './%s < Config/%s.com %s' % (executable,filename,write)
 print 'executing: ',command
 subprocess.call(command, shell=True)
    
