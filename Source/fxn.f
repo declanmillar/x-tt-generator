@@ -931,7 +931,7 @@ c ======================================================================
      &              /(qcol(4,4)+qcol(4,7)+qcol(4,8)
      &               -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
-!       del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
+  !     del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
       del_y=yt-ytb ! this is A' from Bernreuther's paper
   ! calculate cos(theta_l+)
       if(ifinal.gt.0)then
@@ -964,7 +964,7 @@ c ======================================================================
 
   ! calculate costst
       costst=int(ytt/abs(ytt))*costcm
-!       write(*,*)'del_y',del_y,'; costst',costst
+  !     write(*,*)'del_y',del_y,'; costst',costst
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(ifinal.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
@@ -1023,7 +1023,7 @@ c ======================================================================
         continue
       end if !
 !-----------------------------------------------------------------------    
-! Matrix elements   
+! Matrix elements
   ! Assign 2to2 MadGraph momenta
       if(ifinal.eq.0)then
         
@@ -1306,7 +1306,7 @@ c ======================================================================
   !       write(*,*)'resdd =',resdd
   !       write(*,*)'pfxtot =',pfxtot
 ! ----------------------------------------------------------------------
-! Phase space volume      
+! Phase space volume
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
       pfxtot=pfxtot*(1.d0-tau)*2.d0*Ecm/s
      &      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
@@ -1399,14 +1399,14 @@ c ======================================================================
      &                              *wgt
           spaterror(2,it,+1)=spaterror(2,it,+1)
      &                   +spatcross(2,it,+1)**2
-!           write(*,*)'asy(5)=+1'
+  !         write(*,*)'asy(5)=+1'
         else if(costst.lt.0.d0)then
           spatcross(2,it,-1)=spatcross(2,it,-1)
      &                              +ffxn
      &                              *wgt
           spaterror(2,it,-1)=spaterror(2,it,-1)
      &                   +spatcross(2,it,-1)**2
-!           write(*,*)'asy(5)=-1'
+  !         write(*,*)'asy(5)=-1'
         end if
       end if
 
@@ -1463,14 +1463,14 @@ c ======================================================================
      &                              *wgt
           spaterror(5,it,+1)=spaterror(5,it,+1)
      &                   +spatcross(5,it,+1)**2
-!           write(*,*)'asy(8)=+1'
+  !         write(*,*)'asy(8)=+1'
         else if(del_y.lt.0.d0)then
           spatcross(5,it,-1)=spatcross(5,it,-1)
      &                              +ffxn
      &                              *wgt
           spaterror(5,it,-1)=spaterror(5,it,-1)
      &                   +spatcross(5,it,-1)**2
-!           write(*,*)'asy(8)=-1'
+  !         write(*,*)'asy(8)=-1'
         end if
       end if
 
