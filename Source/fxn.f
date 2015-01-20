@@ -205,11 +205,17 @@ c ======================================================================
       dimension pTvis(2),pTmiss(2)
   ! Lepton azimuthal angle coordinate system
       dimension xp(3),yp(3),zp(3)
-  !   polar M*Ms for asymmetries
-      dimension respolgg(-1:1,-1:1),respolqq(-1:1,-1:1)      
-      dimension respoldd(-1:1,-1:1),respoluu(-1:1,-1:1)
+  !  polar M*Ms for asymmetries
+    ! situation one: q-qbar
+      dimension respolgg1(-1:1,-1:1),respolqq1(-1:1,-1:1)      
+      dimension respoldd1(-1:1,-1:1),respoluu1(-1:1,-1:1)   
+      dimension pfx1(-1:1,-1:1)
+    ! situation two: qbar-q
+      dimension respolgg2(-1:1,-1:1),respolqq2(-1:1,-1:1)      
+      dimension respoldd2(-1:1,-1:1),respoluu2(-1:1,-1:1)
+      dimension pfx2(-1:1,-1:1)
+    ! weight
       dimension weight(20,-1:1,-1:1)
-      dimension pfx(-1:1,-1:1)
   !   PDFs
       dimension fx1(13),fx2(13)
       dimension x1x2(2,2)
@@ -1163,10 +1169,14 @@ c ======================================================================
       resdd=0.d0
       do ii=-1,1,1
         do jj=-1,1,1
-          respolgg(ii,jj)=0.d0
-          respolqq(ii,jj)=0.d0
-          respoldd(ii,jj)=0.d0
-          respoluu(ii,jj)=0.d0
+          respolgg1(ii,jj)=0.d0
+          respolqq1(ii,jj)=0.d0
+          respoldd1(ii,jj)=0.d0
+          respoluu1(ii,jj)=0.d0
+          respolgg2(ii,jj)=0.d0
+          respolqq2(ii,jj)=0.d0
+          respoldd2(ii,jj)=0.d0
+          respoluu2(ii,jj)=0.d0
           do kk=1,20
             weight(kk,ii,jj)=0.d0
           end do
@@ -1181,8 +1191,10 @@ c ======================================================================
         else if(iQCD.eq.1)then
           do lam3=-1,1,2
             do lam4=-1,1,2
-            respolqq(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
-            respolgg(lam3,lam4)=sgg_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
+            respolqq1(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
+            respolgg1(lam3,lam4)=sgg_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
+            respolqq2(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
+            respolgg2(lam3,lam4)=sgg_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
             end do
           end do
         else
@@ -1193,10 +1205,14 @@ c ======================================================================
         if((iEW.eq.1).or.(iBSM.eq.1))then
           do lam3=-1,1,2
             do lam4=-1,1,2
-              respoldd(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
+              respoldd1(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
      &                                           ,p1,p2,p3,p4,lam3,lam4)
-              respoluu(lam3,lam4)=sqqb_ttb_EWp(2,gZpu,gZpu,rmZp,gamZp
+              respoluu1(lam3,lam4)=sqqb_ttb_EWp(2,gZpu,gZpu,rmZp,gamZp
      &                                           ,p1,p2,p3,p4,lam3,lam4)
+              respoldd2(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
+     &                                           ,p2,p1,p3,p4,lam3,lam4)
+              respoluu2(lam3,lam4)=sqqb_ttb_EWp(2,gZpu,gZpu,rmZp,gamZp
+     &                                           ,p2,p1,p3,p4,lam3,lam4)
             end do
           end do
         else
@@ -1243,29 +1259,35 @@ c ======================================================================
   ! (Initial luminosity for total unpolarised cross section: pfxtot)
 
   ! sum over all polarised Matrix elements
-      pfxtot=0.d0
+      pfx1tot=0.d0
+      pfx2tot=0.d0
       if(ifinal.eq.0) then
 
         do lam3=-1,1,2
           do lam4=-1,1,2
-               pfx(lam3,lam4)=respolgg(lam3,lam4) *fx1(13)*fx2(13)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 1)*fx2( 7)
-     &  +(respolqq(lam3,lam4)+respoluu(lam3,lam4))*fx1( 2)*fx2( 8)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 3)*fx2( 9)
-     &  +(respolqq(lam3,lam4)+respoluu(lam3,lam4))*fx1( 4)*fx2(10)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 5)*fx2(11)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 7)*fx2( 1)
-     &  +(respolqq(lam3,lam4)+respoluu(lam3,lam4))*fx1( 8)*fx2( 2)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1( 9)*fx2( 3)
-     &  +(respolqq(lam3,lam4)+respoluu(lam3,lam4))*fx1(10)*fx2( 4)
-     &  +(respolqq(lam3,lam4)+respoldd(lam3,lam4))*fx1(11)*fx2( 5)
+               pfx1(lam3,lam4)=respolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+     &  +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 1)*fx2( 7)
+     &  +(respolqq1(lam3,lam4)+respoluu1(lam3,lam4))*fx1( 2)*fx2( 8)
+     &  +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 3)*fx2( 9)
+     &  +(respolqq1(lam3,lam4)+respoluu1(lam3,lam4))*fx1( 4)*fx2(10)
+     &  +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 5)*fx2(11)
+               pfx2(lam3,lam4)=respolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+     &  +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1( 7)*fx2( 1)
+     &  +(respolqq2(lam3,lam4)+respoluu2(lam3,lam4))*fx1( 8)*fx2( 2)
+     &  +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1( 9)*fx2( 3)
+     &  +(respolqq2(lam3,lam4)+respoluu2(lam3,lam4))*fx1(10)*fx2( 4)
+     &  +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1(11)*fx2( 5)
             if(ix.eq.1)then
-              pfx(lam3,lam4)=pfx(lam3,lam4)/x1
+              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
+              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
             else if(ix.eq.2)then
-              pfx(lam3,lam4)=pfx(lam3,lam4)/x2
+              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x2
+              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x2
             end if
-            pfxtot=pfxtot
-     &            +pfx(lam3,lam4)
+            pfx1tot=pfx1tot
+     &             +pfx1(lam3,lam4)
+            pfx2tot=pfx2tot
+     &             +pfx2(lam3,lam4)
           end do
         end do
       else if(ifinal.eq.1) then
@@ -1287,7 +1309,7 @@ c ======================================================================
         end if
       end if
 
-      if(pfxtot.eq.0.d0)then
+      if(pfx1tot.eq.0.d0.and.pfx2tot.eq.0.d0)then
         ffxn=0.d0
         return
       end if
@@ -1295,7 +1317,8 @@ c ======================================================================
       if(ifinal.eq.0)then 
         do lam3=-1,1,2
           do lam4=-1,1,2
-            pfx(lam3,lam4)=pfx(lam3,lam4)/pfxtot
+            pfx1(lam3,lam4)=pfx1(lam3,lam4)/pfxtot1
+            pfx2(lam3,lam4)=pfx2(lam3,lam4)/pfxtot2
           end do
         end do
       end if
