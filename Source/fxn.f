@@ -257,15 +257,15 @@ c ======================================================================
       if(istructure.le.4)then
         q2=QQ*QQ
         if((x1.le.1.d-6).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-6).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ.le.1.3d0).or.(QQ.ge.1.d4))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
   !   (Note that for cteq PDFs we multiply by x1 below and then divide by 
@@ -289,15 +289,15 @@ c ======================================================================
       else if(istructure.eq.5)then
         imode=1
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -305,15 +305,15 @@ c ======================================================================
       else if(istructure.eq.6)then
         imode=2
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -321,15 +321,15 @@ c ======================================================================
       else if(istructure.eq.7)then
         imode=3
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -337,15 +337,15 @@ c ======================================================================
       else if(istructure.eq.8)then
         imode=4
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -353,15 +353,15 @@ c ======================================================================
       else if(istructure.eq.9)then
         imode=5
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((x2.le.1.d-5).or.(x2.ge.1.d0))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         if((QQ**2.le.1.25d0).or.(QQ**2.ge.1.d7))then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
@@ -430,7 +430,7 @@ c ======================================================================
         qcm2=((Ecm*Ecm-rm3*rm3-rm4*rm4)**2-(2.d0*rm3*rm4)**2)/
      &    (4.d0*Ecm*Ecm)
         if (qcm2.lt.0.d0) then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           qcm=sqrt(qcm2)
@@ -461,7 +461,7 @@ c ======================================================================
         rl356=dtan(xx)*rmt*gamt                        
         rm356_2=(rmt**2+rl356)                         
         if(rm356_2.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rm356=sqrt(rm356_2)
@@ -474,7 +474,7 @@ c ======================================================================
         rl478=dtan(xx)*rmt*gamt
         rm478_2=(rmt**2+rl478)
         if(rm478_2.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rm478=sqrt(rm478_2)
@@ -487,7 +487,7 @@ c ======================================================================
         rl56=dtan(xx)*rmW*gamW
         rm56_2=(rmW**2+rl56)
         if(rm56_2.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rm56=sqrt(rm56_2)
@@ -500,7 +500,7 @@ c ======================================================================
         rl78=dtan(xx)*rmW*gamW
         rm78_2=(rmW**2+rl78)
         if(rm78_2.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rm78=sqrt(rm78_2)
@@ -533,7 +533,7 @@ c ======================================================================
      &     -(2.d0*rm356*rm478)**2)/
      &      (4.d0*Ecm*Ecm)
         if(rq2.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rq=sqrt(rq2)
@@ -545,7 +545,7 @@ c ======================================================================
         rq562=((rm356*rm356-rm3*rm3-rm56*rm56)**2-(2.d0*rm3*rm56)**2)/
      &      (4.d0*rm356*rm356)
         if(rq562.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rq56=sqrt(rq562)
@@ -571,7 +571,7 @@ c ======================================================================
         rq782=((rm478*rm478-rm4*rm4-rm78*rm78)**2-(2.d0*rm4*rm78)**2)/
      &      (4.d0*rm478*rm478)
         if(rq782.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rq78=sqrt(rq782)
@@ -593,7 +593,7 @@ c ======================================================================
         rq52=((rm56*rm56-rm5*rm5-rm6*rm6)**2-(2.d0*rm5*rm6)**2)/
      &       (4.d0*rm56*rm56)
         if(rq52.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rq5=sqrt(rq52)
@@ -615,7 +615,7 @@ c ======================================================================
         rq72=((rm78*rm78-rm7*rm7-rm8*rm8)**2-(2.d0*rm7*rm8)**2)/
      &       (4.d0*rm78*rm78)
         if(rq72.lt.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         else
           rq7=sqrt(rq72)
@@ -1013,11 +1013,11 @@ c ======================================================================
   ! Cut on top pT
       if(ifinal.eq.0)then       
         if(abs(eta(3)).gt.ytcut)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
       else if(abs(eta356).gt.ytcut)then
-        ffxn=0.d0
+        fffxn=0.d0
         return
       else
         continue
@@ -1226,10 +1226,10 @@ c ======================================================================
           continue
         end if
       end if
-  ! if no gauge sectors are active, ffxn = 0
+  ! if no gauge sectors are active, fffxn = 0
       if(ifinal.eq.1)then
         if((resqq+resgg+resuu+resdd).eq.0.d0)then
-          ffxn=0.d0
+          fffxn=0.d0
           return
         end if
       end if
@@ -1288,7 +1288,7 @@ c ======================================================================
       end if
 
       if(pfxtot.eq.0.d0)then
-        ffxn=0.d0
+        fffxn=0.d0
         return
       end if
   ! for distributions,
@@ -1310,54 +1310,54 @@ c ======================================================================
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
       pfxtot=pfxtot*(1.d0-tau)*2.d0*Ecm/s
      &      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
-  ! ffxn is now M*M*PDFs
-      ffxn=pfxtot
+  ! fffxn is now M*M*PDFs
+      fffxn=pfxtot
   ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
-      ffxn=ffxn*fac
+      fffxn=fffxn*fac
       if(ifinal.eq.0)then
   ! 2-body phase space factor     
-        ffxn=ffxn*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
+        fffxn=fffxn*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
+        fffxn=fffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
       else if(ifinal.eq.1)then
   ! 6-body flux factor, pi's and phase space integral
-        ffxn=ffxn*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
+        fffxn=fffxn*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
      &     /(2.d0*rm356)
      &     /rmt/gamt
      &     *((rm356*rm356-rmt*rmt)**2+rmt**2*gamt**2)
-        ffxn=ffxn*(XX356max-XX356min)
+        fffxn=fffxn*(XX356max-XX356min)
      &     /(2.d0*rm478)
      &     /rmt/gamt
      &     *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
-        ffxn=ffxn*(XX478max-XX478min)
+        fffxn=fffxn*(XX478max-XX478min)
      &     /(2.d0*rm56)
      &     /rmW/gamW
      &     *((rm56*rm56-rmW*rmW)**2+rmW**2*gamW**2)
-        ffxn=ffxn*(XX56max-XX56min)
+        fffxn=fffxn*(XX56max-XX56min)
      &     /(2.d0*rm78)
      &     /rmW/gamW
      &     *((rm78*rm78-rmW*rmW)**2+rmW**2*gamW**2)
-        ffxn=ffxn*(XX78max-XX78min)
+        fffxn=fffxn*(XX78max-XX78min)
   !   NWA
-        ffxn=ffxn
+        fffxn=fffxn
      &     *gamt/gNWA
      &     *gamt/gNWA
   !   flux and pi factors.
-        ffxn=ffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
+        fffxn=fffxn/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
    
   ! Polarised differential cross sections
   !   Polarised cross section for each point is calculated. 
-  !   (Note that above pfx was divided by ffxn.)
+  !   (Note that above pfx was divided by fffxn.)
       if(ifinal.eq.0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             polcross(it,iphel,jphel)=polcross(it,iphel,jphel)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt          
      &                              *pfx(iphel,jphel)
-            weight(it,iphel,jphel)=+ffxn
+            weight(it,iphel,jphel)=+fffxn
      &                             *wgt
      &                             *pfx(iphel,jphel)
             polerror(it,iphel,jphel)=polerror(it,iphel,jphel)
@@ -1374,13 +1374,13 @@ c ======================================================================
           continue
         else if(costcm.gt.0.d0)then
           spatcross(1,it,+1)=spatcross(1,it,+1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(1,it,+1)=spaterror(1,it,+1)
      &                   +spatcross(1,it,+1)**2
         else if(costcm.lt.0.d0)then
           spatcross(1,it,-1)=spatcross(1,it,-1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(1,it,-1)=spaterror(1,it,-1)
      &                   +spatcross(1,it,-1)**2
@@ -1395,14 +1395,14 @@ c ======================================================================
           continue
         else if(costst.gt.0.d0)then
           spatcross(2,it,+1)=spatcross(2,it,+1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(2,it,+1)=spaterror(2,it,+1)
      &                   +spatcross(2,it,+1)**2
   !         write(*,*)'asy(5)=+1'
         else if(costst.lt.0.d0)then
           spatcross(2,it,-1)=spatcross(2,it,-1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(2,it,-1)=spaterror(2,it,-1)
      &                   +spatcross(2,it,-1)**2
@@ -1419,13 +1419,13 @@ c ======================================================================
           continue
         else if(yt.gt.0.d0)then
           spatcross(3,it,+1)=spatcross(3,it,+1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(3,it,+1)=spaterror(3,it,+1)
      &                   +spatcross(3,it,+1)**2
         else if(yt.lt.0.d0)then
           spatcross(3,it,-1)=spatcross(3,it,-1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(3,it,-1)=spaterror(3,it,-1)
      &                   +spatcross(3,it,-1)**2
@@ -1438,14 +1438,14 @@ c ======================================================================
       else
         if(yt.ge.0.d0)then
           spatcross(4,it,+1)=spatcross(4,it,+1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(4,it,+1)=spaterror(4,it,+1)
      &                   +spatcross(4,it,+1)**2
         end if
         if(ytb.ge.0.d0)then
           spatcross(4,it,-1)=spatcross(4,it,-1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(4,it,-1)=spaterror(4,it,-1)
      &                   +spatcross(4,it,-1)**2
@@ -1459,14 +1459,14 @@ c ======================================================================
           continue
         else if(del_y.gt.0.d0)then
           spatcross(5,it,+1)=spatcross(5,it,+1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(5,it,+1)=spaterror(5,it,+1)
      &                   +spatcross(5,it,+1)**2
   !         write(*,*)'asy(8)=+1'
         else if(del_y.lt.0.d0)then
           spatcross(5,it,-1)=spatcross(5,it,-1)
-     &                              +ffxn
+     &                              +fffxn
      &                              *wgt
           spaterror(5,it,-1)=spaterror(5,it,-1)
      &                   +spatcross(5,it,-1)**2
@@ -1483,13 +1483,13 @@ c ======================================================================
             continue
           else if(cosfl.gt.0.d0)then
             spatcross(6,it,+1)=spatcross(6,it,+1)
-     &                                +ffxn
+     &                                +fffxn
      &                                *wgt
             spaterror(6,it,+1)=spaterror(6,it,+1)
      &                     +spatcross(6,it,+1)**2
           else if(cosfl.lt.0.d0)then
             spatcross(6,it,-1)=spatcross(6,it,-1)
-     &                                +ffxn
+     &                                +fffxn
      &                                *wgt
             spaterror(6,it,-1)=spaterror(6,it,-1)
      &                     +spatcross(6,it,-1)**2
@@ -1499,7 +1499,7 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Binning
   ! scale by weight
-      hist=ffxn*wgt
+      hist=fffxn*wgt
 
       do ip=3,ipmax
   ! generate distribution in pT      
