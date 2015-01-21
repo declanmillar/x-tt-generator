@@ -1195,8 +1195,8 @@ c ======================================================================
           do lam3=-1,1,2
             do lam4=-1,1,2
             respolqq1(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
-            respolgg1(lam3,lam4)=sgg_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
-            respolqq2(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
+            respolgg1(lam3,lam4)=sgg_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
+            respolqq2(lam3,lam4)=sqqb_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
             respolgg2(lam3,lam4)=sgg_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
             end do
           end do
