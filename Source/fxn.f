@@ -936,8 +936,8 @@ c ======================================================================
      &              /(qcol(4,4)+qcol(4,7)+qcol(4,8)
      &               -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
-  !     del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
-      del_y=yt-ytb ! this is A' from Bernreuther's paper
+      del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
+  !    del_y=yt-ytb ! this is A' from Bernreuther's paper
   ! calculate cos(theta_l+)
       if(ifinal.gt.0)then
           cost5=+(q(1,5)*q(1,1)
