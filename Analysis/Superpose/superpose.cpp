@@ -148,8 +148,8 @@ int main(int argc, char *argv[])
   // 1st root file
   TFile f1( fileName1.c_str() ,"READ" );
   TH1D *h1 = ( TH1D* )f1.Get( histName.c_str() );
-  // h1->SetTitle( fileName1.c_str() );
-  h1->SetTitle( "SM only" );
+  h1->SetTitle( fileName1.c_str() );
+  // h1->SetTitle( "SM only" );
   h1->Draw();
   h1->SetLineColor( kBlue );
   h1->GetYaxis()->SetTitleOffset( 1.3 );
@@ -158,8 +158,8 @@ int main(int argc, char *argv[])
   // 2nd root file
   TFile f2( fileName2.c_str() ,"READ" );
   TH1D *h2 = ( TH1D* )f2.Get( histName.c_str() );
-  // h2->SetTitle( fileName2.c_str() );
-  h2->SetTitle( "Z' only" );
+  h2->SetTitle( fileName2.c_str() );
+  // h2->SetTitle( "Z' only" );
   h2->Draw( "SAME" );
   h2->SetLineColor( kRed );
 
