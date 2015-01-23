@@ -368,10 +368,10 @@ c global variables
       common /fermions/ fmass,     fwidth
       integer     npoints
       common/stat/npoints
-      integer       iQCD,iEW,iBSM
-      common/igauge/iQCD,iEW,iBSM
-      integer             iint
-      common/interference/iint
+      integer       o_QCD,o_EW,o_BSM
+      common/igauge/o_QCD,o_EW,o_BSM
+      integer             o_int
+      common/interference/o_int
 c ---------------------------------- method ------------------------------------
 c up/down type couplings (1-6: quarks, 7-12: leptons)
 
@@ -431,7 +431,7 @@ c t (off shell) coupled to b and W vector current
 c t-bar coupled to b-bar and W vector current 
       call fvixxx( w4 ,w11 ,gWf ,fmass(11) ,fwidth(11) ,w13 )
 
-      if (iEW.eq.1)then
+      if (o_EW.eq.1)then
 c A coupled to q q-bar vector current 
         call jioxxx( w1 ,w2 ,gAq ,Amass ,Awidth ,w9  )
 c A diagram      
@@ -444,7 +444,7 @@ c Z diagram
         continue
       end if
 c Z' diagrams
-      if (iBSM.eq.1)then
+      if (o_BSM.eq.1)then
         do i =1,5
           if (Zpmass(i).gt.0) then  
             do j=1,2
@@ -469,11 +469,11 @@ c check amplitudes
 c total M*M for given helicity combination
       qqb_bbbtatann_EWp = 0.d0 
       amp_tmp = (0.d0,0.d0)
-      if (iint.eq.0)then ! no interference
+      if (o_int.eq.0)then ! no interference
         do i=1,ngraphs
           qqb_bbbtatann_EWp = qqb_bbbtatann_EWp+amp(i)*conjg(amp(i))
         end do
-      else if (iint.eq.1)then ! SM interference
+      else if (o_int.eq.1)then ! SM interference
         do i = 1, 2       
           amp_tmp = amp_tmp + amp(i)
         end do
@@ -481,12 +481,12 @@ c total M*M for given helicity combination
         do i=3,ngraphs
           qqb_bbbtatann_EWp = qqb_bbbtatann_EWp+amp(i)*conjg(amp(i))
         end do
-      else if (iint.eq.2)then ! full interference
+      else if (o_int.eq.2)then ! full interference
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do
         qqb_bbbtatann_EWp =qqb_bbbtatann_EWp+amp_tmp*conjg(amp_tmp)
-      else if (iint.eq.3)then ! interference only
+      else if (o_int.eq.3)then ! interference only
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do

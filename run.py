@@ -1,114 +1,122 @@
 #!/usr/bin/env python 
 # ------------------------------------------------------------------------------------------
-# Command line executor for Zp-tt code. Use run.py -h for help.
-# Generates a .com file to feed into fortran Zp-tt executable and runs it.
+# Command line executor for Zp-tt code.
+# Generates a .com file then runs the ttbar_BSM executable using it.
+# Do ./run.py -h for help.
 
 # Arguments:
-# 	0 = executable e.g. ttbar_BSM. see makefile
-#   1 = mdl: name of model file in Models directory
-# 	2 = ecm: centre of mass energy input:TeV, output: GeV
-#   3 = final: final state
-# 	4 = ncall: number of vegas calls (monte carlo points)
+#   0 = mdl:   name of model file in Models directory
+#   2 = ecm:   centre of mass energy (input:TeV, output: GeV)
+#   3 = final: final state (0: no decay, 1: dilepton)
+#   4 = ncall: number of vegas calls (monte carlo/phase space points)
 # ------------------------------------------------------------------------------------------
 
 import os,StringIO,re,optparse,subprocess,time,sys,random
 
-# Options
-parser = optparse.OptionParser("usage: %prog [options] executable model ecm_col ifs ncall")
+# Usage help
+parser = optparse.OptionParser("usage: ./%prog [options] model ecm_col o_final ncall")
 
-# External options
-parser.add_option("-o", "--output", action="store_true", default=False, help="output to terminal")
-parser.add_option("-t", "--tag", default="",type="string",help="add specific tag to logfile name")
+# Local options
+parser.add_option("-o", "--output" , default=False, action="store_true"               , help="output to terminal")
+parser.add_option("-t", "--tag"    , default=""   ,   type="string"                   , help="add a name tag to logfile")
 
-# Internal options
-parser.add_option("-q", "--iqcd",   default=1,action="store_const",const=0, help="Turn off QCD contribution for ttbar")
-parser.add_option("-e", "--iew",    default=1,action="store_const",const=0, help="Turn off EW (gamma/Z) contribution")
-parser.add_option("-b", "--ibsm",   default=1,action="store_const",const=0, help="Turn off Z' contribution")
-parser.add_option("-f", "--iint",   type="int",default=2, help="Specify interference: 0=none; 1=SM interference only; 2=all interference; 3=Zp interference only.")
-parser.add_option("-n", "--iNWA",   action="store_const", const=1, default=0, help="NWA")
-parser.add_option("-c", "--icol",   action="store_const", const=1, default=0, help="collider")
-parser.add_option("-P", "--pdf",    default=4,type="int", help="PDF set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
-parser.add_option("-y", "--ytcut",  default=100,type="float", help="rapidity cut")
-parser.add_option("-Y", "--yttcut", default=0,type="float", help="top pair rapidity cut")
-parser.add_option("-s", "--iseed",  action="store_true", default=False, help="used fixed seed for random number generator")
-parser.add_option("-D", "--idist",  action="store_const", const=0, default=1, help="Do not make standard distributions.")
-parser.add_option("-T", "--itdist",  action="store_const", const=0, default=1, help="Do not make transverse mass distributions.")
-parser.add_option("-A", "--iadist",  action="store_const", const=0, default=1, help="Do not make asymmetry distributions.")
-parser.add_option("-m", "--itmx",   type="int",default=5, help="Maximum number of VEGAS iterations.")
-parser.add_option("-l", "--ilhe",   default=0,action="store_const",const=1, help="Output in lhe format.")
-parser.add_option("-x", "--isymx1x2",   default=0,action="store_const",const=1, help="Symmatrise phase space over x1 and x2.")
-parser.add_option("-j", "--isymcost",   default=0,action="store_const",const=1, help="Symmatrise phase space over costheta_t.")
+# Physics options
+parser.add_option("-p", "--col"   ,  default=0   , const=1      , action="store_const", help="switch to p-pbar collisions")
+parser.add_option("-P", "--pdf"   ,  default=4   ,  type="int"                        , help="PDF set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
+parser.add_option("-q", "--qcd"   ,  default=1   , const=0      , action="store_const", help="turn off QCD")
+parser.add_option("-e", "--ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
+parser.add_option("-z", "--bsm"    ,  default=1   , const=0      , action="store_const", help="turn off Z'")
+parser.add_option("-i", "--int"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
+parser.add_option("-n", "--NWA"   ,  default=0   , const=1      , action="store_const", help="turn on NWA")
+parser.add_option("-r", "--BR"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by BR")
+parser.add_option("-T", "--tran"  ,  default=1   , const=0      , action="store_const", help="switch off transverse mass variables")
+parser.add_option("-a", "--asym"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
+parser.add_option("-C", "--cuts"  ,  default=1   , const=0      , action="store_const", help="turn off all cuts")
+parser.add_option("-y", "--ytmax" ,  default=100 ,  type="float",                       help="rapidity cut")
+parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",                       help="top pair rapidity cut")
+
+# Monte Carlo options
+parser.add_option("-s", "--iseed"   , default=False,               action="store_true" , help="used fixed iseed for random number generator")
+parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,                       help="maximum number of VEGAS iterations")
+parser.add_option("-x", "--symx1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
+parser.add_option("-c", "--symcost", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
+parser.add_option("-D", "--distros", default=1    , const=0     , action="store_const", help="turn off distributions")
+
 (options, args) = parser.parse_args()
 
 # Collect arguments
 model = args[0]
-if   options.ibsm==1:
-	smodel = args[0]
-elif options.ibsm==0:
-	smodel = ""
+if   options.bsm==1:
+  smodel = args[0]
+elif options.bsm==0:
+  smodel = ""
 emc_col=args[1]
-ifs=args[2]
+final=args[2]
 ncall=args[3]
 
-seed = 12345 if options.iseed else random.randint(0,100000)
+# Default iseed
+iseed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="ttbar_BSM"
-final = "2to2" if (ifs=="0") else "2to6"
+sfinal = "2to2" if (final=="0") else "2to6"
 config=StringIO.StringIO()
 
 # Gauge sectors
-if   options.iqcd==1 and options.iew==1 and options.ibsm==1:
-	sector = ""
-elif options.iqcd==1 and options.iew==1 and options.ibsm==0:
-	sector = "SM"
-elif options.iqcd==1 and options.iew==0 and options.ibsm==1:
-	sector = "_QCD-Zp"	
-elif options.iqcd==0 and options.iew==1 and options.ibsm==1:
-	sector = "_EW-Zp"	
-elif options.iqcd==1 and options.iew==0 and options.ibsm==0:
-	sector = "QCD"		
-elif options.iqcd==0 and options.iew==1 and options.ibsm==0:
-	sector = "EW"
-elif options.iqcd==0 and options.iew==0 and options.ibsm==1:
-	sector = "_Zp"
+if   options.qcd==1 and options.ew==1 and options.bsm==1:
+  sector = ""
+elif options.qcd==1 and options.ew==1 and options.bsm==0:
+  sector = "SM"
+elif options.qcd==1 and options.ew==0 and options.bsm==1:
+  sector = "_QCD-Zp"  
+elif options.qcd==0 and options.ew==1 and options.bsm==1:
+  sector = "_EW-Zp" 
+elif options.qcd==1 and options.ew==0 and options.bsm==0:
+  sector = "QCD"    
+elif options.qcd==0 and options.ew==1 and options.bsm==0:
+  sector = "EW"
+elif options.qcd==0 and options.ew==0 and options.bsm==1:
+  sector = "_Zp"
 
-# Interference	
-if   options.iint==0:
-	interference="_int0"
-elif options.iint==1:
-	interference="_int1"
-elif options.iint==2:
-	interference=""
-elif options.iint==3:
-	interference="_int3"
+# Interference  
+if   options.int==0:
+  interference="_int0"
+elif options.int==1:
+  interference="_int1"
+elif options.int==2:
+  interference=""
+elif options.int==3:
+  interference="_int3"
 
-# Printing
-print >> config, '%s ! iQCD' % options.iqcd
-print >> config, '%s ! iEW' % options.iew
-print >> config, '%s ! iBSM' % options.ibsm
-print >> config, '%s ! iint' % options.iint
-print >> config, '%s ! ifs' % ifs
-print >> config, '%s ! iNWA' % options.iNWA
-print >> config, '%s ! model' % model
+# Print config file
+print >> config, '%s ! col' % options.col
 print >> config, '%s.d3 ! ecm_col' % emc_col
-print >> config, '%s ! icol' % options.icol
 print >> config, '%s ! ISTRUCTURE' % options.pdf
-print >> config, '%s.d0 ! ytcut' % options.ytcut
-print >> config, '%sd0 ! yttcut' % options.yttcut
-print >> config, '%s ! ncall' % ncall
+print >> config, '%s ! model' % model
+print >> config, '%s ! QCD' % options.qcd
+print >> config, '%s ! EW' % options.ew
+print >> config, '%s ! BSM' % options.bsm
+print >> config, '%s ! int' % options.int
+print >> config, '%s ! sfinal' % final
+print >> config, '%s ! NWA' % options.NWA
+print >> config, '%s ! BR' % options.BR
+print >> config, '%s ! tran' % options.tran
+print >> config, '%s ! asym' % options.asym
+print >> config, '%s.d0 ! ytmax' % options.ytmax
+print >> config, '%s.d0 ! yttmin' % options.yttmin
+
+print >> config, '%s ! iseed' % iseed
 print >> config, '%s ! itmx' % options.itmx
+print >> config, '%s ! ncall' % ncall
 print >> config, '-1.d0 ! acc'
-print >> config, '%s ! iseed' % seed
-print >> config, '%s ! idist' % options.idist
-print >> config, '%s ! itdist' % options.itdist
-print >> config, '%s ! iadist' % options.iadist
-print >> config, '%s ! ilhe' % options.ilhe
-print >> config, '%s ! isymx1x2' % options.isymx1x2
-print >> config, '%s ! isymcost' % options.isymcost
+print >> config, '%s ! symx1x2' % options.symx1x2
+print >> config, '%s ! symcost' % options.symcost
+
+print >> config, '%s ! distros' % options.distros
+
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s' % (final,smodel,sector,interference,emc_col,options.itmx,ncall,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s' % (sfinal,smodel,sector,interference,emc_col,options.itmx,ncall,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

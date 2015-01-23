@@ -17,7 +17,8 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Declarations
   !implicit
-      implicit real*8 (a-h,o-z)
+      implicit real*8 (a-h,p-z)
+      implicit integer (l-o)
   ! Argument arrays
   !   Integration variables
       dimension x(100)
@@ -32,7 +33,7 @@ c ======================================================================
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifinal,ipmax
+      common/final/o_final,ipmax
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -40,21 +41,21 @@ c ======================================================================
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
-      common/cuts/ytcut,yttcut
+      common/cuts/ytmax,yttmin
   !   Narrow Width Approximation (NWA)
       common/NWA/gNWA
   !   Z' masses and LR couplings
       common/Zp/rmZp(5),gamZp(5)
       common/ZpLRcoup/gZpd(2,5),gZpu(2,5)
   !   Active gauge sectors
-      common/igauge/iQCD,iEW,iBSM
+      common/igauge/o_QCD,o_EW,o_Zp
   !   Common for decay ME
       common/polarqq/polqq(-1:1,-1:1)
       common/polargg/polgg(-1:1,-1:1)
   !   structure functions
       common/partdist/istructure
       common/alfastrong/rlambdaQCD4,nloops
-      common/collider/icoll
+      common/collider/o_coll
   ! Polarised/Spatial cross sections
       integer nasy
       parameter (nasy=9)
@@ -62,8 +63,6 @@ c ======================================================================
       parameter (nspat=6) !nasy-3
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
       common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
-  !   Switch for all distributions
-      common/distros/idist
   !   Distributions in pTs of particles
       common/ext_pT/pTmax(8),pTmin(8),pTw(8)
       common/dist_pT/xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
@@ -236,12 +235,12 @@ c ======================================================================
   !   Maximum centre of mass energy
       Ecm_max=Ecm_coll 
   !   Centre of mass energy
-      Ecm=x(2+12*ifinal)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
+      Ecm=x(2+12*o_final)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
      &                        +rm3+rm4+rm5+rm6+rm7+rm8
       shat=Ecm*Ecm
       tau=shat/s
   !   x1 and x2 of the partons      
-      xx1=x(3+12*ifinal)*(1.d0-tau)+tau
+      xx1=x(3+12*o_final)*(1.d0-tau)+tau
       xx2=tau/xx1
       x1x2(1,1)=xx1
       x1x2(1,2)=xx2
@@ -392,14 +391,14 @@ c ======================================================================
       do i=1,13
         fx1(i)=fx1(i)/x1
       end do
-      fx2(1)=d2*(1-icoll)+dsea2
-      fx2(2)=u2*(1-icoll)+usea2
+      fx2(1)=d2*(1-o_coll)+dsea2
+      fx2(2)=u2*(1-o_coll)+usea2
       fx2(3)=str2
       fx2(4)=chm2
       fx2(5)=btm2
       fx2(6)=0.d0
-      fx2(7)=d2*icoll+dsea2
-      fx2(8)=u2*icoll+usea2
+      fx2(7)=d2*o_coll+dsea2
+      fx2(8)=u2*o_coll+usea2
       fx2(9)=fx2(3)
       fx2(10)=fx2(4)
       fx2(11)=fx2(5)
@@ -423,7 +422,7 @@ c ======================================================================
       q(1,2)=0.d0
 
   !   Outgoing momenta for 2 body final state.  
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         phit=2.d0*pi*ran(jseed)
         if(jx.eq.1)then
           ct=x(1)
@@ -457,7 +456,7 @@ c ======================================================================
         end do
 
   ! Outgoing momenta for 6 body final state
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
         phit=2.d0*pi*ran(jseed)
         rm356min=rm3+rm5+rm6
         rm356max=Ecm-rm4-rm7-rm8
@@ -645,7 +644,7 @@ c ======================================================================
   ! Boost initial and final state momenta to the collider CM
       vcol=(x1-x2)/(x1+x2)
       gcol=(x1+x2)/2.d0/sqrt(x1*x2)
-      imax=4+ifinal*4
+      imax=4+o_final*4
       do i=1,imax
         qcol(4,i)=gcol*(q(4,i)+vcol*q(3,i))
         qcol(3,i)=gcol*(q(3,i)+vcol*q(4,i))
@@ -677,11 +676,11 @@ c ======================================================================
         phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
       end do
   ! calculate delta phi
-      if(ifinal.eq.1)then
+      if(o_final.eq.1)then
         dphi=abs(phi(5)-phi(7))
       end if
   ! calculate visible and missing transverse momentum
-      if(ifinal.eq.1)then  
+      if(o_final.eq.1)then  
         ETvis2=0d0
         ETmiss2=0d0
         do i=1,2
@@ -694,7 +693,7 @@ c ======================================================================
         ETmiss=sqrt(ETmiss2) 
       end if            
   ! calculate truth level top/antitop pT, eta and phi
-      if(ifinal.eq.1)then
+      if(o_final.eq.1)then
         pT356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2
      &           +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
 
@@ -731,7 +730,7 @@ c ======================================================================
         continue
       end if
   ! Calculate cos(theta_t)
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
           cost=
      &     (qcol(1,3)*qcol(1,1)
      &     +qcol(2,3)*qcol(2,1)
@@ -742,7 +741,7 @@ c ======================================================================
      &/sqrt(qcol(1,1)*qcol(1,1)
      &     +qcol(2,1)*qcol(2,1)
      &     +qcol(3,1)*qcol(3,1))
-        else if(ifinal.eq.1)then
+        else if(o_final.eq.1)then
           cost=
      &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
      &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
@@ -758,7 +757,7 @@ c ======================================================================
      &     +qcol(3,1)*qcol(3,1))
       end if     
   ! calculate cos(theta^*_t)
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
           costcm=(q(1,3)*q(1,1)
      &           +q(2,3)*q(2,1)  
      &           +q(3,3)*q(3,1))
@@ -768,7 +767,7 @@ c ======================================================================
      &      /sqrt(q(1,1)*q(1,1) 
      &           +q(2,1)*q(2,1)
      &           +q(3,1)*q(3,1))
-      else if(ifinal.gt.0)then
+      else if(o_final.gt.0)then
         costcm=
      &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
      &    +(q(2,3)+q(2,5)+q(2,6))*q(2,1)
@@ -784,9 +783,9 @@ c ======================================================================
      &     +q(3,1)*q(3,1))
       end if      
   ! calculate the energy of the top
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         Et=qcol(4,3)
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
         Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
 
@@ -794,12 +793,12 @@ c ======================================================================
       ytt = 0.5d0*log(x1/x2)
 
   ! calculate rMtt
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         rMtt2=(qcol(4,3)+qcol(4,4))**2
         do i=1,3
           rMtt2=rMtt2-(qcol(i,3)+qcol(i,4))**2
         end do
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
         rMtt2=(qcol(4,3)+qcol(4,4)
      &         +qcol(4,5)+qcol(4,6)
      &         +qcol(4,7)+qcol(4,8))**2
@@ -821,7 +820,7 @@ c ======================================================================
         trans(1)=sqrt(abs(rMvis2))
       end if
   ! calculate transverse energy energies of visible particles
-      if(ifinal.eq.1)then
+      if(o_final.eq.1)then
         ET3=sqrt(rm3**2+pT2(3))
         ET4=sqrt(rm4**2+pT2(4))
         ET5=sqrt(rm5**2+pT2(5))
@@ -897,7 +896,7 @@ c ======================================================================
         trans(10)=sqrt(abs(rMlCT2))
       end if
   ! calculate top pseudorapidity
-      if(ifinal.eq.1)then
+      if(o_final.eq.1)then
         rps356=(q(3,3)+q(3,5)+q(3,6))
      &       /sqrt((q(1,3)+q(1,5)+q(1,6))**2
      &            +(q(2,3)+q(2,5)+q(2,6))**2
@@ -923,10 +922,10 @@ c ======================================================================
         continue
       end if
   ! Calculate rapdity (y) of top and antitop
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3))) 
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
-      else if(ifinal.gt.0)then
+      else if(o_final.gt.0)then
         yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6)
      &               +qcol(3,3)+qcol(3,5)+qcol(3,6))
      &              /(qcol(4,3)+qcol(4,5)+qcol(4,6)
@@ -939,7 +938,7 @@ c ======================================================================
       del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
   !    del_y=yt-ytb ! this is A' from Bernreuther's paper
   ! calculate cos(theta_l+)
-      if(ifinal.gt.0)then
+      if(o_final.gt.0)then
           cost5=+(q(1,5)*q(1,1)
      &           +q(2,5)*q(2,1)  
      &           +q(3,5)*q(3,1))
@@ -951,7 +950,7 @@ c ======================================================================
      &           +q(3,1)*q(3,1))
       end if
   ! calculate cos(theta_l-)
-      if(ifinal.gt.0)then
+      if(o_final.gt.0)then
           cost7=+(q(1,7)*q(1,1)
      &           +q(2,7)*q(2,1)  
      &           +q(3,7)*q(3,1))
@@ -963,7 +962,7 @@ c ======================================================================
      &           +q(3,1)*q(3,1))
       end if
 
-      if(ifinal.gt.0)then
+      if(o_final.gt.0)then
         ct7ct5=cost7*cost5
       end if
 
@@ -971,7 +970,7 @@ c ======================================================================
       costst=int(ytt/abs(ytt))*costcm
   !     write(*,*)'del_y',del_y,'; costst',costst
   ! Calculate cos(phi_l) (lepton azimuthal angle)
-      if(ifinal.gt.0)then
+      if(o_final.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
 
         ! p(1)^ is z^
@@ -1016,12 +1015,12 @@ c ======================================================================
 ! ----------------------------------------------------------------------
 ! Selections
   ! Cut on top pT
-      if(ifinal.eq.0)then       
-        if(abs(eta(3)).gt.ytcut)then
+      if(o_final.eq.0)then       
+        if(abs(eta(3)).gt.ytmax)then
           fffxn=0.d0
           return
         end if
-      else if(abs(eta356).gt.ytcut)then
+      else if(abs(eta356).gt.ytmax)then
         fffxn=0.d0
         return
       else
@@ -1030,7 +1029,7 @@ c ======================================================================
 !-----------------------------------------------------------------------    
 ! Matrix elements
   ! Assign 2to2 MadGraph momenta
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         
         do i=1,3
           p1(i)=q(i,1)
@@ -1078,7 +1077,7 @@ c ======================================================================
     !         write(*,*) 'rm_4 =',rmassa4
 
 
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
   ! Assign 2to6 MadGraph momenta      
         do i=1,3
           p1(i)=q(i,1)
@@ -1188,10 +1187,10 @@ c ======================================================================
 
   ! 2-body MEs      
   !   Add QCD Matrix Elements
-      if(ifinal.eq.0)then
-        if(iQCD.eq.0)then
+      if(o_final.eq.0)then
+        if(o_QCD.eq.0)then
           continue
-        else if(iQCD.eq.1)then
+        else if(o_QCD.eq.1)then
           do lam3=-1,1,2
             do lam4=-1,1,2
             respolqq1(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
@@ -1201,11 +1200,11 @@ c ======================================================================
             end do
           end do
         else
-          write(*,*)'iQCD is not set correctly.'
+          write(*,*)'o_QCD is not set correctly.'
           stop
         end if  
   !   Add EW Matrix Elements
-        if((iEW.eq.1).or.(iBSM.eq.1))then
+        if((o_EW.eq.1).or.(o_Zp.eq.1))then
           do lam3=-1,1,2
             do lam4=-1,1,2
               respoldd1(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
@@ -1224,20 +1223,20 @@ c ======================================================================
       end if
   ! 6-body MEs
   !   Add QCD Matrix Elements
-      if(ifinal.eq.1)then
-        if(iQCD.eq.0)then
+      if(o_final.eq.1)then
+        if(o_QCD.eq.0)then
           continue
-        else if(iQCD.eq.1)then
+        else if(o_QCD.eq.1)then
           resqq1=sqqb_bbbtatann( p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
           resgg1= sgg_bbbtatann( p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
           resqq2=sqqb_bbbtatann( p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
           resgg2= sgg_bbbtatann( p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
         else
-          write(*,*)'iQCD is not set correctly.'
+          write(*,*)'o_QCD is not set correctly.'
           stop
         end if
   !   Add EW Matrix Elements
-        if((iEW.eq.1).or.(iBSM.eq.1))then          
+        if((o_EW.eq.1).or.(o_Zp.eq.1))then          
           resdd1=sqqb_bbbtatann_EWp(1,gZpd,gZpu,rmZp,gamZp
      &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
           resuu1=sqqb_bbbtatann_EWp(2,gZpu,gZpu,rmZp,gamZp
@@ -1251,7 +1250,7 @@ c ======================================================================
         end if
       end if
   ! if no gauge sectors are active, fffxn = 0
-      if(ifinal.eq.1)then
+      if(o_final.eq.1)then
         restot=resqq1+resgg1+resuu1+resdd1+resqq2+resgg2+resuu2+resdd2
         if((restot).eq.0.d0)then
           fffxn=0.d0
@@ -1271,7 +1270,7 @@ c ======================================================================
   ! sum over all polarised Matrix elements
       pfx1tot=0.d0
       pfx2tot=0.d0
-      if(ifinal.eq.0) then
+      if(o_final.eq.0) then
         do lam3=-1,1,2
           do lam4=-1,1,2
               pfx1(lam3,lam4)=respolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
@@ -1299,7 +1298,7 @@ c ======================================================================
      &             +pfx2(lam3,lam4)
           end do
         end do
-      else if(ifinal.eq.1) then
+      else if(o_final.eq.1) then
         qqd1=fx1( 1)*fx2( 7)*(resqq1+resdd1)
      &      +fx1( 2)*fx2( 8)*(resqq1+resuu1)
      &      +fx1( 3)*fx2( 9)*(resqq1+resdd1)
@@ -1326,7 +1325,7 @@ c ======================================================================
         return
       end if
   ! for distributions,
-      if(ifinal.eq.0)then 
+      if(o_final.eq.0)then 
         do lam3=-1,1,2
           do lam4=-1,1,2
             pfx1(lam3,lam4)=pfx1(lam3,lam4)/pfx1tot
@@ -1347,13 +1346,13 @@ c ======================================================================
   ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
       fffxn1=fffxn1*fac
       fffxn2=fffxn2*fac
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
   ! 2-body phase space factor     
         fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn1=fffxn1/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
         fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn2=fffxn2/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
   ! 6-body flux factor, pi's and phase space integral
         fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
      &     /(2.d0*rm356)
@@ -1410,7 +1409,7 @@ c ======================================================================
   ! Polarised total cross sections
   !   Polarised cross section for each point is calculated. 
   !   (Note that above pfx was divided by fffxn.)
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             polcross(it,iphel,jphel)=polcross(it,iphel,jphel)
@@ -1516,7 +1515,7 @@ c ======================================================================
 
   ! ARFB/A'
 
-      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
+      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttmin))then
         if(del_y.eq.0.d0)then
           continue
         else if(del_y.gt.0.d0)then
@@ -1540,7 +1539,7 @@ c ======================================================================
       if(m_asy(9).eq.0)then
         continue
       else
-        if (ifinal.gt.0)then      
+        if (o_final.gt.0)then      
           if(cosfl.eq.0.d0)then
             continue
           else if(cosfl.gt.0.d0)then
@@ -2014,7 +2013,7 @@ c ======================================================================
         end if
       end if
 
-      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttcut))then
+      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttmin))then
         if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
   ! generate distribution in sigp for ARFB.
           sigp=Ecm

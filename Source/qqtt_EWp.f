@@ -95,10 +95,10 @@ c Global variables
       common /fermions/ fmass,     fwidth
       integer     npoints
       common/stat/npoints
-      integer       iQCD,iEW,iBSM
-      common/igauge/iQCD,iEW,iBSM
-      integer             iint
-      common/interference/iint
+      integer       o_QCD,o_EW,o_BSM
+      common/igauge/o_QCD,o_EW,o_BSM
+      integer             o_int
+      common/interference/o_int
 
 c Local constants
       integer    ngraphs ,nexternal
@@ -175,7 +175,7 @@ c wavefunctions
       call oxxxxx( p3 ,fmass(11) ,nhel(3) , 1   ,w3 )                       
       call ixxxxx( p4 ,fmass(11) ,nhel(4) ,-1   ,w4 )
 
-      if (iEW.eq.1)then
+      if (o_EW.eq.1)then
 c A diagram               
         call jioxxx( w1  ,w2  ,gAq ,Amass ,Awidth ,w5 )
         call iovxxx( w4  ,w3  ,w5  ,gAt   ,amp(1) )
@@ -188,7 +188,7 @@ c Z diagram
       end if
 
 c Z' diagrams
-      if (iBSM.eq.1)then
+      if (o_BSM.eq.1)then
         do i =1,5
           if (Zpmass(i).gt.0) then
             do j=1,2
@@ -208,11 +208,11 @@ c Z' diagrams
 c total M*M for given helicity combination
       qqb_ttb_EWp = 0.d0 
       amp_tmp = (0.d0,0.d0)
-      if (iint.eq.0)then ! no interference
+      if (o_int.eq.0)then ! no interference
         do i=1,ngraphs
           qqb_ttb_EWp = qqb_ttb_EWp+amp(i)*conjg(amp(i))
         end do
-      else if (iint.eq.1)then ! SM interference
+      else if (o_int.eq.1)then ! SM interference
         do i = 1, 2       
           amp_tmp = amp_tmp + amp(i)
         end do
@@ -220,12 +220,12 @@ c total M*M for given helicity combination
         do i=3,ngraphs
           qqb_ttb_EWp = qqb_ttb_EWp+amp(i)*conjg(amp(i))
         end do
-      else if (iint.eq.2)then ! full interference
+      else if (o_int.eq.2)then ! full interference
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do
         qqb_ttb_EWp =qqb_ttb_EWp+amp_tmp*conjg(amp_tmp)
-      else if (iint.eq.3)then ! interference only
+      else if (o_int.eq.3)then ! interference only
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do

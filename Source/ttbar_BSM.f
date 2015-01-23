@@ -13,25 +13,8 @@
 ! ----------------------------------------------------------------------
 ! Declarations
   ! implicit
-      implicit real*8 (a-h,o-z)
-
-  !  LHE format
-    ! Initialization information
-      integer maxpup
-      parameter (maxpup=100)
-      integer idbmup,pdfgup,pdfsup,idwtup,nprup,lprup 
-      double precision ebmup,xsecup,xerrup,xmaxup 
-      common/heprup/idbmup(2),ebmup(2),pdfgup(2),pdfsup(2),
-     & idwtup,nprup,xsecup(maxpup),xerrup(maxpup),
-     & xmaxup(maxpup),lprup(maxpup)
-    ! Information on each separate event
-      integer maxnup
-      parameter (maxnup=500)
-      integer nup,idprup,idup,istup,mothup,icolup
-      double precision xwgtup,scalup,aqedup,aqcdup,pup,vtimup,spinup
-      common/hepeup/nup,idprup,xwgtup,scalup,aqedup,aqcdup, 
-     & idup(maxnup),istup(maxnup),mothup(2,maxnup),icolup(2,maxnup),
-     & pup(5,maxnup),vtimup(maxnup),spinup(maxnup)
+      implicit real*8 (a-h,p-z)
+      implicit integer (l-o)
 
   ! Global variables     
   !   vegas
@@ -43,7 +26,7 @@
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/ifinal,ipmax
+      common/final/o_final,ipmax
       common/top/rmt,gamt
       common/W/rmW,gamW
       common/Z/rmZ,gamZ
@@ -51,7 +34,7 @@
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
-      common/cuts/ytcut,yttcut
+      common/cuts/ytmax,yttmin
   !   Polarised/Spatial cross sections
       integer nasy
       parameter (nasy=9)
@@ -60,9 +43,9 @@
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
       common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
   !   Permitted gauge sectors
-      common/igauge/iQCD,iEW,iBSM
+      common/igauge/o_QCD,o_EW,o_BSM
   !   Interference       
-      common/interference/iint      
+      common/interference/o_int      
   !   Z' masses and VA/LR couplings
       common/Zp/rmZp(5),gamZp(5)
       common/Zpparam/paramZp(5)
@@ -71,9 +54,9 @@
   !   Narrow width approximation (NWA)
       common/NWA/gNWA
   !   Structure functions
-      common/partdist/istructure
+      common/partdist/o_structure
       common/ALFASTRONG/rlambdaQCD4,nloops
-      common/collider/icoll
+      common/collider/o_coll
   !   Switch for all distributions
       common/distros/idist
   !   Distributions in pTs of external particles
@@ -232,87 +215,84 @@
       data              gamW/2.08d0/
       data rmZ/91.19d0/,gamZ/2.50d0/
       data rmH/125.0d0/,gamH/0.31278d-2/
+
   !   Branching ratio for t->bln      
       real*8 BRtbln/0.10779733d0/
-  !       real*8 BRtbln/1d0/
 
   ! External procedures
       external fxn
 ! ----------------------------------------------------------------------
 ! Read input files
   ! Read config file
-  !   Permitted gauge sector flags
-      read(5,*) iQCD
-      read(5,*) iEW
-      read(5,*) iBSM
-  !   Interference flag
-      read(5,*) iint
-  !   Final state flag (ifinal=0: no top decay; ifinal=1: dileptonic top decay)      
-      read(5,*) ifinal
-  !   NWA flag (iNWA = 0: Actual top widths; iNWA = 1: tops in NWA)
-      read(5,*) iNWA
-  !   Name of model file
-      read(5,*) model
+  !   Collider flag (o_coll=0: pp; o_coll=1: ppbar)
+      read(5,*) o_coll
   !   Collider energy     
       read(5,*) ecm_coll
-  !   Collider flag (icoll=0: pp; icoll=1: ppbar)
-      read(5,*) icoll
   !   PDFs
-      read(5,*) istructure
+      read(5,*) o_structure  
+  !   Name of model file
+      read(5,*) model      
+  !   Permitted gauge sector options
+      read(5,*) o_QCD
+      read(5,*) o_EW
+      read(5,*) o_BSM
+  !   Interference options
+      read(5,*) o_int
+  !   Final state option (o_final=ttbar: no decay; o_final=1: bbllnn)      
+      read(5,*) o_final
+  !   NWA flag (o_NWA = 0: Actual top widths; o_NWA = 1: tops in NWA)
+      read(5,*) o_NWA
+  !   Branching ratio flag
+      read(5,*) o_BR
+  !   Transverse mass variables flag
+      read(5,*) o_tran
+  !   Asymmetry observable flag
+      read(5,*) o_asym
   !   Cut on top rapidity 
-      read(5,*) ytcut
+      read(5,*) ytmax
   !   Cut on top pair boost
-      read(5,*) yttcut
-  !   Number of Vegas calls per iteration
-      read(5,*) ncall
-  !   Maximum number of Vegas iterations
-      read(5,*) itmx
-  !   Desired Accuracy (If negative, run maximum iterations.)
-      read(5,*) acc
+      read(5,*) yttmin
   !   Random number seed
       read(5,*) iseed
+  !   Maximum number of Vegas iterations
+      read(5,*) itmx      
+  !   Number of Vegas calls per iteration
+      read(5,*) ncall
+  !   Desired Accuracy (If negative, run maximum iterations.)
+      read(5,*) acc  
+  !   Symmatrise of x1 and x2
+      read(5,*) o_symx1x2
+  !   Symmatrise of x1 and x2
+      read(5,*) o_symcost      
   !   Standard distributions flag
-      read(5,*) idist
-  !   Transverse mass distributions flag
-      read(5,*) itdist
-  !   Asymmetry distributions flag
-      read(5,*) iadist
-  !   Outout in lhe format
-      read(5,*) ilhe
-  !   Symmatrise of x1 and x2
-      read(5,*) isymx1x2
-  !   Symmatrise of x1 and x2
-      read(5,*) isymcost
+      read(5,*) o_distros    
+        
   ! Interpret config
     ! Number of external lines
-      if(ifinal.eq.0)then 
+      if(o_final.eq.0)then 
         ipmax=4
-      else if(ifinal.eq.1)then 
+      else if(o_final.eq.1)then 
         ipmax=8
       else 
         write(*,*)'Invalid final state identifier!'
         stop
       end if
     ! NWA only for six-body final state
-      if(ifinal.eq.0) iNWA=0
+      if(o_final.eq.0) o_NWA=0
     ! itmx no more than 20.      
       if(itmx.gt.20)then
         write(*,*)'itmx does not have to exceed 20!'
         stop
       end if
-    ! No event weighting for *true* event generation
-      if(ilhe.eq.1)then
-        itmx=1
-      end if
     ! For every point in phase space with x1 and x2, include the point
     ! in phase space with x1<->x2
-      if(isymx1x2.eq.1)then
+      if(o_symx1x2.eq.1)then
         ixmax=2
       else
         ixmax=1
       end if
     ! in phase space with cost->-cost
-      if(isymcost.eq.1)then
+      if(o_symcost.eq.1)then
         jxmax=2
       else
         jxmax=1
@@ -348,7 +328,7 @@
   ! pT distributions
       do ip=1,ipmax
         m_pT(ip)=idist
-        pTmax(ip)=7000.d0/(1+icoll*6)
+        pTmax(ip)=7000.d0/(1+o_coll*6)
         pTmin(ip)=0.d0
         ndiv_pT(ip)=70
   ! eta distributions
@@ -364,12 +344,12 @@
       end do
   !   missing transverse momentum
       m_ETmiss=idist
-      ETmissmax=7000.d0/(1+icoll*6)
+      ETmissmax=7000.d0/(1+o_coll*6)
       ETmissmin=0.d0
       ndiv_ETmiss=70      
   !   top transverse momentum
       m_pT356=idist
-      pT356max=7000.d0/(1+icoll*6)
+      pT356max=7000.d0/(1+o_coll*6)
       pT356min=0.d0
       ndiv_pT356=70
   !   2to6 top pseudorapidity
@@ -384,7 +364,7 @@
       ndiv_phi356=50        
   !   anti-top transverse momentum
       m_pT478=idist
-      pT478max=7000.d0/(1+icoll*6)
+      pT478max=7000.d0/(1+o_coll*6)
       pT478min=0.d0
       ndiv_pT478=70
   !   2to6 anti-top pseudorapidity
@@ -399,7 +379,7 @@
       ndiv_phi478=50
   !   invarient mass of tt pair (always on)
       m_rMtt=1
-      rMttmax=14000.d0/(1+icoll*6)
+      rMttmax=14000.d0/(1+o_coll*6)
       rMttmin=0.d0
       ndiv_rMtt=140
   !   boost of parton CoM
@@ -414,16 +394,16 @@
       ndiv_cost=50
   !   top energy
       m_Et=idist
-      Etmax=7000.d0/(1+icoll*6)
+      Etmax=7000.d0/(1+o_coll*6)
       Etmin=0.d0
       ndiv_Et=70
 
   !   transverse variables
       do itrans=1,ntrans
-        if(ifinal.eq.0)then
+        if(o_final.eq.0)then
           m_trans(itrans)=0
         else 
-          m_trans(itrans)=itdist
+          m_trans(itrans)=o_tran
         end if
       end do
   !   invarient mass of the visible decay products of the tt pair
@@ -468,53 +448,53 @@
       ndiv_trans(10)=50     
 
   !   phi_l
-      m_fl=iadist
+      m_fl=o_asym
       flmax=+2*pi
       flmin=0
       ndiv_fl=100
   !   cosphi_l
-      m_cosfl=iadist
+      m_cosfl=o_asym
       cosflmax=+1.d0
       cosflmin=-1.d0
       ndiv_cosfl=100
   !   delta phi
-      m_dphi=iadist
+      m_dphi=o_asym
       dphimax=+pi
       dphimin=0
       ndiv_dphi=10
   !   cost5
-      m_cost5=iadist
+      m_cost5=o_asym
       cost5max=+1
       cost5min=-1
       ndiv_cost5=10
   !   cost7
-      m_cost7=iadist
+      m_cost7=o_asym
       cost7max=+1
       cost7min=-1
       ndiv_cost7=10
    !  ct7ct5
-      m_ct7ct5=iadist
+      m_ct7ct5=o_asym
       ct7ct5max=+1
       ct7ct5min=-1
       ndiv_ct7ct5=10   
   !   sigp
-      m_sigp=iadist
+      m_sigp=o_asym
       sigpmax=rMttmax
       sigpmin=rMttmin
       ndiv_sigp=ndiv_rMtt/5
   !   sigm
-      m_sigm=iadist
+      m_sigm=o_asym
       sigmmax=rMttmax
       sigmmin=rMttmin
       ndiv_sigm=ndiv_rMtt/5      
 
   !   asymmetries
       do iasy=1,nasy
-        m_asy(iasy)=iadist
+        m_asy(iasy)=o_asym
       end do
 
   !   Turn off 2->6 only distributions
-      if (ifinal.eq.0)then
+      if (o_final.eq.0)then
         do ip=5,8
           m_pT(i)   = 0
           m_eta(i)  = 0
@@ -541,7 +521,7 @@
         m_asy(9) = 0  ! turn off A_l
       end if
   !   Turn off 2->2 only distributions
-      if (ifinal.eq.1)then
+      if (o_final.eq.1)then
         m_asy(1) = 0 ! turn off A_LL
         m_asy(2) = 0 ! turn off A_L
         m_asy(3) = 0 ! turn off A_PV
@@ -560,39 +540,39 @@
 
   ! QCDL4 is QCD LAMBDA4 (to match PDF fits).
   ! (PDFs are intrinsically linked to the value of lamda_QCD; alpha_QCD) 
-      if(istructure.eq.1)qcdl4=0.326d0
-      if(istructure.eq.2)qcdl4=0.326d0
-      if(istructure.eq.3)qcdl4=0.326d0
-      if(istructure.eq.4)qcdl4=0.215d0
-      if(istructure.eq.5)qcdl4=0.300d0
-      if(istructure.eq.6)qcdl4=0.300d0
-      if(istructure.eq.7)qcdl4=0.300d0
-      if(istructure.eq.8)qcdl4=0.229d0
-      if(istructure.eq.9)qcdl4=0.383d0
+      if(o_structure.eq.1)qcdl4=0.326d0
+      if(o_structure.eq.2)qcdl4=0.326d0
+      if(o_structure.eq.3)qcdl4=0.326d0
+      if(o_structure.eq.4)qcdl4=0.215d0
+      if(o_structure.eq.5)qcdl4=0.300d0
+      if(o_structure.eq.6)qcdl4=0.300d0
+      if(o_structure.eq.7)qcdl4=0.300d0
+      if(o_structure.eq.8)qcdl4=0.229d0
+      if(o_structure.eq.9)qcdl4=0.383d0
       rlambdaQCD4=QCDL4
 
   ! Initialise CTEQ grids.
-      if(istructure.le.4)then
-        icteq=istructure
+      if(o_structure.le.4)then
+        icteq=o_structure
         call SetCtq6(ICTEQ)
       end if
 
   ! Use appropriately evolved alphas.
-      if(istructure.eq.1)nloops=2
-      if(istructure.eq.2)nloops=2
-      if(istructure.eq.3)nloops=1
-      if(istructure.eq.4)nloops=1
-      if(istructure.eq.5)nloops=1
-      if(istructure.eq.6)nloops=1
-      if(istructure.eq.7)nloops=1
-      if(istructure.eq.8)nloops=1
-      if(istructure.eq.9)nloops=1
+      if(o_structure.eq.1)nloops=2
+      if(o_structure.eq.2)nloops=2
+      if(o_structure.eq.3)nloops=1
+      if(o_structure.eq.4)nloops=1
+      if(o_structure.eq.5)nloops=1
+      if(o_structure.eq.6)nloops=1
+      if(o_structure.eq.7)nloops=1
+      if(o_structure.eq.8)nloops=1
+      if(o_structure.eq.9)nloops=1
 
   ! Initialize MadGraph for MEs
       rmt=175.d0
       gamt=1.55d0
       gNWA=gamt
-      if(iNWA.eq.1)gamt=1.d-5
+      if(o_NWA.eq.1)gamt=1.d-5
       call initialize(rmt,gamt)
 
   ! some EW parameters.
@@ -614,14 +594,14 @@
 ! ---------------------------------------------------------------------- 
 ! VEGAS parameters
   ! Dimensions of integration
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         ndim=3
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
         ndim=15
       end if
   !   (If nprn<0 no print-out.)
       nprn=0
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
   !   Final state masses     
         rm3=rmt
         rm4=rmt
@@ -652,7 +632,7 @@
         end do
   !         end if
 
-      else if(ifinal.eq.1)then
+      else if(o_final.eq.1)then
   !   Final state masses
         rm3=rmb
         rm4=rmb
@@ -876,19 +856,19 @@
       write(*,*)'TIME ',now(1),now(2),now(3)
       write(*,*)'-----------------------------------------------------'
       write(*,*)'PROCESS'
-      if(icoll.eq.0)then
-        if(ifinal.eq.0)
+      if(o_coll.eq.0)then
+        if(o_final.eq.0)
      &    write(*,*)'pp #rightarrow t#bar{t}',
      &               ' #times BR(t#rightarrow bl#nu)^{2}'
-        if(ifinal.eq.1)
+        if(o_final.eq.1)
      &    write(*,*)'pp #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-      else if(icoll.eq.1)then
-        if(ifinal.eq.0)
+      else if(o_coll.eq.1)then
+        if(o_final.eq.0)
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
      &               ' #times BR(t#rightarrow bl#nu)^{2}'
-        if(ifinal.eq.1) 
+        if(o_final.eq.1) 
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
@@ -897,32 +877,32 @@
       write(*,*)'NOTES'            
       write(*,*)'Units: GeV'
       write(*,*)'Quarks: all massless except t, b.'           
-      if(istructure.eq.1)write(*,*)'PDFs: cteq6m.'
-      if(istructure.eq.2)write(*,*)'PDFs: cteq6d.'
-      if(istructure.eq.3)write(*,*)'PDFs: cteq6l.'
-      if(istructure.eq.4)write(*,*)'PDFs: cteq6l1.'
-      if(istructure.eq.5)write(*,*)'PDFs: mrs99 (cor01).'
-      if(istructure.eq.6)write(*,*)'PDFs: mrs99 (cor02).'
-      if(istructure.eq.7)write(*,*)'PDFs: mrs99 (cor03).'
-      if(istructure.eq.8)write(*,*)'PDFs: mrs99 (cor04).'
-      if(istructure.eq.9)write(*,*)'PDFs: mrs99 (cor05).'
-      if((ifinal.eq.1).and.(iNWA.eq.0))write(*,*)'Tops: off-shell.'
-      if((ifinal.eq.1).and.(iNWA.eq.1))write(*,*)'Tops: NWA.'
+      if(o_structure.eq.1)write(*,*)'PDFs: cteq6m.'
+      if(o_structure.eq.2)write(*,*)'PDFs: cteq6d.'
+      if(o_structure.eq.3)write(*,*)'PDFs: cteq6l.'
+      if(o_structure.eq.4)write(*,*)'PDFs: cteq6l1.'
+      if(o_structure.eq.5)write(*,*)'PDFs: mrs99 (cor01).'
+      if(o_structure.eq.6)write(*,*)'PDFs: mrs99 (cor02).'
+      if(o_structure.eq.7)write(*,*)'PDFs: mrs99 (cor03).'
+      if(o_structure.eq.8)write(*,*)'PDFs: mrs99 (cor04).'
+      if(o_structure.eq.9)write(*,*)'PDFs: mrs99 (cor05).'
+      if((o_final.eq.1).and.(o_NWA.eq.0))write(*,*)'Tops: off-shell.'
+      if((o_final.eq.1).and.(o_NWA.eq.1))write(*,*)'Tops: NWA.'
       write(*,*)'BSM model: ',model
-      if(iQCD.eq.1)write(*,*)'QCD: On '
-      if(iQCD.eq.0)write(*,*)'QCD: Off'
-      if(iEW.eq.1) write(*,*)'EW:  On '
-      if(iEW.eq.0) write(*,*)'EW:  Off'
-      if(iBSM.eq.1)write(*,*)'BSM: On '
-      if(iBSM.eq.0)write(*,*)'BSM: Off'   
-      if(iint.eq.0)write(*,*)'Interference: None'
-      if(iint.eq.1)write(*,*)'Interference: SM'
-      if(iint.eq.2)write(*,*)'Interference: Full'
-      if(iint.eq.3)write(*,*)'Interference: No square terms.'      
+      if(o_QCD.eq.1)write(*,*)'QCD: On '
+      if(o_QCD.eq.0)write(*,*)'QCD: Off'
+      if(o_EW.eq.1) write(*,*)'EW:  On '
+      if(o_EW.eq.0) write(*,*)'EW:  Off'
+      if(o_BSM.eq.1)write(*,*)'BSM: On '
+      if(o_BSM.eq.0)write(*,*)'BSM: Off'   
+      if(o_int.eq.0)write(*,*)'Interference: None'
+      if(o_int.eq.1)write(*,*)'Interference: SM'
+      if(o_int.eq.2)write(*,*)'Interference: Full'
+      if(o_int.eq.3)write(*,*)'Interference: No square terms.'      
       write(*,*)'-----------------------------------------------------'      
       write(*,*)'PARAMETERS'
       write(*,*)'#sqrt{s}              ',ecm_coll
-      write(*,*)'at |y| <              ',abs(ytcut)
+      write(*,*)'at |y| <              ',abs(ytmax)
       write(*,*)'Loops a_s evaluated at',nloops
       write(*,*)'a_{s}(M_{Z})          ',alfas(rmZ,rLambdaQCD4,nloops)
       write(*,*)'#Lambda_{QCD}(4)      ',QCDL4
@@ -940,7 +920,7 @@
       write(*,*)'ZPRIME PARAMETERS'
       do i=1,5
         if(rmZp(i).gt.0)then
-          write(*,*)'Z#prime',i 
+          write(*,*)'Z#prime               ',i 
           write(*,*)'m_{Z#prime}           ',rmZp(i) 
           write(*,*)'iwidth:               ',iwidth(i)   
           write(*,*)'#Gamma_{Z#prime}      ',gamZp(i)
@@ -952,15 +932,17 @@
           write(*,*)         
         end if
       end do
+      write(*,*)'-----------------------------------------------------' 
+      write(*,*)'CUTS'      
+      write(*,*)'-----------------------------------------------------'
 ! ----------------------------------------------------------------------
 ! Integration
   ! Section header
-      write(*,*)'-----------------------------------------------------'
       write(*,*)'INTEGRATION'
   !   Reset counter
       npoints=0  
   !   Reset various iterative quantities
-      if(ifinal.eq.0)then
+      if(o_final.eq.0)then
         do i=1,20
           resl(i)=0.d0
           standdevl(i)=0.d0
@@ -982,15 +964,18 @@
   !   Integrate
       it=0
       call vegas(ndim,fxn,avgi,sd,chi2a)
-      if(ifinal.eq.0)then
-  !   Multiply by branching ratios (if ifinal = 0)      
-        avgi=avgi*(BRtbln)**2
-        sd=sd*(BRtbln)**2
+      if(o_final.eq.0)then
+  !   Multiply by branching ratios (if o_final = 0)
+        if(o_BR.eq.0)then     
+          avgi=avgi*(BRtbln)**2
+          sd=sd*(BRtbln)**2
+        else 
+          continue
+        end if
       end if
   !  Collect total cross-section
       cross=avgi
       error=sd
-
 
     ! Print integrated cross section
       write(*,*)'-----------------------------------------------------'
@@ -1017,8 +1002,8 @@
 ! ----------------------------------------------------------------------
 ! Total asymmetries
   ! Collect polarised cross sections.
-      if(iadist.eq.1)then
-        if(ifinal.eq.0)then  
+      if(o_asym.eq.1)then
+        if(o_final.eq.0)then  
     
           do iphel=-1,+1,2
             do jphel=-1,+1,2
@@ -1077,7 +1062,7 @@
         end do
 
     ! Define asymmetries
-        if(ifinal.eq.0)then
+        if(o_final.eq.0)then
     ! ALL
           Atot(1)=
      &          +(poltot(+1,+1)-poltot(+1,-1)
@@ -1118,7 +1103,7 @@
 
   ! Print Asymmetries     
         write(*,*)'TOTAL ASYMMETRIES'
-        if(ifinal.eq.0)then
+        if(o_final.eq.0)then
           write(*,*)'ALL:                  uncertainty (same units):'
           write(*,*)Atot(1),Atoterr(1) 
           write(*,*)'AL:                   uncertainty (same units):'
@@ -1135,7 +1120,7 @@
           write(*,*)Atot(7),Atoterr(7)
           write(*,*)"ARFB/A':              uncertainty (same units):"
           write(*,*)Atot(8),Atoterr(8)
-        else if(ifinal.gt.0)then
+        else if(o_final.gt.0)then
           write(*,*)'A_l:                  uncertainty (same units):'
           write(*,*)Atot(9),Atoterr(9) 
         end if
