@@ -25,25 +25,33 @@ parser.add_option("-p", "--col"   ,  default=0   , const=1      , action="store_
 parser.add_option("-P", "--pdf"   ,  default=4   ,  type="int"                        , help="PDF set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
 parser.add_option("-q", "--qcd"   ,  default=1   , const=0      , action="store_const", help="turn off QCD")
 parser.add_option("-e", "--ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
-parser.add_option("-z", "--bsm"    ,  default=1   , const=0      , action="store_const", help="turn off Z'")
+parser.add_option("-z", "--bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
 parser.add_option("-i", "--int"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
 parser.add_option("-n", "--NWA"   ,  default=0   , const=1      , action="store_const", help="turn on NWA")
 parser.add_option("-r", "--BR"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by BR")
 parser.add_option("-T", "--tran"  ,  default=1   , const=0      , action="store_const", help="switch off transverse mass variables")
-parser.add_option("-a", "--asym"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
+parser.add_option("-A", "--asym"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
 parser.add_option("-C", "--cuts"  ,  default=1   , const=0      , action="store_const", help="turn off all cuts")
 parser.add_option("-y", "--ytmax" ,  default=100 ,  type="float",                       help="rapidity cut")
 parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",                       help="top pair rapidity cut")
 
 # Monte Carlo options
-parser.add_option("-s", "--iseed"   , default=False,               action="store_true" , help="used fixed iseed for random number generator")
+parser.add_option("-s", "--iseed"  , default=False,               action="store_true" , help="used fixed iseed for random number generator")
 parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,                       help="maximum number of VEGAS iterations")
 parser.add_option("-x", "--symx1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symcost", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
 parser.add_option("-D", "--distros", default=1    , const=0     , action="store_const", help="turn off distributions")
 
+# Debug options
+parser.add_option("-M", "--M_eq_1",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
+
 (options, args) = parser.parse_args()
 
+if options.M_eq_1==1:
+  options.qcd=0
+  options.ew=0
+  options.bsm=0
+  
 # Collect arguments
 model = args[0]
 if   options.bsm==1:
@@ -55,7 +63,7 @@ final=args[2]
 ncall=args[3]
 
 # Default iseed
-iseed = 12345 if options.iseed else random.randint(0,100000)
+seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="ttbar_BSM"
@@ -77,6 +85,8 @@ elif options.qcd==0 and options.ew==1 and options.bsm==0:
   sector = "EW"
 elif options.qcd==0 and options.ew==0 and options.bsm==1:
   sector = "_Zp"
+elif options.qcd==0 and options.ew==0 and options.bsm==0:
+  sector = "PS"
 
 # Interference  
 if   options.int==0:
@@ -87,6 +97,16 @@ elif options.int==2:
   interference=""
 elif options.int==3:
   interference="_int3"
+
+# Symmetrization
+if   (options.symx1x2==1) and (options.symcost==0):
+  symmetrization = "_symx"
+elif (options.symx1x2==0) and (options.symcost==1):
+  symmetrization = "_symc"
+elif (options.symx1x2==1) and (options.symcost==1):
+  symmetrization = "_symxc"
+else:
+  symmetrization = ""
 
 # Print config file
 print >> config, '%s ! col' % options.col
@@ -105,18 +125,19 @@ print >> config, '%s ! asym' % options.asym
 print >> config, '%s.d0 ! ytmax' % options.ytmax
 print >> config, '%s.d0 ! yttmin' % options.yttmin
 
-print >> config, '%s ! iseed' % iseed
+print >> config, '%s ! iseed' % seed
 print >> config, '%s ! itmx' % options.itmx
 print >> config, '%s ! ncall' % ncall
 print >> config, '-1.d0 ! acc'
 print >> config, '%s ! symx1x2' % options.symx1x2
 print >> config, '%s ! symcost' % options.symcost
-
 print >> config, '%s ! distros' % options.distros
+
+print >> config, '%s ! M_eq_1' % options.M_eq_1
 
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s' % (sfinal,smodel,sector,interference,emc_col,options.itmx,ncall,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s%s' % (sfinal,smodel,sector,interference,emc_col,options.itmx,ncall,symmetrization,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

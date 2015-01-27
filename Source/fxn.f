@@ -22,7 +22,6 @@ c ======================================================================
   ! Argument arrays
   !   Integration variables
       dimension x(100)
-
   ! Global variables
   !   Vegas
       common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
@@ -42,101 +41,103 @@ c ======================================================================
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
       common/cuts/ytmax,yttmin
+  !   Debugging
+      common/debug/o_M_eq_1
   !   Narrow Width Approximation (NWA)
       common/NWA/gNWA
   !   Z' masses and LR couplings
       common/Zp/rmZp(5),gamZp(5)
       common/ZpLRcoup/gZpd(2,5),gZpu(2,5)
   !   Active gauge sectors
-      common/igauge/o_QCD,o_EW,o_Zp
+      common/igauge/o_QCD,o_EW,o_BSM
   !   Common for decay ME
       common/polarqq/polqq(-1:1,-1:1)
       common/polargg/polgg(-1:1,-1:1)
   !   structure functions
-      common/partdist/istructure
+      common/partdist/o_structure
       common/alfastrong/rlambdaQCD4,nloops
       common/collider/o_coll
   ! Polarised/Spatial cross sections
-      integer nasy
-      parameter (nasy=9)
+      integer nasym
+      parameter (nasym=9)
       integer nspat
-      parameter (nspat=6) !nasy-3
+      parameter (nspat=6) !nasym-3
       common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
       common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
   !   Distributions in pTs of particles
       common/ext_pT/pTmax(8),pTmin(8),pTw(8)
       common/dist_pT/xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
-      common/inp_pT/m_pT(8)
+      common/inp_pT/o_pT(8)
       common/div_pT/ndiv_pT(8)
   !   Distributions in etas of external particles
       common/ext_eta/etamax(8),etamin(8),etaw(8)
       common/dist_eta/xeta(8,500),fxeta(8,500,20),fxetatot(8,500)
-      common/inp_eta/m_eta(8)
+      common/inp_eta/o_eta(8)
       common/div_eta/ndiv_eta(8)
   !   Distributions in phis of external particles
       common/ext_phi/phimax(8),phimin(8),phiw(8)
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
-      common/inp_phi/m_phi(8)
+      common/inp_phi/o_phi(8)
       common/div_phi/ndiv_phi(8)
   !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
-      common/inp_ETmiss/m_ETmiss
+      common/inp_ETmiss/o_ETmiss
       common/div_ETmiss/ndiv_ETmiss
   !   Distribution in pT of the top
       common/ext_pT356/pT356max,pT356min,pT356w
       common/dist_pT356/xpT356(500),fxpT356(500,20),fxpT356tot(500)
-      common/inp_pT356/m_pT356
+      common/inp_pT356/o_pT356
       common/div_pT356/ndiv_pT356
   !   Distribution in eta of the top
       common/ext_eta356/eta356max,eta356min,eta356w
       common/dist_eta356/xeta356(500),fxeta356(500,20),fxeta356tot(500)
-      common/inp_eta356/m_eta356
+      common/inp_eta356/o_eta356
       common/div_eta356/ndiv_eta356
   !   Distribution in phi of the top
       common/ext_phi356/phi356max,phi356min,phi356w
       common/dist_phi356/xphi356(500),fxphi356(500,20),fxphi356tot(500)
-      common/inp_phi356/m_phi356
+      common/inp_phi356/o_phi356
       common/div_phi356/ndiv_phi356
   !   Distribution in pT of the anti-top
       common/ext_pT478/pT478max,pT478min,pT478w
       common/dist_pT478/xpT478(500),fxpT478(500,20),fxpT478tot(500)
-      common/inp_pT478/m_pT478
+      common/inp_pT478/o_pT478
       common/div_pT478/ndiv_pT478
   !   Distribution in eta of the anti-top
       common/ext_eta478/eta478max,eta478min,eta478w
       common/dist_eta478/xeta478(500),fxeta478(500,20),fxeta478tot(500)
-      common/inp_eta478/m_eta478
+      common/inp_eta478/o_eta478
       common/div_eta478/ndiv_eta478
   !   Distribution in phi of the anti-top
       common/ext_phi478/phi478max,phi478min,phi478w
       common/dist_phi478/xphi478(500),fxphi478(500,20),fxphi478tot(500)
-      common/inp_phi478/m_phi478
+      common/inp_phi478/o_phi478
       common/div_phi478/ndiv_phi478 
   !   Distribution in invarient mass of the top pair
       common/ext_rMtt/rMttmax,rMttmin,rMttw
       common/dist_rMtt/xrMtt(500),fxrMtt(500,20),fxrMtttot(500)
-      common/inp_rMtt/m_rMtt
+      common/inp_rMtt/o_rMtt
       common/div_rMtt/ndiv_rMtt
   !   Distribution in invarient mass of all visible decay products
       common/ext_rmvis/rmvismax,rmvismin,rmvisw
       common/dist_rmvis/xrmvis(500),fxrmvis(500,20),fxrmvistot(500)
-      common/inp_rmvis/m_rmvis
+      common/inp_rmvis/o_rmvis
       common/div_rmvis/ndiv_rmvis  
   !   Distribution in  boost of top pair centre of mass frame
       common/ext_beta/betamax,betamin,betaw
       common/dist_beta/xbeta(500),fxbeta(500,20),fxbetatot(500)
-      common/inp_beta/m_beta
+      common/inp_beta/o_beta
       common/div_beta/ndiv_beta
   !   Distribution in cos(theta_t)
       common/ext_cost/costmax,costmin,costw
       common/dist_cost/xcost(500),fxcost(500,20),fxcosttot(500)
-      common/inp_cost/m_cost
+      common/inp_cost/o_cost
       common/div_cost/ndiv_cost
   !   Distribution in top energy
       common/ext_Et/Etmax,Etmin,Etw
       common/dist_Et/xEt(500),fxEt(500,20),fxEttot(500)
-      common/inp_Et/m_Et
+      common/inp_Et/o_Et
       common/div_Et/ndiv_Et
   !   Distributions in transverse variables
       integer ntrans
@@ -144,53 +145,53 @@ c ======================================================================
       common/ext_trans/transmax(ntrans),transmin(ntrans),transw(ntrans)
       common/dist_trans/xtrans(ntrans,500),fxtrans(ntrans,500,20)
      &                                           ,fxtranstot(ntrans,500)
-      common/inp_trans/m_trans(ntrans)
+      common/inp_trans/o_tran(ntrans)
       common/div_trans/ndiv_trans(ntrans)
       dimension trans(ntrans)
   !   Distribution in phi_l (lepton azimuthal angle)
       common/ext_fl/flmax,flmin,flw
       common/dist_fl/xfl(500),fxfl(500,20),fxfltot(500)
-      common/inp_fl/m_fl
+      common/inp_fl/o_fl
       common/div_fl/ndiv_fl
   !   Distribution in cos_phi_l
       common/ext_cosfl/cosflmax,cosflmin,cosflw
       common/dist_cosfl/xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
-      common/inp_cosfl/m_cosfl
+      common/inp_cosfl/o_cosfl
       common/div_cosfl/ndiv_cosfl
   !   Distribution in delta phi
       common/ext_dphi/dphimax,dphimin,dphiw
       common/dist_dphi/xdphi(500),fxdphi(500,20),fxdphitot(500)
-      common/inp_dphi/m_dphi
+      common/inp_dphi/o_dphi
       common/div_dphi/ndiv_dphi
   !   Distribution in cost5
       common/ext_cost5/cost5max,cost5min,cost5w
       common/dist_cost5/xcost5(500),fxcost5(500,20),fxcost5tot(500)
-      common/inp_cost5/m_cost5
+      common/inp_cost5/o_cost5
       common/div_cost5/ndiv_cost5
   !   Distribution in cost7
       common/ext_cost7/cost7max,cost7min,cost7w
       common/dist_cost7/xcost7(500),fxcost7(500,20),fxcost7tot(500)
-      common/inp_cost7/m_cost7
+      common/inp_cost7/o_cost7
       common/div_cost7/ndiv_cost7
   !   Distribution in ct7ct5
       common/ext_ct7ct5/ct7ct5max,ct7ct5min,ct7ct5w
       common/dist_ct7ct5/xct7ct5(500),fxct7ct5(500,20),fxct7ct5tot(500)
-      common/inp_ct7ct5/m_ct7ct5
+      common/inp_ct7ct5/o_ct7ct5
       common/div_ct7ct5/ndiv_ct7ct5
   !   Distribution in sigp
       common/ext_sigp/sigpmax,sigpmin,sigpw
-      common/dist_sigp/xsigp(1000),fxsigp(nasy,1000,20)
-     &,fxsigptot(nasy,1000)
-      common/inp_sigp/m_sigp
+      common/dist_sigp/xsigp(1000),fxsigp(nasym,1000,20)
+     &,fxsigptot(nasym,1000)
+      common/inp_sigp/o_sigp
       common/div_sigp/ndiv_sigp
   !   Distribution in sigm
       common/ext_sigm/sigmmax,sigmmin,sigmw
-      common/dist_sigm/xsigm(1000),fxsigm(nasy,1000,20)
-     &,fxsigmtot(nasy,1000)
-      common/inp_sigm/m_sigm
+      common/dist_sigm/xsigm(1000),fxsigm(nasym,1000,20)
+     &,fxsigmtot(nasym,1000)
+      common/inp_sigm/o_sigm
       common/div_sigm/ndiv_sigm
   !   Distributions in asymmetries
-      common/inp_asym/m_asy(nasy)  ! nasy
+      common/inp_asym/o_asym(nasym)  ! nasym
 
   ! Local arrays    
   !   phase space vectors.
@@ -259,7 +260,7 @@ c ======================================================================
   !   Scale for the PDFs
       QQ=2.d0*rmt
   !   construct hadronic structure functions.
-      if(istructure.le.4)then
+      if(o_structure.le.4)then
         q2=QQ*QQ
         if((x1.le.1.d-6).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -291,7 +292,7 @@ c ======================================================================
         chm2=x2*ctq6pdf(4,x2,QQ)
         btm2=x2*ctq6pdf(5,x2,QQ)
         g2=x2*ctq6pdf(0,x2,QQ)
-      else if(istructure.eq.5)then
+      else if(o_structure.eq.5)then
         imode=1
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -307,7 +308,7 @@ c ======================================================================
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
         call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
-      else if(istructure.eq.6)then
+      else if(o_structure.eq.6)then
         imode=2
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -323,7 +324,7 @@ c ======================================================================
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
         call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
-      else if(istructure.eq.7)then
+      else if(o_structure.eq.7)then
         imode=3
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -339,7 +340,7 @@ c ======================================================================
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
         call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
-      else if(istructure.eq.8)then
+      else if(o_structure.eq.8)then
         imode=4
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -355,7 +356,7 @@ c ======================================================================
         end if
         call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
         call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
-      else if(istructure.eq.9)then
+      else if(o_structure.eq.9)then
         imode=5
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
           fffxn=0.d0
@@ -655,6 +656,7 @@ c ======================================================================
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
   ! distributions and cuts.
+
       
   ! Calculate transverse momenta (pT)
       do ip=1,ipmax
@@ -810,7 +812,7 @@ c ======================================================================
       end if        
       rMtt=sqrt(abs(rMtt2))
   ! calculate invariant mass of visible decay products
-      if(m_trans(1).eq.1)then
+      if(o_tran(1).eq.1)then
         rMvis2=(qcol(4,3)+qcol(4,4)
      &       +qcol(4,5)+qcol(4,7))**2
         do i=1,3
@@ -827,18 +829,18 @@ c ======================================================================
         ET7=sqrt(rm6**2+pT2(7))
       end if
   ! calculate HT
-      if(m_trans(2).eq.1)then
+      if(o_tran(2).eq.1)then
         trans(2)=ET3+ET4+ET5+ET7+ETmiss
       end if
 
   ! calculate *full* transverse mass 1
-      if(m_trans(3).eq.1)then
+      if(o_tran(3).eq.1)then
         rM_T12=(ET3+ET4+ET5+ET7+ETmiss)**2
      &        +(pT(3)+pT(4)+pT(5)+pT(7)+ETmiss)**2
-        trans(3)=sqrt(abs(rM_T12))
+        trans(3)=sqrt(abs(ro_T12))
       end if
   ! calculate *full* transverse mass 2
-      if(m_trans(4).eq.1)then
+      if(o_tran(4).eq.1)then
         rM_T22=(ET3+ET4+ET5+ET7+ETmiss)**2
         do i=1,2
           rM_T22=rM_T22-(pTvis(i)+pTmiss(i))**2
@@ -846,7 +848,7 @@ c ======================================================================
         trans(4)=sqrt(abs(rM_T22))
       end if
   ! calculate *full* transverse mass 3
-      if(m_trans(5).eq.1)then
+      if(o_tran(5).eq.1)then
         rM_T32=(ETvis+ETmiss)**2
         do i=1,2
           rM_T32=rM_T32-(pTvis(i)+pTmiss(i))**2
@@ -854,7 +856,7 @@ c ======================================================================
         trans(5)=sqrt(abs(rM_T32))    
       end if
   ! calculate lepton transverse mass
-      if(m_trans(6).eq.1)then
+      if(o_tran(6).eq.1)then
         ET5=sqrt(rm5**2+pT2(5))
         ET7=sqrt(rm7**2+pT2(7))
         rMlT2=(ET5+ET7)**2
@@ -864,13 +866,13 @@ c ======================================================================
         trans(6)=sqrt(abs(rMlT2))
       end if
   ! calculate *full* contranverse mass 1
-      if(m_trans(7).eq.1)then
+      if(o_tran(7).eq.1)then
         rM_CT12=(ET3+ET4+ET5+ET7+ETmiss)**2
      &        +(pT(3)+pT(4)+pT(5)+pT(7)-ETmiss)**2
         trans(7)=sqrt(abs(rM_CT12))
       end if
   ! calculate *full* contranverse mass 2
-      if(m_trans(8).eq.1)then
+      if(o_tran(8).eq.1)then
         rM_CT22=(ET3+ET4+ET5+ET7+ETmiss)**2
         do i=1,2
           rM_CT22=rM_CT22-(pTvis(i)-pTmiss(i))**2
@@ -878,7 +880,7 @@ c ======================================================================
         trans(8)=sqrt(abs(rM_CT22))
       end if
   ! calculate *full* contranverse mass 3
-      if(m_trans(9).eq.1)then
+      if(o_tran(9).eq.1)then
         rM_CT32=(ETvis+ETmiss)**2
         do i=1,2
           rM_CT32=rM_CT32-(pTvis(i)-pTmiss(i))**2
@@ -886,7 +888,7 @@ c ======================================================================
         trans(9)=sqrt(abs(rM_CT32))      
       end if
   ! calculate lepton contransverse mass
-      if(m_trans(10).eq.1)then
+      if(o_tran(10).eq.1)then
         ET5=sqrt(rm5**2+pT2(5))
         ET7=sqrt(rm7**2+pT2(7))
         rMlCT2=(ET5+ET7)**2
@@ -1028,6 +1030,32 @@ c ======================================================================
       end if !
 !-----------------------------------------------------------------------    
 ! Matrix elements
+  ! Set |M|^2 =1 (for bug squishing) and skip matrix element calculation
+      if(o_M_eq_1.eq.1)then
+        if(o_final.eq.0)then
+          if(ix.eq.1)then
+            pfx1tot=0.5/x1
+            pfx2tot=0.5/x1
+          else if(ix.eq.2)then
+            pfx1tot=0.5/x2
+            pfx2tot=0.5/x2
+          end if
+          do lam3=-1,1,2
+            do lam4=-1,1,2
+              if(ix.eq.1)then
+                pfx1(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
+                pfx2(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
+              else if(ix.eq.2)then
+                pfx1(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
+                pfx2(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
+              end if
+            end do
+          end do
+          go to 666
+        end if
+      else
+        continue
+      end if
   ! Assign 2to2 MadGraph momenta
       if(o_final.eq.0)then
         
@@ -1071,7 +1099,7 @@ c ======================================================================
     !         rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
     !         rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
     !         rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-    !         write(*,*) 'rm_1 =',rmassa1
+    !         write(*,*) 'ro_1 =',rmassa1
     !         write(*,*) 'rm_2 =',rmassa2
     !         write(*,*) 'rm_3 =',rmassa3
     !         write(*,*) 'rm_4 =',rmassa4
@@ -1204,7 +1232,7 @@ c ======================================================================
           stop
         end if  
   !   Add EW Matrix Elements
-        if((o_EW.eq.1).or.(o_Zp.eq.1))then
+        if((o_EW.eq.1).or.(o_BSM.eq.1))then
           do lam3=-1,1,2
             do lam4=-1,1,2
               respoldd1(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
@@ -1236,7 +1264,7 @@ c ======================================================================
           stop
         end if
   !   Add EW Matrix Elements
-        if((o_EW.eq.1).or.(o_Zp.eq.1))then          
+        if((o_EW.eq.1).or.(o_BSM.eq.1))then          
           resdd1=sqqb_bbbtatann_EWp(1,gZpd,gZpu,rmZp,gamZp
      &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
           resuu1=sqqb_bbbtatann_EWp(2,gZpu,gZpu,rmZp,gamZp
@@ -1320,19 +1348,20 @@ c ======================================================================
         end if
       end if
   !  check it's not null
-      if(pfx1tot.eq.0.d0.and.pfx2tot.eq.0.d0)then
-        fffxn=0.d0
-        return
-      end if
-  ! for distributions,
+      if(pfx1tot.eq.0.d0.or.pfx2tot.eq.0.d0)then 
+        fffxn=0.d0                               
+        return                                   
+      end if                                     
+  ! for distributions,                           
       if(o_final.eq.0)then 
         do lam3=-1,1,2
           do lam4=-1,1,2
-            pfx1(lam3,lam4)=pfx1(lam3,lam4)/pfx1tot
-            pfx2(lam3,lam4)=pfx2(lam3,lam4)/pfx2tot
+            pfx1(lam3,lam4)=pfx1(lam3,lam4)/(pfx1tot+pfx2tot)
+            pfx2(lam3,lam4)=pfx2(lam3,lam4)/(pfx1tot+pfx2tot)
           end do
         end do
       end if
+666   continue
 ! ----------------------------------------------------------------------
 ! Phase space volume
   ! Jacobians from dx1 dx2 -> dx(2) dx(3)
@@ -1402,6 +1431,8 @@ c ======================================================================
   !   flux and pi factors.
         fffxn2=fffxn2/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
+      fffxn1=fffxn1/real(ixmax)/real(jxmax)
+      fffxn2=fffxn2/real(ixmax)/real(jxmax)
       fffxn=fffxn1+fffxn2
 ! ----------------------------------------------------------------------
 ! Categorised cross sections / Asymmetries
@@ -1428,7 +1459,7 @@ c ======================================================================
       end if
 
   ! AFB    
-      if(m_asy(4).eq.0)then
+      if(o_asym(4).eq.0)then
         continue
       else
         if(costcm.eq.0.d0)then
@@ -1449,7 +1480,7 @@ c ======================================================================
       end if
 
   ! AFBstar   
-      if(m_asy(5).eq.0)then
+      if(o_asym(5).eq.0)then
         continue
       else
         if(costst.eq.0.d0)then
@@ -1473,7 +1504,7 @@ c ======================================================================
 
   ! AtRFB
 
-      if(m_asy(6).eq.0)then
+      if(o_asym(6).eq.0)then
         continue
       else
         if(yt.eq.0.d0)then
@@ -1494,7 +1525,7 @@ c ======================================================================
       end if
 
   ! AttbRFB/A
-      if(m_asy(7).eq.0)then
+      if(o_asym(7).eq.0)then
         continue
       else
         if(yt.ge.0.d0)then
@@ -1515,7 +1546,7 @@ c ======================================================================
 
   ! ARFB/A'
 
-      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttmin))then
+      if((o_asym(8).eq.1).and.(abs(ytt).gt.yttmin))then
         if(del_y.eq.0.d0)then
           continue
         else if(del_y.gt.0.d0)then
@@ -1536,7 +1567,7 @@ c ======================================================================
       end if
 
   ! A_l
-      if(m_asy(9).eq.0)then
+      if(o_asym(9).eq.0)then
         continue
       else
         if (o_final.gt.0)then      
@@ -1565,7 +1596,7 @@ c ======================================================================
       hist=hist1+hist2
       do ip=3,ipmax
   ! generate distribution in pT      
-        if(m_pT(ip).eq.1)then      
+        if(o_pT(ip).eq.1)then      
           nbin=int((pT(ip)-pTmin(ip))/pTw(ip))+1
           if(nbin.ge.(ndiv_pT(ip)+1))then
             continue
@@ -1576,7 +1607,7 @@ c ======================================================================
           end if
         end if
   ! generate distribution in eta      
-        if(m_eta(ip).eq.1)then         
+        if(o_eta(ip).eq.1)then         
           nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
           if(nbin.ge.(ndiv_eta(ip)+1))then
             continue
@@ -1587,7 +1618,7 @@ c ======================================================================
           end if
         end if
   ! generate distribution in phi            
-        if(m_phi(ip).eq.1)then   
+        if(o_phi(ip).eq.1)then   
           nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
           if(nbin.ge.(ndiv_phi(ip)+1))then
             continue
@@ -1599,7 +1630,7 @@ c ======================================================================
         end if
       end do
   ! generate distribution in pT356. 
-      if(m_pT356.eq.1)then  
+      if(o_pT356.eq.1)then  
         nbin=int((pT356-pT356min)/pT356w)+1
         if(nbin.ge.(ndiv_pT356+1))then
           continue
@@ -1610,7 +1641,7 @@ c ======================================================================
         end if
       end if      
 
-      if(m_eta356.eq.1)then
+      if(o_eta356.eq.1)then
   ! generate distribution in eta356. 
         nbin=int((eta356-eta356min)/eta356w)+1
         if(nbin.ge.(ndiv_eta356+1))then
@@ -1622,7 +1653,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_phi356.eq.1)then
+      if(o_phi356.eq.1)then
   ! generate distribution in phi356. 
         nbin=int((phi356-phi356min)/phi356w)+1
         if(nbin.ge.(ndiv_phi356+1))then
@@ -1634,7 +1665,7 @@ c ======================================================================
         end if
       end if
 
-        if(m_pT478.eq.1)then
+        if(o_pT478.eq.1)then
   ! generate distribution in pT478. 
         nbin=int((pT478-pT478min)/pT478w)+1
         if(nbin.ge.(ndiv_pT478+1))then
@@ -1646,7 +1677,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_eta478.eq.1)then
+      if(o_eta478.eq.1)then
   ! generate distribution in eta478. 
         nbin=int((eta478-eta478min)/eta478w)+1
         if(nbin.ge.(ndiv_eta478+1))then
@@ -1658,7 +1689,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_phi478.eq.1)then
+      if(o_phi478.eq.1)then
   ! generate distribution in phi478. 
         nbin=int((phi478-phi478min)/phi478w)+1
         if(nbin.ge.(ndiv_phi478+1))then
@@ -1670,7 +1701,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_ETmiss.eq.1)then
+      if(o_ETmiss.eq.1)then
   ! generate distribution in ETmiss. 
         nbin=int((ETmiss-ETmissmin)/ETmissw)+1
         if(nbin.ge.(ndiv_ETmiss+1))then
@@ -1682,7 +1713,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_rMtt.eq.1)then
+      if(o_rMtt.eq.1)then
   ! generate distribution in rMtt.
         nbin=int((rMtt-rMttmin)/rMttw)+1
         if(nbin.ge.(ndiv_rMtt+1))then
@@ -1694,7 +1725,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_beta.eq.1)then
+      if(o_beta.eq.1)then
   ! generate distribution in beta.
         beta=shat/4.d0/rmt**2-1.d0
         nbin=int((beta-betamin)/betaw)+1
@@ -1707,7 +1738,7 @@ c ======================================================================
         end if
       end if  
 
-      if(m_cost.eq.1)then
+      if(o_cost.eq.1)then
   ! generate distribution in cost.
         nbin=int((cost-costmin)/costw)+1
         if(nbin.ge.(ndiv_cost+1))then
@@ -1719,7 +1750,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_Et.eq.1)then   !enerate distribution in Et.
+      if(o_Et.eq.1)then   !enerate distribution in Et.
         nbin=int((Et-Etmin)/Etw)+1
         if(nbin.ge.(ndiv_Et+1))then
           continue
@@ -1732,7 +1763,7 @@ c ======================================================================
 
 
       do itrans=1,ntrans
-        if(m_trans(itrans).eq.1)then
+        if(o_tran(itrans).eq.1)then
   ! generate distribution in trans.
           nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
           if(nbin.ge.(ndiv_trans(itrans)+1))then
@@ -1745,7 +1776,7 @@ c ======================================================================
         end if
       end do
 
-      if(m_fl.eq.1)then
+      if(o_fl.eq.1)then
   ! generate distribution in fl.
         nbin=int((fl-flmin)/flw)+1
         if(nbin.ge.(ndiv_fl+1))then
@@ -1758,7 +1789,7 @@ c ======================================================================
       end if
 
 
-      if(m_cosfl.eq.1)then
+      if(o_cosfl.eq.1)then
   ! generate distribution in cosfl.
         nbin=int((cosfl-cosflmin)/cosflw)+1
         if(nbin.ge.(ndiv_cosfl+1))then
@@ -1771,7 +1802,7 @@ c ======================================================================
       end if
 
 
-      if(m_dphi.eq.1)then
+      if(o_dphi.eq.1)then
   ! generate distribution in dphi.
         nbin=int((dphi-dphimin)/dphiw)+1
         if(nbin.ge.(ndiv_dphi+1))then
@@ -1783,7 +1814,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_cost5.eq.1)then
+      if(o_cost5.eq.1)then
   ! generate distribution in cost5.
         nbin=int((cost5-cost5min)/cost5w)+1
         if(nbin.ge.(ndiv_cost5+1))then
@@ -1795,7 +1826,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_cost7.eq.1)then
+      if(o_cost7.eq.1)then
   ! generate distribution in cost7.
         nbin=int((cost7-cost7min)/cost7w)+1
         if(nbin.ge.(ndiv_cost7+1))then
@@ -1807,7 +1838,7 @@ c ======================================================================
         end if
       end if
 
-      if(m_ct7ct5.eq.1)then
+      if(o_ct7ct5.eq.1)then
         nbin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
         if(nbin.ge.(ndiv_ct7ct5+1))then
           continue
@@ -1818,8 +1849,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(1).eq.1)then
-        if(m_sigp.eq.1)then
+      if(o_asym(1).eq.1)then
+        if(o_sigp.eq.1)then
   ! generate distribution in sigp for ALL.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1832,7 +1863,7 @@ c ======================================================================
      &    (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
           end if
         end if  
-        if(m_sigm.eq.1)then
+        if(o_sigm.eq.1)then
   ! generate distribution in sigm for ALL.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1847,8 +1878,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(2).eq.1)then
-        if(m_sigp.eq.1)then
+      if(o_asym(2).eq.1)then
+        if(o_sigp.eq.1)then
   ! generate distribution in sigp for AL.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1861,7 +1892,7 @@ c ======================================================================
      &      (weight(it,-1,-1)+weight(it,-1,+1))
           end if
         end if  
-        if(m_sigm.eq.1)then
+        if(o_sigm.eq.1)then
   ! generate distribution in sigm for AL.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1876,8 +1907,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(3).eq.1)then
-        if(m_sigp.eq.1)then
+      if(o_asym(3).eq.1)then
+        if(o_sigp.eq.1)then
   ! generate distribution in sigp for APV.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1890,7 +1921,7 @@ c ======================================================================
      &      (weight(it,-1,-1))
           end if
         end if  
-        if(m_sigm.eq.1)then
+        if(o_sigm.eq.1)then
   ! generate distribution in sigm for APV.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1905,8 +1936,8 @@ c ======================================================================
         end if 
       end if
 
-      if(m_asy(4).eq.1)then
-        if((m_sigp.eq.1).and.(costcm.gt.0.d0))then
+      if(o_asym(4).eq.1)then
+        if((o_sigp.eq.1).and.(costcm.gt.0.d0))then
   ! generate distribution in sigp for AFBcm.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1918,7 +1949,7 @@ c ======================================================================
             fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(costcm.lt.0.d0))then
+        if((o_sigm.eq.1).and.(costcm.lt.0.d0))then
   ! generate distribution in sigm for AFBcm.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1932,8 +1963,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(5).eq.1)then
-        if((m_sigp.eq.1).and.(costst.gt.0.d0))then
+      if(o_asym(5).eq.1)then
+        if((o_sigp.eq.1).and.(costst.gt.0.d0))then
   ! generate distribution in sigp for AFBcm.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1945,7 +1976,7 @@ c ======================================================================
             fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(costst.lt.0.d0))then
+        if((o_sigm.eq.1).and.(costst.lt.0.d0))then
   ! generate distribution in sigm for AFBcm.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1959,8 +1990,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(6).eq.1)then
-        if((m_sigp.eq.1).and.(yt.gt.0.d0))then
+      if(o_asym(6).eq.1)then
+        if((o_sigp.eq.1).and.(yt.gt.0.d0))then
   ! generate distribution in sigp for AtFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1972,7 +2003,7 @@ c ======================================================================
             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(yt.lt.0.d0))then
+        if((o_sigm.eq.1).and.(yt.lt.0.d0))then
   ! generate distribution in sigm for AtFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -1986,8 +2017,8 @@ c ======================================================================
         end if
       end if
 
-      if(m_asy(7).eq.1)then
-        if((m_sigp.eq.1).and.(yt.ge.0.d0))then
+      if(o_asym(7).eq.1)then
+        if((o_sigp.eq.1).and.(yt.ge.0.d0))then
   ! generate distribution in sigp for A.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -1999,7 +2030,7 @@ c ======================================================================
             fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(ytb.ge.0.d0))then
+        if((o_sigm.eq.1).and.(ytb.ge.0.d0))then
   ! generate distribution in sigm for A.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2013,8 +2044,8 @@ c ======================================================================
         end if
       end if
 
-      if((m_asy(8).eq.1).and.(abs(ytt).gt.yttmin))then
-        if((m_sigp.eq.1).and.(del_y.gt.0.d0))then
+      if((o_asym(8).eq.1).and.(abs(ytt).gt.yttmin))then
+        if((o_sigp.eq.1).and.(del_y.gt.0.d0))then
   ! generate distribution in sigp for ARFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2026,7 +2057,7 @@ c ======================================================================
             fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
           end if
         end if  
-        if((m_sigm.eq.1).and.(del_y.lt.0.d0))then
+        if((o_sigm.eq.1).and.(del_y.lt.0.d0))then
   ! generate distribution in sigm for ARFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2041,8 +2072,8 @@ c ======================================================================
       end if
 
 
-      if(m_asy(9).eq.1)then
-        if((m_sigp.eq.1).and.(cosfl.gt.0.d0))then
+      if(o_asym(9).eq.1)then
+        if((o_sigp.eq.1).and.(cosfl.gt.0.d0))then
   ! generate distribution in sigp for A_l.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2054,7 +2085,7 @@ c ======================================================================
             fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
           end if
         end if
-        if((m_sigm.eq.1).and.(cosfl.lt.0.d0))then
+        if((o_sigm.eq.1).and.(cosfl.lt.0.d0))then
   ! generate distribution in sigm for A_l.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2072,9 +2103,9 @@ c ======================================================================
   ! stats
       npoints=npoints+1
   ! end loop (cost)+(-cost)
-      ffxn=ffxn+fffxn/float(jxmax) ! 2 x number of phase space points
+      ffxn=ffxn+fffxn
       end do
-      fxn=fxn+ffxn/float(ixmax) ! 2 x number of phase space points
+      fxn=fxn+ffxn
   ! end loop x1 <-> x2 
       end do 
       return
