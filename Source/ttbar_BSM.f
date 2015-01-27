@@ -1156,8 +1156,8 @@
               fxpTtot(ip,j)=fxpTtot(ip,j)+fxpT(ip,j,i)
             end do
             sfxpTtot(ip)=sfxpTtot(ip)+fxpTtot(ip,j)*pTw(ip)
-          end do          
-          write(*,*)'HISTOGRAM'
+          end do
+          write(*,*)'DISRIBUTION'
           write(*,'(A,I1)')'pT',ip
           write(*,'(A,I1,A)')'d#sigma-/dp_{T}(',ip,')--[pb/GeV]'
           write(*,'(A,I1,A)')'p_{T}(',ip,')--[GeV]'
@@ -1177,7 +1177,7 @@
             end do
             sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
           end do
-          write(*,*)'HISTOGRAM'
+          write(*,*)'DISRIBUTION'
           write(*,'(A,I1)')'eta',ip
           write(*,'(A,I1,A)')'d#sigma-/d#eta(',ip,')--[pb]'
           write(*,'(A,I1,A)')'#eta(',ip,')'          
@@ -1197,7 +1197,7 @@
             end do
             sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
           end do
-          write(*,*)'HISTOGRAM'
+          write(*,*)'DISRIBUTION'
           write(*,'(A,I1)')'phi',ip
           write(*,'(A,I1,A)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
           write(*,'(A,I1,A)')'#phi(',ip,')--[rad]'          
@@ -1219,7 +1219,7 @@
           end do
           sfxETmisstot=sfxETmisstot+fxETmisstot(j)*ETmissw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'ETmiss'
         write(*,*)'d#sigma-/dp_{Tmiss}--[pb/GeV]'
         write(*,*)'p_{T}(miss)--[GeV]'
@@ -1240,7 +1240,7 @@
           end do
           sfxpT356tot=sfxpT356tot+fxpT356tot(j)*pT356w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'pT356'
         write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
         write(*,*)'p_{T}(t)--[GeV]'
@@ -1260,7 +1260,7 @@
           end do
           sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'eta356'
         write(*,*)'d#sigma-/d#eta--[pb]'
         write(*,*)'#eta(#bar{t})'
@@ -1280,7 +1280,7 @@
           end do
           sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'phi356'
         write(*,*)'d#sigma-/d#phi--[pb]'
         write(*,*)'#phi(#bar{t})'
@@ -1300,7 +1300,7 @@
           end do
           sfxpT478tot=sfxpT478tot+fxpT478tot(j)*pT478w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'pT478'
         write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
         write(*,*)'p_{T}(#bar{t})--[GeV]'
@@ -1320,7 +1320,7 @@
           end do
           sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'eta478'
         write(*,*)'d#sigma-/d#eta--[pb]'
         write(*,*)'#eta(#bar{t})'
@@ -1340,7 +1340,7 @@
           end do
           sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'phi478'
         write(*,*)'d#sigma-/d#phi--[pb]'
         write(*,*)'#phi(#bar{t})'
@@ -1360,7 +1360,7 @@
           end do
           sfxrMtttot=sfxrMtttot+fxrMtttot(j)*rMttw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'Mtt'
         write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
         write(*,*)'M_{tt}--[GeV]'
@@ -1380,7 +1380,7 @@
           end do
           sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'Beta'
         write(*,*)'d#sigma-/d#Beta_{t}--[pb]'
         write(*,*)'#Beta_{t}'
@@ -1400,7 +1400,7 @@
           end do
           sfxcosttot=sfxcosttot+fxcosttot(j)*costw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'cost'
         write(*,*)'d#sigma-/dcos#theta--[pb]'
         write(*,*)'cos#theta'
@@ -1421,7 +1421,7 @@
           end do
           sfxEttot=sfxEttot+fxEttot(j)*Etw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'Et'
         write(*,*)'d#sigma-/dE_{t}--[pb/GeV]'
         write(*,*)'E_{t}--[GeV]'
@@ -1445,7 +1445,7 @@
             sfxtranstot(itrans)=sfxtranstot(itrans)+
      &                               fxtranstot(itrans,j)*transw(itrans)
           end do
-          write(*,*)'HISTOGRAM'
+          write(*,*)'DISRIBUTION'
           if (itrans.eq.1)then
             write(*,*)'Mvis'
             write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
@@ -1506,7 +1506,7 @@
           end do
           sfxfltot=sfxfltot+fxfltot(j)*flw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'fl'
         write(*,*)'d#sigma-/d#phi_{l}--[pb]'
         write(*,*)'#phi_{l}--[-rad-]'
@@ -1526,7 +1526,7 @@
           end do
           sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'cosfl'
         write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
         write(*,*)'cos#phi_{l}'
@@ -1546,7 +1546,7 @@
           end do
           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'dphi'
         write(*,*)'d#sigma-/d#Delta#phi--[pb]'
         write(*,*)'#Delta#phi'
@@ -1566,7 +1566,7 @@
           end do
           sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'cost5'
         write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
         write(*,*)'cos#theta_{+}'
@@ -1586,7 +1586,7 @@
           end do
           sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'cost7'
         write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
         write(*,*)'cos#theta_{-}'
@@ -1606,7 +1606,7 @@
           end do
           sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
         end do
-        write(*,*)'HISTOGRAM'
+        write(*,*)'DISRIBUTION'
         write(*,*)'ct7ct5'
         write(*,*)
      &      'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
@@ -1640,7 +1640,7 @@
               end do
               sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
             end do
-            write(*,*)'HISTOGRAM'
+            write(*,*)'ASYMMETRY'
             if(jasy.eq.1)then
                 write(*,*)'ALL'
                 write(*,*)'A_{LL}'
@@ -1678,7 +1678,8 @@
               else  
                 write(*,*)(xsigm(i)+xsigp(i))/2.d0,
      &                   (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
-     &                   (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
+     &                   (fxsigptot(jasy,i)+fxsigmtot(jasy,i)),
+     &                    fxsigptot(jasy,i),fxsigmtot(jasy,i)
       !               snorm(jasy)=snorm(jasy)+
       !      &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
       !      &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))

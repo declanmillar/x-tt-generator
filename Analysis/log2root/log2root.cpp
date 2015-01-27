@@ -19,6 +19,7 @@
 #include <TFile.h>
 
 #include "plotDistribution.cpp"
+#include "plotAsymmetry.cpp"
 #include "AtlasROOTStyle.cpp"
 // ================================== main =====================================
 int main(int argc, char *argv[])
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
     std::string fileName; // File name without extension
     std::string logFileName; // adds extension to file name  
     std::string outputFileName; // output .root file name
-    std::string start; // starts reading a histogram
+    std::string dist,asym; // starts reading a histogram
     std::string end; // stops reading the text file
     std::string mainString; // Information strings preceding distributions
     int nHistos; // number of histograms read from text file
@@ -54,7 +55,8 @@ int main(int argc, char *argv[])
     outputFileName = fileName + ".root";
 
     // Triggers
-    start = "HISTOGRAM";
+    dist = "DISTRIBUTION";
+    asym = "ASYMMETRY";
     end = "CLOSE";
 
     // input stream.
@@ -79,13 +81,21 @@ int main(int argc, char *argv[])
         // printf("Main loop string: %s\n",mainString.c_str());
         break;
       }
-      if (mainString==start)
+      if (mainString==dist)
       {
         nHistos+=1;
         printf("Histogram %i\n",nHistos);
         TH1D* Distribution = plotDistribution(&logStream);
         Distribution -> Write();
         delete Distribution;
+      }
+      else if (mainString==asym)
+      {
+        nHistos+=1;
+        printf("Histogram %i\n",nHistos);
+        TH1D* Asymmetry = plotAsymmetry(&logStream);
+        Asymmetry -> Write();
+        delete Asymmetry;
       }
     }
 
