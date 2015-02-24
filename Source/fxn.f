@@ -1235,12 +1235,12 @@ c ======================================================================
         else if(o_QCD.eq.1)then
           do lam3=-1,1,2
             do lam4=-1,1,2            
-           ! qcdpolgg1(lam3,lam4)=sgg_ttb(   p1 ,p2,p3,p4,lam3,lam4)*gs**4            
-           ! qcdpolgg2(lam3,lam4)=sgg_ttb(   p2 ,p1,p3,p4,lam3,lam4)*gs**4
+           qcdpolgg1(lam3,lam4)=sgg_ttb(   p1 ,p2,p3,p4,lam3,lam4)*gs**4            
+           qcdpolgg2(lam3,lam4)=sgg_ttb(   p2 ,p1,p3,p4,lam3,lam4)*gs**4
            qcdpolqq1(lam3,lam4)=sqqb_ttb(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
            qcdpolqq2(lam3,lam4)=sqqb_ttb(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-           ! qcdpolbb1(lam3,lam4)=sqqb_ttb(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-           ! qcdpolbb2(lam3,lam4)=sqqb_ttb(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+           qcdpolbb1(lam3,lam4)=sqqb_ttb(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+           qcdpolbb2(lam3,lam4)=sqqb_ttb(12,p2,p1,p3,p4,lam3,lam4)*gs**4
             end do
           end do
         else
