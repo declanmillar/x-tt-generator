@@ -263,6 +263,7 @@ c ======================================================================
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt
+      write(*,*)x1,x2,QQ
   !   construct hadronic structure functions.
       if(o_structure.le.4)then
         q2=QQ*QQ
@@ -298,6 +299,7 @@ c ======================================================================
         chm2=x2*ctq6pdf(4,x2,QQ)
         btm2=x2*ctq6pdf(5,x2,QQ)
         g2=x2*ctq6pdf(0,x2,QQ)
+        write(*,*)'G2!!!!!!!!:',g2
       else if(o_structure.eq.5)then
         imode=1
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
@@ -1330,20 +1332,18 @@ c ======================================================================
       if(o_final.eq.0) then
         do lam3=-1,1,2
           do lam4=-1,1,2
-              pfx1(lam3,lam4)=
-c qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+              pfx1(lam3,lam4)=qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
      & +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7)
-c & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8)
-c & +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9)
-c & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10)
-c & +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
-              pfx2(lam3,lam4)=
-c qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+     & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8)
+     & +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9)
+     & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10)
+     & +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
+              pfx2(lam3,lam4)=qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0
      & +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1)
-c & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2)
-c & +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3)
-c & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4)
-c & +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+     & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2)
+     & +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3)
+     & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4)
+     & +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
             if(ix.eq.1)then
               pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
               pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1

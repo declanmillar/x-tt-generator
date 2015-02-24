@@ -1,5 +1,5 @@
 ! ======================================================================
-      program ppbbllnn_BSM
+      program zprime
 ! ----------------------------------------------------------------------
 ! Header
   ! Authors: Declan Millar, Stefano Moretti.
@@ -569,7 +569,7 @@
       if(o_structure.eq.8)qcdl4=0.229d0
       if(o_structure.eq.9)qcdl4=0.383d0
       rlambdaQCD4=QCDL4
-
+      write(*,*)rLambdaQCD4
   ! Initialise CTEQ grids.
       if(o_structure.le.4)then
         icteq=o_structure
@@ -593,26 +593,27 @@
       gNWA=gamt
       if(o_NWA.eq.1)gamt=1.d-5
       call initialize(rmt,gamt)
-      ! Test particular matrix element^2  
-      testp1(0)=2835.3779928301524
-      testp1(1)=0.0000000000000000
-      testp1(2)=0.0000000000000000   
-      testp1(3)=2835.3779928301524      
-      testp2(0)=2835.3779928301524        
-      testp2(1)=0.0000000000000000
-      testp2(2)=0.0000000000000000   
-      testp2(3)=-2835.3779928301524     
-      testp3(0)=2835.3779928301524   
-      testp3(1)=-1396.2162308447457     
-      testp3(2)=-22.664163906440582      
-      testp3(3)=-2461.4649976438131     
-      testp4(0)=2835.3779928301524     
-      testp4(1)=1396.2162308447457     
-      testp4(2)=22.664163906440582    
-      testp4(3)=2461.4649976438131
-      testME=sqqb_ttb(3,testp1,testp2,testp3,testp4,-1,1)
-      write(*,*)'ME:',testME
-      stop
+
+  ! Test particular matrix element^2  
+      ! testp1(0)=2835.3779928301524
+      ! testp1(1)=0.0000000000000000
+      ! testp1(2)=0.0000000000000000   
+      ! testp1(3)=2835.3779928301524      
+      ! testp2(0)=2835.3779928301524        
+      ! testp2(1)=0.0000000000000000
+      ! testp2(2)=0.0000000000000000   
+      ! testp2(3)=-2835.3779928301524     
+      ! testp3(0)=2835.3779928301524   
+      ! testp3(1)=-1396.2162308447457     
+      ! testp3(2)=-22.664163906440582      
+      ! testp3(3)=-2461.4649976438131     
+      ! testp4(0)=2835.3779928301524     
+      ! testp4(1)=1396.2162308447457     
+      ! testp4(2)=22.664163906440582    
+      ! testp4(3)=2461.4649976438131
+      ! testME=sqqb_ttb(3,testp1,testp2,testp3,testp4,-1,1)
+      ! write(*,*)'ME:',testME
+      ! stop
   ! some EW parameters.
       a_em=1.d0/128.d0
       s2w=.2320d0

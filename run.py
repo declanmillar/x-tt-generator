@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 # ------------------------------------------------------------------------------------------
 # Command line executor for Zp-tt code.
-# Generates a .com file then runs the ttbar_BSM executable using it.
+# Generates a .com file then runs the zprime executable using it.
 # Do ./run.py -h for help.
 
 # Arguments:
@@ -66,7 +66,7 @@ ncall=args[3]
 seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
-executable="ttbar_BSM"
+executable="zprime"
 sfinal = "2to2" if (final=="0") else "2to6"
 config=StringIO.StringIO()
 
