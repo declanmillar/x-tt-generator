@@ -263,7 +263,6 @@ c ======================================================================
   ! Structure functions
   !   Scale for the PDFs
       QQ=2.d0*rmt
-      write(*,*)x1,x2,QQ
   !   construct hadronic structure functions.
       if(o_structure.le.4)then
         q2=QQ*QQ
@@ -299,7 +298,6 @@ c ======================================================================
         chm2=x2*ctq6pdf(4,x2,QQ)
         btm2=x2*ctq6pdf(5,x2,QQ)
         g2=x2*ctq6pdf(0,x2,QQ)
-        write(*,*)'G2!!!!!!!!:',g2
       else if(o_structure.eq.5)then
         imode=1
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
