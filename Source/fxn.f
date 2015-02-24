@@ -207,12 +207,16 @@ c ======================================================================
       dimension xp(3),yp(3),zp(3)
   !  polar M*Ms for asymmetries
     ! situation one: q-qbar
-      dimension respolgg1(-1:1,-1:1),respolqq1(-1:1,-1:1)      
-      dimension respoldd1(-1:1,-1:1),respoluu1(-1:1,-1:1)   
+      dimension qcdpolqq1(-1:1,-1:1)
+      dimension qcdpolbb1(-1:1,-1:1),qcdpolgg1(-1:1,-1:1) 
+      dimension ewzpoluu1(-1:1,-1:1),ewzpoldd1(-1:1,-1:1)        
+      dimension ewzpolbb1(-1:1,-1:1)
       dimension pfx1(-1:1,-1:1)
-    ! situation two: qbar-q
-      dimension respolgg2(-1:1,-1:1),respolqq2(-1:1,-1:1)      
-      dimension respoldd2(-1:1,-1:1),respoluu2(-1:1,-1:1)
+    ! situation two: qbar-q           
+      dimension qcdpolqq2(-1:1,-1:1)        
+      dimension qcdpolbb2(-1:1,-1:1),qcdpolgg2(-1:1,-1:1) 
+      dimension ewzpoluu2(-1:1,-1:1),ewzpoldd2(-1:1,-1:1)            
+      dimension ewzpolbb2(-1:1,-1:1)
       dimension pfx2(-1:1,-1:1)
     ! weight
       dimension weight(20,-1:1,-1:1)
@@ -276,18 +280,20 @@ c ======================================================================
         end if
   !   (Note that for cteq PDFs we multiply by x1 below and then divide by 
   !   it later. This is for compatibility with MRS, which return xf(x).)
+  !   recent changes may screw up compatabilty with MRS. sea->bar in names
+  !   below reflecting change in cteq61Pdf iparton variable.
         u1=x1*ctq6pdf(1,x1,QQ)
         d1=x1*ctq6pdf(2,x1,QQ)
-        usea1=x1*ctq6pdf(-1,x1,QQ)
-        dsea1=x1*ctq6pdf(-2,x1,QQ)
+        ubar1=x1*ctq6pdf(-1,x1,QQ)
+        dbar1=x1*ctq6pdf(-2,x1,QQ)
         str1=x1*ctq6pdf(3,x1,QQ)
         chm1=x1*ctq6pdf(4,x1,QQ)
         btm1=x1*ctq6pdf(5,x1,QQ)
         g1=x1*ctq6pdf(0,x1,QQ)
         u2=x2*ctq6pdf(1,x2,QQ)
         d2=x2*ctq6pdf(2,x2,QQ)
-        usea2=x2*ctq6pdf(-1,x2,QQ)
-        dsea2=x2*ctq6pdf(-2,x2,QQ)
+        ubar2=x2*ctq6pdf(-1,x2,QQ)
+        dbar2=x2*ctq6pdf(-2,x2,QQ)
         str2=x2*ctq6pdf(3,x2,QQ)
         chm2=x2*ctq6pdf(4,x2,QQ)
         btm2=x2*ctq6pdf(5,x2,QQ)
@@ -306,8 +312,8 @@ c ======================================================================
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
-        call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
+        call mrs99(x1,QQ,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
+        call mrs99(x2,QQ,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
       else if(o_structure.eq.6)then
         imode=2
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
@@ -322,8 +328,8 @@ c ======================================================================
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
-        call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
+        call mrs99(x1,QQ,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
+        call mrs99(x2,QQ,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
       else if(o_structure.eq.7)then
         imode=3
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
@@ -338,8 +344,8 @@ c ======================================================================
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
-        call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
+        call mrs99(x1,QQ,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
+        call mrs99(x2,QQ,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
       else if(o_structure.eq.8)then
         imode=4
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
@@ -354,8 +360,8 @@ c ======================================================================
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
-        call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
+        call mrs99(x1,QQ,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
+        call mrs99(x2,QQ,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
       else if(o_structure.eq.9)then
         imode=5
         if((x1.le.1.d-5).or.(x1.ge.1.d0))then
@@ -370,20 +376,21 @@ c ======================================================================
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,QQ,imode,u1,d1,usea1,dsea1,str1,chm1,btm1,g1)
-        call mrs99(x2,QQ,imode,u2,d2,usea2,dsea2,str2,chm2,btm2,g2)
+        call mrs99(x1,QQ,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
+        call mrs99(x2,QQ,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
       end if
 
   !   Parton distribution functions (PDFs)
   !   (Note that MRS return valence and sea contributions automatically.)
-      fx1(1)=d1+dsea1
-      fx1(2)=u1+usea1
+  !   (Note that cteq do too now!)
+      fx1(1)=d1
+      fx1(2)=u1
       fx1(3)=str1
       fx1(4)=chm1
       fx1(5)=btm1
       fx1(6)=0.d0
-      fx1(7)=dsea1
-      fx1(8)=usea1
+      fx1(7)=dbar1
+      fx1(8)=ubar1
       fx1(9)=fx1(3)
       fx1(10)=fx1(4)
       fx1(11)=fx1(5)
@@ -392,14 +399,14 @@ c ======================================================================
       do i=1,13
         fx1(i)=fx1(i)/x1
       end do
-      fx2(1)=d2*(1-o_coll)+dsea2
-      fx2(2)=u2*(1-o_coll)+usea2
+      fx2(1)=d2*(1-o_coll)+dbar2*o_coll
+      fx2(2)=u2*(1-o_coll)+ubar2*o_coll
       fx2(3)=str2
       fx2(4)=chm2
       fx2(5)=btm2
       fx2(6)=0.d0
-      fx2(7)=d2*o_coll+dsea2
-      fx2(8)=u2*o_coll+usea2
+      fx2(7)=d2*o_coll+dbar2*(1-o_coll)
+      fx2(8)=u2*o_coll+ubar2*(1-o_coll)
       fx2(9)=fx2(3)
       fx2(10)=fx2(4)
       fx2(11)=fx2(5)
@@ -1189,30 +1196,37 @@ c ======================================================================
 
   !   (Do not change the deliberate order of p6 and p7 in the EW code.)
   !   Initilize
-      resqq1=0.d0
-      resgg1=0.d0
-      resuu1=0.d0
-      resdd1=0.d0
-      resqq2=0.d0
-      resgg2=0.d0
-      resuu2=0.d0
-      resdd2=0.d0
+      qcdqq1=0
+      qcdbb1=0
+      qcdgg1=0
+      ewzuu1=0
+      ewzdd1=0
+      ewzbb1=0 
+      qcdqq2=0
+      qcdbb2=0
+      qcdgg2=0
+      ewzuu2=0
+      ewzdd2=0
+      ewzbb2=0
       do ii=-1,1,1
         do jj=-1,1,1
-          respolgg1(ii,jj)=0.d0
-          respolqq1(ii,jj)=0.d0
-          respoldd1(ii,jj)=0.d0
-          respoluu1(ii,jj)=0.d0
-          respolgg2(ii,jj)=0.d0
-          respolqq2(ii,jj)=0.d0
-          respoldd2(ii,jj)=0.d0
-          respoluu2(ii,jj)=0.d0
+          qcdpolqq1(-1:1,-1:1)=0
+          qcdpolbb1(-1:1,-1:1)=0
+          qcdpolgg1(-1:1,-1:1)=0
+          ewzpoluu1(-1:1,-1:1)=0
+          ewzpoldd1(-1:1,-1:1)=0
+          ewzpolbb1(-1:1,-1:1)=0      
+          qcdpolqq2(-1:1,-1:1)=0
+          qcdpolbb2(-1:1,-1:1)=0
+          qcdpolgg2(-1:1,-1:1)=0
+          ewzpoluu2(-1:1,-1:1)=0
+          ewzpoldd2(-1:1,-1:1)=0
+          ewzpolbb2(-1:1,-1:1)=0
           do kk=1,20
             weight(kk,ii,jj)=0.d0
           end do
         end do
       end do
-
   ! 2-body MEs      
   !   Add QCD Matrix Elements
       if(o_final.eq.0)then
@@ -1220,58 +1234,72 @@ c ======================================================================
           continue
         else if(o_QCD.eq.1)then
           do lam3=-1,1,2
-            do lam4=-1,1,2
-            respolqq1(lam3,lam4)=sqqb_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
-            respolgg1(lam3,lam4)=sgg_ttb(p1,p2,p3,p4,lam3,lam4)*gs**4
-            respolqq2(lam3,lam4)=sqqb_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
-            respolgg2(lam3,lam4)=sgg_ttb(p2,p1,p3,p4,lam3,lam4)*gs**4
+            do lam4=-1,1,2            
+           ! qcdpolgg1(lam3,lam4)=sgg_ttb(   p1 ,p2,p3,p4,lam3,lam4)*gs**4            
+           ! qcdpolgg2(lam3,lam4)=sgg_ttb(   p2 ,p1,p3,p4,lam3,lam4)*gs**4
+           qcdpolqq1(lam3,lam4)=sqqb_ttb(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+           qcdpolqq2(lam3,lam4)=sqqb_ttb(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
+           ! qcdpolbb1(lam3,lam4)=sqqb_ttb(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+           ! qcdpolbb2(lam3,lam4)=sqqb_ttb(12,p2,p1,p3,p4,lam3,lam4)*gs**4
             end do
           end do
         else
           write(*,*)'o_QCD is not set correctly.'
           stop
         end if  
+        ! write(*,*)'p1',p1,'p2',p2,'p3',p3,'p4',p4
   !   Add EW Matrix Elements
         if((o_EW.eq.1).or.(o_BSM.eq.1))then
           do lam3=-1,1,2
             do lam4=-1,1,2
-              respoldd1(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
+              ewzpoluu1(lam3,lam4)=sqqb_ttb_EWp(3,gZpu,gZpu,rmZp,gamZp
      &                                           ,p1,p2,p3,p4,lam3,lam4)
-              respoluu1(lam3,lam4)=sqqb_ttb_EWp(2,gZpu,gZpu,rmZp,gamZp
+              ewzpoluu2(lam3,lam4)=sqqb_ttb_EWp(3,gZpu,gZpu,rmZp,gamZp
      &                                           ,p1,p2,p3,p4,lam3,lam4)
-              respoldd2(lam3,lam4)=sqqb_ttb_EWp(1,gZpd,gZpu,rmZp,gamZp
-     &                                           ,p2,p1,p3,p4,lam3,lam4)
-              respoluu2(lam3,lam4)=sqqb_ttb_EWp(2,gZpu,gZpu,rmZp,gamZp
-     &                                           ,p2,p1,p3,p4,lam3,lam4)
+              ewzpoldd1(lam3,lam4)=sqqb_ttb_EWp(4,gZpd,gZpu,rmZp,gamZp
+     &                                           ,p1,p2,p3,p4,lam3,lam4)
+              ewzpoldd2(lam3,lam4)=sqqb_ttb_EWp(4,gZpd,gZpu,rmZp,gamZp
+     &                                           ,p2,p1,p3,p4,lam3,lam4)                         
+              ewzpolbb1(lam3,lam4)=sqqb_ttb_EWp(12,gZpd,gZpu,rmZp,gamZp
+     &                                           ,p1,p2,p3,p4,lam3,lam4)
+              ewzpolbb2(lam3,lam4)=sqqb_ttb_EWp(12,gZpd,gZpu,rmZp,gamZp
+     &                                           ,p2,p1,p3,p4,lam3,lam4)          
             end do
           end do
         else
           continue
         end if
       end if
+
   ! 6-body MEs
   !   Add QCD Matrix Elements
       if(o_final.eq.1)then
         if(o_QCD.eq.0)then
           continue
         else if(o_QCD.eq.1)then
-          resqq1=sqqb_bbbtatann( p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          resgg1= sgg_bbbtatann( p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          resqq2=sqqb_bbbtatann( p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          resgg2= sgg_bbbtatann( p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdqq1=sqqb_bbbtatann(3 , p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdqq2=sqqb_bbbtatann(3 , p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdbb1=sqqb_bbbtatann(12, p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdbb2=sqqb_bbbtatann(12, p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdgg1= sgg_bbbtatann(    p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )          
+          qcdgg2= sgg_bbbtatann(    p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
         else
           write(*,*)'o_QCD is not set correctly.'
           stop
         end if
   !   Add EW Matrix Elements
         if((o_EW.eq.1).or.(o_BSM.eq.1))then          
-          resdd1=sqqb_bbbtatann_EWp(1,gZpd,gZpu,rmZp,gamZp
+          ewzuu1=sqqb_bbbtatann_EWp(3 ,gZpu,gZpu,rmZp,gamZp
      &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          resuu1=sqqb_bbbtatann_EWp(2,gZpu,gZpu,rmZp,gamZp
-     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          resdd2=sqqb_bbbtatann_EWp(1,gZpd,gZpu,rmZp,gamZp
+          ewzuu2=sqqb_bbbtatann_EWp(3 ,gZpu,gZpu,rmZp,gamZp
      &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          resuu2=sqqb_bbbtatann_EWp(2,gZpu,gZpu,rmZp,gamZp
+          ewzdd1=sqqb_bbbtatann_EWp(4 ,gZpd,gZpu,rmZp,gamZp
+     &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
+          ewzdd2=sqqb_bbbtatann_EWp(4 ,gZpd,gZpu,rmZp,gamZp
+     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
+          ewzbb1=sqqb_bbbtatann_EWp(12,gZpd,gZpu,rmZp,gamZp
+     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
+          ewzbb2=sqqb_bbbtatann_EWp(12,gZpd,gZpu,rmZp,gamZp
      &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
         else
           continue
@@ -1279,7 +1307,8 @@ c ======================================================================
       end if
   ! if no gauge sectors are active, fffxn = 0
       if(o_final.eq.1)then
-        restot=resqq1+resgg1+resuu1+resdd1+resqq2+resgg2+resuu2+resdd2
+        restot=qcdqq1+qcdgg1+qcdbb1+ewzuu1+ewzdd1+ewzbb1
+     &        +qcdqq2+qcdgg2+qcdbb2+ewzuu2+ewzdd2+ewzbb2
         if((restot).eq.0.d0)then
           fffxn=0.d0
           return
@@ -1288,10 +1317,10 @@ c ======================================================================
 
   ! Multiple QCD M*M by g_s 
   ! (Madgraph gs is set to one due to scale dependence.)
-      resqq1=resqq1*gs**4
-      resgg1=resgg1*gs**4
-      resqq2=resqq2*gs**4
-      resgg2=resgg2*gs**4
+      qcdqq1=qcdqq1*gs**4
+      qcdgg1=qcdgg1*gs**4
+      qcdqq2=qcdqq2*gs**4
+      qcdgg2=qcdgg2*gs**4
 
   ! Sum over M*M for all initial partons.
   ! (Initial luminosity for total unpolarised cross section: pfxtot)
@@ -1301,18 +1330,20 @@ c ======================================================================
       if(o_final.eq.0) then
         do lam3=-1,1,2
           do lam4=-1,1,2
-              pfx1(lam3,lam4)=respolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
-     & +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 1)*fx2( 7)
-     & +(respolqq1(lam3,lam4)+respoluu1(lam3,lam4))*fx1( 2)*fx2( 8)
-     & +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 3)*fx2( 9)
-     & +(respolqq1(lam3,lam4)+respoluu1(lam3,lam4))*fx1( 4)*fx2(10)
-     & +(respolqq1(lam3,lam4)+respoldd1(lam3,lam4))*fx1( 5)*fx2(11)
-              pfx2(lam3,lam4)=respolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0
-     & +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1( 7)*fx2( 1)
-     & +(respolqq2(lam3,lam4)+respoluu2(lam3,lam4))*fx1( 8)*fx2( 2)
-     & +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1( 9)*fx2( 3)
-     & +(respolqq2(lam3,lam4)+respoluu2(lam3,lam4))*fx1(10)*fx2( 4)
-     & +(respolqq2(lam3,lam4)+respoldd2(lam3,lam4))*fx1(11)*fx2( 5)
+              pfx1(lam3,lam4)=
+c qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+     & +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7)
+c & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8)
+c & +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9)
+c & +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10)
+c & +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
+              pfx2(lam3,lam4)=
+c qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0
+     & +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1)
+c & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2)
+c & +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3)
+c & +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4)
+c & +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
             if(ix.eq.1)then
               pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
               pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
@@ -1331,12 +1362,12 @@ c ======================================================================
      &      +fx1( 2)*fx2( 8)*(resqq1+resuu1)
      &      +fx1( 3)*fx2( 9)*(resqq1+resdd1)
      &      +fx1( 4)*fx2(10)*(resqq1+resuu1)
-     &      +fx1( 5)*fx2(11)*(resqq1+resdd1)
+     &      +fx1( 5)*fx2(11)*(resbb1+resbb1)
         qqd2=fx1( 7)*fx2( 1)*(resqq2+resdd2)
      &      +fx1( 8)*fx2( 2)*(resqq2+resuu2)
      &      +fx1( 9)*fx2( 3)*(resqq2+resdd2)
      &      +fx1(10)*fx2( 4)*(resqq2+resuu2)
-     &      +fx1(11)*fx2( 5)*(resqq2+resdd2)
+     &      +fx1(11)*fx2( 5)*(resbb2+resbb2)
         ggd1=fx1(13)*fx2(13)*resgg1/2.d0
         ggd2=fx1(13)*fx2(13)*resgg2/2.d0
         if(ix.eq.1)then

@@ -3,15 +3,15 @@
 // -------------------
 // Author: Declan Millar
 // ================================== start ====================================
-TH1D* plotAsymmetry(ifstream * logStream){
+TH1D* plotAsymmetry(double luminosity, double efficiency, ifstream * logStream){
 
   // declarations.
   std::string asymName, xTitle,  yTitle; // asymribution labels
   // std::string xVar, xUnits, yVar, yUnits 
-  std::string xS, yS, sigpS, sigmS, stop; // for reading in data pairs as strings
-  int n_DataPairs; // number of x,y pairs  
-  double x, y, sigp, sigm; // for conversion of data pairs to integers
-  std::vector<double> xV,yV,sigpV,sigmV; // for storing data pairs
+  std::string xS, AS, sigpS, sigmS, stop; // for reading in data pairs as strings
+  int n_DataPairs; // number of x,A pairs  
+  double x, A, sigp, sigm ; // for conversion of data pairs to integers
+  std::vector<double> xV,AV,sigpV,sigmV, deltaA1,deltaA2; // for storing data pairs
   int nBins, nBinEdges;
   double binWidth;
   std::vector<double> binLowEdges;
@@ -35,18 +35,18 @@ TH1D* plotAsymmetry(ifstream * logStream){
         // printf("Stop string: %s\n",xS.c_str());
         break;
       }
-      *logStream >> yS;
+      *logStream >> AS;
       *logStream >> sigpS;
       *logStream >> sigmS;
       x = atof(xS.c_str());
-      y = atof(yS.c_str());
+      A = atof(AS.c_str());
       sigp = atof(sigpS.c_str());
       sigm = atof(sigmS.c_str());
       n_DataPairs+=1;
       // printf ("Data pairs number: %i\n",n_DataPairs);
-      // std::cout << x << ' ' << y << std::endl;
+      // std::cout << x << ' ' << A << std::endl;
       xV.push_back(x);
-      yV.push_back(y);
+      AV.push_back(A);
       sigpV.push_back(sigp);
       sigmV.push_back(sigm);
     }
@@ -59,6 +59,8 @@ TH1D* plotAsymmetry(ifstream * logStream){
   nBinEdges = nBins +1;
   binWidth = xV[1]-xV[0]; // only works for fixed bin width!
   binLowEdges.resize(nBinEdges);
+  deltaA1.resize(nBins);
+  deltaA2.resize(nBins);
 
   // Find lower edges of bins.
   for (int i=0; i<nBins; i++){
@@ -66,6 +68,18 @@ TH1D* plotAsymmetry(ifstream * logStream){
     // printf("Bin Low Edge = %f\n",binLowEdges[i]);
   }
   binLowEdges[nBins]=xV[nBins-1]+binWidth/2; // adds end bin edge to vector.
+
+  if (luminosity > 0)
+  {
+    // Find errors
+    for (int i=0; i<nBins; i++)
+    {
+      deltaA1[i]=sqrt((1.0-AV[i]*AV[i])/(luminosity*(sigpV[i]+sigmV[i])));
+      deltaA2[i]=(2.0/(sigpV[i]+sigmV[i]))*sqrt((sigpV[i]*sigmV[i])/(luminosity*(sigpV[i]+sigmV[i])));
+      // printf ("%f,%f\n",sigpV[i],sigmV[i]);
+      // printf ("%f,%f\n",deltaA1[i],deltaA2[i]);
+    }
+  }
 
   // replace hyphens with spaces
   for(int i=0;i <xTitle.size();i++)
@@ -79,7 +93,7 @@ TH1D* plotAsymmetry(ifstream * logStream){
   // print histogram information.
   printf ("  Name:      %s\n",asymName.c_str());
   printf ("  x-Title:   %s\n",xTitle.c_str());
-  printf ("  y-Title:   %s\n",yTitle.c_str());
+  printf ("  A-Title:   %s\n",yTitle.c_str());
   printf ("  n_bins:    %i\n",nBins);
   printf ("  bin_width: %f\n",binWidth);  
 
@@ -92,7 +106,8 @@ TH1D* plotAsymmetry(ifstream * logStream){
 
   // fill Histogram.
   for (int i=0; i<nBins; i++){
-    hist->Fill(xV[i],yV[i]);
+    hist->Fill(xV[i],AV[i]);
+    hist->SetBinError(i,deltaA1[i]);
   }
 
   return hist;

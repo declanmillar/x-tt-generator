@@ -3,7 +3,7 @@
 // -------------------
 // Author: Declan Millar
 // ================================== start ====================================
-TH1D* plotDistribution(ifstream * logStream){
+TH1D* plotDistribution(double luminosity, double efficiency, ifstream * logStream){
 
   // declarations.
   std::string distName, xTitle,  yTitle; // Distribution labels
@@ -11,18 +11,23 @@ TH1D* plotDistribution(ifstream * logStream){
   std::string xS, yS, stop; // for reading in data pairs as strings
   int n_DataPairs; // number of x,y pairs  
   double x, y; // for conversion of data pairs to integers
-  std::vector<double> xVec,yVec; // for storing data pairs
+  std::vector<double> xV,yV; // for storing data pairs
   int nBins, nBinEdges;
   double binWidth;
   std::vector<double> binLowEdges;
+  stop = "END"; // when found, stop reading the histograms
+
 
   // name strings.
   *logStream >> distName >> yTitle >> xTitle;
-  // error when no units in title
-  //*logStream >> distName >> yVar >> yUnits >> xVar >> xUnits;
-  //xTitle = xVar + " " + xUnits;
-  //yTitle = yVar + " " + yUnits;
-  stop = "END"; // when found, stop reading the histograms
+
+  // replace hyphens with spaces
+  for(int i=0;i <xTitle.size();i++)
+    if(xTitle[i]=='-')
+        xTitle[i]=' ';
+  for(int i=0;i <yTitle.size();i++)
+    if(yTitle[i]=='-')
+        yTitle[i]=' ';  
 
   // loop over data pairs.
   n_DataPairs=0;
@@ -41,34 +46,36 @@ TH1D* plotDistribution(ifstream * logStream){
       n_DataPairs+=1;
       // printf ("Data pairs number: %i\n",n_DataPairs);
       // std::cout << x << ' ' << y << std::endl;
-      xVec.push_back(x);
-      yVec.push_back(y);
+      xV.push_back(x);
+      yV.push_back(y);
     }
   }
   else printf("  Stream failed!");
   // printf ("  Read in %i data pairs.\n",n_DataPairs);
 
   // histogram bin information.
-  nBins = xVec.size();
+  nBins = xV.size();
   nBinEdges = nBins +1;
-  binWidth = xVec[1]-xVec[0]; // only works for fixed bin width!
+  binWidth = xV[1]-xV[0]; // only works for fixed bin width!
   binLowEdges.resize(nBinEdges);
 
   // Find lower edges of bins.
   for (int i=0; i<nBins; i++){
-    binLowEdges[i]=xVec[i]-binWidth/2;
+    binLowEdges[i]=xV[i]-binWidth/2;
     // printf("Bin Low Edge = %f\n",binLowEdges[i]);
   }
-  binLowEdges[nBins]=xVec[nBins-1]+binWidth/2; // adds end bin edge to vector.
+  binLowEdges[nBins]=xV[nBins-1]+binWidth/2; // adds end bin edge to vector.
 
-  // replace hyphens with spaces
-  for(int i=0;i <xTitle.size();i++)
-    if(xTitle[i]=='-')
-        xTitle[i]=' ';
-  for(int i=0;i <yTitle.size();i++)
-    if(yTitle[i]=='-')
-        yTitle[i]=' ';
-
+  // multiply by the luminosity if specified
+  if (luminosity > 0)
+  {
+    for (int i=0; i<nBins; i++)
+    {
+      yV[i]=yV[i]*luminosity;
+      // printf("Bin Low Edge = %f\n",binLowEdges[i]);
+    }
+    yTitle="Events";
+  }
 
   // print histogram information.
   printf ("  Name:      %s\n",distName.c_str());
@@ -86,7 +93,7 @@ TH1D* plotDistribution(ifstream * logStream){
 
   // fill Histogram.
   for (int i=0; i<nBins; i++){
-    hist->Fill(xVec[i],yVec[i]);
+    hist->Fill(xV[i],yV[i]);
   }
 
   return hist;

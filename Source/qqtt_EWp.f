@@ -109,7 +109,7 @@ c Local constants
 c Local variables
       integer i,j
       integer jq
-      parameter ( jq=6 ) ! final state tops
+      parameter ( jq=11 ) ! final state tops
       complex*16 amp_tmp
       complex*16 amp( ngraphs )
       complex*16 w1(6) ,w2(6) ,w3(6) ,w4(6) ! external      
@@ -140,27 +140,27 @@ c up/down type couplings (1-6: quarks, 7-12: leptons)
       if((iq.eq. 1).or.(iq.eq. 3).or.(iq.eq. 5).or.
      &   (iq.eq. 7).or.(iq.eq. 9).or.(iq.eq.11))then
         do i=1,2
-          gAq(i)=gAd(i)
-          gZq(i)=gZd(i)
+          gAq(i)=gAu(i)
+          gZq(i)=gZu(i)
         enddo
       else if((iq.eq. 2).or.(iq.eq. 4).or.(iq.eq. 6).or.
      &        (iq.eq. 8).or.(iq.eq.10).or.(iq.eq.12))then
         do i=1,2
-          gAq(i)=gAu(i)
-          gZq(i)=gZu(i)
+          gAq(i)=gAd(i)
+          gZq(i)=gZd(i)
         enddo
       end if
       if((jq.eq. 1).or.(jq.eq. 3).or.(jq.eq. 5).or.
      &   (jq.eq. 7).or.(jq.eq. 9).or.(jq.eq.11))then
         do i=1,2
-          gAt(i)=gAd(i)
-          gZt(i)=gZd(i)
+          gAt(i)=gAu(i)
+          gZt(i)=gZu(i)
         enddo
       else if((jq.eq. 2).or.(jq.eq. 4).or.(jq.eq. 6).or.
      &        (jq.eq. 8).or.(jq.eq.10).or.(jq.eq.12))then
         do i=1,2
-          gAt(i)=gAu(i)
-          gZt(i)=gZu(i)
+          gAt(i)=gAd(i)
+          gZt(i)=gZd(i)
         enddo
       end if
 
@@ -170,8 +170,8 @@ c initialise amplitudes
       enddo      
 
 c wavefunctions
-      call ixxxxx( p1 ,zero      ,nhel(1) , 1   ,w1 )                       
-      call oxxxxx( p2 ,zero      ,nhel(2) ,-1   ,w2 )                       
+      call ixxxxx( p1 ,fmass(iq) ,nhel(1) , 1   ,w1 )                       
+      call oxxxxx( p2 ,fmass(iq) ,nhel(2) ,-1   ,w2 )                       
       call oxxxxx( p3 ,fmass(11) ,nhel(3) , 1   ,w3 )                       
       call ixxxxx( p4 ,fmass(11) ,nhel(4) ,-1   ,w4 )
 

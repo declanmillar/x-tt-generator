@@ -6,13 +6,16 @@
 # Definitions
 
 # executable
-BIN = ttbar_BSM
+BIN = zprime
 
 # Source directory
 SRC = .
 
 # Output directory
 OUT = ..
+
+# Object directory
+OBJ = .
 
 # Compiler
 F = gfortran
@@ -27,7 +30,7 @@ FFLAGS = -g -ffpe-trap=invalid,zero,overflow,underflow,denormal
 .f.o: ; $(F) $(FFLAGS) -c $(SRC)/*.f
 
 # Link mainfile and all processes
-ppbbllnn_SM: *.o makefile
+zprime: *.o makefile
 	$(F) -o $(OUT)/$(BIN) $(FFLAGS) *.o
 
 # Clean up

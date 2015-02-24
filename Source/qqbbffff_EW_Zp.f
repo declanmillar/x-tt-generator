@@ -20,7 +20,7 @@ c constants
       parameter ( nexternal=8, ncomb=256 )
 
 c arguments
-      integer iq ! incoming quark type (up/down)
+      integer iq ! incoming fermion species (see initialise for IDs)
       real*8 gZpq(2,5),gZpt(2,5) ! Zp couplings to quark (up/down) and top 
       real*8 Zpmass(5), Zpwidth(5) ! Zp mass and width
       real*8 p1(0:3),p2(0:3)
@@ -339,7 +339,7 @@ c arguments
 c local variables 
       integer i,j
       integer jq
-      parameter (jq=6) ! final state tops
+      parameter (jq=11) ! final state tops
       complex*16 amp_tmp
       complex*16 amp(ngraphs)
       complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
@@ -379,30 +379,30 @@ c initial down type
       if((iq.eq. 1).or.(iq.eq. 3).or.(iq.eq. 5).or.
      &   (iq.eq. 7).or.(iq.eq. 9).or.(iq.eq.11))then
         do i=1,2
-          gaq(i)=gad(i)
-          gzq(i)=gzd(i)
+          gaq(i)=gAu(i)
+          gzq(i)=gZu(i)
         end do
 c initial up type
       else if((iq.eq. 2).or.(iq.eq. 4).or.(iq.eq. 6).or.
      &        (iq.eq. 8).or.(iq.eq.10).or.(iq.eq.12))then
         do i=1,2
-          gaq(i)=gau(i)
-          gzq(i)=gzu(i)
+          gaq(i)=gAd(i)
+          gzq(i)=gZd(i)
         end do
       end if
 c final down type
       if((jq.eq. 1).or.(jq.eq. 3).or.(jq.eq. 5).or.
      &   (jq.eq. 7).or.(jq.eq. 9).or.(jq.eq.11))then
         do i=1,2
-          gAt(i)=gad(i)
-          gZt(i)=gzd(i)
+          gAt(i)=gAu(i)
+          gZt(i)=gzu(i)
         end do
 c final down type
       else if((jq.eq. 2).or.(jq.eq. 4).or.(jq.eq. 6).or.
      &        (jq.eq. 8).or.(jq.eq.10).or.(jq.eq.12))then
         do i=1,2
-          gAt(i)=gau(i)
-          gZt(i)=gzu(i)
+          gAt(i)=gAd(i)
+          gZt(i)=gZd(i)
         end do
       end if
 
@@ -413,10 +413,10 @@ c initialise all the square matrix elements to zero
 
 
 c wavefunctions
-      call ixxxxx( p1  ,fmass(3  ) ,nhel(1  ) , 1 ,w1 )
-      call oxxxxx( p2  ,fmass(3  ) ,nhel(2  ) ,-1 ,w2 )
-      call oxxxxx( p3  ,fmass(12 ) ,nhel(3  ) , 1 ,w3 )
-      call ixxxxx( p4  ,fmass(12 ) ,nhel(4  ) ,-1 ,w4 )
+      call ixxxxx( p1  ,fmass(iq  ),nhel(1  ) , 1 ,w1 )
+      call oxxxxx( p2  ,fmass(iq ) ,nhel(2  ) ,-1 ,w2 )
+      call oxxxxx( p3  ,fmass(11 ) ,nhel(3  ) , 1 ,w3 )
+      call ixxxxx( p4  ,fmass(11 ) ,nhel(4  ) ,-1 ,w4 )
       call ixxxxx( p5  ,fmass(9  ) ,nhel(5  ) ,-1 ,w5 )
       call oxxxxx( p6  ,fmass(9  ) ,nhel(6  ) , 1 ,w6 )
       call oxxxxx( p7  ,fmass(10 ) ,nhel(7  ) , 1 ,w7 )

@@ -199,6 +199,9 @@
       dimension sfxsigptot(nasym),sfxsigmtot(nasym)
       dimension asym_int(nasym)
       dimension Atot(nasym),Atoterr(nasym)
+  ! test particular matrix element
+      dimension testp1(0:3),testp2(0:3),
+     &          testp3(0:3),testp4(0:3)
 
   ! Local constants
   !   pi
@@ -218,8 +221,12 @@
       data rmZ/91.19d0/,gamZ/2.50d0/
       data rmH/125.0d0/,gamH/0.31278d-2/
 
-  !   Branching ratio for t->bln      
-      real*8 BRtbln/0.10779733d0/
+  !   Branching ratio for t->bev=bmv=btv (with QCD corrections?)     
+  !    real*8 BRtbln/0.10779733d0/
+  !   Branching ratio for t->bev=bmv=btv=1/9 (tree level)      
+      real*8 BRtbln/0.11111111d0/ 
+  !   Branching ratio for t->beq=bmq=btq=6/9 (tree level)      
+      real*8 BRtbeq/0.66666666d0/
 
   ! External procedures
       external fxn
@@ -586,7 +593,26 @@
       gNWA=gamt
       if(o_NWA.eq.1)gamt=1.d-5
       call initialize(rmt,gamt)
-
+      ! Test particular matrix element^2  
+      testp1(0)=2835.3779928301524
+      testp1(1)=0.0000000000000000
+      testp1(2)=0.0000000000000000   
+      testp1(3)=2835.3779928301524      
+      testp2(0)=2835.3779928301524        
+      testp2(1)=0.0000000000000000
+      testp2(2)=0.0000000000000000   
+      testp2(3)=-2835.3779928301524     
+      testp3(0)=2835.3779928301524   
+      testp3(1)=-1396.2162308447457     
+      testp3(2)=-22.664163906440582      
+      testp3(3)=-2461.4649976438131     
+      testp4(0)=2835.3779928301524     
+      testp4(1)=1396.2162308447457     
+      testp4(2)=22.664163906440582    
+      testp4(3)=2461.4649976438131
+      testME=sqqb_ttb(3,testp1,testp2,testp3,testp4,-1,1)
+      write(*,*)'ME:',testME
+      stop
   ! some EW parameters.
       a_em=1.d0/128.d0
       s2w=.2320d0
@@ -1157,7 +1183,7 @@
             end do
             sfxpTtot(ip)=sfxpTtot(ip)+fxpTtot(ip,j)*pTw(ip)
           end do
-          write(*,*)'DISRIBUTION'
+          write(*,*)'DISTRIBUTION'
           write(*,'(A,I1)')'pT',ip
           write(*,'(A,I1,A)')'d#sigma-/dp_{T}(',ip,')--[pb/GeV]'
           write(*,'(A,I1,A)')'p_{T}(',ip,')--[GeV]'
@@ -1177,7 +1203,7 @@
             end do
             sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
           end do
-          write(*,*)'DISRIBUTION'
+          write(*,*)'DISTRIBUTION'
           write(*,'(A,I1)')'eta',ip
           write(*,'(A,I1,A)')'d#sigma-/d#eta(',ip,')--[pb]'
           write(*,'(A,I1,A)')'#eta(',ip,')'          
@@ -1197,7 +1223,7 @@
             end do
             sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
           end do
-          write(*,*)'DISRIBUTION'
+          write(*,*)'DISTRIBUTION'
           write(*,'(A,I1)')'phi',ip
           write(*,'(A,I1,A)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
           write(*,'(A,I1,A)')'#phi(',ip,')--[rad]'          
@@ -1219,7 +1245,7 @@
           end do
           sfxETmisstot=sfxETmisstot+fxETmisstot(j)*ETmissw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'ETmiss'
         write(*,*)'d#sigma-/dp_{Tmiss}--[pb/GeV]'
         write(*,*)'p_{T}(miss)--[GeV]'
@@ -1240,7 +1266,7 @@
           end do
           sfxpT356tot=sfxpT356tot+fxpT356tot(j)*pT356w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'pT356'
         write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
         write(*,*)'p_{T}(t)--[GeV]'
@@ -1260,7 +1286,7 @@
           end do
           sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'eta356'
         write(*,*)'d#sigma-/d#eta--[pb]'
         write(*,*)'#eta(#bar{t})'
@@ -1280,7 +1306,7 @@
           end do
           sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'phi356'
         write(*,*)'d#sigma-/d#phi--[pb]'
         write(*,*)'#phi(#bar{t})'
@@ -1300,7 +1326,7 @@
           end do
           sfxpT478tot=sfxpT478tot+fxpT478tot(j)*pT478w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'pT478'
         write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
         write(*,*)'p_{T}(#bar{t})--[GeV]'
@@ -1320,7 +1346,7 @@
           end do
           sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'eta478'
         write(*,*)'d#sigma-/d#eta--[pb]'
         write(*,*)'#eta(#bar{t})'
@@ -1340,7 +1366,7 @@
           end do
           sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'phi478'
         write(*,*)'d#sigma-/d#phi--[pb]'
         write(*,*)'#phi(#bar{t})'
@@ -1360,7 +1386,7 @@
           end do
           sfxrMtttot=sfxrMtttot+fxrMtttot(j)*rMttw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'Mtt'
         write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
         write(*,*)'M_{tt}--[GeV]'
@@ -1380,7 +1406,7 @@
           end do
           sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'Beta'
         write(*,*)'d#sigma-/d#Beta_{t}--[pb]'
         write(*,*)'#Beta_{t}'
@@ -1400,7 +1426,7 @@
           end do
           sfxcosttot=sfxcosttot+fxcosttot(j)*costw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'cost'
         write(*,*)'d#sigma-/dcos#theta--[pb]'
         write(*,*)'cos#theta'
@@ -1421,7 +1447,7 @@
           end do
           sfxEttot=sfxEttot+fxEttot(j)*Etw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'Et'
         write(*,*)'d#sigma-/dE_{t}--[pb/GeV]'
         write(*,*)'E_{t}--[GeV]'
@@ -1445,7 +1471,7 @@
             sfxtranstot(itrans)=sfxtranstot(itrans)+
      &                               fxtranstot(itrans,j)*transw(itrans)
           end do
-          write(*,*)'DISRIBUTION'
+          write(*,*)'DISTRIBUTION'
           if (itrans.eq.1)then
             write(*,*)'Mvis'
             write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
@@ -1506,7 +1532,7 @@
           end do
           sfxfltot=sfxfltot+fxfltot(j)*flw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'fl'
         write(*,*)'d#sigma-/d#phi_{l}--[pb]'
         write(*,*)'#phi_{l}--[-rad-]'
@@ -1526,7 +1552,7 @@
           end do
           sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'cosfl'
         write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
         write(*,*)'cos#phi_{l}'
@@ -1546,7 +1572,7 @@
           end do
           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'dphi'
         write(*,*)'d#sigma-/d#Delta#phi--[pb]'
         write(*,*)'#Delta#phi'
@@ -1566,7 +1592,7 @@
           end do
           sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'cost5'
         write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
         write(*,*)'cos#theta_{+}'
@@ -1586,7 +1612,7 @@
           end do
           sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'cost7'
         write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
         write(*,*)'cos#theta_{-}'
@@ -1606,7 +1632,7 @@
           end do
           sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
         end do
-        write(*,*)'DISRIBUTION'
+        write(*,*)'DISTRIBUTION'
         write(*,*)'ct7ct5'
         write(*,*)
      &      'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'

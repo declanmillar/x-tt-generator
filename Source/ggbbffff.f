@@ -1,6 +1,5 @@
 c ======================================================================
-      real*8 function sgg_bbbtatann(p1, p2, p3, p4, p5, p6, p7, p8
-     & )! lam357,lam468)
+      real*8 function sgg_bbbtatann(p1, p2, p3, p4, p5, p6, p7, p8)
 c returns amplitude squared summed/avg over colors and helicities
 c for the point in phase space p1,p2,p3,p4,p5,p6,p7,p8, lam357, lam468
 c for process :
@@ -12,6 +11,7 @@ c ----------------------------------------------------------------------
       real*8 polgg
 
 c constants
+      integer iq ! incoming fermion species (see initialise for IDs)
       integer    nexternal,   ncomb                     
       parameter (nexternal=8, ncomb=256)
 
@@ -330,6 +330,7 @@ c ----------------------------------------------------------------------
 c  
 c constants
 c  
+      integer iq ! incoming fermion species (see initialise for IDs)
       integer    ngraphs,    neigen,    nexternal       
       parameter (ngraphs=  3,neigen=  2,nexternal=8)    
       real*8     zero
