@@ -186,7 +186,6 @@ c Z diagram
       else
         continue
       end if
-
 c Z' diagrams
       if (o_BSM.eq.1)then
         do i =1,5

@@ -1,6 +1,6 @@
 c ============================== subroutine ====================================      
-      subroutine initialize(rmt,gamt)
-c     sets up masses and coupling constants 
+      subroutine initialise_madgraph(rmt,gamt)
+c     sets up masses and coupling constants of particles
 c ----------------------------- declarations -----------------------------------
       implicit none
 c arguments
@@ -8,13 +8,13 @@ c arguments
 
 c constants
       real*8     sw2
-      parameter (sw2 = .2320d0)
+      parameter (sw2 = .2320d0) ! sin(theta_weinberg)
       integer igw
 
-c masses and widths of fermions
+c define masses and widths of fermions
 
       real*8     tmass,      bmass,    cmass,    smass,    umass
-      parameter (tmass=175.d0,bmass=4.25d0,cmass=0.d0,
+      parameter (tmass=175.d0,bmass=4.18d0,cmass=0.d0,
      &                        smass=0.d0,umass=0.d0)
       real*8     twidth,    bwidth,    cwidth,    swidth,    uwidth
       parameter (twidth=0.d0,bwidth=0.d0,cwidth=0.d0,
@@ -25,18 +25,18 @@ c masses and widths of fermions
       real*8     dwidth,    ewidth,    muwidth,    tauwidth
       parameter (dwidth=0d0,ewidth=0d0,muwidth=0d0,tauwidth=0d0)
 
-c masses and widths of SM bosons
+c define masses and widths of the SM bosons
       real*8     wmass,      zmass,      wwidth,     zwidth
       parameter (wmass=80.23d0, zmass=91.19d0, 
      &           wwidth=2.08d0, zwidth=2.50d0)
       real*8     amass,     awidth,     hmass,        hwidth
-      parameter (amass=0d0, awidth=0d0, hmass=150.d0, hwidth=0.1635d-01)
+      parameter (amass=0d0, awidth=0d0, hmass=125.d0, hwidth=0.31278d-2)
 
 c local variables
       integer i
 
 c global variables
-      real*8          gw, gwwa, gwwz
+      real*8         gw, gwwa, gwwz
       common /coup1/ gw, gwwa, gwwz
       real*8         gal(2),gau(2),gad(2),gwf(2)
       common /coup2a/gal,   gau,   gad,   gwf
@@ -46,7 +46,7 @@ c global variables
       common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
       complex*16     gchf(2,12)
       common /coup4/ gchf
-      real*8         wmass1,wwidth1,zmass1,zwidth1
+      real*8         Wmass1,Wwidth1,zmass1,zwidth1
       common /vmass1/wmass1,wwidth1,zmass1,zwidth1
       real*8         amass1,awidth1,hmass1,hwidth1
       common /vmass2/amass1,awidth1,hmass1,hwidth1
@@ -55,7 +55,8 @@ c global variables
       real*8           gg(2), g
       common /coupqcd/ gg,    g
 
-c ---------------------------------- method ------------------------------------ 
+c ---------------------------------- method ----------------------------
+c enter fermion masses  
       fmass(1) = emass
       fmass(2) = 0d0
       fmass(3) = umass
@@ -82,7 +83,7 @@ c ---------------------------------- method ------------------------------------
       fwidth(11)= gamt
       fwidth(12)= bwidth
 
-!      wmass1=wmass
+!      wmass1=wmass??!!!!!
       wmass1=zmass*dsqrt(1.d0-sw2)
       zmass1=zmass
       amass1=amass

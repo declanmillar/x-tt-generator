@@ -122,8 +122,8 @@ print >> config, '%s ! NWA' % options.NWA
 print >> config, '%s ! BR' % options.BR
 print >> config, '%s ! tran' % options.tran
 print >> config, '%s ! asym' % options.asym
-print >> config, '%s.d0 ! ytmax' % options.ytmax
-print >> config, '%s.d0 ! yttmin' % options.yttmin
+print >> config, '%sd0 ! ytmax' % options.ytmax
+print >> config, '%sd0 ! yttmin' % options.yttmin
 
 print >> config, '%s ! iseed' % seed
 print >> config, '%s ! itmx' % options.itmx
