@@ -26,7 +26,11 @@
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/o_final,ipmax   
+      common/final/o_final,ipmax
+      common/top/rmt,gamt
+      common/W/rmW,gamW
+      common/Z/rmZ,gamZ
+      common/H/rmH,gamH      
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
@@ -45,19 +49,15 @@
   !   Interference       
       common/interference/o_int      
   !   Z' masses and VA/LR couplings
-      common/fermions/ fmass,     fwidth
-      dimension fmass(12), fwidth(12)
-      common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
-      common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
       common/Zp/rmZp(5),gamZp(5)
       common/Zpparam/paramZp(5)
-      common/coupZpVA/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-      common/coupZp/gZpd(2,5),gZpu(2,5)
+      common/ZpAVcoup/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
+      common/ZpLRcoup/gZpd(2,5),gZpu(2,5)
   !   Narrow width approximation (NWA)
-      common/NWA/o_NWA
+      common/NWA/gNWA
   !   Structure functions
       common/partdist/o_structure
-      common/QCD/rlambdaQCD4,nloops
+      common/ALFASTRONG/rlambdaQCD4,nloops
       common/collider/o_coll
   !   Switch for all distributions
       common/distros/o_distros
@@ -209,7 +209,18 @@
   !   Unit conversion GeV -> nb
       parameter (conv=0.38937966d9)
   !   Date and time
-      integer today(3), now(3)
+      integer today(3), now(3)      
+  !   Quark masses
+      data rmu/0.00d0/,
+     &     rmd/0.00d0/,
+     &     rms/0.00d0/,
+     &     rmc/0.00d0/,
+     &     rmb/4.25d0/
+  !   Higgs/gauge boson masses and widths
+      data              gamW/2.08d0/
+      data rmZ/91.19d0/,gamZ/2.50d0/
+      data rmH/125.0d0/,gamH/0.31278d-2/
+
   !   Branching ratio for t->bev=bmv=btv (with QCD corrections?)     
   !    real*8 BRtbln/0.10779733d0/
   !   Branching ratio for t->bev=bmv=btv=1/9 (tree level)      
@@ -576,17 +587,49 @@
       if(o_structure.eq.9)nloops=1
 
   ! initialise MadGraph - masses and coupling constants of particles
-
+      rmt=175.d0
+      gamt=1.55d0
+      gNWA=gamt
       if(o_NWA.eq.1)gamt=1.d-5
-      call initialise_madGraph(o_NWA,model)
+      call initialise_madGraph(rmt,gamt)
+
+! Test particular matrix element^2  
+   !  testp1(0)=2835.3779928301524
+   !  testp1(1)=0.0000000000000000
+   !  testp1(2)=0.0000000000000000   
+   !  testp1(3)=2835.3779928301524      
+   !  testp2(0)=2835.3779928301524        
+   !  testp2(1)=0.0000000000000000
+   !  testp2(2)=0.0000000000000000   
+   !  testp2(3)=-2835.3779928301524     
+   !  testp3(0)=2835.3779928301524   
+   !  testp3(1)=-1396.2162308447457     
+   !  testp3(2)=-22.664163906440582      
+   !  testp3(3)=-2461.4649976438131     
+   !  testp4(0)=2835.3779928301524     
+   !  testp4(1)=1396.2162308447457     
+   !  testp4(2)=22.664163906440582    
+   !  testp4(3)=2461.4649976438131
+   !  testME=sqqb_ttb_EWp(12,gZpu,gZpu,rmZp,gamZp,
+   ! &                                 testp1,testp2,testp3,testp4,-1,1)
+   !  write(*,*)'ME:',testME
+   !  stop
+      
+  ! some EW parameters.
+      a_em=1.d0/128.d0
+      s2w=.2320d0
+      rmW=rmZ*sqrt(1.d0-s2w)
+      sw=sqrt(s2w)
+      c2w=1.d0-s2w
+      cw=sqrt(c2w)
 
   ! Calculate Zp couplings
-      call coupZpx
+      call coupZp
 
   ! Calculate sequential Zp widths
       do i=1,5
         if (o_width(i).eq.0) gamZp(i)=
-     &             widthZp(rm_W,rm_Z,rmZp(i),a_em,s2w,rlambdaQCD4,nloop)
+     &               widthZp(rmW,rmZ,rmZp(i),a_em,s2w,rlambdaQCD4,nloop)
       end do
 ! ---------------------------------------------------------------------- 
 ! VEGAS parameters
@@ -600,8 +643,8 @@
       nprn=0
       if(o_final.eq.0)then
   !   Final state masses     
-        rm3=fmass(11)
-        rm4=rm3
+        rm3=rmt
+        rm4=rmt
         rm5=0.d0
         rm6=0.d0
         rm7=0.d0
@@ -631,8 +674,8 @@
 
       else if(o_final.eq.1)then
   !   Final state masses
-        rm3=fmass(12)
-        rm4=rm3
+        rm3=rmb
+        rm4=rmb
         rm5=0.d0
         rm6=0.d0
         rm7=0.d0
@@ -643,13 +686,13 @@
   !   x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
   !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
   !   x(13)=(XX356-XX356min)/(XX356max-XX356min),
-  !   where XX356=arctg((rm356**2-rm3**2)/rm3/gamt),
+  !   where XX356=arctg((rm356**2-rmt**2)/rmt/gamt),
   !   x(12)=(XX478-XX478min)/(XX478max-XX478min),
-  !   where XX478=arctg((rm478**2-rm3**2)/rm3/gamt),
+  !   where XX478=arctg((rm478**2-rmt**2)/rmt/gamt),
   !   x(11)=(XX56-XX56min)/(XX56max-XX56min),
-  !   where XX56=arctg((rm56**2-rm_W**2)/rm_W/gamW),
+  !   where XX56=arctg((rm56**2-rmW**2)/rmW/gamW),
   !   x(10)=(XX78-XX78min)/(XX78max-XX78min),
-  !   where XX78=arctg((rm78**2-rm_W**2)/rm_W/gamW),
+  !   where XX78=arctg((rm78**2-rmW**2)/rmW/gamW),
   !   x(9)=cos(theta_cm_356)=-cos(theta_cm_478)  
   !   x(8)=cos(theta56_cm_356),
   !   x(7)=cos(theta78_cm_478),
@@ -905,18 +948,18 @@
       write(*,*)'#sqrt{s}              ',ecm_coll
       write(*,*)'at |y| <              ',abs(ytmax)
       write(*,*)'Loops a_s evaluated at',nloops
-      write(*,*)'a_{s}(M_{Z})          ',alfas(rm_Z,rLambdaQCD4,nloops)
+      write(*,*)'a_{s}(M_{Z})          ',alfas(rmZ,rLambdaQCD4,nloops)
       write(*,*)'#Lambda_{QCD}(4)      ',QCDL4
-      write(*,*)'m_{b}                 ',fmass(12)    
-      write(*,*)'#Gamma_{b}            ',fwidth(12) 
-      write(*,*)'m_{t}                 ',fmass(11)  
-      write(*,*)'#Gamma_{t}            ',fwidth(11)   
-      write(*,*)'m_{Z}                 ',rm_Z    
-      write(*,*)'#Gamma_{Z}            ',gamma_Z   
-      write(*,*)'m_{W}                 ',rm_W    
-      write(*,*)'#Gamma_{W}            ',gamma_W   
-      write(*,*)'m_{H}                 ',rm_h    
-      write(*,*)'#Gamma_{H}            ',gamma_h
+      write(*,*)'m_{b}                 ',rmb    
+      write(*,*)'#Gamma_{b}            ',0.d0   
+      write(*,*)'m_{t}                 ',rmt    
+      write(*,*)'#Gamma_{t}            ',gamt   
+      write(*,*)'m_{Z}                 ',rmZ    
+      write(*,*)'#Gamma_{Z}            ',gamZ   
+      write(*,*)'m_{W}                 ',rmW    
+      write(*,*)'#Gamma_{W}            ',gamW   
+      write(*,*)'m_{H}                 ',rmH    
+      write(*,*)'#Gamma_{H}            ',gamH
       write(*,*)'-----------------------------------------------------' 
       write(*,*)'ZPRIME PARAMETERS'
       do i=1,5

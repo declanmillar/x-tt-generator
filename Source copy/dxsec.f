@@ -1,5 +1,5 @@
 c ======================================================================
-      function fxn(x,wgt)
+      function dxsec(x,wgt)
 ! ----------------------------------------------------------------------
 ! Header
   ! Authors: Declan Millar, Stefano Moretti 
@@ -31,20 +31,20 @@ c ======================================================================
   !   Kinematics
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
-      common/EW/a_em,s2w
-      common/final/o_final,ipmax
-      common/top/rmt,gamt
-      common/W/rmW,gamW
-      common/Z/rmZ,gamZ
-      common/H/rmH,gamH      
+      common/final/o_final,ipmax    
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
       common/cuts/ytmax,yttmin
   !   Debugging
       common/debug/o_M_eq_1
+      common/fermions/ fmass,     fwidth
+      dimension fmass(12), fwidth(12)
+      common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
+      common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
   !   Narrow Width Approximation (NWA)
-      common/NWA/gNWA
+      common/NWA/o_NWA
+      common/Gammas/Gamma_t
   !   Z' masses and LR couplings
       common/Zp/rmZp(5),gamZp(5)
       common/ZpLRcoup/gZpd(2,5),gZpu(2,5)
@@ -225,14 +225,7 @@ c ======================================================================
       dimension x1x2(2,2)
 
   ! Local constants
-  !   pi
       parameter (pi=3.14159265358979323846d0)
-  !   Quark masses
-      data rmu/0.00d0/,
-     &     rmd/0.00d0/,
-     &     rms/0.00d0/,
-     &     rmc/0.00d0/,
-     &     rmb/4.25d0/
   !   Internal random number seed
       data jseed/987654321/
 ! ----------------------------------------------------------------------
@@ -252,7 +245,7 @@ c ======================================================================
       x1x2(2,1)=xx2
       x1x2(2,2)=xx1
   ! Loop over x1 and x2
-      fxn=0.d0
+      dxsec=0.d0
       do ix=1,ixmax
       ffxn=0.d0 
       x1=x1x2(ix,1)
@@ -262,6 +255,8 @@ c ======================================================================
       fffxn=0.d0
   ! Structure functions
   !   Scale for the PDFs
+      rmt=fmass(11)
+      gamt=fwidth(11)
       QQ=2.d0*rmt
   !   construct hadronic structure functions.
       if(o_structure.le.4)then
@@ -494,11 +489,11 @@ c ======================================================================
         endif
         rm56min=rm5+rm6
         rm56max=rm356-rm3
-        XX56min=datan(((rm56min)**2-rmW**2)/rmW/gamW)
-        XX56max=datan(((rm56max)**2-rmW**2)/rmW/gamW)
+        XX56min=datan(((rm56min)**2-rm_W**2)/rm_W/gamma_W)
+        XX56max=datan(((rm56max)**2-rm_W**2)/rm_W/gamma_W)
         xx=x(11)*(XX56max-XX56min)+XX56min
-        rl56=dtan(xx)*rmW*gamW
-        rm56_2=(rmW**2+rl56)
+        rl56=dtan(xx)*rm_W*gamma_W
+        rm56_2=(rm_W**2+rl56)
         if(rm56_2.lt.0.d0)then
           fffxn=0.d0
           return
@@ -507,11 +502,11 @@ c ======================================================================
         endif
         rm78min=rm7+rm8
         rm78max=rm478-rm4
-        XX78min=datan(((rm78min)**2-rmW**2)/rmW/gamW)
-        XX78max=datan(((rm78max)**2-rmW**2)/rmW/gamW)
+        XX78min=datan(((rm78min)**2-rm_W**2)/rm_W/gamma_W)
+        XX78max=datan(((rm78max)**2-rm_W**2)/rm_W/gamma_W)
         xx=x(10)*(XX78max-XX78min)+XX78min
-        rl78=dtan(xx)*rmW*gamW
-        rm78_2=(rmW**2+rl78)
+        rl78=dtan(xx)*rm_W*gamma_W
+        rm78_2=(rm_W**2+rl78)
         if(rm78_2.lt.0.d0)then
           fffxn=0.d0
           return
@@ -1422,17 +1417,17 @@ c ======================================================================
      &     *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn1=fffxn1*(XX478max-XX478min)
      &     /(2.d0*rm56)
-     &     /rmW/gamW
-     &     *((rm56*rm56-rmW*rmW)**2+rmW**2*gamW**2)
+     &     /rm_W/gamma_W
+     &     *((rm56*rm56-rm_W*rm_W)**2+rm_W**2*gamma_W**2)
         fffxn1=fffxn1*(XX56max-XX56min)
      &     /(2.d0*rm78)
-     &     /rmW/gamW
-     &     *((rm78*rm78-rmW*rmW)**2+rmW**2*gamW**2)
+     &     /rm_W/gamma_W
+     &     *((rm78*rm78-rm_W*rm_W)**2+rm_W**2*gamma_W**2)
         fffxn1=fffxn1*(XX78max-XX78min)
   !   NWA
         fffxn1=fffxn1
-     &     *gamt/gNWA
-     &     *gamt/gNWA
+     &     *gamt/twidth_actual
+     &     *gamt/twidth_actual
   !   flux and pi factors.
         fffxn1=fffxn1/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
 
@@ -1446,17 +1441,17 @@ c ======================================================================
      &     *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn2=fffxn2*(XX478max-XX478min)
      &     /(2.d0*rm56)
-     &     /rmW/gamW
-     &     *((rm56*rm56-rmW*rmW)**2+rmW**2*gamW**2)
+     &     /rm_W/gamma_W
+     &     *((rm56*rm56-rm_W*rm_W)**2+rm_W**2*gamma_W**2)
         fffxn2=fffxn2*(XX56max-XX56min)
      &     /(2.d0*rm78)
-     &     /rmW/gamW
-     &     *((rm78*rm78-rmW*rmW)**2+rmW**2*gamW**2)
+     &     /rm_W/gamma_W
+     &     *((rm78*rm78-rm_W*rm_W)**2+rm_W**2*gamma_W**2)
         fffxn2=fffxn2*(XX78max-XX78min)
   !   NWA
         fffxn2=fffxn2
-     &     *gamt/gNWA
-     &     *gamt/gNWA
+     &     *gamt/twidth_actual
+     &     *gamt/twidth_actual
   !   flux and pi factors.
         fffxn2=fffxn2/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if
@@ -2134,7 +2129,7 @@ c ======================================================================
   ! end loop (cost)+(-cost)
       ffxn=ffxn+fffxn
       end do
-      fxn=fxn+ffxn
+      dxsec=dxsec+ffxn
   ! end loop x1 <-> x2 
       end do 
       return
