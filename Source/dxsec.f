@@ -55,7 +55,7 @@ c ======================================================================
       common/polargg/polgg(-1:1,-1:1)
   !   structure functions
       common/partdist/o_structure
-      common/alfastrong/rlambdaQCD4,nloops
+      common/qcd/rlambdaQCD4,nloops
       common/collider/o_coll
   ! Polarised/Spatial cross sections
       integer nasym
@@ -658,7 +658,6 @@ c ======================================================================
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
   ! distributions and cuts.
-
       
   ! Calculate transverse momenta (pT)
       do ip=1,ipmax
@@ -1426,8 +1425,8 @@ c ======================================================================
         fffxn1=fffxn1*(XX78max-XX78min)
   !   NWA
         fffxn1=fffxn1
-     &     *gamt/twidth_actual
-     &     *gamt/twidth_actual
+     &     *gamt/Gamma_t
+     &     *gamt/Gamma_t
   !   flux and pi factors.
         fffxn1=fffxn1/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
 
@@ -1450,8 +1449,8 @@ c ======================================================================
         fffxn2=fffxn2*(XX78max-XX78min)
   !   NWA
         fffxn2=fffxn2
-     &     *gamt/twidth_actual
-     &     *gamt/twidth_actual
+     &     *gamt/Gamma_t
+     &     *gamt/Gamma_t
   !   flux and pi factors.
         fffxn2=fffxn2/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(6))
       end if

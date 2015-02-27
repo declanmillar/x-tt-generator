@@ -4,12 +4,11 @@ c sets up masses and coupling constants of particles
 c ----------------------------------------------------------------------
       implicit none
 
-
 c arguments
       integer o_NWA
       character*50 model
 
-c global variables
+c SM couplings
       real*8        gw, gwwa, gwwZ
       common/coup1/ gw, gwwa, gwwZ
       real*8        gal(2),gau(2),gad(2),gwf(2)
@@ -20,15 +19,16 @@ c global variables
       common/coup3/ gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
       complex*16    gchf(2,12)
       common/coup4/ gchf
+      real*8          gg(2), g
+      common/coupqcd/ gg,    g
+
+c SM masses and widths
+      real*8           fmass(12), fwidth(12)
+      common/fermions/ fmass,     fwidth
       real*8        rm_W,Gamma_W,rm_Z,Gamma_Z
       common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
       real*8        rm_A,Gamma_a,rm_h,Gamma_h
       common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
-
-      real*8           fmass(12), fwidth(12)
-      common/fermions/ fmass,     fwidth
-      real*8          gg(2), g
-      common/coupqcd/ gg,    g
       real*8        Gamma_t
       common/Gammas/Gamma_t
       real*8    a_EM,s2w

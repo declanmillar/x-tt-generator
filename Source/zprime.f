@@ -576,8 +576,6 @@
       if(o_structure.eq.9)nloops=1
 
   ! initialise MadGraph - masses and coupling constants of particles
-
-      if(o_NWA.eq.1)gamt=1.d-5
       call initialise_madGraph(o_NWA,model)
 
   ! Calculate Zp couplings
