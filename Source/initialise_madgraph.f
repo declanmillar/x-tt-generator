@@ -31,13 +31,30 @@ c SM masses and widths
       common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
       real*8        Gamma_t
       common/Gammas/Gamma_t
+c Other SM parameters
       real*8    a_EM,s2w
       common/EW/a_EM,s2w
+      real*8     rlambdaQCD4
+      integer                nloops
+      common/QCD/rlambdaQCD4,nloops
 
+
+c Zprime parameters
+      real*8    rmZp(5),gamZp(5)
+      common/Zp/rmZp   ,gamZp
+      real*8         paramZp(5)
+      common/Zpparam/paramZp
+      real*8          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
+      common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
+      real*8        gZpd(2,5),gZpu(2,5)
+      common/coupZp/gZpd     ,gZpu
 c   constants
       real*8     alpha_EM             ,sin2theta_weinberg
       parameter (alpha_EM=0.0078125   ,sin2theta_weinberg=0.2320d0)
       ! integer igw
+
+      real*8   widthZp
+      external widthZp
 
 c   quark masses
       real*8     umass,       cmass,            tmass
@@ -70,7 +87,7 @@ c   SM boson masses
       parameter (Amass=0d0, Awidth=0d0, hmass=125.d0, hwidth=0.31278d-2)
 
 c other local variables
-      integer i
+      integer i,imodel,o_width(5)
 c ----------------------------------------------------------------------
 c enter global fermion masses  
       fmass(1) = emass
@@ -131,8 +148,41 @@ c enter global fermion masses
       gg(1)=-g
       gg(2)=-g
 
-!   call Zprime couplings
-      ! call coupZpx(o_NWA,model)
+      ! Extract model filename (Remove white space.)
+      imodel = len(model)
+      do while(model(imodel:imodel).eq.'') 
+        imodel = imodel-1
+      end do
+
+      ! Read model file
+      open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
+      read(42,*) rmZp
+      read(42,*) gamZp      
+      read(42,*) gp 
+      read(42,*) paramZp
+      read(42,*) gV_u
+      read(42,*) gA_u
+      read(42,*) gV_d
+      read(42,*) gA_d
+
+  !   Check whether width has been specified
+  !   (If gamZp is zero, the function widthZp is used instead.)
+      do i=1,5
+        if ((gamZp(i).eq.0d0).and.(rmZp(i).gt.0d0)) then
+          o_width(i) = 0
+        else
+          o_width(i) = 1
+        end if
+      enddo
+
+  ! Calculate sequential Zp widths
+      do i=1,5
+        if (o_width(i).eq.0) gamZp(i)=
+     &            widthZp(rm_W,rm_Z,rmZp(i),a_em,s2w,rlambdaQCD4,nloops)
+      end do
+
+      ! convert from VA to LR couplings
+      call coupZpx
 
       ! igw=0 ! don't include w width effects
       ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))

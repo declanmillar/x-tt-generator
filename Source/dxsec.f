@@ -45,9 +45,6 @@ c ======================================================================
   !   Narrow Width Approximation (NWA)
       common/NWA/o_NWA
       common/Gammas/Gamma_t
-  !   Z' masses and LR couplings
-      common/Zp/rmZp(5),gamZp(5)
-      common/coupZp/gZpd(2,5),gZpu(2,5)
   !   Active gauge sectors
       common/igauge/o_QCD,o_EW,o_BSM
   !   Common for decay ME
@@ -412,7 +409,6 @@ c ======================================================================
       end do
 ! ----------------------------------------------------------------------
 ! Kinematics
-
   ! Incoming momenta (all massless)
       pcm=Ecm/2.d0
       q(4,1)=pcm
@@ -658,7 +654,6 @@ c ======================================================================
 ! Additional kinematics
   ! These aren't required for the integration, but are used for
   ! distributions and cuts.
-      
   ! Calculate transverse momenta (pT)
       do ip=1,ipmax
         pT2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
@@ -838,7 +833,7 @@ c ======================================================================
       if(o_tran(3).eq.1)then
         rM_T12=(ET3+ET4+ET5+ET7+ETmiss)**2
      &        +(pT(3)+pT(4)+pT(5)+pT(7)+ETmiss)**2
-        trans(3)=sqrt(abs(ro_T12))
+        trans(3)=sqrt(abs(rM_T12))
       end if
   ! calculate *full* transverse mass 2
       if(o_tran(4).eq.1)then
@@ -968,7 +963,6 @@ c ======================================================================
       if(o_final.gt.0)then
         ct7ct5=cost7*cost5
       end if
-
   ! calculate costst
       costst=int(ytt/abs(ytt))*costcm
   !     write(*,*)'del_y',del_y,'; costst',costst
@@ -1229,12 +1223,12 @@ c ======================================================================
         else if(o_QCD.eq.1)then
           do lam3=-1,1,2
             do lam4=-1,1,2            
-           qcdpolgg1(lam3,lam4)=sgg_ttb(   p1 ,p2,p3,p4,lam3,lam4)*gs**4            
-           qcdpolgg2(lam3,lam4)=sgg_ttb(   p2 ,p1,p3,p4,lam3,lam4)*gs**4
-           qcdpolqq1(lam3,lam4)=sqqb_ttb(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
-           qcdpolqq2(lam3,lam4)=sqqb_ttb(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-           qcdpolbb1(lam3,lam4)=sqqb_ttb(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-           qcdpolbb2(lam3,lam4)=sqqb_ttb(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+          qcdpolgg1(lam3,lam4)=sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4            
+          qcdpolgg2(lam3,lam4)=sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
+          qcdpolqq1(lam3,lam4)=sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+          qcdpolqq2(lam3,lam4)=sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
+          qcdpolbb1(lam3,lam4)=sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+          qcdpolbb2(lam3,lam4)=sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
             end do
           end do
         else
@@ -1246,18 +1240,12 @@ c ======================================================================
         if((o_EW.eq.1).or.(o_BSM.eq.1))then
           do lam3=-1,1,2
             do lam4=-1,1,2
-              ewzpoluu1(lam3,lam4)=sqqb_ttb_EWp(3,gZpu,gZpu,rmZp,gamZp
-     &                                           ,p1,p2,p3,p4,lam3,lam4)
-              ewzpoluu2(lam3,lam4)=sqqb_ttb_EWp(3,gZpu,gZpu,rmZp,gamZp
-     &                                           ,p1,p2,p3,p4,lam3,lam4)
-              ewzpoldd1(lam3,lam4)=sqqb_ttb_EWp(4,gZpd,gZpu,rmZp,gamZp
-     &                                           ,p1,p2,p3,p4,lam3,lam4)
-              ewzpoldd2(lam3,lam4)=sqqb_ttb_EWp(4,gZpd,gZpu,rmZp,gamZp
-     &                                           ,p2,p1,p3,p4,lam3,lam4)                         
-              ewzpolbb1(lam3,lam4)=sqqb_ttb_EWp(12,gZpd,gZpu,rmZp,gamZp
-     &                                           ,p1,p2,p3,p4,lam3,lam4)
-              ewzpolbb2(lam3,lam4)=sqqb_ttb_EWp(12,gZpd,gZpu,rmZp,gamZp
-     &                                           ,p2,p1,p3,p4,lam3,lam4)          
+          ewzpoluu1(lam3,lam4)=sqqff_EWp( 3,11,p1,p2,p3,p4,lam3,lam4)
+          ewzpoluu2(lam3,lam4)=sqqff_EWp( 3,11,p1,p2,p3,p4,lam3,lam4)
+          ewzpoldd1(lam3,lam4)=sqqff_EWp( 4,11,p1,p2,p3,p4,lam3,lam4)
+          ewzpoldd2(lam3,lam4)=sqqff_EWp( 4,11,p2,p1,p3,p4,lam3,lam4)                         
+          ewzpolbb1(lam3,lam4)=sqqff_EWp(12,11,p1,p2,p3,p4,lam3,lam4)
+          ewzpolbb2(lam3,lam4)=sqqff_EWp(12,11,p2,p1,p3,p4,lam3,lam4)          
             end do
           end do
         else
@@ -1271,30 +1259,24 @@ c ======================================================================
         if(o_QCD.eq.0)then
           continue
         else if(o_QCD.eq.1)then
-          qcdqq1=sqqb_bbbtatann(3 , p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          qcdqq2=sqqb_bbbtatann(3 , p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          qcdbb1=sqqb_bbbtatann(12, p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          qcdbb2=sqqb_bbbtatann(12, p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
-          qcdgg1= sgg_bbbtatann(    p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )          
-          qcdgg2= sgg_bbbtatann(    p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8 )
+          qcdqq1=sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8 )
+          qcdqq2=sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8 )
+          qcdbb1=sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8 )
+          qcdbb2=sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8 )
+          qcdgg1=sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8 )          
+          qcdgg2=sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8 )
         else
           write(*,*)'o_QCD is not set correctly.'
           stop
         end if
   !   Add EW Matrix Elements
         if((o_EW.eq.1).or.(o_BSM.eq.1))then          
-          ewzuu1=sqqb_bbbtatann_EWp(3 ,gZpu,gZpu,rmZp,gamZp
-     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          ewzuu2=sqqb_bbbtatann_EWp(3 ,gZpu,gZpu,rmZp,gamZp
-     &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          ewzdd1=sqqb_bbbtatann_EWp(4 ,gZpd,gZpu,rmZp,gamZp
-     &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          ewzdd2=sqqb_bbbtatann_EWp(4 ,gZpd,gZpu,rmZp,gamZp
-     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          ewzbb1=sqqb_bbbtatann_EWp(12,gZpd,gZpu,rmZp,gamZp
-     &                                  ,p1 ,p2 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
-          ewzbb2=sqqb_bbbtatann_EWp(12,gZpd,gZpu,rmZp,gamZp
-     &                                  ,p2 ,p1 ,p3 ,p4 ,p5 ,p7 ,p6 ,p8)
+          ewzuu1=sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzuu2=sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+          ewzdd1=sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+          ewzdd2=sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzbb1=sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzbb2=sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
         else
           continue
         end if
@@ -1315,7 +1297,6 @@ c ======================================================================
       qcdgg1=qcdgg1*gs**4
       qcdqq2=qcdqq2*gs**4
       qcdgg2=qcdgg2*gs**4
-
   ! Sum over M*M for all initial partons.
   ! (Initial luminosity for total unpolarised cross section: pfxtot)
   ! sum over all polarised Matrix elements
@@ -1350,18 +1331,18 @@ c ======================================================================
           end do
         end do
       else if(o_final.eq.1) then
-        qqd1=fx1( 1)*fx2( 7)*(resqq1+resdd1)
-     &      +fx1( 2)*fx2( 8)*(resqq1+resuu1)
-     &      +fx1( 3)*fx2( 9)*(resqq1+resdd1)
-     &      +fx1( 4)*fx2(10)*(resqq1+resuu1)
-     &      +fx1( 5)*fx2(11)*(resbb1+resbb1)
-        qqd2=fx1( 7)*fx2( 1)*(resqq2+resdd2)
-     &      +fx1( 8)*fx2( 2)*(resqq2+resuu2)
-     &      +fx1( 9)*fx2( 3)*(resqq2+resdd2)
-     &      +fx1(10)*fx2( 4)*(resqq2+resuu2)
-     &      +fx1(11)*fx2( 5)*(resbb2+resbb2)
-        ggd1=fx1(13)*fx2(13)*resgg1/2.d0
-        ggd2=fx1(13)*fx2(13)*resgg2/2.d0
+        qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1)
+     &      +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1)
+     &      +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1)
+     &      +fx1( 4)*fx2(10)*(qcdqq1+ewzuu1)
+     &      +fx1( 5)*fx2(11)*(qcdbb1+ewzbb1)
+        qqd2=fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2)
+     &      +fx1( 8)*fx2( 2)*(qcdqq2+ewzuu2)
+     &      +fx1( 9)*fx2( 3)*(qcdqq2+ewzdd2)
+     &      +fx1(10)*fx2( 4)*(qcdqq2+ewzuu2)
+     &      +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
+        ggd1=fx1(13)*fx2(13)*qcdgg1/2.d0
+        ggd2=fx1(13)*fx2(13)*qcdgg2/2.d0
         if(ix.eq.1)then
           pfx1tot=(qqd1+ggd1)/x1
           pfx2tot=(qqd2+ggd2)/x1

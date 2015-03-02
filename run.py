@@ -27,7 +27,7 @@ parser.add_option("-q", "--qcd"   ,  default=1   , const=0      , action="store_
 parser.add_option("-e", "--ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
 parser.add_option("-z", "--bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
 parser.add_option("-i", "--int"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
-parser.add_option("-n", "--NWA"   ,  default=0   , const=1      , action="store_const", help="turn on NWA")
+parser.add_option("-w", "--NWA"   ,  default=0   , const=1      , action="store_const", help="turn on NWA")
 parser.add_option("-r", "--BR"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by BR")
 parser.add_option("-T", "--tran"  ,  default=1   , const=0      , action="store_const", help="switch off transverse mass variables")
 parser.add_option("-A", "--asym"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")

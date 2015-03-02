@@ -305,31 +305,6 @@
       else
         jxmax=1
       end if
-    ! Extract model filename (Remove white space.)
-      imodel = len(model)
-      do while(model(imodel:imodel).eq.'') 
-        imodel = imodel-1
-      end do
-
-  ! Read model file
-      open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
-      read(42,*) rmZp
-      read(42,*) gamZp      
-      read(42,*) gp 
-      read(42,*) paramZp
-      read(42,*) gV_u
-      read(42,*) gA_u
-      read(42,*) gV_d
-      read(42,*) gA_d      
-  !   Check whether width has been specified
-  !   (If gamZp is zero, the function widthZp is used instead.)
-      do i=1,5
-        if ((gamZp(i).eq.0d0).and.(rmZp(i).gt.0d0)) then
-          o_width(i) = 0
-        else
-          o_width(i) = 1
-        end if
-      enddo
 ! ----------------------------------------------------------------------
 ! Distributions Setup
   ! (Set flags, binning range and divisions.)
@@ -577,15 +552,6 @@
 
   ! initialise MadGraph - masses and coupling constants of particles
       call initialise_madGraph(o_NWA,model)
-
-  ! Calculate Zp couplings
-      call coupZpx
-
-  ! Calculate sequential Zp widths
-      do i=1,5
-        if (o_width(i).eq.0) gamZp(i)=
-     &             widthZp(rm_W,rm_Z,rmZp(i),a_em,s2w,rlambdaQCD4,nloop)
-      end do
 ! ---------------------------------------------------------------------- 
 ! VEGAS parameters
   ! Dimensions of integration

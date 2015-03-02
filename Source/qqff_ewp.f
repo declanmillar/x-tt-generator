@@ -1,6 +1,5 @@
 c ======================================================================
-      real*8 function sqqb_ttb_EWp(iq,gZpq,gZpt
-     &                        ,Zpmass,Zpwidth,p1, p2, p3, p4, lam3,lam4)
+      real*8 function sqqff_EWp(iq,jf,p1,p2,p3,p4,lam3,lam4)
 
 c Returns amplitude squared summed/avg over colors and helicities
 c for the point in phase space p1 ,p2 ,p3 ,p4, lam3, lam4 for
@@ -10,22 +9,20 @@ c 1 = down, 2 = up, 3 = strange, 4 = charm, 5 = bottom, 6 = top
 c ---------------------------------------------------------------------- 
       implicit none
 
+c arguments
+      integer iq,jf ! incoming quark type (up/down)
+      integer lam3,lam4 ! ttbar helicities
+      real*8 p1(0:3),p2(0:3),p3(0:3),p4(0:3)      
+
 c constants
       integer nexternal ! number of external legs   
       integer ncomb ! number of helicity combinations                   
       parameter ( nexternal=4, ncomb= 16 )
  
-c arguments
-      integer iq ! incoming quark type (up/down)
-      integer lam3,lam4 ! ttbar helicities
-      real*8 gZpq(2,5),gZpt(2,5) ! Zp couplings to quark (up/down) and top 
-      real*8 Zpmass(5), Zpwidth(5) ! Zp mass and width
-      real*8 p1(0:3),p2(0:3),p3(0:3),p4(0:3)
-
 c local variables 
       integer nhel(nexternal,ncomb),ntry
       real*8 t
-      real*8 qqb_ttb_EWp
+      real*8 qqff_EWp
       integer ihel
       logical goodhel(ncomb)
       data goodhel/ncomb*.false./
@@ -48,33 +45,40 @@ c   All possible helicity combinations
       data (nhel(ihel, 15),ihel=1,4) /  1,  1,  1, -1/
       data (nhel(ihel, 16),ihel=1,4) /  1,  1,  1,  1/
 c ----------------------------------------------------------------------
-      sqqb_ttb_EWp = 0d0
+      sqqff_EWp = 0d0
       ntry=ntry+1
       do ihel=1,ncomb
          !if (goodhel(ihel) .or. ntry .lt. 10) then
-             t=qqb_ttb_EWp(iq,gZpq,gZpt,Zpmass,Zpwidth,
-     &        p1, p2, p3, p4,lam3,lam4,nhel(1,ihel))
-             sqqb_ttb_EWp = sqqb_ttb_EWp + t
+             t=qqff_EWp(iq,jf,p1, p2, p3, p4,lam3,lam4,nhel(1,ihel))
+             sqqff_EWp = sqqff_EWp + t
 !              if (t .gt. 0d0 .and. .not. goodhel(ihel)) then
 !                  goodhel(ihel)=.true.
 !                  ! write(*,*) ihel!,t
 !              endif
         !endif
       enddo
-      sqqb_ttb_EWp = sqqb_ttb_EWp /  4d0
-!       write(*,*)sqqb_ttb_EWp
+      sqqff_EWp = sqqff_EWp /  4d0
+!       write(*,*)sqqff_EWp
       end
 c ======================================================================
 
 c ======================================================================
-      real*8 function qqb_ttb_EWp(iq,gZpq,gZpt,Zpmass,Zpwidth 
-     &                               ,p1 ,p2 ,p3 ,p4, lam3, lam4 ,nhel )
+      real*8 function qqff_EWp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
 c returns amplitude squared summed/avg over colors
 c for the point in phase space p1,p2,p3,p4
 c and helicity nhel(1),nhel(2) for process : 
 c   qqb -> ttb (via A,Z,{Z'})    
 c ----------------------------------------------------------------------
       implicit none
+
+c Local constants
+      integer    ngraphs ,nexternal
+      parameter( ngraphs=7 ,nexternal=4 )
+
+c Arguments
+      integer iq,jf,lam3,lam4
+      real*8 p1(0:3),p2(0:3),p3(0:3),p4(0:3) ! momenta
+      integer nhel(nexternal) ! n_hel
 
 c Global variables
       real*8         gW, gWWA, gWWZ
@@ -93,6 +97,15 @@ c Global variables
       common /vmass2/Amass,Awidth,hmass,hwidth
       real*8            fmass(12), fwidth(12)
       common /fermions/ fmass,     fwidth
+c Zprime parameters
+      real*8    rmZp(5),gamZp(5)
+      common/Zp/rmZp   ,gamZp
+      real*8         paramZp(5)
+      common/Zpparam/paramZp
+      real*8          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
+      common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
+      real*8        gZpd(2,5),gZpu(2,5)
+      common/coupZp/gZpd     ,gZpu
       integer     npoints
       common/stat/npoints
       integer       o_QCD,o_EW,o_BSM
@@ -100,68 +113,69 @@ c Global variables
       integer             o_int
       common/interference/o_int
 
-c Local constants
-      integer    ngraphs ,nexternal
-      parameter( ngraphs=7 ,nexternal=4 )
-      real*8     zero
-      parameter( zero=0d0 )
 
 c Local variables
       integer i,j
-      integer jq
-      parameter ( jq=11 ) ! final state tops
+      ! parameter ( jf=11 ) ! final state tops
       complex*16 amp_tmp
       complex*16 amp( ngraphs )
       complex*16 w1(6) ,w2(6) ,w3(6) ,w4(6) ! external      
       complex*16 w5(6) ,w6(6) ,w7(6) ! interal
-      real*8 gAq(2),gAt(2)
-      real*8 gZq(2),gZt(2)
-      real*8 gZpq_tmp(2),gZpt_tmp(2) ! necessary to pass 2d arrays
-
-c Arguments
-      integer iq,lam3,lam4
-      real*8 p1(0:3),p2(0:3),p3(0:3),p4(0:3) ! momenta
-      integer nhel(nexternal) ! n_hel
-      real*8 gZpq(2,5),gZpt(2,5)
-      real*8 Zpmass(5), Zpwidth(5)
-
-
+      real*8 gAq(2),gAf(2)
+      real*8 gZq(2),gZf(2)
+      real*8 gZpq(2,5),gZpf(2,5)
+      real*8 gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
 
 c ----------------------------------------------------------------------
 c select only final state spins from shell script
       if((nhel(3).eq.lam3).and.(nhel(4).eq.lam4))then
         continue
       else
-        qqb_ttb_EWp = 0.d0 
+        qqff_EWp = 0.d0 
         return
       end if
 
-c up/down type couplings (1-6: quarks, 7-12: leptons)
-      if((iq.eq. 1).or.(iq.eq. 3).or.(iq.eq. 5).or.
-     &   (iq.eq. 7).or.(iq.eq. 9).or.(iq.eq.11))then
+c up/down type couplings 
+      if((iq.eq. 3).or.(iq.eq. 7).or.(iq.eq.11))then
         do i=1,2
           gAq(i)=gAu(i)
           gZq(i)=gZu(i)
+          do j=1,5
+            gZpq(i,j)=gZpu(i,j)
+          end do
         enddo
-      else if((iq.eq. 2).or.(iq.eq. 4).or.(iq.eq. 6).or.
-     &        (iq.eq. 8).or.(iq.eq.10).or.(iq.eq.12))then
+      else if((iq.eq. 4).or.(iq.eq. 8).or.(iq.eq.12))then
         do i=1,2
           gAq(i)=gAd(i)
           gZq(i)=gZd(i)
+          do j=1,5
+            gZpq(i,j)=gZpd(i,j)
+          end do
         enddo
+      else
+        write(*,*)'Incorrect quark ID number.'
       end if
-      if((jq.eq. 1).or.(jq.eq. 3).or.(jq.eq. 5).or.
-     &   (jq.eq. 7).or.(jq.eq. 9).or.(jq.eq.11))then
+
+      if((jf.eq. 1).or.(jf.eq. 3).or.(jf.eq. 5).or.
+     &   (jf.eq. 7).or.(jf.eq. 9).or.(jf.eq.11))then
         do i=1,2
-          gAt(i)=gAu(i)
-          gZt(i)=gZu(i)
+          gAf(i)=gAu(i)
+          gZf(i)=gZu(i)
+          do j=1,5
+            gZpf(i,j)=gZpu(i,j)
+          end do
         enddo
-      else if((jq.eq. 2).or.(jq.eq. 4).or.(jq.eq. 6).or.
-     &        (jq.eq. 8).or.(jq.eq.10).or.(jq.eq.12))then
+      else if((jf.eq. 2).or.(jf.eq. 4).or.(jf.eq. 6).or.
+     &        (jf.eq. 8).or.(jf.eq.10).or.(jf.eq.12))then
         do i=1,2
-          gAt(i)=gAd(i)
-          gZt(i)=gZd(i)
+          gAf(i)=gAd(i)
+          gZf(i)=gZd(i)
+          do j=1,5
+            gZpf(i,j)=gZpd(i,j)
+          end do
         enddo
+      else
+        write(*,*)'Incorrect fermion ID number.'
       end if
 
 c initialise amplitudes
@@ -172,30 +186,30 @@ c initialise amplitudes
 c wavefunctions
       call ixxxxx( p1 ,fmass(iq) ,nhel(1) , 1   ,w1 )                       
       call oxxxxx( p2 ,fmass(iq) ,nhel(2) ,-1   ,w2 )                       
-      call oxxxxx( p3 ,fmass(11) ,nhel(3) , 1   ,w3 )                       
-      call ixxxxx( p4 ,fmass(11) ,nhel(4) ,-1   ,w4 )
+      call oxxxxx( p3 ,fmass(jf) ,nhel(3) , 1   ,w3 )                       
+      call ixxxxx( p4 ,fmass(jf) ,nhel(4) ,-1   ,w4 )
 
       if (o_EW.eq.1)then
 c A diagram               
         call jioxxx( w1  ,w2  ,gAq ,Amass ,Awidth ,w5 )
-        call iovxxx( w4  ,w3  ,w5  ,gAt   ,amp(1) )
+        call iovxxx( w4  ,w3  ,w5  ,gAf   ,amp(1) )
 
 c Z diagram
         call jioxxx( w1 ,w2 ,gZq ,Zmass ,Zwidth ,w6 )
-        call iovxxx( w4 ,w3 ,w6  ,gZt ,amp(2) )
+        call iovxxx( w4 ,w3 ,w6  ,gZf ,amp(2) )
       else
         continue
       end if
 c Z' diagrams
       if (o_BSM.eq.1)then
         do i =1,5
-          if (Zpmass(i).gt.0) then
+          if (rmZp(i).gt.0) then
             do j=1,2
               gZpq_tmp(j)=gZpq(j,i)
-              gZpt_tmp(j)=gZpq(j,i)
+              gZpf_tmp(j)=gZpf(j,i)
             end do      
-            call jioxxx( w1 ,w2 ,gZpq_tmp ,Zpmass(i) ,Zpwidth(i) ,w7 )
-            call iovxxx( w4 ,w3 ,w7   ,gZpt_tmp ,amp(2+i) )
+            call jioxxx( w1 ,w2 ,gZpq_tmp ,rmZp(i) ,gamZp(i) ,w7 )
+            call iovxxx( w4 ,w3 ,w7   ,gZpf_tmp ,amp(2+i) )
           else
             continue
           end if 
@@ -205,32 +219,32 @@ c Z' diagrams
       end if
 
 c total M*M for given helicity combination
-      qqb_ttb_EWp = 0.d0 
+      qqff_EWp = 0.d0 
       amp_tmp = (0.d0,0.d0)
       if (o_int.eq.0)then ! no interference
         do i=1,ngraphs
-          qqb_ttb_EWp = qqb_ttb_EWp+amp(i)*conjg(amp(i))
+          qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
         end do
       else if (o_int.eq.1)then ! SM interference
         do i = 1, 2       
           amp_tmp = amp_tmp + amp(i)
         end do
-        qqb_ttb_EWp =qqb_ttb_EWp+amp_tmp*conjg(amp_tmp)
+        qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
         do i=3,ngraphs
-          qqb_ttb_EWp = qqb_ttb_EWp+amp(i)*conjg(amp(i))
+          qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
         end do
       else if (o_int.eq.2)then ! full interference
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do
-        qqb_ttb_EWp =qqb_ttb_EWp+amp_tmp*conjg(amp_tmp)
+        qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
       else if (o_int.eq.3)then ! interference only
         do i = 1, ngraphs       
           amp_tmp = amp_tmp + amp(i)
         end do
-        qqb_ttb_EWp =qqb_ttb_EWp+amp_tmp*conjg(amp_tmp)
+        qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
         do i=3,ngraphs
-          qqb_ttb_EWp = qqb_ttb_EWp-amp(i)*conjg(amp(i))
+          qqff_EWp = qqff_EWp-amp(i)*conjg(amp(i))
         end do
       else
         write(*,*)'Error: interference flag not set.'
