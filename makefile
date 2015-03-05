@@ -1,21 +1,24 @@
 # ==============================================================================
 # Fortran makefile
 #
-# Authors: Stefano Moretti, Declan Millar
+# Authors: Declan Millar
 # ------------------------------------------------------------------------------
 # Definitions
 
 # executable
 BIN = zprime
 
-# Source directory
-SRC = .
+# object files
+OBJ = Cteq61Pdf.o alpha_EWNG.o coupZp.o dhelas_all.o dxsec.o ggbbffff_qcd.o ggff_qcd.o initialise_madgraph.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o ve_dist.o widthZp.o zprime.o
 
-# Output directory
-OUT = ..
+# Source directory
+SRC = Source
 
 # Object directory
-OBJ = .
+LIB = Library
+
+# Output directory
+OUT = Binary
 
 # Compiler
 F = gfortran
@@ -26,15 +29,16 @@ FFLAGS = -g -ffpe-trap=invalid,zero,overflow,underflow,denormal
 # ------------------------------------------------------------------------------
 # Commands
 
-# Compile all files ending in .f
-.f.o: ; $(F) $(FFLAGS) -c $(SRC)/*.f
+# Compile all files ending in .f in SRC
+$(LIB)/%.o: $(SRC)/%.f 
+	$(F) $(FFLAGS) -c -o $@ $<
 
 # Link mainfile and all processes
-zprime: *.o makefile
-	$(F) -o $(OUT)/$(BIN) $(FFLAGS) *.o
+$(OUT)/$(BIN): $(patsubst %,$(LIB)/%, $(OBJ))
+	$(F) $(FFLAGS) -o $@ $^
 
 # Clean up
 clean:
-	rm -f $(SRC)/*.o
+	rm -f $(LIB)/*.o $(OUT)/$(BIN)
 
 # ============================================================================== 

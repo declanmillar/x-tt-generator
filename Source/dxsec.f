@@ -76,6 +76,11 @@ c ======================================================================
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
       common/inp_phi/o_phi(8)
       common/div_phi/ndiv_phi(8)
+  !   Distributions in ycol of external particles
+      common/ext_phi/ycolmax(8),ycolmin(8),ycolw(8)
+      common/dist_ycol/xycol(8,500),fxycol(8,500,20),fxycoltot(8,500)
+      common/inp_ycol/o_ycol(8)
+      common/div_ycol/ndiv_ycol(8)
   !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
@@ -136,6 +141,12 @@ c ======================================================================
       common/dist_Et/xEt(500),fxEt(500,20),fxEttot(500)
       common/inp_Et/o_Et
       common/div_Et/ndiv_Et
+  !   Distribution in Delta_y
+      common/ext_Delta_y/Delta_ymax,Delta_ymin,Delta_yw
+      common/dist_Delta_y/xDelta_y(500),fxDelta_y(500,20),
+     &fxDelta_ytot(500)
+      common/inp_Delta_y/o_Delta_y
+      common/div_Delta_y/ndiv_Delta_y
   !   Distributions in transverse variables
       integer ntrans
       parameter (ntrans=10)
@@ -198,7 +209,7 @@ c ======================================================================
       dimension q(4,8),qcol(4,8)
       dimension p1(0:3),p2(0:3),
      &          p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
-      dimension pT2(8),pT(8),rps(8),rpl(8),arg(8),eta(8),phi(8)
+      dimension pT2(8),pT(8),rps(8),rpl(8),arg(8),eta(8),phi(8),ycol(8)
       dimension pTvis(2),pTmiss(2)
   ! Lepton azimuthal angle coordinate system
       dimension xp(3),yp(3),zp(3)
@@ -659,7 +670,12 @@ c ======================================================================
         pT2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
         pT(ip)=sqrt(pT2(ip))
       end do
-  ! Calculate pseudorapidity (eta)
+  ! Calculate rapidity (collider frame)
+      do ip=3,ipmax
+        ycol(ip)=0.5d0*log((qcol(4,ip)+qcol(3,ip))
+     &                    /(qcol(4,ip)-qcol(3,ip)))
+      end do
+  ! Calculate pseudorapidity (eta) CoM frame
       do ip=1,ipmax
         rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
         if(rps(ip).lt.-1.d0)rps=-1.d0
@@ -933,8 +949,10 @@ c ======================================================================
      &              /(qcol(4,4)+qcol(4,7)+qcol(4,8)
      &               -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
-      del_y=abs(yt)-abs(ytb) ! this is ARFB from Ken's work
-  !    del_y=yt-ytb ! this is A' from Bernreuther's paper
+
+  ! calculate Delta_y for ARFB 
+      Delta_y=abs(yt)-abs(ytb)
+
   ! calculate cos(theta_l+)
       if(o_final.gt.0)then
           cost5=+(q(1,5)*q(1,1)
@@ -965,7 +983,6 @@ c ======================================================================
       end if
   ! calculate costst
       costst=int(ytt/abs(ytt))*costcm
-  !     write(*,*)'del_y',del_y,'; costst',costst
   ! Calculate cos(phi_l) (lepton azimuthal angle)
       if(o_final.gt.0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
@@ -1241,7 +1258,7 @@ c ======================================================================
           do lam3=-1,1,2
             do lam4=-1,1,2
           ewzpoluu1(lam3,lam4)=sqqff_EWp( 3,11,p1,p2,p3,p4,lam3,lam4)
-          ewzpoluu2(lam3,lam4)=sqqff_EWp( 3,11,p1,p2,p3,p4,lam3,lam4)
+          ewzpoluu2(lam3,lam4)=sqqff_EWp( 3,11,p2,p1,p3,p4,lam3,lam4)
           ewzpoldd1(lam3,lam4)=sqqff_EWp( 4,11,p1,p2,p3,p4,lam3,lam4)
           ewzpoldd2(lam3,lam4)=sqqff_EWp( 4,11,p2,p1,p3,p4,lam3,lam4)                         
           ewzpolbb1(lam3,lam4)=sqqff_EWp(12,11,p1,p2,p3,p4,lam3,lam4)
@@ -1273,8 +1290,8 @@ c ======================================================================
         if((o_EW.eq.1).or.(o_BSM.eq.1))then          
           ewzuu1=sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
           ewzuu2=sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzdd1=sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzdd2=sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzdd1=sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzdd2=sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
           ewzbb1=sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
           ewzbb2=sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
         else
@@ -1352,7 +1369,7 @@ c ======================================================================
         end if
       end if
   !  check it's not null
-      if(pfx1tot.eq.0.d0.or.pfx2tot.eq.0.d0)then 
+      if(pfx1tot.eq.0.d0.and.pfx2tot.eq.0.d0)then 
         fffxn=0.d0                               
         return                                   
       end if                                     
@@ -1551,16 +1568,16 @@ c ======================================================================
   ! ARFB/A'
 
       if((o_asym(8).eq.1).and.(abs(ytt).gt.yttmin))then
-        if(del_y.eq.0.d0)then
+        if(Delta_y.eq.0.d0)then
           continue
-        else if(del_y.gt.0.d0)then
+        else if(Delta_y.gt.0.d0)then
           spatcross(5,it,+1)=spatcross(5,it,+1)
      &                              +fffxn
      &                              *wgt
           spaterror(5,it,+1)=spaterror(5,it,+1)
      &                   +spatcross(5,it,+1)**2
   !         write(*,*)'asy(8)=+1'
-        else if(del_y.lt.0.d0)then
+        else if(Delta_y.lt.0.d0)then
           spatcross(5,it,-1)=spatcross(5,it,-1)
      &                              +fffxn
      &                              *wgt
@@ -1630,6 +1647,17 @@ c ======================================================================
             continue
           else
             fxphi(ip,nbin,it)=fxphi(ip,nbin,it)+hist
+          end if
+        end if
+  ! generate distribution in ycol            
+        if(o_ycol(ip).eq.1)then   
+          nbin=int((ycol(ip)-ycolmin(ip))/ycolw(ip))+1
+          if(nbin.ge.(ndiv_ycol(ip)+1))then
+            continue
+          else if(nbin.lt.1)then
+            continue
+          else
+            fxycol(ip,nbin,it)=fxycol(ip,nbin,it)+hist
           end if
         end if
       end do
@@ -1765,6 +1793,16 @@ c ======================================================================
         end if
       end if
 
+      if(o_Delta_y.eq.1)then   !enerate distribution in Delta_y.
+        nbin=int((Delta_y-Delta_ymin)/Delta_yw)+1
+        if(nbin.ge.(ndiv_Delta_y+1))then
+          continue
+        else if(nbin.lt.1)then
+          continue
+        else
+          fxDelta_y(nbin,it)=fxDelta_y(nbin,it)+hist
+        end if
+      end if
 
       do itrans=1,ntrans
         if(o_tran(itrans).eq.1)then
@@ -1969,7 +2007,7 @@ c ======================================================================
 
       if(o_asym(5).eq.1)then
         if((o_sigp.eq.1).and.(costst.gt.0.d0))then
-  ! generate distribution in sigp for AFBcm.
+  ! generate distribution in sigp for AFBstar.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if(nbin.ge.(ndiv_sigp+1))then
@@ -1981,7 +2019,7 @@ c ======================================================================
           end if
         end if  
         if((o_sigm.eq.1).and.(costst.lt.0.d0))then
-  ! generate distribution in sigm for AFBcm.
+  ! generate distribution in sigm for AFBstar.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if(nbin.ge.(ndiv_sigm+1))then
@@ -2048,8 +2086,8 @@ c ======================================================================
         end if
       end if
 
-      if((o_asym(8).eq.1).and.(abs(ytt).gt.yttmin))then
-        if((o_sigp.eq.1).and.(del_y.gt.0.d0))then
+      if(o_asym(8).eq.1)then
+        if((o_sigp.eq.1).and.(Delta_y.gt.0.d0))then
   ! generate distribution in sigp for ARFB.
           sigp=Ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2058,10 +2096,10 @@ c ======================================================================
           else if(nbin.lt.1)then
             continue
           else
-            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+          if(abs(ytt).gt.yttmin)fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
           end if
         end if  
-        if((o_sigm.eq.1).and.(del_y.lt.0.d0))then
+        if((o_sigm.eq.1).and.(Delta_y.lt.0.d0))then
   ! generate distribution in sigm for ARFB.
           sigm=Ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2070,7 +2108,7 @@ c ======================================================================
           else if(nbin.lt.1)then
             continue
           else
-            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+          if(abs(ytt).gt.yttmin)fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
           end if
         end if
       end if

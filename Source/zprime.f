@@ -76,6 +76,11 @@
       common/dist_phi/xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
       common/inp_phi/o_phi(8)
       common/div_phi/ndiv_phi(8)
+  !   Distributions in ycol of external particles
+      common/ext_phi/ycolmax(8),ycolmin(8),ycolw(8)
+      common/dist_ycol/xycol(8,500),fxycol(8,500,20),fxycoltot(8,500)
+      common/inp_ycol/o_ycol(8)
+      common/div_ycol/ndiv_ycol(8)
   !   Distribution in ETmiss
       common/ext_ETmiss/ETmissmax,ETmissmin,ETmissw
       common/dist_ETmiss/xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
@@ -131,6 +136,12 @@
       common/dist_Et/xEt(500),fxEt(500,20),fxEttot(500)
       common/inp_Et/o_Et
       common/div_Et/ndiv_Et
+  !   Distribution in Delta_y
+      common/ext_Delta_y/Delta_ymax,Delta_ymin,Delta_yw
+      common/dist_Delta_y/xDelta_y(500),fxDelta_y(500,20),
+     &fxDelta_ytot(500)
+      common/inp_Delta_y/o_Delta_y
+      common/div_Delta_y/ndiv_Delta_y
   !   Distributions in transverse variables
       integer ntrans
       parameter (ntrans=10)
@@ -195,7 +206,8 @@
       !dimension snorm(6)  !,ave(4) 
       dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
       dimension spattot(nspat,-1:1),spatchi(nspat,-1:1)
-      dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8)
+      dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8),sfxycoltot(8)
+
       dimension sfxsigptot(nasym),sfxsigmtot(nasym)
       dimension asym_int(nasym)
       dimension Atot(nasym),Atoterr(nasym)
@@ -324,6 +336,11 @@
         phimax(ip)=+pi
         phimin(ip)=-pi
         ndiv_phi(ip)=50
+  ! ycol distributions
+        o_ycol(ip)=o_distros
+        ycolmax(ip)=+4.d0
+        ycolmin(ip)=-4.d0
+        ndiv_ycol(ip)=100
       end do
   !   missing transverse momentum
       o_ETmiss=o_distros
@@ -380,7 +397,11 @@
       Etmax=7000.d0/(1+o_coll*6)
       Etmin=0.d0
       ndiv_Et=70
-
+  !   delta_y
+      o_Delta_y=o_distros
+      Delta_ymax=4.d0
+      Delta_ymin=-4.d0
+      ndiv_Delta_y=100
   !   transverse variables
       do itrans=1,ntrans
         if(o_final.eq.0)then
@@ -664,6 +685,12 @@
             xphi(ip,j)=phimin(ip)+phiw(ip)*(j-1)+phiw(ip)/2.d0
           end do
         end if
+        if(o_ycol(ip).eq.1)then
+          ycolw(ip)=(ycolmax(ip)-ycolmin(ip))/ndiv_ycol(ip)
+          do j=1,ndiv_ycol(ip)
+            xycol(ip,j)=ycolmin(ip)+ycolw(ip)*(j-1)+ycolw(ip)/2.d0
+          end do
+        end if
       end do
 
       if(o_ETmiss.eq.1)then
@@ -739,6 +766,13 @@
         Etw=(Etmax-Etmin)/ndiv_Et
         do i=1,ndiv_Et
           xEt(i)=Etmin+Etw*(i-1)+Etw/2.d0
+        end do
+      end if
+
+      if(o_Delta_y.eq.1)then
+        Delta_yw=(Delta_ymax-Delta_ymin)/ndiv_Delta_y
+        do i=1,ndiv_Delta_y
+          xDelta_y(i)=Delta_ymin+Delta_yw*(i-1)+Delta_yw/2.d0
         end do
       end if
 
@@ -1155,6 +1189,26 @@
           end do
           write(*,*)'END'
         end if
+  ! Plot distributions in ycol        
+        if(o_ycol(ip).eq.1)then
+          sfxycoltot(ip)=0d0
+          do j=1,ndiv_ycol(ip)
+            fxycoltot(ip,j)=0.d0
+            do i=1,it
+              fxycol(ip,j,i)=fxycol(ip,j,i)*avgi/cnorm(i)/ycolw(ip)
+              fxycoltot(ip,j)=fxycoltot(ip,j)+fxycol(ip,j,i)            
+            end do
+            sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
+          end do
+          write(*,*)'DISTRIBUTION'
+          write(*,'(A,I1)')'y',ip
+          write(*,'(A,I1,A)')'d#sigma-/dy(',ip,')--[pb]'
+          write(*,'(A,I1,A)')'y(',ip,')'          
+          do i=1,ndiv_ycol(ip)
+            write(*,*)xycol(ip,i),fxycoltot(ip,i)
+          end do
+          write(*,*)'END'
+        end if
       end do
   
   ! Plot distribution in ETmiss
@@ -1376,6 +1430,26 @@
         write(*,*)'E_{t}--[GeV]'
         do i=1,ndiv_Et
           write(*,*)xEt(i),fxEttot(i)
+        end do
+        write(*,*)'END'
+      end if
+    ! Plot distribution in delta y
+      if(o_Delta_y.eq.1)then
+        sfxDelta_ytot=0d0
+        do j=1,ndiv_Delta_y
+          fxDelta_ytot(j)=0.d0
+          do i=1,it
+            fxDelta_y(j,i)=fxDelta_y(j,i)*avgi/cnorm(i)/Delta_yw
+            fxDelta_ytot(j)=fxDelta_ytot(j)+fxDelta_y(j,i)            
+          end do
+          sfxDelta_ytot=sfxDelta_ytot+fxDelta_ytot(j)*Delta_yw
+        end do
+        write(*,*)'DISTRIBUTION'
+        write(*,*)'Delta_y'
+        write(*,*)'d#sigma-/d#Delta-y--[pb]'
+        write(*,*)'#Delta-y'
+        do i=1,ndiv_Delta_y
+          write(*,*)xDelta_y(i),fxDelta_ytot(i)
         end do
         write(*,*)'END'
       end if
@@ -1603,7 +1677,7 @@
                 write(*,*)'AFB'
                 write(*,*)'A_{FB}'
             else if(jasy.eq.5)then
-                write(*,*)'AFBst'
+                write(*,*)'AFBstar'
                 write(*,*)'A_{FB^{*}}'
             else if(jasy.eq.6)then
                 write(*,*)'AtRFB'

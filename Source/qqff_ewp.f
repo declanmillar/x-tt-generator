@@ -193,7 +193,6 @@ c wavefunctions
 c A diagram               
         call jioxxx( w1  ,w2  ,gAq ,Amass ,Awidth ,w5 )
         call iovxxx( w4  ,w3  ,w5  ,gAf   ,amp(1) )
-
 c Z diagram
         call jioxxx( w1 ,w2 ,gZq ,Zmass ,Zwidth ,w6 )
         call iovxxx( w4 ,w3 ,w6  ,gZf ,amp(2) )

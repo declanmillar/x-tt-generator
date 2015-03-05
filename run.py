@@ -66,7 +66,7 @@ ncall=args[3]
 seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
-executable="zprime"
+executable="Binary/"+"zprime"
 sfinal = "2to2" if (final=="0") else "2to6"
 config=StringIO.StringIO()
 
