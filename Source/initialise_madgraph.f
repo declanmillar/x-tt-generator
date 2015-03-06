@@ -120,6 +120,10 @@ c enter global fermion masses
       end if
       fwidth(12)= bwidth
 
+!    Save EW parameters to common blocks
+      a_em=alpha_EM
+      s2w=sin2theta_weinberg      
+
 !     enter global boson masses and widths
       rm_W=Zmass*dsqrt(1.d0-s2w)
       rm_Z=Zmass
@@ -130,10 +134,6 @@ c enter global fermion masses
       Gamma_Z=Zwidth
       Gamma_A=awidth
       Gamma_h=hwidth
-
-!    Save EW parameters to common blocks
-      a_em=alpha_EM
-      s2w=sin2theta_weinberg
 
 !   call SM HELAS couplings
       call coup1x(s2w,gw,gwwa,gwwZ)
