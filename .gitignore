@@ -13,7 +13,9 @@ ttbar_BSM
 *.o
 *.dat
 *.tbl
+*._*
 Tools/log2root/log2root
 Tools/Superpose/superpose
 Tools/Superpose1/superpose1
 Tools/Superpose3/superpose3
+._.DS_Store

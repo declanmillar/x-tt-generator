@@ -223,9 +223,9 @@
   !   Date and time
       integer today(3), now(3)
   !   Branching ratio for t->bev=bmv=btv (with QCD corrections?)     
-  !    real*8 BRtbln/0.10779733d0/
+      real*8 BRtbln/0.10779733d0/
   !   Branching ratio for t->bev=bmv=btv=1/9 (tree level)      
-      real*8 BRtbln/0.11111111d0/ 
+      ! real*8 BRtbln/0.11111111d0/ 
   !   Branching ratio for t->beq=bmq=btq=6/9 (tree level)      
       real*8 BRtbeq/0.66666666d0/
 
