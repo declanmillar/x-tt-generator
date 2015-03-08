@@ -391,12 +391,13 @@ c begin code
 c ----------
       call ixxxxx(p1  ,fmass(iq ),nhel(1  ), 1,w1  )                       
       call oxxxxx(p2  ,fmass(iq ),nhel(2  ),-1,w2  )                       
-      call oxxxxx(p3  ,fmass(11 ),nhel(3  ), 1,w3  )                       
-      call ixxxxx(p4  ,fmass(11 ),nhel(4  ),-1,w4  )                       
+      call oxxxxx(p3  ,fmass(12 ),nhel(3  ), 1,w3  )                       
+      call ixxxxx(p4  ,fmass(12 ),nhel(4  ),-1,w4  )                       
       call ixxxxx(p5  ,zero,nhel(5  ),-1,w5  )                       
       call oxxxxx(p6  ,zero,nhel(6  ), 1,w6  )                       
       call oxxxxx(p7  ,zero,nhel(7  ), 1,w7  )                       
-      call ixxxxx(p8  ,zero,nhel(8  ),-1,w8  )                       
+      call ixxxxx(p8  ,zero,nhel(8  ),-1,w8  )  
+
       call jioxxx(w1  ,w2  ,gg,zero,zero,w9  )                             
       call jioxxx(w5  ,w7  ,gwf,wmass,wwidth,w10 )                         
       call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w11 )                         

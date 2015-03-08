@@ -1042,16 +1042,17 @@ c ======================================================================
       end if !
 !-----------------------------------------------------------------------    
 ! Matrix elements
+  ! Phase space only
   ! Set |M|^2 =1 (for bug squishing) and skip matrix element calculation
       if(o_M_eq_1.eq.1)then
+        if(ix.eq.1)then
+          pfx1tot=0.5/x1
+          pfx2tot=0.5/x1
+        else if(ix.eq.2)then
+          pfx1tot=0.5/x2
+          pfx2tot=0.5/x2
+        end if
         if(o_final.eq.0)then
-          if(ix.eq.1)then
-            pfx1tot=0.5/x1
-            pfx2tot=0.5/x1
-          else if(ix.eq.2)then
-            pfx1tot=0.5/x2
-            pfx2tot=0.5/x2
-          end if
           do lam3=-1,1,2
             do lam4=-1,1,2
               if(ix.eq.1)then
@@ -1063,8 +1064,10 @@ c ======================================================================
               end if
             end do
           end do
-          go to 666
+        else
+          continue
         end if
+        go to 666
       else
         continue
       end if

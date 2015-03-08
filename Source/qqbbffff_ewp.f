@@ -424,14 +424,14 @@ c initialise all the square matrix elements to zero
       enddo
 
 c wavefunctions
-      call ixxxxx( p1  ,fmass(iq  ),nhel(1  ) , 1 ,w1 )
+      call ixxxxx( p1  ,fmass(iq ),nhel(1  ) , 1 ,w1 )
       call oxxxxx( p2  ,fmass(iq ) ,nhel(2  ) ,-1 ,w2 )
-      call oxxxxx( p3  ,fmass(jf ) ,nhel(3  ) , 1 ,w3 )
-      call ixxxxx( p4  ,fmass(jf ) ,nhel(4  ) ,-1 ,w4 )
-      call ixxxxx( p5  ,fmass(9  ) ,nhel(5  ) ,-1 ,w5 )
-      call oxxxxx( p6  ,fmass(9  ) ,nhel(6  ) , 1 ,w6 )
-      call oxxxxx( p7  ,fmass(10 ) ,nhel(7  ) , 1 ,w7 )
-      call ixxxxx( p8  ,fmass(10 ) ,nhel(8  ) ,-1 ,w8 )
+      call oxxxxx( p3  ,fmass(12 ) ,nhel(3  ) , 1 ,w3 )
+      call ixxxxx( p4  ,fmass(12 ) ,nhel(4  ) ,-1 ,w4 )
+      call ixxxxx( p5  ,fmass(1  ) ,nhel(5  ) ,-1 ,w5 )
+      call oxxxxx( p6  ,fmass(2  ) ,nhel(6  ) , 1 ,w6 )
+      call oxxxxx( p7  ,fmass(1  ) ,nhel(7  ) , 1 ,w7 )
+      call ixxxxx( p8  ,fmass(2  ) ,nhel(8  ) ,-1 ,w8 )
 
 c W coupled to e- nu-bar vector current
       call jioxxx( w5 ,w7 ,gWf ,Wmass ,Wwidth ,w10 )

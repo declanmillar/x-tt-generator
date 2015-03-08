@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
   // h1->SetTitle("pp #rightarrow t#bar{t}#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}");
   h1->Draw();
   // h1->SetLineColor( kAzure-7 );
-  h1->SetLineColor( kBlue );
+  h1->SetLineColor( kBlack );
   h1->GetYaxis()->SetTitleOffset( 1.3 );
   h1->GetXaxis()->SetTitleOffset( 1.2 );
 
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
   // h3->SetTitle(fileName3.c_str());
   h3->SetTitle("SM");
   h3->Draw( "SAME" ); 
-  h3->SetLineColor( kGreen );  
+  h3->SetLineColor( kBlue );  
   // h3->SetLineColor( kPink-8 );    
 
   // normalize histograms
