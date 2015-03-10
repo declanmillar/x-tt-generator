@@ -31,7 +31,7 @@ c ======================================================================
   !   Kinematics
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
-      common/final/o_final,ipmax    
+      common/final/o_final,ipmax,o_decay    
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
@@ -200,6 +200,10 @@ c ======================================================================
       common/div_sigm/ndiv_sigm
   !   Distributions in asymmetries
       common/inp_asym/o_asym(nasym)  ! nasym
+  !   2D-Distribution in deltaphi/Mtt
+      common/dist_dphi2d/xdphi2d(500,500),fxdphi2d(500,500,20),
+     &                                              fxdphi2dtot(500,500)
+      common/inp_dphi2d/o_dphi2d
 
   ! Local arrays    
   !   phase space vectors.
@@ -241,12 +245,12 @@ c ======================================================================
   !   Maximum centre of mass energy
       Ecm_max=Ecm_coll 
   !   Centre of mass energy
-      Ecm=x(2+12*o_final)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
+      Ecm=x(2+12*o_decay)*(Ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
      &                        +rm3+rm4+rm5+rm6+rm7+rm8
       shat=Ecm*Ecm
       tau=shat/s
   !   x1 and x2 of the partons      
-      xx1=x(3+12*o_final)*(1.d0-tau)+tau
+      xx1=x(3+12*o_decay)*(1.d0-tau)+tau
       xx2=tau/xx1
       x1x2(1,1)=xx1
       x1x2(1,2)=xx2
@@ -466,7 +470,7 @@ c ======================================================================
         end do
 
   ! Outgoing momenta for 6 body final state
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
         phit=2.d0*pi*ran(jseed)
         rm356min=rm3+rm5+rm6
         rm356max=Ecm-rm4-rm7-rm8
@@ -654,8 +658,7 @@ c ======================================================================
   ! Boost initial and final state momenta to the collider CM
       vcol=(x1-x2)/(x1+x2)
       gcol=(x1+x2)/2.d0/sqrt(x1*x2)
-      imax=4+o_final*4
-      do i=1,imax
+      do i=1,ipmax
         qcol(4,i)=gcol*(q(4,i)+vcol*q(3,i))
         qcol(3,i)=gcol*(q(3,i)+vcol*q(4,i))
         qcol(2,i)=q(2,i)
@@ -707,7 +710,7 @@ c ======================================================================
         ETmiss=sqrt(ETmiss2) 
       end if            
   ! calculate truth level top/antitop pT, eta and phi
-      if(o_final.eq.1)then
+      if(o_final.ge.1)then
         pT356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2
      &           +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
 
@@ -755,7 +758,7 @@ c ======================================================================
      &/sqrt(qcol(1,1)*qcol(1,1)
      &     +qcol(2,1)*qcol(2,1)
      &     +qcol(3,1)*qcol(3,1))
-        else if(o_final.eq.1)then
+        else if(o_final.ge.1)then
           cost=
      &    ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1)
      &    +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1)
@@ -781,7 +784,7 @@ c ======================================================================
      &      /sqrt(q(1,1)*q(1,1) 
      &           +q(2,1)*q(2,1)
      &           +q(3,1)*q(3,1))
-      else if(o_final.gt.0)then
+      else if(o_final.ge.1)then
         costcm=
      &    ((q(1,3)+q(1,5)+q(1,6))*q(1,1)
      &    +(q(2,3)+q(2,5)+q(2,6))*q(2,1)
@@ -799,7 +802,7 @@ c ======================================================================
   ! calculate the energy of the top
       if(o_final.eq.0)then
         Et=qcol(4,3)
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
         Et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
 
@@ -812,7 +815,7 @@ c ======================================================================
         do i=1,3
           rMtt2=rMtt2-(qcol(i,3)+qcol(i,4))**2
         end do
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
         rMtt2=(qcol(4,3)+qcol(4,4)
      &         +qcol(4,5)+qcol(4,6)
      &         +qcol(4,7)+qcol(4,8))**2
@@ -834,7 +837,7 @@ c ======================================================================
         trans(1)=sqrt(abs(rMvis2))
       end if
   ! calculate transverse energy energies of visible particles
-      if(o_final.eq.1)then
+      if(o_final.ge.1)then
         ET3=sqrt(rm3**2+pT2(3))
         ET4=sqrt(rm4**2+pT2(4))
         ET5=sqrt(rm5**2+pT2(5))
@@ -910,7 +913,7 @@ c ======================================================================
         trans(10)=sqrt(abs(rMlCT2))
       end if
   ! calculate top pseudorapidity
-      if(o_final.eq.1)then
+      if(o_final.ge.1)then
         rps356=(q(3,3)+q(3,5)+q(3,6))
      &       /sqrt((q(1,3)+q(1,5)+q(1,6))**2
      &            +(q(2,3)+q(2,5)+q(2,6))**2
@@ -1120,7 +1123,7 @@ c ======================================================================
     !         write(*,*) 'rm_4 =',rmassa4
 
 
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
   ! Assign 2to6 MadGraph momenta      
         do i=1,3
           p1(i)=q(i,1)
@@ -1275,7 +1278,7 @@ c ======================================================================
 
   ! 6-body MEs
   !   Add QCD Matrix Elements
-      if(o_final.eq.1)then
+      if(o_final.ge.1)then
         if(o_QCD.eq.0)then
           continue
         else if(o_QCD.eq.1)then
@@ -1302,7 +1305,7 @@ c ======================================================================
         end if
       end if
   ! if no gauge sectors are active, fffxn = 0
-      if(o_final.eq.1)then
+      if(o_final.ge.1)then
         restot=qcdqq1+qcdgg1+qcdbb1+ewzuu1+ewzdd1+ewzbb1
      &        +qcdqq2+qcdgg2+qcdbb2+ewzuu2+ewzdd2+ewzbb2
         if((restot).eq.0.d0)then
@@ -1350,7 +1353,7 @@ c ======================================================================
      &             +pfx2(lam3,lam4)
           end do
         end do
-      else if(o_final.eq.1) then
+      else if(o_final.ge.1) then
         qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1)
      &      +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1)
      &      +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1)
@@ -1405,7 +1408,7 @@ c ======================================================================
         fffxn1=fffxn1/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
         fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn2=fffxn2/2.d0/Ecm/Ecm*(2.d0*pi)**(4-3*(2))
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
   ! 6-body flux factor, pi's and phase space integral
         fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/Ecm*256.d0*2.d0**(4-3*(6))
      &     /(2.d0*rm356)
@@ -1891,6 +1894,19 @@ c ======================================================================
           continue
         else
             fxct7ct5(nbin,it)=fxct7ct5(nbin,it)+hist
+        end if
+      end if
+
+      if(o_dphi2d.eq.1)then
+  ! generate distribution in cost7.
+        ibin=int((dphi-dphimin)/dphiw)+1
+        jbin=int((rMtt-rMttmin)/rMttw)+1
+        if((ibin.gt.ndiv_dphi).or.(jbin.gt.ndiv_rMtt))then
+          continue
+        else if((ibin.lt.1).or.(jbin.lt.1))then
+          continue
+        else
+          fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
         end if
       end if
 

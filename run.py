@@ -41,6 +41,7 @@ parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,               
 parser.add_option("-x", "--symx1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symcost", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
 parser.add_option("-D", "--distros", default=1    , const=0     , action="store_const", help="turn off distributions")
+parser.add_option("-2", "--dist2d" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
 
 # Debug options
 parser.add_option("-M", "--M_eq_1",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
@@ -132,6 +133,7 @@ print >> config, '-1.d0 ! acc'
 print >> config, '%s ! symx1x2' % options.symx1x2
 print >> config, '%s ! symcost' % options.symcost
 print >> config, '%s ! distros' % options.distros
+print >> config, '%s ! dist2d' % options.dist2d
 
 print >> config, '%s ! M_eq_1' % options.M_eq_1
 

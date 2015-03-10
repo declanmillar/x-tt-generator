@@ -26,7 +26,7 @@
       common/par/rm3,rm4,rm5,rm6,rm7,rm8,s
       common/limfac/fac
       common/EW/a_em,s2w
-      common/final/o_final,ipmax   
+      common/final/o_final,ipmax,o_decay
       common/stat/npoints
       common/symint/ixmax,jxmax
       common/coll/ecm_coll
@@ -195,6 +195,10 @@
      &,fxsigmtot(nasym,1000)
       common/inp_sigm/o_sigm
       common/div_sigm/ndiv_sigm
+  !   2D-Distribution in deltaphi/Mtt
+      common/dist_dphi2d/xdphi2d(500,500),fxdphi2d(500,500,20),
+     &                                              fxdphi2dtot(500,500)
+      common/inp_dphi2d/o_dphi2d
 
   ! Local variables
   !   Flag for Zp width specification
@@ -248,9 +252,9 @@
       read(5,*) o_BSM
   !   Interference options
       read(5,*) o_int
-  !   Final state option (o_final=ttbar: no decay; o_final=1: bbllnn)      
+  !   Final state option (1:no decay,1:dilepton,2:semi-had,4:full-had)
       read(5,*) o_final
-  !   NWA flag (o_NWA = 0: Actual top widths; o_NWA = 1: tops in NWA)
+  !   NWA flag (0:Actual top widths,1: tops in NWA)
       read(5,*) o_NWA
   !   Branching ratio flag
       read(5,*) o_BR
@@ -275,7 +279,9 @@
   !   Symmatrise of x1 and x2
       read(5,*) o_symcost      
   !   Standard distributions flag
-      read(5,*) o_distros   
+      read(5,*) o_distros 
+  !   2d-distributions flag
+      read(5,*) o_dist2d     
   !   set |M|^2=1
       read(5,*) o_M_eq_1
         
@@ -283,11 +289,8 @@
     ! Number of external lines
       if(o_final.eq.0)then 
         ipmax=4
-      else if(o_final.eq.1)then 
+      else
         ipmax=8
-      else 
-        write(*,*)'Invalid final state identifier!'
-        stop
       end if
     ! NWA only for six-body final state
       if(o_final.eq.0) o_NWA=0
@@ -308,6 +311,12 @@
         jxmax=2
       else
         jxmax=1
+      end if
+    ! Do tops decay?
+      if(o_final.eq.0)then
+        o_decay=0
+      else
+        o_decay=1
       end if
     ! in phase space with cost->-cost
       if(o_M_eq_1.eq.1)then
@@ -490,7 +499,13 @@
       o_sigm=o_asyms
       sigmmax=rMttmax
       sigmmin=rMttmin
-      ndiv_sigm=ndiv_rMtt/5      
+      ndiv_sigm=ndiv_rMtt/5
+  !   dphi2d
+      if((o_dphi.eq.1).and.(o_rMtt.eq.1))then
+        o_dphi2d=O_dist2d
+      else
+        o_dphi2d=0
+      end if
 
   !   asymmetries
       do iasy=1,nasym
@@ -522,10 +537,11 @@
         o_cost7  = 0
         o_cost5  = 0
         o_ct7ct5 = 0
+        o_dphi2d = 0
         o_asym(9) = 0  ! turn off A_l
       end if
   !   Turn off 2->2 only distributions
-      if (o_final.eq.1)then
+      if (o_final.ge.1)then
         o_asym(1) = 0 ! turn off A_LL
         o_asym(2) = 0 ! turn off A_L
         o_asym(3) = 0 ! turn off A_PV
@@ -578,7 +594,7 @@
   ! Dimensions of integration
       if(o_final.eq.0)then
         ndim=3
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
         ndim=15
       end if
   !   (If nprn<0 no print-out.)
@@ -614,7 +630,7 @@
         end do
   !         end if
 
-      else if(o_final.eq.1)then
+      else if(o_final.ge.1)then
   !   Final state masses
         rm3=fmass(12)
         rm4=rm3
@@ -859,6 +875,14 @@
      &    write(*,*)'pp #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
+        if(o_final.eq.2)
+     &    write(*,*)'pp #rightarrow t#bar{t}',
+     &               '#rightarrow b#bar{b} W^{+}W^{-}',
+     &               '#rightarrow b#bar{b} q#bar{q} l #nu'
+        if(o_final.eq.3)
+     &    write(*,*)'pp #rightarrow t#bar{t}',
+     &               '#rightarrow b#bar{b} W^{+}W^{-}',
+     &               "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
       else if(o_coll.eq.1)then
         if(o_final.eq.0)
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
@@ -867,6 +891,14 @@
      &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
      &               '#rightarrow b#bar{b} W^{+}W^{-}',
      &               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
+        if(o_final.eq.2)
+     &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
+     &               '#rightarrow b#bar{b} W^{+}W^{-}',
+     &               '#rightarrow b#bar{b} q#bar{q} l #nu'
+        if(o_final.eq.3)
+     &    write(*,*)'p#bar{p} #rightarrow t#bar{t}',
+     &               '#rightarrow b#bar{b} W^{+}W^{-}',
+     &               "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
       end if
       write(*,*)'-----------------------------------------------------'
       write(*,*)'NOTES'            
@@ -881,8 +913,8 @@
       if(o_structure.eq.7)write(*,*)'PDFs: mrs99 (cor03).'
       if(o_structure.eq.8)write(*,*)'PDFs: mrs99 (cor04).'
       if(o_structure.eq.9)write(*,*)'PDFs: mrs99 (cor05).'
-      if((o_final.eq.1).and.(o_NWA.eq.0))write(*,*)'Tops: off-shell.'
-      if((o_final.eq.1).and.(o_NWA.eq.1))write(*,*)'Tops: NWA.'
+      if((o_final.ge.1).and.(o_NWA.eq.0))write(*,*)'Tops: off-shell.'
+      if((o_final.ge.1).and.(o_NWA.eq.1))write(*,*)'Tops: NWA.'
       write(*,*)'BSM model: ',model
       if(o_QCD.eq.1)write(*,*)'QCD: On '
       if(o_QCD.eq.0)write(*,*)'QCD: Off'
@@ -1575,6 +1607,31 @@
         write(*,*)'#Delta#phi'
         do i=1,ndiv_dphi
           write(*,*)xdphi(i),fxdphitot(i)
+        end do
+        write(*,*)'END'
+      end if
+      ! Plot 2d-distribution in delta phi
+      if(o_dphi2d.eq.1)then
+        sfxdphi2dtot=0d0
+        do i=1,ndiv_dphi
+          do j=1,ndiv_rMtt
+            fxdphi2dtot(i,j)=0.d0
+            do k=1,it
+              fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*avgi/cnorm(k)/dphiw/rMttw
+              fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)            
+            end do
+          sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+          end do
+        end do
+        write(*,*)'2D-DISTRIBUTION'
+        write(*,*)'dphi2d'
+        write(*,*)'d^2#sigma-/d#Delta#phi-dM_{tt}--[pb/GeV]'
+        write(*,*)'#Delta#phi'
+        write(*,*)'#M_{tt}'
+        do i=1,ndiv_dphi
+          do j=1,ndiv_rMtt
+            write(*,*)xdphi(i),xrMtt(j),fxdphi2dtot(i,j)
+          end do
         end do
         write(*,*)'END'
       end if
