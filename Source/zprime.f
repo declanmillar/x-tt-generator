@@ -1627,7 +1627,13 @@
         write(*,*)'dphi2d'
         write(*,*)'d^2#sigma-/d#Delta#phi-dM_{tt}--[pb/GeV]'
         write(*,*)'#Delta#phi'
+        write(*,*) ndiv_dphi
+        write(*,*) dphimin
+        write(*,*) dphimax
         write(*,*)'#M_{tt}'
+        write(*,*) ndiv_rMtt
+        write(*,*) rMttmin
+        write(*,*) rMttmax
         do i=1,ndiv_dphi
           do j=1,ndiv_rMtt
             write(*,*)xdphi(i),xrMtt(j),fxdphi2dtot(i,j)
