@@ -25,6 +25,7 @@ F = gfortran
 
 # Flags
 FFLAGS = -g 
+# -ffree-form
 # -ffpe-trap=invalid,zero,overflow,underflow,denormal
 # -Wall
 # ------------------------------------------------------------------------------

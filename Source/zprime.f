@@ -1,4 +1,3 @@
-! ======================================================================
       program zprime
 ! ----------------------------------------------------------------------
 ! Header
@@ -150,7 +149,7 @@
      &                                           ,fxtranstot(ntrans,500)
       common/inp_trans/o_tran(ntrans)
       common/div_trans/ndiv_trans(ntrans)
-      dimension sfxtranstot(ntrans)
+      dimension sfxtranstot(ntrans),sfxtransdptot(ntrans)
   !   Distribution in phi_l (lepton azimuthal angle)
       common/ext_fl/flmax,flmin,flw
       common/dist_fl/xfl(500),fxfl(500,20),fxfltot(500)
@@ -199,6 +198,10 @@
       common/dist_dphi2d/xdphi2d(500,500),fxdphi2d(500,500,20),
      &                                              fxdphi2dtot(500,500)
       common/inp_dphi2d/o_dphi2d
+  !   2D-Distribution in deltaphi/trans
+      common/dist_dphi2d/xtransdp(ntrans,500,500),
+     &         fxtransdp(ntrans,500,500,20),fxtransdptot(ntrans,500,500)
+      common/inp_transdp/o_transdp(ntrans)
 
   ! Local variables
   !   Flag for Zp width specification
@@ -506,7 +509,14 @@
       else
         o_dphi2d=0
       end if
-
+  !   dtransph
+      do itrans=1, ntrans
+        if((o_dphi.eq.1).and.(o_tran(itrans).eq.1))then
+          o_transdp(itrans)=o_dist2d
+        else
+          o_transdp(itrans)=0
+        end if
+      end do
   !   asymmetries
       do iasy=1,nasym
         o_asym(iasy)=o_asyms
@@ -1610,7 +1620,7 @@
         end do
         write(*,*)'END'
       end if
-      ! Plot 2d-distribution in delta phi
+  ! Plot 2d-distribution in delta phi
       if(o_dphi2d.eq.1)then
         sfxdphi2dtot=0d0
         do i=1,ndiv_dphi
@@ -1626,11 +1636,11 @@
         write(*,*)'2D-DISTRIBUTION'
         write(*,*)'dphi2d'
         write(*,*)'d^2#sigma-/d#Delta#phi-dM_{tt}--[pb/GeV]'
-        write(*,*)'#Delta#phi'
+        write(*,*)'#Delta#phi--[rad]'
         write(*,*) ndiv_dphi
         write(*,*) dphimin
         write(*,*) dphimax
-        write(*,*)'#M_{tt}'
+        write(*,*)'#M_{tt}--[GeV]'
         write(*,*) ndiv_rMtt
         write(*,*) rMttmin
         write(*,*) rMttmax
@@ -1641,6 +1651,96 @@
         end do
         write(*,*)'END'
       end if
+  ! Plot 2d-distributions in delta_phi and all transverse variables
+      do itrans=1,ntrans
+        if(o_transdp(itrans).eq.1)then
+          sfxtransdptot(itrans)=0d0
+          do i=1,ndiv_dphi
+            do j=1,ndiv_trans(itrans)
+              fxtransdptot(itrans,i,j)=0.d0
+              do k=1,it
+                fxtransdp(itrans,i,j,k)=fxtransdp(itrans,i,j,k)
+     &                           *avgi/cnorm(k)/transw(itrans)/dphiw
+                fxtransdptot(itrans,i,j)=fxtransdptot(itrans,i,j)
+     &                            +fxtransdp(itrans,i,j,k)            
+              end do
+              sfxtransdptot(itrans)=sfxtransdptot(itrans)+
+     &                         fxtransdptot(itrans,i,j)*transw(itrans)
+            end do
+          end do
+          write(*,*)'2D-DISTRIBUTION'
+          if (itrans.eq.1)then
+            write(*,*)'dphiMvis'
+            write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+          else if (itrans.eq.2)then
+            write(*,*)'HT'
+            write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
+          else if (itrans.eq.3)then
+            write(*,*)'dphiM_T1'
+            write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          else if (itrans.eq.4)then
+            write(*,*)'dphiM_T2'
+            write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          else if (itrans.eq.5)then
+            write(*,*)'dphiM_T3'
+            write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          else if (itrans.eq.6)then
+            write(*,*)'dphiMlT'
+            write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+          else if (itrans.eq.7)then
+            write(*,*)'dphiM_CT1'
+            write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          else if (itrans.eq.8)then
+            write(*,*)'dphiM_CT2'
+            write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          else if (itrans.eq.9)then
+            write(*,*)'dphiM_CT3'
+            write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          else if (itrans.eq.10)then
+            write(*,*)'dphiMlCT'
+            write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+          else
+            continue
+          end if
+            write(*,*)'#Delta#phi'
+            write(*,*) ndiv_dphi
+            write(*,*) dphimin
+            write(*,*) dphimax
+          if (itrans.eq.1)then
+            write(*,*)'M_{vis}--[GeV]'
+          else if (itrans.eq.2)then
+            write(*,*)'H_{T}--[GeV]'          
+          else if (itrans.eq.3)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.4)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.5)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.6)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.7)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.8)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.9)then
+            write(*,*)'M_{T}--[GeV]'
+          else if (itrans.eq.10)then
+            write(*,*)'M^{l}_{CT}--[GeV]'
+          else
+            continue
+          end if
+          write(*,*)ndiv_trans(itrans)
+          write(*,*)transmin(itrans)
+          write(*,*)transmax(itrans)
+          do i=1,ndiv_dphi
+            do j=1,ndiv_trans(itrans)
+              write(*,*)xdphi(i),xtrans(itrans,j)
+     &                                         ,fxtransdptot(itrans,i,j)
+            end do
+          end do
+          write(*,*)'END'
+        end if
+      end do
   ! Plot distribution in cost5
       if(o_cost5.eq.1)then
         sfxcost5tot=0d0

@@ -1,4 +1,4 @@
-c ======================================================================
+! ======================================================================
       function dxsec(x,wgt)
 ! ----------------------------------------------------------------------
 ! Header
@@ -204,6 +204,10 @@ c ======================================================================
       common/dist_dphi2d/xdphi2d(500,500),fxdphi2d(500,500,20),
      &                                              fxdphi2dtot(500,500)
       common/inp_dphi2d/o_dphi2d
+  !   2D-Distribution in deltaphi/trans
+      common/dist_dphi2d/xtransdp(ntrans,500,500),
+     &         fxtransdp(ntrans,500,500,20),fxtransdptot(ntrans,500,500)
+      common/inp_transdp/o_transdp(ntrans)
 
   ! Local arrays    
   !   phase space vectors.
@@ -1898,7 +1902,7 @@ c ======================================================================
       end if
 
       if(o_dphi2d.eq.1)then
-  ! generate distribution in cost7.
+  ! generate distribution in dphi2d.
         ibin=int((dphi-dphimin)/dphiw)+1
         jbin=int((rMtt-rMttmin)/rMttw)+1
         if((ibin.gt.ndiv_dphi).or.(jbin.gt.ndiv_rMtt))then
@@ -1909,6 +1913,22 @@ c ======================================================================
           fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
         end if
       end if
+
+      do itrans=1,ntrans
+        if(o_transdp(itrans).eq.1)then
+  ! generate distribution in transdp.
+          ibin=int((dphi-dphimin)/dphiw)+1
+          jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
+         if((ibin.gt.ndiv_dphi).or.(jbin.ge.(ndiv_trans(itrans)+1)))then
+            continue
+          else if((ibin.lt.1).or.(jbin.lt.1))then
+            continue
+          else
+            fxtransdp(itrans,ibin,jbin,it)=
+     &      fxtransdp(itrans,ibin,jbin,it)+hist
+          end if
+        end if
+      end do
 
       if(o_asym(1).eq.1)then
         if(o_sigp.eq.1)then
@@ -2170,5 +2190,5 @@ c ======================================================================
   ! end loop x1 <-> x2 
       end do 
       return
-      end
+      end function dxsec 
 ! ======================================================================
