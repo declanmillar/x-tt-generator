@@ -99,7 +99,7 @@ TH2D* plot2dDistribution(double luminosity, double efficiency, ifstream * logStr
 
   // create histogram
   TH2D *hist = new TH2D(distName.c_str(), " " , nBinsx, xlow, xup, nBinsy, ylow, yup);
-  hist -> GetYaxis() -> SetTitle(zTitle.c_str());
+  hist -> GetYaxis() -> SetTitle(yTitle.c_str());
   hist -> GetYaxis() -> CenterTitle();
   hist -> GetXaxis() -> SetTitle(xTitle.c_str());
   hist -> GetXaxis() -> CenterTitle();

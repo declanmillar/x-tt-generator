@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
   TFile f1( fileName1.c_str() ,"READ" );
   TH1D *h1 = ( TH1D* )f1.Get( histName.c_str() );
   // h1->SetTitle( fileName1.c_str() );
-  h1->SetTitle( "Declan" );
+  h1->SetTitle( "SM" );
   h1->Draw();
   h1->SetLineColor( kBlack );
   h1->GetYaxis()->SetTitleOffset( 1.3 );
@@ -159,11 +159,12 @@ int main(int argc, char *argv[])
   TFile f2( fileName2.c_str() ,"READ" );
   TH1D *h2 = ( TH1D* )f2.Get( histName.c_str() );
   // h2->SetTitle( fileName2.c_str() );
-  h2->SetTitle( "Ken" );
+  h2->SetTitle( "SSM Z' (M=2 TeV, #Gamma=200 GeV)" );
   h2->Draw( "SAME" );
   h2->SetLineColor( kRed );
 
   // normalize histograms
+  normalize=true;
   if ( normalize == true )
   { 
     std::string yTitle;
