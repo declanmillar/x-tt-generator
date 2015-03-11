@@ -55,7 +55,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream * logStrea
 
   // histogram bin information.
   nBins = xV.size();
-  nBinEdges = nBins +1;
+  nBinEdges = nBins + 1;
   binWidth = xV[1]-xV[0]; // only works for fixed bin width!
   binLowEdges.resize(nBinEdges);
 

@@ -1,9 +1,6 @@
-// ================================== header ===================================
 // program log2root
-// -------------------
 // Author: Declan Millar
-// ================================== start ====================================
-// includes
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,14 +14,16 @@
 #include <TApplication.h>
 #include <TAxis.h>
 #include <TH1.h>
+#include <TH2.h>
 #include <TFile.h>
 
 #include "plotDistribution.cpp"
+#include "plot2dDistribution.cpp"
 #include "plotAsymmetry.cpp"
-#include "AtlasROOTStyle.cpp"
+// #include "AtlasROOTStyle.cpp"
 
 namespace po = boost::program_options;
-// ================================== main =====================================
+
 int main(int argc, char *argv[])
 {
   // Atlas style
@@ -44,7 +43,7 @@ int main(int argc, char *argv[])
   std::string fileName; // File name without extension
   std::string logFileName; // adds extension to file name  
   std::string outputFileName; // output .root file name
-  std::string dist,asym; // starts reading a histogram
+  std::string dist,asym,dist2d; // starts reading a histogram
   std::string end; // stops reading the text file
   std::string mainString; // Information strings preceding distributions
   int nHistos; // number of histograms read from text file
@@ -85,6 +84,7 @@ int main(int argc, char *argv[])
 
   // Triggers
   dist = "DISTRIBUTION";
+  dist2d = "2D-DISTRIBUTION";
   asym = "ASYMMETRY";
   end  = "CLOSE";
 
@@ -129,6 +129,14 @@ int main(int argc, char *argv[])
       Asymmetry -> Write();
       delete Asymmetry;
     }
+    else if (mainString==dist2d)
+    {
+      nHistos+=1;
+      printf("Histogram %i\n",nHistos);
+      TH2D* Distribution2D = plot2dDistribution(efficiency,luminosity,&logStream);
+      Distribution2D -> Write();
+      delete Distribution2D;
+    }
   }
 
   // Wrapping up
@@ -137,4 +145,3 @@ int main(int argc, char *argv[])
   printf("Program complete.\n");
   return 0;
 }
-// ================================ end main ===================================
