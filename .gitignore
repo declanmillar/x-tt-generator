@@ -19,3 +19,6 @@ Tools/Superpose/superpose
 Tools/Superpose1/superpose1
 Tools/Superpose3/superpose3
 ._.DS_Store
+*.mod
+Source_Fixed_Form
+Tools/f2f-0.96
