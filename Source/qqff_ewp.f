@@ -1,25 +1,25 @@
 function sqqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4)
 
-! Returns amplitude squared summed/avg over colors and helicities
-! for the point in phase space p1 ,p2 ,p3 ,p4, lam3, lam4 for
-!   q q  -> t t (via A ,Z ,{Z'})
-! note iq (initial quark) has now been added to the arguments.
-! 1 = down, 2 = up, 3 = strange, 4 = charm, 5 = bottom, 6 = top
+  ! Returns amplitude squared summed/avg over colors and helicities
+  ! for the point in phase space p1 ,p2 ,p3 ,p4, lam3, lam4 for
+  !   q q  -> t t (via A ,Z ,{Z'})
+  ! note iq (initial quark) has now been added to the arguments.
+  ! 1 = down, 2 = up, 3 = strange, 4 = charm, 5 = bottom, 6 = top
 
   implicit none
 
-! arguments
-  integer :: iq,jf ! incoming quark type (up/down)
-  integer :: lam3,lam4 ! ttbar helicities
+  ! arguments
+  integer :: iq,jf  ! incoming quark type (up/down)
+  integer :: lam3,lam4  ! ttbar helicities
   real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3)
   real :: sqqff_EWp
 
-! constants
-  integer :: nexternal ! number of external legs
-  integer :: ncomb ! number of helicity combinations
+  ! constants
+  integer :: nexternal  ! number of external legs
+  integer :: ncomb  ! number of helicity combinations
   parameter ( nexternal=4, ncomb= 16 )
    
-! local variables
+  ! local variables
   integer :: nhel(nexternal,ncomb),ntry
   real :: t
   real :: qqff_EWp
@@ -27,7 +27,7 @@ function sqqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4)
   logical :: goodhel(ncomb)
   data goodhel/ncomb* .FALSE. /
   data ntry/0/
-!   All possible helicity combinations
+  !   All possible helicity combinations
   data (nhel(ihel,  1),ihel=1,4) / -1, -1, -1, -1/
   data (nhel(ihel,  2),ihel=1,4) / -1, -1, -1,  1/
   data (nhel(ihel,  3),ihel=1,4) / -1, -1,  1, -1/
@@ -48,41 +48,43 @@ function sqqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4)
   sqqff_EWp = 0d0
   ntry=ntry+1
   do ihel=1,ncomb
-  ! f (goodhel(ihel) .or. ntry .lt. 10) then
+    ! f (goodhel(ihel) .or. ntry .lt. 10) then
     t=qqff_EWp(iq,jf,p1, p2, p3, p4,lam3,lam4,nhel(1,ihel))
     sqqff_EWp = sqqff_EWp + t
-  !              if (t .gt. 0d0 .and. .not. goodhel(ihel)) then
-  !                  goodhel(ihel)=.true.
-  !                  ! write(*,*) ihel!,t
-  !              endif
-  ! ndif
+    !              if (t .gt. 0d0 .and. .not. goodhel(ihel)) then
+    !                  goodhel(ihel)=.true.
+    !                   ! write(*,*) ihel!,t
+    !              endif
+    ! ndif
   enddo
   sqqff_EWp = sqqff_EWp /  4d0
-!       write(*,*)sqqff_EWp
+  !       write(*,*)sqqff_EWp
 end function sqqff_ewp
 
 
 
 function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
-! returns amplitude squared summed/avg over colors
-! for the point in phase space p1,p2,p3,p4
-! and helicity nhel(1),nhel(2) for process :
-!   qqb -> ttb (via A,Z,{Z'})
+  ! returns amplitude squared summed/avg over colors
+  ! for the point in phase space p1,p2,p3,p4
+  ! and helicity nhel(1),nhel(2) for process :
+  !   qqb -> ttb (via A,Z,{Z'})
+
+  use Configuration, only: include_EW, include_BSM, interference
 
   implicit none
 
   real :: qqff_EWp
 
-! Local constants
+  ! Local constants
   integer ::    ngraphs ,nexternal
   parameter( ngraphs=7 ,nexternal=4 )
 
-! Arguments
+  ! Arguments
   integer :: iq,jf,lam3,lam4
-  real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3) ! momenta
-  integer :: nhel(nexternal) ! n_hel
+  real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3)   ! momenta
+  integer :: nhel(nexternal)  ! n_hel
 
-! Global variables
+  ! Global variables
   real ::         gW, gWWA, gWWZ
   common /coup1/ gW, gWWA, gWWZ
   real ::         gAl(2),gAu(2),gAd(2),gWf(2)
@@ -99,7 +101,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   common /vmass2/Amass,Awidth,hmass,hwidth
   real ::            fmass(12), fwidth(12)
   common /fermions/ fmass,     fwidth
-! Zprime parameters
+  ! Zprime parameters
   real ::    rmZp(5),gamZp(5)
   common/Zp/rmZp   ,gamZp
   real ::         paramZp(5)
@@ -110,26 +112,21 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   common/coupZp/gZpd     ,gZpu
   integer ::     npoints
   common/stat/npoints
-  integer ::       o_QCD,o_EW,o_BSM
-  common/igauge/o_QCD,o_EW,o_BSM
-  integer ::             o_int
-  common/interference/o_int
 
-
-! Local variables
+  ! Local variables
   integer :: i,j
-! parameter ( jf=11 ) ! final state tops
+  ! parameter ( jf=11 )   ! final state tops
   complex*16 amp_tmp
   complex*16 amp( ngraphs )
-  complex*16 w1(6) ,w2(6) ,w3(6) ,w4(6) ! external
-  complex*16 w5(6) ,w6(6) ,w7(6) ! interal
+  complex*16 w1(6) ,w2(6) ,w3(6) ,w4(6)   ! external
+  complex*16 w5(6) ,w6(6) ,w7(6)  ! interal
   real :: gAq(2),gAf(2)
   real :: gZq(2),gZf(2)
   real :: gZpq(2,5),gZpf(2,5)
-  real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
+  real :: gZpq_tmp(2),gZpf_tmp(2)   ! necessary to pass 2d arrays
 
 
-! select only final state spins from shell script
+  ! select only final state spins from shell script
   if((nhel(3) == lam3) .AND. (nhel(4) == lam4))then
     continue
   else
@@ -137,7 +134,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     return
   end if
 
-! up/down type couplings
+  ! up/down type couplings
   if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
     do i=1,2
       gAq(i)=gAu(i)
@@ -180,29 +177,29 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     write(*,*)'Incorrect fermion ID number.'
   end if
 
-! initialise amplitudes
+  ! initialise amplitudes
   do i=1,ngraphs
     amp(i)=0d0
   enddo
 
-! wavefunctions
+  ! wavefunctions
   call ixxxxx( p1 ,fmass(iq) ,nhel(1) , 1   ,w1 )
   call oxxxxx( p2 ,fmass(iq) ,nhel(2) ,-1   ,w2 )
   call oxxxxx( p3 ,fmass(jf) ,nhel(3) , 1   ,w3 )
   call ixxxxx( p4 ,fmass(jf) ,nhel(4) ,-1   ,w4 )
 
-  if (o_EW == 1)then
-  ! A diagram
+  if (include_EW == 1)then
+    ! A diagram
     call jioxxx( w1  ,w2  ,gAq ,Amass ,Awidth ,w5 )
     call iovxxx( w4  ,w3  ,w5  ,gAf   ,amp(1) )
-  ! Z diagram
+    ! Z diagram
     call jioxxx( w1 ,w2 ,gZq ,Zmass ,Zwidth ,w6 )
     call iovxxx( w4 ,w3 ,w6  ,gZf ,amp(2) )
   else
     continue
   end if
-! Z' diagrams
-  if (o_BSM == 1)then
+  ! Z' diagrams
+  if (include_BSM == 1)then
     do i =1,5
       if (rmZp(i) > 0) then
         do j=1,2
@@ -219,14 +216,14 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     continue
   end if
 
-! total M*M for given helicity combination
+  ! total M*M for given helicity combination
   qqff_EWp = 0.d0
   amp_tmp = (0.d0,0.d0)
-  if (o_int == 0)then ! no interference
+  if (interference == 0)then   ! no interference
     do i=1,ngraphs
       qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (o_int == 1)then ! SM interference
+  else if (interference == 1)then  ! SM interference
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -234,12 +231,12 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     do i=3,ngraphs
       qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (o_int == 2)then ! full interference
+  else if (interference == 2)then  ! full interference
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
     qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
-  else if (o_int == 3)then ! interference only
+  else if (interference == 3)then  ! interference only
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -252,11 +249,11 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     stop
   end if
 
-! print individual amplitudes
-!       if (npoints.lt.10)then
-!         do i=1,ngraphs
-!           write(*,*)'M: ' ,i ,amp(i)
-!         enddo
-!       end if
+  ! print individual amplitudes
+  !       if (npoints.lt.10)then
+  !         do i=1,ngraphs
+  !           write(*,*)'M: ' ,i ,amp(i)
+  !         enddo
+  !       end if
 
 end function qqff_ewp

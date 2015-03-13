@@ -1,190 +1,82 @@
 program zprime
 
   ! Calculates the cross section and generates distributions for
-  !   pp -> tt,
-  !   pp -> tt -> bW^+bbarW^- -> bbbare^+nue^-nubarc
+  ! pp -> tt,
+  ! pp -> tt -> bW^+bbarW^- -> bbbare^+nue^-nubarc
   ! (Future:) pp -> bW^+bbarW^- -> b bbar e^+ nu qqbar'
   ! Uses adapted Madgraph functions.
   ! Uses cteq6 and mrs99 PDF subroutines.
   ! Authors: Declan Millar, Stefano Moretti.
 
+  use Configuration
   use Kinematics
   use Distributions
 
-  ! implicit
   implicit real (a-h,p-z)
   implicit integer (l-o)
 
-  ! Global variables
-  !   vegas
-  common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  common/rndm/iseed
-  common/reslocal/resl(20),standdevl(20)
   common/limfac/fac
+
   common/EW/a_em,s2w
-  common/final/o_final,ipmax,o_decay
   common/stat/npoints
-  common/symint/ixmax,jxmax
-  common/coll/ecm_coll
-  common/cuts/ytmax,yttmin
-  !   Debugging
-  common/debug/o_M_eq_1
-  !   Polarised/Spatial cross sections
+  ! Polarised/Spatial cross sections
   common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
   common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
-  !   Permitted gauge sectors
-  common/igauge/o_QCD,o_EW,o_BSM
-  !   Interference
-  common/interference/o_int
-  !   Z' masses and VA/LR couplings
+  ! Z' masses and VA/LR couplings
   common/fermions/ fmass,     fwidth
-  dimension fmass(12), fwidth(12)
+  real :: fmass(12), fwidth(12)
   common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
   common/vmass2/rm_A,Gamma_A,rm_h,Gamma_h
   common/Zp/rmZp(5),gamZp(5)
   common/Zpparam/paramZp(5)
   common/coupZpVA/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
   common/coupZp/gZpd(2,5),gZpu(2,5)
-  !   Narrow width approximation (NWA)
-  common/NWA/o_NWA
-  !   Structure functions
-  common/partdist/o_structure
   common/QCD/rlambdaQCD4,nloops
-  common/collider/o_coll
 
   ! Local variables
-  !   Flag for Zp width specification
-  dimension o_width(5)
-  !   Model name
-  character(50) :: model
-  !   Polarised/hemispherised cross sections
-  dimension cnorm(20)
+  ! Flag for Zp width specification
+  real :: o_width(5)
+  ! Polarised/hemispherised cross sections
+  real :: cnorm(20)
   ! imension snorm(6)  !,ave(4)
-  dimension poltot(-1:1,-1:1),polchi(-1:1,-1:1)
-  dimension spattot(nspat,-1:1),spatchi(nspat,-1:1)
-  dimension sfxpTtot(8),sfxetatot(8),sfxphitot(8),sfxycoltot(8)
+  real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)
+  real :: spattot(nspat,-1:1),spatchi(nspat,-1:1)
+  real :: sfxpTtot(8),sfxetatot(8),sfxphitot(8),sfxycoltot(8)
 
-  dimension sfxsigptot(nasym),sfxsigmtot(nasym)
-  dimension asym_int(nasym)
-  dimension Atot(nasym),Atoterr(nasym)
+  real :: sfxsigptot(nasym),sfxsigmtot(nasym)
+  real :: asym_int(nasym)
+  real :: Atot(nasym),Atoterr(nasym)
   ! test particular matrix element
-  dimension testp1(0:3),testp2(0:3), &
+  real :: testp1(0:3),testp2(0:3), &
   testp3(0:3),testp4(0:3)
 
   ! Local constants
-  !   pi
+  integer pi
   parameter (pi=3.14159265358979323846d0)
-  !   Unit conversion GeV -> nb
-  parameter (conv=0.38937966d9)
-  !   Date and time
+  integer GeV_to_nb
+  parameter (GeV_to_nb=0.38937966d9)
   integer :: today(3), now(3)
-  !   Branching ratio for t->bev=bmv=btv (with QCD corrections?)
+  ! Branching ratio for t->bev=bmv=btv (with QCD corrections?)
   real :: BRtbln=0.10779733d0
-  !   Branching ratio for t->bev=bmv=btv=1/9 (tree level)
+  ! Branching ratio for t->bev=bmv=btv=1/9 (tree level)
   ! real BRtbln/0.11111111d0/
-  !   Branching ratio for t->beq=bmq=btq=6/9 (tree level)
-  real :: BRtbeq=0.66666666d0
+  ! Branching ratio for t->beq=bmq=btq=6/9 (tree level)
+  ! real :: BRtbeq=0.66666666d0
 
   ! External procedures
   external dxsec
 
-  ! Read config file
-  !   Collider flag (o_coll=0: pp; o_coll=1: ppbar)
-  read(5,*) o_coll
-  !   Collider energy
-  read(5,*) ecm_coll
-  !   PDFs
-  read(5,*) o_structure
-  !   Name of model file
-  read(5,*) model
-  !   Permitted gauge sector options
-  read(5,*) o_QCD
-  read(5,*) o_EW
-  read(5,*) o_BSM
-  !   Interference options
-  read(5,*) o_int
-  !   Final state option (1:no decay,1:dilepton,2:semi-had,4:full-had)
-  read(5,*) o_final
-  !   NWA flag (0:Actual top widths,1: tops in NWA)
-  read(5,*) o_NWA
-  !   Branching ratio flag
-  read(5,*) o_BR
-  !   Transverse mass variables flag
-  read(5,*) o_trans
-  !   Asymmetry observable flag
-  read(5,*) o_asyms
-  !   Cut on top rapidity
-  read(5,*) ytmax
-  !   Cut on top pair boost
-  read(5,*) yttmin
-  !   Random number seed
-  read(5,*) iseed
-  !   Maximum number of Vegas iterations
-  read(5,*) itmx
-  !   Number of Vegas calls per iteration
-  read(5,*) ncall
-  !   Desired Accuracy (If negative, run maximum iterations.)
-  read(5,*) acc
-  !   Symmatrise of x1 and x2
-  read(5,*) o_symx1x2
-  !   Symmatrise of x1 and x2
-  read(5,*) o_symcost
-  !   Standard distributions flag
-  read(5,*) o_distros
-  !   2d-distributions flag
-  read(5,*) o_dist2d
-  !   set |M|^2=1
-  read(5,*) o_M_eq_1
-        
-  ! Interpret config
-  ! Number of external lines
-  if(o_final == 0)then
-    ipmax=4
-  else
-    ipmax=8
-  end if
-  ! NWA only for six-body final state
-  if(o_final == 0) o_NWA=0
-  ! itmx no more than 20.
-  if(itmx > 20)then
-    write(*,*)'itmx does not have to exceed 20!'
-    stop
-  end if
-  ! For every point in phase space with x1 and x2, include the point
-  ! in phase space with x1<->x2
-  if(o_symx1x2 == 1)then
-    ixmax=2
-  else
-    ixmax=1
-  end if
-  ! in phase space with cost->-cost
-  if(o_symcost == 1)then
-    jxmax=2
-  else
-    jxmax=1
-  end if
-  ! Do tops decay?
-  if(o_final == 0)then
-    o_decay=0
-  else
-    o_decay=1
-  end if
-  ! in phase space with cost->-cost
-  if(o_M_eq_1 == 1)then
-    o_QCD=0
-    o_EW=0
-    o_BSM=0
-  else
-    jxmax=1
-  end if
+  ! read in the config file
+  call read_config
+  ! resolve incompatable flags and interpret content
+  call modify_config
 
   ! Distributions Setup
   ! (Set flags, binning range and divisions.)
   ! pT distributions
-  do ip=1,ipmax
+  do ip=1,nfinal
     o_pT(ip)=o_distros
-    pTmax(ip)=7000.d0/(1+o_coll*6)
+    pTmax(ip)=7000.d0/(1+initial_state*6)
     pTmin(ip)=0.d0
     ndiv_pT(ip)=70
     ! eta distributions
@@ -203,91 +95,91 @@ program zprime
     ycolmin(ip)=-4.d0
     ndiv_ycol(ip)=100
   end do
-  !   missing transverse momentum
+  ! missing transverse momentum
   o_ETmiss=o_distros
-  ETmissmax=7000.d0/(1+o_coll*6)
+  ETmissmax=7000.d0/(1+initial_state*6)
   ETmissmin=0.d0
   ndiv_ETmiss=70
-  !   top transverse momentum
+  ! top transverse momentum
   o_pT356=o_distros
-  pT356max=7000.d0/(1+o_coll*6)
+  pT356max=7000.d0/(1+initial_state*6)
   pT356min=0.d0
   ndiv_pT356=70
-  !   2to6 top pseudorapidity
+  ! 2to6 top pseudorapidity
   o_eta356=o_distros
   eta356max=+10
   eta356min=-10
   ndiv_eta356=50
-  !   2to6 top pseudorapidity
+  ! 2to6 top pseudorapidity
   o_phi356=o_distros
   phi356max=+pi
   phi356min=-pi
   ndiv_phi356=50
-  !   anti-top transverse momentum
+  ! anti-top transverse momentum
   o_pT478=o_distros
-  pT478max=7000.d0/(1+o_coll*6)
+  pT478max=7000.d0/(1+initial_state*6)
   pT478min=0.d0
   ndiv_pT478=70
-  !   2to6 anti-top pseudorapidity
+  ! 2to6 anti-top pseudorapidity
   o_eta478=o_distros
   eta478max=+10
   eta478min=-10
   ndiv_eta478=50
-  !   2to6 top pseudorapidity
+  ! 2to6 top pseudorapidity
   o_phi478=o_distros
   phi478max=+pi
   phi478min=-pi
   ndiv_phi478=50
-  !   invarient mass of tt pair (always on)
+  ! invarient mass of tt pair (always on)
   o_rMtt=1
-  rMttmax=14000.d0/(1+o_coll*6)
+  rMttmax=14000.d0/(1+initial_state*6)
   rMttmin=0.d0
   ndiv_rMtt=140
-  !   boost of parton CoM
+  ! boost of parton CoM
   o_beta=o_distros
   betamax=1000.d0
   betamin=0.d0
   ndiv_beta=100
-  !   costheta
+  ! costheta
   o_cost=o_distros
   costmax=+1.d0
   costmin=-1.d0
   ndiv_cost=50
-  !   top energy
+  ! top energy
   o_Et=o_distros
-  Etmax=7000.d0/(1+o_coll*6)
+  Etmax=7000.d0/(1+initial_state*6)
   Etmin=0.d0
   ndiv_Et=70
-  !   delta_y
+  ! delta_y
   o_Delta_y=o_distros
   Delta_ymax=4.d0
   Delta_ymin=-4.d0
   ndiv_Delta_y=100
-  !   transverse variables
+  ! transverse variables
   do itrans=1,ntrans
-    if(o_final == 0)then
+    if(ifinal_state == 0)then
       o_tran(itrans)=0
     else
       o_tran(itrans)=o_trans
     end if
   end do
-  !   invarient mass of the visible decay products of the tt pair
+  ! invarient mass of the visible decay products of the tt pair
   transmax(1)=4000
   transmin(1)=0.d0
   ndiv_trans(1)=40
-  !   sum of tranvserse energy
+  ! sum of tranvserse energy
   transmax(2)=4000
   transmin(2)=0.d0
   ndiv_trans(2)=40
-  !   transverse mass 1
+  ! transverse mass 1
   transmax(3)=4000
   transmin(3)=0.d0
   ndiv_trans(3)=40
-  !   transverse mass 2
+  ! transverse mass 2
   transmax(4)=4000
   transmin(4)=0.d0
   ndiv_trans(4)=40
-  !   transverse mass 3
+  ! transverse mass 3
   transmax(5)=4000
   transmin(5)=0.d0
   ndiv_trans(5)=40
@@ -295,44 +187,44 @@ program zprime
   transmax(6)=500
   transmin(6)=0.d0
   ndiv_trans(6)=40
-  !   contransverse mass 1
+  ! contransverse mass 1
   transmax(7)=4000
   transmin(7)=0.d0
   ndiv_trans(7)=40
-  !   contransverse mass 2
+  ! contransverse mass 2
   transmax(8)=4000
   transmin(8)=0.d0
   ndiv_trans(8)=40
-  !   contransverse mass 3
+  ! contransverse mass 3
   transmax(9)=4000
   transmin(9)=0.d0
   ndiv_trans(9)=40
-  !   lepton contransverse mass
+  ! lepton contransverse mass
   transmax(10)=500
   transmin(10)=0.d0
   ndiv_trans(10)=50
 
-  !   phi_l
+  ! phi_l
   o_fl=o_asyms
   flmax=+2*pi
   flmin=0
   ndiv_fl=100
-  !   cosphi_l
+  ! cosphi_l
   o_cosfl=o_asyms
   cosflmax=+1.d0
   cosflmin=-1.d0
   ndiv_cosfl=100
-  !   delta phi
+  ! delta phi
   o_dphi=o_asyms
   dphimax=+pi
   dphimin=0
   ndiv_dphi=10
-  !   cost5
+  ! cost5
   o_cost5=o_asyms
   cost5max=+1
   cost5min=-1
   ndiv_cost5=10
-  !   cost7
+  ! cost7
   o_cost7=o_asyms
   cost7max=+1
   cost7min=-1
@@ -342,23 +234,23 @@ program zprime
   ct7ct5max=+1
   ct7ct5min=-1
   ndiv_ct7ct5=10
-  !   sigp
+  ! sigp
   o_sigp=o_asyms
   sigpmax=rMttmax
   sigpmin=rMttmin
   ndiv_sigp=ndiv_rMtt/5
-  !   sigm
+  ! sigm
   o_sigm=o_asyms
   sigmmax=rMttmax
   sigmmin=rMttmin
   ndiv_sigm=ndiv_rMtt/5
-  !   dphi2d
+  ! dphi2d
   if((o_dphi == 1) .AND. (o_rMtt == 1))then
     o_dphi2d=O_dist2d
   else
     o_dphi2d=0
   end if
-  !   dtransph
+  ! dtransph
   do itrans=1, ntrans
     if((o_dphi == 1) .AND. (o_tran(itrans) == 1))then
       o_transdp(itrans)=o_dist2d
@@ -366,13 +258,13 @@ program zprime
       o_transdp(itrans)=0
     end if
   end do
-  !   asymmetries
+  ! asymmetries
   do iasy=1,nasym
     o_asym(iasy)=o_asyms
   end do
 
-  !   Turn off 2->6 only distributions
-  if (o_final == 0)then
+  ! Turn off 2->6 only distributions
+  if (ifinal_state == 0)then
     do ip=5,8
       o_pT(i)   = 0
       o_eta(i)  = 0
@@ -399,8 +291,8 @@ program zprime
     o_dphi2d = 0
     o_asym(9) = 0    ! turn off A_l
   end if
-  !   Turn off 2->2 only distributions
-  if (o_final >= 1)then
+  ! Turn off 2->2 only distributions
+  if (ifinal_state >= 1)then
     o_asym(1) = 0   ! turn off A_LL
     o_asym(2) = 0   ! turn off A_L
     o_asym(3) = 0   ! turn off A_PV
@@ -409,12 +301,12 @@ program zprime
   ! Set-up physics
 
   ! Collider CM energy squared.
-  s=ecm_coll*ecm_coll
+  s=collider_energy*collider_energy
 
   ! Factor outside integration
-  !   Conversion GeV^-2 -> pb
-  fac=conv
-  !   Azimuthal angle integrated out (No initial transverse polarisation.)
+  ! Conversion GeV^-2 -> pb
+  fac=GeV_to_nb
+  ! Azimuthal angle integrated out (No initial transverse polarisation.)
   fac=fac*2.d0*pi
 
   ! QCDL4 is QCD LAMBDA4 (to match PDF fits).
@@ -450,76 +342,76 @@ program zprime
   call initialise_madGraph(o_NWA,model)
 
   ! VEGAS parameters
-  ! Dimensions of integration
-  if(o_final == 0)then
+  ! real ::s of integration
+  if(ifinal_state == 0)then
     ndim=3
-  else if(o_final >= 1)then
+  else if(ifinal_state > 0)then
     ndim=15
   end if
-  !   (If nprn<0 no print-out.)
+  ! If nprn<0 no print-out
   nprn=0
-  if(o_final == 0)then
-    !   Final state masses
+  if(ifinal_state == 0)then
+    ! Final state masses
     rm3=fmass(11)
     rm4=rm3
     rm5=0.d0
     rm6=0.d0
     rm7=0.d0
     rm8=0.d0
-    !   Integrates on:
-    !   x(3)=(x1-tau)/(1-tau),
-    !   x(2)=(ecm-rm3-rm4)/(ecm_max-rm3-rm4),
-    !   x(1)=cos(theta3_cm)
-    !   Limits:
+    ! Integrates on:
+    ! x(3)=(x1-tau)/(1-tau),
+    ! x(2)=(ecm-rm3-rm4)/(ecm_max-rm3-rm4),
+    ! x(1)=cos(theta3_cm)
+    ! Limits:
     do i=3,2,-1
       xl(i)=0.d0
       xu(i)=1.d0
     end do
-    !         if(isycost.eq.1)then    ! might not work
-    !           nctpoints = 200
-    !           do i=1,1
-    !             xl(i)=0.d0
-    !             xu(i)=0.d0
-    !           end do
-    !         else
-    !           nctpoints = 0
+    !       if(isycost.eq.1)then    ! might not work
+    !         nctpoints = 200
+    !         do i=1,1
+    !           xl(i)=0.d0
+    !           xu(i)=0.d0
+    !         end do
+    !       else
+    !         nctpoints = 0
     do i=1,1
       xl(i)=-1.d0
       xu(i)=1.d0
     end do
-    !         end if
+    !       end if
 
-  else if(o_final >= 1)then
-    !   Final state masses
+  else if(ifinal_state >= 1)then
+    ! Final state masses
     rm3=fmass(12)
     rm4=rm3
     rm5=0.d0
     rm6=0.d0
     rm7=0.d0
     rm8=0.d0
-    !   Integrates on:
+    ! Integrates on:
          
-    !   x(15)=(x1-tau)/(1-tau),
-    !   x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
-    !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
-    !   x(13)=(XX356-XX356min)/(XX356max-XX356min),
-    !   where XX356=arctg((rm356**2-rm3**2)/rm3/gamt),
-    !   x(12)=(XX478-XX478min)/(XX478max-XX478min),
-    !   where XX478=arctg((rm478**2-rm3**2)/rm3/gamt),
-    !   x(11)=(XX56-XX56min)/(XX56max-XX56min),
-    !   where XX56=arctg((rm56**2-rm_W**2)/rm_W/gamW),
-    !   x(10)=(XX78-XX78min)/(XX78max-XX78min),
-    !   where XX78=arctg((rm78**2-rm_W**2)/rm_W/gamW),
-    !   x(9)=cos(theta_cm_356)=-cos(theta_cm_478)
-    !   x(8)=cos(theta56_cm_356),
-    !   x(7)=cos(theta78_cm_478),
-    !   x(6)=cos(theta5_cm_56),
-    !   x(5)=cos(theta7_cm_78),
-    !   x(4)=fi56_cm_356,
-    !   x(3)=fi78_cm_478,
-    !   x(2)=fi5_cm_56,
-    !   x(1)=fi8_cm_78;
-    !   Limits:
+    ! x(15)=(x1-tau)/(1-tau),
+    ! x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
+    !      /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
+    ! x(13)=(XX356-XX356min)/(XX356max-XX356min),
+    ! where XX356=arctg((rm356**2-rm3**2)/rm3/gamt),
+    ! x(12)=(XX478-XX478min)/(XX478max-XX478min),
+    ! where XX478=arctg((rm478**2-rm3**2)/rm3/gamt),
+    ! x(11)=(XX56-XX56min)/(XX56max-XX56min),
+    ! where XX56=arctg((rm56**2-rm_W**2)/rm_W/gamW),
+    ! x(10)=(XX78-XX78min)/(XX78max-XX78min),
+    ! where XX78=arctg((rm78**2-rm_W**2)/rm_W/gamW),
+    ! x(9)=cos(theta_cm_356)=-cos(theta_cm_478)
+    ! x(8)=cos(theta56_cm_356),
+    ! x(7)=cos(theta78_cm_478),
+    ! x(6)=cos(theta5_cm_56),
+    ! x(5)=cos(theta7_cm_78),
+    ! x(4)=fi56_cm_356,
+    ! x(3)=fi78_cm_478,
+    ! x(2)=fi5_cm_56,
+    ! x(1)=fi8_cm_78;
+    ! Limits:
     do i=15,14,-1
       xl(i)=0.d0
       xu(i)=1.d0
@@ -541,7 +433,7 @@ program zprime
   ! Generate bins
   ! (Finds bin width, finds midpoints.)
 
-  do ip=3,ipmax
+  do ip=3,nfinal
     if(o_pT(ip) == 1)then
       pTw(ip)=(pTmax(ip)-pTmin(ip))/ndiv_pT(ip)
       do j=1,ndiv_pT(ip)
@@ -726,35 +618,35 @@ program zprime
   write(*,*)'TIME ',now(1),now(2),now(3)
   write(*,*)'-----------------------------------------------------'
   write(*,*)'PROCESS'
-  if(o_coll == 0)then
-    if(o_final == 0) &
+  if(initial_state == 0)then
+    if(ifinal_state == 0) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     ' #times BR(t#rightarrow bl#nu)^{2}'
-    if(o_final == 1) &
+    if(ifinal_state == 1) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    if(o_final == 2) &
+    if(ifinal_state == 2) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
-    if(o_final == 3) &
+    if(ifinal_state == 3) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
-  else if(o_coll == 1)then
-    if(o_final == 0) &
+  else if(initial_state == 1)then
+    if(ifinal_state == 0) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     ' #times BR(t#rightarrow bl#nu)^{2}'
-    if(o_final == 1) &
+    if(ifinal_state == 1) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    if(o_final == 2) &
+    if(ifinal_state == 2) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
-    if(o_final == 3) &
+    if(ifinal_state == 3) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} W^{+}W^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
@@ -772,26 +664,26 @@ program zprime
   if(o_structure == 7)write(*,*)'PDFs: mrs99 (cor03).'
   if(o_structure == 8)write(*,*)'PDFs: mrs99 (cor04).'
   if(o_structure == 9)write(*,*)'PDFs: mrs99 (cor05).'
-  if((o_final >= 1) .AND. (o_NWA == 0))write(*,*)'Tops: off-shell.'
-  if((o_final >= 1) .AND. (o_NWA == 1))write(*,*)'Tops: NWA.'
+  if((ifinal_state >= 1) .AND. (o_NWA == 0))write(*,*)'Tops: off-shell.'
+  if((ifinal_state >= 1) .AND. (o_NWA == 1))write(*,*)'Tops: NWA.'
   write(*,*)'BSM model: ',model
-  if(o_QCD == 1)write(*,*)'QCD: On '
-  if(o_QCD == 0)write(*,*)'QCD: Off'
-  if(o_EW == 1) write(*,*)'EW:  On '
-  if(o_EW == 0) write(*,*)'EW:  Off'
-  if(o_BSM == 1)write(*,*)'BSM: On '
-  if(o_BSM == 0)write(*,*)'BSM: Off'
-  if(o_int == 0)write(*,*)'Interference: None'
-  if(o_int == 1)write(*,*)'Interference: SM'
-  if(o_int == 2)write(*,*)'Interference: Full'
-  if(o_int == 3)write(*,*)'Interference: No square terms.'
+  if(include_QCD == 1)write(*,*)'QCD: On '
+  if(include_QCD == 0)write(*,*)'QCD: Off'
+  if(include_EW == 1) write(*,*)'EW:  On '
+  if(include_EW == 0) write(*,*)'EW:  Off'
+  if(include_BSM == 1)write(*,*)'BSM: On '
+  if(include_BSM == 0)write(*,*)'BSM: Off'
+  if(interference == 0)write(*,*)'Interference: None'
+  if(interference == 1)write(*,*)'Interference: SM'
+  if(interference == 2)write(*,*)'Interference: Full'
+  if(interference == 3)write(*,*)'Interference: No square terms.'
   if(o_M_eq_1 == 1)write(*,*)'Phase space only'
   if(o_symx1x2 == 1)write(*,*)'Symmetrical integration over x1<->x2'
   if(o_symcost == 1)write(*,*)'Symmetrical integration over cost'
   write(*,*)'iseed: ',iseed
   write(*,*)'-----------------------------------------------------'
   write(*,*)'PARAMETERS'
-  write(*,*)'#sqrt{s}              ',ecm_coll
+  write(*,*)'#sqrt{s}              ',collider_energy
   write(*,*)'at |y| <              ',abs(ytmax)
   write(*,*)'Loops a_s evaluated at',nloops
   write(*,*)'a_{s}(M_{Z})          ',alfas(rm_Z,rLambdaQCD4,nloops)
@@ -826,13 +718,12 @@ program zprime
   write(*,*)'CUTS'
   write(*,*)'-----------------------------------------------------'
 
-  ! Integration
-  ! Section header
-  write(*,*)'INTEGRATION'
-  !   Reset counter
+
+  ! reset counter
   npoints=0
-  !   Reset various iterative quantities
-  if(o_final == 0)then
+
+  ! reset 
+  if(ifinal_state == 0)then
     do i=1,20
       resl(i)=0.d0
       standdevl(i)=0.d0
@@ -851,25 +742,25 @@ program zprime
       end do
     end do
   end if
-  !   Integrate
-  it=0
+
+  ! integrate 
+  write(*,*)'Starting integration'
+  it=0  
   call vegas(ndim,dxsec,avgi,sd,chi2a)
-  if(o_final == 0)then
-    !   Multiply by branching ratios (if o_final = 0)
-    if(o_BR == 1)then
-      avgi=avgi*(BRtbln)**2
-      sd=sd*(BRtbln)**2
-    else
-      continue
-    end if
+
+  if(ifinal_state == 0 .and. o_BR == 1)then
+    ! multiply by branching ratios
+    avgi=avgi*BRtbln*BRtbln
+    sd=sd*BRtbln*BRtbln
   end if
-  !  Collect total cross-section
+
+  ! collect total cross-section
   cross=avgi
   error=sd
 
   ! Print integrated cross section
-  write(*,*)'-----------------------------------------------------'
-  write(*,*)'INTEGRATED CROSS-SECTION'
+  write(*,*)''
+  write(*,*)'INTEGRATED CROSS SECTION'
   if(cross == 0d0)then
     write(*,*)'sigma = 0  ! Check permitted gauge sectors.'
     stop
@@ -893,7 +784,7 @@ program zprime
   ! Total asymmetries
   ! Collect polarised cross sections.
   if(o_asyms == 1)then
-    if(o_final == 0)then
+    if(ifinal_state == 0)then
       do iphel=-1,+1,2
         do jphel=-1,+1,2
           do i=1,it
@@ -912,10 +803,10 @@ program zprime
           end do
           polchi(iphel,jphel)=polchi(iphel,jphel) &
           /poltot(iphel,jphel)
-          !          polchi(iphel,jphel)=
-          !   & sqrt(abs(polchi(iphel,jphel)
-          !   &         -poltot(iphel,jphel)**2*dfloat(ncall)))
-          !   & /dfloat(ncall)
+          !        polchi(iphel,jphel)=
+          ! & sqrt(abs(polchi(iphel,jphel)
+          ! &         -poltot(iphel,jphel)**2*dfloat(ncall)))
+          ! & /dfloat(ncall)
         end do
       end do
     end if
@@ -942,16 +833,16 @@ program zprime
           end do
           spatchi(ispat,iAB)=spatchi(ispat,iAB) &
           /spattot(ispat,iAB)
-          !           spatchi(iasy)=
-          !      & sqrt(abs(spatchi(iasy)
-          !      &         -spattot(iasy)**2*dfloat(ncall)))
-          !      & /dfloat(ncall)
+          !         spatchi(iasy)=
+          !    & sqrt(abs(spatchi(iasy)
+          !    &         -spattot(iasy)**2*dfloat(ncall)))
+          !    & /dfloat(ncall)
         end do
       end if
     end do
 
     ! Define asymmetries
-    if(o_final == 0)then
+    if(ifinal_state == 0)then
       ! ALL
       Atot(1)= &
       +(poltot(+1,+1)-poltot(+1,-1) &
@@ -992,7 +883,7 @@ program zprime
 
     ! Print Asymmetries
     write(*,*)'TOTAL ASYMMETRIES'
-    if(o_final == 0)then
+    if(ifinal_state == 0)then
       write(*,*)'ALL:                  uncertainty (same units):'
       write(*,*)Atot(1),Atoterr(1)
       write(*,*)'AL:                   uncertainty (same units):'
@@ -1009,15 +900,15 @@ program zprime
       write(*,*)Atot(7),Atoterr(7)
       write(*,*)"ARFB/A':              uncertainty (same units):"
       write(*,*)Atot(8),Atoterr(8)
-    else if(o_final > 0)then
+    else if(ifinal_state > 0)then
       write(*,*)'A_l:                  uncertainty (same units):'
       write(*,*)Atot(9),Atoterr(9)
     end if
   end if
 
   ! Plot Distributions
-  ! Section header
-  write(*,*)'-----------------------------------------------------'
+
+  write(*,*)''
   write(*,*)'HISTOGRAMS'
   do ip=3,8
     ! Plot distributions in pT
@@ -1709,23 +1600,23 @@ program zprime
         do i=1,ndiv_sig
           if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
             write(*,*)(xsigm(i)+xsigp(i))/2.d0,0.d0
-            !             snorm(jasy)=snorm(jasy)+0.d0
+            !           snorm(jasy)=snorm(jasy)+0.d0
           else
             write(*,*)(xsigm(i)+xsigp(i))/2.d0, &
             (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/ &
             (fxsigptot(jasy,i)+fxsigmtot(jasy,i)), &
             fxsigptot(jasy,i),fxsigmtot(jasy,i)
-            !               snorm(jasy)=snorm(jasy)+
-            !      &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
-            !      &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-            !      &               *fxrMtttot(i)*rMttw/avgi
+            !             snorm(jasy)=snorm(jasy)+
+            !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
+            !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
+            !    &               *fxrMtttot(i)*rMttw/avgi
           end if
         end do
         asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/ &
         (sfxsigptot(jasy)+sfxsigmtot(jasy))
         write(*,*)'END'
-        !           write(*,*)'(Total Asymmetry:',asym_int(jasy),')'
-        !           write(*,*)'(Integrated Asymmetry:',snorm(jasy),' )'
+        !         write(*,*)'(Total Asymmetry:',asym_int(jasy),')'
+        !         write(*,*)'(Integrated Asymmetry:',snorm(jasy),' )'
       end if
     end do
   end if
@@ -1733,7 +1624,7 @@ program zprime
   ! Check distributions
   diff_max=1E-12
   n_error=0
-  do ip=3,ipmax
+  do ip=3,nfinal
     if(o_pT(ip) == 1)then
       if(abs(cross-sfxpTtot(ip))>diff_max)then
         write(*,*)'pT',ip,' Error:',sfxpTtot(ip)

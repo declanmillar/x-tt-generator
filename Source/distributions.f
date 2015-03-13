@@ -1,11 +1,9 @@
-! include 'configuration.f'
-
 module Distributions
 
-  ! use Configuration
+  ! use Configuration, only: o_distros, o_dist2d, o_trans, o_asyms, ifinal_state
 
   ! switch for all distributions
-  integer :: o_distros
+  ! integer :: o_distros
 
   ! distributions in pTs of asymptotic particles
   real :: pTmax(8),pTmin(8),pTw(8)
@@ -175,7 +173,8 @@ module Distributions
   real :: xtransdp(ntrans,500,500), fxtransdp(ntrans,500,500,20),fxtransdptot(ntrans,500,500)
   integer :: o_transdp(ntrans)
 
-  ! private initialise_distributions
+  ! public :: initialise_distributions
+  ! public :: 
 
   ! contains
 
@@ -184,9 +183,9 @@ module Distributions
   !     ! Set flags, binning range and divisions
 
   !     ! pT distributions
-  !     do ip=1,ipmax
+  !     do ip=1,nfinal
   !       o_pT(ip)=o_distros
-  !       pTmax(ip)=7000.d0/(1+o_coll*6)
+  !       pTmax(ip)=7000.d0/(1+initial_state*6)
   !       pTmin(ip)=0.d0
   !       ndiv_pT(ip)=70
   !       ! eta distributions
@@ -207,12 +206,12 @@ module Distributions
   !     end do
   !     !   missing transverse momentum
   !     o_ETmiss=o_distros
-  !     ETmissmax=7000.d0/(1+o_coll*6)
+  !     ETmissmax=7000.d0/(1+initial_state*6)
   !     ETmissmin=0.d0
   !     ndiv_ETmiss=70
   !     !   top transverse momentum
   !     o_pT356=o_distros
-  !     pT356max=7000.d0/(1+o_coll*6)
+  !     pT356max=7000.d0/(1+initial_state*6)
   !     pT356min=0.d0
   !     ndiv_pT356=70
   !     !   2to6 top pseudorapidity
@@ -227,7 +226,7 @@ module Distributions
   !     ndiv_phi356=50
   !     !   anti-top transverse momentum
   !     o_pT478=o_distros
-  !     pT478max=7000.d0/(1+o_coll*6)
+  !     pT478max=7000.d0/(1+initial_state*6)
   !     pT478min=0.d0
   !     ndiv_pT478=70
   !     !   2to6 anti-top pseudorapidity
@@ -242,7 +241,7 @@ module Distributions
   !     ndiv_phi478=50
   !     !   invarient mass of tt pair (always on)
   !     o_rMtt=1
-  !     rMttmax=14000.d0/(1+o_coll*6)
+  !     rMttmax=14000.d0/(1+initial_state*6)
   !     rMttmin=0.d0
   !     ndiv_rMtt=140
   !     !   boost of parton CoM
@@ -257,7 +256,7 @@ module Distributions
   !     ndiv_cost=50
   !     !   top energy
   !     o_Et=o_distros
-  !     Etmax=7000.d0/(1+o_coll*6)
+  !     Etmax=7000.d0/(1+initial_state*6)
   !     Etmin=0.d0
   !     ndiv_Et=70
   !     !   delta_y
@@ -267,7 +266,7 @@ module Distributions
   !     ndiv_Delta_y=100
   !     !   transverse variables
   !     do itrans=1,ntrans
-  !       if(o_final == 0)then
+  !       if(ifinal_state == 0)then
   !         o_tran(itrans)=0
   !       else
   !         o_tran(itrans)=o_trans
@@ -374,7 +373,7 @@ module Distributions
   !     end do
 
   !     !   Turn off 2->6 only distributions
-  !     if (o_final == 0)then
+  !     if (ifinal_state == 0)then
   !       do ip=5,8
   !         o_pT(i)   = 0
   !         o_eta(i)  = 0
@@ -402,7 +401,7 @@ module Distributions
   !       o_asym(9) = 0    ! turn off A_l
   !     end if
   !     !   Turn off 2->2 only distributions
-  !     if (o_final >= 1)then
+  !     if (ifinal_state >= 1)then
   !       o_asym(1) = 0   ! turn off A_LL
   !       o_asym(2) = 0   ! turn off A_L
   !       o_asym(3) = 0   ! turn off A_PV

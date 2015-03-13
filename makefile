@@ -9,7 +9,7 @@
 BIN = zprime
 
 # object files
-OBJ = Cteq61Pdf.o alpha_EWNG.o coupZp.o dhelas_all.o dxsec.o ggbbffff_qcd.o ggff_qcd.o initialise_madgraph.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o ve_dist.o widthZp.o zprime.o
+OBJ = Cteq61Pdf.o configuration.o distributions.o kinematics.o alpha_EWNG.o coupZp.o dhelas_all.o dxsec.o ggbbffff_qcd.o ggff_qcd.o initialise_madgraph.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o ve_dist.o widthZp.o zprime.o
 
 # Source directory
 SRC = Source

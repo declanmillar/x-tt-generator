@@ -310,6 +310,8 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   ! and helicity nhel(1),nhel(2)
   ! for process : q q -> b b l+ l- v_l v_l via (via A ,Z ,{Z'})
 
+  use Configuration, only: include_EW, include_BSM, interference
+
   implicit none
 
 ! constants
@@ -365,10 +367,6 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   common/coupZp/gZpd     ,gZpu
   integer ::     npoints
   common/stat/npoints
-  integer ::       o_QCD,o_EW,o_BSM
-  common/igauge/o_QCD,o_EW,o_BSM
-  integer ::             o_int
-  common/interference/o_int
 ! up/down type couplings
   if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
     do i=1,2
@@ -436,7 +434,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 ! t-bar coupled to b-bar and W vector current
   call fvixxx( w4 ,w11 ,gWf ,fmass(11) ,fwidth(11) ,w13 )
 
-  if (o_EW == 1)then
+  if (include_EW == 1)then
   ! A coupled to q q-bar vector current
     call jioxxx( w1 ,w2 ,gAq ,Amass ,Awidth ,w9  )
   ! A diagram
@@ -449,7 +447,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     continue
   end if
 ! Z' diagrams
-  if (o_BSM == 1)then
+  if (include_BSM == 1)then
     do i =1,5
       if (rmZp(i) > 0) then
         do j=1,2
@@ -465,20 +463,19 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   else
     continue
   end if
-! rite(*,*)'466'
-! check amplitudes
-!       do i=1,ngraphs,1
-!         write(*,*)'M: ' ,i ,amp(i)
-!       enddo
+  ! check amplitudes
+  ! do i=1,ngraphs,1
+  !   write(*,*)'M=',i,'=',amp(i)
+  ! enddo
 
 ! total M*M for given helicity combination
   qqbbffff_EWp = 0.d0
   amp_tmp = (0.d0,0.d0)
-  if (o_int == 0)then ! no interference
+  if (interference == 0)then ! no interference
     do i=1,ngraphs
       qqbbffff_EWp = qqbbffff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (o_int == 1)then ! SM interference
+  else if (interference == 1)then ! SM interference
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -486,12 +483,12 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     do i=3,ngraphs
       qqbbffff_EWp = qqbbffff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (o_int == 2)then ! full interference
+  else if (interference == 2)then ! full interference
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
     qqbbffff_EWp =qqbbffff_EWp+amp_tmp*conjg(amp_tmp)
-  else if (o_int == 3)then ! interference only
+  else if (interference == 3)then ! interference only
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
