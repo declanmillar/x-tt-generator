@@ -15,14 +15,11 @@ program zprime
   implicit real (a-h,p-z)
   implicit integer (l-o)
 
-  common/limfac/fac
-
-  common/EW/a_em,s2w
   common/stat/npoints
   ! Polarised/Spatial cross sections
   common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
   common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
-  ! Z' masses and VA/LR couplings
+  common/EW/a_em,s2w
   common/fermions/ fmass,     fwidth
   real :: fmass(12), fwidth(12)
   common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
@@ -50,11 +47,7 @@ program zprime
   real :: testp1(0:3),testp2(0:3), &
   testp3(0:3),testp4(0:3)
 
-  ! Local constants
-  integer pi
-  parameter (pi=3.14159265358979323846d0)
-  integer GeV_to_nb
-  parameter (GeV_to_nb=0.38937966d9)
+  ! Local constant
   integer :: today(3), now(3)
   ! Branching ratio for t->bev=bmv=btv (with QCD corrections?)
   real :: BRtbln=0.10779733d0

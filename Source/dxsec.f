@@ -23,7 +23,6 @@ function dxsec(x,wgt)
   dimension x(100)
 
   ! Global variables
-  common/limfac/fac
   common/stat/npoints
   common/fermions/ fmass,     fwidth
   dimension fmass(12), fwidth(12)
@@ -74,9 +73,6 @@ function dxsec(x,wgt)
   real :: x1x2(2,2)
   real :: trans(ntrans)
 
-  ! Local constants
-  real :: pi
-  parameter (pi=3.14159265358979323846d0)
   ! Internal random number seed
   integer :: jseed
   data jseed/987654321/
@@ -1239,8 +1235,8 @@ function dxsec(x,wgt)
       fffxn1=pfx1tot
       fffxn2=pfx2tot
     ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
-      fffxn1=fffxn1*fac
-      fffxn2=fffxn2*fac
+      fffxn1=fffxn1*2.d0*pi*unit_cov
+      fffxn2=fffxn2*2.d0*pi*unit_cov
       if(ifinal_state == 0)then
       ! 2-body phase space factor
         fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
