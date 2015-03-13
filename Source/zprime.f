@@ -12,13 +12,12 @@ program zprime
   use Kinematics
   use Distributions
 
-  implicit real (a-h,p-z)
-  implicit integer (l-o)
+  implicit none
 
   common/stat/npoints
   ! Polarised/Spatial cross sections
-  common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
-  common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
+  common/polarised/Xsec_polar(20,-1:1,-1:1),error_polar(20,-1:1,-1:1)
+  common/spatial/Xsec_FB(nspat,20,-1:1),error_FB(nspat,20,-1:1)
   common/EW/a_em,s2w
   common/fermions/ fmass,     fwidth
   real :: fmass(12), fwidth(12)
@@ -295,12 +294,6 @@ program zprime
 
   ! Collider CM energy squared.
   s=collider_energy*collider_energy
-
-  ! Factor outside integration
-  ! Conversion GeV^-2 -> pb
-  fac=GeV_to_nb
-  ! Azimuthal angle integrated out (No initial transverse polarisation.)
-  fac=fac*2.d0*pi
 
   ! QCDL4 is QCD LAMBDA4 (to match PDF fits).
   ! (PDFs are intrinsically linked to the value of lamda_QCD; alpha_QCD)
@@ -723,14 +716,14 @@ program zprime
       cnorm(i)=0.d0
       do iphel=-1,+1,2
         do jphel=-1,+1,2
-          polcross(i,iphel,jphel)=0.d0
-          polerror(i,iphel,jphel)=0.d0
+          Xsec_polar(i,iphel,jphel)=0.d0
+          error_polar(i,iphel,jphel)=0.d0
         end do
       end do
       do ispat=1,nspat
         do iasy=-1,+1,2
-          spatcross(ispat,i,iasy)=0.d0
-          spaterror(ispat,i,iasy)=0.d0
+          Xsec_FB(ispat,i,iasy)=0.d0
+          error_FB(ispat,i,iasy)=0.d0
         end do
       end do
     end do
@@ -781,18 +774,18 @@ program zprime
       do iphel=-1,+1,2
         do jphel=-1,+1,2
           do i=1,it
-            polcross(i,iphel,jphel)=polcross(i,iphel,jphel) &
+            Xsec_polar(i,iphel,jphel)=Xsec_polar(i,iphel,jphel) &
             *avgi/cnorm(i)
-            polerror(i,iphel,jphel)=polcross(i,iphel,jphel) &
+            error_polar(i,iphel,jphel)=Xsec_polar(i,iphel,jphel) &
             *sd/cnorm(i)
           end do
           poltot(iphel,jphel)=0.d0
           polchi(iphel,jphel)=0.d0
           do i=1,it
             poltot(iphel,jphel)=poltot(iphel,jphel) &
-            +polcross(i,iphel,jphel)
+            +Xsec_polar(i,iphel,jphel)
             polchi(iphel,jphel)=polchi(iphel,jphel) &
-            +polerror(i,iphel,jphel)
+            +error_polar(i,iphel,jphel)
           end do
           polchi(iphel,jphel)=polchi(iphel,jphel) &
           /poltot(iphel,jphel)
@@ -811,18 +804,18 @@ program zprime
       else
         do iAB=-1,+1,2
           do i=1,it
-            spatcross(ispat,i,iAB)=spatcross(ispat,i,iAB) &
+            Xsec_FB(ispat,i,iAB)=Xsec_FB(ispat,i,iAB) &
             *avgi/cnorm(i)
-            spaterror(ispat,i,iAB)=spatcross(ispat,i,iAB) &
+            error_FB(ispat,i,iAB)=Xsec_FB(ispat,i,iAB) &
             *sd/cnorm(i)
           end do
           spattot(ispat,iAB)=0.d0
           spatchi(ispat,iAB)=0.d0
           do i=1,it     ! add up each iteration
             spattot(ispat,iAB)=spattot(ispat,iAB) &
-            +spatcross(ispat,i,iAB)
+            +Xsec_FB(ispat,i,iAB)
             spatchi(ispat,iAB)=spatchi(ispat,iAB) &
-            +spaterror(ispat,i,iAB)
+            +error_FB(ispat,i,iAB)
           end do
           spatchi(ispat,iAB)=spatchi(ispat,iAB) &
           /spattot(ispat,iAB)

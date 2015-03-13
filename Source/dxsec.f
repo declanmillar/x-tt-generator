@@ -35,8 +35,8 @@ function dxsec(x,wgt)
   common/polargg/polgg(-1:1,-1:1)
   common/qcd/rlambdaQCD4,nloops
   ! Polarised/Spatial cross sections
-  common/polarised/polcross(20,-1:1,-1:1),polerror(20,-1:1,-1:1)
-  common/spatial/spatcross(nspat,20,-1:1),spaterror(nspat,20,-1:1)
+  common/polarised/Xsec_polar(20,-1:1,-1:1),error_polar(20,-1:1,-1:1)
+  common/spatial/Xsec_FB(nspat,20,-1:1),error_FB(nspat,20,-1:1)
 
   ! phase space vectors.
   real :: q356(4),q478(4),p356(4),p478(4)
@@ -94,7 +94,7 @@ function dxsec(x,wgt)
   x1x2(2,1)=xx2
   x1x2(2,2)=xx1
   ! Loop over x1 and x2
-  dxsec=0.d0
+  dXsec=0.d0
   do ix=1,ixmax
     ffxn=0.d0
     x1=x1x2(ix,1)
@@ -782,7 +782,7 @@ function dxsec(x,wgt)
         if(arg478 <= 0.d0)arg478=1.d-9
         eta478=-log(arg478)   ! no cuts on pseudorapidity yet
       end if
-    ! Calculate rapdity (y) of top and antitop
+    ! Calculate rapidity (y) of top and antitop
       if(ifinal_state == 0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3)))
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
@@ -1206,8 +1206,6 @@ function dxsec(x,wgt)
         end if
       end if
 
-      write(*,*)pfxt1tot
-
       if(pfx1tot == 0.d0 .and. pfx2tot == 0.d0)then
           write(*,*)'f(x1)f(x2)|M|^2 = 0 for phase space point ',npoints
           fffxn=0.d0
@@ -1235,8 +1233,8 @@ function dxsec(x,wgt)
       fffxn1=pfx1tot
       fffxn2=pfx2tot
     ! Multiply by 2pi from phit integration and convert from GeV^-2 to pb
-      fffxn1=fffxn1*2.d0*pi*unit_cov
-      fffxn2=fffxn2*2.d0*pi*unit_cov
+      fffxn1=fffxn1*2.d0*pi*unit_conv
+      fffxn2=fffxn2*2.d0*pi*unit_conv
       if(ifinal_state == 0)then
       ! 2-body phase space factor
         fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
@@ -1305,7 +1303,7 @@ function dxsec(x,wgt)
       if(ifinal_state == 0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
-            polcross(it,iphel,jphel)=polcross(it,iphel,jphel) &
+            Xsec_polar(it,iphel,jphel)=Xsec_polar(it,iphel,jphel) &
             +fffxn &
             *wgt &
             *(pfx1(iphel,jphel) &
@@ -1314,8 +1312,8 @@ function dxsec(x,wgt)
             *wgt &
             *(pfx1(iphel,jphel) &
             +pfx2(iphel,jphel))
-            polerror(it,iphel,jphel)=polerror(it,iphel,jphel) &
-            +polcross(it,iphel,jphel)**2
+            error_polar(it,iphel,jphel)=error_polar(it,iphel,jphel) &
+            +Xsec_polar(it,iphel,jphel)**2
           end do
         end do
       end if
@@ -1323,69 +1321,69 @@ function dxsec(x,wgt)
     ! AFB
       if(o_asym(4) == 1)then
         if(costcm > 0.d0)then
-          spatcross(1,it,+1)=spatcross(1,it,+1) &
+          Xsec_FB(1,it,+1)=Xsec_FB(1,it,+1) &
           +fffxn &
           *wgt
-          spaterror(1,it,+1)=spaterror(1,it,+1) &
-          +spatcross(1,it,+1)**2
+          error_FB(1,it,+1)=error_FB(1,it,+1) &
+          +Xsec_FB(1,it,+1)**2
         else if(costcm < 0.d0)then
-          spatcross(1,it,-1)=spatcross(1,it,-1) &
+          Xsec_FB(1,it,-1)=Xsec_FB(1,it,-1) &
           +fffxn &
           *wgt
-          spaterror(1,it,-1)=spaterror(1,it,-1) &
-          +spatcross(1,it,-1)**2
+          error_FB(1,it,-1)=error_FB(1,it,-1) &
+          +Xsec_FB(1,it,-1)**2
         end if
       end if
 
     ! AFBstar
       if(o_asym(5) == 1)then
         if(costst > 0.d0)then
-          spatcross(2,it,+1)=spatcross(2,it,+1) &
+          Xsec_FB(2,it,+1)=Xsec_FB(2,it,+1) &
           +fffxn &
           *wgt
-          spaterror(2,it,+1)=spaterror(2,it,+1) &
-          +spatcross(2,it,+1)**2
+          error_FB(2,it,+1)=error_FB(2,it,+1) &
+          +Xsec_FB(2,it,+1)**2
         else if(costst < 0.d0)then
-          spatcross(2,it,-1)=spatcross(2,it,-1) &
+          Xsec_FB(2,it,-1)=Xsec_FB(2,it,-1) &
           +fffxn &
           *wgt
-          spaterror(2,it,-1)=spaterror(2,it,-1) &
-          +spatcross(2,it,-1)**2
+          error_FB(2,it,-1)=error_FB(2,it,-1) &
+          +Xsec_FB(2,it,-1)**2
         end if
       end if
 
     ! AtRFB
       if(o_asym(6) == 1)then
         if(yt > 0.d0)then
-          spatcross(3,it,+1)=spatcross(3,it,+1) &
+          Xsec_FB(3,it,+1)=Xsec_FB(3,it,+1) &
           +fffxn &
           *wgt
-          spaterror(3,it,+1)=spaterror(3,it,+1) &
-          +spatcross(3,it,+1)**2
+          error_FB(3,it,+1)=error_FB(3,it,+1) &
+          +Xsec_FB(3,it,+1)**2
         else if(yt < 0.d0)then
-          spatcross(3,it,-1)=spatcross(3,it,-1) &
+          Xsec_FB(3,it,-1)=Xsec_FB(3,it,-1) &
           +fffxn &
           *wgt
-          spaterror(3,it,-1)=spaterror(3,it,-1) &
-          +spatcross(3,it,-1)**2
+          error_FB(3,it,-1)=error_FB(3,it,-1) &
+          +Xsec_FB(3,it,-1)**2
         end if
       end if
 
     ! AttbRFB/A
       if(o_asym(7) == 1)then
         if(yt >= 0.d0)then
-          spatcross(4,it,+1)=spatcross(4,it,+1) &
+          Xsec_FB(4,it,+1)=Xsec_FB(4,it,+1) &
           +fffxn &
           *wgt
-          spaterror(4,it,+1)=spaterror(4,it,+1) &
-          +spatcross(4,it,+1)**2
+          error_FB(4,it,+1)=error_FB(4,it,+1) &
+          +Xsec_FB(4,it,+1)**2
         end if
         if(ytb >= 0.d0)then
-          spatcross(4,it,-1)=spatcross(4,it,-1) &
+          Xsec_FB(4,it,-1)=Xsec_FB(4,it,-1) &
           +fffxn &
           *wgt
-          spaterror(4,it,-1)=spaterror(4,it,-1) &
-          +spatcross(4,it,-1)**2
+          error_FB(4,it,-1)=error_FB(4,it,-1) &
+          +Xsec_FB(4,it,-1)**2
         end if
       end if
 
@@ -1395,36 +1393,34 @@ function dxsec(x,wgt)
         if(Delta_absy == 0.d0)then
           continue
         else if(Delta_absy > 0.d0)then
-          spatcross(5,it,+1)=spatcross(5,it,+1) &
+          Xsec_FB(5,it,+1)=Xsec_FB(5,it,+1) &
           +fffxn &
           *wgt
-          spaterror(5,it,+1)=spaterror(5,it,+1) &
-          +spatcross(5,it,+1)**2
-        !       write(*,*)'asy(8)=+1'
+          error_FB(5,it,+1)=error_FB(5,it,+1) &
+          +Xsec_FB(5,it,+1)**2
         else if(Delta_absy < 0.d0)then
-          spatcross(5,it,-1)=spatcross(5,it,-1) &
+          Xsec_FB(5,it,-1)=Xsec_FB(5,it,-1) &
           +fffxn &
           *wgt
-          spaterror(5,it,-1)=spaterror(5,it,-1) &
-          +spatcross(5,it,-1)**2
-        !       write(*,*)'asy(8)=-1'
+          error_FB(5,it,-1)=error_FB(5,it,-1) &
+          +Xsec_FB(5,it,-1)**2
         end if
       end if
 
     ! A_l
       if(o_asym(9) == 1)then
         if(cosfl > 0.d0)then
-          spatcross(6,it,+1)=spatcross(6,it,+1) &
+          Xsec_FB(6,it,+1)=Xsec_FB(6,it,+1) &
           +fffxn &
           *wgt
-          spaterror(6,it,+1)=spaterror(6,it,+1) &
-          +spatcross(6,it,+1)**2
+          error_FB(6,it,+1)=error_FB(6,it,+1) &
+          +Xsec_FB(6,it,+1)**2
         else if(cosfl < 0.d0)then
-          spatcross(6,it,-1)=spatcross(6,it,-1) &
+          Xsec_FB(6,it,-1)=Xsec_FB(6,it,-1) &
           +fffxn &
           *wgt
-          spaterror(6,it,-1)=spaterror(6,it,-1) &
-          +spatcross(6,it,-1)**2
+          error_FB(6,it,-1)=error_FB(6,it,-1) &
+          +Xsec_FB(6,it,-1)**2
         end if
       end if
     
@@ -1993,7 +1989,7 @@ function dxsec(x,wgt)
       
       ffxn=ffxn+fffxn
     end do ! end loop costheta_t<->-cost
-    dxsec=dxsec+ffxn  
+    dXsec=dXsec+ffxn  
   end do ! end loop x1 <-> x2
   return
-end function dxsec
+end function dXsec
