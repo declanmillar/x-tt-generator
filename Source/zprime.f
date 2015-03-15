@@ -12,12 +12,11 @@ program zprime
   use Kinematics
   use Distributions
 
-  implicit none
+  implicit real (a-h,p-z)
+  implicit integer (l-o)
 
-  common/stat/npoints
-  ! Polarised/Spatial cross sections
-  common/polarised/Xsec_polar(20,-1:1,-1:1),error_polar(20,-1:1,-1:1)
-  common/spatial/Xsec_FB(nspat,20,-1:1),error_FB(nspat,20,-1:1)
+  external dxsec
+
   common/EW/a_em,s2w
   common/fermions/ fmass,     fwidth
   real :: fmass(12), fwidth(12)
@@ -43,8 +42,7 @@ program zprime
   real :: asym_int(nasym)
   real :: Atot(nasym),Atoterr(nasym)
   ! test particular matrix element
-  real :: testp1(0:3),testp2(0:3), &
-  testp3(0:3),testp4(0:3)
+  real :: testp1(0:3),testp2(0:3),testp3(0:3),testp4(0:3)
 
   ! Local constant
   integer :: today(3), now(3)
@@ -55,8 +53,7 @@ program zprime
   ! Branching ratio for t->beq=bmq=btq=6/9 (tree level)
   ! real :: BRtbeq=0.66666666d0
 
-  ! External procedures
-  external dxsec
+  integer i, j, k
 
   ! read in the config file
   call read_config
@@ -66,26 +63,26 @@ program zprime
   ! Distributions Setup
   ! (Set flags, binning range and divisions.)
   ! pT distributions
-  do ip=1,nfinal
-    o_pT(ip)=o_distros
-    pTmax(ip)=7000.d0/(1+initial_state*6)
-    pTmin(ip)=0.d0
-    ndiv_pT(ip)=70
+  do i=1,nfinal
+    o_pT(i)=o_distros
+    pTmax(i)=7000.d0/(1+initial_state*6)
+    pTmin(i)=0.d0
+    ndiv_pT(i)=70
     ! eta distributions
-    o_eta(ip)=o_distros
-    etamax(ip)=+10
-    etamin(ip)=-10
-    ndiv_eta(ip)=50
+    o_eta(i)=o_distros
+    etamax(i)=+10
+    etamin(i)=-10
+    ndiv_eta(i)=50
     ! phi distributions
-    o_phi(ip)=o_distros
-    phimax(ip)=+pi
-    phimin(ip)=-pi
-    ndiv_phi(ip)=50
+    o_phi(i)=o_distros
+    phimax(i)=+pi
+    phimin(i)=-pi
+    ndiv_phi(i)=50
     ! ycol distributions
-    o_ycol(ip)=o_distros
-    ycolmax(ip)=+4.d0
-    ycolmin(ip)=-4.d0
-    ndiv_ycol(ip)=100
+    o_ycol(i)=o_distros
+    ycolmax(i)=+4.d0
+    ycolmin(i)=-4.d0
+    ndiv_ycol(i)=100
   end do
   ! missing transverse momentum
   o_ETmiss=o_distros
@@ -1585,7 +1582,7 @@ program zprime
         ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
         do i=1,ndiv_sig
           if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
-            write(*,*)(xsigm(i)+xsigp(i))/2.d0,0.d0
+            write(*,*)(xsigm(i)+xsigp(i))/2.d0,0.d0,0.d0,0.d0
             !           snorm(jasy)=snorm(jasy)+0.d0
           else
             write(*,*)(xsigm(i)+xsigp(i))/2.d0, &

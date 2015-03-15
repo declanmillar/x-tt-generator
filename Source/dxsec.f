@@ -23,7 +23,6 @@ function dxsec(x,wgt)
   dimension x(100)
 
   ! Global variables
-  common/stat/npoints
   common/fermions/ fmass,     fwidth
   dimension fmass(12), fwidth(12)
   common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
@@ -34,10 +33,7 @@ function dxsec(x,wgt)
   common/polarqq/polqq(-1:1,-1:1)
   common/polargg/polgg(-1:1,-1:1)
   common/qcd/rlambdaQCD4,nloops
-  ! Polarised/Spatial cross sections
-  common/polarised/Xsec_polar(20,-1:1,-1:1),error_polar(20,-1:1,-1:1)
-  common/spatial/Xsec_FB(nspat,20,-1:1),error_FB(nspat,20,-1:1)
-
+  
   ! phase space vectors.
   real :: q356(4),q478(4),p356(4),p478(4)
   real :: q56(4),q78(4),p56(4),p78(4)
@@ -1140,7 +1136,7 @@ function dxsec(x,wgt)
       end if
 
       if((resall) == 0.d0)then
-        write(*,*)'|M|^2 = 0 for phase space point ',npoints
+        ! write(*,*)'|M|^2 = 0 for phase space point ',npoints
         fffxn=0.d0
         return
       end if
@@ -1207,7 +1203,7 @@ function dxsec(x,wgt)
       end if
 
       if(pfx1tot == 0.d0 .and. pfx2tot == 0.d0)then
-          write(*,*)'f(x1)f(x2)|M|^2 = 0 for phase space point ',npoints
+          ! write(*,*)'f(x1)f(x2)|M|^2 = 0 for phase space point ',npoints
           fffxn=0.d0
         return
       end if

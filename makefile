@@ -24,8 +24,7 @@ OUT = Binary
 F = gfortran
 
 # Flags
-FFLAGS = -g -ffree-form -fdefault-real-8 -std=gnu
-# -ffpe-trap=invalid,zero,overflow,underflow,denormal
+FFLAGS = -g -ffree-form -fdefault-real-8 -std=gnu -ffpe-trap=invalid,zero,overflow,underflow
 # -Wall
 # ------------------------------------------------------------------------------
 # Commands
