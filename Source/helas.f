@@ -1,7 +1,3 @@
-
-
-
-
     subroutine boostx(p,q , pboost)
 
 ! this subroutine performs the lorentz boost of a four-momentum.  the

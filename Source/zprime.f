@@ -1,57 +1,57 @@
 program zprime
 
-  ! Calculates the cross section and generates distributions for
+  ! calculates the cross section and generates distributions for
   ! pp -> tt,
-  ! pp -> tt -> bW^+bbarW^- -> bbbare^+nue^-nubarc
-  ! (Future:) pp -> bW^+bbarW^- -> b bbar e^+ nu qqbar'
-  ! Uses adapted Madgraph functions.
-  ! Uses cteq6 and mrs99 PDF subroutines.
-  ! Authors: Declan Millar, Stefano Moretti.
+  ! pp -> tt -> bw^+bbarw^- -> bbbare^+nue^-nubarc
+  ! (future:) pp -> bw^+bbarw^- -> b bbar e^+ nu qqbar'
+  ! uses adapted madgraph functions.
+  ! uses cteq6 and mrs99 pdf subroutines.
+  ! authors: declan millar, stefano moretti.
 
-  use Configuration
-  use Kinematics
-  use Distributions
+  use configuration
+  use kinematics
+  use distributions
 
   implicit real (a-h,p-z)
   implicit integer (l-o)
 
-  external dxsec
+  external differential_cross_section
 
-  common/EW/a_em,s2w
+  common/ew/a_em,s2w
   common/fermions/ fmass,     fwidth
   real :: fmass(12), fwidth(12)
-  common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
-  common/vmass2/rm_A,Gamma_A,rm_h,Gamma_h
-  common/Zp/rmZp(5),gamZp(5)
-  common/Zpparam/paramZp(5)
-  common/coupZpVA/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-  common/coupZp/gZpd(2,5),gZpu(2,5)
-  common/QCD/rlambdaQCD4,nloops
+  common/vmass1/rm_w,gamma_w,rm_z,gamma_z
+  common/vmass2/rm_a,gamma_a,rm_h,gamma_h
+  common/zp/rmzp(5),gamzp(5)
+  common/zpparam/paramzp(5)
+  common/coupzpva/gp(5),gv_d(5),ga_d(5),gv_u(5),ga_u(5)
+  common/coupzp/gzpd(2,5),gzpu(2,5)
+  common/qcd/rlambdaqcd4,nloops
 
-  ! Local variables
-  ! Flag for Zp width specification
+  ! local variables
+  ! flag for zp width specification
   real :: o_width(5)
-  ! Polarised/hemispherised cross sections
+  ! polarised/hemispherised cross sections
   real :: cnorm(20)
   ! imension snorm(6)  !,ave(4)
   real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)
   real :: spattot(nspat,-1:1),spatchi(nspat,-1:1)
-  real :: sfxpTtot(8),sfxetatot(8),sfxphitot(8),sfxycoltot(8)
+  real :: sfxpttot(8),sfxetatot(8),sfxphitot(8),sfxycoltot(8)
 
   real :: sfxsigptot(nasym),sfxsigmtot(nasym)
   real :: asym_int(nasym)
-  real :: Atot(nasym),Atoterr(nasym)
+  real :: atot(nasym),atoterr(nasym)
   ! test particular matrix element
   real :: testp1(0:3),testp2(0:3),testp3(0:3),testp4(0:3)
 
-  ! Local constant
+  ! local constant
   integer :: today(3), now(3)
-  ! Branching ratio for t->bev=bmv=btv (with QCD corrections?)
-  real :: BRtbln=0.10779733d0
-  ! Branching ratio for t->bev=bmv=btv=1/9 (tree level)
-  ! real BRtbln/0.11111111d0/
-  ! Branching ratio for t->beq=bmq=btq=6/9 (tree level)
-  ! real :: BRtbeq=0.66666666d0
+  ! branching ratio for t->bev=bmv=btv (with qcd corrections?)
+  real :: brtbln=0.10779733d0
+  ! branching ratio for t->bev=bmv=btv=1/9 (tree level)
+  ! real brtbln/0.11111111d0/
+  ! branching ratio for t->beq=bmq=btq=6/9 (tree level)
+  ! real :: brtbeq=0.66666666d0
 
   integer i, j, k
 
@@ -60,14 +60,14 @@ program zprime
   ! resolve incompatable flags and interpret content
   call modify_config
 
-  ! Distributions Setup
-  ! (Set flags, binning range and divisions.)
-  ! pT distributions
+  ! distributions setup
+  ! (set flags, binning range and divisions.)
+  ! pt distributions
   do i=1,nfinal
-    o_pT(i)=o_distros
-    pTmax(i)=7000.d0/(1+initial_state*6)
-    pTmin(i)=0.d0
-    ndiv_pT(i)=70
+    o_pt(i)=o_distros
+    ptmax(i)=7000.d0/(1+initial_state*6)
+    ptmin(i)=0.d0
+    ndiv_pt(i)=70
     ! eta distributions
     o_eta(i)=o_distros
     etamax(i)=+10
@@ -85,15 +85,15 @@ program zprime
     ndiv_ycol(i)=100
   end do
   ! missing transverse momentum
-  o_ETmiss=o_distros
-  ETmissmax=7000.d0/(1+initial_state*6)
-  ETmissmin=0.d0
-  ndiv_ETmiss=70
+  o_etmiss=o_distros
+  etmissmax=7000.d0/(1+initial_state*6)
+  etmissmin=0.d0
+  ndiv_etmiss=70
   ! top transverse momentum
-  o_pT356=o_distros
-  pT356max=7000.d0/(1+initial_state*6)
-  pT356min=0.d0
-  ndiv_pT356=70
+  o_pt356=o_distros
+  pt356max=7000.d0/(1+initial_state*6)
+  pt356min=0.d0
+  ndiv_pt356=70
   ! 2to6 top pseudorapidity
   o_eta356=o_distros
   eta356max=+10
@@ -105,10 +105,10 @@ program zprime
   phi356min=-pi
   ndiv_phi356=50
   ! anti-top transverse momentum
-  o_pT478=o_distros
-  pT478max=7000.d0/(1+initial_state*6)
-  pT478min=0.d0
-  ndiv_pT478=70
+  o_pt478=o_distros
+  pt478max=7000.d0/(1+initial_state*6)
+  pt478min=0.d0
+  ndiv_pt478=70
   ! 2to6 anti-top pseudorapidity
   o_eta478=o_distros
   eta478max=+10
@@ -120,11 +120,11 @@ program zprime
   phi478min=-pi
   ndiv_phi478=50
   ! invarient mass of tt pair (always on)
-  o_rMtt=1
-  rMttmax=14000.d0/(1+initial_state*6)
-  rMttmin=0.d0
-  ndiv_rMtt=140
-  ! boost of parton CoM
+  o_rmtt=1
+  rmttmax=14000.d0/(1+initial_state*6)
+  rmttmin=0.d0
+  ndiv_rmtt=140
+  ! boost of parton com
   o_beta=o_distros
   betamax=1000.d0
   betamin=0.d0
@@ -135,15 +135,15 @@ program zprime
   costmin=-1.d0
   ndiv_cost=50
   ! top energy
-  o_Et=o_distros
-  Etmax=7000.d0/(1+initial_state*6)
-  Etmin=0.d0
-  ndiv_Et=70
+  o_et=o_distros
+  etmax=7000.d0/(1+initial_state*6)
+  etmin=0.d0
+  ndiv_et=70
   ! delta_y
-  o_Delta_y=o_distros
-  Delta_ymax=4.d0
-  Delta_ymin=-4.d0
-  ndiv_Delta_y=100
+  o_delta_y=o_distros
+  delta_ymax=4.d0
+  delta_ymin=-4.d0
+  ndiv_delta_y=100
   ! transverse variables
   do itrans=1,ntrans
     if(ifinal_state == 0)then
@@ -225,23 +225,23 @@ program zprime
   ndiv_ct7ct5=10
   ! sigp
   o_sigp=o_asyms
-  sigpmax=rMttmax
-  sigpmin=rMttmin
-  ndiv_sigp=ndiv_rMtt/5
+  sigpmax=rmttmax
+  sigpmin=rmttmin
+  ndiv_sigp=ndiv_rmtt/5
   ! sigm
   o_sigm=o_asyms
-  sigmmax=rMttmax
-  sigmmin=rMttmin
-  ndiv_sigm=ndiv_rMtt/5
+  sigmmax=rmttmax
+  sigmmin=rmttmin
+  ndiv_sigm=ndiv_rmtt/5
   ! dphi2d
-  if((o_dphi == 1) .AND. (o_rMtt == 1))then
-    o_dphi2d=O_dist2d
+  if((o_dphi == 1) .and. (o_rmtt == 1))then
+    o_dphi2d=o_dist2d
   else
     o_dphi2d=0
   end if
   ! dtransph
   do itrans=1, ntrans
-    if((o_dphi == 1) .AND. (o_tran(itrans) == 1))then
+    if((o_dphi == 1) .and. (o_tran(itrans) == 1))then
       o_transdp(itrans)=o_dist2d
     else
       o_transdp(itrans)=0
@@ -252,10 +252,10 @@ program zprime
     o_asym(iasy)=o_asyms
   end do
 
-  ! Turn off 2->6 only distributions
+  ! turn off 2->6 only distributions
   if (ifinal_state == 0)then
     do ip=5,8
-      o_pT(i)   = 0
+      o_pt(i)   = 0
       o_eta(i)  = 0
       o_phi(i)  = 0
     end do
@@ -263,14 +263,14 @@ program zprime
       o_tran(itrans)=0
     end do
     o_tran  = 0
-    o_pT356  = 0
+    o_pt356  = 0
     o_eta356 = 0
     o_phi356 = 0
-    o_pT478  = 0
+    o_pt478  = 0
     o_eta478 = 0
     o_phi478 = 0
-    o_ETmiss = 0
-    o_HT     = 0
+    o_etmiss = 0
+    o_ht     = 0
     o_fl     = 0
     o_dphi   = 0
     o_cosfl  = 0
@@ -278,22 +278,22 @@ program zprime
     o_cost5  = 0
     o_ct7ct5 = 0
     o_dphi2d = 0
-    o_asym(9) = 0    ! turn off A_l
+    o_asym(9) = 0    ! turn off a_l
   end if
-  ! Turn off 2->2 only distributions
+  ! turn off 2->2 only distributions
   if (ifinal_state >= 1)then
-    o_asym(1) = 0   ! turn off A_LL
-    o_asym(2) = 0   ! turn off A_L
-    o_asym(3) = 0   ! turn off A_PV
+    o_asym(1) = 0   ! turn off a_ll
+    o_asym(2) = 0   ! turn off a_l
+    o_asym(3) = 0   ! turn off a_pv
   end if
 
-  ! Set-up physics
+  ! set-up physics
 
-  ! Collider CM energy squared.
+  ! collider cm energy squared.
   s=collider_energy*collider_energy
 
-  ! QCDL4 is QCD LAMBDA4 (to match PDF fits).
-  ! (PDFs are intrinsically linked to the value of lamda_QCD; alpha_QCD)
+  ! qcdl4 is qcd lambda4 (to match pdf fits).
+  ! (pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd)
   if(o_structure == 1)qcdl4=0.326d0
   if(o_structure == 2)qcdl4=0.326d0
   if(o_structure == 3)qcdl4=0.326d0
@@ -303,14 +303,14 @@ program zprime
   if(o_structure == 7)qcdl4=0.300d0
   if(o_structure == 8)qcdl4=0.229d0
   if(o_structure == 9)qcdl4=0.383d0
-  rlambdaQCD4=QCDL4
-  ! Initialise CTEQ grids.
+  rlambdaqcd4=qcdl4
+  ! initialise cteq grids.
   if(o_structure <= 4)then
     icteq=o_structure
-    call SetCtq6(ICTEQ)
+    call setctq6(icteq)
   end if
 
-  ! Use appropriately evolved alphas.
+  ! use appropriately evolved alphas.
   if(o_structure == 1)nloops=2
   if(o_structure == 2)nloops=2
   if(o_structure == 3)nloops=1
@@ -321,31 +321,31 @@ program zprime
   if(o_structure == 8)nloops=1
   if(o_structure == 9)nloops=1
 
-  ! initialise MadGraph - masses and coupling constants of particles
-  call initialise_madGraph(o_NWA,model)
+  ! initialise madgraph - masses and coupling constants of particles
+  call initialise_madgraph(o_nwa,model)
 
-  ! VEGAS parameters
+  ! vegas parameters
   ! real ::s of integration
   if(ifinal_state == 0)then
     ndim=3
   else if(ifinal_state > 0)then
     ndim=15
   end if
-  ! If nprn<0 no print-out
+  ! if nprn<0 no print-out
   nprn=0
   if(ifinal_state == 0)then
-    ! Final state masses
+    ! final state masses
     rm3=fmass(11)
     rm4=rm3
     rm5=0.d0
     rm6=0.d0
     rm7=0.d0
     rm8=0.d0
-    ! Integrates on:
+    ! integrates on:
     ! x(3)=(x1-tau)/(1-tau),
     ! x(2)=(ecm-rm3-rm4)/(ecm_max-rm3-rm4),
     ! x(1)=cos(theta3_cm)
-    ! Limits:
+    ! limits:
     do i=3,2,-1
       xl(i)=0.d0
       xu(i)=1.d0
@@ -365,26 +365,26 @@ program zprime
     !       end if
 
   else if(ifinal_state >= 1)then
-    ! Final state masses
+    ! final state masses
     rm3=fmass(12)
     rm4=rm3
     rm5=0.d0
     rm6=0.d0
     rm7=0.d0
     rm8=0.d0
-    ! Integrates on:
+    ! integrates on:
          
     ! x(15)=(x1-tau)/(1-tau),
     ! x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)
     !      /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
-    ! x(13)=(XX356-XX356min)/(XX356max-XX356min),
-    ! where XX356=arctg((rm356**2-rm3**2)/rm3/gamt),
-    ! x(12)=(XX478-XX478min)/(XX478max-XX478min),
-    ! where XX478=arctg((rm478**2-rm3**2)/rm3/gamt),
-    ! x(11)=(XX56-XX56min)/(XX56max-XX56min),
-    ! where XX56=arctg((rm56**2-rm_W**2)/rm_W/gamW),
-    ! x(10)=(XX78-XX78min)/(XX78max-XX78min),
-    ! where XX78=arctg((rm78**2-rm_W**2)/rm_W/gamW),
+    ! x(13)=(xx356-xx356min)/(xx356max-xx356min),
+    ! where xx356=arctg((rm356**2-rm3**2)/rm3/gamt),
+    ! x(12)=(xx478-xx478min)/(xx478max-xx478min),
+    ! where xx478=arctg((rm478**2-rm3**2)/rm3/gamt),
+    ! x(11)=(xx56-xx56min)/(xx56max-xx56min),
+    ! where xx56=arctg((rm56**2-rm_w**2)/rm_w/gamw),
+    ! x(10)=(xx78-xx78min)/(xx78max-xx78min),
+    ! where xx78=arctg((rm78**2-rm_w**2)/rm_w/gamw),
     ! x(9)=cos(theta_cm_356)=-cos(theta_cm_478)
     ! x(8)=cos(theta56_cm_356),
     ! x(7)=cos(theta78_cm_478),
@@ -394,7 +394,7 @@ program zprime
     ! x(3)=fi78_cm_478,
     ! x(2)=fi5_cm_56,
     ! x(1)=fi8_cm_78;
-    ! Limits:
+    ! limits:
     do i=15,14,-1
       xl(i)=0.d0
       xu(i)=1.d0
@@ -413,14 +413,14 @@ program zprime
     end do
   end if
 
-  ! Generate bins
-  ! (Finds bin width, finds midpoints.)
+  ! generate bins
+  ! (finds bin width, finds midpoints.)
 
   do ip=3,nfinal
-    if(o_pT(ip) == 1)then
-      pTw(ip)=(pTmax(ip)-pTmin(ip))/ndiv_pT(ip)
-      do j=1,ndiv_pT(ip)
-        xpT(ip,j)=pTmin(ip)+pTw(ip)*(j-1)+pTw(ip)/2.d0
+    if(o_pt(ip) == 1)then
+      ptw(ip)=(ptmax(ip)-ptmin(ip))/ndiv_pt(ip)
+      do j=1,ndiv_pt(ip)
+        xpt(ip,j)=ptmin(ip)+ptw(ip)*(j-1)+ptw(ip)/2.d0
       end do
     end if
     if(o_eta(ip) == 1)then
@@ -443,17 +443,17 @@ program zprime
     end if
   end do
 
-  if(o_ETmiss == 1)then
-    ETmissw=(ETmissmax-ETmissmin)/ndiv_ETmiss
-    do i=1,ndiv_ETmiss
-      xETmiss(i)=ETmissmin+ETmissw*(i-1)+ETmissw/2.d0
+  if(o_etmiss == 1)then
+    etmissw=(etmissmax-etmissmin)/ndiv_etmiss
+    do i=1,ndiv_etmiss
+      xetmiss(i)=etmissmin+etmissw*(i-1)+etmissw/2.d0
     end do
   end if
 
-  if(o_pT356 == 1)then
-    pT356w=(pT356max-pT356min)/ndiv_pT356
-    do i=1,ndiv_pT356
-      xpT356(i)=pT356min+pT356w*(i-1)+pT356w/2.d0
+  if(o_pt356 == 1)then
+    pt356w=(pt356max-pt356min)/ndiv_pt356
+    do i=1,ndiv_pt356
+      xpt356(i)=pt356min+pt356w*(i-1)+pt356w/2.d0
     end do
   end if
 
@@ -471,10 +471,10 @@ program zprime
     end do
   end if
 
-  if(o_pT478 == 1)then
-    pT478w=(pT478max-pT478min)/ndiv_pT478
-    do i=1,ndiv_pT478
-      xpT478(i)=pT478min+pT478w*(i-1)+pT478w/2.d0
+  if(o_pt478 == 1)then
+    pt478w=(pt478max-pt478min)/ndiv_pt478
+    do i=1,ndiv_pt478
+      xpt478(i)=pt478min+pt478w*(i-1)+pt478w/2.d0
     end do
   end if
 
@@ -492,10 +492,10 @@ program zprime
     end do
   end if
 
-  if(o_rMtt == 1)then
-    rMttw=(rMttmax-rMttmin)/ndiv_rMtt
-    do i=1,ndiv_rMtt
-      xrMtt(i)=rMttmin+rMttw*(i-1)+rMttw/2.d0
+  if(o_rmtt == 1)then
+    rmttw=(rmttmax-rmttmin)/ndiv_rmtt
+    do i=1,ndiv_rmtt
+      xrmtt(i)=rmttmin+rmttw*(i-1)+rmttw/2.d0
     end do
   end if
 
@@ -512,17 +512,17 @@ program zprime
     end do
   end if
 
-  if(o_Et == 1)then
-    Etw=(Etmax-Etmin)/ndiv_Et
-    do i=1,ndiv_Et
-      xEt(i)=Etmin+Etw*(i-1)+Etw/2.d0
+  if(o_et == 1)then
+    etw=(etmax-etmin)/ndiv_et
+    do i=1,ndiv_et
+      xet(i)=etmin+etw*(i-1)+etw/2.d0
     end do
   end if
 
-  if(o_Delta_y == 1)then
-    Delta_yw=(Delta_ymax-Delta_ymin)/ndiv_Delta_y
-    do i=1,ndiv_Delta_y
-      xDelta_y(i)=Delta_ymin+Delta_yw*(i-1)+Delta_yw/2.d0
+  if(o_delta_y == 1)then
+    delta_yw=(delta_ymax-delta_ymin)/ndiv_delta_y
+    do i=1,ndiv_delta_y
+      xdelta_y(i)=delta_ymin+delta_yw*(i-1)+delta_yw/2.d0
     end do
   end if
 
@@ -593,112 +593,112 @@ program zprime
     end do
   end if
 
-  ! Output information before integration
+  ! output information before integration
   write(*,*)'====================================================='
   call idate(today)     ! today(1)=day, (2)=month, (3)=year
   call itime(now)       ! now(1)=hour, (2)=minute, (3)=second
-  write(*,*)'DATE ',today(3),today(2),today(1)
-  write(*,*)'TIME ',now(1),now(2),now(3)
+  write(*,*)'date ',today(3),today(2),today(1)
+  write(*,*)'time ',now(1),now(2),now(3)
   write(*,*)'-----------------------------------------------------'
-  write(*,*)'PROCESS'
+  write(*,*)'process'
   if(initial_state == 0)then
     if(ifinal_state == 0) &
     write(*,*)'pp #rightarrow t#bar{t}', &
-    ' #times BR(t#rightarrow bl#nu)^{2}'
+    ' #times br(t#rightarrow bl#nu)^{2}'
     if(ifinal_state == 1) &
     write(*,*)'pp #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
     if(ifinal_state == 2) &
     write(*,*)'pp #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
     if(ifinal_state == 3) &
     write(*,*)'pp #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
   else if(initial_state == 1)then
     if(ifinal_state == 0) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
-    ' #times BR(t#rightarrow bl#nu)^{2}'
+    ' #times br(t#rightarrow bl#nu)^{2}'
     if(ifinal_state == 1) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
     if(ifinal_state == 2) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
     if(ifinal_state == 3) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
-    '#rightarrow b#bar{b} W^{+}W^{-}', &
+    '#rightarrow b#bar{b} w^{+}w^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
   end if
   write(*,*)'-----------------------------------------------------'
-  write(*,*)'NOTES'
-  write(*,*)'Units: GeV'
-  write(*,*)'Quarks: all massless except t, b.'
-  if(o_structure == 1)write(*,*)'PDFs: cteq6m.'
-  if(o_structure == 2)write(*,*)'PDFs: cteq6d.'
-  if(o_structure == 3)write(*,*)'PDFs: cteq6l.'
-  if(o_structure == 4)write(*,*)'PDFs: cteq6l1.'
-  if(o_structure == 5)write(*,*)'PDFs: mrs99 (cor01).'
-  if(o_structure == 6)write(*,*)'PDFs: mrs99 (cor02).'
-  if(o_structure == 7)write(*,*)'PDFs: mrs99 (cor03).'
-  if(o_structure == 8)write(*,*)'PDFs: mrs99 (cor04).'
-  if(o_structure == 9)write(*,*)'PDFs: mrs99 (cor05).'
-  if((ifinal_state >= 1) .AND. (o_NWA == 0))write(*,*)'Tops: off-shell.'
-  if((ifinal_state >= 1) .AND. (o_NWA == 1))write(*,*)'Tops: NWA.'
-  write(*,*)'BSM model: ',model
-  if(include_QCD == 1)write(*,*)'QCD: On '
-  if(include_QCD == 0)write(*,*)'QCD: Off'
-  if(include_EW == 1) write(*,*)'EW:  On '
-  if(include_EW == 0) write(*,*)'EW:  Off'
-  if(include_BSM == 1)write(*,*)'BSM: On '
-  if(include_BSM == 0)write(*,*)'BSM: Off'
-  if(interference == 0)write(*,*)'Interference: None'
-  if(interference == 1)write(*,*)'Interference: SM'
-  if(interference == 2)write(*,*)'Interference: Full'
-  if(interference == 3)write(*,*)'Interference: No square terms.'
-  if(o_M_eq_1 == 1)write(*,*)'Phase space only'
-  if(o_symx1x2 == 1)write(*,*)'Symmetrical integration over x1<->x2'
-  if(o_symcost == 1)write(*,*)'Symmetrical integration over cost'
+  write(*,*)'notes'
+  write(*,*)'units: gev'
+  write(*,*)'quarks: all massless except t, b.'
+  if(o_structure == 1)write(*,*)'pdfs: cteq6m.'
+  if(o_structure == 2)write(*,*)'pdfs: cteq6d.'
+  if(o_structure == 3)write(*,*)'pdfs: cteq6l.'
+  if(o_structure == 4)write(*,*)'pdfs: cteq6l1.'
+  if(o_structure == 5)write(*,*)'pdfs: mrs99 (cor01).'
+  if(o_structure == 6)write(*,*)'pdfs: mrs99 (cor02).'
+  if(o_structure == 7)write(*,*)'pdfs: mrs99 (cor03).'
+  if(o_structure == 8)write(*,*)'pdfs: mrs99 (cor04).'
+  if(o_structure == 9)write(*,*)'pdfs: mrs99 (cor05).'
+  if((ifinal_state >= 1) .and. (o_nwa == 0))write(*,*)'tops: off-shell.'
+  if((ifinal_state >= 1) .and. (o_nwa == 1))write(*,*)'tops: nwa.'
+  write(*,*)'bsm model: ',model
+  if(include_qcd == 1)write(*,*)'qcd: on '
+  if(include_qcd == 0)write(*,*)'qcd: off'
+  if(include_ew == 1) write(*,*)'ew:  on '
+  if(include_ew == 0) write(*,*)'ew:  off'
+  if(include_bsm == 1)write(*,*)'bsm: on '
+  if(include_bsm == 0)write(*,*)'bsm: off'
+  if(interference == 0)write(*,*)'interference: none'
+  if(interference == 1)write(*,*)'interference: sm'
+  if(interference == 2)write(*,*)'interference: full'
+  if(interference == 3)write(*,*)'interference: no square terms.'
+  if(o_m_eq_1 == 1)write(*,*)'phase space only'
+  if(o_symx1x2 == 1)write(*,*)'symmetrical integration over x1<->x2'
+  if(o_symcost == 1)write(*,*)'symmetrical integration over cost'
   write(*,*)'iseed: ',iseed
   write(*,*)'-----------------------------------------------------'
-  write(*,*)'PARAMETERS'
+  write(*,*)'parameters'
   write(*,*)'#sqrt{s}              ',collider_energy
   write(*,*)'at |y| <              ',abs(ytmax)
-  write(*,*)'Loops a_s evaluated at',nloops
-  write(*,*)'a_{s}(M_{Z})          ',alfas(rm_Z,rLambdaQCD4,nloops)
-  write(*,*)'#Lambda_{QCD}(4)      ',QCDL4
+  write(*,*)'loops a_s evaluated at',nloops
+  write(*,*)'a_{s}(m_{z})          ',alfas(rm_z,rlambdaqcd4,nloops)
+  write(*,*)'#lambda_{qcd}(4)      ',qcdl4
   write(*,*)'m_{b}                 ',fmass(12)
-  write(*,*)'#Gamma_{b}            ',fwidth(12)
+  write(*,*)'#gamma_{b}            ',fwidth(12)
   write(*,*)'m_{t}                 ',fmass(11)
-  write(*,*)'#Gamma_{t}            ',fwidth(11)
-  write(*,*)'m_{Z}                 ',rm_Z
-  write(*,*)'#Gamma_{Z}            ',gamma_Z
-  write(*,*)'m_{W}                 ',rm_W
-  write(*,*)'#Gamma_{W}            ',gamma_W
-  write(*,*)'m_{H}                 ',rm_h
-  write(*,*)'#Gamma_{H}            ',gamma_h
+  write(*,*)'#gamma_{t}            ',fwidth(11)
+  write(*,*)'m_{z}                 ',rm_z
+  write(*,*)'#gamma_{z}            ',gamma_z
+  write(*,*)'m_{w}                 ',rm_w
+  write(*,*)'#gamma_{w}            ',gamma_w
+  write(*,*)'m_{h}                 ',rm_h
+  write(*,*)'#gamma_{h}            ',gamma_h
   write(*,*)'-----------------------------------------------------'
-  write(*,*)'ZPRIME PARAMETERS'
+  write(*,*)'zprime parameters'
   do i=1,5
-    if(rmZp(i) > 0)then
-      write(*,*)'Z#prime               ',i
-      write(*,*)'m_{Z#prime}           ',rmZp(i)
+    if(rmzp(i) > 0)then
+      write(*,*)'z#prime               ',i
+      write(*,*)'m_{z#prime}           ',rmzp(i)
       write(*,*)'o_width:              ',o_width(i)
-      write(*,*)'#Gamma_{Z#prime}      ',gamZp(i)
+      write(*,*)'#gamma_{z#prime}      ',gamzp(i)
       write(*,*)'g_{p}                 ',gp(i)
-      write(*,*)'g_{V}^{u}             ',gV_u(i)
-      write(*,*)'g_{A}^{u}             ',gA_u(i)
-      write(*,*)'g_{V}^{d}             ',gV_d(i)
-      write(*,*)'g_{A}^{d}             ',gA_d(i)
+      write(*,*)'g_{v}^{u}             ',gv_u(i)
+      write(*,*)'g_{a}^{u}             ',ga_u(i)
+      write(*,*)'g_{v}^{d}             ',gv_d(i)
+      write(*,*)'g_{a}^{d}             ',ga_d(i)
       write(*,*)
     end if
   end do
   write(*,*)'-----------------------------------------------------'
-  write(*,*)'CUTS'
+  write(*,*)'cuts'
   write(*,*)'-----------------------------------------------------'
 
 
@@ -713,46 +713,46 @@ program zprime
       cnorm(i)=0.d0
       do iphel=-1,+1,2
         do jphel=-1,+1,2
-          Xsec_polar(i,iphel,jphel)=0.d0
+          xsec_polar(i,iphel,jphel)=0.d0
           error_polar(i,iphel,jphel)=0.d0
         end do
       end do
       do ispat=1,nspat
         do iasy=-1,+1,2
-          Xsec_FB(ispat,i,iasy)=0.d0
-          error_FB(ispat,i,iasy)=0.d0
+          xsec_fb(ispat,i,iasy)=0.d0
+          error_fb(ispat,i,iasy)=0.d0
         end do
       end do
     end do
   end if
 
   ! integrate 
-  write(*,*)'Starting integration'
+  write(*,*)'starting integration'
   it=0  
-  call vegas(ndim,dxsec,avgi,sd,chi2a)
+  call vegas(ndim,differential_cross_section,avgi,sd,chi2a)
 
-  if(ifinal_state == 0 .and. o_BR == 1)then
+  if(ifinal_state == 0 .and. o_br == 1)then
     ! multiply by branching ratios
-    avgi=avgi*BRtbln*BRtbln
-    sd=sd*BRtbln*BRtbln
+    avgi=avgi*brtbln*brtbln
+    sd=sd*brtbln*brtbln
   end if
 
   ! collect total cross-section
   cross=avgi
   error=sd
 
-  ! Print integrated cross section
+  ! print integrated cross section
   write(*,*)''
-  write(*,*)'INTEGRATED CROSS SECTION'
+  write(*,*)'integrated cross section'
   if(cross == 0d0)then
-    write(*,*)'sigma = 0  ! Check permitted gauge sectors.'
+    write(*,*)'sigma = 0  ! check permitted gauge sectors.'
     stop
   else
     write(*,*)'sigma (pb)','error (same units)'
     write(*,*)cross,error
     write(*,*)'(using ',npoints,' points)'
   end if
-  ! Re-weight distributions for different iterations
+  ! re-weight distributions for different iterations
   stantot=0.d0
   do i=1,it
     stantot=stantot+1.d0/standdevl(i)/standdevl(i)
@@ -764,23 +764,23 @@ program zprime
     cnorm(i)=resl(i)*standdevl(i)
   end do
 
-  ! Total asymmetries
-  ! Collect polarised cross sections.
+  ! total asymmetries
+  ! collect polarised cross sections.
   if(o_asyms == 1)then
     if(ifinal_state == 0)then
       do iphel=-1,+1,2
         do jphel=-1,+1,2
           do i=1,it
-            Xsec_polar(i,iphel,jphel)=Xsec_polar(i,iphel,jphel) &
+            xsec_polar(i,iphel,jphel)=xsec_polar(i,iphel,jphel) &
             *avgi/cnorm(i)
-            error_polar(i,iphel,jphel)=Xsec_polar(i,iphel,jphel) &
+            error_polar(i,iphel,jphel)=xsec_polar(i,iphel,jphel) &
             *sd/cnorm(i)
           end do
           poltot(iphel,jphel)=0.d0
           polchi(iphel,jphel)=0.d0
           do i=1,it
             poltot(iphel,jphel)=poltot(iphel,jphel) &
-            +Xsec_polar(i,iphel,jphel)
+            +xsec_polar(i,iphel,jphel)
             polchi(iphel,jphel)=polchi(iphel,jphel) &
             +error_polar(i,iphel,jphel)
           end do
@@ -794,28 +794,28 @@ program zprime
       end do
     end if
 
-    ! Collect unpolarised spatial asymmetry
+    ! collect unpolarised spatial asymmetry
     do ispat=1,nspat
       if(o_asym(ispat+3) == 0)then
         continue
       else
-        do iAB=-1,+1,2
+        do iab=-1,+1,2
           do i=1,it
-            Xsec_FB(ispat,i,iAB)=Xsec_FB(ispat,i,iAB) &
+            xsec_fb(ispat,i,iab)=xsec_fb(ispat,i,iab) &
             *avgi/cnorm(i)
-            error_FB(ispat,i,iAB)=Xsec_FB(ispat,i,iAB) &
+            error_fb(ispat,i,iab)=xsec_fb(ispat,i,iab) &
             *sd/cnorm(i)
           end do
-          spattot(ispat,iAB)=0.d0
-          spatchi(ispat,iAB)=0.d0
+          spattot(ispat,iab)=0.d0
+          spatchi(ispat,iab)=0.d0
           do i=1,it     ! add up each iteration
-            spattot(ispat,iAB)=spattot(ispat,iAB) &
-            +Xsec_FB(ispat,i,iAB)
-            spatchi(ispat,iAB)=spatchi(ispat,iAB) &
-            +error_FB(ispat,i,iAB)
+            spattot(ispat,iab)=spattot(ispat,iab) &
+            +xsec_fb(ispat,i,iab)
+            spatchi(ispat,iab)=spatchi(ispat,iab) &
+            +error_fb(ispat,i,iab)
           end do
-          spatchi(ispat,iAB)=spatchi(ispat,iAB) &
-          /spattot(ispat,iAB)
+          spatchi(ispat,iab)=spatchi(ispat,iab) &
+          /spattot(ispat,iab)
           !         spatchi(iasy)=
           !    & sqrt(abs(spatchi(iasy)
           !    &         -spattot(iasy)**2*dfloat(ncall)))
@@ -824,97 +824,97 @@ program zprime
       end if
     end do
 
-    ! Define asymmetries
+    ! define asymmetries
     if(ifinal_state == 0)then
-      ! ALL
-      Atot(1)= &
+      ! all
+      atot(1)= &
       +(poltot(+1,+1)-poltot(+1,-1) &
       -poltot(-1,+1)+poltot(-1,-1)) &
       /cross
-      Atoterr(1)= &
+      atoterr(1)= &
       +(polchi(+1,+1)+polchi(+1,-1) &
       +polchi(-1,+1)+polchi(-1,-1)) &
-      /4.d0*Atot(1)
-      ! AL
-      Atot(2)= &
+      /4.d0*atot(1)
+      ! al
+      atot(2)= &
       +(poltot(-1,-1)-poltot(+1,-1) &
       +poltot(-1,+1)-poltot(+1,+1)) &
       /cross
-      Atoterr(2)= &
+      atoterr(2)= &
       +(polchi(-1,-1)+polchi(+1,-1) &
       +polchi(-1,+1)+polchi(+1,+1)) &
-      /4.d0*Atot(2)
-      ! APV
-      Atot(3)= &
+      /4.d0*atot(2)
+      ! apv
+      atot(3)= &
       +(poltot(-1,-1)-poltot(+1,+1)) &
       /cross/2.d0
-      Atoterr(3)= &
+      atoterr(3)= &
       +(polchi(-1,-1)+polchi(+1,+1)) &
-      /2.d0*Atot(3)
+      /2.d0*atot(3)
     end if
 
     do iasy=4,nasym
       ispat=iasy-3
       if(o_asym(iasy) > 0)then
-        Atot(iasy)= &
+        atot(iasy)= &
         +(spattot(ispat,+1)-spattot(ispat,-1)) &
         /cross
-        Atoterr(iasy)= &
-        +sd/avgi*Atot(iasy)
+        atoterr(iasy)= &
+        +sd/avgi*atot(iasy)
       end if
     end do
 
-    ! Print Asymmetries
-    write(*,*)'TOTAL ASYMMETRIES'
+    ! print asymmetries
+    write(*,*)'total asymmetries'
     if(ifinal_state == 0)then
-      write(*,*)'ALL:                  uncertainty (same units):'
-      write(*,*)Atot(1),Atoterr(1)
-      write(*,*)'AL:                   uncertainty (same units):'
-      write(*,*)Atot(2),Atoterr(2)
-      write(*,*)'APV:                  uncertainty (same units):'
-      write(*,*)Atot(3),Atoterr(3)
-      write(*,*)'AFB:                 uncertainty (same units):'
-      write(*,*)Atot(4),Atoterr(4)
-      write(*,*)'AFB*:                   uncertainty (same units):'
-      write(*,*)Atot(5),Atoterr(5)
-      write(*,*)'AtRFB:                  uncertainty (same units):'
-      write(*,*)Atot(6),Atoterr(6)
-      write(*,*)"AttbRFB/A:              uncertainty (same units):"
-      write(*,*)Atot(7),Atoterr(7)
-      write(*,*)"ARFB/A':              uncertainty (same units):"
-      write(*,*)Atot(8),Atoterr(8)
+      write(*,*)'all:                  uncertainty (same units):'
+      write(*,*)atot(1),atoterr(1)
+      write(*,*)'al:                   uncertainty (same units):'
+      write(*,*)atot(2),atoterr(2)
+      write(*,*)'apv:                  uncertainty (same units):'
+      write(*,*)atot(3),atoterr(3)
+      write(*,*)'afb:                 uncertainty (same units):'
+      write(*,*)atot(4),atoterr(4)
+      write(*,*)'afb*:                   uncertainty (same units):'
+      write(*,*)atot(5),atoterr(5)
+      write(*,*)'atrfb:                  uncertainty (same units):'
+      write(*,*)atot(6),atoterr(6)
+      write(*,*)"attbrfb/a:              uncertainty (same units):"
+      write(*,*)atot(7),atoterr(7)
+      write(*,*)"arfb/a':              uncertainty (same units):"
+      write(*,*)atot(8),atoterr(8)
     else if(ifinal_state > 0)then
-      write(*,*)'A_l:                  uncertainty (same units):'
-      write(*,*)Atot(9),Atoterr(9)
+      write(*,*)'a_l:                  uncertainty (same units):'
+      write(*,*)atot(9),atoterr(9)
     end if
   end if
 
-  ! Plot Distributions
+  ! plot distributions
 
   write(*,*)''
-  write(*,*)'HISTOGRAMS'
+  write(*,*)'histograms'
   do ip=3,8
-    ! Plot distributions in pT
-    if(o_pT(ip) == 1)then
-      sfxpTtot(ip)=0d0
-      do j=1,ndiv_pT(ip)
-        fxpTtot(ip,j)=0.d0
+    ! plot distributions in pt
+    if(o_pt(ip) == 1)then
+      sfxpttot(ip)=0d0
+      do j=1,ndiv_pt(ip)
+        fxpttot(ip,j)=0.d0
         do i=1,it
-          fxpT(ip,j,i)=fxpT(ip,j,i)*avgi/cnorm(i)/pTw(ip)
-          fxpTtot(ip,j)=fxpTtot(ip,j)+fxpT(ip,j,i)
+          fxpt(ip,j,i)=fxpt(ip,j,i)*avgi/cnorm(i)/ptw(ip)
+          fxpttot(ip,j)=fxpttot(ip,j)+fxpt(ip,j,i)
         end do
-        sfxpTtot(ip)=sfxpTtot(ip)+fxpTtot(ip,j)*pTw(ip)
+        sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,'(A,I1)')'pT',ip
-      write(*,'(A,I1,A)')'d#sigma-/dp_{T}(',ip,')--[pb/GeV]'
-      write(*,'(A,I1,A)')'p_{T}(',ip,')--[GeV]'
-      do i=1,ndiv_pT(ip)
-        write(*,*)xpT(ip,i),fxpTtot(ip,i)
+      write(*,*)'distribution'
+      write(*,'(a,i1)')'pt',ip
+      write(*,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/gev]'
+      write(*,'(a,i1,a)')'p_{t}(',ip,')--[gev]'
+      do i=1,ndiv_pt(ip)
+        write(*,*)xpt(ip,i),fxpttot(ip,i)
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
-    ! Plot distributions in eta
+    ! plot distributions in eta
     if(o_eta(ip) == 1)then
       sfxetatot(ip)=0d0
       do j=1,ndiv_eta(ip)
@@ -925,16 +925,16 @@ program zprime
         end do
         sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,'(A,I1)')'eta',ip
-      write(*,'(A,I1,A)')'d#sigma-/d#eta(',ip,')--[pb]'
-      write(*,'(A,I1,A)')'#eta(',ip,')'
+      write(*,*)'distribution'
+      write(*,'(a,i1)')'eta',ip
+      write(*,'(a,i1,a)')'d#sigma-/d#eta(',ip,')--[pb]'
+      write(*,'(a,i1,a)')'#eta(',ip,')'
       do i=1,ndiv_eta(ip)
         write(*,*)xeta(ip,i),fxetatot(ip,i)
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
-    ! Plot distributions in phi
+    ! plot distributions in phi
     if(o_phi(ip) == 1)then
       sfxphitot(ip)=0d0
       do j=1,ndiv_phi(ip)
@@ -945,16 +945,16 @@ program zprime
         end do
         sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,'(A,I1)')'phi',ip
-      write(*,'(A,I1,A)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
-      write(*,'(A,I1,A)')'#phi(',ip,')--[rad]'
+      write(*,*)'distribution'
+      write(*,'(a,i1)')'phi',ip
+      write(*,'(a,i1,a)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
+      write(*,'(a,i1,a)')'#phi(',ip,')--[rad]'
       do i=1,ndiv_phi(ip)
         write(*,*)xphi(ip,i),fxphitot(ip,i)
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
-    ! Plot distributions in ycol
+    ! plot distributions in ycol
     if(o_ycol(ip) == 1)then
       sfxycoltot(ip)=0d0
       do j=1,ndiv_ycol(ip)
@@ -965,59 +965,59 @@ program zprime
         end do
         sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,'(A,I1)')'y',ip
-      write(*,'(A,I1,A)')'d#sigma-/dy(',ip,')--[pb]'
-      write(*,'(A,I1,A)')'y(',ip,')'
+      write(*,*)'distribution'
+      write(*,'(a,i1)')'y',ip
+      write(*,'(a,i1,a)')'d#sigma-/dy(',ip,')--[pb]'
+      write(*,'(a,i1,a)')'y(',ip,')'
       do i=1,ndiv_ycol(ip)
         write(*,*)xycol(ip,i),fxycoltot(ip,i)
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
   end do
      
-  ! Plot distribution in ETmiss
-  if(o_ETmiss == 1)then
-    sfxETmisstot=0d0
-    do j=1,ndiv_ETmiss
-      fxETmisstot(j)=0.d0
+  ! plot distribution in etmiss
+  if(o_etmiss == 1)then
+    sfxetmisstot=0d0
+    do j=1,ndiv_etmiss
+      fxetmisstot(j)=0.d0
       do i=1,it
-        fxETmiss(j,i)=fxETmiss(j,i)*avgi/cnorm(i)/ETmissw
-        fxETmisstot(j)=fxETmisstot(j)+fxETmiss(j,i)
+        fxetmiss(j,i)=fxetmiss(j,i)*avgi/cnorm(i)/etmissw
+        fxetmisstot(j)=fxetmisstot(j)+fxetmiss(j,i)
       end do
-      sfxETmisstot=sfxETmisstot+fxETmisstot(j)*ETmissw
+      sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'ETmiss'
-    write(*,*)'d#sigma-/dp_{Tmiss}--[pb/GeV]'
-    write(*,*)'p_{T}(miss)--[GeV]'
-    do i=1,ndiv_ETmiss
-      write(*,*)xETmiss(i),fxETmisstot(i)
+    write(*,*)'distribution'
+    write(*,*)'etmiss'
+    write(*,*)'d#sigma-/dp_{tmiss}--[pb/gev]'
+    write(*,*)'p_{t}(miss)--[gev]'
+    do i=1,ndiv_etmiss
+      write(*,*)xetmiss(i),fxetmisstot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
 
-  ! Plot distribution in pT356
-  if(o_pT356 == 1)then
-    sfxpT356tot=0d0
-    do j=1,ndiv_pT356
-      fxpT356tot(j)=0.d0
+  ! plot distribution in pt356
+  if(o_pt356 == 1)then
+    sfxpt356tot=0d0
+    do j=1,ndiv_pt356
+      fxpt356tot(j)=0.d0
       do i=1,it
-        fxpT356(j,i)=fxpT356(j,i)*avgi/cnorm(i)/pT356w
-        fxpT356tot(j)=fxpT356tot(j)+fxpT356(j,i)
+        fxpt356(j,i)=fxpt356(j,i)*avgi/cnorm(i)/pt356w
+        fxpt356tot(j)=fxpt356tot(j)+fxpt356(j,i)
       end do
-      sfxpT356tot=sfxpT356tot+fxpT356tot(j)*pT356w
+      sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'pT356'
-    write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
-    write(*,*)'p_{T}(t)--[GeV]'
-    do i=1,ndiv_pT356
-      write(*,*)xpT356(i),fxpT356tot(i)
+    write(*,*)'distribution'
+    write(*,*)'pt356'
+    write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
+    write(*,*)'p_{t}(t)--[gev]'
+    do i=1,ndiv_pt356
+      write(*,*)xpt356(i),fxpt356tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in eta356
+  ! plot distribution in eta356
   if(o_eta356 == 1)then
     sfxeta356tot=0d0
     do j=1,ndiv_eta356
@@ -1028,16 +1028,16 @@ program zprime
       end do
       sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'eta356'
     write(*,*)'d#sigma-/d#eta--[pb]'
     write(*,*)'#eta(#bar{t})'
     do i=1,ndiv_eta356
       write(*,*)xeta356(i),fxeta356tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in phi356
+  ! plot distribution in phi356
   if(o_phi356 == 1)then
     sfxphi356tot=0d0
     do j=1,ndiv_phi356
@@ -1048,36 +1048,36 @@ program zprime
       end do
       sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'phi356'
     write(*,*)'d#sigma-/d#phi--[pb]'
     write(*,*)'#phi(#bar{t})'
     do i=1,ndiv_phi356
       write(*,*)xphi356(i),fxphi356tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in pT478
-  if(o_pT478 == 1)then
-    sfxpT478tot=0d0
-    do j=1,ndiv_pT478
-      fxpT478tot(j)=0.d0
+  ! plot distribution in pt478
+  if(o_pt478 == 1)then
+    sfxpt478tot=0d0
+    do j=1,ndiv_pt478
+      fxpt478tot(j)=0.d0
       do i=1,it
-        fxpT478(j,i)=fxpT478(j,i)*avgi/cnorm(i)/pT478w
-        fxpT478tot(j)=fxpT478tot(j)+fxpT478(j,i)
+        fxpt478(j,i)=fxpt478(j,i)*avgi/cnorm(i)/pt478w
+        fxpt478tot(j)=fxpt478tot(j)+fxpt478(j,i)
       end do
-      sfxpT478tot=sfxpT478tot+fxpT478tot(j)*pT478w
+      sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'pT478'
-    write(*,*)'d#sigma-/dp_{T}--[pb/GeV]'
-    write(*,*)'p_{T}(#bar{t})--[GeV]'
-    do i=1,ndiv_pT478
-      write(*,*)xpT478(i),fxpT478tot(i)
+    write(*,*)'distribution'
+    write(*,*)'pt478'
+    write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
+    write(*,*)'p_{t}(#bar{t})--[gev]'
+    do i=1,ndiv_pt478
+      write(*,*)xpt478(i),fxpt478tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in eta478
+  ! plot distribution in eta478
   if(o_eta478 == 1)then
     sfxeta478tot=0d0
     do j=1,ndiv_eta478
@@ -1088,16 +1088,16 @@ program zprime
       end do
       sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'eta478'
     write(*,*)'d#sigma-/d#eta--[pb]'
     write(*,*)'#eta(#bar{t})'
     do i=1,ndiv_eta478
       write(*,*)xeta478(i),fxeta478tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in phi478
+  ! plot distribution in phi478
   if(o_phi478 == 1)then
     sfxphi478tot=0d0
     do j=1,ndiv_phi478
@@ -1108,36 +1108,36 @@ program zprime
       end do
       sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'phi478'
     write(*,*)'d#sigma-/d#phi--[pb]'
     write(*,*)'#phi(#bar{t})'
     do i=1,ndiv_phi478
       write(*,*)xphi478(i),fxphi478tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in Mtt
-  if(o_rMtt == 1)then
-    sfxrMtttot=0d0
-    do j=1,ndiv_rMtt
-      fxrMtttot(j)=0.d0
+  ! plot distribution in mtt
+  if(o_rmtt == 1)then
+    sfxrmtttot=0d0
+    do j=1,ndiv_rmtt
+      fxrmtttot(j)=0.d0
       do i=1,it
-        fxrMtt(j,i)=fxrMtt(j,i)*avgi/cnorm(i)/rMttw
-        fxrMtttot(j)=fxrMtttot(j)+fxrMtt(j,i)
+        fxrmtt(j,i)=fxrmtt(j,i)*avgi/cnorm(i)/rmttw
+        fxrmtttot(j)=fxrmtttot(j)+fxrmtt(j,i)
       end do
-      sfxrMtttot=sfxrMtttot+fxrMtttot(j)*rMttw
+      sfxrmtttot=sfxrmtttot+fxrmtttot(j)*rmttw
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'Mtt'
-    write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
-    write(*,*)'M_{tt}--[GeV]'
-    do i=1,ndiv_rMtt
-      write(*,*)xrMtt(i),fxrMtttot(i)
+    write(*,*)'distribution'
+    write(*,*)'mtt'
+    write(*,*)'d#sigma-/dm_{tt}--[pb/gev]'
+    write(*,*)'m_{tt}--[gev]'
+    do i=1,ndiv_rmtt
+      write(*,*)xrmtt(i),fxrmtttot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in beta.
+  ! plot distribution in beta.
   if(o_beta == 1)then
     sfxbetatot=0d0
     do j=1,ndiv_beta
@@ -1148,16 +1148,16 @@ program zprime
       end do
       sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'Beta'
-    write(*,*)'d#sigma-/d#Beta_{t}--[pb]'
-    write(*,*)'#Beta_{t}'
+    write(*,*)'distribution'
+    write(*,*)'beta'
+    write(*,*)'d#sigma-/d#beta_{t}--[pb]'
+    write(*,*)'#beta_{t}'
     do i=1,ndiv_beta
       write(*,*)xbeta(i),fxbetatot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in cost
+  ! plot distribution in cost
   if(o_cost == 1)then
     sfxcosttot=0d0
     do j=1,ndiv_cost
@@ -1168,57 +1168,57 @@ program zprime
       end do
       sfxcosttot=sfxcosttot+fxcosttot(j)*costw
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'cost'
     write(*,*)'d#sigma-/dcos#theta--[pb]'
     write(*,*)'cos#theta'
     do i=1,ndiv_cost
       write(*,*)xcost(i),fxcosttot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in Et
-  if(o_Et == 1)then
+  ! plot distribution in et
+  if(o_et == 1)then
 
-    sfxEttot=0d0
-    do j=1,ndiv_Et
-      fxEttot(j)=0.d0
+    sfxettot=0d0
+    do j=1,ndiv_et
+      fxettot(j)=0.d0
       do i=1,it
-        fxEt(j,i)=fxEt(j,i)*avgi/cnorm(i)/Etw
-        fxEttot(j)=fxEttot(j)+fxEt(j,i)
+        fxet(j,i)=fxet(j,i)*avgi/cnorm(i)/etw
+        fxettot(j)=fxettot(j)+fxet(j,i)
       end do
-      sfxEttot=sfxEttot+fxEttot(j)*Etw
+      sfxettot=sfxettot+fxettot(j)*etw
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'Et'
-    write(*,*)'d#sigma-/dE_{t}--[pb/GeV]'
-    write(*,*)'E_{t}--[GeV]'
-    do i=1,ndiv_Et
-      write(*,*)xEt(i),fxEttot(i)
+    write(*,*)'distribution'
+    write(*,*)'et'
+    write(*,*)'d#sigma-/de_{t}--[pb/gev]'
+    write(*,*)'e_{t}--[gev]'
+    do i=1,ndiv_et
+      write(*,*)xet(i),fxettot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in delta y
-  if(o_Delta_y == 1)then
-    sfxDelta_ytot=0d0
-    do j=1,ndiv_Delta_y
-      fxDelta_ytot(j)=0.d0
+  ! plot distribution in delta y
+  if(o_delta_y == 1)then
+    sfxdelta_ytot=0d0
+    do j=1,ndiv_delta_y
+      fxdelta_ytot(j)=0.d0
       do i=1,it
-        fxDelta_y(j,i)=fxDelta_y(j,i)*avgi/cnorm(i)/Delta_yw
-        fxDelta_ytot(j)=fxDelta_ytot(j)+fxDelta_y(j,i)
+        fxdelta_y(j,i)=fxdelta_y(j,i)*avgi/cnorm(i)/delta_yw
+        fxdelta_ytot(j)=fxdelta_ytot(j)+fxdelta_y(j,i)
       end do
-      sfxDelta_ytot=sfxDelta_ytot+fxDelta_ytot(j)*Delta_yw
+      sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
     end do
-    write(*,*)'DISTRIBUTION'
-    write(*,*)'Delta_y'
-    write(*,*)'d#sigma-/d#Delta-y--[pb]'
-    write(*,*)'#Delta-y'
-    do i=1,ndiv_Delta_y
-      write(*,*)xDelta_y(i),fxDelta_ytot(i)
+    write(*,*)'distribution'
+    write(*,*)'delta_y'
+    write(*,*)'d#sigma-/d#delta-y--[pb]'
+    write(*,*)'#delta-y'
+    do i=1,ndiv_delta_y
+      write(*,*)xdelta_y(i),fxdelta_ytot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distributions in all transverse variables
+  ! plot distributions in all transverse variables
   do itrans=1,ntrans
     if(o_tran(itrans) == 1)then
       sfxtranstot(itrans)=0d0
@@ -1233,57 +1233,57 @@ program zprime
         sfxtranstot(itrans)=sfxtranstot(itrans)+ &
         fxtranstot(itrans,j)*transw(itrans)
       end do
-      write(*,*)'DISTRIBUTION'
+      write(*,*)'distribution'
       if (itrans == 1)then
-        write(*,*)'Mvis'
-        write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
-        write(*,*)'M_{vis}--[GeV]'
+        write(*,*)'mvis'
+        write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
+        write(*,*)'m_{vis}--[gev]'
       else if (itrans == 2)then
-        write(*,*)'HT'
-        write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
-        write(*,*)'H_{T}--[GeV]'
+        write(*,*)'ht'
+        write(*,*)'d#sigma-/dh_{t}--[pb/gev]'
+        write(*,*)'h_{t}--[gev]'
       else if (itrans == 3)then
-        write(*,*)'M_T1'
-        write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_t1'
+        write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 4)then
-        write(*,*)'M_T2'
-        write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_t2'
+        write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 5)then
-        write(*,*)'M_T3'
-        write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_t3'
+        write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 6)then
-        write(*,*)'MlT'
-        write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'mlt'
+        write(*,*)'d#sigma-/dm^{l}_{t}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 7)then
-        write(*,*)'M_CT1'
-        write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_ct1'
+        write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 8)then
-        write(*,*)'M_CT2'
-        write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_ct2'
+        write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 9)then
-        write(*,*)'M_CT3'
-        write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_ct3'
+        write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 10)then
-        write(*,*)'MlCT'
-        write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
-        write(*,*)'M^{l}_{CT}--[GeV]'
+        write(*,*)'mlct'
+        write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/gev]'
+        write(*,*)'m^{l}_{ct}--[gev]'
       else
         continue
       end if
       do i=1,ndiv_trans(itrans)
         write(*,*)xtrans(itrans,i),fxtranstot(itrans,i)
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
   end do
-  ! Plot distribution in fl
+  ! plot distribution in fl
   if(o_fl == 1)then
     sfxfltot=0d0
     do j=1,ndiv_fl
@@ -1294,16 +1294,16 @@ program zprime
       end do
       sfxfltot=sfxfltot+fxfltot(j)*flw
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'fl'
     write(*,*)'d#sigma-/d#phi_{l}--[pb]'
     write(*,*)'#phi_{l}--[-rad-]'
     do i=1,ndiv_fl
       write(*,*)xfl(i),fxfltot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in cosfl
+  ! plot distribution in cosfl
   if(o_cosfl == 1)then
     sfxcosfltot=0d0
     do j=1,ndiv_cosfl
@@ -1314,16 +1314,16 @@ program zprime
       end do
       sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'cosfl'
     write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
     write(*,*)'cos#phi_{l}'
     do i=1,ndiv_cosfl
       write(*,*)xcosfl(i),fxcosfltot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in delta phi
+  ! plot distribution in delta phi
   if(o_dphi == 1)then
     sfxdphitot=0d0
     do j=1,ndiv_dphi
@@ -1334,47 +1334,47 @@ program zprime
       end do
       sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'dphi'
-    write(*,*)'d#sigma-/d#Delta#phi--[pb]'
-    write(*,*)'#Delta#phi'
+    write(*,*)'d#sigma-/d#delta#phi--[pb]'
+    write(*,*)'#delta#phi'
     do i=1,ndiv_dphi
       write(*,*)xdphi(i),fxdphitot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot 2d-distribution in delta phi
+  ! plot 2d-distribution in delta phi
   if(o_dphi2d == 1)then
     sfxdphi2dtot=0d0
     do i=1,ndiv_dphi
-      do j=1,ndiv_rMtt
+      do j=1,ndiv_rmtt
         fxdphi2dtot(i,j)=0.d0
         do k=1,it
-          fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*avgi/cnorm(k)/dphiw/rMttw
+          fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*avgi/cnorm(k)/dphiw/rmttw
           fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
         end do
         sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
       end do
     end do
-    write(*,*)'2D-DISTRIBUTION'
+    write(*,*)'2d-distribution'
     write(*,*)'dphi2d'
-    write(*,*)'d^2#sigma-/d#Delta#phi-dM_{tt}--[pb/GeV]'
-    write(*,*)'#Delta#phi--[rad]'
+    write(*,*)'d^2#sigma-/d#delta#phi-dm_{tt}--[pb/gev]'
+    write(*,*)'#delta#phi--[rad]'
     write(*,*) ndiv_dphi
     write(*,*) dphimin
     write(*,*) dphimax
-    write(*,*)'#M_{tt}--[GeV]'
-    write(*,*) ndiv_rMtt
-    write(*,*) rMttmin
-    write(*,*) rMttmax
+    write(*,*)'#m_{tt}--[gev]'
+    write(*,*) ndiv_rmtt
+    write(*,*) rmttmin
+    write(*,*) rmttmax
     do i=1,ndiv_dphi
-      do j=1,ndiv_rMtt
-        write(*,*)xdphi(i),xrMtt(j),fxdphi2dtot(i,j)
+      do j=1,ndiv_rmtt
+        write(*,*)xdphi(i),xrmtt(j),fxdphi2dtot(i,j)
       end do
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot 2d-distributions in delta_phi and all transverse variables
+  ! plot 2d-distributions in delta_phi and all transverse variables
   do itrans=1,ntrans
     if(o_transdp(itrans) == 1)then
       sfxtransdptot(itrans)=0d0
@@ -1391,64 +1391,64 @@ program zprime
           fxtransdptot(itrans,i,j)*transw(itrans)
         end do
       end do
-      write(*,*)'2D-DISTRIBUTION'
+      write(*,*)'2d-distribution'
       if (itrans == 1)then
-        write(*,*)'dphiMvis'
-        write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+        write(*,*)'dphimvis'
+        write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
       else if (itrans == 2)then
-        write(*,*)'HT'
-        write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
+        write(*,*)'ht'
+        write(*,*)'d#sigma-/dh_{t}--[pb/gev]'
       else if (itrans == 3)then
-        write(*,*)'dphiM_T1'
-        write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+        write(*,*)'dphim_t1'
+        write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
       else if (itrans == 4)then
-        write(*,*)'dphiM_T2'
-        write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+        write(*,*)'dphim_t2'
+        write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
       else if (itrans == 5)then
-        write(*,*)'dphiM_T3'
-        write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+        write(*,*)'dphim_t3'
+        write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
       else if (itrans == 6)then
-        write(*,*)'dphiMlT'
-        write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+        write(*,*)'dphimlt'
+        write(*,*)'d#sigma-/dm^{l}_{t}--[pb/gev]'
       else if (itrans == 7)then
-        write(*,*)'dphiM_CT1'
-        write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+        write(*,*)'dphim_ct1'
+        write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
       else if (itrans == 8)then
-        write(*,*)'dphiM_CT2'
-        write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+        write(*,*)'dphim_ct2'
+        write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
       else if (itrans == 9)then
-        write(*,*)'dphiM_CT3'
-        write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+        write(*,*)'dphim_ct3'
+        write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
       else if (itrans == 10)then
-        write(*,*)'dphiMlCT'
-        write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+        write(*,*)'dphimlct'
+        write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/gev]'
       else
         continue
       end if
-      write(*,*)'#Delta#phi'
+      write(*,*)'#delta#phi'
       write(*,*) ndiv_dphi
       write(*,*) dphimin
       write(*,*) dphimax
       if (itrans == 1)then
-        write(*,*)'M_{vis}--[GeV]'
+        write(*,*)'m_{vis}--[gev]'
       else if (itrans == 2)then
-        write(*,*)'H_{T}--[GeV]'
+        write(*,*)'h_{t}--[gev]'
       else if (itrans == 3)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 4)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 5)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 6)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 7)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 8)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 9)then
-        write(*,*)'M_{T}--[GeV]'
+        write(*,*)'m_{t}--[gev]'
       else if (itrans == 10)then
-        write(*,*)'M^{l}_{CT}--[GeV]'
+        write(*,*)'m^{l}_{ct}--[gev]'
       else
         continue
       end if
@@ -1461,10 +1461,10 @@ program zprime
           ,fxtransdptot(itrans,i,j)
         end do
       end do
-      write(*,*)'END'
+      write(*,*)'end'
     end if
   end do
-  ! Plot distribution in cost5
+  ! plot distribution in cost5
   if(o_cost5 == 1)then
     sfxcost5tot=0d0
     do j=1,ndiv_cost5
@@ -1475,16 +1475,16 @@ program zprime
       end do
       sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'cost5'
     write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
     write(*,*)'cos#theta_{+}'
     do i=1,ndiv_cost5
       write(*,*)xcost5(i),fxcost5tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in cost7
+  ! plot distribution in cost7
   if(o_cost7 == 1)then
     sfxcost7tot=0d0
     do j=1,ndiv_cost7
@@ -1495,16 +1495,16 @@ program zprime
       end do
       sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'cost7'
     write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
     write(*,*)'cos#theta_{-}'
     do i=1,ndiv_cost7
       write(*,*)xcost7(i),fxcost7tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distribution in ct7ct5
+  ! plot distribution in ct7ct5
   if(o_ct7ct5 == 1)then
     sfxct7ct5tot=0d0
     do j=1,ndiv_ct7ct5
@@ -1515,7 +1515,7 @@ program zprime
       end do
       sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
     end do
-    write(*,*)'DISTRIBUTION'
+    write(*,*)'distribution'
     write(*,*)'ct7ct5'
     write(*,*) &
     'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
@@ -1523,10 +1523,10 @@ program zprime
     do i=1,ndiv_ct7ct5
       write(*,*)xct7ct5(i),fxct7ct5tot(i)
     end do
-    write(*,*)'END'
+    write(*,*)'end'
   end if
-  ! Plot distributions in all asymmetries
-  if((o_sigp == 1) .AND. (o_sigm == 1))then
+  ! plot distributions in all asymmetries
+  if((o_sigp == 1) .and. (o_sigm == 1))then
     do jasy=1,nasym
       if(o_asym(jasy) == 0)then
         continue
@@ -1549,36 +1549,36 @@ program zprime
           end do
           sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
         end do
-        write(*,*)'ASYMMETRY'
+        write(*,*)'asymmetry'
         if(jasy == 1)then
-          write(*,*)'ALL'
-          write(*,*)'A_{LL}'
+          write(*,*)'all'
+          write(*,*)'a_{ll}'
         else if(jasy == 2)then
-          write(*,*)'AL'
-          write(*,*)'A_{L}'
+          write(*,*)'al'
+          write(*,*)'a_{l}'
         else if(jasy == 3)then
-          write(*,*)'APV'
-          write(*,*)'A_{PV}'
+          write(*,*)'apv'
+          write(*,*)'a_{pv}'
         else if(jasy == 4)then
-          write(*,*)'AFB'
-          write(*,*)'A_{FB}'
+          write(*,*)'afb'
+          write(*,*)'a_{fb}'
         else if(jasy == 5)then
-          write(*,*)'AFBstar'
-          write(*,*)'A_{FB^{*}}'
+          write(*,*)'afbstar'
+          write(*,*)'a_{fb^{*}}'
         else if(jasy == 6)then
-          write(*,*)'AtRFB'
-          write(*,*)'A^{t}_{RFB}'
+          write(*,*)'atrfb'
+          write(*,*)'a^{t}_{rfb}'
         else if(jasy == 7)then
-          write(*,*)'AttbRFB'
-          write(*,*)"A^{b\bar{b}}_{RFB}"
+          write(*,*)'attbrfb'
+          write(*,*)"a^{b\bar{b}}_{rfb}"
         else if(jasy == 8)then
-          write(*,*)'ARFB'
-          write(*,*)"A_{RFB}"
+          write(*,*)'arfb'
+          write(*,*)"a_{rfb}"
         else if(jasy == 9)then
-          write(*,*)'A_l'
-          write(*,*)'A_{l}'
+          write(*,*)'a_l'
+          write(*,*)'a_{l}'
         end if
-        write(*,*)'M_{tt}'
+        write(*,*)'m_{tt}'
         ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
         do i=1,ndiv_sig
           if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
@@ -1592,104 +1592,104 @@ program zprime
             !             snorm(jasy)=snorm(jasy)+
             !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
             !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-            !    &               *fxrMtttot(i)*rMttw/avgi
+            !    &               *fxrmtttot(i)*rmttw/avgi
           end if
         end do
         asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/ &
         (sfxsigptot(jasy)+sfxsigmtot(jasy))
-        write(*,*)'END'
-        !         write(*,*)'(Total Asymmetry:',asym_int(jasy),')'
-        !         write(*,*)'(Integrated Asymmetry:',snorm(jasy),' )'
+        write(*,*)'end'
+        !         write(*,*)'(total asymmetry:',asym_int(jasy),')'
+        !         write(*,*)'(integrated asymmetry:',snorm(jasy),' )'
       end if
     end do
   end if
 
-  ! Check distributions
-  diff_max=1E-12
+  ! check distributions
+  diff_max=1e-12
   n_error=0
   do ip=3,nfinal
-    if(o_pT(ip) == 1)then
-      if(abs(cross-sfxpTtot(ip))>diff_max)then
-        write(*,*)'pT',ip,' Error:',sfxpTtot(ip)
+    if(o_pt(ip) == 1)then
+      if(abs(cross-sfxpttot(ip))>diff_max)then
+        write(*,*)'pt',ip,' error:',sfxpttot(ip)
         n_error=n_error+1
       end if
     end if
     if(o_eta(ip) == 1)then
       if(abs(cross-sfxetatot(ip))>diff_max)then
-        write(*,*)'eta',ip,' Error:',sfxetatot(ip)
+        write(*,*)'eta',ip,' error:',sfxetatot(ip)
         n_error=n_error+1
       end if
     end if
     if(o_phi(ip) == 1)then
       if(abs(cross-sfxphitot(ip))>diff_max)then
-        write(*,*)'phi',ip,' Error:',sfxphitot(ip)
+        write(*,*)'phi',ip,' error:',sfxphitot(ip)
         n_error=n_error+1
       end if
     end if
   end do
-  if(o_ETmiss == 1)then
-    if(abs(cross-sfxETmisstot)>diff_max)then
-      write(*,*)'ETmiss Error:',sfxETmisstot
+  if(o_etmiss == 1)then
+    if(abs(cross-sfxetmisstot)>diff_max)then
+      write(*,*)'etmiss error:',sfxetmisstot
       n_error=n_error+1
     end if
   end if
-  if(o_pT356 == 1)then
-    if(abs(cross-sfxpT356tot)>diff_max)then
-      write(*,*)'pT356 Error:',sfxpT356tot
+  if(o_pt356 == 1)then
+    if(abs(cross-sfxpt356tot)>diff_max)then
+      write(*,*)'pt356 error:',sfxpt356tot
       n_error=n_error+1
     end if
   end if
   if(o_eta356 == 1)then
     if(abs(cross-sfxeta356tot)>diff_max)then
-      write(*,*)'eta356 Error:',sfxeta356tot
+      write(*,*)'eta356 error:',sfxeta356tot
       n_error=n_error+1
     end if
   end if
   if(o_phi356 == 1)then
     if(abs(cross-sfxphi356tot)>diff_max)then
-      write(*,*)'phi356 Error:',sfxphi356tot
+      write(*,*)'phi356 error:',sfxphi356tot
       n_error=n_error+1
     end if
   end if
-  if(o_pT478 == 1)then
-    if(abs(cross-sfxpT478tot)>diff_max)then
-      write(*,*)'pT478 Error:',sfxpT478tot
+  if(o_pt478 == 1)then
+    if(abs(cross-sfxpt478tot)>diff_max)then
+      write(*,*)'pt478 error:',sfxpt478tot
       n_error=n_error+1
     end if
   end if
   if(o_eta478 == 1)then
     if(abs(cross-sfxeta478tot)>diff_max)then
-      write(*,*)'eta478 Error:',sfxeta478tot
+      write(*,*)'eta478 error:',sfxeta478tot
       n_error=n_error+1
     end if
   end if
   if(o_phi478 == 1)then
     if(abs(cross-sfxphi478tot)>diff_max)then
-      write(*,*)'phi478 Error:',sfxphi478tot
+      write(*,*)'phi478 error:',sfxphi478tot
       n_error=n_error+1
     end if
   end if
-  if(o_rMtt == 1)then
-    if(abs(cross-sfxrMtttot)>diff_max)then
-      write(*,*)'rMtt Error:',sfxrMtttot
+  if(o_rmtt == 1)then
+    if(abs(cross-sfxrmtttot)>diff_max)then
+      write(*,*)'rmtt error:',sfxrmtttot
       n_error=n_error+1
     end if
   end if
   if(o_beta == 1)then
     if(abs(cross-sfxbetatot)>diff_max*10)then
-      write(*,*)'beta Error:',sfxbetatot
+      write(*,*)'beta error:',sfxbetatot
       n_error=n_error+1
     end if
   end if
   if(o_cost == 1)then
     if(abs(cross-sfxcosttot)>diff_max)then
-      write(*,*)'cost Error:',sfxcosttot
+      write(*,*)'cost error:',sfxcosttot
       n_error=n_error+1
     end if
   end if
-  if(o_Et == 1)then
-    if(abs(cross-sfxEttot)>diff_max)then
-      write(*,*)'Et Error:',sfxEttot
+  if(o_et == 1)then
+    if(abs(cross-sfxettot)>diff_max)then
+      write(*,*)'et error:',sfxettot
       n_error=n_error+1
     end if
   end if
@@ -1697,27 +1697,27 @@ program zprime
     if(o_asym(iasy) == 0)then
       continue
     else
-      if(abs(Atot(iasy)-asym_int(iasy))>diff_max)then
-        write(*,*)'A Error:',iasy,asym_int(iasy)
+      if(abs(atot(iasy)-asym_int(iasy))>diff_max)then
+        write(*,*)'a error:',iasy,asym_int(iasy)
         n_error=n_error+1
       end if
     end if
   end do
   if(o_fl == 1)then
     if(abs(cross-sfxfltot)>diff_max)then
-      write(*,*)'fl Error:',sfxfltot
+      write(*,*)'fl error:',sfxfltot
       n_error=n_error+1
     end if
   end if
   if(o_cosfl == 1)then
     if(abs(cross-sfxcosfltot)>diff_max)then
-      write(*,*)'cosfl Error:',sfxcosfltot
+      write(*,*)'cosfl error:',sfxcosfltot
       n_error=n_error+1
     end if
   end if
   if(o_dphi == 1)then
     if(abs(cross-sfxdphitot)>diff_max)then
-      write(*,*)'dphi Error:',sfxdphitot
+      write(*,*)'dphi error:',sfxdphitot
       n_error=n_error+1
     end if
   end if
@@ -1725,13 +1725,13 @@ program zprime
     if(o_asym(iasy) == 0)then
       continue
     else
-      if(abs(Atot(iasy)-asym_int(iasy))>diff_max)then
-        write(*,*)'A Error:',iasy,asym_int(iasy)
+      if(abs(atot(iasy)-asym_int(iasy))>diff_max)then
+        write(*,*)'a error:',iasy,asym_int(iasy)
         n_error=n_error+1
       end if
     end if
   end do
-  write(*,*)'INTEGRATION ERRORS:',n_error
-  write(*,*)'CLOSE'
+  write(*,*)'integration errors:',n_error
+  write(*,*)'close'
   stop
 end program zprime
