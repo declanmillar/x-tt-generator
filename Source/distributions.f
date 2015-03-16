@@ -1,7 +1,8 @@
 module distributions
 
   use configuration, only: o_distros, o_dist2d, o_trans, o_asyms, o_asym, nspat, nasym, ifinal_state, initial_state, nfinal
-  use kinematics, only: pi
+  use kinematics, only: pi, sigma
+  use integration, only: it
 
   ! distributions in pts of asymptotic particles
   real :: ptmax(8),ptmin(8),ptw(8)
@@ -495,6 +496,7 @@ module distributions
           xbeta(i)=betamin+betaw*(i-1)+betaw/2.d0
         end do
       end if
+
       if(o_cost == 1)then
         costw=(costmax-costmin)/ndiv_cost
         do i=1,ndiv_cost
@@ -589,6 +591,8 @@ module distributions
 
       integer :: ip
 
+      write(*,*)'sigma',sigma
+
       write(*,*)''
       write(*,*)'HISTOGRAMS'
       do ip=3,8
@@ -598,7 +602,7 @@ module distributions
           do j=1,ndiv_pt(ip)
             fxpttot(ip,j)=0.d0
             do i=1,it
-              fxpt(ip,j,i)=fxpt(ip,j,i)*avgi/cnorm(i)/ptw(ip)
+              fxpt(ip,j,i)=fxpt(ip,j,i)*sigma/cnorm(i)/ptw(ip)
               fxpttot(ip,j)=fxpttot(ip,j)+fxpt(ip,j,i)
             end do
             sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
@@ -618,7 +622,7 @@ module distributions
           do j=1,ndiv_eta(ip)
             fxetatot(ip,j)=0.d0
             do i=1,it
-              fxeta(ip,j,i)=fxeta(ip,j,i)*avgi/cnorm(i)/etaw(ip)
+              fxeta(ip,j,i)=fxeta(ip,j,i)*sigma/cnorm(i)/etaw(ip)
               fxetatot(ip,j)=fxetatot(ip,j)+fxeta(ip,j,i)
             end do
             sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
@@ -638,7 +642,7 @@ module distributions
           do j=1,ndiv_phi(ip)
             fxphitot(ip,j)=0.d0
             do i=1,it
-              fxphi(ip,j,i)=fxphi(ip,j,i)*avgi/cnorm(i)/phiw(ip)
+              fxphi(ip,j,i)=fxphi(ip,j,i)*sigma/cnorm(i)/phiw(ip)
               fxphitot(ip,j)=fxphitot(ip,j)+fxphi(ip,j,i)
             end do
             sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
@@ -658,7 +662,7 @@ module distributions
           do j=1,ndiv_ycol(ip)
             fxycoltot(ip,j)=0.d0
             do i=1,it
-              fxycol(ip,j,i)=fxycol(ip,j,i)*avgi/cnorm(i)/ycolw(ip)
+              fxycol(ip,j,i)=fxycol(ip,j,i)*sigma/cnorm(i)/ycolw(ip)
               fxycoltot(ip,j)=fxycoltot(ip,j)+fxycol(ip,j,i)
             end do
             sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
@@ -680,7 +684,7 @@ module distributions
         do j=1,ndiv_etmiss
           fxetmisstot(j)=0.d0
           do i=1,it
-            fxetmiss(j,i)=fxetmiss(j,i)*avgi/cnorm(i)/etmissw
+            fxetmiss(j,i)=fxetmiss(j,i)*sigma/cnorm(i)/etmissw
             fxetmisstot(j)=fxetmisstot(j)+fxetmiss(j,i)
           end do
           sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
@@ -701,7 +705,7 @@ module distributions
         do j=1,ndiv_pt356
           fxpt356tot(j)=0.d0
           do i=1,it
-            fxpt356(j,i)=fxpt356(j,i)*avgi/cnorm(i)/pt356w
+            fxpt356(j,i)=fxpt356(j,i)*sigma/cnorm(i)/pt356w
             fxpt356tot(j)=fxpt356tot(j)+fxpt356(j,i)
           end do
           sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
@@ -721,7 +725,7 @@ module distributions
         do j=1,ndiv_eta356
           fxeta356tot(j)=0.d0
           do i=1,it
-            fxeta356(j,i)=fxeta356(j,i)*avgi/cnorm(i)/eta356w
+            fxeta356(j,i)=fxeta356(j,i)*sigma/cnorm(i)/eta356w
             fxeta356tot(j)=fxeta356tot(j)+fxeta356(j,i)
           end do
           sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
@@ -741,7 +745,7 @@ module distributions
         do j=1,ndiv_phi356
           fxphi356tot(j)=0.d0
           do i=1,it
-            fxphi356(j,i)=fxphi356(j,i)*avgi/cnorm(i)/phi356w
+            fxphi356(j,i)=fxphi356(j,i)*sigma/cnorm(i)/phi356w
             fxphi356tot(j)=fxphi356tot(j)+fxphi356(j,i)
           end do
           sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
@@ -761,7 +765,7 @@ module distributions
         do j=1,ndiv_pt478
           fxpt478tot(j)=0.d0
           do i=1,it
-            fxpt478(j,i)=fxpt478(j,i)*avgi/cnorm(i)/pt478w
+            fxpt478(j,i)=fxpt478(j,i)*sigma/cnorm(i)/pt478w
             fxpt478tot(j)=fxpt478tot(j)+fxpt478(j,i)
           end do
           sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
@@ -781,7 +785,7 @@ module distributions
         do j=1,ndiv_eta478
           fxeta478tot(j)=0.d0
           do i=1,it
-            fxeta478(j,i)=fxeta478(j,i)*avgi/cnorm(i)/eta478w
+            fxeta478(j,i)=fxeta478(j,i)*sigma/cnorm(i)/eta478w
             fxeta478tot(j)=fxeta478tot(j)+fxeta478(j,i)
           end do
           sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
@@ -801,7 +805,7 @@ module distributions
         do j=1,ndiv_phi478
           fxphi478tot(j)=0.d0
           do i=1,it
-            fxphi478(j,i)=fxphi478(j,i)*avgi/cnorm(i)/phi478w
+            fxphi478(j,i)=fxphi478(j,i)*sigma/cnorm(i)/phi478w
             fxphi478tot(j)=fxphi478tot(j)+fxphi478(j,i)
           end do
           sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
@@ -821,7 +825,7 @@ module distributions
         do j=1,ndiv_rmtt
           fxrmtttot(j)=0.d0
           do i=1,it
-            fxrmtt(j,i)=fxrmtt(j,i)*avgi/cnorm(i)/rmttw
+            fxrmtt(j,i)=fxrmtt(j,i)*sigma/cnorm(i)/rmttw
             fxrmtttot(j)=fxrmtttot(j)+fxrmtt(j,i)
           end do
           sfxrmtttot=sfxrmtttot+fxrmtttot(j)*rmttw
@@ -841,7 +845,7 @@ module distributions
         do j=1,ndiv_beta
           fxbetatot(j)=0.d0
           do i=1,it
-            fxbeta(j,i)=fxbeta(j,i)*avgi/cnorm(i)/betaw
+            fxbeta(j,i)=fxbeta(j,i)*sigma/cnorm(i)/betaw
             fxbetatot(j)=fxbetatot(j)+fxbeta(j,i)
           end do
           sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
@@ -861,7 +865,7 @@ module distributions
         do j=1,ndiv_cost
           fxcosttot(j)=0.d0
           do i=1,it
-            fxcost(j,i)=fxcost(j,i)*avgi/cnorm(i)/costw
+            fxcost(j,i)=fxcost(j,i)*sigma/cnorm(i)/costw
             fxcosttot(j)=fxcosttot(j)+fxcost(j,i)
           end do
           sfxcosttot=sfxcosttot+fxcosttot(j)*costw
@@ -882,7 +886,7 @@ module distributions
         do j=1,ndiv_et
           fxettot(j)=0.d0
           do i=1,it
-            fxet(j,i)=fxet(j,i)*avgi/cnorm(i)/etw
+            fxet(j,i)=fxet(j,i)*sigma/cnorm(i)/etw
             fxettot(j)=fxettot(j)+fxet(j,i)
           end do
           sfxettot=sfxettot+fxettot(j)*etw
@@ -902,7 +906,7 @@ module distributions
         do j=1,ndiv_delta_y
           fxdelta_ytot(j)=0.d0
           do i=1,it
-            fxdelta_y(j,i)=fxdelta_y(j,i)*avgi/cnorm(i)/delta_yw
+            fxdelta_y(j,i)=fxdelta_y(j,i)*sigma/cnorm(i)/delta_yw
             fxdelta_ytot(j)=fxdelta_ytot(j)+fxdelta_y(j,i)
           end do
           sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
@@ -924,7 +928,7 @@ module distributions
             fxtranstot(itrans,j)=0.d0
             do i=1,it
               fxtrans(itrans,j,i)=fxtrans(itrans,j,i) &
-              *avgi/cnorm(i)/transw(itrans)
+              *sigma/cnorm(i)/transw(itrans)
               fxtranstot(itrans,j)=fxtranstot(itrans,j) &
               +fxtrans(itrans,j,i)
             end do
@@ -987,7 +991,7 @@ module distributions
         do j=1,ndiv_fl
           fxfltot(j)=0.d0
           do i=1,it
-            fxfl(j,i)=fxfl(j,i)*avgi/cnorm(i)/flw
+            fxfl(j,i)=fxfl(j,i)*sigma/cnorm(i)/flw
             fxfltot(j)=fxfltot(j)+fxfl(j,i)
           end do
           sfxfltot=sfxfltot+fxfltot(j)*flw
@@ -1007,7 +1011,7 @@ module distributions
         do j=1,ndiv_cosfl
           fxcosfltot(j)=0.d0
           do i=1,it
-            fxcosfl(j,i)=fxcosfl(j,i)*avgi/cnorm(i)/cosflw
+            fxcosfl(j,i)=fxcosfl(j,i)*sigma/cnorm(i)/cosflw
             fxcosfltot(j)=fxcosfltot(j)+fxcosfl(j,i)
           end do
           sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
@@ -1027,7 +1031,7 @@ module distributions
         do j=1,ndiv_dphi
           fxdphitot(j)=0.d0
           do i=1,it
-            fxdphi(j,i)=fxdphi(j,i)*avgi/cnorm(i)/dphiw
+            fxdphi(j,i)=fxdphi(j,i)*sigma/cnorm(i)/dphiw
             fxdphitot(j)=fxdphitot(j)+fxdphi(j,i)
           end do
           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
@@ -1048,7 +1052,7 @@ module distributions
           do j=1,ndiv_rmtt
             fxdphi2dtot(i,j)=0.d0
             do k=1,it
-              fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*avgi/cnorm(k)/dphiw/rmttw
+              fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/rmttw
               fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
             end do
             sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
@@ -1081,7 +1085,7 @@ module distributions
               fxtransdptot(itrans,i,j)=0.d0
               do k=1,it
                 fxtransdp(itrans,i,j,k)=fxtransdp(itrans,i,j,k) &
-                *avgi/cnorm(k)/transw(itrans)/dphiw
+                *sigma/cnorm(k)/transw(itrans)/dphiw
                 fxtransdptot(itrans,i,j)=fxtransdptot(itrans,i,j) &
                 +fxtransdp(itrans,i,j,k)
               end do
@@ -1168,7 +1172,7 @@ module distributions
         do j=1,ndiv_cost5
           fxcost5tot(j)=0.d0
           do i=1,it
-            fxcost5(j,i)=fxcost5(j,i)*avgi/cnorm(i)/cost5w
+            fxcost5(j,i)=fxcost5(j,i)*sigma/cnorm(i)/cost5w
             fxcost5tot(j)=fxcost5tot(j)+fxcost5(j,i)
           end do
           sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
@@ -1188,7 +1192,7 @@ module distributions
         do j=1,ndiv_cost7
           fxcost7tot(j)=0.d0
           do i=1,it
-            fxcost7(j,i)=fxcost7(j,i)*avgi/cnorm(i)/cost7w
+            fxcost7(j,i)=fxcost7(j,i)*sigma/cnorm(i)/cost7w
             fxcost7tot(j)=fxcost7tot(j)+fxcost7(j,i)
           end do
           sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
@@ -1208,7 +1212,7 @@ module distributions
         do j=1,ndiv_ct7ct5
           fxct7ct5tot(j)=0.d0
           do i=1,it
-            fxct7ct5(j,i)=fxct7ct5(j,i)*avgi/cnorm(i)/ct7ct5w
+            fxct7ct5(j,i)=fxct7ct5(j,i)*sigma/cnorm(i)/ct7ct5w
             fxct7ct5tot(j)=fxct7ct5tot(j)+fxct7ct5(j,i)
           end do
           sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
@@ -1234,7 +1238,7 @@ module distributions
             do j=1,ndiv_sigp
               fxsigptot(jasy,j)=0.d0
               do i=1,it
-                fxsigp(jasy,j,i)=fxsigp(jasy,j,i)*avgi/cnorm(i)/sigpw
+                fxsigp(jasy,j,i)=fxsigp(jasy,j,i)*sigma/cnorm(i)/sigpw
                 fxsigptot(jasy,j)=fxsigptot(jasy,j)+fxsigp(jasy,j,i)
               end do
               sfxsigptot(jasy)=sfxsigptot(jasy)+fxsigptot(jasy,j)*sigpw
@@ -1242,7 +1246,7 @@ module distributions
             sfxsigmtot(jasy)=0d0
             do j=1,ndiv_sigm
               do i=1,it
-                fxsigm(jasy,j,i)=fxsigm(jasy,j,i)*avgi/cnorm(i)/sigmw
+                fxsigm(jasy,j,i)=fxsigm(jasy,j,i)*sigma/cnorm(i)/sigmw
                 fxsigmtot(jasy,j)=fxsigmtot(jasy,j)+fxsigm(jasy,j,i)
               end do
               sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
@@ -1290,9 +1294,10 @@ module distributions
                 !             snorm(jasy)=snorm(jasy)+
                 !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
                 !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-                !    &               *fxrmtttot(i)*rmttw/avgi
+                !    &               *fxrmtttot(i)*rmttw/sigma
               end if
             end do
+            write(*,*)'test'
             asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/(sfxsigptot(jasy)+sfxsigmtot(jasy))
             write(*,*)'END'
             !         write(*,*)'(total asymmetry:',asym_int(jasy),')'
@@ -1302,8 +1307,10 @@ module distributions
       end if
     end subroutine print_distributions
 
+
+
     subroutine  check_distributions
-      diff_max=1e-12
+      real :: diff_max=1e-12
       n_error=0
       do ip=3,nfinal
         if(o_pt(ip) == 1)then
@@ -1373,12 +1380,14 @@ module distributions
           n_error=n_error+1
         end if
       end if
+
       if(o_beta == 1)then
-        if(abs(cross-sfxbetatot)>diff_max*10)then
+        if(abs(cross-sfxbetatot)>diff_max)then
           write(*,*)'beta error:',sfxbetatot
           n_error=n_error+1
         end if
       end if
+
       if(o_cost == 1)then
         if(abs(cross-sfxcosttot)>diff_max)then
           write(*,*)'cost error:',sfxcosttot
@@ -1420,7 +1429,7 @@ module distributions
         end if
       end do
       write(*,*)'integration errors:',n_error
-      write(*,*)'close'
+      write(*,*)'CLOSE'
 
     end subroutine check_distributions
 

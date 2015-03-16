@@ -1,38 +1,55 @@
-! ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+! block data
+!   implicit double precision(a-h,o-z)
+! !   makes default parameter assignments for vegas
+!   common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
+!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
+!   common/bveg3/alph,ndmx,mds
+!   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
+!   xl/100*0.d0/,xu/100*1.d0/, &
+!   alph/1.5d0/,ndmx/50/,mds/1/,ndev/6/, &
+!   ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/
+! end
 
-! introduced a new common for calculating more precise distributions
-! common/reslocal/resl(20),standdevl(20)
-
-
-! ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-!-----------------------------------------------------------------------
-!  start vegas section
-
-block data
+module integration 
   implicit double precision(a-h,o-z)
 !   makes default parameter assignments for vegas
-  common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  common/bveg3/alph,ndmx,mds
+
+  integer :: ncall,itmx,nprn,ndev
+  real :: xl(100),xu(100),acc
+  integer :: it,ndo
+  real :: si,swgt,schi,xi(50,100)
+  real :: alph
+  integer :: ndmx,mds
+  real :: resl(20),standdevl(20)
+
+  integer :: iseed
+
+  ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
+  ! common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
+  ! common/bveg3/alph,ndmx,mds
+  ! common/rndm/iseed
+  ! common/reslocal/resl(20),standdevl(20)
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
   xl/100*0.d0/,xu/100*1.d0/, &
   alph/1.5d0/,ndmx/50/,mds/1/,ndev/6/, &
-  ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/
-end
+  ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/  
+end module integration
 
 
 subroutine vegas(ndim,fxn,avgi,sd,chi2a)
 
-!     !  subroutine performs ndim-dimensional monte carlo integ'n
-!      - by g.p. lepage    sept 1976/(rev)aug 1979
-!      - algorithm described in j comp phys 27,192(1978)
+  use integration
+
+  !   subroutine performs ndim-dimensional monte carlo integ'n
+  ! - by g.p. lepage    sept 1976/(rev)aug 1979
+  ! - algorithm described in j comp phys 27,192(1978)
 
   implicit double precision(a-h,o-z)
-  common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  common/bveg3/alph,ndmx,mds
-  common/bveg4/calls,ti,tsi
-  common/reslocal/resl(20),standdevl(20)
+  ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
+  ! common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
+  ! common/bveg3/alph,ndmx,mds
+  ! common/bveg4/calls,ti,tsi
+  ! common/reslocal/resl(20),standdevl(20)
   dimension d(50,100),di(50,100),xin(50),r(50),dx(100),ia(100), &
   kg(100),dt(100),x(100)
   dimension rand(100)
@@ -274,48 +291,53 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   return
 end subroutine vegas
 
-!***************************************************************
-! load vegas data if desired
-subroutine load_vegas(ndim,name)
-  implicit double precision(a-h,o-z)
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  character(30) :: name
-!      open(unit=13,file=name,status='old',shared)
-  read(13,210) it,ndo,si,swgt,schi
-  do 190 j=1,ndim
-    read(13,*)  (xi(i,j),i=1,50)
-  190 END DO
-  210 format(2i8,3z16)
-  close(unit=13)
-  return
-end subroutine load_vegas
 
-!*******************************************************************
-! store vegas data for possible later use
-subroutine store_vegas(ndim,name)
-  implicit double precision(a-h,o-z)
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  character(30) :: name
-  open(unit=12,file=name,status='new')
-  write(12,210) it,ndo,si,swgt,schi
-  do 190 j=1,ndim
-    write(12,*)  (xi(i,j),i=1,50)
-  190 END DO
-  210 format(2i8,3z16)
-  close(unit=12)
-  return
-end subroutine store_vegas
+
+! subroutine load_vegas(ndim,name)
+
+!   ! load vegas data if desired
+
+!   implicit double precision(a-h,o-z)
+!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
+!   character(30) :: name
+!   ! open(unit=13,file=name,status='old',shared)
+!   read(13,210) it,ndo,si,swgt,schi
+!   do 190 j=1,ndim
+!     read(13,*)  (xi(i,j),i=1,50)
+!   190 END DO
+!   210 format(2i8,3z16)
+!   close(unit=13)
+!   return
+! end subroutine load_vegas
+
+
+! subroutine store_vegas(ndim,name)
+  
+!   ! store vegas data for possible later use
+
+!   implicit double precision(a-h,o-z)
+!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
+!   character(30) :: name
+!   open(unit=12,file=name,status='new')
+!   write(12,210) it,ndo,si,swgt,schi
+!   do 190 j=1,ndim
+!     write(12,*)  (xi(i,j),i=1,50)
+!   190 END DO
+!   210 format(2i8,3z16)
+!   close(unit=12)
+!   return
+! end subroutine store_vegas
 
 subroutine randa(n,rand)
 
-!   subroutine generates uniformly distributed random no's x(i),i=1,n
+  use integration, only: iseed
+
+  ! subroutine generates uniformly distributed random no's x(i),i=1,n
+
   implicit double precision(a-h,o-z)
-  common/rndm/iseed
   dimension rand(n)
   do 1 i=1,n
     rand(i)=ran2(iseed)
   1 END DO
   return
 end subroutine randa
-
-!--------- end the vegas section -------------------------------------

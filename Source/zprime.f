@@ -11,35 +11,39 @@ program zprime
   use configuration
   use kinematics
   use distributions
+  use integration
 
-  implicit real (a-h,p-z)
-  implicit integer (l-o)
+  implicit none
 
   external differential_cross_section
 
-  common/ew/a_em,s2w
   common/fermions/ fmass,     fwidth
   real :: fmass(12), fwidth(12)
+  real :: rm_w,gamma_w,rm_z,gamma_z
   common/vmass1/rm_w,gamma_w,rm_z,gamma_z
+  real :: rm_a,gamma_a,rm_h,gamma_h
   common/vmass2/rm_a,gamma_a,rm_h,gamma_h
-  common/zp/rmzp(5),gamzp(5)
-  common/zpparam/paramzp(5)
-  common/coupzpva/gp(5),gv_d(5),ga_d(5),gv_u(5),ga_u(5)
-  common/coupzp/gzpd(2,5),gzpu(2,5)
+  real :: rmzp(5),gamzp(5)
+  common/zp/rmzp,gamzp
+  real :: paramzp(5)
+  common/zpparam/paramzp
+  real :: gp(5),gv_d(5),ga_d(5),gv_u(5),ga_u(5)
+  common/coupzpva/gp,gv_d,ga_d,gv_u,ga_u
+  real :: gzpd(2,5),gzpu(2,5)
+  common/coupzp/gzpd,gzpu
+  real :: rlambdaqcd4
+  integer :: nloops
   common/qcd/rlambdaqcd4,nloops
 
-  ! local variables
-  ! flag for zp width specification
+
   real :: o_width(5)
-  ! polarised/hemispherised cross sections
-  ! imension snorm(6)  !,ave(4)
   real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)
   real :: spattot(nspat,-1:1),spatchi(nspat,-1:1)
-  ! test particular matrix element
-  real :: testp1(0:3),testp2(0:3),testp3(0:3),testp4(0:3)
 
-  ! local constant
-  integer :: today(3), now(3)
+  real :: avgi, chi2a, cross, error, sd, stantot, alfas, qcdl4
+  integer :: iab, ndimensions, iasy, icteq, iphel,ispat,jphel
+
+  
   ! branching ratio for t->bev=bmv=btv (with qcd corrections?)
   real :: brtbln=0.10779733d0
   ! branching ratio for t->bev=bmv=btv=1/9 (tree level)
@@ -47,7 +51,8 @@ program zprime
   ! branching ratio for t->beq=bmq=btq=6/9 (tree level)
   ! real :: brtbeq=0.66666666d0
 
-  integer i, j, k
+  integer :: i, j, k
+  integer :: today(3), now(3)
 
   call read_config
 
@@ -91,9 +96,9 @@ program zprime
 
   ! dimensions
   if(ifinal_state == 0)then
-    ndim=3
+    ndimensions=3
   else if(ifinal_state > 0)then
-    ndim=15
+    ndimensions=15
   end if
   ! if nprn<0 no print-out
   nprn=0
@@ -307,8 +312,9 @@ program zprime
 
   ! integrate 
   write(*,*)'starting integration'
-  it=0  
-  call vegas(ndim,differential_cross_section,avgi,sd,chi2a)
+  it=0 
+  write(*,*)'bork316' 
+  call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
 
   if(ifinal_state == 0 .and. o_br == 1)then
     ! multiply by branching ratios
@@ -318,6 +324,7 @@ program zprime
 
   ! collect total cross-section
   cross=avgi
+  sigma=avgi
   error=sd
 
   ! print integrated cross section

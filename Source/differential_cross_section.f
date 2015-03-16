@@ -14,6 +14,7 @@ function differential_cross_section(x,wgt)
   use configuration
   use kinematics
   use distributions
+  use integration
 
   implicit real (a-h,p-z)
   implicit integer (l-o)
@@ -72,8 +73,6 @@ function differential_cross_section(x,wgt)
   ! internal random number seed
   integer :: jseed
   data jseed/987654321/
-
-  ! execute
 
   ! maximum centre of mass energy
   ecm_max=collider_energy
@@ -1435,6 +1434,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxpt(ip,nbin,it)=fxpt(ip,nbin,it)+hist
+            ! write(*,*)fxpt(ip,nbin,it)
           end if
         end if
       ! generate distribution in eta

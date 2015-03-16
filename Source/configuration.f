@@ -1,11 +1,13 @@
 module configuration
+
+  use integration, only: iseed, itmx, ncall, acc
+
+  implicit none
   
-  implicit double precision(a-h,o-z)
-  
-  common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  common/rndm/iseed
-  common/reslocal/resl(20),standdevl(20)
+  ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
+  ! common/bveg2/,ndo,si,swgt,schi,xi(50,100)
+  ! common/rndm/iseed
+  ! common/reslocal/resl(20),standdevl(20)
 
   real    :: collider_energy
   integer :: initial_state ! 0 = pp, 1 = ppbar
@@ -38,6 +40,8 @@ module configuration
   integer :: o_dist2d
   !   set |m|^2=1
   integer :: o_m_eq_1
+
+  integer :: o_decay
 
   ! distributions in asymmetries
   integer :: nasym
