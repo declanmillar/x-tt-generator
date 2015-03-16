@@ -1,5 +1,5 @@
-module Kinematics
-  use Distributions, only: nspat
+module kinematics
+  use configuration, only: nspat
   real :: rm3,rm4,rm5,rm6,rm7,rm8,s
   integer :: o_decay
   real:: pi

@@ -39,6 +39,13 @@ module configuration
   !   set |m|^2=1
   integer :: o_m_eq_1
 
+  ! distributions in asymmetries
+  integer :: nasym
+  parameter (nasym=9)
+  integer :: nspat
+  parameter (nspat=6) ! nasym-3
+  integer :: o_asym(nasym)
+
   integer :: ixmax,jxmax
   
   public :: read_config
