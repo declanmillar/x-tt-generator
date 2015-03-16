@@ -1,9 +1,7 @@
 module Distributions
 
-  ! use Configuration, only: o_distros, o_dist2d, o_trans, o_asyms, ifinal_state
-
-  ! switch for all distributions
-  ! integer :: o_distros
+  use Configuration, only: o_distros, o_dist2d, o_trans, o_asyms, ifinal_state, initial_state, nfinal
+  use kinematics, only: pi
 
   ! distributions in pTs of asymptotic particles
   real :: pTmax(8),pTmin(8),pTw(8)
@@ -181,229 +179,228 @@ module Distributions
     
       ! sets flags, binning range and divisions.
 
-      ! do i=1,nfinal
-      !   o_pT(i)=o_distros
-      !   pTmax(i)=7000.d0/(1+initial_state*6)
-      !   pTmin(i)=0.d0
-      !   ndiv_pT(i)=70
-      !   ! eta distributions
-      !   o_eta(i)=o_distros
-      !   etamax(i)=+10
-      !   etamin(i)=-10
-      !   ndiv_eta(i)=50
-      !   ! phi distributions
-      !   o_phi(i)=o_distros
-      !   phimax(i)=+pi
-      !   phimin(i)=-pi
-      !   ndiv_phi(i)=50
-      !   ! ycol distributions
-      !   o_ycol(i)=o_distros
-      !   ycolmax(i)=+4.d0
-      !   ycolmin(i)=-4.d0
-      !   ndiv_ycol(i)=100
-      ! end do
-      ! ! missing transverse momentum
-      ! o_ETmiss=o_distros
-      ! ETmissmax=7000.d0/(1+initial_state*6)
-      ! ETmissmin=0.d0
-      ! ndiv_ETmiss=70
-      ! ! top transverse momentum
-      ! o_pT356=o_distros
-      ! pT356max=7000.d0/(1+initial_state*6)
-      ! pT356min=0.d0
-      ! ndiv_pT356=70
-      ! ! 2to6 top pseudorapidity
-      ! o_eta356=o_distros
-      ! eta356max=+10
-      ! eta356min=-10
-      ! ndiv_eta356=50
-      ! ! 2to6 top pseudorapidity
-      ! o_phi356=o_distros
-      ! phi356max=+pi
-      ! phi356min=-pi
-      ! ndiv_phi356=50
-      ! ! anti-top transverse momentum
-      ! o_pT478=o_distros
-      ! pT478max=7000.d0/(1+initial_state*6)
-      ! pT478min=0.d0
-      ! ndiv_pT478=70
-      ! ! 2to6 anti-top pseudorapidity
-      ! o_eta478=o_distros
-      ! eta478max=+10
-      ! eta478min=-10
-      ! ndiv_eta478=50
-      ! ! 2to6 top pseudorapidity
-      ! o_phi478=o_distros
-      ! phi478max=+pi
-      ! phi478min=-pi
-      ! ndiv_phi478=50
-      ! ! invarient mass of tt pair (always on)
-      ! o_rMtt=1
-      ! rMttmax=14000.d0/(1+initial_state*6)
-      ! rMttmin=0.d0
-      ! ndiv_rMtt=140
-      ! ! boost of parton CoM
-      ! o_beta=o_distros
-      ! betamax=1000.d0
-      ! betamin=0.d0
-      ! ndiv_beta=100
-      ! ! costheta
-      ! o_cost=o_distros
-      ! costmax=+1.d0
-      ! costmin=-1.d0
-      ! ndiv_cost=50
-      ! ! top energy
-      ! o_Et=o_distros
-      ! Etmax=7000.d0/(1+initial_state*6)
-      ! Etmin=0.d0
-      ! ndiv_Et=70
-      ! ! delta_y
-      ! o_Delta_y=o_distros
-      ! Delta_ymax=4.d0
-      ! Delta_ymin=-4.d0
-      ! ndiv_Delta_y=100
-      ! ! transverse variables
-      ! do itrans=1,ntrans
-      !   if(ifinal_state == 0)then
-      !     o_tran(itrans)=0
-      !   else
-      !     o_tran(itrans)=o_trans
-      !   end if
-      ! end do
-      ! ! invarient mass of the visible decay products of the tt pair
-      ! transmax(1)=4000
-      ! transmin(1)=0.d0
-      ! ndiv_trans(1)=40
-      ! ! sum of tranvserse energy
-      ! transmax(2)=4000
-      ! transmin(2)=0.d0
-      ! ndiv_trans(2)=40
-      ! ! transverse mass 1
-      ! transmax(3)=4000
-      ! transmin(3)=0.d0
-      ! ndiv_trans(3)=40
-      ! ! transverse mass 2
-      ! transmax(4)=4000
-      ! transmin(4)=0.d0
-      ! ndiv_trans(4)=40
-      ! ! transverse mass 3
-      ! transmax(5)=4000
-      ! transmin(5)=0.d0
-      ! ndiv_trans(5)=40
-      ! !  lepton transverse mass
-      ! transmax(6)=500
-      ! transmin(6)=0.d0
-      ! ndiv_trans(6)=40
-      ! ! contransverse mass 1
-      ! transmax(7)=4000
-      ! transmin(7)=0.d0
-      ! ndiv_trans(7)=40
-      ! ! contransverse mass 2
-      ! transmax(8)=4000
-      ! transmin(8)=0.d0
-      ! ndiv_trans(8)=40
-      ! ! contransverse mass 3
-      ! transmax(9)=4000
-      ! transmin(9)=0.d0
-      ! ndiv_trans(9)=40
-      ! ! lepton contransverse mass
-      ! transmax(10)=500
-      ! transmin(10)=0.d0
-      ! ndiv_trans(10)=50
+      do i=1,nfinal
+        o_pT(i)=o_distros
+        pTmax(i)=7000.d0/(1+initial_state*6)
+        pTmin(i)=0.d0
+        ndiv_pT(i)=70
+        ! eta distributions
+        o_eta(i)=o_distros
+        etamax(i)=+10
+        etamin(i)=-10
+        ndiv_eta(i)=50
+        ! phi distributions
+        o_phi(i)=o_distros
+        phimax(i)=+pi
+        phimin(i)=-pi
+        ndiv_phi(i)=50
+        ! ycol distributions
+        o_ycol(i)=o_distros
+        ycolmax(i)=+4.d0
+        ycolmin(i)=-4.d0
+        ndiv_ycol(i)=100
+      end do
+      ! missing transverse momentum
+      o_ETmiss=o_distros
+      ETmissmax=7000.d0/(1+initial_state*6)
+      ETmissmin=0.d0
+      ndiv_ETmiss=70
+      ! top transverse momentum
+      o_pT356=o_distros
+      pT356max=7000.d0/(1+initial_state*6)
+      pT356min=0.d0
+      ndiv_pT356=70
+      ! 2to6 top pseudorapidity
+      o_eta356=o_distros
+      eta356max=+10
+      eta356min=-10
+      ndiv_eta356=50
+      ! 2to6 top pseudorapidity
+      o_phi356=o_distros
+      phi356max=+pi
+      phi356min=-pi
+      ndiv_phi356=50
+      ! anti-top transverse momentum
+      o_pT478=o_distros
+      pT478max=7000.d0/(1+initial_state*6)
+      pT478min=0.d0
+      ndiv_pT478=70
+      ! 2to6 anti-top pseudorapidity
+      o_eta478=o_distros
+      eta478max=+10
+      eta478min=-10
+      ndiv_eta478=50
+      ! 2to6 top pseudorapidity
+      o_phi478=o_distros
+      phi478max=+pi
+      phi478min=-pi
+      ndiv_phi478=50
+      ! invarient mass of tt pair (always on)
+      o_rMtt=1
+      rMttmax=14000.d0/(1+initial_state*6)
+      rMttmin=0.d0
+      ndiv_rMtt=140
+      ! boost of parton CoM
+      o_beta=o_distros
+      betamax=1000.d0
+      betamin=0.d0
+      ndiv_beta=100
+      ! costheta
+      o_cost=o_distros
+      costmax=+1.d0
+      costmin=-1.d0
+      ndiv_cost=50
+      ! top energy
+      o_Et=o_distros
+      Etmax=7000.d0/(1+initial_state*6)
+      Etmin=0.d0
+      ndiv_Et=70
+      ! delta_y
+      o_Delta_y=o_distros
+      Delta_ymax=4.d0
+      Delta_ymin=-4.d0
+      ndiv_Delta_y=100
+      ! transverse variables
+      do itrans=1,ntrans
+        if(ifinal_state == 0)then
+          o_tran(itrans)=0
+        else
+          o_tran(itrans)=o_trans
+        end if
+      end do
+      ! invarient mass of the visible decay products of the tt pair
+      transmax(1)=4000
+      transmin(1)=0.d0
+      ndiv_trans(1)=40
+      ! sum of tranvserse energy
+      transmax(2)=4000
+      transmin(2)=0.d0
+      ndiv_trans(2)=40
+      ! transverse mass 1
+      transmax(3)=4000
+      transmin(3)=0.d0
+      ndiv_trans(3)=40
+      ! transverse mass 2
+      transmax(4)=4000
+      transmin(4)=0.d0
+      ndiv_trans(4)=40
+      ! transverse mass 3
+      transmax(5)=4000
+      transmin(5)=0.d0
+      ndiv_trans(5)=40
+      !  lepton transverse mass
+      transmax(6)=500
+      transmin(6)=0.d0
+      ndiv_trans(6)=40
+      ! contransverse mass 1
+      transmax(7)=4000
+      transmin(7)=0.d0
+      ndiv_trans(7)=40
+      ! contransverse mass 2
+      transmax(8)=4000
+      transmin(8)=0.d0
+      ndiv_trans(8)=40
+      ! contransverse mass 3
+      transmax(9)=4000
+      transmin(9)=0.d0
+      ndiv_trans(9)=40
+      ! lepton contransverse mass
+      transmax(10)=500
+      transmin(10)=0.d0
+      ndiv_trans(10)=50
+      ! phi_l
+      o_fl=o_asyms
+      flmax=+2*pi
+      flmin=0
+      ndiv_fl=100
+      ! cosphi_l
+      o_cosfl=o_asyms
+      cosflmax=+1.d0
+      cosflmin=-1.d0
+      ndiv_cosfl=100
+      ! delta phi
+      o_dphi=o_asyms
+      dphimax=+pi
+      dphimin=0
+      ndiv_dphi=10
+      ! cost5
+      o_cost5=o_asyms
+      cost5max=+1
+      cost5min=-1
+      ndiv_cost5=10
+      ! cost7
+      o_cost7=o_asyms
+      cost7max=+1
+      cost7min=-1
+      ndiv_cost7=10
+      !  ct7ct5
+      o_ct7ct5=o_asyms
+      ct7ct5max=+1
+      ct7ct5min=-1
+      ndiv_ct7ct5=10
+      ! sigp
+      o_sigp=o_asyms
+      sigpmax=rMttmax
+      sigpmin=rMttmin
+      ndiv_sigp=ndiv_rMtt/5
+      ! sigm
+      o_sigm=o_asyms
+      sigmmax=rMttmax
+      sigmmin=rMttmin
+      ndiv_sigm=ndiv_rMtt/5
+      ! dphi2d
+      if((o_dphi == 1) .AND. (o_rMtt == 1))then
+        o_dphi2d=O_dist2d
+      else
+        o_dphi2d=0
+      end if
+      ! dtransph
+      do itrans=1, ntrans
+        if((o_dphi == 1) .AND. (o_tran(itrans) == 1))then
+          o_transdp(itrans)=o_dist2d
+        else
+          o_transdp(itrans)=0
+        end if
+      end do
+      ! asymmetries
+      do iasy=1,nasym
+        o_asym(iasy)=o_asyms
+      end do
 
-      ! ! phi_l
-      ! o_fl=o_asyms
-      ! flmax=+2*pi
-      ! flmin=0
-      ! ndiv_fl=100
-      ! ! cosphi_l
-      ! o_cosfl=o_asyms
-      ! cosflmax=+1.d0
-      ! cosflmin=-1.d0
-      ! ndiv_cosfl=100
-      ! ! delta phi
-      ! o_dphi=o_asyms
-      ! dphimax=+pi
-      ! dphimin=0
-      ! ndiv_dphi=10
-      ! ! cost5
-      ! o_cost5=o_asyms
-      ! cost5max=+1
-      ! cost5min=-1
-      ! ndiv_cost5=10
-      ! ! cost7
-      ! o_cost7=o_asyms
-      ! cost7max=+1
-      ! cost7min=-1
-      ! ndiv_cost7=10
-      ! !  ct7ct5
-      ! o_ct7ct5=o_asyms
-      ! ct7ct5max=+1
-      ! ct7ct5min=-1
-      ! ndiv_ct7ct5=10
-      ! ! sigp
-      ! o_sigp=o_asyms
-      ! sigpmax=rMttmax
-      ! sigpmin=rMttmin
-      ! ndiv_sigp=ndiv_rMtt/5
-      ! ! sigm
-      ! o_sigm=o_asyms
-      ! sigmmax=rMttmax
-      ! sigmmin=rMttmin
-      ! ndiv_sigm=ndiv_rMtt/5
-      ! ! dphi2d
-      ! if((o_dphi == 1) .AND. (o_rMtt == 1))then
-      !   o_dphi2d=O_dist2d
-      ! else
-      !   o_dphi2d=0
-      ! end if
-      ! ! dtransph
-      ! do itrans=1, ntrans
-      !   if((o_dphi == 1) .AND. (o_tran(itrans) == 1))then
-      !     o_transdp(itrans)=o_dist2d
-      !   else
-      !     o_transdp(itrans)=0
-      !   end if
-      ! end do
-      ! ! asymmetries
-      ! do iasy=1,nasym
-      !   o_asym(iasy)=o_asyms
-      ! end do
-
-      ! ! Turn off 2->6 only distributions
-      ! if (ifinal_state == 0)then
-      !   do ip=5,8
-      !     o_pT(i)   = 0
-      !     o_eta(i)  = 0
-      !     o_phi(i)  = 0
-      !   end do
-      !   do itrans=1,ntrans
-      !     o_tran(itrans)=0
-      !   end do
-      !   o_tran  = 0
-      !   o_pT356  = 0
-      !   o_eta356 = 0
-      !   o_phi356 = 0
-      !   o_pT478  = 0
-      !   o_eta478 = 0
-      !   o_phi478 = 0
-      !   o_ETmiss = 0
-      !   o_HT     = 0
-      !   o_fl     = 0
-      !   o_dphi   = 0
-      !   o_cosfl  = 0
-      !   o_cost7  = 0
-      !   o_cost5  = 0
-      !   o_ct7ct5 = 0
-      !   o_dphi2d = 0
-      !   o_asym(9) = 0    ! turn off A_l
-      ! end if
-      ! ! Turn off 2->2 only distributions
-      ! if (ifinal_state >= 1)then
-      !   o_asym(1) = 0   ! turn off A_LL
-      !   o_asym(2) = 0   ! turn off A_L
-      !   o_asym(3) = 0   ! turn off A_PV
-      ! end if
+      ! Turn off 2->6 only distributions
+      if (ifinal_state == 0)then
+        do ip=5,8
+          o_pT(i)   = 0
+          o_eta(i)  = 0
+          o_phi(i)  = 0
+        end do
+        do itrans=1,ntrans
+          o_tran(itrans)=0
+        end do
+        o_tran  = 0
+        o_pT356  = 0
+        o_eta356 = 0
+        o_phi356 = 0
+        o_pT478  = 0
+        o_eta478 = 0
+        o_phi478 = 0
+        o_ETmiss = 0
+        o_HT     = 0
+        o_fl     = 0
+        o_dphi   = 0
+        o_cosfl  = 0
+        o_cost7  = 0
+        o_cost5  = 0
+        o_ct7ct5 = 0
+        o_dphi2d = 0
+        o_asym(9) = 0    ! turn off A_l
+      end if
+      ! Turn off 2->2 only distributions
+      if (ifinal_state > 0)then
+        o_asym(1) = 0   ! turn off A_LL
+        o_asym(2) = 0   ! turn off A_L
+        o_asym(3) = 0   ! turn off A_PV
+      end if
 
     end subroutine initialise_distributions
 
