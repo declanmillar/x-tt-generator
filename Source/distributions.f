@@ -1,13 +1,13 @@
-module Distributions
+module distributions
 
-  use Configuration, only: o_distros, o_dist2d, o_trans, o_asyms, ifinal_state, initial_state, nfinal
+  use configuration, only: o_distros, o_dist2d, o_trans, o_asyms, ifinal_state, initial_state, nfinal
   use kinematics, only: pi
 
-  ! distributions in pTs of asymptotic particles
-  real :: pTmax(8),pTmin(8),pTw(8)
-  real :: xpT(8,500),fxpT(8,500,20),fxpTtot(8,500)
-  integer :: o_pT(8)
-  integer :: ndiv_pT(8)
+  ! distributions in pts of asymptotic particles
+  real :: ptmax(8),ptmin(8),ptw(8)
+  real :: xpt(8,500),fxpt(8,500,20),fxpttot(8,500)
+  integer :: o_pt(8)
+  integer :: ndiv_pt(8)
 
   ! distributions in etas of asymptotic particles
   real :: etamax(8),etamin(8),etaw(8)
@@ -27,17 +27,17 @@ module Distributions
   integer :: o_ycol(8)
   integer :: ndiv_ycol(8)
 
-  ! distribution in ETmiss
-  real :: ETmissmax,ETmissmin,ETmissw
-  real :: xETmiss(500),fxETmiss(500,20),fxETmisstot(500)
-  integer :: o_ETmiss
-  integer :: ndiv_ETmiss
+  ! distribution in etmiss
+  real :: etmissmax,etmissmin,etmissw
+  real :: xetmiss(500),fxetmiss(500,20),fxetmisstot(500)
+  integer :: o_etmiss
+  integer :: ndiv_etmiss
 
-  ! distribution in pT of the top
-  real :: pT356max,pT356min,pT356w
-  real :: xpT356(500),fxpT356(500,20),fxpT356tot(500)
-  integer :: o_pT356
-  integer :: ndiv_pT356
+  ! distribution in pt of the top
+  real :: pt356max,pt356min,pt356w
+  real :: xpt356(500),fxpt356(500,20),fxpt356tot(500)
+  integer :: o_pt356
+  integer :: ndiv_pt356
 
   ! distribution in eta of the top
   real :: eta356max,eta356min,eta356w
@@ -51,11 +51,11 @@ module Distributions
   integer :: o_phi356
   integer :: ndiv_phi356
 
-  ! distribution in pT of the anti-top
-  real :: pT478max,pT478min,pT478w
-  real :: xpT478(500),fxpT478(500,20),fxpT478tot(500)
-  integer :: o_pT478
-  integer :: ndiv_pT478
+  ! distribution in pt of the anti-top
+  real :: pt478max,pt478min,pt478w
+  real :: xpt478(500),fxpt478(500,20),fxpt478tot(500)
+  integer :: o_pt478
+  integer :: ndiv_pt478
 
   ! distribution in eta of the anti-top
   real :: eta478max,eta478min,eta478w
@@ -70,10 +70,10 @@ module Distributions
   integer :: ndiv_phi478
 
   ! distribution in invarient mass of the top pair
-  real :: rMttmax,rMttmin,rMttw
-  real :: xrMtt(500),fxrMtt(500,20),fxrMtttot(500)
-  integer :: o_rMtt
-  integer :: ndiv_rMtt
+  real :: rmttmax,rmttmin,rmttw
+  real :: xrmtt(500),fxrmtt(500,20),fxrmtttot(500)
+  integer :: o_rmtt
+  integer :: ndiv_rmtt
 
   ! distribution in boost of top pair centre of mass frame
   real :: betamax,betamin,betaw
@@ -88,16 +88,16 @@ module Distributions
   integer :: ndiv_cost
 
   ! distribution in top energy
-  real :: Etmax,Etmin,Etw
-  real :: xEt(500),fxEt(500,20),fxEttot(500)
-  integer :: o_Et
-  integer :: ndiv_Et
+  real :: etmax,etmin,etw
+  real :: xet(500),fxet(500,20),fxettot(500)
+  integer :: o_et
+  integer :: ndiv_et
 
-  ! distribution in Delta_y
-  real :: Delta_ymax,Delta_ymin,Delta_yw
-  real :: xDelta_y(500),fxDelta_y(500,20), fxDelta_ytot(500)
-  integer :: o_Delta_y
-  integer :: ndiv_Delta_y
+  ! distribution in delta_y
+  real :: delta_ymax,delta_ymin,delta_yw
+  real :: xdelta_y(500),fxdelta_y(500,20), fxdelta_ytot(500)
+  integer :: o_delta_y
+  integer :: ndiv_delta_y
 
   ! distributions in transverse variables
   integer :: ntrans
@@ -180,10 +180,10 @@ module Distributions
       ! sets flags, binning range and divisions.
 
       do i=1,nfinal
-        o_pT(i)=o_distros
-        pTmax(i)=7000.d0/(1+initial_state*6)
-        pTmin(i)=0.d0
-        ndiv_pT(i)=70
+        o_pt(i)=o_distros
+        ptmax(i)=7000.d0/(1+initial_state*6)
+        ptmin(i)=0.d0
+        ndiv_pt(i)=70
         ! eta distributions
         o_eta(i)=o_distros
         etamax(i)=+10
@@ -201,15 +201,15 @@ module Distributions
         ndiv_ycol(i)=100
       end do
       ! missing transverse momentum
-      o_ETmiss=o_distros
-      ETmissmax=7000.d0/(1+initial_state*6)
-      ETmissmin=0.d0
-      ndiv_ETmiss=70
+      o_etmiss=o_distros
+      etmissmax=7000.d0/(1+initial_state*6)
+      etmissmin=0.d0
+      ndiv_etmiss=70
       ! top transverse momentum
-      o_pT356=o_distros
-      pT356max=7000.d0/(1+initial_state*6)
-      pT356min=0.d0
-      ndiv_pT356=70
+      o_pt356=o_distros
+      pt356max=7000.d0/(1+initial_state*6)
+      pt356min=0.d0
+      ndiv_pt356=70
       ! 2to6 top pseudorapidity
       o_eta356=o_distros
       eta356max=+10
@@ -221,10 +221,10 @@ module Distributions
       phi356min=-pi
       ndiv_phi356=50
       ! anti-top transverse momentum
-      o_pT478=o_distros
-      pT478max=7000.d0/(1+initial_state*6)
-      pT478min=0.d0
-      ndiv_pT478=70
+      o_pt478=o_distros
+      pt478max=7000.d0/(1+initial_state*6)
+      pt478min=0.d0
+      ndiv_pt478=70
       ! 2to6 anti-top pseudorapidity
       o_eta478=o_distros
       eta478max=+10
@@ -236,11 +236,11 @@ module Distributions
       phi478min=-pi
       ndiv_phi478=50
       ! invarient mass of tt pair (always on)
-      o_rMtt=1
-      rMttmax=14000.d0/(1+initial_state*6)
-      rMttmin=0.d0
-      ndiv_rMtt=140
-      ! boost of parton CoM
+      o_rmtt=1
+      rmttmax=14000.d0/(1+initial_state*6)
+      rmttmin=0.d0
+      ndiv_rmtt=140
+      ! boost of parton com
       o_beta=o_distros
       betamax=1000.d0
       betamin=0.d0
@@ -251,15 +251,15 @@ module Distributions
       costmin=-1.d0
       ndiv_cost=50
       ! top energy
-      o_Et=o_distros
-      Etmax=7000.d0/(1+initial_state*6)
-      Etmin=0.d0
-      ndiv_Et=70
+      o_et=o_distros
+      etmax=7000.d0/(1+initial_state*6)
+      etmin=0.d0
+      ndiv_et=70
       ! delta_y
-      o_Delta_y=o_distros
-      Delta_ymax=4.d0
-      Delta_ymin=-4.d0
-      ndiv_Delta_y=100
+      o_delta_y=o_distros
+      delta_ymax=4.d0
+      delta_ymin=-4.d0
+      ndiv_delta_y=100
       ! transverse variables
       do itrans=1,ntrans
         if(ifinal_state == 0)then
@@ -340,23 +340,23 @@ module Distributions
       ndiv_ct7ct5=10
       ! sigp
       o_sigp=o_asyms
-      sigpmax=rMttmax
-      sigpmin=rMttmin
-      ndiv_sigp=ndiv_rMtt/5
+      sigpmax=rmttmax
+      sigpmin=rmttmin
+      ndiv_sigp=ndiv_rmtt/5
       ! sigm
       o_sigm=o_asyms
-      sigmmax=rMttmax
-      sigmmin=rMttmin
-      ndiv_sigm=ndiv_rMtt/5
+      sigmmax=rmttmax
+      sigmmin=rmttmin
+      ndiv_sigm=ndiv_rmtt/5
       ! dphi2d
-      if((o_dphi == 1) .AND. (o_rMtt == 1))then
-        o_dphi2d=O_dist2d
+      if((o_dphi == 1) .and. (o_rmtt == 1))then
+        o_dphi2d=o_dist2d
       else
         o_dphi2d=0
       end if
       ! dtransph
       do itrans=1, ntrans
-        if((o_dphi == 1) .AND. (o_tran(itrans) == 1))then
+        if((o_dphi == 1) .and. (o_tran(itrans) == 1))then
           o_transdp(itrans)=o_dist2d
         else
           o_transdp(itrans)=0
@@ -367,10 +367,9 @@ module Distributions
         o_asym(iasy)=o_asyms
       end do
 
-      ! Turn off 2->6 only distributions
       if (ifinal_state == 0)then
         do ip=5,8
-          o_pT(i)   = 0
+          o_pt(i)   = 0
           o_eta(i)  = 0
           o_phi(i)  = 0
         end do
@@ -378,14 +377,14 @@ module Distributions
           o_tran(itrans)=0
         end do
         o_tran  = 0
-        o_pT356  = 0
+        o_pt356  = 0
         o_eta356 = 0
         o_phi356 = 0
-        o_pT478  = 0
+        o_pt478  = 0
         o_eta478 = 0
         o_phi478 = 0
-        o_ETmiss = 0
-        o_HT     = 0
+        o_etmiss = 0
+        o_ht     = 0
         o_fl     = 0
         o_dphi   = 0
         o_cosfl  = 0
@@ -393,15 +392,13 @@ module Distributions
         o_cost5  = 0
         o_ct7ct5 = 0
         o_dphi2d = 0
-        o_asym(9) = 0    ! turn off A_l
-      end if
-      ! Turn off 2->2 only distributions
-      if (ifinal_state > 0)then
-        o_asym(1) = 0   ! turn off A_LL
-        o_asym(2) = 0   ! turn off A_L
-        o_asym(3) = 0   ! turn off A_PV
+        o_asym(9) = 0    ! turn off a_l
+      else if (ifinal_state > 0)then
+        o_asym(1) = 0   ! turn off a_ll
+        o_asym(2) = 0   ! turn off a_l
+        o_asym(3) = 0   ! turn off a_pv
       end if
 
     end subroutine initialise_distributions
 
-end module Distributions
+end module distributions

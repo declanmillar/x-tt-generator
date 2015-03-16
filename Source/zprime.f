@@ -138,7 +138,7 @@ program zprime
          
     ! x(15) = (x1-tau)/(1-tau),
     ! x(14) = (ecm-rm3-rm4-rm5-rm6-rm7-rm8)
-    !      /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
+    !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
     ! x(13) = (xx356-xx356min)/(xx356max-xx356min),
     ! where xx356 = arctg((rm356**2-rm3**2)/rm3/gamt),
     ! x(12) = (xx478-xx478min)/(xx478max-xx478min),
@@ -668,14 +668,14 @@ program zprime
         end do
         sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
       end do
-      write(*,*)'distribution'
+      write(*,*)'DISTRIBUTION'
       write(*,'(a,i1)')'pt',ip
       write(*,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/gev]'
       write(*,'(a,i1,a)')'p_{t}(',ip,')--[gev]'
       do i=1,ndiv_pt(ip)
         write(*,*)xpt(ip,i),fxpttot(ip,i)
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
     ! plot distributions in eta
     if(o_eta(ip) == 1)then
@@ -688,14 +688,14 @@ program zprime
         end do
         sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
       end do
-      write(*,*)'distribution'
+      write(*,*)'DISTRIBUTION'
       write(*,'(a,i1)')'eta',ip
       write(*,'(a,i1,a)')'d#sigma-/d#eta(',ip,')--[pb]'
       write(*,'(a,i1,a)')'#eta(',ip,')'
       do i=1,ndiv_eta(ip)
         write(*,*)xeta(ip,i),fxetatot(ip,i)
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
     ! plot distributions in phi
     if(o_phi(ip) == 1)then
@@ -708,14 +708,14 @@ program zprime
         end do
         sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
       end do
-      write(*,*)'distribution'
+      write(*,*)'DISTRIBUTION'
       write(*,'(a,i1)')'phi',ip
       write(*,'(a,i1,a)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
       write(*,'(a,i1,a)')'#phi(',ip,')--[rad]'
       do i=1,ndiv_phi(ip)
         write(*,*)xphi(ip,i),fxphitot(ip,i)
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
     ! plot distributions in ycol
     if(o_ycol(ip) == 1)then
@@ -728,14 +728,14 @@ program zprime
         end do
         sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
       end do
-      write(*,*)'distribution'
+      write(*,*)'DISTRIBUTION'
       write(*,'(a,i1)')'y',ip
       write(*,'(a,i1,a)')'d#sigma-/dy(',ip,')--[pb]'
       write(*,'(a,i1,a)')'y(',ip,')'
       do i=1,ndiv_ycol(ip)
         write(*,*)xycol(ip,i),fxycoltot(ip,i)
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
   end do
      
@@ -750,14 +750,14 @@ program zprime
       end do
       sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'etmiss'
     write(*,*)'d#sigma-/dp_{tmiss}--[pb/gev]'
     write(*,*)'p_{t}(miss)--[gev]'
     do i=1,ndiv_etmiss
       write(*,*)xetmiss(i),fxetmisstot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
 
   ! plot distribution in pt356
@@ -771,14 +771,14 @@ program zprime
       end do
       sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'pt356'
     write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
     write(*,*)'p_{t}(t)--[gev]'
     do i=1,ndiv_pt356
       write(*,*)xpt356(i),fxpt356tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in eta356
   if(o_eta356 == 1)then
@@ -791,14 +791,14 @@ program zprime
       end do
       sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'eta356'
     write(*,*)'d#sigma-/d#eta--[pb]'
     write(*,*)'#eta(#bar{t})'
     do i=1,ndiv_eta356
       write(*,*)xeta356(i),fxeta356tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in phi356
   if(o_phi356 == 1)then
@@ -811,14 +811,14 @@ program zprime
       end do
       sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'phi356'
     write(*,*)'d#sigma-/d#phi--[pb]'
     write(*,*)'#phi(#bar{t})'
     do i=1,ndiv_phi356
       write(*,*)xphi356(i),fxphi356tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in pt478
   if(o_pt478 == 1)then
@@ -831,14 +831,14 @@ program zprime
       end do
       sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'pt478'
     write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
     write(*,*)'p_{t}(#bar{t})--[gev]'
     do i=1,ndiv_pt478
       write(*,*)xpt478(i),fxpt478tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in eta478
   if(o_eta478 == 1)then
@@ -851,14 +851,14 @@ program zprime
       end do
       sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'eta478'
     write(*,*)'d#sigma-/d#eta--[pb]'
     write(*,*)'#eta(#bar{t})'
     do i=1,ndiv_eta478
       write(*,*)xeta478(i),fxeta478tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in phi478
   if(o_phi478 == 1)then
@@ -871,14 +871,14 @@ program zprime
       end do
       sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'phi478'
     write(*,*)'d#sigma-/d#phi--[pb]'
     write(*,*)'#phi(#bar{t})'
     do i=1,ndiv_phi478
       write(*,*)xphi478(i),fxphi478tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in mtt
   if(o_rmtt == 1)then
@@ -891,14 +891,14 @@ program zprime
       end do
       sfxrmtttot=sfxrmtttot+fxrmtttot(j)*rmttw
     end do
-    write(*,*)'distribution'
-    write(*,*)'mtt'
+    write(*,*)'DISTRIBUTION'
+    write(*,*)'Mtt'
     write(*,*)'d#sigma-/dm_{tt}--[pb/gev]'
     write(*,*)'m_{tt}--[gev]'
     do i=1,ndiv_rmtt
       write(*,*)xrmtt(i),fxrmtttot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in beta.
   if(o_beta == 1)then
@@ -911,14 +911,14 @@ program zprime
       end do
       sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'beta'
     write(*,*)'d#sigma-/d#beta_{t}--[pb]'
     write(*,*)'#beta_{t}'
     do i=1,ndiv_beta
       write(*,*)xbeta(i),fxbetatot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in cost
   if(o_cost == 1)then
@@ -931,14 +931,14 @@ program zprime
       end do
       sfxcosttot=sfxcosttot+fxcosttot(j)*costw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'cost'
     write(*,*)'d#sigma-/dcos#theta--[pb]'
     write(*,*)'cos#theta'
     do i=1,ndiv_cost
       write(*,*)xcost(i),fxcosttot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in et
   if(o_et == 1)then
@@ -952,14 +952,14 @@ program zprime
       end do
       sfxettot=sfxettot+fxettot(j)*etw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'et'
     write(*,*)'d#sigma-/de_{t}--[pb/gev]'
     write(*,*)'e_{t}--[gev]'
     do i=1,ndiv_et
       write(*,*)xet(i),fxettot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in delta y
   if(o_delta_y == 1)then
@@ -972,14 +972,14 @@ program zprime
       end do
       sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'delta_y'
     write(*,*)'d#sigma-/d#delta-y--[pb]'
     write(*,*)'#delta-y'
     do i=1,ndiv_delta_y
       write(*,*)xdelta_y(i),fxdelta_ytot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distributions in all transverse variables
   do itrans=1,ntrans
@@ -996,7 +996,7 @@ program zprime
         sfxtranstot(itrans)=sfxtranstot(itrans)+ &
         fxtranstot(itrans,j)*transw(itrans)
       end do
-      write(*,*)'distribution'
+      write(*,*)'DISTRIBUTION'
       if (itrans == 1)then
         write(*,*)'mvis'
         write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
@@ -1043,7 +1043,7 @@ program zprime
       do i=1,ndiv_trans(itrans)
         write(*,*)xtrans(itrans,i),fxtranstot(itrans,i)
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
   end do
   ! plot distribution in fl
@@ -1057,14 +1057,14 @@ program zprime
       end do
       sfxfltot=sfxfltot+fxfltot(j)*flw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'fl'
     write(*,*)'d#sigma-/d#phi_{l}--[pb]'
     write(*,*)'#phi_{l}--[-rad-]'
     do i=1,ndiv_fl
       write(*,*)xfl(i),fxfltot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in cosfl
   if(o_cosfl == 1)then
@@ -1077,14 +1077,14 @@ program zprime
       end do
       sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'cosfl'
     write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
     write(*,*)'cos#phi_{l}'
     do i=1,ndiv_cosfl
       write(*,*)xcosfl(i),fxcosfltot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in delta phi
   if(o_dphi == 1)then
@@ -1097,14 +1097,14 @@ program zprime
       end do
       sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'dphi'
     write(*,*)'d#sigma-/d#delta#phi--[pb]'
     write(*,*)'#delta#phi'
     do i=1,ndiv_dphi
       write(*,*)xdphi(i),fxdphitot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot 2d-distribution in delta phi
   if(o_dphi2d == 1)then
@@ -1119,7 +1119,7 @@ program zprime
         sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
       end do
     end do
-    write(*,*)'2d-distribution'
+    write(*,*)'2D-DISTRIBUTION'
     write(*,*)'dphi2d'
     write(*,*)'d^2#sigma-/d#delta#phi-dm_{tt}--[pb/gev]'
     write(*,*)'#delta#phi--[rad]'
@@ -1135,7 +1135,7 @@ program zprime
         write(*,*)xdphi(i),xrmtt(j),fxdphi2dtot(i,j)
       end do
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot 2d-distributions in delta_phi and all transverse variables
   do itrans=1,ntrans
@@ -1154,7 +1154,7 @@ program zprime
           fxtransdptot(itrans,i,j)*transw(itrans)
         end do
       end do
-      write(*,*)'2d-distribution'
+      write(*,*)'2D-DISTRIBUTION'
       if (itrans == 1)then
         write(*,*)'dphimvis'
         write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
@@ -1224,7 +1224,7 @@ program zprime
           ,fxtransdptot(itrans,i,j)
         end do
       end do
-      write(*,*)'end'
+      write(*,*)'END'
     end if
   end do
   ! plot distribution in cost5
@@ -1238,14 +1238,14 @@ program zprime
       end do
       sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'cost5'
     write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
     write(*,*)'cos#theta_{+}'
     do i=1,ndiv_cost5
       write(*,*)xcost5(i),fxcost5tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in cost7
   if(o_cost7 == 1)then
@@ -1258,14 +1258,14 @@ program zprime
       end do
       sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'cost7'
     write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
     write(*,*)'cos#theta_{-}'
     do i=1,ndiv_cost7
       write(*,*)xcost7(i),fxcost7tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distribution in ct7ct5
   if(o_ct7ct5 == 1)then
@@ -1278,7 +1278,7 @@ program zprime
       end do
       sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
     end do
-    write(*,*)'distribution'
+    write(*,*)'DISTRIBUTION'
     write(*,*)'ct7ct5'
     write(*,*) &
     'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
@@ -1286,7 +1286,7 @@ program zprime
     do i=1,ndiv_ct7ct5
       write(*,*)xct7ct5(i),fxct7ct5tot(i)
     end do
-    write(*,*)'end'
+    write(*,*)'END'
   end if
   ! plot distributions in all asymmetries
   if((o_sigp == 1) .and. (o_sigm == 1))then
@@ -1312,33 +1312,33 @@ program zprime
           end do
           sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
         end do
-        write(*,*)'asymmetry'
+        write(*,*)'ASYMMETRY'
         if(jasy == 1)then
-          write(*,*)'all'
+          write(*,*)'ALL'
           write(*,*)'a_{ll}'
         else if(jasy == 2)then
-          write(*,*)'al'
+          write(*,*)'AL'
           write(*,*)'a_{l}'
         else if(jasy == 3)then
-          write(*,*)'apv'
+          write(*,*)'APV'
           write(*,*)'a_{pv}'
         else if(jasy == 4)then
-          write(*,*)'afb'
+          write(*,*)'AFB'
           write(*,*)'a_{fb}'
         else if(jasy == 5)then
-          write(*,*)'afbstar'
+          write(*,*)'AFBSTAR'
           write(*,*)'a_{fb^{*}}'
         else if(jasy == 6)then
-          write(*,*)'atrfb'
+          write(*,*)'AtRFB'
           write(*,*)'a^{t}_{rfb}'
         else if(jasy == 7)then
-          write(*,*)'attbrfb'
+          write(*,*)'AttbRFB'
           write(*,*)"a^{b\bar{b}}_{rfb}"
         else if(jasy == 8)then
-          write(*,*)'arfb'
+          write(*,*)'ARFB'
           write(*,*)"a_{rfb}"
         else if(jasy == 9)then
-          write(*,*)'a_l'
+          write(*,*)'A_l'
           write(*,*)'a_{l}'
         end if
         write(*,*)'m_{tt}'
@@ -1360,7 +1360,7 @@ program zprime
         end do
         asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/ &
         (sfxsigptot(jasy)+sfxsigmtot(jasy))
-        write(*,*)'end'
+        write(*,*)'END'
         !         write(*,*)'(total asymmetry:',asym_int(jasy),')'
         !         write(*,*)'(integrated asymmetry:',snorm(jasy),' )'
       end if
