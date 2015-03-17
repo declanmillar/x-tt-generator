@@ -1,7 +1,5 @@
 *.o
 *.mod
-*.dat
-*.tbl
 *._*
 
 .dropbox
