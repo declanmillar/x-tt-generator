@@ -2,7 +2,7 @@
 ! input: vector and axial Zp couplings to up and down quarks
 ! output: left and right chiral couplings to up and down quarks
 
-    subroutine coupZpx!(o_NWA,model)
+    subroutine coupZpx!(o_NWA,model_name)
     implicit real (a-h,o-z)
     common/coupZpVA/gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
     common/coupZp/gZpd(2,5),gZpu(2,5)

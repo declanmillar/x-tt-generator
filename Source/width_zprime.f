@@ -3,12 +3,41 @@ function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
   ! Calculates the width of the Zp in the SSM.
   ! Authors: stefano moretti and declan millar <d.millar@soton.ac.uk>
 
-  implicit real (a-h,o-z)
-  ! global
-  common/top/rmt,gamt
-  ! local
-  real :: ME2
+  implicit none
 
+  common/fermions/ fmass,     fwidth
+  real :: fmass(12), fwidth(12)
+
+
+  ! implicit to explicit variable dump
+  real :: ME2
+  real :: widthzp
+  real :: rmw
+  real :: rmz
+  real :: rmzp
+  real :: a_em
+  real :: s2w
+  real :: rlambdaqcd4
+  integer :: nloop
+  real :: a_s
+  real :: ctw
+  real :: e
+  real :: eq
+  real :: g
+  real :: gamt
+  real :: gf
+  integer :: i
+  real :: pi
+  real :: rmq
+  real :: rmt
+  real :: t3q
+  real :: temp
+  real :: temp1
+  real :: temp2
+  real :: alfas
+
+  rmt=fmass(11)
+  gamt=fwidth(11)
   ! couplings.
   pi=dacos(-1.d0)
   ctw=sqrt(1.d0-s2w)

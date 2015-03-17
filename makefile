@@ -24,14 +24,14 @@ OUT = Binary
 F = gfortran
 
 # Flags
-FFLAGS = -g -ffree-form -fdefault-real-8 -std=gnu -ffpe-trap=invalid,zero,overflow,underflow
+FFLAGS = -g -ffree-form -fdefault-real-8 -std=gnu -ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0 -J$(LIB)
 # -Wall
 # ------------------------------------------------------------------------------
 # Commands
 
 # Compile all files ending in .f in SRC
 $(LIB)/%.o: $(SRC)/%.f 
-	$(F) $(FFLAGS) -c -o $@ $<
+	$(F) $(FFLAGS) -c -o  $@ $<
 
 # Link mainfile and all processes
 $(OUT)/$(BIN): $(patsubst %,$(LIB)/%, $(OBJ))

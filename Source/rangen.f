@@ -1,11 +1,11 @@
-function ran2(iseed)!declan: changed ran to ran2 for gfortran compatability
+function ran2(seed)!declan: changed ran to ran2 for gfortran compatability
   implicit none
-  integer :: iseed,nevhep,nrn(2)
+  integer :: seed,nevhep,nrn(2)
   double precision :: ran2,ran1,dummy,hwrset,hwrget
   data nevhep/0/
   nevhep=nevhep+1
-  nrn(1)=iseed
-  nrn(2)=abs(iseed-111111111)
+  nrn(1)=seed
+  nrn(2)=abs(seed-111111111)
   if(nevhep == 1)dummy = hwrset(nrn)
   ran2=ran1(0)
   return
@@ -18,16 +18,16 @@ function ran1(i)
 
   implicit none
   double precision :: ran1,hwrset,hwrget
-  integer :: i,iseed(2),k,iz,jseed(2)
-  save iseed
-  data iseed/12345,67890/
-  k=iseed(1)/53668
-  iseed(1)=40014*(iseed(1)-k*53668)-k*12211
-  if (iseed(1) < 0) iseed(1)=iseed(1)+2147483563
-  k=iseed(2)/52774
-  iseed(2)=40692*(iseed(2)-k*52774)-k*3791
-  if (iseed(2) < 0) iseed(2)=iseed(2)+2147483399
-  iz=iseed(1)-iseed(2)
+  integer :: i,seed(2),k,iz,jseed(2)
+  save seed
+  data seed/12345,67890/
+  k=seed(1)/53668
+  seed(1)=40014*(seed(1)-k*53668)-k*12211
+  if (seed(1) < 0) seed(1)=seed(1)+2147483563
+  k=seed(2)/52774
+  seed(2)=40692*(seed(2)-k*52774)-k*3791
+  if (seed(2) < 0) seed(2)=seed(2)+2147483399
+  iz=seed(1)-seed(2)
   if (iz < 1) iz=iz+2147483562
   ran1=dble(iz)*4.656613001013252d-10
 !--->                (4.656613001013252d-10 = 1.d0/2147483589)
@@ -35,13 +35,13 @@ function ran1(i)
 !-----------------------------------------------------------------------
   entry hwrset(jseed)
 !-----------------------------------------------------------------------
-  iseed(1)=jseed(1)
-  iseed(2)=jseed(2)
+  seed(1)=jseed(1)
+  seed(2)=jseed(2)
   999 return
 !-----------------------------------------------------------------------
   entry hwrget(jseed)
 !-----------------------------------------------------------------------
-  jseed(1)=iseed(1)
-  jseed(2)=iseed(2)
+  jseed(1)=seed(1)
+  jseed(2)=seed(2)
   return
 end function ran1

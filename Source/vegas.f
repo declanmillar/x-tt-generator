@@ -22,12 +22,12 @@ module integration
   integer :: ndmx,mds
   real :: resl(20),standdevl(20)
 
-  integer :: iseed
+  integer :: seed
 
   ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
   ! common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
   ! common/bveg3/alph,ndmx,mds
-  ! common/rndm/iseed
+  ! common/rndm/seed
   ! common/reslocal/resl(20),standdevl(20)
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
   xl/100*0.d0/,xu/100*1.d0/, &
@@ -330,14 +330,14 @@ end subroutine vegas
 
 subroutine randa(n,rand)
 
-  use integration, only: iseed
+  use integration, only: seed
 
   ! subroutine generates uniformly distributed random no's x(i),i=1,n
 
   implicit double precision(a-h,o-z)
   dimension rand(n)
   do 1 i=1,n
-    rand(i)=ran2(iseed)
+    rand(i)=ran2(seed)
   1 END DO
   return
 end subroutine randa

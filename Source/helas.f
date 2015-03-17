@@ -42,7 +42,7 @@
     subroutine coup1x(sw2 , gw,gwwa,gwwz)
 
 ! this subroutine sets up the coupling constants of the gauge bosons in
-! the standard model.
+! the standard model_name.
 
 ! input:
 !       real    sw2            : square of sine of the weak angle
@@ -77,7 +77,7 @@
     subroutine coup2x(sw2 , gal,gau,gad,gwf,gzn,gzl,gzu,gzd,g1)
 
 ! this subroutine sets up the coupling constants for the fermion-
-! fermion-vector vertices in the standard model.  the array of the
+! fermion-vector vertices in the standard model_name.  the array of the
 ! couplings specifies the chirality of the flowing-in fermion.  g??(1)
 ! denotes a left-handed coupling, and g??(2) a right-handed coupling.
 
@@ -142,7 +142,7 @@
     gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh)
 
 ! this subroutine sets up the coupling constants of the gauge bosons and
-! higgs boson in the standard model.
+! higgs boson in the standard model_name.
 
 ! input:
 !       real    sw2            : square of sine of the weak angle

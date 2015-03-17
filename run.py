@@ -5,32 +5,32 @@
 # Do ./run.py -h for help.
 
 # Arguments:
-#   0 = mdl:   name of model file in Models directory
+#   0 = mdl:   name of model_name file in Models directory
 #   2 = ecm:   centre of mass energy (input:TeV, output: GeV)
-#   3 = final: final state (0: no decay, 1: dilepton)
+#   3 = final_state: final_state state (0: no decay, 1: dilepton)
 #   4 = ncall: number of vegas calls (monte carlo/phase space points)
 # ------------------------------------------------------------------------------------------
 
 import os,StringIO,re,optparse,subprocess,time,sys,random
 
 # Usage help
-parser = optparse.OptionParser("usage: ./%prog [options] model ecm_col o_final ncall")
+parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
 
 # Local options
 parser.add_option("-o", "--output" , default=False, action="store_true"               , help="output to terminal")
 parser.add_option("-t", "--tag"    , default=""   ,   type="string"                   , help="add a name tag to logfile")
 
 # Physics options
-parser.add_option("-p", "--col"   ,  default=0   , const=1      , action="store_const", help="switch to p-pbar collisions")
-parser.add_option("-P", "--pdf"   ,  default=4   ,  type="int"                        , help="PDF set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
-parser.add_option("-q", "--qcd"   ,  default=1   , const=0      , action="store_const", help="turn off QCD")
-parser.add_option("-e", "--ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
-parser.add_option("-z", "--bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
-parser.add_option("-i", "--int"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
-parser.add_option("-w", "--NWA"   ,  default=0   , const=1      , action="store_const", help="turn on NWA")
-parser.add_option("-r", "--BR"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by BR")
-parser.add_option("-T", "--tran"  ,  default=1   , const=0      , action="store_const", help="switch off transverse mass variables")
-parser.add_option("-A", "--asym"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
+parser.add_option("-p", "--initial_state"   ,  default=0   , const=1      , action="store_const", help="switch to p-pbar collisions")
+parser.add_option("-P", "--structure_function"   ,  default=4   ,  type="int"                        , help="structure_functions set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
+parser.add_option("-q", "--include_qcd"   ,  default=1   , const=0      , action="store_const", help="turn off QCD")
+parser.add_option("-e", "--include_ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
+parser.add_option("-z", "--include_bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
+parser.add_option("-i", "--interference"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
+parser.add_option("-w", "--use_NWA"   ,  default=0   , const=1      , action="store_const", help="turn on use_NWA")
+parser.add_option("-r", "--use_branching_ratio"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by use_branching_ratio")
+parser.add_option("-T", "--include_transverse"  ,  default=1   , const=0      , action="store_const", help="switch off include_transversesverse mass variables")
+parser.add_option("-A", "--include_asymmetries"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
 parser.add_option("-C", "--cuts"  ,  default=1   , const=0      , action="store_const", help="turn off all cuts")
 parser.add_option("-y", "--ytmax" ,  default=100 ,  type="float",                       help="rapidity cut")
 parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",                       help="top pair rapidity cut")
@@ -38,29 +38,29 @@ parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",               
 # Monte Carlo options
 parser.add_option("-s", "--iseed"  , default=False,               action="store_true" , help="used fixed iseed for random number generator")
 parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,                       help="maximum number of VEGAS iterations")
-parser.add_option("-x", "--symx1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
-parser.add_option("-c", "--symcost", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
-parser.add_option("-D", "--distros", default=1    , const=0     , action="store_const", help="turn off distributions")
-parser.add_option("-2", "--dist2d" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
+parser.add_option("-x", "--symmetries_x1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
+parser.add_option("-c", "--symmetrise_costheta_t", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
+parser.add_option("-D", "--print_all_distributions", default=1    , const=0     , action="store_const", help="turn off distributions")
+parser.add_option("-2", "--print_2d_distributions" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
 
 # Debug options
-parser.add_option("-M", "--M_eq_1",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
+parser.add_option("-M", "--phase_space_only",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
 
 (options, args) = parser.parse_args()
 
-if options.M_eq_1==1:
-  options.qcd=0
-  options.ew=0
-  options.bsm=0
+if options.phase_space_only==1:
+  options.include_qcd=0
+  options.include_ew=0
+  options.include_bsm=0
   
 # Collect arguments
-model = args[0]
-if   options.bsm==1:
+model_name = args[0]
+if   options.include_bsm==1:
   smodel = args[0]
-elif options.bsm==0:
+elif options.include_bsm==0:
   smodel = ""
-emc_col=args[1]
-final=args[2]
+collider_energy=args[1]
+final_state=args[2]
 ncall=args[3]
 
 # Default iseed
@@ -68,78 +68,99 @@ seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="Binary/"+"zprime"
-sfinal = "2to2" if (final=="0") else "2to6"
+sfinal = "2to2" if (final_state=="0") else "2to6"
 config=StringIO.StringIO()
 
 # Gauge sectors
-if   options.qcd==1 and options.ew==1 and options.bsm==1:
+if   options.include_qcd==1 and options.include_ew==1 and options.include_bsm==1:
   sector = ""
-elif options.qcd==1 and options.ew==1 and options.bsm==0:
+elif options.include_qcd==1 and options.include_ew==1 and options.include_bsm==0:
   sector = "SM"
-elif options.qcd==1 and options.ew==0 and options.bsm==1:
+elif options.include_qcd==1 and options.include_ew==0 and options.include_bsm==1:
   sector = "_QCD-Zp"  
-elif options.qcd==0 and options.ew==1 and options.bsm==1:
+elif options.include_qcd==0 and options.include_ew==1 and options.include_bsm==1:
   sector = "_EW-Zp" 
-elif options.qcd==1 and options.ew==0 and options.bsm==0:
+elif options.include_qcd==1 and options.include_ew==0 and options.include_bsm==0:
   sector = "QCD"    
-elif options.qcd==0 and options.ew==1 and options.bsm==0:
+elif options.include_qcd==0 and options.include_ew==1 and options.include_bsm==0:
   sector = "EW"
-elif options.qcd==0 and options.ew==0 and options.bsm==1:
+elif options.include_qcd==0 and options.include_ew==0 and options.include_bsm==1:
   sector = "_Zp"
-elif options.qcd==0 and options.ew==0 and options.bsm==0:
+elif options.include_qcd==0 and options.include_ew==0 and options.include_bsm==0:
   sector = "PS"
 
 # Interference  
-if   options.int==0:
+if   options.interference==0:
   interference="_int0"
-elif options.int==1:
+elif options.interference==1:
   interference="_int1"
-elif options.int==2:
+elif options.interference==2:
   interference=""
-elif options.int==3:
+elif options.interference==3:
   interference="_int3"
 
 # Symmetrization
-if   (options.symx1x2==1) and (options.symcost==0):
+if   (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==0):
   symmetrization = "_symx"
-elif (options.symx1x2==0) and (options.symcost==1):
+elif (options.symmetries_x1x2==0) and (options.symmetrise_costheta_t==1):
   symmetrization = "_symc"
-elif (options.symx1x2==1) and (options.symcost==1):
+elif (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==1):
   symmetrization = "_symxc"
 else:
   symmetrization = ""
 
 # Print config file
-print >> config, '%s ! col' % options.col
-print >> config, '%s.d3 ! ecm_col' % emc_col
-print >> config, '%s ! ISTRUCTURE' % options.pdf
-print >> config, '%s ! model' % model
-print >> config, '%s ! QCD' % options.qcd
-print >> config, '%s ! EW' % options.ew
-print >> config, '%s ! BSM' % options.bsm
-print >> config, '%s ! int' % options.int
-print >> config, '%s ! sfinal' % final
-print >> config, '%s ! NWA' % options.NWA
-print >> config, '%s ! BR' % options.BR
-print >> config, '%s ! tran' % options.tran
-print >> config, '%s ! asym' % options.asym
+
+print >> config, '%s ! initial_state' % options.initial_state
+
+print >> config, '%s ! final_state' % final_state
+
+print >> config, '%s ! model_name' % model_name
+
+print >> config, '%s ! ISTRUCTURE' % options.structure_function
+
+print >> config, '%s ! include_qcd' % options.include_qcd
+
+print >> config, '%s ! include_ew' % options.include_ew
+
+print >> config, '%s ! include_bsm' % options.include_bsm
+
+print >> config, '%s ! phase_space_only' % options.phase_space_only
+
+print >> config, '%s ! interference' % options.interference
+
+print >> config, '%s ! use_branching_ratio' % options.use_branching_ratio
+
+print >> config, '%s ! use_NWA' % options.use_NWA
+
+print >> config, '%s ! include_transverse' % options.include_transverse
+
+print >> config, '%s ! include_asymmetries' % options.include_asymmetries
+
+print >> config, '%s.d3 ! ecm_col' % collider_energy
+
 print >> config, '%sd0 ! ytmax' % options.ytmax
+
 print >> config, '%sd0 ! yttmin' % options.yttmin
 
 print >> config, '%s ! iseed' % seed
+
 print >> config, '%s ! itmx' % options.itmx
+
 print >> config, '%s ! ncall' % ncall
+
 print >> config, '-1.d0 ! acc'
-print >> config, '%s ! symx1x2' % options.symx1x2
-print >> config, '%s ! symcost' % options.symcost
-print >> config, '%s ! distros' % options.distros
-print >> config, '%s ! dist2d' % options.dist2d
 
-print >> config, '%s ! M_eq_1' % options.M_eq_1
+print >> config, '%s ! symmetries_x1x2' % options.symmetries_x1x2
 
+print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
+
+print >> config, '%s ! print_all_distributions' % options.print_all_distributions
+
+print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s%s' % (sfinal,smodel,sector,interference,emc_col,options.itmx,ncall,symmetrization,options.tag)
+filename = '%s_%s%s%s_%s_%sx%s%s%s' % (sfinal,smodel,sector,interference,collider_energy,options.itmx,ncall,symmetrization,options.tag)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

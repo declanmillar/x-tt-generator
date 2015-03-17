@@ -1,11 +1,11 @@
-subroutine initialise_madgraph(o_NWA,model)
+subroutine initialise_madgraph(o_NWA,model_name)
 ! sets up masses and coupling constants of particles
 
   implicit none
 
 ! arguments
   integer :: o_NWA
-  character(50) :: model
+  character(50) :: model_name
 
 ! SM couplings
   real ::        gw, gwwa, gwwZ
@@ -86,7 +86,7 @@ subroutine initialise_madgraph(o_NWA,model)
   parameter (Amass=0d0, Awidth=0d0, hmass=125.d0, hwidth=0.31278d-2)
 
 ! other local variables
-  integer :: i,imodel,o_width(5)
+  integer :: i,imodel_name,o_width(5)
 
 ! enter global fermion masses
   fmass(1) = emass
@@ -147,14 +147,14 @@ subroutine initialise_madgraph(o_NWA,model)
   gg(1)=-g
   gg(2)=-g
 
-! Extract model filename (Remove white space.)
-  imodel = len(model)
-  do while(model(imodel:imodel) == '')
-    imodel = imodel-1
+! Extract model_name filename (Remove white space.)
+  imodel_name = len(model_name)
+  do while(model_name(imodel_name:imodel_name) == '')
+    imodel_name = imodel_name-1
   end do
 
-! Read model file
-  open(unit=42,file='Models/'//model(1:imodel)//'.mdl',status='old')
+! Read model_name file
+  open(unit=42,file='Models/'//model_name(1:imodel_name)//'.mdl',status='old')
   read(42,*) rmZp
   read(42,*) gamZp
   read(42,*) gp

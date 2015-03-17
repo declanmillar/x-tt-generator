@@ -16,24 +16,158 @@ function differential_cross_section(x,wgt)
   use distributions
   use integration
 
-  implicit real (a-h,p-z)
-  implicit integer (l-o)
+  implicit none
 
-  ! argument arrays
-  ! integration variables
-  dimension x(100)
-
-  ! global variables
-  common/fermions/ fmass,     fwidth
-  dimension fmass(12), fwidth(12)
+  real :: fmass(12), fwidth(12)
+  common/fermions/ fmass,     fwidth  
+  real :: rm_w,gamma_w,rm_z,gamma_z
   common/vmass1/rm_w,gamma_w,rm_z,gamma_z
+  real :: rm_a,gamma_a,rm_h,gamma_h
   common/vmass2/rm_a,gamma_a,rm_h,gamma_h
   ! narrow width approximation (nwa)
+  real :: gamma_t
   common/gammas/gamma_t
   ! common for decay me
-  common/polarqq/polqq(-1:1,-1:1)
-  common/polargg/polgg(-1:1,-1:1)
+  real :: polqq(-1:1,-1:1)
+  common/polarqq/polqq
+  real :: polgg(-1:1,-1:1)
+  common/polargg/polgg
+  real :: rlambdaqcd4
+  integer :: nloops
   common/qcd/rlambdaqcd4,nloops
+
+  real :: differential_cross_section
+  real :: alfas
+  real :: sqqff_qcd
+  real :: sggff_qcd
+  real :: sqqff_ewp
+  real :: sqqbbffff_qcd
+  real :: sggbbffff_qcd
+  real :: sqqbbffff_ewp
+  real :: ctq6pdf
+
+  ! implict to explicit variable dump
+  real :: x(100)
+  real :: wgt
+  real :: a_s
+  real :: arg356
+  real :: arg478
+  real :: beta
+  real :: cf5
+  real :: cf56
+  real :: cf7
+  real :: cf78
+  real :: cosfl
+  real :: cost
+  real :: costheta5
+  real :: costheta7
+  real :: costheta_top_cm
+  real :: costheta_top_star
+  real :: ct
+  real :: ct5
+  real :: ct56
+  real :: ct7
+  real :: ct78
+  real :: ct7ct5
+  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, g1, g2, ggd1, ggd2, p5xp, p5yp, p5zp
+  real :: ffxn, fffxn, fffxn1, fffxn2
+  real :: rmt, gamt
+  real :: delta_absy
+  real :: dphi
+  real :: ecm, ecm_max, pcm, qcm2
+  real :: hist, hist1, hist2
+  real :: gs, gs2
+  real :: et, et3, et4, et5, et7, etmiss, etmiss2, eta356, eta478, etvis, etvis2
+  real :: pfx1tot, pfx2tot
+  real :: gcol, qcm
+  real :: pt356, pt478, phi356, phi478
+  real :: phit
+  real :: pq5, pq52, pq56, pq7, pq78, p5m, p5mp
+  real :: phi_l
+  real :: q2, qq
+  real :: qqd1, qqd2
+  real :: resall
+  real :: rl356
+  real :: rl478
+  real :: rl56
+  real :: rl78
+  real :: m356
+  real :: m356_2
+  real :: m356max
+  real :: m356min
+  real :: m478
+  real :: m478_2
+  real :: m478max
+  real :: m478min
+  real :: m56
+  real :: m56_2
+  real :: m56max
+  real :: m56min
+  real :: m78
+  real :: m78_2
+  real :: m78max
+  real :: m78min
+  real :: rm_ct12
+  real :: rm_ct22
+  real :: rm_ct32
+  real :: rm_t12
+  real :: rm_t22
+  real :: rm_t32
+  real :: rmlct2
+  real :: rmlt2
+  real :: rmtt
+  real :: rmtt2
+  real :: rmvis2
+  real :: rpl356
+  real :: rpl478
+  real :: rps356
+  real :: rps478
+  real :: rq
+  real :: rq2
+  real :: rq5
+  real :: rq52
+  real :: rq56
+  real :: rq562
+  real :: rq7
+  real :: rq72
+  real :: rq78
+  real :: rq782
+  real :: sf5
+  real :: sf56
+  real :: sf7
+  real :: sf78
+  real :: shat
+  real :: sigm
+  real :: sigp
+  real :: st
+  real :: st5
+  real :: st56
+  real :: st7
+  real :: st78
+  real :: tau
+  real :: vcol
+  real :: x1
+  real :: x2
+  real :: xx
+  real :: xx1
+  real :: xx2
+  real :: xx356max
+  real :: xx356min
+  real :: xx478max
+  real :: xx478min
+  real :: xx56max
+  real :: xx56min
+  real :: xx78max
+  real :: xx78min
+  real :: yt
+  real :: ytb
+  real :: ytt
+  real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
+  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, itrans
+
+
+
+  
   
   ! phase space vectors.
   real :: q356(4),q478(4),p356(4),p478(4)
@@ -77,12 +211,12 @@ function differential_cross_section(x,wgt)
   ! maximum centre of mass energy
   ecm_max=collider_energy
   ! centre of mass energy
-  ecm=x(2+12*o_decay)*(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8) &
-  +rm3+rm4+rm5+rm6+rm7+rm8
+  ecm=x(2+12*tops_decay)*(ecm_max-m3-m4-m5-m6-m7-m8) &
+  +m3+m4+m5+m6+m7+m8
   shat=ecm*ecm
   tau=shat/s
   ! x1 and x2 of the partons
-  xx1=x(3+12*o_decay)*(1.d0-tau)+tau
+  xx1=x(3+12*tops_decay)*(1.d0-tau)+tau
   xx2=tau/xx1
   x1x2(1,1)=xx1
   x1x2(1,2)=xx2
@@ -103,7 +237,7 @@ function differential_cross_section(x,wgt)
       gamt=fwidth(11)
       qq=2.d0*rmt
       ! construct hadronic structure functions.
-      if(o_structure <= 4)then
+      if(structure_function <= 4)then
         q2=qq*qq
         if((x1 <= 1.d-6) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -141,7 +275,7 @@ function differential_cross_section(x,wgt)
         btm2=x2*ctq6pdf(5,x2,qq)
         g2=x2*ctq6pdf(0,x2,qq)
 
-      else if(o_structure == 5)then
+      else if(structure_function == 5)then
         imode=1
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -157,7 +291,7 @@ function differential_cross_section(x,wgt)
         end if
         call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
         call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
-      else if(o_structure == 6)then
+      else if(structure_function == 6)then
         imode=2
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -173,7 +307,7 @@ function differential_cross_section(x,wgt)
         end if
         call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
         call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
-      else if(o_structure == 7)then
+      else if(structure_function == 7)then
         imode=3
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -189,7 +323,7 @@ function differential_cross_section(x,wgt)
         end if
         call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
         call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
-      else if(o_structure == 8)then
+      else if(structure_function == 8)then
         imode=4
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -205,7 +339,7 @@ function differential_cross_section(x,wgt)
         end if
         call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
         call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
-      else if(o_structure == 9)then
+      else if(structure_function == 9)then
         imode=5
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
           fffxn=0.d0
@@ -272,7 +406,7 @@ function differential_cross_section(x,wgt)
       q(2,2)=0.d0
       q(1,2)=0.d0
 
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         ! calculate 2to2 kinematics in parton cm frame
         phit=2.d0*pi*ran(jseed)
         if(jx == 1)then
@@ -283,7 +417,7 @@ function differential_cross_section(x,wgt)
           write(*,*)'invalid jx.'
         end if
         st=sqrt(1.d0-ct*ct)
-        qcm2=((ecm*ecm-rm3*rm3-rm4*rm4)**2-(2.d0*rm3*rm4)**2)/ &
+        qcm2=((ecm*ecm-m3*m3-m4*m4)**2-(2.d0*m3*m4)**2)/ &
         (4.d0*ecm*ecm)
         if (qcm2 < 0.d0) then
           fffxn=0.d0
@@ -291,11 +425,11 @@ function differential_cross_section(x,wgt)
         else
           qcm=sqrt(qcm2)
         endif
-        q(4,3)=sqrt(qcm2+rm3*rm3)
+        q(4,3)=sqrt(qcm2+m3*m3)
         q(3,3)=qcm*ct
         q(2,3)=qcm*st*cos(phit)
         q(1,3)=qcm*st*sin(phit)
-        q(4,4)=sqrt(qcm2+rm4*rm4)
+        q(4,4)=sqrt(qcm2+m4*m4)
         q(3,4)=-qcm*ct
         q(2,4)=-qcm*st*cos(phit)
         q(1,4)=-qcm*st*sin(phit)
@@ -305,60 +439,60 @@ function differential_cross_section(x,wgt)
           q(i,7)=0.d0
           q(i,8)=0.d0
         end do
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         ! calculate 2to6 kinematics in parton cm frame
         phit=2.d0*pi*ran(jseed)
-        rm356min=rm3+rm5+rm6
-        rm356max=ecm-rm4-rm7-rm8
-        xx356min=datan(((rm356min)**2-rmt**2)/rmt/gamt)
-        xx356max=datan(((rm356max)**2-rmt**2)/rmt/gamt)
+        m356min=m3+m5+m6
+        m356max=ecm-m4-m7-m8
+        xx356min=datan(((m356min)**2-rmt**2)/rmt/gamt)
+        xx356max=datan(((m356max)**2-rmt**2)/rmt/gamt)
         xx=x(13)*(xx356max-xx356min)+xx356min
         rl356=dtan(xx)*rmt*gamt
-        rm356_2=(rmt**2+rl356)
-        if(rm356_2 < 0.d0)then
+        m356_2=(rmt**2+rl356)
+        if(m356_2 < 0.d0)then
           fffxn=0.d0
           return
         else
-          rm356=sqrt(rm356_2)
+          m356=sqrt(m356_2)
         endif
-        rm478min=rm4+rm7+rm8
-        rm478max=ecm-rm356
-        xx478min=datan(((rm478min)**2-rmt**2)/rmt/gamt)
-        xx478max=datan(((rm478max)**2-rmt**2)/rmt/gamt)
+        m478min=m4+m7+m8
+        m478max=ecm-m356
+        xx478min=datan(((m478min)**2-rmt**2)/rmt/gamt)
+        xx478max=datan(((m478max)**2-rmt**2)/rmt/gamt)
         xx=x(12)*(xx478max-xx478min)+xx478min
         rl478=dtan(xx)*rmt*gamt
-        rm478_2=(rmt**2+rl478)
-        if(rm478_2 < 0.d0)then
+        m478_2=(rmt**2+rl478)
+        if(m478_2 < 0.d0)then
           fffxn=0.d0
           return
         else
-          rm478=sqrt(rm478_2)
+          m478=sqrt(m478_2)
         endif
-        rm56min=rm5+rm6
-        rm56max=rm356-rm3
-        xx56min=datan(((rm56min)**2-rm_w**2)/rm_w/gamma_w)
-        xx56max=datan(((rm56max)**2-rm_w**2)/rm_w/gamma_w)
+        m56min=m5+m6
+        m56max=m356-m3
+        xx56min=datan(((m56min)**2-rm_w**2)/rm_w/gamma_w)
+        xx56max=datan(((m56max)**2-rm_w**2)/rm_w/gamma_w)
         xx=x(11)*(xx56max-xx56min)+xx56min
         rl56=dtan(xx)*rm_w*gamma_w
-        rm56_2=(rm_w**2+rl56)
-        if(rm56_2 < 0.d0)then
+        m56_2=(rm_w**2+rl56)
+        if(m56_2 < 0.d0)then
           fffxn=0.d0
           return
         else
-          rm56=sqrt(rm56_2)
+          m56=sqrt(m56_2)
         endif
-        rm78min=rm7+rm8
-        rm78max=rm478-rm4
-        xx78min=datan(((rm78min)**2-rm_w**2)/rm_w/gamma_w)
-        xx78max=datan(((rm78max)**2-rm_w**2)/rm_w/gamma_w)
+        m78min=m7+m8
+        m78max=m478-m4
+        xx78min=datan(((m78min)**2-rm_w**2)/rm_w/gamma_w)
+        xx78max=datan(((m78max)**2-rm_w**2)/rm_w/gamma_w)
         xx=x(10)*(xx78max-xx78min)+xx78min
         rl78=dtan(xx)*rm_w*gamma_w
-        rm78_2=(rm_w**2+rl78)
-        if(rm78_2 < 0.d0)then
+        m78_2=(rm_w**2+rl78)
+        if(m78_2 < 0.d0)then
           fffxn=0.d0
           return
         else
-          rm78=sqrt(rm78_2)
+          m78=sqrt(m78_2)
         endif
         if(jx == 1)then
           ct=x(9)
@@ -384,8 +518,8 @@ function differential_cross_section(x,wgt)
         sf5=sin(x(2))
         cf7=cos(x(1))
         sf7=sin(x(1))
-        rq2=((ecm*ecm-rm356*rm356-rm478*rm478)**2 &
-        -(2.d0*rm356*rm478)**2)/ &
+        rq2=((ecm*ecm-m356*m356-m478*m478)**2 &
+        -(2.d0*m356*m478)**2)/ &
         (4.d0*ecm*ecm)
         if(rq2 < 0.d0)then
           fffxn=0.d0
@@ -396,9 +530,9 @@ function differential_cross_section(x,wgt)
         p356(3)=rq*ct
         p356(2)=rq*st*cos(phit)
         p356(1)=rq*st*sin(phit)
-        p356(4)=sqrt(rq2+rm356*rm356)
-        rq562=((rm356*rm356-rm3*rm3-rm56*rm56)**2-(2.d0*rm3*rm56)**2)/ &
-        (4.d0*rm356*rm356)
+        p356(4)=sqrt(rq2+m356*m356)
+        rq562=((m356*m356-m3*m3-m56*m56)**2-(2.d0*m3*m56)**2)/ &
+        (4.d0*m356*m356)
         if(rq562 < 0.d0)then
           fffxn=0.d0
           return
@@ -408,23 +542,23 @@ function differential_cross_section(x,wgt)
         q56(3)=rq56*st56*cf56
         q56(2)=rq56*st56*sf56
         q56(1)=rq56*ct56
-        q56(4)=sqrt(rq562+rm56*rm56)
+        q56(4)=sqrt(rq562+m56*m56)
         pq56=0.d0
         do i=1,3
           pq56=pq56+p356(i)*q56(i)
         end do
-        p56(4)=(p356(4)*q56(4)+pq56)/rm356
+        p56(4)=(p356(4)*q56(4)+pq56)/m356
         q(4,3)=p356(4)-p56(4)
         do i=1,3
-          p56(i)=q56(i)+p356(i)*(p56(4)+q56(4))/(p356(4)+rm356)
+          p56(i)=q56(i)+p356(i)*(p56(4)+q56(4))/(p356(4)+m356)
           q(i,3)=p356(i)-p56(i)
         end do
         do i=1,3
           p478(i)=-p356(i)
         end do
-        p478(4)=sqrt(rq2+rm478*rm478)
-        rq782=((rm478*rm478-rm4*rm4-rm78*rm78)**2-(2.d0*rm4*rm78)**2)/ &
-        (4.d0*rm478*rm478)
+        p478(4)=sqrt(rq2+m478*m478)
+        rq782=((m478*m478-m4*m4-m78*m78)**2-(2.d0*m4*m78)**2)/ &
+        (4.d0*m478*m478)
         if(rq782 < 0.d0)then
           fffxn=0.d0
           return
@@ -434,19 +568,19 @@ function differential_cross_section(x,wgt)
         q78(3)=rq78*st78*cf78
         q78(2)=rq78*st78*sf78
         q78(1)=rq78*ct78
-        q78(4)=sqrt(rq782+rm78*rm78)
+        q78(4)=sqrt(rq782+m78*m78)
         pq78=0.d0
         do i=1,3
           pq78=pq78+p478(i)*q78(i)
         end do
-        p78(4)=(p478(4)*q78(4)+pq78)/rm478
+        p78(4)=(p478(4)*q78(4)+pq78)/m478
         q(4,4)=p478(4)-p78(4)
         do i=1,3
-          p78(i)=q78(i)+p478(i)*(p78(4)+q78(4))/(p478(4)+rm478)
+          p78(i)=q78(i)+p478(i)*(p78(4)+q78(4))/(p478(4)+m478)
           q(i,4)=p478(i)-p78(i)
         end do
-        rq52=((rm56*rm56-rm5*rm5-rm6*rm6)**2-(2.d0*rm5*rm6)**2)/ &
-        (4.d0*rm56*rm56)
+        rq52=((m56*m56-m5*m5-m6*m6)**2-(2.d0*m5*m6)**2)/ &
+        (4.d0*m56*m56)
         if(rq52 < 0.d0)then
           fffxn=0.d0
           return
@@ -456,19 +590,19 @@ function differential_cross_section(x,wgt)
         q5(3)=rq5*st5*cf5
         q5(2)=rq5*st5*sf5
         q5(1)=rq5*ct5
-        q5(4)=sqrt(rq52+rm5*rm5)
+        q5(4)=sqrt(rq52+m5*m5)
         pq5=0.d0
         do i=1,3
           pq5=pq5+p56(i)*q5(i)
         end do
-        q(4,5)=(p56(4)*q5(4)+pq5)/rm56
+        q(4,5)=(p56(4)*q5(4)+pq5)/m56
         q(4,6)=p56(4)-q(4,5)
         do i=1,3
-          q(i,5)=q5(i)+p56(i)*(q(4,5)+q5(4))/(p56(4)+rm56)
+          q(i,5)=q5(i)+p56(i)*(q(4,5)+q5(4))/(p56(4)+m56)
           q(i,6)=p56(i)-q(i,5)
         end do
-        rq72=((rm78*rm78-rm7*rm7-rm8*rm8)**2-(2.d0*rm7*rm8)**2)/ &
-        (4.d0*rm78*rm78)
+        rq72=((m78*m78-m7*m7-m8*m8)**2-(2.d0*m7*m8)**2)/ &
+        (4.d0*m78*m78)
         if(rq72 < 0.d0)then
           fffxn=0.d0
           return
@@ -478,15 +612,15 @@ function differential_cross_section(x,wgt)
         q7(3)=rq7*st7*cf7
         q7(2)=rq7*st7*sf7
         q7(1)=rq7*ct7
-        q7(4)=sqrt(rq72+rm7*rm7)
+        q7(4)=sqrt(rq72+m7*m7)
         pq7=0.d0
         do i=1,3
           pq7=pq7+p78(i)*q7(i)
         end do
-        q(4,7)=(p78(4)*q7(4)+pq7)/rm78
+        q(4,7)=(p78(4)*q7(4)+pq7)/m78
         q(4,8)=p78(4)-q(4,7)
         do i=1,3
-          q(i,7)=q7(i)+p78(i)*(q(4,7)+q7(4))/(p78(4)+rm78)
+          q(i,7)=q7(i)+p78(i)*(q(4,7)+q7(4))/(p78(4)+m78)
           q(i,8)=p78(i)-q(i,7)
         end do
       end if
@@ -494,7 +628,7 @@ function differential_cross_section(x,wgt)
       ! boost initial and final state momenta to the collider frame
       vcol=(x1-x2)/(x1+x2)
       gcol=(x1+x2)/2.d0/sqrt(x1*x2)
-      do i=1,nfinal
+      do i=1,n_final
         qcol(4,i)=gcol*(q(4,i)+vcol*q(3,i))
         qcol(3,i)=gcol*(q(3,i)+vcol*q(4,i))
         qcol(2,i)=q(2,i)
@@ -506,19 +640,19 @@ function differential_cross_section(x,wgt)
       ! distributions and cuts.
 
       ! calculate transverse momenta (pt)
-      do ip=1,nfinal
+      do ip=1,n_final
         pt2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
         pt(ip)=sqrt(pt2(ip))
       end do
 
       ! calculate rapidity (collider frame)
-      do ip=3,nfinal
+      do ip=3,n_final
         ycol(ip)=0.5d0*log((qcol(4,ip)+qcol(3,ip)) &
         /(qcol(4,ip)-qcol(3,ip)))
       end do
 
       ! calculate pseudorapidity (eta) com frame
-      do ip=1,nfinal
+      do ip=1,n_final
         rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
         if(rps(ip) < -1.d0)rps=-1.d0
         if(rps(ip) > +1.d0)rps=+1.d0
@@ -529,17 +663,17 @@ function differential_cross_section(x,wgt)
       end do
 
       ! calculate azimuthal angle (phi) in lab frame
-      do ip=1,nfinal
+      do ip=1,n_final
         phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
       end do
 
       ! calculate delta phi
-      if(ifinal_state == 1)then
+      if(final_state == 1)then
         dphi=abs(phi(5)-phi(7))
       end if
 
       ! calculate visible and missing transverse momentum
-      if(ifinal_state == 1)then
+      if(final_state == 1)then
         etvis2=0d0
         etmiss2=0d0
         do i=1,2
@@ -553,7 +687,7 @@ function differential_cross_section(x,wgt)
       end if
 
       ! calculate truth level top/antitop pt, eta and phi
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         pt356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2 &
                   +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
 
@@ -588,7 +722,7 @@ function differential_cross_section(x,wgt)
         ,qcol(1,4)+qcol(1,7)+qcol(1,8))
       end if
     ! calculate cos(theta_t)
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         cost= &
         (qcol(1,3)*qcol(1,1) &
         +qcol(2,3)*qcol(2,1) &
@@ -599,7 +733,7 @@ function differential_cross_section(x,wgt)
         /sqrt(qcol(1,1)*qcol(1,1) &
         +qcol(2,1)*qcol(2,1) &
         +qcol(3,1)*qcol(3,1))
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         cost= &
         ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
         +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
@@ -615,7 +749,7 @@ function differential_cross_section(x,wgt)
         +qcol(3,1)*qcol(3,1))
       end if
     ! calculate cos(theta^*_t)
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         costheta_top_cm=(q(1,3)*q(1,1) &
         +q(2,3)*q(2,1) &
         +q(3,3)*q(3,1)) &
@@ -625,7 +759,7 @@ function differential_cross_section(x,wgt)
         /sqrt(q(1,1)*q(1,1) &
         +q(2,1)*q(2,1) &
         +q(3,1)*q(3,1))
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         costheta_top_cm= &
         ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
         +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
@@ -641,9 +775,9 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
     ! calculate the energy of the top
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         et=qcol(4,3)
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
 
@@ -651,12 +785,12 @@ function differential_cross_section(x,wgt)
       ytt = 0.5d0*log(x1/x2)
 
     ! calculate rmtt
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         rmtt2=(qcol(4,3)+qcol(4,4))**2
         do i=1,3
           rmtt2=rmtt2-(qcol(i,3)+qcol(i,4))**2
         end do
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         rmtt2=(qcol(4,3)+qcol(4,4) &
         +qcol(4,5)+qcol(4,6) &
         +qcol(4,7)+qcol(4,8))**2
@@ -678,11 +812,11 @@ function differential_cross_section(x,wgt)
         trans(1)=sqrt(abs(rmvis2))
       end if
     ! calculate transverse energy energies of visible particles
-      if(ifinal_state > 0)then
-        et3=sqrt(rm3**2+pt2(3))
-        et4=sqrt(rm4**2+pt2(4))
-        et5=sqrt(rm5**2+pt2(5))
-        et7=sqrt(rm6**2+pt2(7))
+      if(final_state > 0)then
+        et3=sqrt(m3**2+pt2(3))
+        et4=sqrt(m4**2+pt2(4))
+        et5=sqrt(m5**2+pt2(5))
+        et7=sqrt(m6**2+pt2(7))
       end if
     ! calculate ht
       if(o_tran(2) == 1)then
@@ -713,8 +847,8 @@ function differential_cross_section(x,wgt)
       end if
     ! calculate lepton transverse mass
       if(o_tran(6) == 1)then
-        et5=sqrt(rm5**2+pt2(5))
-        et7=sqrt(rm7**2+pt2(7))
+        et5=sqrt(m5**2+pt2(5))
+        et7=sqrt(m7**2+pt2(7))
         rmlt2=(et5+et7)**2
         do i=1,2
           rmlt2=rmlt2-(qcol(i,5)+qcol(i,7))**2
@@ -745,8 +879,8 @@ function differential_cross_section(x,wgt)
       end if
     ! calculate lepton contransverse mass
       if(o_tran(10) == 1)then
-        et5=sqrt(rm5**2+pt2(5))
-        et7=sqrt(rm7**2+pt2(7))
+        et5=sqrt(m5**2+pt2(5))
+        et7=sqrt(m7**2+pt2(7))
         rmlct2=(et5+et7)**2
         do i=1,2
           rmlct2=rmlct2-(qcol(i,5)-qcol(i,7))**2
@@ -754,7 +888,7 @@ function differential_cross_section(x,wgt)
         trans(10)=sqrt(abs(rmlct2))
       end if
     ! calculate top pseudorapidity
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         rps356=(q(3,3)+q(3,5)+q(3,6)) &
         /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
         +(q(2,3)+q(2,5)+q(2,6))**2 &
@@ -778,10 +912,10 @@ function differential_cross_section(x,wgt)
         eta478=-log(arg478)   ! no cuts on pseudorapidity yet
       end if
     ! calculate rapidity (y) of top and antitop
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3)))
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6) &
         +qcol(3,3)+qcol(3,5)+qcol(3,6)) &
         /(qcol(4,3)+qcol(4,5)+qcol(4,6) &
@@ -796,7 +930,7 @@ function differential_cross_section(x,wgt)
       delta_absy=abs(yt)-abs(ytb)
 
     ! calculate cos(theta_l+)
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         costheta5=+(q(1,5)*q(1,1) &
         +q(2,5)*q(2,1) &
         +q(3,5)*q(3,1)) &
@@ -808,7 +942,7 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
     ! calculate cos(theta_l-)
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         costheta7=+(q(1,7)*q(1,1) &
         +q(2,7)*q(2,1) &
         +q(3,7)*q(3,1)) &
@@ -820,13 +954,13 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
 
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         ct7ct5=costheta7*costheta5
       end if
 
       costheta_top_star=int(ytt/abs(ytt))*costheta_top_cm
     ! calculate cos(phi_l) (lepton azimuthal angle)
-      if(ifinal_state > 0)then
+      if(final_state > 0)then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
 
       ! p(1)^ is z^
@@ -871,7 +1005,7 @@ function differential_cross_section(x,wgt)
     
     ! selections
     ! cut on top pt
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         if(abs(eta(3)) > ytmax)then
           fffxn=0.d0
           return
@@ -884,7 +1018,7 @@ function differential_cross_section(x,wgt)
     ! matrix elements
     ! phase space only
     ! set |m|^2 =1 (for bug squishing) and skip matrix element calculation
-      if(o_m_eq_1 == 1)then
+      if(phase_space_only == 1)then
         if(ix == 1)then
           pfx1tot=0.5/x1
           pfx2tot=0.5/x1
@@ -892,7 +1026,7 @@ function differential_cross_section(x,wgt)
           pfx1tot=0.5/x2
           pfx2tot=0.5/x2
         end if
-        if(ifinal_state == 0)then
+        if(final_state == 0)then
           do lam3=-1,1,2
             do lam4=-1,1,2
               if(ix == 1)then
@@ -908,7 +1042,7 @@ function differential_cross_section(x,wgt)
         go to 666
       end if
     
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         ! assign 2to2 madgraph momenta    
         do i=1,3
           p1(i)=q(i,1)
@@ -952,7 +1086,7 @@ function differential_cross_section(x,wgt)
         ! write(*,*) 'rm_4 =',rmassa4
 
 
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
       ! assign 2to6 madgraph momenta
         do i=1,3
           p1(i)=q(i,1)
@@ -1049,25 +1183,25 @@ function differential_cross_section(x,wgt)
       ewzbb2=0
       do ii=-1,1,1
         do jj=-1,1,1
-          qcdpolqq1(-1:1,-1:1)=0
-          qcdpolbb1(-1:1,-1:1)=0
-          qcdpolgg1(-1:1,-1:1)=0
-          ewzpoluu1(-1:1,-1:1)=0
-          ewzpoldd1(-1:1,-1:1)=0
-          ewzpolbb1(-1:1,-1:1)=0
-          qcdpolqq2(-1:1,-1:1)=0
-          qcdpolbb2(-1:1,-1:1)=0
-          qcdpolgg2(-1:1,-1:1)=0
-          ewzpoluu2(-1:1,-1:1)=0
-          ewzpoldd2(-1:1,-1:1)=0
-          ewzpolbb2(-1:1,-1:1)=0
+          qcdpolqq1(ii,jj)=0
+          qcdpolbb1(ii,jj)=0
+          qcdpolgg1(ii,jj)=0
+          ewzpoluu1(ii,jj)=0
+          ewzpoldd1(ii,jj)=0
+          ewzpolbb1(ii,jj)=0
+          qcdpolqq2(ii,jj)=0
+          qcdpolbb2(ii,jj)=0
+          qcdpolgg2(ii,jj)=0
+          ewzpoluu2(ii,jj)=0
+          ewzpoldd2(ii,jj)=0
+          ewzpolbb2(ii,jj)=0
           do kk=1,20
             weight(kk,ii,jj)=0.d0
           end do
         end do
       end do
       resall=0
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         ! compute 2to2 mes
         if(include_qcd == 1)then
           ! compute qcd square matrix elements
@@ -1110,7 +1244,7 @@ function differential_cross_section(x,wgt)
           end do
         end if
 
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
         ! 6-body mes
         if(include_qcd == 1)then
           ! compute qcd square matrix elements
@@ -1149,7 +1283,7 @@ function differential_cross_section(x,wgt)
       ! sum over |m|^2 with pdfs for all initial partons    
       pfx1tot=0.d0
       pfx2tot=0.d0
-      if(ifinal_state == 0) then
+      if(final_state == 0) then
         ! sum over all polarised |m|^2
         do lam3=-1,1,2
           do lam4=-1,1,2
@@ -1179,7 +1313,7 @@ function differential_cross_section(x,wgt)
           end do
         end do
 
-      else if (ifinal_state > 0) then
+      else if (final_state > 0) then
         qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
         +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1) &
         +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1) &
@@ -1207,7 +1341,7 @@ function differential_cross_section(x,wgt)
         return
       end if
 
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         ! weight for distributions
         do lam3=-1,1,2
           do lam4=-1,1,2
@@ -1221,39 +1355,39 @@ function differential_cross_section(x,wgt)
     ! phase space volume
     ! jacobians from dx1 dx2 -> dx(2) dx(3)
       pfx1tot=pfx1tot*(1.d0-tau)*2.d0*ecm/s &
-      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
+      *(ecm_max-m3-m4-m5-m6-m7-m8)
       pfx2tot=pfx2tot*(1.d0-tau)*2.d0*ecm/s &
-      *(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8)
+      *(ecm_max-m3-m4-m5-m6-m7-m8)
     ! fffxn is now m*m*pdfs
       fffxn1=pfx1tot
       fffxn2=pfx2tot
     ! multiply by 2pi from phit integration and convert from gev^-2 to pb
       fffxn1=fffxn1*2.d0*pi*unit_conv
       fffxn2=fffxn2*2.d0*pi*unit_conv
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
       ! 2-body phase space factor
         fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
         fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
-      else if(ifinal_state > 0)then
+      else if(final_state > 0)then
       ! 6-body flux factor, pi's and phase space integral
         fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
-        /(2.d0*rm356) &
+        /(2.d0*m356) &
         /rmt/gamt &
-        *((rm356*rm356-rmt*rmt)**2+rmt**2*gamt**2)
+        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn1=fffxn1*(xx356max-xx356min) &
-        /(2.d0*rm478) &
+        /(2.d0*m478) &
         /rmt/gamt &
-        *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
+        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn1=fffxn1*(xx478max-xx478min) &
-        /(2.d0*rm56) &
+        /(2.d0*m56) &
         /rm_w/gamma_w &
-        *((rm56*rm56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
         fffxn1=fffxn1*(xx56max-xx56min) &
-        /(2.d0*rm78) &
+        /(2.d0*m78) &
         /rm_w/gamma_w &
-        *((rm78*rm78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
         fffxn1=fffxn1*(xx78max-xx78min)
       ! nwa
         fffxn1=fffxn1 &
@@ -1263,21 +1397,21 @@ function differential_cross_section(x,wgt)
         fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
 
         fffxn2=fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
-        /(2.d0*rm356) &
+        /(2.d0*m356) &
         /rmt/gamt &
-        *((rm356*rm356-rmt*rmt)**2+rmt**2*gamt**2)
+        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn2=fffxn2*(xx356max-xx356min) &
-        /(2.d0*rm478) &
+        /(2.d0*m478) &
         /rmt/gamt &
-        *((rm478*rm478-rmt*rmt)**2+rmt**2*gamt**2)
+        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
         fffxn2=fffxn2*(xx478max-xx478min) &
-        /(2.d0*rm56) &
+        /(2.d0*m56) &
         /rm_w/gamma_w &
-        *((rm56*rm56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
         fffxn2=fffxn2*(xx56max-xx56min) &
-        /(2.d0*rm78) &
+        /(2.d0*m78) &
         /rm_w/gamma_w &
-        *((rm78*rm78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
         fffxn2=fffxn2*(xx78max-xx78min)
       ! nwa
         fffxn2=fffxn2 &
@@ -1295,7 +1429,7 @@ function differential_cross_section(x,wgt)
     ! polarised total cross sections
     ! polarised cross section for each point is calculated.
     ! (note that above pfx was divided by fffxn.)
-      if(ifinal_state == 0)then
+      if(final_state == 0)then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             xsec_polar(it,iphel,jphel)=xsec_polar(it,iphel,jphel) &
@@ -1424,7 +1558,7 @@ function differential_cross_section(x,wgt)
       hist1=fffxn1*wgt
       hist2=fffxn2*wgt
       hist=hist1+hist2
-      do ip=3,nfinal
+      do ip=3,n_final
       ! generate distribution in pt
         if(o_pt(ip) == 1)then
           nbin=int((pt(ip)-ptmin(ip))/ptw(ip))+1
@@ -1715,7 +1849,7 @@ function differential_cross_section(x,wgt)
       end if
 
       do itrans=1,ntrans
-        if(o_transdp(itrans) == 1)then
+        if(include_transversedp(itrans) == 1)then
         ! generate distribution in transdp.
           ibin=int((dphi-dphimin)/dphiw)+1
           jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1

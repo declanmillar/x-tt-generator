@@ -38,7 +38,7 @@ program zprime
 
   real :: o_width(5)
   real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)
-  real :: spattot(nspat,-1:1),spatchi(nspat,-1:1)
+  real :: spattot(n_fb_asymmetries,-1:1),spatchi(n_fb_asymmetries,-1:1)
 
   real :: avgi, chi2a, cross, error, sd, stantot, alfas, qcdl4
   integer :: iab, ndimensions, iasy, icteq, iphel,ispat,jphel
@@ -64,56 +64,56 @@ program zprime
 
   ! qcdl4 is qcd lambda4 (to match pdf fits).
   ! (pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd)
-  if(o_structure == 1)qcdl4=0.326d0
-  if(o_structure == 2)qcdl4=0.326d0
-  if(o_structure == 3)qcdl4=0.326d0
-  if(o_structure == 4)qcdl4=0.215d0
-  if(o_structure == 5)qcdl4=0.300d0
-  if(o_structure == 6)qcdl4=0.300d0
-  if(o_structure == 7)qcdl4=0.300d0
-  if(o_structure == 8)qcdl4=0.229d0
-  if(o_structure == 9)qcdl4=0.383d0
+  if(structure_function == 1)qcdl4=0.326d0
+  if(structure_function == 2)qcdl4=0.326d0
+  if(structure_function == 3)qcdl4=0.326d0
+  if(structure_function == 4)qcdl4=0.215d0
+  if(structure_function == 5)qcdl4=0.300d0
+  if(structure_function == 6)qcdl4=0.300d0
+  if(structure_function == 7)qcdl4=0.300d0
+  if(structure_function == 8)qcdl4=0.229d0
+  if(structure_function == 9)qcdl4=0.383d0
   rlambdaqcd4=qcdl4
   ! initialise cteq grids.
-  if(o_structure <= 4)then
-    icteq=o_structure
+  if(structure_function <= 4)then
+    icteq=structure_function
     call setctq6(icteq)
   end if
 
   ! use appropriately evolved alphas.
-  if(o_structure == 1)nloops=2
-  if(o_structure == 2)nloops=2
-  if(o_structure == 3)nloops=1
-  if(o_structure == 4)nloops=1
-  if(o_structure == 5)nloops=1
-  if(o_structure == 6)nloops=1
-  if(o_structure == 7)nloops=1
-  if(o_structure == 8)nloops=1
-  if(o_structure == 9)nloops=1
+  if(structure_function == 1)nloops=2
+  if(structure_function == 2)nloops=2
+  if(structure_function == 3)nloops=1
+  if(structure_function == 4)nloops=1
+  if(structure_function == 5)nloops=1
+  if(structure_function == 6)nloops=1
+  if(structure_function == 7)nloops=1
+  if(structure_function == 8)nloops=1
+  if(structure_function == 9)nloops=1
 
   ! initialise madgraph - masses and coupling constants of particles
-  call initialise_madgraph(o_nwa,model)
+  call initialise_madgraph(use_nwa,model_name)
 
   ! dimensions
-  if(ifinal_state == 0)then
+  if(final_state == 0)then
     ndimensions=3
-  else if(ifinal_state > 0)then
+  else if(final_state > 0)then
     ndimensions=15
   end if
   ! if nprn<0 no print-out
   nprn=0
 
-  if(ifinal_state == 0)then
-    rm3=fmass(11)
-    rm4=rm3
-    rm5=0.d0
-    rm6=0.d0
-    rm7=0.d0
-    rm8=0.d0
+  if(final_state == 0)then
+    m3=fmass(11)
+    m4=m3
+    m5=0.d0
+    m6=0.d0
+    m7=0.d0
+    m8=0.d0
     ! integrates on:
 
     ! x(3) = (x1-tau)/(1-tau),
-    ! x(2) = (ecm-rm3-rm4)/(ecm_max-rm3-rm4),
+    ! x(2) = (ecm-m3-m4)/(ecm_max-m3-m4),
     ! x(1) = cos(theta3_cm)
 
     ! limits:
@@ -126,26 +126,26 @@ program zprime
       xu(i)=1.d0
     end do
 
-  else if(ifinal_state >= 1)then
-    rm3=fmass(12)
-    rm4=rm3
-    rm5=0.d0
-    rm6=0.d0
-    rm7=0.d0
-    rm8=0.d0
+  else if(final_state >= 1)then
+    m3=fmass(12)
+    m4=m3
+    m5=0.d0
+    m6=0.d0
+    m7=0.d0
+    m8=0.d0
     ! integrates on:
          
     ! x(15) = (x1-tau)/(1-tau),
-    ! x(14) = (ecm-rm3-rm4-rm5-rm6-rm7-rm8)
-    !        /(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
+    ! x(14) = (ecm-m3-m4-m5-m6-m7-m8)
+    !        /(ecm_max-m3-m4-m5-m6-m7-m8),
     ! x(13) = (xx356-xx356min)/(xx356max-xx356min),
-    ! where xx356 = arctg((rm356**2-rm3**2)/rm3/gamt),
+    ! where xx356 = arctg((m356**2-m3**2)/m3/gamt),
     ! x(12) = (xx478-xx478min)/(xx478max-xx478min),
-    ! where xx478 = arctg((rm478**2-rm3**2)/rm3/gamt),
+    ! where xx478 = arctg((m478**2-m3**2)/m3/gamt),
     ! x(11) = (xx56-xx56min)/(xx56max-xx56min),
-    ! where xx56 = arctg((rm56**2-rm_w**2)/rm_w/gamw),
+    ! where xx56 = arctg((m56**2-rm_w**2)/rm_w/gamw),
     ! x(10) = (xx78-xx78min)/(xx78max-xx78min),
-    ! where xx78 = arctg((rm78**2-rm_w**2)/rm_w/gamw),
+    ! where xx78 = arctg((m78**2-rm_w**2)/rm_w/gamw),
     ! x(9) = cos(theta_cm_356) = -cos(theta_cm_478)
     ! x(8) = cos(theta56_cm_356),
     ! x(7) = cos(theta78_cm_478),
@@ -186,34 +186,34 @@ program zprime
   write(*,*)'-----------------------------------------------------'
   write(*,*)'process'
   if(initial_state == 0)then
-    if(ifinal_state == 0) &
+    if(final_state == 0) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     ' #times br(t#rightarrow bl#nu)^{2}'
-    if(ifinal_state == 1) &
+    if(final_state == 1) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    if(ifinal_state == 2) &
+    if(final_state == 2) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
-    if(ifinal_state == 3) &
+    if(final_state == 3) &
     write(*,*)'pp #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
   else if(initial_state == 1)then
-    if(ifinal_state == 0) &
+    if(final_state == 0) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     ' #times br(t#rightarrow bl#nu)^{2}'
-    if(ifinal_state == 1) &
+    if(final_state == 1) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    if(ifinal_state == 2) &
+    if(final_state == 2) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     '#rightarrow b#bar{b} q#bar{q} l #nu'
-    if(ifinal_state == 3) &
+    if(final_state == 3) &
     write(*,*)'p#bar{p} #rightarrow t#bar{t}', &
     '#rightarrow b#bar{b} w^{+}w^{-}', &
     "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
@@ -222,18 +222,18 @@ program zprime
   write(*,*)'notes'
   write(*,*)'units: gev'
   write(*,*)'quarks: all massless except t, b.'
-  if(o_structure == 1)write(*,*)'pdfs: cteq6m.'
-  if(o_structure == 2)write(*,*)'pdfs: cteq6d.'
-  if(o_structure == 3)write(*,*)'pdfs: cteq6l.'
-  if(o_structure == 4)write(*,*)'pdfs: cteq6l1.'
-  if(o_structure == 5)write(*,*)'pdfs: mrs99 (cor01).'
-  if(o_structure == 6)write(*,*)'pdfs: mrs99 (cor02).'
-  if(o_structure == 7)write(*,*)'pdfs: mrs99 (cor03).'
-  if(o_structure == 8)write(*,*)'pdfs: mrs99 (cor04).'
-  if(o_structure == 9)write(*,*)'pdfs: mrs99 (cor05).'
-  if((ifinal_state >= 1) .and. (o_nwa == 0))write(*,*)'tops: off-shell.'
-  if((ifinal_state >= 1) .and. (o_nwa == 1))write(*,*)'tops: nwa.'
-  write(*,*)'bsm model: ',model
+  if(structure_function == 1)write(*,*)'pdfs: cteq6m.'
+  if(structure_function == 2)write(*,*)'pdfs: cteq6d.'
+  if(structure_function == 3)write(*,*)'pdfs: cteq6l.'
+  if(structure_function == 4)write(*,*)'pdfs: cteq6l1.'
+  if(structure_function == 5)write(*,*)'pdfs: mrs99 (cor01).'
+  if(structure_function == 6)write(*,*)'pdfs: mrs99 (cor02).'
+  if(structure_function == 7)write(*,*)'pdfs: mrs99 (cor03).'
+  if(structure_function == 8)write(*,*)'pdfs: mrs99 (cor04).'
+  if(structure_function == 9)write(*,*)'pdfs: mrs99 (cor05).'
+  if((final_state >= 1) .and. (use_nwa == 0))write(*,*)'tops: off-shell.'
+  if((final_state >= 1) .and. (use_nwa == 1))write(*,*)'tops: nwa.'
+  write(*,*)'bsm model_name: ',model_name
   if(include_qcd == 1)write(*,*)'qcd: on '
   if(include_qcd == 0)write(*,*)'qcd: off'
   if(include_ew == 1) write(*,*)'ew:  on '
@@ -244,10 +244,10 @@ program zprime
   if(interference == 1)write(*,*)'interference: sm'
   if(interference == 2)write(*,*)'interference: full'
   if(interference == 3)write(*,*)'interference: no square terms.'
-  if(o_m_eq_1 == 1)write(*,*)'phase space only'
-  if(o_symx1x2 == 1)write(*,*)'symmetrical integration over x1<->x2'
-  if(o_symcost == 1)write(*,*)'symmetrical integration over cost'
-  write(*,*)'iseed: ',iseed
+  if(phase_space_only == 1)write(*,*)'phase space only'
+  if(symmetrise_x1x2 == 1)write(*,*)'symmetrical integration over x1<->x2'
+  if(symmetrise_costheta_t == 1)write(*,*)'symmetrical integration over cost'
+  write(*,*)'seed: ',seed
   write(*,*)'-----------------------------------------------------'
   write(*,*)'parameters'
   write(*,*)'#sqrt{s}              ',collider_energy
@@ -290,7 +290,7 @@ program zprime
   npoints=0
 
   ! reset 
-  if(ifinal_state == 0)then
+  if(final_state == 0)then
     do i=1,20
       resl(i)=0.d0
       standdevl(i)=0.d0
@@ -301,7 +301,7 @@ program zprime
           error_polar(i,iphel,jphel)=0.d0
         end do
       end do
-      do ispat=1,nspat
+      do ispat=1,n_fb_asymmetries
         do iasy=-1,+1,2
           xsec_fb(ispat,i,iasy)=0.d0
           error_fb(ispat,i,iasy)=0.d0
@@ -316,7 +316,7 @@ program zprime
   write(*,*)'bork316' 
   call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
 
-  if(ifinal_state == 0 .and. o_br == 1)then
+  if(final_state == 0 .and. use_branching_ratio == 1)then
     ! multiply by branching ratios
     avgi=avgi*brtbln*brtbln
     sd=sd*brtbln*brtbln
@@ -352,8 +352,8 @@ program zprime
 
   ! total asymmetries
   ! collect polarised cross sections.
-  if(o_asyms == 1)then
-    if(ifinal_state == 0)then
+  if(include_asymmetries == 1)then
+    if(final_state == 0)then
       do iphel=-1,+1,2
         do jphel=-1,+1,2
           do i=1,it
@@ -381,7 +381,7 @@ program zprime
     end if
 
     ! collect unpolarised spatial asymmetry
-    do ispat=1,nspat
+    do ispat=1,n_fb_asymmetries
       if(o_asym(ispat+3) == 0)then
         continue
       else
@@ -411,7 +411,7 @@ program zprime
     end do
 
     ! define asymmetries
-    if(ifinal_state == 0)then
+    if(final_state == 0)then
       ! all
       atot(1)= &
       +(poltot(+1,+1)-poltot(+1,-1) &
@@ -439,7 +439,7 @@ program zprime
       /2.d0*atot(3)
     end if
 
-    do iasy=4,nasym
+    do iasy=4,n_asymmetries
       ispat=iasy-3
       if(o_asym(iasy) > 0)then
         atot(iasy)= &
@@ -452,25 +452,25 @@ program zprime
 
     ! print asymmetries
     write(*,*)'total asymmetries'
-    if(ifinal_state == 0)then
-      write(*,*)'all:                  uncertainty (same units):'
+    if(final_state == 0)then
+      write(*,*)'ALL:                    uncertainty (same units):'
       write(*,*)atot(1),atoterr(1)
-      write(*,*)'al:                   uncertainty (same units):'
+      write(*,*)'AL:                     uncertainty (same units):'
       write(*,*)atot(2),atoterr(2)
-      write(*,*)'apv:                  uncertainty (same units):'
+      write(*,*)'APV:                    uncertainty (same units):'
       write(*,*)atot(3),atoterr(3)
-      write(*,*)'afb:                 uncertainty (same units):'
+      write(*,*)'AFB:                    uncertainty (same units):'
       write(*,*)atot(4),atoterr(4)
-      write(*,*)'afb*:                   uncertainty (same units):'
+      write(*,*)'AFB*:                   uncertainty (same units):'
       write(*,*)atot(5),atoterr(5)
-      write(*,*)'atrfb:                  uncertainty (same units):'
+      write(*,*)'AtRFB:                  uncertainty (same units):'
       write(*,*)atot(6),atoterr(6)
-      write(*,*)"attbrfb/a:              uncertainty (same units):"
+      write(*,*)"AttbRFB:                uncertainty (same units):"
       write(*,*)atot(7),atoterr(7)
-      write(*,*)"arfb/a':              uncertainty (same units):"
+      write(*,*)"ARFB/:                  uncertainty (same units):"
       write(*,*)atot(8),atoterr(8)
-    else if(ifinal_state > 0)then
-      write(*,*)'a_l:                  uncertainty (same units):'
+    else if(final_state > 0)then
+      write(*,*)'A_l:                    uncertainty (same units):'
       write(*,*)atot(9),atoterr(9)
     end if
   end if
