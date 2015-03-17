@@ -10,7 +10,6 @@ function sggff_qcd(p1, p2, p3, p4, lam3, lam4)
   implicit none
 
 ! constants
-  real sggff_qcd
   integer :: iq ! incoming fermion species (see initialise for IDs)
   integer ::    nexternal,   ncomb
   parameter (nexternal=4, ncomb= 16)
@@ -24,6 +23,7 @@ function sggff_qcd(p1, p2, p3, p4, lam3, lam4)
 
   integer :: nhel(nexternal,ncomb),ntry
   real :: t
+  real :: sggff_qcd
   real :: ggff_qcd
   integer :: ihel
   logical :: goodhel(ncomb)
@@ -76,9 +76,8 @@ function ggff_qcd(iq, p1, p2, p3, p4,lam3,lam4,nhel)
   implicit none
 
 ! constants
-  real ggff_qcd
+  real :: ggff_qcd
 
-  real ggff_qcd
   integer :: iq ! incoming fermion species (see initialise for IDs)
   integer ::    ngraphs,    neigen,    nexternal
   parameter (ngraphs=  3,neigen=  2,nexternal=4)

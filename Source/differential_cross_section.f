@@ -444,10 +444,10 @@ function differential_cross_section(x,wgt)
         phit=2.d0*pi*ran(jseed)
         m356min=m3+m5+m6
         m356max=ecm-m4-m7-m8
-        xx356min=datan(((m356min)**2-rmt**2)/rmt/gamt)
-        xx356max=datan(((m356max)**2-rmt**2)/rmt/gamt)
+        xx356min=atan(((m356min)**2-rmt**2)/rmt/gamt)
+        xx356max=atan(((m356max)**2-rmt**2)/rmt/gamt)
         xx=x(13)*(xx356max-xx356min)+xx356min
-        rl356=dtan(xx)*rmt*gamt
+        rl356=tan(xx)*rmt*gamt
         m356_2=(rmt**2+rl356)
         if(m356_2 < 0.d0)then
           fffxn=0.d0
@@ -457,10 +457,10 @@ function differential_cross_section(x,wgt)
         endif
         m478min=m4+m7+m8
         m478max=ecm-m356
-        xx478min=datan(((m478min)**2-rmt**2)/rmt/gamt)
-        xx478max=datan(((m478max)**2-rmt**2)/rmt/gamt)
+        xx478min=atan(((m478min)**2-rmt**2)/rmt/gamt)
+        xx478max=atan(((m478max)**2-rmt**2)/rmt/gamt)
         xx=x(12)*(xx478max-xx478min)+xx478min
-        rl478=dtan(xx)*rmt*gamt
+        rl478=tan(xx)*rmt*gamt
         m478_2=(rmt**2+rl478)
         if(m478_2 < 0.d0)then
           fffxn=0.d0
@@ -470,10 +470,10 @@ function differential_cross_section(x,wgt)
         endif
         m56min=m5+m6
         m56max=m356-m3
-        xx56min=datan(((m56min)**2-rm_w**2)/rm_w/gamma_w)
-        xx56max=datan(((m56max)**2-rm_w**2)/rm_w/gamma_w)
+        xx56min=atan(((m56min)**2-rm_w**2)/rm_w/gamma_w)
+        xx56max=atan(((m56max)**2-rm_w**2)/rm_w/gamma_w)
         xx=x(11)*(xx56max-xx56min)+xx56min
-        rl56=dtan(xx)*rm_w*gamma_w
+        rl56=tan(xx)*rm_w*gamma_w
         m56_2=(rm_w**2+rl56)
         if(m56_2 < 0.d0)then
           fffxn=0.d0
@@ -483,10 +483,10 @@ function differential_cross_section(x,wgt)
         endif
         m78min=m7+m8
         m78max=m478-m4
-        xx78min=datan(((m78min)**2-rm_w**2)/rm_w/gamma_w)
-        xx78max=datan(((m78max)**2-rm_w**2)/rm_w/gamma_w)
+        xx78min=atan(((m78min)**2-rm_w**2)/rm_w/gamma_w)
+        xx78max=atan(((m78max)**2-rm_w**2)/rm_w/gamma_w)
         xx=x(10)*(xx78max-xx78min)+xx78min
-        rl78=dtan(xx)*rm_w*gamma_w
+        rl78=tan(xx)*rm_w*gamma_w
         m78_2=(rm_w**2+rl78)
         if(m78_2 < 0.d0)then
           fffxn=0.d0
@@ -656,7 +656,7 @@ function differential_cross_section(x,wgt)
         rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
         if(rps(ip) < -1.d0)rps=-1.d0
         if(rps(ip) > +1.d0)rps=+1.d0
-        rpl(ip)=dacos(rps(ip))
+        rpl(ip)=acos(rps(ip))
         arg(ip)=tan(rpl(ip)/2d0)
         if(arg(ip) <= 0.d0)arg(ip)=1.d-9
         eta(ip)=-log(arg(ip))
@@ -700,7 +700,7 @@ function differential_cross_section(x,wgt)
         +(q(3,3)+q(3,5)+q(3,6))**2)
         if(rps356 < -1.d0)rps=-1.d0
         if(rps356 > +1.d0)rps=+1.d0
-        rpl356=dacos(rps356)
+        rpl356=acos(rps356)
         arg356=tan(rpl356/2d0)
         if(arg356 <= 0.d0)arg356=1.d-9
         eta356=-log(arg356)
@@ -711,7 +711,7 @@ function differential_cross_section(x,wgt)
         +(q(3,4)+q(3,7)+q(3,8))**2)
         if(rps478 < -1.d0)rps=-1.d0
         if(rps478 > +1.d0)rps=+1.d0
-        rpl478=dacos(rps478)
+        rpl478=acos(rps478)
         arg478=tan(rpl478/2d0)
         if(arg478 <= 0.d0)arg478=1.d-9
         eta478=-log(arg478)
@@ -895,7 +895,7 @@ function differential_cross_section(x,wgt)
         +(q(3,3)+q(3,5)+q(3,6))**2)
         if(rps356 < -1.d0)rps=-1.d0
         if(rps356 > +1.d0)rps=+1.d0
-        rpl356=dacos(rps356)
+        rpl356=acos(rps356)
         arg356=tan(rpl356/2d0)
         if(arg356 <= 0.d0)arg356=1.d-9
         eta356=-log(arg356)
@@ -906,7 +906,7 @@ function differential_cross_section(x,wgt)
         +(q(3,4)+q(3,7)+q(3,8))**2)
         if(rps478 < -1.d0)rps=-1.d0
         if(rps478 > +1.d0)rps=+1.d0
-        rpl478=dacos(rps478)
+        rpl478=acos(rps478)
         arg478=tan(rpl478/2d0)
         if(arg478 <= 0.d0)arg478=1.d-9
         eta478=-log(arg478)   ! no cuts on pseudorapidity yet

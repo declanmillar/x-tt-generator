@@ -12,9 +12,9 @@
 ! output:
 !       real    pboost(0:3)    : four-momentum p in the boosted frame
 
-    real ::    p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
+    real*8 ::    p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     qq=q(1)**2+q(2)**2+q(3)**2
@@ -52,9 +52,9 @@
 !       real    gwwa           : dimensionless coupling of w-,w+,a
 !       real    gwwz           : dimensionless coupling of w-,w+,z
 
-    real ::    sw2,gw,gwwa,gwwz,alpha,fourpi,ee,sw,cw
+    real*8 ::    sw2,gw,gwwa,gwwz,alpha,fourpi,ee,sw,cw
 
-    real :: r_one, r_four, r_ote, r_pi, r_ialph
+    real*8 :: r_one, r_four, r_ote, r_pi, r_ialph
     parameter( r_one=1.0d0, r_four=4.0d0, r_ote=128.0d0 )
     parameter( r_pi=3.14159265358979323846d0, r_ialph=137.0359895d0 )
 
@@ -95,11 +95,11 @@
 !       real    gzd(2)         : coupling with z of down-type quarks
 !       real    g1(2)          : unit coupling of fermions
 
-    real :: gal(2),gau(2),gad(2),gwf(2),gzn(2),gzl(2),gzu(2),gzd(2), &
+    real*8 :: gal(2),gau(2),gad(2),gwf(2),gzn(2),gzl(2),gzu(2),gzd(2), &
     g1(2),sw2,alpha,fourpi,ee,sw,cw,ez,ey
 
-    real :: r_zero, r_half, r_one, r_two, r_three, r_four, r_ote
-    real :: r_pi, r_ialph
+    real*8 :: r_zero, r_half, r_one, r_two, r_three, r_four, r_ote
+    real*8 :: r_pi, r_ialph
     parameter( r_zero=0.0d0, r_half=0.5d0, r_one=1.0d0, r_two=2.0d0, &
     r_three=3.0d0 )
     parameter( r_four=4.0d0, r_ote=128.0d0 )
@@ -157,11 +157,11 @@
 !       real    gzzhh          : dimensionful  coupling of z, z, h, h
 !       real    ghhhh          : dimensionless coupling of h, h, h, h
 
-    real ::    sw2,zmass,hmass,gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh, &
+    real*8 ::    sw2,zmass,hmass,gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh, &
     alpha,fourpi,ee2,sc2,v
 
-    real :: r_half, r_one, r_two, r_three, r_four, r_ote
-    real :: r_pi, r_ialph
+    real*8 :: r_half, r_one, r_two, r_three, r_four, r_ote
+    real*8 :: r_pi, r_ialph
     parameter( r_half=0.5d0, r_one=1.0d0, r_two=2.0d0, r_three=3.0d0 )
     parameter( r_four=4.0d0, r_ote=128.0d0 )
     parameter( r_pi=3.14159265358979323846d0, r_ialph=137.0359895d0 )
@@ -345,23 +345,23 @@
 !       complex fsi(6)         : off-shell fermion             |f',s,fi>
 
     complex*16 fi(6),sc(3),fsi(6),gc(2),sl1,sl2,sr1,sr2,ds
-    real ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
+    real*8 ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
 
     fsi(5) = fi(5)-sc(2)
     fsi(6) = fi(6)-sc(3)
 
     pf(0)=dble( fsi(5))
     pf(1)=dble( fsi(6))
-    pf(2)=dimag(fsi(6))
-    pf(3)=dimag(fsi(5))
+    pf(2)=aimag(fsi(6))
+    pf(3)=aimag(fsi(5))
     pf2=pf(0)**2-(pf(1)**2+pf(2)**2+pf(3)**2)
 
-    ds=-sc(1)/dcmplx(pf2-fmass**2,max(dsign(fmass*fwidth ,pf2),0d0))
+    ds=-sc(1)/dcmplx(pf2-fmass**2,max(sign(fmass*fwidth ,pf2),0d0))
     p0p3=pf(0)+pf(3)
     p0m3=pf(0)-pf(3)
-    sl1=gc(1)*(p0p3*fi(1)+dconjg(fsi(6))*fi(2))
+    sl1=gc(1)*(p0p3*fi(1)+conjg(fsi(6))*fi(2))
     sl2=gc(1)*(p0m3*fi(2)      +fsi(6) *fi(1))
-    sr1=gc(2)*(p0m3*fi(3)-dconjg(fsi(6))*fi(4))
+    sr1=gc(2)*(p0m3*fi(3)-conjg(fsi(6))*fi(4))
     sr2=gc(2)*(p0p3*fi(4)      -fsi(6) *fi(3))
 
     fsi(1) = ( gc(1)*fmass*fi(1) + sr1 )*ds
@@ -390,24 +390,24 @@
 !       complex fso(6)         : off-shell fermion             <fo,s,f'|
 
     complex*16 fo(6),sc(6),fso(6),gc(2),sl1,sl2,sr1,sr2,ds
-    real ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
+    real*8 ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
 
     fso(5) = fo(5)+sc(2)
     fso(6) = fo(6)+sc(3)
 
     pf(0)=dble( fso(5))
     pf(1)=dble( fso(6))
-    pf(2)=dimag(fso(6))
-    pf(3)=dimag(fso(5))
+    pf(2)=aimag(fso(6))
+    pf(3)=aimag(fso(5))
     pf2=pf(0)**2-(pf(1)**2+pf(2)**2+pf(3)**2)
 
-    ds=-sc(1)/dcmplx(pf2-fmass**2,max(dsign(fmass*fwidth ,pf2),0d0))
+    ds=-sc(1)/dcmplx(pf2-fmass**2,max(sign(fmass*fwidth ,pf2),0d0))
     p0p3=pf(0)+pf(3)
     p0m3=pf(0)-pf(3)
     sl1=gc(2)*(p0p3*fo(3)      +fso(6) *fo(4))
-    sl2=gc(2)*(p0m3*fo(4)+dconjg(fso(6))*fo(3))
+    sl2=gc(2)*(p0m3*fo(4)+conjg(fso(6))*fo(3))
     sr1=gc(1)*(p0m3*fo(1)      -fso(6) *fo(2))
-    sr2=gc(1)*(p0p3*fo(2)-dconjg(fso(6))*fo(1))
+    sr2=gc(1)*(p0p3*fo(2)-conjg(fso(6))*fo(1))
 
     fso(1) = ( gc(1)*fmass*fo(1) + sl1 )*ds
     fso(2) = ( gc(1)*fmass*fo(2) + sl2 )*ds
@@ -435,9 +435,9 @@
 !       complex fvi(6)         : off-shell fermion             |f',v,fi>
 
     complex*16 fi(6),vc(6),fvi(6),sl1,sl2,sr1,sr2,d
-    real ::    g(2),pf(0:3),fmass,fwidth,pf2
+    real*8 ::    g(2),pf(0:3),fmass,fwidth,pf2
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -449,8 +449,8 @@
 
     pf(0)=dble( fvi(5))
     pf(1)=dble( fvi(6))
-    pf(2)=dimag(fvi(6))
-    pf(3)=dimag(fvi(5))
+    pf(2)=aimag(fvi(6))
+    pf(3)=aimag(fvi(5))
     pf2=pf(0)**2-(pf(1)**2+pf(2)**2+pf(3)**2)
 
     d=-r_one/dcmplx( pf2-fmass**2,max(sign(fmass*fwidth,pf2),r_zero))
@@ -465,17 +465,17 @@
         sr2=-(vc(2)+c_imag*vc(3))*fi(3) &
         +(vc(1)+       vc(4))*fi(4)
     
-        fvi(1) = ( g(1)*((pf(0)-pf(3))*sl1 -dconjg(fvi(6))*sl2) &
+        fvi(1) = ( g(1)*((pf(0)-pf(3))*sl1 -conjg(fvi(6))*sl2) &
         +g(2)*fmass*sr1)*d
         fvi(2) = ( g(1)*(      -fvi(6)*sl1 +(pf(0)+pf(3))*sl2) &
         +g(2)*fmass*sr2)*d
-        fvi(3) = ( g(2)*((pf(0)+pf(3))*sr1 +dconjg(fvi(6))*sr2) &
+        fvi(3) = ( g(2)*((pf(0)+pf(3))*sr1 +conjg(fvi(6))*sr2) &
         +g(1)*fmass*sl1)*d
         fvi(4) = ( g(2)*(       fvi(6)*sr1 +(pf(0)-pf(3))*sr2) &
         +g(1)*fmass*sl2)*d
     
     else
-        fvi(1) = g(1)*((pf(0)-pf(3))*sl1 -dconjg(fvi(6))*sl2)*d
+        fvi(1) = g(1)*((pf(0)-pf(3))*sl1 -conjg(fvi(6))*sl2)*d
         fvi(2) = g(1)*(      -fvi(6)*sl1 +(pf(0)+pf(3))*sl2)*d
         fvi(3) = g(1)*fmass*sl1*d
         fvi(4) = g(1)*fmass*sl2*d
@@ -502,9 +502,9 @@
 !       complex fvo(6)         : off-shell fermion             <fo,v,f'|
 
     complex*16 fo(6),vc(6),fvo(6),sl1,sl2,sr1,sr2,d
-    real ::    g(2),pf(0:3),fmass,fwidth,pf2
+    real*8 ::    g(2),pf(0:3),fmass,fwidth,pf2
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -516,8 +516,8 @@
 
     pf(0)=dble( fvo(5))
     pf(1)=dble( fvo(6))
-    pf(2)=dimag(fvo(6))
-    pf(3)=dimag(fvo(5))
+    pf(2)=aimag(fvo(6))
+    pf(3)=aimag(fvo(5))
     pf2=pf(0)**2-(pf(1)**2+pf(2)**2+pf(3)**2)
 
     d=-r_one/dcmplx( pf2-fmass**2,max(sign(fmass*fwidth,pf2),r_zero))
@@ -534,18 +534,18 @@
     
         fvo(1) = ( g(2)*( (pf(0)+pf(3))*sr1        +fvo(6)*sr2) &
         +g(1)*fmass*sl1)*d
-        fvo(2) = ( g(2)*( dconjg(fvo(6))*sr1 +(pf(0)-pf(3))*sr2) &
+        fvo(2) = ( g(2)*( conjg(fvo(6))*sr1 +(pf(0)-pf(3))*sr2) &
         +g(1)*fmass*sl2)*d
         fvo(3) = ( g(1)*( (pf(0)-pf(3))*sl1        -fvo(6)*sl2) &
         +g(2)*fmass*sr1)*d
-        fvo(4) = ( g(1)*(-dconjg(fvo(6))*sl1 +(pf(0)+pf(3))*sl2) &
+        fvo(4) = ( g(1)*(-conjg(fvo(6))*sl1 +(pf(0)+pf(3))*sl2) &
         +g(2)*fmass*sr2)*d
     
     else
         fvo(1) = g(1)*fmass*sl1*d
         fvo(2) = g(1)*fmass*sl2*d
         fvo(3) = g(1)*( (pf(0)-pf(3))*sl1        -fvo(6)*sl2)*d
-        fvo(4) = g(1)*(-dconjg(fvo(6))*sl1 +(pf(0)+pf(3))*sl2)*d
+        fvo(4) = g(1)*(-conjg(fvo(6))*sl1 +(pf(0)+pf(3))*sl2)*d
     end if
 
     return
@@ -589,28 +589,28 @@
     complex*16    wm(6),w31(6),wp(6),w32(6),vertex
     complex*16 dv1(0:3),dv2(0:3),dv3(0:3),dv4(0:3), &
     dvertx,v12,v13,v14,v23,v24,v34
-    real ::       pwm(0:3),pw31(0:3),pwp(0:3),pw32(0:3),g
-    real ::     dp1(0:3),dp2(0:3),dp3(0:3),dp4(0:3)
+    real*8 ::       pwm(0:3),pw31(0:3),pwp(0:3),pw32(0:3),g
+    real*8 ::     dp1(0:3),dp2(0:3),dp3(0:3),dp4(0:3)
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
 
     pwm(0)=dble( wm(5))
     pwm(1)=dble( wm(6))
-    pwm(2)=dimag(wm(6))
-    pwm(3)=dimag(wm(5))
+    pwm(2)=aimag(wm(6))
+    pwm(3)=aimag(wm(5))
     pwp(0)=dble( wp(5))
     pwp(1)=dble( wp(6))
-    pwp(2)=dimag(wp(6))
-    pwp(3)=dimag(wp(5))
+    pwp(2)=aimag(wp(6))
+    pwp(3)=aimag(wp(5))
     pw31(0)=dble( w31(5))
     pw31(1)=dble( w31(6))
-    pw31(2)=dimag(w31(6))
-    pw31(3)=dimag(w31(5))
+    pw31(2)=aimag(w31(6))
+    pw31(3)=aimag(w31(5))
     pw32(0)=dble( w32(5))
     pw32(1)=dble( w32(6))
-    pw32(2)=dimag(w32(6))
-    pw32(3)=dimag(w32(5))
+    pw32(2)=aimag(w32(6))
+    pw32(3)=aimag(w32(5))
 
     dv1(0)=dcmplx(wm(1))
     dv1(1)=dcmplx(wm(2))
@@ -677,23 +677,23 @@
 
     complex*16 wm(6),wp(6),w3(6),vertex, &
     xv1,xv2,xv3,v12,v23,v31,p12,p13,p21,p23,p31,p32
-    real ::    pwm(0:3),pwp(0:3),pw3(0:3),g
+    real*8 ::    pwm(0:3),pwp(0:3),pw3(0:3),g
 
-    real :: r_zero, r_tenth
+    real*8 :: r_zero, r_tenth
     parameter( r_zero=0.0d0, r_tenth=0.1d0 )
 
     pwm(0)=dble( wm(5))
     pwm(1)=dble( wm(6))
-    pwm(2)=dimag(wm(6))
-    pwm(3)=dimag(wm(5))
+    pwm(2)=aimag(wm(6))
+    pwm(3)=aimag(wm(5))
     pwp(0)=dble( wp(5))
     pwp(1)=dble( wp(6))
-    pwp(2)=dimag(wp(6))
-    pwp(3)=dimag(wp(5))
+    pwp(2)=aimag(wp(6))
+    pwp(3)=aimag(wp(5))
     pw3(0)=dble( w3(5))
     pw3(1)=dble( w3(6))
-    pw3(2)=dimag(w3(6))
-    pw3(3)=dimag(w3(5))
+    pw3(2)=aimag(w3(6))
+    pw3(3)=aimag(w3(5))
 
     v12=wm(1)*wp(1)-wm(2)*wp(2)-wm(3)*wp(3)-wm(4)*wp(4)
     v23=wp(1)*w3(1)-wp(2)*w3(2)-wp(3)*w3(3)-wp(4)*w3(4)
@@ -750,18 +750,18 @@
 !       complex hio(3)         : scalar current             j(<fi|s|fo>)
 
     complex*16 fi(6),fo(6),hio(3),gc(2),dn
-    real ::  q(0:3),smass,swidth,q2
+    real*8 ::  q(0:3),smass,swidth,q2
 
     hio(2) = fo(5)-fi(5)
     hio(3) = fo(6)-fi(6)
 
     q(0)=dble( hio(2))
     q(1)=dble( hio(3))
-    q(2)=dimag(hio(3))
-    q(3)=dimag(hio(2))
+    q(2)=aimag(hio(3))
+    q(3)=aimag(hio(2))
     q2=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
 
-    dn=-dcmplx(q2-smass**2,dmax1(dsign(smass*swidth,q2),0.d0))
+    dn=-dcmplx(q2-smass**2,dmax1(sign(smass*swidth,q2),0.d0))
 
     hio(1) = ( gc(1)*(fo(1)*fi(1)+fo(2)*fi(2)) &
     +gc(2)*(fo(3)*fi(3)+fo(4)*fi(4)) )/dn
@@ -796,8 +796,8 @@
 
     Q(0)=dble( HSSS(2))
     Q(1)=dble( HSSS(3))
-    Q(2)=dIMAG(HSSS(3))
-    Q(3)=dIMAG(HSSS(2))
+    Q(2)=aimag(HSSS(3))
+    Q(3)=aimag(HSSS(2))
     Q2=Q(0)**2-(Q(1)**2+Q(2)**2+Q(3)**2)
 
     DG=-G/dCMPLX( Q2-SMASS**2,MAX(SIGN(SMASS*SWIDTH ,Q2),0.d0))
@@ -832,8 +832,8 @@
 
     Q(0)=dble( HSS(2))
     Q(1)=dble( HSS(3))
-    Q(2)=dIMAG(HSS(3))
-    Q(3)=dIMAG(HSS(2))
+    Q(2)=aimag(HSS(3))
+    Q(3)=aimag(HSS(2))
     Q2=Q(0)**2-(Q(1)**2+Q(2)**2+Q(3)**2)
 
     DG=-G/dCMPLX( Q2-SMASS**2, MAX(SIGN(SMASS*SWIDTH ,Q2),0.d0))
@@ -879,26 +879,26 @@
 
     implicit none
     complex*16 vc(6),sc(3),hvs(3),dg,qvv,qpv,g
-    real ::    qv(0:3),qp(0:3),qa(0:3),smass,swidth,q2
+    real*8 ::    qv(0:3),qp(0:3),qa(0:3),smass,swidth,q2
 
     hvs(2) = vc(5)+sc(2)
     hvs(3) = vc(6)+sc(3)
 
     qv(0)=dble(  vc(5))
     qv(1)=dble(  vc(6))
-    qv(2)=dimag( vc(6))
-    qv(3)=dimag( vc(5))
+    qv(2)=aimag( vc(6))
+    qv(3)=aimag( vc(5))
     qp(0)=dble(  sc(2))
     qp(1)=dble(  sc(3))
-    qp(2)=dimag( sc(3))
-    qp(3)=dimag( sc(2))
+    qp(2)=aimag( sc(3))
+    qp(3)=aimag( sc(2))
     qa(0)=dble( hvs(2))
     qa(1)=dble( hvs(3))
-    qa(2)=dimag(hvs(3))
-    qa(3)=dimag(hvs(2))
+    qa(2)=aimag(hvs(3))
+    qa(3)=aimag(hvs(2))
     q2=qa(0)**2-(qa(1)**2+qa(2)**2+qa(3)**2)
 
-    dg=-g/dcmplx( q2-smass**2 , max(dsign( smass*swidth ,q2),0d0) )
+    dg=-g/dcmplx( q2-smass**2 , max(sign( smass*swidth ,q2),0d0) )
     qvv=qv(0)*vc(1)-qv(1)*vc(2)-qv(2)*vc(3)-qv(3)*vc(4)
     qpv=qp(0)*vc(1)-qp(1)*vc(2)-qp(2)*vc(3)-qp(3)*vc(4)
 
@@ -925,9 +925,9 @@
 !       complex hvv(3)         : off-shell scalar current     j(s:v1,v2)
 
     complex*16 v1(6),v2(6),hvv(3),dg
-    real ::    q(0:3),g,smass,swidth,q2
+    real*8 ::    q(0:3),g,smass,swidth,q2
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     hvv(2) = v1(5)+v2(5)
@@ -935,8 +935,8 @@
 
     q(0)=dble( hvv(2))
     q(1)=dble( hvv(3))
-    q(2)=dimag(hvv(3))
-    q(3)=dimag(hvv(2))
+    q(2)=aimag(hvv(3))
+    q(3)=aimag(hvv(2))
     q2=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
 
     dg=-g/dcmplx( q2-smass**2 , max(sign( smass*swidth ,q2),r_zero) )
@@ -987,9 +987,9 @@
 !       complex vertex         : amplitude                     <fo|v|fi>
 
     complex*16 fi(6),fo(6),vc(6),vertex
-    real ::    g(2)
+    real*8 ::    g(2)
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -1032,16 +1032,16 @@
 
     complex*16 fi(6)
     integer*4 :: nhel, nsf
-    real :: p(0:3), fmass
+    real*8 :: p(0:3), fmass
 
 ! declare local variables
 
-    real :: r_zero, r_one, r_two
+    real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
 !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
-    real :: plat, pabs, omegap, omegam, rs2pa, spaz
+    real*8 :: plat, pabs, omegap, omegam, rs2pa, spaz
 
 ! define kinematic parameters
 
@@ -1395,10 +1395,10 @@
 
     complex*16 fi(6),fo(6),j3(6), &
     c0l,c1l,c2l,c3l,csl,c0r,c1r,c2r,c3r,csr,dz,ddif
-    real ::    gaf(2),gzf(2),q(0:3),zmass,zwidth,zm2,zmw,q2,da,ww, &
+    real*8 ::    gaf(2),gzf(2),q(0:3),zmass,zwidth,zm2,zmw,q2,da,ww, &
     cw,sw,gn,gz3l,ga3l
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -1410,14 +1410,14 @@
 
     q(0)=-dble( j3(5))
     q(1)=-dble( j3(6))
-    q(2)=-dimag(j3(6))
-    q(3)=-dimag(j3(5))
+    q(2)=-aimag(j3(6))
+    q(3)=-aimag(j3(5))
     q2=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
     zm2=zmass**2
     zmw=zmass*zwidth
 
     da=r_one/q2
-    ww=max(dsign( zmw ,q2),r_zero)
+    ww=max(sign( zmw ,q2),r_zero)
     dz=r_one/dcmplx( q2-zm2 , ww )
     ddif=dcmplx( -zm2 , ww )*da*dz
 
@@ -1555,9 +1555,9 @@
     complex*16  w1(6),w2(6),w3(6),jw3w(6)
     complex*16 dw1(0:3),dw2(0:3),dw3(0:3), &
     jj(0:3),dv,w32,w13
-    real ::     p1(0:3),p2(0:3),p3(0:3),q(0:3),g,dg2,q2
+    real*8 ::     p1(0:3),p2(0:3),p3(0:3),q(0:3),g,dg2,q2
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     jw3w(5) = w1(5)+w2(5)+w3(5)
@@ -1577,16 +1577,16 @@
     dw3(3)=dcmplx(w3(4))
     p1(0)=dble(      w1(5))
     p1(1)=dble(      w1(6))
-    p1(2)=dble(dimag(w1(6)))
-    p1(3)=dble(dimag(w1(5)))
+    p1(2)=dble(aimag(w1(6)))
+    p1(3)=dble(aimag(w1(5)))
     p2(0)=dble(      w2(5))
     p2(1)=dble(      w2(6))
-    p2(2)=dble(dimag(w2(6)))
-    p2(3)=dble(dimag(w2(5)))
+    p2(2)=dble(aimag(w2(6)))
+    p2(3)=dble(aimag(w2(5)))
     p3(0)=dble(      w3(5))
     p3(1)=dble(      w3(6))
-    p3(2)=dble(dimag(w3(6)))
-    p3(3)=dble(dimag(w3(5)))
+    p3(2)=dble(aimag(w3(6)))
+    p3(3)=dble(aimag(w3(5)))
     q(0)=-(p1(0)+p2(0)+p3(0))
     q(1)=-(p1(1)+p2(1)+p3(1))
     q(2)=-(p1(2)+p2(2)+p3(2))
@@ -1637,9 +1637,9 @@
 
     complex*16 v1(6),v2(6),jvv(6),j12(0:3), &
     sv1,sv2,v12
-    real ::    p1(0:3),p2(0:3),q(0:3),g,gs,s
+    real*8 ::    p1(0:3),p2(0:3),q(0:3),g,gs,s
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     jvv(5) = v1(5)+v2(5)
@@ -1647,16 +1647,16 @@
 
     p1(0)=dble( v1(5))
     p1(1)=dble( v1(6))
-    p1(2)=dimag(v1(6))
-    p1(3)=dimag(v1(5))
+    p1(2)=aimag(v1(6))
+    p1(3)=aimag(v1(5))
     p2(0)=dble( v2(5))
     p2(1)=dble( v2(6))
-    p2(2)=dimag(v2(6))
-    p2(3)=dimag(v2(5))
+    p2(2)=aimag(v2(6))
+    p2(3)=aimag(v2(5))
     q(0)=-dble( jvv(5))
     q(1)=-dble( jvv(6))
-    q(2)=-dimag(jvv(6))
-    q(3)=-dimag(jvv(5))
+    q(2)=-aimag(jvv(6))
+    q(3)=-aimag(jvv(5))
     s=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
 
     v12=v1(1)*v2(1)-v1(2)*v2(2)-v1(3)*v2(3)-v1(4)*v2(4)
@@ -1698,9 +1698,9 @@
 !       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
 
     complex*16 fi(6),fo(6),jio(6),c0,c1,c2,c3,cs,d
-    real ::    g(2),q(0:3),vmass,vwidth,q2,vm2,dd
+    real*8 ::    g(2),q(0:3),vmass,vwidth,q2,vm2,dd
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -1712,8 +1712,8 @@
 
     q(0)=dble( jio(5))
     q(1)=dble( jio(6))
-    q(2)=dimag(jio(6))
-    q(3)=dimag(jio(5))
+    q(2)=aimag(jio(6))
+    q(3)=aimag(jio(5))
     q2=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
     vm2=vmass**2
 
@@ -1818,8 +1818,8 @@
 
     Q(0)=dble( JSS(5))
     Q(1)=dble( JSS(6))
-    Q(2)=dIMAG(JSS(6))
-    Q(3)=dIMAG(JSS(5))
+    Q(2)=aimag(JSS(6))
+    Q(3)=aimag(JSS(5))
     Q2=Q(0)**2-(Q(1)**2+Q(2)**2+Q(3)**2)
     VM2=VMASS**2
 
@@ -1833,12 +1833,12 @@
 
     PP(0)=dble( S1(2))
     PP(1)=dble( S1(3))
-    PP(2)=dIMAG(S1(3))
-    PP(3)=dIMAG(S1(2))
+    PP(2)=aimag(S1(3))
+    PP(3)=aimag(S1(2))
     PA(0)=dble( S2(2))
     PA(1)=dble( S2(3))
-    PA(2)=dIMAG(S2(3))
-    PA(3)=dIMAG(S2(2))
+    PA(2)=aimag(S2(3))
+    PA(3)=aimag(S2(2))
     MP2=PP(0)**2-(PP(1)**2+PP(2)**2+PP(3)**2)
     MA2=PA(0)**2-(PA(1)**2+PA(2)**2+PA(3)**2)
     M2D=MP2-MA2
@@ -1854,8 +1854,8 @@
 
     JSS(1) = ADG*dble( S1(2)-S2(2))
     JSS(2) = ADG*dble( S1(3)-S2(3))
-    JSS(3) = ADG*dIMAG(S1(3)-S2(3))
-    JSS(4) = ADG*dIMAG(S1(2)-S2(2))
+    JSS(3) = ADG*aimag(S1(3)-S2(3))
+    JSS(4) = ADG*aimag(S1(2)-S2(2))
 
     RETURN
     END SUBROUTINE JSSXXX
@@ -1878,9 +1878,9 @@
 !       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
 
     complex*16 fi(6),fo(6),jio(6)
-    real ::    g(2)
+    real*8 ::    g(2)
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
 !      parameter( c_imag=dcmplx( r_zero, r_one ) )
@@ -1938,8 +1938,8 @@
 
     Q(0)=dble( JVSS(5))
     Q(1)=dble( JVSS(6))
-    Q(2)=dIMAG(JVSS(6))
-    Q(3)=dIMAG(JVSS(5))
+    Q(2)=aimag(JVSS(6))
+    Q(3)=aimag(JVSS(5))
     Q2=Q(0)**2-(Q(1)**2+Q(2)**2+Q(3)**2)
     VM2=VMASS**2
 
@@ -1989,21 +1989,21 @@
 !       complex jvs(6)         : vector current             j^mu(v':v,s)
 
     complex*16 vc(6),sc(3),jvs(6),dg,vk
-    real ::    q(0:3),vmass,vwidth,q2,vm2,g
+    real*8 ::    q(0:3),vmass,vwidth,q2,vm2,g
 
     jvs(5) = vc(5)+sc(2)
     jvs(6) = vc(6)+sc(3)
 
     q(0)=dble( jvs(5))
     q(1)=dble( jvs(6))
-    q(2)=dimag(jvs(6))
-    q(3)=dimag(jvs(5))
+    q(2)=aimag(jvs(6))
+    q(3)=aimag(jvs(5))
     q2=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
     vm2=vmass**2
 
     if (vmass == 0.) goto 10
 
-    dg=g*sc(1)/dcmplx( q2-vm2 , max(dsign( vmass*vwidth ,q2),0.d0) )
+    dg=g*sc(1)/dcmplx( q2-vm2 , max(sign( vmass*vwidth ,q2),0.d0) )
 !  for the running width, use below instead of the above dg.
 !      dg=g*sc(1)/dcmplx( q2-vm2 , max( vwidth*q2/vmass ,0.) )
 
@@ -2056,9 +2056,9 @@
 
     complex*16 v1(6),v2(6),jvv(6),j12(0:3),js,dg, &
     sv1,sv2,s11,s12,s21,s22,v12
-    real ::    p1(0:3),p2(0:3),q(0:3),g,vmass,vwidth,gs,s,vm2,m1,m2
+    real*8 ::    p1(0:3),p2(0:3),q(0:3),g,vmass,vwidth,gs,s,vm2,m1,m2
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     jvv(5) = v1(5)+v2(5)
@@ -2066,16 +2066,16 @@
 
     p1(0)=dble( v1(5))
     p1(1)=dble( v1(6))
-    p1(2)=dimag(v1(6))
-    p1(3)=dimag(v1(5))
+    p1(2)=aimag(v1(6))
+    p1(3)=aimag(v1(5))
     p2(0)=dble( v2(5))
     p2(1)=dble( v2(6))
-    p2(2)=dimag(v2(6))
-    p2(3)=dimag(v2(5))
+    p2(2)=aimag(v2(6))
+    p2(3)=aimag(v2(5))
     q(0)=-dble( jvv(5))
     q(1)=-dble( jvv(6))
-    q(2)=-dimag(jvv(6))
-    q(3)=-dimag(jvv(5))
+    q(2)=-aimag(jvv(6))
+    q(3)=-aimag(jvv(5))
     s=q(0)**2-(q(1)**2+q(2)**2+q(3)**2)
 
     v12=v1(1)*v2(1)-v1(2)*v2(2)-v1(3)*v2(3)-v1(4)*v2(4)
@@ -2177,11 +2177,11 @@
     jj(0:3),j4(0:3), &
     dv,w12,w32,w13, &
     jq
-    real ::     g1,g2,wmass,wwidth,vmass,vwidth
-    real ::     p1(0:3),p2(0:3),p3(0:3),q(0:3), &
+    real*8 ::     g1,g2,wmass,wwidth,vmass,vwidth
+    real*8 ::     p1(0:3),p2(0:3),p3(0:3),q(0:3), &
     dg2,dmv,dwv,mv2,q2
 
-    real :: r_zero
+    real*8 :: r_zero
     parameter( r_zero=0.0d0 )
 
     jw3w(5) = w1(5)+w2(5)+w3(5)
@@ -2201,16 +2201,16 @@
     dw3(3)=dcmplx(w3(4))
     p1(0)=dble(      w1(5))
     p1(1)=dble(      w1(6))
-    p1(2)=dble(dimag(w1(6)))
-    p1(3)=dble(dimag(w1(5)))
+    p1(2)=dble(aimag(w1(6)))
+    p1(3)=dble(aimag(w1(5)))
     p2(0)=dble(      w2(5))
     p2(1)=dble(      w2(6))
-    p2(2)=dble(dimag(w2(6)))
-    p2(3)=dble(dimag(w2(5)))
+    p2(2)=dble(aimag(w2(6)))
+    p2(3)=dble(aimag(w2(5)))
     p3(0)=dble(      w3(5))
     p3(1)=dble(      w3(6))
-    p3(2)=dble(dimag(w3(6)))
-    p3(3)=dble(dimag(w3(5)))
+    p3(2)=dble(aimag(w3(6)))
+    p3(3)=dble(aimag(w3(5)))
     q(0)=-(p1(0)+p2(0)+p3(0))
     q(1)=-(p1(1)+p2(1)+p3(1))
     q(2)=-(p1(2)+p2(2)+p3(2))
@@ -2225,7 +2225,7 @@
     if (vmass == r_zero) then
         dv = 1.0d0/dcmplx( q2 )
     else
-        dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dsign(dmv*dwv,q2 ),0.d0) )
+        dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(sign(dmv*dwv,q2 ),0.d0) )
     endif
 !  for the running width, use below instead of the above dv.
 !      dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dwv*q2/dmv,0.d0) )
@@ -2324,8 +2324,8 @@
     jt12(0:3),jt32(0:3),j12(0:3),j32(0:3), &
     dzs,dzt,dw,w12,w32,w13,p1w2,p2w1,p3w2,p2w3, &
     jk12,jk32,jsw3,jtw1,p3js,ksw3,p1jt,ktw1,jq
-    real ::     gwwa,gwwz,zmass,zwidth,wmass,wwidth
-    real ::     p1(0:3),p2(0:3),p3(0:3),q(0:3),ks(0:3),kt(0:3), &
+    real*8 ::     gwwa,gwwz,zmass,zwidth,wmass,wwidth
+    real*8 ::     p1(0:3),p2(0:3),p3(0:3),q(0:3),ks(0:3),kt(0:3), &
     dgwwa2,dgwwz2,dgw2,dmz,dwz,dmw,dww,mz2,mw2,q2,ks2,kt2, &
     das,dat
 
@@ -2346,16 +2346,16 @@
     dw3(3)=dcmplx(w3(4))
     p1(0)=dble(      w1(5))
     p1(1)=dble(      w1(6))
-    p1(2)=dble(dimag(w1(6)))
-    p1(3)=dble(dimag(w1(5)))
+    p1(2)=dble(aimag(w1(6)))
+    p1(3)=dble(aimag(w1(5)))
     p2(0)=dble(      w2(5))
     p2(1)=dble(      w2(6))
-    p2(2)=dble(dimag(w2(6)))
-    p2(3)=dble(dimag(w2(5)))
+    p2(2)=dble(aimag(w2(6)))
+    p2(3)=dble(aimag(w2(5)))
     p3(0)=dble(      w3(5))
     p3(1)=dble(      w3(6))
-    p3(2)=dble(dimag(w3(6)))
-    p3(3)=dble(dimag(w3(5)))
+    p3(2)=dble(aimag(w3(6)))
+    p3(3)=dble(aimag(w3(5)))
     q(0)=-(p1(0)+p2(0)+p3(0))
     q(1)=-(p1(1)+p2(1)+p3(1))
     q(2)=-(p1(2)+p2(2)+p3(2))
@@ -2383,9 +2383,9 @@
 
     das=-dgwwa2/ks2
     dat=-dgwwa2/kt2
-    dzs=-dgwwz2/dcmplx( ks2-mz2 , dmax1(dsign(dmz*dwz,ks2),0.d0) )
-    dzt=-dgwwz2/dcmplx( kt2-mz2 , dmax1(dsign(dmz*dwz,kt2),0.d0) )
-    dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(dsign(dmw*dww,q2 ),0.d0) )
+    dzs=-dgwwz2/dcmplx( ks2-mz2 , dmax1(sign(dmz*dwz,ks2),0.d0) )
+    dzt=-dgwwz2/dcmplx( kt2-mz2 , dmax1(sign(dmz*dwz,kt2),0.d0) )
+    dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(sign(dmw*dww,q2 ),0.d0) )
 !  for the running width, use below instead of the above dw.
 !      dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(dww*q2/dmw,0.d0) )
 
@@ -2575,16 +2575,16 @@
 
     complex*16 fo(6)
     integer*4 :: nhel, nsf
-    real :: p(0:3), fmass
+    real*8 :: p(0:3), fmass
 
 ! declare local variables
 
-    real :: r_zero, r_one, r_two
+    real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
 !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
-    real :: plat, pabs, omegap, omegam, rs2pa, spaz
+    real*8 :: plat, pabs, omegap, omegam, rs2pa, spaz
 
 ! define kinematic parameters
 
@@ -2931,9 +2931,9 @@
 ! output:
 !       real    prot(0:3)      : four-momentum p in the rotated frame
 
-    real ::    p(0:3),q(0:3),prot(0:3),qt2,qt,psgn,qq,p1
+    real*8 ::    p(0:3),q(0:3),prot(0:3),qt2,qt,psgn,qq,p1
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
 
     prot(0) = p(0)
@@ -2946,7 +2946,7 @@
             prot(2) = p(2)
             prot(3) = p(3)
         else
-            psgn=dsign(r_one,q(3))
+            psgn=sign(r_one,q(3))
             prot(1) = p(1)*psgn
             prot(2) = p(2)*psgn
             prot(3) = p(3)*psgn
@@ -3067,12 +3067,12 @@
 !       complex vertex         : amplitude                gamma(v,s1,s2)
 
     complex*16 vc(6),s1(3),s2(3),vertex,g
-    real ::    p(0:3)
+    real*8 ::    p(0:3)
 
     p(0)=dble( s1(2)-s2(2))
     p(1)=dble( s1(3)-s2(3))
-    p(2)=dimag(s1(3)-s2(3))
-    p(3)=dimag(s1(2)-s2(2))
+    p(2)=aimag(s1(3)-s2(3))
+    p(3)=aimag(s1(2)-s2(2))
 
     vertex = g*s1(1)*s2(1) &
     *(vc(1)*p(0)-vc(2)*p(1)-vc(3)*p(2)-vc(4)*p(3))
@@ -3123,7 +3123,7 @@
 !       complex vertex         : amplitude                gamma(v1,v2,s)
 
     complex*16 v1(6),v2(6),sc(3),vertex
-    real ::    g
+    real*8 ::    g
 
     vertex = g*sc(1)*(v1(1)*v2(1)-v1(2)*v2(2)-v1(3)*v2(3)-v1(4)*v2(4))
 
@@ -3148,23 +3148,23 @@
 
     complex*16 wm(6),wp(6),w3(6),vertex, &
     xv1,xv2,xv3,v12,v23,v31,p12,p13,p21,p23,p31,p32
-    real ::    pwm(0:3),pwp(0:3),pw3(0:3),g
+    real*8 ::    pwm(0:3),pwp(0:3),pw3(0:3),g
 
-    real :: r_zero, r_tenth
+    real*8 :: r_zero, r_tenth
     parameter( r_zero=0.0d0, r_tenth=0.1d0 )
 
     pwm(0)=dble( wm(5))
     pwm(1)=dble( wm(6))
-    pwm(2)=dimag(wm(6))
-    pwm(3)=dimag(wm(5))
+    pwm(2)=aimag(wm(6))
+    pwm(3)=aimag(wm(5))
     pwp(0)=dble( wp(5))
     pwp(1)=dble( wp(6))
-    pwp(2)=dimag(wp(6))
-    pwp(3)=dimag(wp(5))
+    pwp(2)=aimag(wp(6))
+    pwp(3)=aimag(wp(5))
     pw3(0)=dble( w3(5))
     pw3(1)=dble( w3(6))
-    pw3(2)=dimag(w3(6))
-    pw3(3)=dimag(w3(5))
+    pw3(2)=aimag(w3(6))
+    pw3(3)=aimag(w3(5))
 
     v12=wm(1)*wp(1)-wm(2)*wp(2)-wm(3)*wp(3)-wm(4)*wp(4)
     v23=wp(1)*w3(1)-wp(2)*w3(2)-wp(3)*w3(3)-wp(4)*w3(4)
@@ -3226,16 +3226,16 @@
 
     complex*16 vc(6)
     integer*4 :: nhel, nsv
-    real :: p(0:3), vmass
+    real*8 :: p(0:3), vmass
 
 ! declare local variables
 
-    real :: r_zero, r_one, r_two
+    real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
 !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
-    real :: plat, pabs, rs2, rplat, rpabs, rden
+    real*8 :: plat, pabs, rs2, rplat, rpabs, rden
 
 ! define internal/external momenta
 
@@ -3257,7 +3257,7 @@
     if ( nhel**2 == 1 ) then
         if ( (pabs == r_zero) .OR. (plat == r_zero) ) then
             vc(1) = c_zero
-            vc(2) = dcmplx( -nhel * rs2 * dsign( r_one, p(3) ), r_zero )
+            vc(2) = dcmplx( -nhel * rs2 * sign( r_one, p(3) ), r_zero )
             vc(3) = dcmplx( r_zero, nsv * rs2 )
             vc(4) = c_zero
         else
@@ -3356,9 +3356,9 @@
     complex*16    wm(6),w31(6),wp(6),w32(6),vertex
     complex*16 dv1(0:3),dv2(0:3),dv3(0:3),dv4(0:3),dvertx, &
     v12,v13,v14,v23,v24,v34
-    real ::     g31,g32,wmass,wwidth
+    real*8 ::     g31,g32,wmass,wwidth
 
-    real :: r_zero, r_one
+    real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
 
     dv1(0)=dcmplx(wm(1))
@@ -3436,30 +3436,30 @@
     j12(0:3),j34(0:3),j14(0:3),j32(0:3),dvertx, &
     sv1,sv2,sv3,sv4,tv1,tv2,tv3,tv4,dzs,dzt, &
     v12,v13,v14,v23,v24,v34,js12,js34,js14,js32,js,jt
-    real ::       pwm1(0:3),pwp1(0:3),pwm2(0:3),pwp2(0:3), &
+    real*8 ::       pwm1(0:3),pwp1(0:3),pwm2(0:3),pwp2(0:3), &
     gwwa,gwwz,zmass,zwidth
-    real ::     q(0:3),k(0:3),dp1(0:3),dp2(0:3),dp3(0:3),dp4(0:3), &
+    real*8 ::     q(0:3),k(0:3),dp1(0:3),dp2(0:3),dp3(0:3),dp4(0:3), &
     dgwwa2,dgwwz2,dgw2,dmz,dwidth,s,t,das,dat
 
-    real :: r_zero, r_one, r_two
+    real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
 
     pwm1(0)=dble( wm1(5))
     pwm1(1)=dble( wm1(6))
-    pwm1(2)=dimag(wm1(6))
-    pwm1(3)=dimag(wm1(5))
+    pwm1(2)=aimag(wm1(6))
+    pwm1(3)=aimag(wm1(5))
     pwp1(0)=dble( wp1(5))
     pwp1(1)=dble( wp1(6))
-    pwp1(2)=dimag(wp1(6))
-    pwp1(3)=dimag(wp1(5))
+    pwp1(2)=aimag(wp1(6))
+    pwp1(3)=aimag(wp1(5))
     pwm2(0)=dble( wm2(5))
     pwm2(1)=dble( wm2(6))
-    pwm2(2)=dimag(wm2(6))
-    pwm2(3)=dimag(wm2(5))
+    pwm2(2)=aimag(wm2(6))
+    pwm2(3)=aimag(wm2(5))
     pwp2(0)=dble( wp2(5))
     pwp2(1)=dble( wp2(6))
-    pwp2(2)=dimag(wp2(6))
-    pwp2(3)=dimag(wp2(5))
+    pwp2(2)=aimag(wp2(6))
+    pwp2(3)=aimag(wp2(5))
 
     dv1(0)=dcmplx(wm1(1))
     dv1(1)=dcmplx(wm1(2))
@@ -3520,8 +3520,8 @@
 
     das=-r_one/s
     dat=-r_one/t
-    dzs=-r_one/dcmplx( s-dmz**2 , dmax1(dsign(dmz*dwidth,s),r_zero) )
-    dzt=-r_one/dcmplx( t-dmz**2 , dmax1(dsign(dmz*dwidth,t),r_zero) )
+    dzs=-r_one/dcmplx( s-dmz**2 , dmax1(sign(dmz*dwidth,s),r_zero) )
+    dzt=-r_one/dcmplx( t-dmz**2 , dmax1(sign(dmz*dwidth,t),r_zero) )
 
     sv1= (dp2(0)+q(0))*dv1(0) -(dp2(1)+q(1))*dv1(1) &
     -(dp2(2)+q(2))*dv1(2) -(dp2(3)+q(3))*dv1(3)

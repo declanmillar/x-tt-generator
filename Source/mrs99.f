@@ -112,11 +112,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -131,7 +131,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -198,11 +198,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -217,7 +217,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -284,11 +284,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -303,7 +303,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -371,11 +371,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -390,7 +390,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -457,11 +457,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -476,7 +476,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -544,11 +544,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -563,7 +563,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -630,11 +630,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -649,7 +649,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -718,11 +718,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -737,7 +737,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -804,11 +804,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -823,7 +823,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -892,11 +892,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -911,7 +911,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -978,11 +978,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -997,7 +997,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70
@@ -1065,11 +1065,11 @@
             25 END DO
     20 END DO
     do 31 j=1,ntenth-1
-        xx(j)=dlog10(xx(j)/xx(ntenth))+xx(ntenth)
+        xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
         do 31 i=1,8
             if(i == 5 .OR. i == 7) goto 31
             do 30 k=1,nq
-                f(i,j,k)=dlog10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
+                f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
     31 END DO
     50 format(8f10.5)
@@ -1084,7 +1084,7 @@
     if(qsq < qsqmin)      qsq=qsqmin
     if(qsq > qsqmax)      qsq=qsqmax
     xxx=x
-    if(x < xx(ntenth)) xxx=dlog10(x/xx(ntenth))+xx(ntenth)
+    if(x < xx(ntenth)) xxx=log10(x/xx(ntenth))+xx(ntenth)
     n=0
     70 n=n+1
     if(xxx > xx(n+1)) goto 70

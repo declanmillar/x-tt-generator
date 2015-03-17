@@ -243,9 +243,9 @@ subroutine topwid(rmt,rmw,rmb,rgw,igw,rgt)
   implicit complex*16(a-h,o-Z)
   real :: rmt,rmb,rmw,xw,xb,rgw,rgt
 
-  pi=4.*datan(1.d0)
+  pi=4.*atan(1.d0)
   gf=1.16637d-05
-  gw=cdsqrt(rmw**2*gf/dsqrt(2.d0))
+  gw=sqrt(rmw**2*gf/dsqrt(2.d0))
 !                            flavour & colour
   xb=rmb/rmt
   xw=rmw/rmt
@@ -261,10 +261,10 @@ subroutine topwid(rmt,rmw,rmb,rgw,igw,rgt)
   10 continue
   rm=xb**2
   om=1.+rm-dcmplx(rmw**2,rmw*rgw)/rmt**2
-  y1=om+cdsqrt(om*om-4.*rm)
-  y0=om-cdsqrt(om*om-4.*rm)
+  y1=om+sqrt(om*om-4.*rm)
+  y0=om-sqrt(om*om-4.*rm)
   Z1=2.
-  Z0=2.*cdsqrt(rm)
+  Z0=2.*sqrt(rm)
 
   d0=(-y0**8+3.*y0**7*rm+3.*y0**7-8.*y0**6*rm-12.*y0**5*rm** &
   &  2-12.*y0**5*rm+96.*y0**4*rm**2-48.*y0**3*rm**3-48.*y0**3* &
@@ -291,12 +291,12 @@ subroutine topwid(rmt,rmw,rmb,rgw,igw,rgt)
   b1=(y1+y0-3.*rm-3.)/24.
   b2=1./24.
 
-  rint=d0*cdlog((Z1-y0)/(Z0-y0)) &
-  -d1*cdlog((y1-Z1)/(y1-Z0)) &
+  rint=d0*log((Z1-y0)/(Z0-y0)) &
+  -d1*log((y1-Z1)/(y1-Z0)) &
   -a4/3.*(1./Z1**3-1./Z0**3) &
   -a3/2.*(1./Z1**2-1./Z0**2) &
   -a2   *(1./Z1   -1./Z0   ) &
-  +a1*cdlog(Z1/Z0) &
+  +a1*log(Z1/Z0) &
   +b0   *(Z1   -Z0   ) &
   +b1/2.*(Z1**2-Z0**2) &
   +b2/3.*(Z1**3-Z0**3)
@@ -304,7 +304,7 @@ subroutine topwid(rmt,rmw,rmb,rgw,igw,rgt)
   gw4=gw**4
 
 ! total width includes flavour & colour factors
-  rgt=rmt**3/(rmw*rgw)*gw4/(8.*pi**3)*dimag(rint)
+  rgt=rmt**3/(rmw*rgw)*gw4/(8.*pi**3)*aimag(rint)
   rgt=9.*rgt
   return
 end subroutine topwid
