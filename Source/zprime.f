@@ -313,7 +313,6 @@ program zprime
   ! integrate 
   write(*,*)'starting integration'
   it=0 
-  write(*,*)'bork316' 
   call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
 
   if(final_state == 0 .and. use_branching_ratio == 1)then
