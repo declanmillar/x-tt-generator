@@ -340,34 +340,6 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   real :: gZpq(2,5),gZpf(2,5) ! coupling of z to q, t
   real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
        
-! global variables
-!   real ::         gW, gWWA, gWWZ
-!   common /coup1/ gW, gWWA, gWWZ
-!   real ::         gAl(2),gAu(2),gAd(2),gWf(2)
-!   common /coup2a/gAl,   gAu,   gAd,   gWf
-!   real ::         gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
-!   common /coup2b/gZn,   gZl,   gZu,   gZd,   g1
-!   real ::         gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-!   common /coup3/ gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-!   complex*16     gh(2,12)
-!   common /coup4/ gh
-!   real ::         rm_W,Gamma_W,rm_Z,Gamma_Z
-!   common /vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
-!   real ::         rm_A,Gamma_A,hmass,hwidth
-!   common /vmass2/rm_A,Gamma_A,hmass,hwidth
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-! ! Zprime parameters
-!   real ::    rmZp(5),gamZp(5)
-!   common/Zp/rmZp   ,gamZp
-!   real ::         paramZp(5)
-!   common/Zpparam/paramZp
-!   real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-!   common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
-!   real ::        gZpd(2,5),gZpu(2,5)
-!   common/coupZp/gZpd     ,gZpu
-!   integer ::     npoints
-!   common/stat/npoints
 ! up/down type couplings
   if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
     do i=1,2

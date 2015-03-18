@@ -1,5 +1,7 @@
 module quantum_field_theory
 
+  use configuration, only: use_nwa, model_name
+
   implicit none 
 
   ! SM couplings
@@ -46,8 +48,268 @@ module quantum_field_theory
   real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
   real :: gZpd(2,5),gZpu(2,5)
 
+  public :: initialise_standard_model
+  public :: initialise_zprimes
+
 contains
 
+subroutine initialise_standard_model
 
+  integer i
+
+  fmass(1)  = emass
+  fmass(2)  = nuemass
+  fmass(3)  = umass
+  fmass(4)  = dmass
+  fmass(5)  = mumass
+  fmass(6)  = numumass
+  fmass(7)  = cmass
+  fmass(8)  = smass
+  fmass(9)  = taumass
+  fmass(10) = nutaumass
+  fmass(11) = tmass
+  fmass(12) = bmass
+
+  fwidth(1)  = ewidth
+  fwidth(2)  = nuewidth
+  fwidth(3)  = uwidth
+  fwidth(4)  = dwidth
+  fwidth(5)  = muwidth
+  fwidth(6)  = numuwidth
+  fwidth(7)  = cwidth
+  fwidth(8)  = swidth
+  fwidth(9)  = tauwidth
+  fwidth(10) = nutauwidth
+
+  if(use_NWA == 1)then
+    fwidth(11)=1.d-5
+  else
+    fwidth(11)=twidth
+  end if
+
+  fwidth(12) = bwidth
+
+  ! call SM HELAS couplings
+  call coup1x(s2w,gw,gwwa,gwwZ)
+  call coup2x(s2w,gal,gau,gad,gwf,gZn,gZl,gZu,gZd,g1)
+  call coup3x(s2w,rm_Z,rm_h,gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh)
+  do i=1,12
+    call coup4x(s2w,rm_Z,fmass(i),gchf(1,i))
+  enddo
+
+  ! QCD couplings
+  g = 1.d0
+  gg(1)=-g
+  gg(2)=-g
+
+end subroutine initialise_standard_model
+
+subroutine initialise_zprimes 
+
+  integer o_width(5), imodel_name, i
+
+  ! Extract model_name filename (Remove white space.)
+  imodel_name = len(model_name)
+  do while(model_name(imodel_name:imodel_name) == '')
+    imodel_name = imodel_name-1
+  end do
+
+  ! read model file
+  open(unit=42,file='Models/'//model_name(1:imodel_name)//'.mdl',status='old')
+  read(42,*) rmZp
+  read(42,*) gamZp
+  read(42,*) gp
+  read(42,*) paramZp
+  read(42,*) gV_u
+  read(42,*) gA_u
+  read(42,*) gV_d
+  read(42,*) gA_d
+
+  ! Check whether width has been specified
+  ! (If gamZp is zero, the function widthZp is used instead.)
+  do i=1,5
+    if ((gamZp(i) == 0d0) .AND. (rmZp(i) > 0d0)) then
+      o_width(i) = 0
+    else
+      o_width(i) = 1
+    end if
+  enddo
+
+  ! Calculate sequential Zp widths
+  do i=1,5
+    if (o_width(i) == 0) gamZp(i)= &
+    widthZp(rm_W,rm_Z,rmZp(i),a_em,s2w,rlambdaQCD4,nloops)
+  end do
+
+  ! convert from VA to LR couplings
+  call coupZpx
+
+  ! igw=0 ! don't include w width effects
+  ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
+  ! call printconstants
+  return
+end subroutine initialise_zprimes
+
+subroutine coupZpx
+
+  ! input: vector and axial Zp couplings to up and down quarks
+  ! output: left and right chiral couplings to up and down quarks
+
+  integer i
+
+  do i=1,5
+      gZpd(1,i) = gp(i)*(gV_d(i)+gA_d(i))/2.d0
+      gZpd(2,i) = gp(i)*(gV_d(i)-gA_d(i))/2.d0
+      gZpu(1,i) = gp(i)*(gV_u(i)+gA_u(i))/2.d0
+      gZpu(2,i) = gp(i)*(gV_u(i)-gA_u(i))/2.d0
+  enddo
+   
+  return
+end subroutine coupZpx
+
+function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
+
+  ! Calculates the width of the Zp in the SSM.
+  ! Authors: stefano moretti and declan millar <d.millar@soton.ac.uk>
+
+  implicit none
+
+  ! implicit to explicit variable dump
+  real :: ME2
+  real :: widthzp
+  real :: rmw
+  real :: rmz
+  real :: rmzp
+  real :: a_em
+  real :: s2w
+  real :: rlambdaqcd4
+  integer :: nloop
+  real :: a_s
+  real :: ctw
+  real :: e
+  real :: eq
+  real :: g
+  real :: gamt
+  real :: gf
+  integer :: i
+  real :: pi
+  real :: rmq
+  real :: rmt
+  real :: t3q
+  real :: temp
+  real :: temp1
+  real :: temp2
+  real :: alfas
+
+  rmt=fmass(11)
+  gamt=fwidth(11)
+  ! couplings.
+  pi=dacos(-1.d0)
+  ctw=sqrt(1.d0-s2w)
+  e=sqrt(4.d0*pi*a_em)
+  g=e/sqrt(s2w)
+  a_s=alfas(rmZp,rlambdaQCD4,nloop,4)
+  GF=1.16639D-5
+  ! renormalise e.
+  e=sqrt(s2w*8.d0*rmZ*rmZ*ctw*ctw*GF/sqrt(2.d0))
+  ! Zp width.
+  widthZp=0.d0
+  do i=1,6
+    rmq=0.d0
+    if(i == 6)rmq=rmt
+    if((i == 2) .OR. (i == 4) .OR. (i == 6))then
+
+    ! Quarks
+    ! u-quark.
+      t3q=+1.d0/2.d0
+      eq=+2.d0/3.d0
+    else if((i == 1) .OR. (i == 3) .OR. (i == 5))then
+    ! d-quark.
+      t3q=-1.d0/2.d0
+      eq=-1.d0/3.d0
+    end if
+    if(rmZp <= 2.d0*rmq)goto 123
+    widthZp=widthZp+3.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    *((2.d0*t3q)**2 &
+    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    +(2.d0*t3q-4.d0*eq*s2w)**2 &
+    *(1.d0+2.d0*rmq**2/rmZp**2)) &
+    *(1.d0+1.045d0*a_s/pi)
+  !        cr=-eq*s2w
+  !        cl=t3q-eq*s2w
+  !        gv=cl+cr
+  !        ga=cl-cr
+  !        widthZp=widthZp+3.d0*e**2/12.d0/pi*rmZp/16.d0/s2w/ctw**2
+  !     &               *sqrt(1.d0-4.d0*rmq**2/rmZp**2)
+  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rmZp**2)
+  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rmZp**2))
+  !     &               *(1.d0+1.045d0*a_s/pi)
+    123 continue
+  end do
+
+  !       print *,'Z'' width due to quarks: ',widthZp,' [GeV]'
+
+  ! Leptons
+  temp=0.d0
+  temp1=0.d0
+  temp2=0.d0
+
+  do i=1,6
+    rmq=0.d0
+    if((i == 2) .OR. (i == 4) .OR. (i == 6))then
+    ! neutrino.
+      t3q=+1.d0/2.d0
+      eq=0.d0
+    else if((i == 1) .OR. (i == 3) .OR. (i == 5))then
+    ! lepton.
+      t3q=-1.d0/2.d0
+      eq=-1.d0
+    end if
+    widthZp=widthZp+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    *((2.d0*t3q)**2 &
+    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    +(2.d0*t3q-4.d0*eq*s2w)**2 &
+    *(1.d0+2.d0*rmq**2/rmZp**2))
+  !        cr=-eq*s2w
+  !        cl=t3q-eq*s2w
+  !        gv=cl+cr
+  !        ga=cl-cr
+  !        widthZp=widthZp+1.d0*e**2/12.d0/pi*rmZp/16.d0/s2w/ctw**2
+  !     &               *sqrt(1.d0-4.d0*rmq**2/rmZp**2)
+  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rmZp**2)
+  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rmZp**2))
+
+    temp=temp+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    *((2.d0*t3q)**2 &
+    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    +(2.d0*t3q-4.d0*eq*s2w)**2 &
+    *(1.d0+2.d0*rmq**2/rmZp**2))
+    if((i == 2) .OR. (i == 4) .OR. (i == 6)) &
+    temp1=temp1+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    *((2.d0*t3q)**2 &
+    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    +(2.d0*t3q-4.d0*eq*s2w)**2 &
+    *(1.d0+2.d0*rmq**2/rmZp**2))
+    if((i == 1) .OR. (i == 3) .OR. (i == 5)) &
+    temp2=temp2+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    *((2.d0*t3q)**2 &
+    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    +(2.d0*t3q-4.d0*eq*s2w)**2 &
+    *(1.d0+2.d0*rmq**2/rmZp**2))
+
+  end do
+
+  !       print *,'Z'' width due to quarks+leptons:',widthZp,' [GeV]'
+  !       print *,'(so that due to leptons are:',temp,' [GeV])'
+  !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
+  !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
+
+  return
+end function widthZp
 
 end module quantum_field_theory

@@ -74,8 +74,9 @@ program zprime
   if(structure_function == 9)nloops=1
 
   ! initialise madgraph - masses and coupling constants of particles
-  call initialise_madgraph(use_nwa,model_name)
-
+  call initialise_standard_model
+  call initialise_zprimes
+  
   ! dimensions
   if(final_state == 0)then
     ndimensions=3

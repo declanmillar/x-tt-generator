@@ -101,12 +101,6 @@ function ggff_qcd(iq, p1, p2, p3, p4,lam3,lam4,nhel)
   complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
   complex*16 w6(6)  , w7(6)
 
-! global variables
-!   real ::           gg(2), g
-!   common /coupqcd/ gg,    g
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-
 ! color data
 
   data eigen_val(1  )/       7.2916666666666588e-02 /

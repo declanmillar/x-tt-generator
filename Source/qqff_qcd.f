@@ -93,12 +93,6 @@ function qqff_qcd(iq,p1, p2, p3, p4,lam3,lam4,nhel)
   complex*16 amp(ngraphs)
   complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
 
-! global variables
-!   real ::           gg(2), g
-!   common /coupqcd/ gg,    g
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-
 ! color data
 
   data eigen_val(1  )/       2.2222222222222221e-01 /

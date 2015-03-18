@@ -276,7 +276,6 @@ end subroutine vegas
 !   ! load vegas data if desired
 
 !   implicit double precision(a-h,o-z)
-!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
 !   character(30) :: name
 !   ! open(unit=13,file=name,status='old',shared)
 !   read(13,210) it,ndo,si,swgt,schi
@@ -294,7 +293,6 @@ end subroutine vegas
 !   ! store vegas data for possible later use
 
 !   implicit double precision(a-h,o-z)
-!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
 !   character(30) :: name
 !   open(unit=12,file=name,status='new')
 !   write(12,210) it,ndo,si,swgt,schi

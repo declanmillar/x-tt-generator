@@ -85,35 +85,6 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3)   ! momenta
   integer :: nhel(nexternal)  ! n_hel
 
-  ! Global variables
-!   real ::         gW, gWWA, gWWZ
-!   common /coup1/ gW, gWWA, gWWZ
-!   real ::         gAl(2),gAu(2),gAd(2),gWf(2)
-!   common /coup2a/gAl,   gAu,   gAd,   gWf
-!   real ::         gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
-!   common /coup2b/gZn,   gZl,   gZu,   gZd,   g1
-!   real ::         gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-!   common /coup3/ gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-!   complex*16     gh(2,12)
-!   common /coup4/ gh
-!   real ::         Wmass,Wwidth,rm_Z,gamma_Z
-!   common /vmass1/Wmass,Wwidth,rm_Z,gamma_Z
-!   real ::         rm_a,gamma_A,hmass,hwidth
-!   common /vmass2/rm_a,gamma_A,hmass,hwidth
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-!   ! Zprime parameters
-!   real ::    rmZp(5),gamZp(5)
-!   common/Zp/rmZp   ,gamZp
-!   real ::         paramZp(5)
-!   common/Zpparam/paramZp
-!   real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-!   common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
-!   real ::        gZpd(2,5),gZpu(2,5)
-!   common/coupZp/gZpd     ,gZpu
-!   integer ::     npoints
-!   common/stat/npoints
-
   ! Local variables
   integer :: i,j
   ! parameter ( jf=11 )   ! final state tops

@@ -6,7 +6,6 @@ function sggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8)
 
   implicit none
 
-  common/polargg/polgg(-1:1,-1:1)
   real :: polgg
   real sggbbffff_qcd
 
@@ -285,11 +284,11 @@ function sggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8)
   data (nhel(ihel,255),ihel=1,8) /  1,  1,  1,  1,  1,  1,  1, -1/
   data (nhel(ihel,256),ihel=1,8) /  1,  1,  1,  1,  1,  1,  1,  1/
 
-  do i=-1,+1,2
-    do j=-1,+1,2
-      polgg(i,j)=0.d0
-    end do
-  end do
+!   do i=-1,+1,2
+!     do j=-1,+1,2
+!       polgg(i,j)=0.d0
+!     end do
+!   end do
   sggbbffff_qcd = 0d0
   ntry=ntry+1
   do ihel=1,ncomb
@@ -297,8 +296,8 @@ function sggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8)
     t=ggbbffff_qcd(p1, p2, &
     p3, p4, p5, p6, p7, p8,nhel(1,ihel))
     sggbbffff_qcd = sggbbffff_qcd + t
-    polgg(nhel(5,ihel),nhel(6,ihel))= &
-    polgg(nhel(5,ihel),nhel(6,ihel)) + t
+!     polgg(nhel(5,ihel),nhel(6,ihel))= &
+!     polgg(nhel(5,ihel),nhel(6,ihel)) + t
   !              if (t .gt. 0d0 .and. .not. goodhel(ihel)) then
   !                  goodhel(ihel)=.true.
   !                  write(*,*) ihel,t
@@ -307,11 +306,11 @@ function sggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8)
   enddo
   sggbbffff_qcd = sggbbffff_qcd /  4d0
   if(sggbbffff_qcd == 0.d0)return
-  do i=-1,+1,2
-    do j=-1,+1,2
-      polgg(i,j)=polgg(i,j)/4d0/sggbbffff_qcd
-    end do
-  end do
+!   do i=-1,+1,2
+!     do j=-1,+1,2
+!       polgg(i,j)=polgg(i,j)/4d0/sggbbffff_qcd
+!     end do
+!   end do
 !      print *,'test(gg):',
 !     & polgg(-1,-1)+polgg(-1,+1)+polgg(+1,-1)+polgg(+1,+1)
 end function sggbbffff_qcd
@@ -319,32 +318,32 @@ end function sggbbffff_qcd
 
 function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
-! returns amplitude squared summed/avg over colors
-! for the point in phase space p1,p2,p3,p4,...
-! and helicity nhel(1),nhel(2),....
-
-! for process : g g  -> b b~ ta+ ta- vt vt~
+  ! returns amplitude squared summed/avg over colors
+  ! for the point in phase space p1,p2,p3,p4,...
+  ! and helicity nhel(1),nhel(2),....
+  
+  ! for process : g g  -> b b~ ta+ ta- vt vt~
 
   use quantum_field_theory
 
   implicit none
 
-! constants
+  ! constants
 
-  integer :: iq ! incoming fermion species (see initialise for IDs)
+  integer :: iq   ! incoming fermion species (see initialise for IDs)
   integer ::    ngraphs,    neigen,    nexternal
   parameter (ngraphs=  3,neigen=  2,nexternal=8)
   real ggbbffff_qcd
   real ::     zero
   parameter (zero=0d0)
 
-! arguments
+  ! arguments
 
   real :: p1(0:3),p2(0:3), &
   p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
   integer :: nhel(nexternal)
 
-! local variables
+  ! local variables
   integer :: i,j
   real :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
   complex*16 ztemp
@@ -353,27 +352,7 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   complex*16 w6(6)  , w7(6)  , w8(6)  , w9(6)  , w10(6)
   complex*16 w11(6) , w12(6) , w13(6) , w14(6) , w15(6)
 
-! global variables
-!   real ::         gw, gwwa, gwwz
-!   common /coup1/ gw, gwwa, gwwz
-!   real ::         gal(2),gau(2),gad(2),gwf(2)
-!   common /coup2a/gal,   gau,   gad,   gwf
-!   real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
-!   common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
-!   real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-!   common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-!   complex*16     gh(2,12)
-!   common /coup4/ gh
-!   real ::         rm_W,Gamma_W,rm_Z,Gamma_Z
-!   common /vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
-!   real ::         rm_A,Gamma_A,rm_h,Gamma_h
-!   common /vmass2/rm_A,Gamma_A,rm_h,Gamma_h
-!   real ::           gg(2), g
-!   common /coupqcd/ gg,    g
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-   
-! color data
+  ! color data
   data eigen_val(1  )/       7.2916666666666588e-02 /
   data eigen_vec(1  ,1  )/   7.0710678118654768e-01 /
   data eigen_vec(2  ,1  )/   7.0710678118654735e-01 /
@@ -383,14 +362,14 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   data eigen_vec(2  ,2  )/   4.0824829046386285e-01 /
   data eigen_vec(3  ,2  )/   8.1649658092772603e-01 /
 
-! rite(*,*)nhel
-! select only final state spins from shell script
-!       if((nhel(3).eq.lam3).and.(nhel(4).eq.lam4))then
-!         continue
-!       else
-!         qqb_ttb_EWp = 0.d0
-!         return
-!       end if
+  ! rite(*,*)nhel
+  ! select only final state spins from shell script
+  !       if((nhel(3).eq.lam3).and.(nhel(4).eq.lam4))then
+  !         continue
+  !       else
+  !         qqb_ttb_EWp = 0.d0
+  !         return
+  !       end if
 
   call vxxxxx(p1  , zero,nhel(1  ),-1,w1  )
   call vxxxxx(p2  , zero,nhel(2  ),-1,w2  )
@@ -418,5 +397,5 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     enddo
     ggbbffff_qcd =ggbbffff_qcd+ztemp*eigen_val(i)*conjg(ztemp)
   enddo
-!      call gaugecheck(amp,ztemp,eigen_vec,eigen_val,ngraphs,neigen)
+  !      call gaugecheck(amp,ztemp,eigen_vec,eigen_val,ngraphs,neigen)
 end function ggbbffff_qcd

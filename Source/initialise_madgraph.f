@@ -102,35 +102,12 @@ subroutine initialise_madgraph(o_NWA,model_name)
 end subroutine initialise_madgraph
 
 ! subroutine printconstants
-! !*************************************************************************
-! !     prints out all masses, widths, and couplings in common blocks
-! !*************************************************************************
+
 !   implicit none
 
 ! !     local
 
 ! !      integer i
-
-! !     global
-
-!   real ::          gw, gwwa, gwwZ
-!   common /coup1/ gw, gwwa, gwwZ
-!   real ::         gal(2),gau(2),gad(2),gwf(2)
-!   common /coup2a/gal,   gau,   gad,   gwf
-!   real ::         gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
-!   common /coup2b/gZn,   gZl,   gZu,   gZd,   g1
-!   real ::         gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
-!   common /coup3/ gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
-!   complex*16     gchf(2,12)
-!   common /coup4/ gchf
-!   real ::         wmass,wwidth,Zmass,Zwidth
-!   common /vmass1/wmass,wwidth,Zmass,Zwidth
-!   real ::         Amass,awidth,hmass,hwidth
-!   common /vmass2/Amass,awidth,hmass,hwidth
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
-!   real ::           gg(2), g
-!   common /coupqcd/ gg,    g
 
 !   write(*,'(a)') 'MADGRAPH Parameters'
 !   write(*,'(a)') 'Boson masses and Widths:'

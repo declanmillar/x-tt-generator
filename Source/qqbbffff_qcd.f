@@ -9,8 +9,7 @@ function sqqbbffff_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
 
   implicit none
 
-  common/polarqq/polqq(-1:1,-1:1)
-  real :: polqq
+!   real :: polqq
   real sqqbbffff_qcd
 
 ! constants
@@ -293,11 +292,11 @@ function sqqbbffff_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
 ! ----------
 ! begin code
 ! ----------
-  do i=-1,+1,2
-    do j=-1,+1,2
-      polqq(i,j)=0.d0
-    end do
-  end do
+!   do i=-1,+1,2
+!     do j=-1,+1,2
+!       polqq(i,j)=0.d0
+!     end do
+!   end do
   sqqbbffff_qcd = 0d0
   ntry=ntry+1
   do ihel=1,ncomb
@@ -305,8 +304,8 @@ function sqqbbffff_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
     t=qqbbffff_qcd(iq, p1, p2, &
     p3, p4, p5, p6, p7, p8,nhel(1,ihel))
     sqqbbffff_qcd = sqqbbffff_qcd + t
-    polqq(nhel(5,ihel),nhel(6,ihel))= &
-    polqq(nhel(5,ihel),nhel(6,ihel)) + t
+!     polqq(nhel(5,ihel),nhel(6,ihel))= &
+!     polqq(nhel(5,ihel),nhel(6,ihel)) + t
   !              if (t .gt. 0d0 .and. .not. goodhel(ihel)) then
   !                  goodhel(ihel)=.true.
   !                  write(*,*) ihel,t
@@ -315,11 +314,11 @@ function sqqbbffff_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   enddo
   sqqbbffff_qcd = sqqbbffff_qcd /  4d0
   if(sqqbbffff_qcd == 0.d0)return
-  do i=-1,+1,2
-    do j=-1,+1,2
-      polqq(i,j)=polqq(i,j)/4d0/sqqbbffff_qcd
-    end do
-  end do
+!   do i=-1,+1,2
+!     do j=-1,+1,2
+!       polqq(i,j)=polqq(i,j)/4d0/sqqbbffff_qcd
+!     end do
+!   end do
 !      print *,'test(qq):',
 !     & polqq(-1,-1)+polqq(-1,+1)+polqq(+1,-1)+polqq(+1,+1)
 end function sqqbbffff_qcd
@@ -361,27 +360,6 @@ function qqbbffff_qcd(iq,p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
   complex*16 w6(6)  , w7(6)  , w8(6)  , w9(6)  , w10(6)
   complex*16 w11(6) , w12(6) , w13(6)
-
-! global variables
-
-!   real ::         gw, gwwa, gwwz
-!   common /coup1/ gw, gwwa, gwwz
-!   real ::         gal(2),gau(2),gad(2),gwf(2)
-!   common /coup2a/gal,   gau,   gad,   gwf
-!   real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
-!   common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
-!   real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-!   common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-!   complex*16     gh(2,12)
-!   common /coup4/ gh
-!   real ::         rm_w,gamma_W,zmass,zwidth
-!   common /vmass1/rm_w,gamma_W,zmass,zwidth
-!   real ::         amass,awidth,hmass,hwidth
-!   common /vmass2/amass,awidth,hmass,hwidth
-!   real ::           gg(2), g
-!   common /coupqcd/ gg,    g
-!   real ::            fmass(12), fwidth(12)
-!   common /fermions/ fmass,     fwidth
 
 ! color data
 
