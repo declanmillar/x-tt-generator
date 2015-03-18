@@ -11,7 +11,6 @@
 ! end
 
 module integration 
-  implicit double precision(a-h,o-z)
 !   makes default parameter assignments for vegas
 
   integer :: ncall,itmx,nprn,ndev
@@ -151,6 +150,8 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
     14 x(j)=xl(j)+rc*dx(j)
     wgt=wgt*xo*xnd
   15 END DO
+
+  write(*,*)'x3',x(3)
 
   f=wgt
   f=f*fxn(x,wgt)
