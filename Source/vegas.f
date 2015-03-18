@@ -151,8 +151,6 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
     wgt=wgt*xo*xnd
   15 END DO
 
-  write(*,*)'x3',x(3)
-
   f=wgt
   f=f*fxn(x,wgt)
   f2=f*f

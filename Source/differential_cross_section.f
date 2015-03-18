@@ -216,39 +216,30 @@ function differential_cross_section(x,wgt)
   shat=ecm*ecm
   tau=shat/s
   ! x1 and x2 of the partons
-  write(*,*)'x3',x(3)
   xx1=x(3+12*tops_decay)*(1.d0-tau)+tau
-  write(*,*)'xx1',xx1
   xx2=tau/xx1
   x1x2(1,1)=xx1
   x1x2(1,2)=xx2
   x1x2(2,1)=xx2
   x1x2(2,2)=xx1
-  write(*,*)''
-  write(*,*)'bork225'
   ! loop over x1 and x2
   differential_cross_section=0.d0
   do ix=1,ixmax
-    write(*,*)'bork229'
     ffxn=0.d0
     x1=x1x2(ix,1)
-    write(*,*)'x1',x1
     x2=x1x2(ix,2)
     ! loop over costheta_cm
     do jx=1,jxmax
-      write(*,*)'bork235'
       fffxn=0.d0
       ! structure functions
       ! scale for the pdfs
       rmt=fmass(11)
       gamt=fwidth(11)
       qq=2.d0*rmt
-      write(*,*)'bork242'
       ! construct hadronic structure functions.
       if(structure_function <= 4)then
         q2=qq*qq
         if((x1 <= 1.d-6) .or. (x1 >= 1.d0))then
-          write(*,*)'bork247'
           fffxn=0.d0
           return
         end if
@@ -266,7 +257,6 @@ function differential_cross_section(x,wgt)
         ! recent changes may screw up compatabilty with mrs. sea->bar in names
         ! below reflecting change in cteq61pdf iparton variable.
 
-        write(*,*)'bork263'
 
         u1=x1*ctq6pdf(1,x1,qq)
         d1=x1*ctq6pdf(2,x1,qq)
@@ -285,7 +275,6 @@ function differential_cross_section(x,wgt)
         btm2=x2*ctq6pdf(5,x2,qq)
         g2=x2*ctq6pdf(0,x2,qq)
 
-        write(*,*)'bork281'
 
       else if(structure_function == 5)then
         imode=1
@@ -418,7 +407,6 @@ function differential_cross_section(x,wgt)
       q(2,2)=0.d0
       q(1,2)=0.d0
 
-      write(*,*)'bork409'
 
       if(final_state == 0)then
         ! calculate 2to2 kinematics in parton cm frame
@@ -638,8 +626,6 @@ function differential_cross_section(x,wgt)
           q(i,8)=p78(i)-q(i,7)
         end do
       end if
-
-      write(*,*)'bork633'
 
       ! boost initial and final state momenta to the collider frame
       vcol=(x1-x2)/(x1+x2)
