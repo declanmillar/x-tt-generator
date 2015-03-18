@@ -72,6 +72,7 @@ function ggff_qcd(iq, p1, p2, p3, p4,lam3,lam4,nhel)
 ! and helicity nhel(1),nhel(2),....
 
 ! for process : g g  -> t t~
+  use quantum_field_theory, only: gg, g, fmass, fwidth
 
   implicit none
 
@@ -101,11 +102,10 @@ function ggff_qcd(iq, p1, p2, p3, p4,lam3,lam4,nhel)
   complex*16 w6(6)  , w7(6)
 
 ! global variables
-
-  real ::           gg(2), g
-  common /coupqcd/ gg,    g
-  real ::            fmass(12), fwidth(12)
-  common /fermions/ fmass,     fwidth
+!   real ::           gg(2), g
+!   common /coupqcd/ gg,    g
+!   real ::            fmass(12), fwidth(12)
+!   common /fermions/ fmass,     fwidth
 
 ! color data
 

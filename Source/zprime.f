@@ -9,6 +9,7 @@ program zprime
   ! authors: declan millar, stefano moretti.
 
   use configuration
+  use quantum_field_theory
   use kinematics
   use distributions
   use integration
@@ -16,25 +17,6 @@ program zprime
   implicit none
 
   external differential_cross_section
-
-  common/fermions/ fmass,     fwidth
-  real :: fmass(12), fwidth(12)
-  real :: rm_w,gamma_w,rm_z,gamma_z
-  common/vmass1/rm_w,gamma_w,rm_z,gamma_z
-  real :: rm_a,gamma_a,rm_h,gamma_h
-  common/vmass2/rm_a,gamma_a,rm_h,gamma_h
-  real :: rmzp(5),gamzp(5)
-  common/zp/rmzp,gamzp
-  real :: paramzp(5)
-  common/zpparam/paramzp
-  real :: gp(5),gv_d(5),ga_d(5),gv_u(5),ga_u(5)
-  common/coupzpva/gp,gv_d,ga_d,gv_u,ga_u
-  real :: gzpd(2,5),gzpu(2,5)
-  common/coupzp/gzpd,gzpu
-  real :: rlambdaqcd4
-  integer :: nloops
-  common/qcd/rlambdaqcd4,nloops
-
 
   real :: o_width(5)
   real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)

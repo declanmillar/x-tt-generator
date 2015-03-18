@@ -311,6 +311,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   ! for process : q q -> b b l+ l- v_l v_l via (via A ,Z ,{Z'})
 
   use Configuration, only: include_EW, include_BSM, interference
+  use quantum_field_theory
 
   implicit none
 
@@ -340,33 +341,33 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
        
 ! global variables
-  real ::         gW, gWWA, gWWZ
-  common /coup1/ gW, gWWA, gWWZ
-  real ::         gAl(2),gAu(2),gAd(2),gWf(2)
-  common /coup2a/gAl,   gAu,   gAd,   gWf
-  real ::         gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
-  common /coup2b/gZn,   gZl,   gZu,   gZd,   g1
-  real ::         gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-  common /coup3/ gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
-  complex*16     gh(2,12)
-  common /coup4/ gh
-  real ::         Wmass,Wwidth,Zmass,Zwidth
-  common /vmass1/Wmass,Wwidth,Zmass,Zwidth
-  real ::         Amass,Awidth,hmass,hwidth
-  common /vmass2/Amass,Awidth,hmass,hwidth
-  real ::            fmass(12), fwidth(12)
-  common /fermions/ fmass,     fwidth
-! Zprime parameters
-  real ::    rmZp(5),gamZp(5)
-  common/Zp/rmZp   ,gamZp
-  real ::         paramZp(5)
-  common/Zpparam/paramZp
-  real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-  common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
-  real ::        gZpd(2,5),gZpu(2,5)
-  common/coupZp/gZpd     ,gZpu
-  integer ::     npoints
-  common/stat/npoints
+!   real ::         gW, gWWA, gWWZ
+!   common /coup1/ gW, gWWA, gWWZ
+!   real ::         gAl(2),gAu(2),gAd(2),gWf(2)
+!   common /coup2a/gAl,   gAu,   gAd,   gWf
+!   real ::         gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
+!   common /coup2b/gZn,   gZl,   gZu,   gZd,   g1
+!   real ::         gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
+!   common /coup3/ gWWh,gZZh,ghhh,gWWhh,gZZhh,ghhhh
+!   complex*16     gh(2,12)
+!   common /coup4/ gh
+!   real ::         rm_W,Gamma_W,rm_Z,Gamma_Z
+!   common /vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
+!   real ::         rm_A,Gamma_A,hmass,hwidth
+!   common /vmass2/rm_A,Gamma_A,hmass,hwidth
+!   real ::            fmass(12), fwidth(12)
+!   common /fermions/ fmass,     fwidth
+! ! Zprime parameters
+!   real ::    rmZp(5),gamZp(5)
+!   common/Zp/rmZp   ,gamZp
+!   real ::         paramZp(5)
+!   common/Zpparam/paramZp
+!   real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
+!   common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
+!   real ::        gZpd(2,5),gZpu(2,5)
+!   common/coupZp/gZpd     ,gZpu
+!   integer ::     npoints
+!   common/stat/npoints
 ! up/down type couplings
   if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
     do i=1,2
@@ -426,9 +427,9 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   call ixxxxx( p8  ,fmass(2  ) ,nhel(8  ) ,-1 ,w8 )
 
 ! W coupled to e- nu-bar vector current
-  call jioxxx( w5 ,w7 ,gWf ,Wmass ,Wwidth ,w10 )
+  call jioxxx( w5 ,w7 ,gWf ,rm_W ,Gamma_W ,w10 )
 ! W coupled to e+ nu vector current
-  call jioxxx( w8 ,w6 ,gWf ,Wmass ,Wwidth ,w11 )
+  call jioxxx( w8 ,w6 ,gWf ,rm_W ,Gamma_W ,w11 )
 ! t (off shell) coupled to b and W vector current
   call fvoxxx( w3 ,w10 ,gWf ,fmass(11) ,fwidth(11) ,w12 )
 ! t-bar coupled to b-bar and W vector current
@@ -436,11 +437,11 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 
   if (include_EW == 1)then
   ! A coupled to q q-bar vector current
-    call jioxxx( w1 ,w2 ,gAq ,Amass ,Awidth ,w9  )
+    call jioxxx( w1 ,w2 ,gAq ,rm_A ,Gamma_A ,w9  )
   ! A diagram
     call iovxxx( w13 ,w12 ,w9 ,gAf ,amp(1) )
   ! Z (off shell) coupled to q and q-bar vector current
-    call jioxxx( w1 ,w2 ,gZq ,Zmass ,Zwidth ,w14 )
+    call jioxxx( w1 ,w2 ,gZq ,rm_Z ,Gamma_Z ,w14 )
   ! Z diagram
     call iovxxx( w13 ,w12 ,w14 ,gZf ,amp(2) )
   else

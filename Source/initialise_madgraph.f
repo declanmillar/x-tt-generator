@@ -1,88 +1,90 @@
 subroutine initialise_madgraph(o_NWA,model_name)
-! sets up masses and coupling constants of particles
+  ! sets up masses and coupling constants of particles
+
+  use quantum_field_theory
 
   implicit none
 
-! arguments
+  ! arguments
   integer :: o_NWA
   character(50) :: model_name
 
-! SM couplings
-  real ::        gw, gwwa, gwwZ
-  common/coup1/ gw, gwwa, gwwZ
-  real ::        gal(2),gau(2),gad(2),gwf(2)
-  common/coup2a/gal,   gau,   gad,   gwf
-  real ::        gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
-  common/coup2b/gZn,   gZl,   gZu,   gZd,   g1
-  real ::        gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
-  common/coup3/ gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
-  complex*16    gchf(2,12)
-  common/coup4/ gchf
-  real ::          gg(2), g
-  common/coupqcd/ gg,    g
+! ! SM couplings
+!   real ::        gw, gwwa, gwwZ
+!   common/coup1/ gw, gwwa, gwwZ
+!   real ::        gal(2),gau(2),gad(2),gwf(2)
+!   common/coup2a/gal,   gau,   gad,   gwf
+!   real ::        gZn(2),gZl(2),gZu(2),gZd(2),g1(2)
+!   common/coup2b/gZn,   gZl,   gZu,   gZd,   g1
+!   real ::        gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
+!   common/coup3/ gwwh,gZZh,ghhh,gwwhh,gZZhh,ghhhh
+!   complex*16    gchf(2,12)
+!   common/coup4/ gchf
+!   real ::          gg(2), g
+!   common/coupqcd/ gg,    g
 
-! SM masses and widths
-  real ::           fmass(12), fwidth(12)
-  common/fermions/ fmass,     fwidth
-  real ::        rm_W,Gamma_W,rm_Z,Gamma_Z
-  common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
-  real ::        rm_A,Gamma_a,rm_h,Gamma_h
-  common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
-  real ::        Gamma_t
-  common/Gammas/Gamma_t
-! Other SM parameters
-  real ::    a_EM,s2w
-  common/EW/a_EM,s2w
-  real ::     rlambdaQCD4
-  integer ::                nloops
-  common/QCD/rlambdaQCD4,nloops
+! ! SM masses and widths
+!   real ::           fmass(12), fwidth(12)
+!   common/fermions/ fmass,     fwidth
+!   real ::        rm_W,Gamma_W,rm_Z,Gamma_Z
+!   common/vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
+!   real ::        rm_A,Gamma_a,rm_h,Gamma_h
+!   common/vmass2/rm_A,Gamma_a,rm_h,Gamma_h
+!   real ::        Gamma_t
+!   common/Gammas/Gamma_t
+! ! Other SM parameters
+!   real ::    a_EM,s2w
+!   common/EW/a_EM,s2w
+!   real ::     rlambdaQCD4
+!   integer ::                nloops
+!   common/QCD/rlambdaQCD4,nloops
 
 
-! Zprime parameters
-  real ::    rmZp(5),gamZp(5)
-  common/Zp/rmZp   ,gamZp
-  real ::         paramZp(5)
-  common/Zpparam/paramZp
-  real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
-  common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
-  real ::        gZpd(2,5),gZpu(2,5)
-  common/coupZp/gZpd     ,gZpu
+! ! Zprime parameters
+!   real ::    rmZp(5),gamZp(5)
+!   common/Zp/rmZp   ,gamZp
+!   real ::         paramZp(5)
+!   common/Zpparam/paramZp
+!   real ::          gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5)
+!   common/coupZpVA/gp   ,gV_d   ,gA_d   ,gV_u   ,gA_u
+!   real ::        gZpd(2,5),gZpu(2,5)
+!   common/coupZp/gZpd     ,gZpu
 !   constants
-  real ::     alpha_EM             ,sin2theta_weinberg
-  parameter (alpha_EM=0.0078125   ,sin2theta_weinberg=0.2320d0)
-! integer igw
 
-  real ::   widthZp
+  real ::    alpha_EM             ,sin2theta_weinberg
+  parameter (alpha_EM=0.0078125   ,sin2theta_weinberg=0.2320d0)
+
+  real ::  widthZp
   external widthZp
 
 !   quark masses
-  real ::     umass,       cmass,            tmass
+  real ::    umass,       cmass,            tmass
   parameter (umass=0.d0,  cmass=0.d0,       tmass=175.d0)
-  real ::     dmass,       smass,            bmass
+  real ::    dmass,       smass,            bmass
   parameter (dmass=0.d0,  smass=0.d0,       bmass=4.18d0)
 
 !   leptons masses
-  real ::     emass,        mumass,          taumass
+  real ::    emass,        mumass,          taumass
   parameter (emass=0.d0,   mumass=0.d0,     taumass=1.78d0)
-  real ::     nuemass,      numumass,        nutaumass
+  real ::    nuemass,      numumass,        nutaumass
   parameter (nuemass=0d0,  numumass=0d0,    nutaumass=0d0)
 
 !   quark widths
-  real ::     uwidth,       cwidth,          twidth
+  real ::    uwidth,       cwidth,          twidth
   parameter (uwidth=0.d0,  cwidth=0.d0,     twidth=1.55d0)
-  real ::     dwidth,       swidth,          bwidth
+  real ::    dwidth,       swidth,          bwidth
   parameter (dwidth=0.d0,  swidth=0.d0,     bwidth=0.d0)
 
 !   lepton widths
-  real ::     eWidth,        muwidth,        tauwidth
+  real ::    eWidth,        muwidth,        tauwidth
   parameter (eWidth=0.d0,   muwidth=0.d0,   tauwidth=0.d0)
-  real ::     nueWidth,      numuwidth,      nutauwidth
+  real ::    nueWidth,      numuwidth,      nutauwidth
   parameter (nueWidth=0.d0, numuwidth=0.d0, nutauwidth=0.d0)
 
 !   SM boson masses
-  real ::     Wmass,      Zmass,      Wwidth,     Zwidth
+  real ::    Wmass,      Zmass,      Wwidth,     Zwidth
   parameter (Wmass=80.23d0,Zmass=91.19d0,Wwidth=2.08d0,Zwidth=2.5d0)
-  real ::     Amass,     Awidth,     hmass,        hwidth
+  real ::    Amass,     Awidth,     hmass,        hwidth
   parameter (Amass=0d0, Awidth=0d0, hmass=125.d0, hwidth=0.31278d-2)
 
 ! other local variables

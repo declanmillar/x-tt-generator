@@ -12,6 +12,7 @@ function differential_cross_section(x,wgt)
   ! authors: declan millar, stefano moretti
 
   use configuration
+  use quantum_field_theory
   use kinematics
   use distributions
   use integration
@@ -19,24 +20,6 @@ function differential_cross_section(x,wgt)
   implicit none
 
   real :: x(100), wgt
-
-  real :: fmass(12), fwidth(12)
-  common/fermions/ fmass,     fwidth  
-  real :: rm_w,gamma_w,rm_z,gamma_z
-  common/vmass1/rm_w,gamma_w,rm_z,gamma_z
-  real :: rm_a,gamma_a,rm_h,gamma_h
-  common/vmass2/rm_a,gamma_a,rm_h,gamma_h
-  ! narrow width approximation (nwa)
-  real :: gamma_t
-  common/gammas/gamma_t
-  ! common for decay me
-  real :: polqq(-1:1,-1:1)
-  common/polarqq/polqq
-  real :: polgg(-1:1,-1:1)
-  common/polargg/polgg
-  real :: rlambdaqcd4
-  integer :: nloops
-  common/qcd/rlambdaqcd4,nloops
 
   real :: differential_cross_section
   real :: alfas
@@ -69,7 +52,7 @@ function differential_cross_section(x,wgt)
   real :: ct7
   real :: ct78
   real :: ct7ct5
-  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, g1, g2, ggd1, ggd2, p5xp, p5yp, p5zp
+  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, p5xp, p5yp, p5zp
   real :: ffxn, fffxn, fffxn1, fffxn2
   real :: rmt, gamt
   real :: delta_absy
@@ -265,7 +248,7 @@ function differential_cross_section(x,wgt)
         str1=x1*ctq6pdf(3,x1,qq)
         chm1=x1*ctq6pdf(4,x1,qq)
         btm1=x1*ctq6pdf(5,x1,qq)
-        g1=x1*ctq6pdf(0,x1,qq)
+        glu1=x1*ctq6pdf(0,x1,qq)
         u2=x2*ctq6pdf(1,x2,qq)
         d2=x2*ctq6pdf(2,x2,qq)
         ubar2=x2*ctq6pdf(-1,x2,qq)
@@ -273,7 +256,7 @@ function differential_cross_section(x,wgt)
         str2=x2*ctq6pdf(3,x2,qq)
         chm2=x2*ctq6pdf(4,x2,qq)
         btm2=x2*ctq6pdf(5,x2,qq)
-        g2=x2*ctq6pdf(0,x2,qq)
+        glu2=x2*ctq6pdf(0,x2,qq)
 
 
       else if(structure_function == 5)then
@@ -290,8 +273,8 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
+        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
+        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
       else if(structure_function == 6)then
         imode=2
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
@@ -306,8 +289,8 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
+        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
+        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
       else if(structure_function == 7)then
         imode=3
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
@@ -322,8 +305,8 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
+        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
+        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
       else if(structure_function == 8)then
         imode=4
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
@@ -338,8 +321,8 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
+        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
+        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
       else if(structure_function == 9)then
         imode=5
         if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
@@ -354,8 +337,8 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,g1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,g2)
+        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
+        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
 
       ! note that mrs return valence and sea contributions automatically.)
       ! note that cteq do too now!)
@@ -375,7 +358,7 @@ function differential_cross_section(x,wgt)
       fx1(10)=fx1(4)
       fx1(11)=fx1(5)
       fx1(12)=fx1(6)
-      fx1(13)=g1
+      fx1(13)=glu1
       do i=1,13
         fx1(i)=fx1(i)/x1
       end do
@@ -391,7 +374,7 @@ function differential_cross_section(x,wgt)
       fx2(10)=fx2(4)
       fx2(11)=fx2(5)
       fx2(12)=fx2(6)
-      fx2(13)=g2
+      fx2(13)=glu2
       do i=1,13
         fx2(i)=fx2(i)/x2
       end do

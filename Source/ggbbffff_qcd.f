@@ -325,6 +325,8 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
 ! for process : g g  -> b b~ ta+ ta- vt vt~
 
+  use quantum_field_theory
+
   implicit none
 
 ! constants
@@ -352,24 +354,24 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   complex*16 w11(6) , w12(6) , w13(6) , w14(6) , w15(6)
 
 ! global variables
-  real ::         gw, gwwa, gwwz
-  common /coup1/ gw, gwwa, gwwz
-  real ::         gal(2),gau(2),gad(2),gwf(2)
-  common /coup2a/gal,   gau,   gad,   gwf
-  real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
-  common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
-  real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-  common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-  complex*16     gh(2,12)
-  common /coup4/ gh
-  real ::         wmass,wwidth,zmass,zwidth
-  common /vmass1/wmass,wwidth,zmass,zwidth
-  real ::         amass,awidth,hmass,hwidth
-  common /vmass2/amass,awidth,hmass,hwidth
-  real ::           gg(2), g
-  common /coupqcd/ gg,    g
-  real ::            fmass(12), fwidth(12)
-  common /fermions/ fmass,     fwidth
+!   real ::         gw, gwwa, gwwz
+!   common /coup1/ gw, gwwa, gwwz
+!   real ::         gal(2),gau(2),gad(2),gwf(2)
+!   common /coup2a/gal,   gau,   gad,   gwf
+!   real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
+!   common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
+!   real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
+!   common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
+!   complex*16     gh(2,12)
+!   common /coup4/ gh
+!   real ::         rm_W,Gamma_W,rm_Z,Gamma_Z
+!   common /vmass1/rm_W,Gamma_W,rm_Z,Gamma_Z
+!   real ::         rm_A,Gamma_A,rm_h,Gamma_h
+!   common /vmass2/rm_A,Gamma_A,rm_h,Gamma_h
+!   real ::           gg(2), g
+!   common /coupqcd/ gg,    g
+!   real ::            fmass(12), fwidth(12)
+!   common /fermions/ fmass,     fwidth
    
 ! color data
   data eigen_val(1  )/       7.2916666666666588e-02 /
@@ -398,8 +400,8 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   call oxxxxx(p6  ,zero,nhel(6  ), 1,w6  )
   call oxxxxx(p7  ,zero,nhel(7  ), 1,w7  )
   call ixxxxx(p8  ,zero,nhel(8  ),-1,w8  )
-  call jioxxx(w5  ,w7  ,gwf,wmass,wwidth,w9  )
-  call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w10 )
+  call jioxxx(w5  ,w7  ,gwf,rm_W,Gamma_W,w9  )
+  call jioxxx(w8  ,w6  ,gwf,rm_W,Gamma_W,w10 )
   call fvoxxx(w3  ,w9  ,gwf,fmass(11 ),fwidth(11 ),w11 )
   call fvixxx(w4  ,w10 ,gwf,fmass(11 ),fwidth(11 ),w12 )
   call fvoxxx(w11 ,w2  ,gg,fmass(11 ),fwidth(11 ),w13 )

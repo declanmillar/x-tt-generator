@@ -333,6 +333,8 @@ function qqbbffff_qcd(iq,p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 ! and helicity nhel(1),nhel(2),....
 
 ! for process : q q~  -> b b~ ta+ ta- vt vt~
+  
+  use quantum_field_theory
 
   implicit none
 
@@ -362,24 +364,24 @@ function qqbbffff_qcd(iq,p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
 ! global variables
 
-  real ::         gw, gwwa, gwwz
-  common /coup1/ gw, gwwa, gwwz
-  real ::         gal(2),gau(2),gad(2),gwf(2)
-  common /coup2a/gal,   gau,   gad,   gwf
-  real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
-  common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
-  real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-  common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-  complex*16     gh(2,12)
-  common /coup4/ gh
-  real ::         wmass,wwidth,zmass,zwidth
-  common /vmass1/wmass,wwidth,zmass,zwidth
-  real ::         amass,awidth,hmass,hwidth
-  common /vmass2/amass,awidth,hmass,hwidth
-  real ::           gg(2), g
-  common /coupqcd/ gg,    g
-  real ::            fmass(12), fwidth(12)
-  common /fermions/ fmass,     fwidth
+!   real ::         gw, gwwa, gwwz
+!   common /coup1/ gw, gwwa, gwwz
+!   real ::         gal(2),gau(2),gad(2),gwf(2)
+!   common /coup2a/gal,   gau,   gad,   gwf
+!   real ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
+!   common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
+!   real ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
+!   common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
+!   complex*16     gh(2,12)
+!   common /coup4/ gh
+!   real ::         rm_w,gamma_W,zmass,zwidth
+!   common /vmass1/rm_w,gamma_W,zmass,zwidth
+!   real ::         amass,awidth,hmass,hwidth
+!   common /vmass2/amass,awidth,hmass,hwidth
+!   real ::           gg(2), g
+!   common /coupqcd/ gg,    g
+!   real ::            fmass(12), fwidth(12)
+!   common /fermions/ fmass,     fwidth
 
 ! color data
 
@@ -398,8 +400,8 @@ function qqbbffff_qcd(iq,p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   call ixxxxx(p8  ,zero,nhel(8  ),-1,w8  )
 
   call jioxxx(w1  ,w2  ,gg,zero,zero,w9  )
-  call jioxxx(w5  ,w7  ,gwf,wmass,wwidth,w10 )
-  call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w11 )
+  call jioxxx(w5  ,w7  ,gwf,rm_w,gamma_W,w10 )
+  call jioxxx(w8  ,w6  ,gwf,rm_w,gamma_W,w11 )
   call fvoxxx(w3  ,w10 ,gwf,fmass(11 ),fwidth(11 ),w12 )
   call fvixxx(w4  ,w11 ,gwf,fmass(11 ),fwidth(11 ),w13 )
   call iovxxx(w13 ,w12 ,w9  ,gg,amp(1  ))
