@@ -1,17 +1,6 @@
-! block data
-!   implicit double precision(a-h,o-z)
-! !   makes default parameter assignments for vegas
-!   common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-!   common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-!   common/bveg3/alph,ndmx,mds
-!   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
-!   xl/100*0.d0/,xu/100*1.d0/, &
-!   alph/1.5d0/,ndmx/50/,mds/1/,ndev/6/, &
-!   ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/
-! end
-
 module integration 
-!   makes default parameter assignments for vegas
+
+  ! store information from vegas
 
   integer :: ncall,itmx,nprn,ndev
   real :: xl(100),xu(100),acc
@@ -20,35 +9,25 @@ module integration
   real :: alph
   integer :: ndmx,mds
   real :: resl(20),standdevl(20)
-
   integer :: seed
 
-  ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  ! common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  ! common/bveg3/alph,ndmx,mds
-  ! common/rndm/seed
-  ! common/reslocal/resl(20),standdevl(20)
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
   xl/100*0.d0/,xu/100*1.d0/, &
   alph/1.5d0/,ndmx/50/,mds/1/,ndev/6/, &
   ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/  
+
 end module integration
 
 
 subroutine vegas(ndim,fxn,avgi,sd,chi2a)
 
-  use integration
-
   !   subroutine performs ndim-dimensional monte carlo integ'n
   ! - by g.p. lepage    sept 1976/(rev)aug 1979
   ! - algorithm described in j comp phys 27,192(1978)
 
+  use integration
+
   implicit double precision(a-h,o-z)
-  ! common/bveg1/ncall,itmx,nprn,ndev,xl(100),xu(100),acc
-  ! common/bveg2/it,ndo,si,swgt,schi,xi(50,100)
-  ! common/bveg3/alph,ndmx,mds
-  ! common/bveg4/calls,ti,tsi
-  ! common/reslocal/resl(20),standdevl(20)
   dimension d(50,100),di(50,100),xin(50),r(50),dx(100),ia(100), &
   kg(100),dt(100),x(100)
   dimension rand(100)
