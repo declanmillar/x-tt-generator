@@ -97,7 +97,7 @@ subroutine initialise_standard_model
     call coup4x(s2w,rm_Z,fmass(i),gchf(1,i))
   enddo
 
-  ! QCD couplings
+  ! QCD couplings (set to one, multiply correctly in zprime)
   g = 1.d0
   gg(1)=-g
   gg(2)=-g
@@ -138,7 +138,7 @@ subroutine initialise_zprimes
   ! Calculate sequential Zp widths
   do i=1,5
     if (o_width(i) == 0) gamZp(i)= &
-    widthZp(rm_W,rm_Z,rmZp(i),a_em,s2w,rlambdaQCD4,nloops)
+    widthZp(rmZp(i))
   end do
 
   ! convert from VA to LR couplings
@@ -167,7 +167,7 @@ subroutine coupZpx
   return
 end subroutine coupZpx
 
-function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
+function widthZp(rm_Zp)
 
   ! Calculates the width of the Zp in the SSM.
   ! Authors: stefano moretti and declan millar <d.millar@soton.ac.uk>
@@ -175,20 +175,12 @@ function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
   implicit none
 
   ! implicit to explicit variable dump
-  real :: ME2
   real :: widthzp
-  real :: rmw
-  real :: rmz
-  real :: rmzp
-  real :: a_em
-  real :: s2w
-  real :: rlambdaqcd4
-  integer :: nloop
-  real :: a_s
+  real :: rm_zp
   real :: ctw
   real :: e
   real :: eq
-  real :: g
+  real :: gweak
   real :: gamt
   real :: gf
   integer :: i
@@ -200,18 +192,20 @@ function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
   real :: temp1
   real :: temp2
   real :: alfas
+  real :: a_s
 
   rmt=fmass(11)
   gamt=fwidth(11)
+  
   ! couplings.
   pi=dacos(-1.d0)
   ctw=sqrt(1.d0-s2w)
   e=sqrt(4.d0*pi*a_em)
-  g=e/sqrt(s2w)
-  a_s=alfas(rmZp,rlambdaQCD4,nloop,4)
+  gweak=e/sqrt(s2w)
+  a_s=alfas(rm_Zp,rlambdaQCD4,nloops,4)
   GF=1.16639D-5
   ! renormalise e.
-  e=sqrt(s2w*8.d0*rmZ*rmZ*ctw*ctw*GF/sqrt(2.d0))
+  e=sqrt(s2w*8.d0*rm_Z*rm_Z*ctw*ctw*GF/sqrt(2.d0))
   ! Zp width.
   widthZp=0.d0
   do i=1,6
@@ -228,22 +222,22 @@ function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
       t3q=-1.d0/2.d0
       eq=-1.d0/3.d0
     end if
-    if(rmZp <= 2.d0*rmq)goto 123
-    widthZp=widthZp+3.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    if(rm_Zp <= 2.d0*rmq)goto 123
+    widthZp=widthZp+3.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    *(1.d0-4.d0*rmq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*rmq**2/rmZp**2)) &
+    *(1.d0+2.d0*rmq**2/rm_Zp**2)) &
     *(1.d0+1.045d0*a_s/pi)
   !        cr=-eq*s2w
   !        cl=t3q-eq*s2w
   !        gv=cl+cr
   !        ga=cl-cr
-  !        widthZp=widthZp+3.d0*e**2/12.d0/pi*rmZp/16.d0/s2w/ctw**2
-  !     &               *sqrt(1.d0-4.d0*rmq**2/rmZp**2)
-  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rmZp**2)
-  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rmZp**2))
+  !        widthZp=widthZp+3.d0*e**2/12.d0/pi*rm_Zp/16.d0/s2w/ctw**2
+  !     &               *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2)
+  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rm_Zp**2)
+  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rm_Zp**2))
   !     &               *(1.d0+1.045d0*a_s/pi)
     123 continue
   end do
@@ -266,41 +260,41 @@ function widthZp(rmW,rmZ,rmZp,a_em,s2w,rlambdaQCD4,nloop)
       t3q=-1.d0/2.d0
       eq=-1.d0
     end if
-    widthZp=widthZp+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    widthZp=widthZp+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    *(1.d0-4.d0*rmq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*rmq**2/rmZp**2))
+    *(1.d0+2.d0*rmq**2/rm_Zp**2))
   !        cr=-eq*s2w
   !        cl=t3q-eq*s2w
   !        gv=cl+cr
   !        ga=cl-cr
-  !        widthZp=widthZp+1.d0*e**2/12.d0/pi*rmZp/16.d0/s2w/ctw**2
-  !     &               *sqrt(1.d0-4.d0*rmq**2/rmZp**2)
-  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rmZp**2)
-  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rmZp**2))
+  !        widthZp=widthZp+1.d0*e**2/12.d0/pi*rm_Zp/16.d0/s2w/ctw**2
+  !     &               *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2)
+  !     &               *(4.d0*gv**2*(1.d0+2.d0*rmq**2/rm_Zp**2)
+  !     &                +4.d0*ga**2*(1.d0-4.d0*rmq**2/rm_Zp**2))
 
-    temp=temp+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    temp=temp+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    *(1.d0-4.d0*rmq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*rmq**2/rmZp**2))
+    *(1.d0+2.d0*rmq**2/rm_Zp**2))
     if((i == 2) .OR. (i == 4) .OR. (i == 6)) &
-    temp1=temp1+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    temp1=temp1+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    *(1.d0-4.d0*rmq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*rmq**2/rmZp**2))
+    *(1.d0+2.d0*rmq**2/rm_Zp**2))
     if((i == 1) .OR. (i == 3) .OR. (i == 5)) &
-    temp2=temp2+1.d0*rmZ**2*rmZp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*rmq**2/rmZp**2) &
+    temp2=temp2+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*rmq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*rmq**2/rmZp**2) &
+    *(1.d0-4.d0*rmq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*rmq**2/rmZp**2))
+    *(1.d0+2.d0*rmq**2/rm_Zp**2))
 
   end do
 

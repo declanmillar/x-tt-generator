@@ -76,7 +76,7 @@ program zprime
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_standard_model
   call initialise_zprimes
-  
+
   ! dimensions
   if(final_state == 0)then
     ndimensions=3
@@ -254,7 +254,6 @@ program zprime
     if(rmzp(i) > 0)then
       write(*,*)'z#prime               ',i
       write(*,*)'m_{z#prime}           ',rmzp(i)
-      write(*,*)'o_width:              ',o_width(i)
       write(*,*)'#gamma_{z#prime}      ',gamzp(i)
       write(*,*)'g_{p}                 ',gp(i)
       write(*,*)'g_{v}^{u}             ',gv_u(i)
