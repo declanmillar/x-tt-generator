@@ -153,38 +153,38 @@ function differential_cross_section(x,wgt)
   
   
   ! phase space vectors.
-  real :: q356(4),q478(4),p356(4),p478(4)
-  real :: q56(4),q78(4),p56(4),p78(4)
-  real :: q5(4),q7(4)
-  real :: q(4,8),qcol(4,8)
+  real :: q356(4), q478(4), p356(4), p478(4)
+  real :: q56(4), q78(4), p56(4), p78(4)
+  real :: q5(4), q7(4)
+  real :: q(4, 8), qcol(4, 8)
   ! momentum 4-vectors
-  real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   ! kinematic vectors
-  real :: pt2(8),pt(8),rps(8),rpl(8),arg(8),eta(8),phi(8),ycol(8)
-  real :: ptvis(2),ptmiss(2)
+  real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
+  real :: ptvis(2), ptmiss(2)
   ! lepton azimuthal angle coordinate system
-  real :: xp(3),yp(3),zp(3)
+  real :: xp(3), yp(3), zp(3)
 
   ! polarised square matrix elements
   ! situation one: q-qbar collision
-  real :: qcdpolqq1(-1:1,-1:1)
-  real :: qcdpolbb1(-1:1,-1:1),qcdpolgg1(-1:1,-1:1)
-  real :: ewzpoluu1(-1:1,-1:1),ewzpoldd1(-1:1,-1:1)
-  real :: ewzpolbb1(-1:1,-1:1)
-  real :: pfx1(-1:1,-1:1)
+  real :: qcdpolqq1(-1:1, -1:1)
+  real :: qcdpolbb1(-1:1, -1:1), qcdpolgg1(-1:1, -1:1)
+  real :: ewzpoluu1(-1:1, -1:1), ewzpoldd1(-1:1, -1:1)
+  real :: ewzpolbb1(-1:1, -1:1)
+  real :: pfx1(-1:1, -1:1)
   ! situation two: qbar-q collision
-  real :: qcdpolqq2(-1:1,-1:1)
-  real :: qcdpolbb2(-1:1,-1:1),qcdpolgg2(-1:1,-1:1)
-  real :: ewzpoluu2(-1:1,-1:1),ewzpoldd2(-1:1,-1:1)
-  real :: ewzpolbb2(-1:1,-1:1)
-  real :: pfx2(-1:1,-1:1)
+  real :: qcdpolqq2(-1:1, -1:1)
+  real :: qcdpolbb2(-1:1, -1:1), qcdpolgg2(-1:1, -1:1)
+  real :: ewzpoluu2(-1:1, -1:1), ewzpoldd2(-1:1, -1:1)
+  real :: ewzpolbb2(-1:1, -1:1)
+  real :: pfx2(-1:1, -1:1)
 
   ! weight per polarisation
-  real :: weight(20,-1:1,-1:1)
+  real :: weight(20, -1:1, -1:1)
 
   ! pdfs
-  real :: fx1(13),fx2(13)
-  real :: x1x2(2,2)
+  real :: fx1(13), fx2(13)
+  real :: x1x2(2, 2)
   real :: trans(ntrans)
 
   ! internal random number seed
@@ -192,45 +192,45 @@ function differential_cross_section(x,wgt)
   data jseed/987654321/
 
   ! maximum centre of mass energy
-  ecm_max=collider_energy
+  ecm_max = collider_energy
   ! centre of mass energy
-  ecm=x(2+12*tops_decay)*(ecm_max-m3-m4-m5-m6-m7-m8) &
-  +m3+m4+m5+m6+m7+m8
-  shat=ecm*ecm
-  tau=shat/s
+  ecm = x(2 + 12*tops_decay)*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8) &
+        + m3 + m4 + m5 + m6 + m7 + m8
+  shat = ecm*ecm
+  tau = shat/s
   ! x1 and x2 of the partons
-  xx1=x(3+12*tops_decay)*(1.d0-tau)+tau
-  xx2=tau/xx1
-  x1x2(1,1)=xx1
-  x1x2(1,2)=xx2
-  x1x2(2,1)=xx2
-  x1x2(2,2)=xx1
+  xx1 = x(3+12*tops_decay) * (1.d0-tau) + tau
+  xx2 = tau/xx1
+  x1x2(1, 1) = xx1
+  x1x2(1, 2) = xx2
+  x1x2(2, 1) = xx2
+  x1x2(2, 2) = xx1
   ! loop over x1 and x2
   differential_cross_section=0.d0
-  do ix=1,ixmax
-    ffxn=0.d0
-    x1=x1x2(ix,1)
-    x2=x1x2(ix,2)
+  do ix = 1, ixmax
+    ffxn = 0.d0
+    x1 = x1x2(ix, 1)
+    x2 = x1x2(ix, 2)
     ! loop over costheta_cm
-    do jx=1,jxmax
-      fffxn=0.d0
+    do jx = 1, jxmax
+      fffxn = 0.d0
       ! structure functions
       ! scale for the pdfs
-      rmt=fmass(11)
-      gamt=fwidth(11)
-      qq=2.d0*rmt
+      rmt = fmass(11)
+      gamt = fwidth(11)
+      qq = 2.d0*rmt
       ! construct hadronic structure functions.
-      if(structure_function <= 4)then
-        q2=qq*qq
-        if((x1 <= 1.d-6) .or. (x1 >= 1.d0))then
+      if (structure_function <= 4) then
+        q2 = qq*qq
+        if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-6) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq <= 1.3d0) .or. (qq >= 1.d4))then
+        if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
           fffxn=0.d0
           return
         end if
@@ -241,104 +241,104 @@ function differential_cross_section(x,wgt)
         ! below reflecting change in cteq61pdf iparton variable.
 
 
-        u1=x1*ctq6pdf(1,x1,qq)
-        d1=x1*ctq6pdf(2,x1,qq)
-        ubar1=x1*ctq6pdf(-1,x1,qq)
-        dbar1=x1*ctq6pdf(-2,x1,qq)
-        str1=x1*ctq6pdf(3,x1,qq)
-        chm1=x1*ctq6pdf(4,x1,qq)
-        btm1=x1*ctq6pdf(5,x1,qq)
-        glu1=x1*ctq6pdf(0,x1,qq)
-        u2=x2*ctq6pdf(1,x2,qq)
-        d2=x2*ctq6pdf(2,x2,qq)
-        ubar2=x2*ctq6pdf(-1,x2,qq)
-        dbar2=x2*ctq6pdf(-2,x2,qq)
-        str2=x2*ctq6pdf(3,x2,qq)
-        chm2=x2*ctq6pdf(4,x2,qq)
-        btm2=x2*ctq6pdf(5,x2,qq)
-        glu2=x2*ctq6pdf(0,x2,qq)
+        u1 = x1*ctq6pdf(1, x1, qq)
+        d1 = x1*ctq6pdf(2, x1, qq)
+        ubar1 = x1*ctq6pdf(-1, x1, qq)
+        dbar1 = x1*ctq6pdf(-2, x1, qq)
+        str1 = x1*ctq6pdf(3, x1, qq)
+        chm1 = x1*ctq6pdf(4, x1, qq)
+        btm1 = x1*ctq6pdf(5, x1, qq)
+        glu1 = x1*ctq6pdf(0, x1, qq)
+        u2 = x2*ctq6pdf(1, x2, qq)
+        d2 = x2*ctq6pdf(2, x2, qq)
+        ubar2 = x2*ctq6pdf(-1, x2, qq)
+        dbar2 = x2*ctq6pdf(-2, x2, qq)
+        str2 = x2*ctq6pdf(3, x2, qq)
+        chm2 = x2*ctq6pdf(4, x2, qq)
+        btm2 = x2*ctq6pdf(5, x2, qq)
+        glu2 = x2*ctq6pdf(0, x2, qq)
 
 
-      else if(structure_function == 5)then
+      else if (structure_function == 5) then
         imode=1
-        if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
+        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-5) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7))then
+        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
-      else if(structure_function == 6)then
+        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+      else if (structure_function == 6) then
         imode=2
-        if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
+        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-5) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7))then
+        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
-      else if(structure_function == 7)then
+        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+      else if (structure_function == 7) then
         imode=3
-        if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
+        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-5) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7))then
+        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
-      else if(structure_function == 8)then
+        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+      else if (structure_function == 8) then
         imode=4
-        if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
+        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-5) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7))then
+        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
-      else if(structure_function == 9)then
+        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+      else if (structure_function == 9) then
         imode=5
-        if((x1 <= 1.d-5) .or. (x1 >= 1.d0))then
+        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((x2 <= 1.d-5) .or. (x2 >= 1.d0))then
+        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
           return
         end if
-        if((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7))then
+        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
           return
         end if
-        call mrs99(x1,qq,imode,u1,d1,ubar1,dbar1,str1,chm1,btm1,glu1)
-        call mrs99(x2,qq,imode,u2,d2,ubar2,dbar2,str2,chm2,btm2,glu2)
+        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
 
       ! note that mrs return valence and sea contributions automatically.)
       ! note that cteq do too now!)
@@ -346,272 +346,272 @@ function differential_cross_section(x,wgt)
       end if
      
       ! initialise pdfs
-      fx1(1)=d1
-      fx1(2)=u1
-      fx1(3)=str1
-      fx1(4)=chm1
-      fx1(5)=btm1
-      fx1(6)=0.d0
-      fx1(7)=dbar1
-      fx1(8)=ubar1
-      fx1(9)=fx1(3)
-      fx1(10)=fx1(4)
-      fx1(11)=fx1(5)
-      fx1(12)=fx1(6)
-      fx1(13)=glu1
-      do i=1,13
-        fx1(i)=fx1(i)/x1
+      fx1(1) = d1
+      fx1(2) = u1
+      fx1(3) = str1
+      fx1(4) = chm1
+      fx1(5) = btm1
+      fx1(6) = 0.d0
+      fx1(7) = dbar1
+      fx1(8) = ubar1
+      fx1(9) = fx1(3)
+      fx1(10) = fx1(4)
+      fx1(11) = fx1(5)
+      fx1(12) = fx1(6)
+      fx1(13) = glu1
+      do i = 1, 13
+        fx1(i) = fx1(i)/x1
       end do
-      fx2(1)=d2*(1-initial_state)+dbar2*initial_state
-      fx2(2)=u2*(1-initial_state)+ubar2*initial_state
-      fx2(3)=str2
-      fx2(4)=chm2
-      fx2(5)=btm2
-      fx2(6)=0.d0
-      fx2(7)=d2*initial_state+dbar2*(1-initial_state)
-      fx2(8)=u2*initial_state+ubar2*(1-initial_state)
-      fx2(9)=fx2(3)
-      fx2(10)=fx2(4)
-      fx2(11)=fx2(5)
-      fx2(12)=fx2(6)
-      fx2(13)=glu2
-      do i=1,13
-        fx2(i)=fx2(i)/x2
+      fx2(1) = d2*(1 - initial_state) + dbar2*initial_state
+      fx2(2) = u2*(1 - initial_state) + ubar2*initial_state
+      fx2(3) = str2
+      fx2(4) = chm2
+      fx2(5) = btm2
+      fx2(6) = 0.d0
+      fx2(7) = d2*initial_state + dbar2*(1 - initial_state)
+      fx2(8) = u2*initial_state + ubar2*(1 - initial_state)
+      fx2(9) = fx2(3)
+      fx2(10) = fx2(4)
+      fx2(11) = fx2(5)
+      fx2(12) = fx2(6)
+      fx2(13) = glu2
+      do i = 1, 13
+        fx2(i) = fx2(i)/x2
       end do
     
       ! initial particle momenta (all approximately massless)
-      pcm=ecm/2.d0
-      q(4,1)=pcm
-      q(3,1)=pcm
-      q(2,1)=0.d0
-      q(1,1)=0.d0
-      q(4,2)=pcm
-      q(3,2)=-pcm
-      q(2,2)=0.d0
-      q(1,2)=0.d0
+      pcm = ecm/2.d0
+      q(4,1) = pcm
+      q(3,1) = pcm
+      q(2,1) = 0.d0
+      q(1,1) = 0.d0
+      q(4,2) = pcm
+      q(3,2) = -pcm
+      q(2,2) = 0.d0
+      q(1,2) = 0.d0
 
 
-      if(final_state == 0)then
+      if (final_state == 0) then
         ! calculate 2to2 kinematics in parton cm frame
-        phit=2.d0*pi*ran(jseed)
-        if(jx == 1)then
-          ct=x(1)
-        else if(jx == 2)then
-          ct=-x(1)
+        phit = 2.d0*pi*ran(jseed)
+        if (jx == 1) then
+          ct = x(1)
+        else if (jx == 2) then
+          ct = -x(1)
         else
-          write(*,*)'invalid jx.'
+          print *, 'invalid jx.'
         end if
-        st=sqrt(1.d0-ct*ct)
-        qcm2=((ecm*ecm-m3*m3-m4*m4)**2-(2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
+        st=sqrt(1.d0 - ct*ct)
+        qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
         if (qcm2 < 0.d0) then
-          fffxn=0.d0
+          fffxn = 0.d0
           return
         else
-          qcm=sqrt(qcm2)
+          qcm = sqrt(qcm2)
         endif
-        q(4,3)=sqrt(qcm2+m3*m3)
-        q(3,3)=qcm*ct
-        q(2,3)=qcm*st*cos(phit)
-        q(1,3)=qcm*st*sin(phit)
-        q(4,4)=sqrt(qcm2+m4*m4)
-        q(3,4)=-qcm*ct
-        q(2,4)=-qcm*st*cos(phit)
-        q(1,4)=-qcm*st*sin(phit)
-        do i=1,4
-          q(i,5)=0.d0
-          q(i,6)=0.d0
-          q(i,7)=0.d0
-          q(i,8)=0.d0
+        q(4,3) = sqrt(qcm2 + m3*m3)
+        q(3,3) = qcm*ct
+        q(2,3) = qcm*st*cos(phit)
+        q(1,3) = qcm*st*sin(phit)
+        q(4,4) = sqrt(qcm2 + m4*m4)
+        q(3,4) = -qcm*ct
+        q(2,4) = -qcm*st*cos(phit)
+        q(1,4) = -qcm*st*sin(phit)
+        do i = 1, 4
+          q(i,5) = 0.d0
+          q(i,6) = 0.d0
+          q(i,7) = 0.d0
+          q(i,8) = 0.d0
         end do
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         ! calculate 2to6 kinematics in parton cm frame
-        phit=2.d0*pi*ran(jseed)
-        m356min=m3+m5+m6
-        m356max=ecm-m4-m7-m8
-        xx356min=atan(((m356min)**2-rmt**2)/rmt/gamt)
-        xx356max=atan(((m356max)**2-rmt**2)/rmt/gamt)
-        xx=x(13)*(xx356max-xx356min)+xx356min
-        rl356=tan(xx)*rmt*gamt
-        m356_2=(rmt**2+rl356)
-        if(m356_2 < 0.d0)then
-          fffxn=0.d0
+        phit = 2.d0*pi*ran(jseed)
+        m356min = m3 + m5 + m6
+        m356max = ecm - m4 - m7 - m8
+        xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
+        xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
+        xx = x(13)*(xx356max - xx356min) + xx356min
+        rl356 = tan(xx)*rmt*gamt
+        m356_2 = (rmt**2 + rl356)
+        if (m356_2 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          m356=sqrt(m356_2)
+          m356 = sqrt(m356_2)
         endif
-        m478min=m4+m7+m8
-        m478max=ecm-m356
-        xx478min=atan(((m478min)**2-rmt**2)/rmt/gamt)
-        xx478max=atan(((m478max)**2-rmt**2)/rmt/gamt)
-        xx=x(12)*(xx478max-xx478min)+xx478min
-        rl478=tan(xx)*rmt*gamt
-        m478_2=(rmt**2+rl478)
-        if(m478_2 < 0.d0)then
-          fffxn=0.d0
+        m478min = m4 + m7 + m8
+        m478max = ecm - m356
+        xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
+        xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
+        xx = x(12)*(xx478max - xx478min) + xx478min
+        rl478 = tan(xx)*rmt*gamt
+        m478_2 = (rmt**2 + rl478)
+        if (m478_2 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          m478=sqrt(m478_2)
+          m478 = sqrt(m478_2)
         endif
-        m56min=m5+m6
-        m56max=m356-m3
-        xx56min=atan(((m56min)**2-rm_w**2)/rm_w/gamma_w)
-        xx56max=atan(((m56max)**2-rm_w**2)/rm_w/gamma_w)
-        xx=x(11)*(xx56max-xx56min)+xx56min
-        rl56=tan(xx)*rm_w*gamma_w
-        m56_2=(rm_w**2+rl56)
-        if(m56_2 < 0.d0)then
-          fffxn=0.d0
+        m56min = m5 + m6
+        m56max = m356 - m3
+        xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
+        xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
+        xx = x(11)*(xx56max - xx56min) + xx56min
+        rl56 = tan(xx)*rm_w*gamma_w
+        m56_2 = (rm_w**2 + rl56)
+        if (m56_2 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          m56=sqrt(m56_2)
+          m56 = sqrt(m56_2)
         endif
-        m78min=m7+m8
-        m78max=m478-m4
-        xx78min=atan(((m78min)**2-rm_w**2)/rm_w/gamma_w)
-        xx78max=atan(((m78max)**2-rm_w**2)/rm_w/gamma_w)
-        xx=x(10)*(xx78max-xx78min)+xx78min
-        rl78=tan(xx)*rm_w*gamma_w
-        m78_2=(rm_w**2+rl78)
-        if(m78_2 < 0.d0)then
-          fffxn=0.d0
+        m78min = m7 + m8
+        m78max = m478 - m4
+        xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
+        xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
+        xx = x(10)*(xx78max - xx78min) + xx78min
+        rl78 = tan(xx)*rm_w*gamma_w
+        m78_2 = (rm_w**2 + rl78)
+        if (m78_2 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          m78=sqrt(m78_2)
+          m78 = sqrt(m78_2)
         endif
-        if(jx == 1)then
-          ct=x(9)
-        else if(jx == 2)then
-          ct=-x(9)
+        if (jx == 1) then
+          ct = x(9)
+        else if (jx == 2) then
+          ct =  - x(9)
         else
-          write(*,*)'invalid jx.'
+          print *, 'invalid jx.'
         end if
-        st=sqrt(abs(1.d0-ct*ct))
-        ct56=x(8)
-        st56=sqrt(1.d0-ct56*ct56)
-        ct78=x(7)
-        st78=sqrt(1.d0-ct78*ct78)
-        ct5=x(6)
-        st5=sqrt(1.d0-ct5*ct5)
-        ct7=x(5)
-        st7=sqrt(1.d0-ct7*ct7)
-        cf56=cos(x(4))
-        sf56=sin(x(4))
-        cf78=cos(x(3))
-        sf78=sin(x(3))
-        cf5=cos(x(2))
-        sf5=sin(x(2))
-        cf7=cos(x(1))
-        sf7=sin(x(1))
-        rq2=((ecm*ecm-m356*m356-m478*m478)**2 &
-        -(2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
-        if(rq2 < 0.d0)then
-          fffxn=0.d0
+        st = sqrt(abs(1.d0 - ct*ct))
+        ct56 = x(8)
+        st56 = sqrt(1.d0 - ct56*ct56)
+        ct78 = x(7)
+        st78 = sqrt(1.d0 - ct78*ct78)
+        ct5 = x(6)
+        st5 = sqrt(1.d0 - ct5*ct5)
+        ct7 = x(5)
+        st7 = sqrt(1.d0 - ct7*ct7)
+        cf56 = cos(x(4))
+        sf56 = sin(x(4))
+        cf78 = cos(x(3))
+        sf78 = sin(x(3))
+        cf5 = cos(x(2))
+        sf5 = sin(x(2))
+        cf7 = cos(x(1))
+        sf7 = sin(x(1))
+        rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 &
+         - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
+        if (rq2 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          rq=sqrt(rq2)
+          rq = sqrt(rq2)
         endif
-        p356(3)=rq*ct
-        p356(2)=rq*st*cos(phit)
-        p356(1)=rq*st*sin(phit)
-        p356(4)=sqrt(rq2+m356*m356)
-        rq562=((m356*m356-m3*m3-m56*m56)**2-(2.d0*m3*m56)**2)/(4.d0*m356*m356)
-        if(rq562 < 0.d0)then
-          fffxn=0.d0
+        p356(3) = rq*ct
+        p356(2) = rq*st*cos(phit)
+        p356(1) = rq*st*sin(phit)
+        p356(4) = sqrt(rq2 + m356*m356)
+        rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
+        if (rq562 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          rq56=sqrt(rq562)
+          rq56 = sqrt(rq562)
         endif
-        q56(3)=rq56*st56*cf56
-        q56(2)=rq56*st56*sf56
-        q56(1)=rq56*ct56
-        q56(4)=sqrt(rq562+m56*m56)
-        pq56=0.d0
-        do i=1,3
-          pq56=pq56+p356(i)*q56(i)
+        q56(3) = rq56*st56*cf56
+        q56(2) = rq56*st56*sf56
+        q56(1) = rq56*ct56
+        q56(4) = sqrt(rq562 + m56*m56)
+        pq56 = 0.d0
+        do i = 1,3
+          pq56 = pq56 + p356(i)*q56(i)
         end do
-        p56(4)=(p356(4)*q56(4)+pq56)/m356
-        q(4,3)=p356(4)-p56(4)
-        do i=1,3
-          p56(i)=q56(i)+p356(i)*(p56(4)+q56(4))/(p356(4)+m356)
-          q(i,3)=p356(i)-p56(i)
+        p56(4) = (p356(4)*q56(4) + pq56)/m356
+        q(4,3) = p356(4) - p56(4)
+        do i = 1,3
+          p56(i) = q56(i) + p356(i)*(p56(4) + q56(4))/(p356(4) + m356)
+          q(i,3) = p356(i) - p56(i)
         end do
-        do i=1,3
-          p478(i)=-p356(i)
+        do i = 1,3
+          p478(i) =  - p356(i)
         end do
-        p478(4)=sqrt(rq2+m478*m478)
-        rq782=((m478*m478-m4*m4-m78*m78)**2-(2.d0*m4*m78)**2)/(4.d0*m478*m478)
-        if(rq782 < 0.d0)then
-          fffxn=0.d0
+        p478(4) = sqrt(rq2 + m478*m478)
+        rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
+        if (rq782 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          rq78=sqrt(rq782)
+          rq78 = sqrt(rq782)
         endif
-        q78(3)=rq78*st78*cf78
-        q78(2)=rq78*st78*sf78
-        q78(1)=rq78*ct78
-        q78(4)=sqrt(rq782+m78*m78)
-        pq78=0.d0
-        do i=1,3
-          pq78=pq78+p478(i)*q78(i)
+        q78(3) = rq78*st78*cf78
+        q78(2) = rq78*st78*sf78
+        q78(1) = rq78*ct78
+        q78(4) = sqrt(rq782 + m78*m78)
+        pq78 = 0.d0
+        do i = 1,3
+          pq78 = pq78 + p478(i)*q78(i)
         end do
-        p78(4)=(p478(4)*q78(4)+pq78)/m478
-        q(4,4)=p478(4)-p78(4)
-        do i=1,3
-          p78(i)=q78(i)+p478(i)*(p78(4)+q78(4))/(p478(4)+m478)
-          q(i,4)=p478(i)-p78(i)
+        p78(4) = (p478(4)*q78(4) + pq78)/m478
+        q(4,4) = p478(4) - p78(4)
+        do i = 1,3
+          p78(i) = q78(i) + p478(i)*(p78(4) + q78(4))/(p478(4) + m478)
+          q(i,4) = p478(i) - p78(i)
         end do
-        rq52=((m56*m56-m5*m5-m6*m6)**2-(2.d0*m5*m6)**2)/(4.d0*m56*m56)
-        if(rq52 < 0.d0)then
-          fffxn=0.d0
+        rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
+        if (rq52 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          rq5=sqrt(rq52)
+          rq5 = sqrt(rq52)
         endif
-        q5(3)=rq5*st5*cf5
-        q5(2)=rq5*st5*sf5
-        q5(1)=rq5*ct5
-        q5(4)=sqrt(rq52+m5*m5)
-        pq5=0.d0
-        do i=1,3
-          pq5=pq5+p56(i)*q5(i)
+        q5(3) = rq5*st5*cf5
+        q5(2) = rq5*st5*sf5
+        q5(1) = rq5*ct5
+        q5(4) = sqrt(rq52 + m5*m5)
+        pq5 = 0.d0
+        do i = 1,3
+          pq5 = pq5 + p56(i)*q5(i)
         end do
-        q(4,5)=(p56(4)*q5(4)+pq5)/m56
-        q(4,6)=p56(4)-q(4,5)
-        do i=1,3
-          q(i,5)=q5(i)+p56(i)*(q(4,5)+q5(4))/(p56(4)+m56)
-          q(i,6)=p56(i)-q(i,5)
+        q(4,5) = (p56(4)*q5(4) + pq5)/m56
+        q(4,6) = p56(4) - q(4,5)
+        do i = 1,3
+          q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
+          q(i,6) = p56(i) - q(i,5)
         end do
-        rq72=((m78*m78-m7*m7-m8*m8)**2-(2.d0*m7*m8)**2)/(4.d0*m78*m78)
-        if(rq72 < 0.d0)then
-          fffxn=0.d0
+        rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
+        if (rq72 < 0.d0) then
+          fffxn = 0.d0
           return
         else
-          rq7=sqrt(rq72)
+          rq7 = sqrt(rq72)
         endif
-        q7(3)=rq7*st7*cf7
-        q7(2)=rq7*st7*sf7
-        q7(1)=rq7*ct7
-        q7(4)=sqrt(rq72+m7*m7)
-        pq7=0.d0
-        do i=1,3
-          pq7=pq7+p78(i)*q7(i)
+        q7(3) = rq7*st7*cf7
+        q7(2) = rq7*st7*sf7
+        q7(1) = rq7*ct7
+        q7(4) = sqrt(rq72 + m7*m7)
+        pq7 = 0.d0
+        do i = 1,3
+          pq7 = pq7 + p78(i)*q7(i)
         end do
-        q(4,7)=(p78(4)*q7(4)+pq7)/m78
-        q(4,8)=p78(4)-q(4,7)
-        do i=1,3
-          q(i,7)=q7(i)+p78(i)*(q(4,7)+q7(4))/(p78(4)+m78)
-          q(i,8)=p78(i)-q(i,7)
+        q(4,7) = (p78(4)*q7(4) + pq7)/m78
+        q(4,8) = p78(4) - q(4,7)
+        do i = 1,3
+          q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
+          q(i,8) = p78(i) - q(i,7)
         end do
       end if
 
       ! boost initial and final state momenta to the collider frame
-      vcol=(x1-x2)/(x1+x2)
-      gcol=(x1+x2)/2.d0/sqrt(x1*x2)
-      do i=1,n_final
-        qcol(4,i)=gcol*(q(4,i)+vcol*q(3,i))
-        qcol(3,i)=gcol*(q(3,i)+vcol*q(4,i))
-        qcol(2,i)=q(2,i)
-        qcol(1,i)=q(1,i)
+      vcol = (x1 - x2)/(x1 + x2)
+      gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
+      do i = 1, n_final
+        qcol(4,i) = gcol*(q(4,i) + vcol*q(3,i))
+        qcol(3,i) = gcol*(q(3,i) + vcol*q(4,i))
+        qcol(2,i) = q(2,i)
+        qcol(1,i) = q(1,i)
       end do
     
       ! additional kinematics
@@ -619,25 +619,25 @@ function differential_cross_section(x,wgt)
       ! distributions and cuts.
 
       ! calculate transverse momenta (pt)
-      do ip=1,n_final
-        pt2(ip)=qcol(1,ip)**2+qcol(2,ip)**2
-        pt(ip)=sqrt(pt2(ip))
+      do ip = 1, n_final
+        pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
+        pt(ip) = sqrt(pt2(ip))
       end do
 
       ! calculate rapidity (collider frame)
       do ip=3,n_final
         ycol(ip)=0.5d0*log((qcol(4,ip)+qcol(3,ip)) &
-        /(qcol(4,ip)-qcol(3,ip)))
+        /(qcol(4,ip) - qcol(3,ip)))
       end do
 
       ! calculate pseudorapidity (eta) com frame
       do ip=1,n_final
         rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
-        if(rps(ip) < -1.d0)rps=-1.d0
-        if(rps(ip) > +1.d0)rps=+1.d0
+        if (rps(ip) < - 1.d0)rps=-1.d0
+        if (rps(ip) > +1.d0)rps=+1.d0
         rpl(ip)=acos(rps(ip))
         arg(ip)=tan(rpl(ip)/2d0)
-        if(arg(ip) <= 0.d0)arg(ip)=1.d-9
+        if (arg(ip) <= 0.d0)arg(ip)=1.d-9
         eta(ip)=-log(arg(ip))
       end do
 
@@ -647,12 +647,12 @@ function differential_cross_section(x,wgt)
       end do
 
       ! calculate delta phi
-      if(final_state == 1)then
+      if (final_state == 1) then
         dphi=abs(phi(5)-phi(7))
       end if
 
       ! calculate visible and missing transverse momentum
-      if(final_state == 1)then
+      if (final_state == 1) then
         etvis2=0d0
         etmiss2=0d0
         do i=1,2
@@ -666,7 +666,7 @@ function differential_cross_section(x,wgt)
       end if
 
       ! calculate truth level top/antitop pt, eta and phi
-      if(final_state > 0)then
+      if (final_state > 0) then
         pt356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2 &
                   +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
 
@@ -677,22 +677,22 @@ function differential_cross_section(x,wgt)
         /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
         +(q(2,3)+q(2,5)+q(2,6))**2 &
         +(q(3,3)+q(3,5)+q(3,6))**2)
-        if(rps356 < -1.d0)rps=-1.d0
-        if(rps356 > +1.d0)rps=+1.d0
+        if (rps356 < -1.d0)rps=-1.d0
+        if (rps356 > +1.d0)rps=+1.d0
         rpl356=acos(rps356)
         arg356=tan(rpl356/2d0)
-        if(arg356 <= 0.d0)arg356=1.d-9
+        if (arg356 <= 0.d0)arg356=1.d-9
         eta356=-log(arg356)
 
         rps478=(q(3,4)+q(3,7)+q(3,8)) &
         /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
         +(q(2,4)+q(2,7)+q(2,8))**2 &
         +(q(3,4)+q(3,7)+q(3,8))**2)
-        if(rps478 < -1.d0)rps=-1.d0
-        if(rps478 > +1.d0)rps=+1.d0
+        if (rps478 < -1.d0)rps=-1.d0
+        if (rps478 > +1.d0)rps=+1.d0
         rpl478=acos(rps478)
         arg478=tan(rpl478/2d0)
-        if(arg478 <= 0.d0)arg478=1.d-9
+        if (arg478 <= 0.d0)arg478=1.d-9
         eta478=-log(arg478)
 
         phi356=atan2(qcol(2,3)+qcol(2,5)+qcol(2,6) &
@@ -701,7 +701,7 @@ function differential_cross_section(x,wgt)
         ,qcol(1,4)+qcol(1,7)+qcol(1,8))
       end if
     ! calculate cos(theta_t)
-      if(final_state == 0)then
+      if (final_state == 0) then
         cost= &
         (qcol(1,3)*qcol(1,1) &
         +qcol(2,3)*qcol(2,1) &
@@ -712,7 +712,7 @@ function differential_cross_section(x,wgt)
         /sqrt(qcol(1,1)*qcol(1,1) &
         +qcol(2,1)*qcol(2,1) &
         +qcol(3,1)*qcol(3,1))
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         cost= &
         ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
         +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
@@ -728,7 +728,7 @@ function differential_cross_section(x,wgt)
         +qcol(3,1)*qcol(3,1))
       end if
     ! calculate cos(theta^*_t)
-      if(final_state == 0)then
+      if (final_state == 0) then
         costheta_top_cm=(q(1,3)*q(1,1) &
         +q(2,3)*q(2,1) &
         +q(3,3)*q(3,1)) &
@@ -738,7 +738,7 @@ function differential_cross_section(x,wgt)
         /sqrt(q(1,1)*q(1,1) &
         +q(2,1)*q(2,1) &
         +q(3,1)*q(3,1))
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         costheta_top_cm= &
         ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
         +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
@@ -754,9 +754,9 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
     ! calculate the energy of the top
-      if(final_state == 0)then
+      if (final_state == 0) then
         et=qcol(4,3)
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         et=qcol(4,3)+qcol(4,5)+qcol(4,6)
       end if
 
@@ -764,12 +764,12 @@ function differential_cross_section(x,wgt)
       ytt = 0.5d0*log(x1/x2)
 
     ! calculate rmtt
-      if(final_state == 0)then
+      if (final_state == 0) then
         rmtt2=(qcol(4,3)+qcol(4,4))**2
         do i=1,3
           rmtt2=rmtt2-(qcol(i,3)+qcol(i,4))**2
         end do
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         rmtt2=(qcol(4,3)+qcol(4,4) &
         +qcol(4,5)+qcol(4,6) &
         +qcol(4,7)+qcol(4,8))**2
@@ -781,7 +781,7 @@ function differential_cross_section(x,wgt)
       end if
       rmtt=sqrt(abs(rmtt2))
     ! calculate invariant mass of visible decay products
-      if(o_tran(1) == 1)then
+      if (o_tran(1) == 1) then
         rmvis2=(qcol(4,3)+qcol(4,4) &
         +qcol(4,5)+qcol(4,7))**2
         do i=1,3
@@ -791,25 +791,25 @@ function differential_cross_section(x,wgt)
         trans(1)=sqrt(abs(rmvis2))
       end if
     ! calculate transverse energy energies of visible particles
-      if(final_state > 0)then
+      if (final_state > 0) then
         et3=sqrt(m3**2+pt2(3))
         et4=sqrt(m4**2+pt2(4))
         et5=sqrt(m5**2+pt2(5))
         et7=sqrt(m6**2+pt2(7))
       end if
     ! calculate ht
-      if(o_tran(2) == 1)then
+      if (o_tran(2) == 1) then
         trans(2)=et3+et4+et5+et7+etmiss
       end if
 
     ! calculate *full* transverse mass 1
-      if(o_tran(3) == 1)then
+      if (o_tran(3) == 1) then
         rm_t12=(et3+et4+et5+et7+etmiss)**2 &
         +(pt(3)+pt(4)+pt(5)+pt(7)+etmiss)**2
         trans(3)=sqrt(abs(rm_t12))
       end if
     ! calculate *full* transverse mass 2
-      if(o_tran(4) == 1)then
+      if (o_tran(4) == 1) then
         rm_t22=(et3+et4+et5+et7+etmiss)**2
         do i=1,2
           rm_t22=rm_t22-(ptvis(i)+ptmiss(i))**2
@@ -817,7 +817,7 @@ function differential_cross_section(x,wgt)
         trans(4)=sqrt(abs(rm_t22))
       end if
     ! calculate *full* transverse mass 3
-      if(o_tran(5) == 1)then
+      if (o_tran(5) == 1) then
         rm_t32=(etvis+etmiss)**2
         do i=1,2
           rm_t32=rm_t32-(ptvis(i)+ptmiss(i))**2
@@ -825,7 +825,7 @@ function differential_cross_section(x,wgt)
         trans(5)=sqrt(abs(rm_t32))
       end if
     ! calculate lepton transverse mass
-      if(o_tran(6) == 1)then
+      if (o_tran(6) == 1) then
         et5=sqrt(m5**2+pt2(5))
         et7=sqrt(m7**2+pt2(7))
         rmlt2=(et5+et7)**2
@@ -835,13 +835,13 @@ function differential_cross_section(x,wgt)
         trans(6)=sqrt(abs(rmlt2))
       end if
     ! calculate *full* contranverse mass 1
-      if(o_tran(7) == 1)then
+      if (o_tran(7) == 1) then
         rm_ct12=(et3+et4+et5+et7+etmiss)**2 &
         +(pt(3)+pt(4)+pt(5)+pt(7)-etmiss)**2
         trans(7)=sqrt(abs(rm_ct12))
       end if
     ! calculate *full* contranverse mass 2
-      if(o_tran(8) == 1)then
+      if (o_tran(8) == 1) then
         rm_ct22=(et3+et4+et5+et7+etmiss)**2
         do i=1,2
           rm_ct22=rm_ct22-(ptvis(i)-ptmiss(i))**2
@@ -849,7 +849,7 @@ function differential_cross_section(x,wgt)
         trans(8)=sqrt(abs(rm_ct22))
       end if
     ! calculate *full* contranverse mass 3
-      if(o_tran(9) == 1)then
+      if (o_tran(9) == 1) then
         rm_ct32=(etvis+etmiss)**2
         do i=1,2
           rm_ct32=rm_ct32-(ptvis(i)-ptmiss(i))**2
@@ -857,7 +857,7 @@ function differential_cross_section(x,wgt)
         trans(9)=sqrt(abs(rm_ct32))
       end if
     ! calculate lepton contransverse mass
-      if(o_tran(10) == 1)then
+      if (o_tran(10) == 1) then
         et5=sqrt(m5**2+pt2(5))
         et7=sqrt(m7**2+pt2(7))
         rmlct2=(et5+et7)**2
@@ -867,34 +867,34 @@ function differential_cross_section(x,wgt)
         trans(10)=sqrt(abs(rmlct2))
       end if
     ! calculate top pseudorapidity
-      if(final_state > 0)then
+      if (final_state > 0) then
         rps356=(q(3,3)+q(3,5)+q(3,6)) &
         /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
         +(q(2,3)+q(2,5)+q(2,6))**2 &
         +(q(3,3)+q(3,5)+q(3,6))**2)
-        if(rps356 < -1.d0)rps=-1.d0
-        if(rps356 > +1.d0)rps=+1.d0
+        if (rps356 < -1.d0)rps=-1.d0
+        if (rps356 > +1.d0)rps=+1.d0
         rpl356=acos(rps356)
         arg356=tan(rpl356/2d0)
-        if(arg356 <= 0.d0)arg356=1.d-9
+        if (arg356 <= 0.d0)arg356=1.d-9
         eta356=-log(arg356)
 
         rps478=(q(3,4)+q(3,7)+q(3,8)) &
         /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
         +(q(2,4)+q(2,7)+q(2,8))**2 &
         +(q(3,4)+q(3,7)+q(3,8))**2)
-        if(rps478 < -1.d0)rps=-1.d0
-        if(rps478 > +1.d0)rps=+1.d0
+        if (rps478 < -1.d0)rps=-1.d0
+        if (rps478 > +1.d0)rps=+1.d0
         rpl478=acos(rps478)
         arg478=tan(rpl478/2d0)
-        if(arg478 <= 0.d0)arg478=1.d-9
+        if (arg478 <= 0.d0)arg478=1.d-9
         eta478=-log(arg478)   ! no cuts on pseudorapidity yet
       end if
     ! calculate rapidity (y) of top and antitop
-      if(final_state == 0)then
+      if (final_state == 0) then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3)))
         ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6) &
         +qcol(3,3)+qcol(3,5)+qcol(3,6)) &
         /(qcol(4,3)+qcol(4,5)+qcol(4,6) &
@@ -909,7 +909,7 @@ function differential_cross_section(x,wgt)
       delta_absy=abs(yt)-abs(ytb)
 
     ! calculate cos(theta_l+)
-      if(final_state > 0)then
+      if (final_state > 0) then
         costheta5=+(q(1,5)*q(1,1) &
         +q(2,5)*q(2,1) &
         +q(3,5)*q(3,1)) &
@@ -921,7 +921,7 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
     ! calculate cos(theta_l-)
-      if(final_state > 0)then
+      if (final_state > 0) then
         costheta7=+(q(1,7)*q(1,1) &
         +q(2,7)*q(2,1) &
         +q(3,7)*q(3,1)) &
@@ -933,13 +933,13 @@ function differential_cross_section(x,wgt)
         +q(3,1)*q(3,1))
       end if
 
-      if(final_state > 0)then
+      if (final_state > 0) then
         ct7ct5=costheta7*costheta5
       end if
 
       costheta_top_star=int(ytt/abs(ytt))*costheta_top_cm
     ! calculate cos(phi_l) (lepton azimuthal angle)
-      if(final_state > 0)then
+      if (final_state > 0) then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
 
       ! p(1)^ is z^
@@ -973,23 +973,23 @@ function differential_cross_section(x,wgt)
 
         p5mp=sqrt(p5xp*p5xp+p5yp*p5yp+p5zp*p5zp)
 
-        if(abs(p5m-p5mp) >= 1e-11)write(*,*)'error in coord transform.'
+        if (abs(p5m-p5mp) >= 1e-11)print *, 'error in coord transform.'
 
         phi_l=atan2(p5yp,p5xp)
 
-        if(phi_l < 0)phi_l=phi_l+2*pi
+        if (phi_l < 0)phi_l=phi_l+2*pi
 
         cosfl=cos(phi_l)
       end if
     
     ! selections
     ! cut on top pt
-      if(final_state == 0)then
-        if(abs(eta(3)) > ytmax)then
+      if (final_state == 0) then
+        if (abs(eta(3)) > ytmax) then
           fffxn=0.d0
           return
         end if
-      else if(abs(eta356) > ytmax)then
+      else if (abs(eta356) > ytmax) then
         fffxn=0.d0
         return
       end if
@@ -997,21 +997,21 @@ function differential_cross_section(x,wgt)
     ! matrix elements
     ! phase space only
     ! set |m|^2 =1 (for bug squishing) and skip matrix element calculation
-      if(phase_space_only == 1)then
-        if(ix == 1)then
+      if (phase_space_only == 1) then
+        if (ix == 1) then
           pfx1tot=0.5/x1
           pfx2tot=0.5/x1
-        else if(ix == 2)then
+        else if (ix == 2) then
           pfx1tot=0.5/x2
           pfx2tot=0.5/x2
         end if
-        if(final_state == 0)then
+        if (final_state == 0) then
           do lam3=-1,1,2
             do lam4=-1,1,2
-              if(ix == 1)then
+              if (ix == 1) then
                 pfx1(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
                 pfx2(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
-              else if(ix == 2)then
+              else if (ix == 2) then
                 pfx1(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
                 pfx2(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
               end if
@@ -1021,7 +1021,7 @@ function differential_cross_section(x,wgt)
         go to 666
       end if
     
-      if(final_state == 0)then
+      if (final_state == 0) then
         ! assign 2to2 madgraph momenta    
         do i=1,3
           p1(i)=q(i,1)
@@ -1043,29 +1043,29 @@ function differential_cross_section(x,wgt)
         p8(0)=0.d0
 
         ! check 2to2 kinematics
-        ! write(*,*) 'p1  =',p1
-        ! write(*,*) 'p2  =',p2
-        ! write(*,*) 'p3  =',p3
-        ! write(*,*) 'p4  =',p4
+        ! print *,  'p1  =',p1
+        ! print *,  'p2  =',p2
+        ! print *,  'p3  =',p3
+        ! print *,  'p4  =',p4
         ! delta_e=p1(0)+p2(0)-p3(0)-p4(0)
         ! delta_x=p1(1)+p2(1)-p3(1)-p4(1)
         ! delta_y=p1(2)+p2(2)-p3(2)-p4(2)
         ! delta_z=p1(3)+p2(3)-p3(3)-p4(3)
-        ! write(*,*) 'delta_e=',delta_e
-        ! write(*,*) 'delta_x=',delta_x
-        ! write(*,*) 'delta_y=',delta_y
-        ! write(*,*) 'delta_z=',delta_z
+        ! print *,  'delta_e=',delta_e
+        ! print *,  'delta_x=',delta_x
+        ! print *,  'delta_y=',delta_y
+        ! print *,  'delta_z=',delta_z
         ! rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
         ! rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
         ! rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
         ! rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-        ! write(*,*) 'rm_1 =',rmassa1
-        ! write(*,*) 'rm_2 =',rmassa2
-        ! write(*,*) 'rm_3 =',rmassa3
-        ! write(*,*) 'rm_4 =',rmassa4
+        ! print *,  'rm_1 =',rmassa1
+        ! print *,  'rm_2 =',rmassa2
+        ! print *,  'rm_3 =',rmassa3
+        ! print *,  'rm_4 =',rmassa4
 
 
-      else if(final_state > 0)then
+      else if (final_state > 0) then
       ! assign 2to6 madgraph momenta
         do i=1,3
           p1(i)=q(i,1)
@@ -1087,14 +1087,14 @@ function differential_cross_section(x,wgt)
         p8(0)=q(4,8)
 
       ! check 6-body kinematics
-      !       write(*,*) 'p1  =',p1
-      !       write(*,*) 'p2  =',p2
-      !       write(*,*) 'p3  =',p3
-      !       write(*,*) 'p4  =',p4
-      !       write(*,*) 'p5  =',p5
-      !       write(*,*) 'p6  =',p6
-      !       write(*,*) 'p7  =',p7
-      !       write(*,*) 'p8  =',p8
+      !       print *,  'p1  =',p1
+      !       print *,  'p2  =',p2
+      !       print *,  'p3  =',p3
+      !       print *,  'p4  =',p4
+      !       print *,  'p5  =',p5
+      !       print *,  'p6  =',p6
+      !       print *,  'p7  =',p7
+      !       print *,  'p8  =',p8
       ! ! check conservation of 4-momentum.
       !       delta_e=p1(0)+p2(0)
       !    &         -p3(0)-p4(0)
@@ -1112,10 +1112,10 @@ function differential_cross_section(x,wgt)
       !    &         -p3(3)-p4(3)
       !    &         -p5(3)-p6(3)
       !    &         -p7(3)-p8(3)
-      !       write(*,*) 'delta_e=',delta_e
-      !       write(*,*) 'delta_px=',delta_x
-      !       write(*,*) 'delta_py=',delta_y
-      !       write(*,*) 'delta_pz=',delta_z
+      !       print *,  'delta_e=',delta_e
+      !       print *,  'delta_px=',delta_x
+      !       print *,  'delta_py=',delta_y
+      !       print *,  'delta_pz=',delta_z
       ! ! check invarient mass.
       !       rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
       !       rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
@@ -1125,19 +1125,19 @@ function differential_cross_section(x,wgt)
       !       rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
       !       rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
       !       rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
-      !       write(*,*) 'rm_1 =',rmassa1
-      !       write(*,*) 'rm_2 =',rmassa2
-      !       write(*,*) 'rm_3 =',rmassa3
-      !       write(*,*) 'rm_4 =',rmassa4
-      !       write(*,*) 'rm_5 =',rmassa5
-      !       write(*,*) 'rm_6 =',rmassa6
-      !       write(*,*) 'rm_7 =',rmassa7
-      !       write(*,*) 'rm_8 =',rmassa8
+      !       print *,  'rm_1 =',rmassa1
+      !       print *,  'rm_2 =',rmassa2
+      !       print *,  'rm_3 =',rmassa3
+      !       print *,  'rm_4 =',rmassa4
+      !       print *,  'rm_5 =',rmassa5
+      !       print *,  'rm_6 =',rmassa6
+      !       print *,  'rm_7 =',rmassa7
+      !       print *,  'rm_8 =',rmassa8
       ! ! check missing momentum
       !       pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
       !       pt68=sqrt(pt682)
-      !       write(*,*)'etmiss :',etmiss
-      !       write(*,*)'pt(v+v):',pt68
+      !       print *, 'etmiss :',etmiss
+      !       print *, 'pt(v+v):',pt68
       end if
 
     ! square matrix elements
@@ -1180,9 +1180,9 @@ function differential_cross_section(x,wgt)
         end do
       end do
       resall=0
-      if(final_state == 0)then
+      if (final_state == 0) then
         ! compute 2to2 mes
-        if(include_qcd == 1)then
+        if (include_qcd == 1) then
           ! compute qcd square matrix elements
           do lam3=-1,1,2
             do lam4=-1,1,2
@@ -1202,7 +1202,7 @@ function differential_cross_section(x,wgt)
             end do
           end do
         end if
-        if((include_ew == 1) .or. (include_bsm == 1))then
+        if ((include_ew == 1) .or. (include_bsm == 1)) then
           ! compute ew and z' square matrix elements
           do lam3=-1,1,2
             do lam4=-1,1,2
@@ -1223,9 +1223,9 @@ function differential_cross_section(x,wgt)
           end do
         end if
 
-      else if(final_state > 0)then
+      else if (final_state > 0) then
         ! 6-body mes
-        if(include_qcd == 1)then
+        if (include_qcd == 1) then
           ! compute qcd square matrix elements
           qcdqq1=sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8 )
           qcdqq2=sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8 )
@@ -1234,7 +1234,7 @@ function differential_cross_section(x,wgt)
           qcdgg1=sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8 )
           qcdgg2=sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8 )
         end if
-        if((include_ew == 1) .or. (include_bsm == 1))then
+        if ((include_ew == 1) .or. (include_bsm == 1)) then
           ! compute ew and z' square matrix elements
           ewzuu1=sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
           ewzuu2=sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
@@ -1247,8 +1247,8 @@ function differential_cross_section(x,wgt)
         +qcdqq2+qcdgg2+qcdbb2+ewzuu2+ewzdd2+ewzbb2
       end if
 
-      if((resall) == 0.d0)then
-        ! write(*,*)'|m|^2 = 0 for phase space point ',npoints
+      if ((resall) == 0.d0) then
+        ! print *, '|m|^2 = 0 for phase space point ',npoints
         fffxn=0.d0
         return
       end if
@@ -1262,7 +1262,7 @@ function differential_cross_section(x,wgt)
       ! sum over |m|^2 with pdfs for all initial partons    
       pfx1tot=0.d0
       pfx2tot=0.d0
-      if(final_state == 0) then
+      if (final_state == 0) then
         ! sum over all polarised |m|^2
         do lam3=-1,1,2
           do lam4=-1,1,2
@@ -1278,10 +1278,10 @@ function differential_cross_section(x,wgt)
             +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
             +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
             +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
-            if(ix == 1)then
+            if (ix == 1) then
               pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
               pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
-            else if(ix == 2)then
+            else if (ix == 2) then
               pfx1(lam3,lam4)=pfx1(lam3,lam4)/x2
               pfx2(lam3,lam4)=pfx2(lam3,lam4)/x2
             end if
@@ -1305,22 +1305,22 @@ function differential_cross_section(x,wgt)
         +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
         ggd1=fx1(13)*fx2(13)*qcdgg1/2.d0
         ggd2=fx1(13)*fx2(13)*qcdgg2/2.d0
-        if(ix == 1)then
+        if (ix == 1) then
           pfx1tot=(qqd1+ggd1)/x1
           pfx2tot=(qqd2+ggd2)/x1
-        else if(ix == 2)then
+        else if (ix == 2) then
           pfx1tot=(qqd1+ggd1)/x2
           pfx2tot=(qqd2+ggd2)/x2
         end if
       end if
 
-      if(pfx1tot == 0.d0 .and. pfx2tot == 0.d0)then
-          ! write(*,*)'f(x1)f(x2)|m|^2 = 0 for phase space point ',npoints
+      if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
+          ! print *, 'f(x1)f(x2)|m|^2 = 0 for phase space point ',npoints
           fffxn=0.d0
         return
       end if
 
-      if(final_state == 0)then
+      if (final_state == 0) then
         ! weight for distributions
         do lam3=-1,1,2
           do lam4=-1,1,2
@@ -1343,13 +1343,13 @@ function differential_cross_section(x,wgt)
     ! multiply by 2pi from phit integration and convert from gev^-2 to pb
       fffxn1=fffxn1*2.d0*pi*unit_conv
       fffxn2=fffxn2*2.d0*pi*unit_conv
-      if(final_state == 0)then
+      if (final_state == 0) then
       ! 2-body phase space factor
         fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
         fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
         fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
-      else if(final_state > 0)then
+      else if (final_state > 0) then
       ! 6-body flux factor, pi's and phase space integral
         fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
         /(2.d0*m356) &
@@ -1408,7 +1408,7 @@ function differential_cross_section(x,wgt)
     ! polarised total cross sections
     ! polarised cross section for each point is calculated.
     ! (note that above pfx was divided by fffxn.)
-      if(final_state == 0)then
+      if (final_state == 0) then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
             xsec_polar(it,iphel,jphel)=xsec_polar(it,iphel,jphel) &
@@ -1428,14 +1428,14 @@ function differential_cross_section(x,wgt)
 
 
     ! afb
-      if(o_asym(4) == 1)then
-        if(costheta_top_cm > 0.d0)then
+      if (o_asym(4) == 1) then
+        if (costheta_top_cm > 0.d0) then
           xsec_fb(1,it,+1)=xsec_fb(1,it,+1) &
           +fffxn &
           *wgt
           error_fb(1,it,+1)=error_fb(1,it,+1) &
           +xsec_fb(1,it,+1)**2
-        else if(costheta_top_cm < 0.d0)then
+        else if (costheta_top_cm < 0.d0) then
           xsec_fb(1,it,-1)=xsec_fb(1,it,-1) &
           +fffxn &
           *wgt
@@ -1445,14 +1445,14 @@ function differential_cross_section(x,wgt)
       end if
 
     ! afbstar
-      if(o_asym(5) == 1)then
-        if(costheta_top_star > 0.d0)then
+      if (o_asym(5) == 1) then
+        if (costheta_top_star > 0.d0) then
           xsec_fb(2,it,+1)=xsec_fb(2,it,+1) &
           +fffxn &
           *wgt
           error_fb(2,it,+1)=error_fb(2,it,+1) &
           +xsec_fb(2,it,+1)**2
-        else if(costheta_top_star < 0.d0)then
+        else if (costheta_top_star < 0.d0) then
           xsec_fb(2,it,-1)=xsec_fb(2,it,-1) &
           +fffxn &
           *wgt
@@ -1462,14 +1462,14 @@ function differential_cross_section(x,wgt)
       end if
 
     ! atrfb
-      if(o_asym(6) == 1)then
-        if(yt > 0.d0)then
+      if (o_asym(6) == 1) then
+        if (yt > 0.d0) then
           xsec_fb(3,it,+1)=xsec_fb(3,it,+1) &
           +fffxn &
           *wgt
           error_fb(3,it,+1)=error_fb(3,it,+1) &
           +xsec_fb(3,it,+1)**2
-        else if(yt < 0.d0)then
+        else if (yt < 0.d0) then
           xsec_fb(3,it,-1)=xsec_fb(3,it,-1) &
           +fffxn &
           *wgt
@@ -1479,15 +1479,15 @@ function differential_cross_section(x,wgt)
       end if
 
     ! attbrfb/a
-      if(o_asym(7) == 1)then
-        if(yt >= 0.d0)then
+      if (o_asym(7) == 1) then
+        if (yt >= 0.d0) then
           xsec_fb(4,it,+1)=xsec_fb(4,it,+1) &
           +fffxn &
           *wgt
           error_fb(4,it,+1)=error_fb(4,it,+1) &
           +xsec_fb(4,it,+1)**2
         end if
-        if(ytb >= 0.d0)then
+        if (ytb >= 0.d0) then
           xsec_fb(4,it,-1)=xsec_fb(4,it,-1) &
           +fffxn &
           *wgt
@@ -1498,16 +1498,16 @@ function differential_cross_section(x,wgt)
 
     ! arfb/a'
 
-      if((o_asym(8) == 1) .and. (abs(ytt) > yttmin))then
-        if(delta_absy == 0.d0)then
+      if ((o_asym(8) == 1) .and. (abs(ytt) > yttmin)) then
+        if (delta_absy == 0.d0) then
           continue
-        else if(delta_absy > 0.d0)then
+        else if (delta_absy > 0.d0) then
           xsec_fb(5,it,+1)=xsec_fb(5,it,+1) &
           +fffxn &
           *wgt
           error_fb(5,it,+1)=error_fb(5,it,+1) &
           +xsec_fb(5,it,+1)**2
-        else if(delta_absy < 0.d0)then
+        else if (delta_absy < 0.d0) then
           xsec_fb(5,it,-1)=xsec_fb(5,it,-1) &
           +fffxn &
           *wgt
@@ -1517,14 +1517,14 @@ function differential_cross_section(x,wgt)
       end if
 
     ! a_l
-      if(o_asym(9) == 1)then
-        if(cosfl > 0.d0)then
+      if (o_asym(9) == 1) then
+        if (cosfl > 0.d0) then
           xsec_fb(6,it,+1)=xsec_fb(6,it,+1) &
           +fffxn &
           *wgt
           error_fb(6,it,+1)=error_fb(6,it,+1) &
           +xsec_fb(6,it,+1)**2
-        else if(cosfl < 0.d0)then
+        else if (cosfl < 0.d0) then
           xsec_fb(6,it,-1)=xsec_fb(6,it,-1) &
           +fffxn &
           *wgt
@@ -1540,45 +1540,45 @@ function differential_cross_section(x,wgt)
       hist=hist1+hist2
       do ip=3,n_final
       ! generate distribution in pt
-        if(o_pt(ip) == 1)then
+        if (o_pt(ip) == 1) then
           nbin=int((pt(ip)-ptmin(ip))/ptw(ip))+1
-          if(nbin >= (ndiv_pt(ip)+1))then
+          if (nbin >= (ndiv_pt(ip)+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxpt(ip,nbin,it)=fxpt(ip,nbin,it)+hist
-            ! write(*,*)fxpt(ip,nbin,it)
+            ! print *, fxpt(ip,nbin,it)
           end if
         end if
       ! generate distribution in eta
-        if(o_eta(ip) == 1)then
+        if (o_eta(ip) == 1) then
           nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
-          if(nbin >= (ndiv_eta(ip)+1))then
+          if (nbin >= (ndiv_eta(ip)+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxeta(ip,nbin,it)=fxeta(ip,nbin,it)+hist
           end if
         end if
       ! generate distribution in phi
-        if(o_phi(ip) == 1)then
+        if (o_phi(ip) == 1) then
           nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
-          if(nbin >= (ndiv_phi(ip)+1))then
+          if (nbin >= (ndiv_phi(ip)+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxphi(ip,nbin,it)=fxphi(ip,nbin,it)+hist
           end if
         end if
       ! generate distribution in ycol
-        if(o_ycol(ip) == 1)then
+        if (o_ycol(ip) == 1) then
           nbin=int((ycol(ip)-ycolmin(ip))/ycolw(ip))+1
-          if(nbin >= (ndiv_ycol(ip)+1))then
+          if (nbin >= (ndiv_ycol(ip)+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxycol(ip,nbin,it)=fxycol(ip,nbin,it)+hist
@@ -1586,142 +1586,142 @@ function differential_cross_section(x,wgt)
         end if
       end do
     ! generate distribution in pt356.
-      if(o_pt356 == 1)then
+      if (o_pt356 == 1) then
         nbin=int((pt356-pt356min)/pt356w)+1
-        if(nbin >= (ndiv_pt356+1))then
+        if (nbin >= (ndiv_pt356+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxpt356(nbin,it)=fxpt356(nbin,it)+hist
         end if
       end if
 
-      if(o_eta356 == 1)then
+      if (o_eta356 == 1) then
       ! generate distribution in eta356.
         nbin=int((eta356-eta356min)/eta356w)+1
-        if(nbin >= (ndiv_eta356+1))then
+        if (nbin >= (ndiv_eta356+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxeta356(nbin,it)=fxeta356(nbin,it)+hist
         end if
       end if
 
-      if(o_phi356 == 1)then
+      if (o_phi356 == 1) then
       ! generate distribution in phi356.
         nbin=int((phi356-phi356min)/phi356w)+1
-        if(nbin >= (ndiv_phi356+1))then
+        if (nbin >= (ndiv_phi356+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxphi356(nbin,it)=fxphi356(nbin,it)+hist
         end if
       end if
 
-      if(o_pt478 == 1)then
+      if (o_pt478 == 1) then
       ! generate distribution in pt478.
         nbin=int((pt478-pt478min)/pt478w)+1
-        if(nbin >= (ndiv_pt478+1))then
+        if (nbin >= (ndiv_pt478+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxpt478(nbin,it)=fxpt478(nbin,it)+hist
         end if
       end if
 
-      if(o_eta478 == 1)then
+      if (o_eta478 == 1) then
       ! generate distribution in eta478.
         nbin=int((eta478-eta478min)/eta478w)+1
-        if(nbin >= (ndiv_eta478+1))then
+        if (nbin >= (ndiv_eta478+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxeta478(nbin,it)=fxeta478(nbin,it)+hist
         end if
       end if
 
-      if(o_phi478 == 1)then
+      if (o_phi478 == 1) then
       ! generate distribution in phi478.
         nbin=int((phi478-phi478min)/phi478w)+1
-        if(nbin >= (ndiv_phi478+1))then
+        if (nbin >= (ndiv_phi478+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxphi478(nbin,it)=fxphi478(nbin,it)+hist
         end if
       end if
 
-      if(o_etmiss == 1)then
+      if (o_etmiss == 1) then
       ! generate distribution in etmiss.
         nbin=int((etmiss-etmissmin)/etmissw)+1
-        if(nbin >= (ndiv_etmiss+1))then
+        if (nbin >= (ndiv_etmiss+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxetmiss(nbin,it)=fxetmiss(nbin,it)+hist
         end if
       end if
 
-      if(o_rmtt == 1)then
+      if (o_rmtt == 1) then
         ! generate distribution in mtt.
         nbin=int((rmtt-rmttmin)/rmttw)+1
-        if(nbin >= (ndiv_rmtt+1))then
+        if (nbin >= (ndiv_rmtt+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxrmtt(nbin,it)=fxrmtt(nbin,it)+hist
         end if
       end if
 
-      if(o_beta == 1)then
+      if (o_beta == 1) then
       ! generate distribution in beta.
         beta=shat/4.d0/rmt**2-1.d0
         nbin=int((beta-betamin)/betaw)+1
-        if(nbin >= (ndiv_beta+1))then
+        if (nbin >= (ndiv_beta+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxbeta(nbin,it)=fxbeta(nbin,it)+hist
         end if
       end if
 
-      if(o_cost == 1)then
+      if (o_cost == 1) then
       ! generate distribution in cost.
         nbin=int((cost-costmin)/costw)+1
-        if(nbin >= (ndiv_cost+1))then
+        if (nbin >= (ndiv_cost+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxcost(nbin,it)=fxcost(nbin,it)+hist
         end if
       end if
 
-      if(o_et == 1)then   !enerate distribution in et.
+      if (o_et == 1) then   !enerate distribution in et.
         nbin=int((et-etmin)/etw)+1
-        if(nbin >= (ndiv_et+1))then
+        if (nbin >= (ndiv_et+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxet(nbin,it)=fxet(nbin,it)+hist
         end if
       end if
 
-      if(o_delta_y == 1)then   !enerate distribution in delta_absy.
+      if (o_delta_y == 1) then   !enerate distribution in delta_absy.
         nbin=int((delta_absy-delta_ymin)/delta_yw)+1
-        if(nbin >= (ndiv_delta_y+1))then
+        if (nbin >= (ndiv_delta_y+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxdelta_y(nbin,it)=fxdelta_y(nbin,it)+hist
@@ -1729,12 +1729,12 @@ function differential_cross_section(x,wgt)
       end if
 
       do itrans=1,ntrans
-        if(o_tran(itrans) == 1)then
+        if (o_tran(itrans) == 1) then
         ! generate distribution in trans.
           nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-          if(nbin >= (ndiv_trans(itrans)+1))then
+          if (nbin >= (ndiv_trans(itrans)+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxtrans(itrans,nbin,it)=fxtrans(itrans,nbin,it)+hist
@@ -1742,12 +1742,12 @@ function differential_cross_section(x,wgt)
         end if
       end do
 
-      if(o_fl == 1)then
+      if (o_fl == 1) then
       ! generate distribution in phi_l.
         nbin=int((phi_l-flmin)/flw)+1
-        if(nbin >= (ndiv_fl+1))then
+        if (nbin >= (ndiv_fl+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxfl(nbin,it)=fxfl(nbin,it)+hist
@@ -1755,12 +1755,12 @@ function differential_cross_section(x,wgt)
       end if
 
 
-      if(o_cosfl == 1)then
+      if (o_cosfl == 1) then
       ! generate distribution in cosfl.
         nbin=int((cosfl-cosflmin)/cosflw)+1
-        if(nbin >= (ndiv_cosfl+1))then
+        if (nbin >= (ndiv_cosfl+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxcosfl(nbin,it)=fxcosfl(nbin,it)+hist
@@ -1768,60 +1768,60 @@ function differential_cross_section(x,wgt)
       end if
 
 
-      if(o_dphi == 1)then
+      if (o_dphi == 1) then
       ! generate distribution in dphi.
         nbin=int((dphi-dphimin)/dphiw)+1
-        if(nbin >= (ndiv_dphi+1))then
+        if (nbin >= (ndiv_dphi+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxdphi(nbin,it)=fxdphi(nbin,it)+hist
         end if
       end if
 
-      if(o_cost5 == 1)then
+      if (o_cost5 == 1) then
       ! generate distribution in costheta5.
         nbin=int((costheta5-cost5min)/cost5w)+1
-        if(nbin >= (ndiv_cost5+1))then
+        if (nbin >= (ndiv_cost5+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxcost5(nbin,it)=fxcost5(nbin,it)+hist
         end if
       end if
 
-      if(o_cost7 == 1)then
+      if (o_cost7 == 1) then
       ! generate distribution in costheta7.
         nbin=int((costheta7-cost7min)/cost7w)+1
-        if(nbin >= (ndiv_cost7+1))then
+        if (nbin >= (ndiv_cost7+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxcost7(nbin,it)=fxcost7(nbin,it)+hist
         end if
       end if
 
-      if(o_ct7ct5 == 1)then
+      if (o_ct7ct5 == 1) then
         nbin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
-        if(nbin >= (ndiv_ct7ct5+1))then
+        if (nbin >= (ndiv_ct7ct5+1)) then
           continue
-        else if(nbin < 1)then
+        else if (nbin < 1) then
           continue
         else
           fxct7ct5(nbin,it)=fxct7ct5(nbin,it)+hist
         end if
       end if
 
-      if(o_dphi2d == 1)then
+      if (o_dphi2d == 1) then
       ! generate distribution in dphi2d.
         ibin=int((dphi-dphimin)/dphiw)+1
         jbin=int((rmtt-rmttmin)/rmttw)+1
-        if((ibin > ndiv_dphi) .or. (jbin > ndiv_rmtt))then
+        if ((ibin > ndiv_dphi) .or. (jbin > ndiv_rmtt)) then
           continue
-        else if((ibin < 1) .or. (jbin < 1))then
+        else if ((ibin < 1) .or. (jbin < 1)) then
           continue
         else
           fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
@@ -1829,13 +1829,13 @@ function differential_cross_section(x,wgt)
       end if
 
       do itrans=1,ntrans
-        if(include_transversedp(itrans) == 1)then
+        if (include_transversedp(itrans) == 1) then
         ! generate distribution in transdp.
           ibin=int((dphi-dphimin)/dphiw)+1
           jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-          if((ibin > ndiv_dphi) .or. (jbin >= (ndiv_trans(itrans)+1)))then
+          if ((ibin > ndiv_dphi) .or. (jbin >= (ndiv_trans(itrans)+1))) then
             continue
-          else if((ibin < 1) .or. (jbin < 1))then
+          else if ((ibin < 1) .or. (jbin < 1)) then
             continue
           else
             fxtransdp(itrans,ibin,jbin,it)= &
@@ -1844,27 +1844,27 @@ function differential_cross_section(x,wgt)
         end if
       end do
 
-      if(o_asym(1) == 1)then
-        if(o_sigp == 1)then
+      if (o_asym(1) == 1) then
+        if (o_sigp == 1) then
         ! generate distribution in sigp for all.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
             (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
           end if
         end if
-        if(o_sigm == 1)then
+        if (o_sigm == 1) then
         ! generate distribution in sigm for all.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
@@ -1873,27 +1873,27 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(2) == 1)then
-        if(o_sigp == 1)then
+      if (o_asym(2) == 1) then
+        if (o_sigp == 1) then
         ! generate distribution in sigp for al.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
             (weight(it,-1,-1)+weight(it,-1,+1))
           end if
         end if
-        if(o_sigm == 1)then
+        if (o_sigm == 1) then
         ! generate distribution in sigm for al.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
@@ -1902,27 +1902,27 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(3) == 1)then
-        if(o_sigp == 1)then
+      if (o_asym(3) == 1) then
+        if (o_sigp == 1) then
         ! generate distribution in sigp for apv.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
             (weight(it,-1,-1))
           end if
         end if
-        if(o_sigm == 1)then
+        if (o_sigm == 1) then
         ! generate distribution in sigm for apv.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
@@ -1931,26 +1931,26 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(4) == 1)then
-        if((o_sigp == 1) .and. (costheta_top_cm > 0.d0))then
+      if (o_asym(4) == 1) then
+        if ((o_sigp == 1) .and. (costheta_top_cm > 0.d0)) then
         ! generate distribution in sigp for afbcm.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (costheta_top_cm < 0.d0))then
+        if ((o_sigm == 1) .and. (costheta_top_cm < 0.d0)) then
         ! generate distribution in sigm for afbcm.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
@@ -1958,26 +1958,26 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(5) == 1)then
-        if((o_sigp == 1) .and. (costheta_top_star > 0.d0))then
+      if (o_asym(5) == 1) then
+        if ((o_sigp == 1) .and. (costheta_top_star > 0.d0)) then
         ! generate distribution in sigp for afbstar.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (costheta_top_star < 0.d0))then
+        if ((o_sigm == 1) .and. (costheta_top_star < 0.d0)) then
         ! generate distribution in sigm for afbstar.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
@@ -1985,26 +1985,26 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(6) == 1)then
-        if((o_sigp == 1) .and. (yt > 0.d0))then
+      if (o_asym(6) == 1) then
+        if ((o_sigp == 1) .and. (yt > 0.d0)) then
         ! generate distribution in sigp for atfb.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (yt < 0.d0))then
+        if ((o_sigm == 1) .and. (yt < 0.d0)) then
         ! generate distribution in sigm for atfb.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
@@ -2012,26 +2012,26 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(7) == 1)then
-        if((o_sigp == 1) .and. (yt >= 0.d0))then
+      if (o_asym(7) == 1) then
+        if ((o_sigp == 1) .and. (yt >= 0.d0)) then
         ! generate distribution in sigp for a.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (ytb >= 0.d0))then
+        if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
         ! generate distribution in sigm for a.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
@@ -2039,53 +2039,53 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if(o_asym(8) == 1)then
-        if((o_sigp == 1) .and. (delta_absy > 0.d0))then
+      if (o_asym(8) == 1) then
+        if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
         ! generate distribution in sigp for arfb.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
-            if(abs(ytt) > yttmin)fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+            if (abs(ytt) > yttmin)fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (delta_absy < 0.d0))then
+        if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
         ! generate distribution in sigm for arfb.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
-            if(abs(ytt) > yttmin)fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+            if (abs(ytt) > yttmin)fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
           end if
         end if
       end if
 
-      if(o_asym(9) == 1)then
-        if((o_sigp == 1) .and. (cosfl > 0.d0))then
+      if (o_asym(9) == 1) then
+        if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
         ! generate distribution in sigp for a_l.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
-          if(nbin >= (ndiv_sigp+1))then
+          if (nbin >= (ndiv_sigp+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
           end if
         end if
-        if((o_sigm == 1) .and. (cosfl < 0.d0))then
+        if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
         ! generate distribution in sigm for a_l.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
-          if(nbin >= (ndiv_sigm+1))then
+          if (nbin >= (ndiv_sigm+1)) then
             continue
-          else if(nbin < 1)then
+          else if (nbin < 1) then
             continue
           else
             fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
