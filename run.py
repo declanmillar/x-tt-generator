@@ -28,7 +28,7 @@ parser.add_option("-e", "--include_ew"    ,  default=1   , const=0      , action
 parser.add_option("-z", "--include_bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
 parser.add_option("-i", "--interference"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
 parser.add_option("-w", "--use_NWA"   ,  default=0   , const=1      , action="store_const", help="turn on use_NWA")
-parser.add_option("-r", "--use_branching_ratio"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by use_branching_ratio")
+parser.add_option("-B", "--use_branching_ratio"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by use_branching_ratio")
 parser.add_option("-T", "--include_transverse"  ,  default=1   , const=0      , action="store_const", help="switch off include_transversesverse mass variables")
 parser.add_option("-A", "--include_asymmetries"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
 parser.add_option("-C", "--cuts"  ,  default=1   , const=0      , action="store_const", help="turn off all cuts")
@@ -101,11 +101,11 @@ elif options.interference==3:
 
 # Symmetrization
 if   (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==0):
-  symmetrization = "_symx"
+  symmetrization = "_x"
 elif (options.symmetries_x1x2==0) and (options.symmetrise_costheta_t==1):
-  symmetrization = "_symc"
+  symmetrization = "_c"
 elif (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==1):
-  symmetrization = "_symxc"
+  symmetrization = "_xc"
 else:
   symmetrization = ""
 
@@ -160,7 +160,7 @@ print >> config, '%s ! print_all_distributions' % options.print_all_distribution
 print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
 
 # Filename
-filename = '%s_%s%s%s_%s_%sx%s%s%s' % (sfinal,smodel,sector,interference,collider_energy,options.itmx,ncall,symmetrization,options.tag)
+filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())

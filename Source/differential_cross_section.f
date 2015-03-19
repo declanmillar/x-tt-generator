@@ -402,8 +402,7 @@ function differential_cross_section(x,wgt)
           write(*,*)'invalid jx.'
         end if
         st=sqrt(1.d0-ct*ct)
-        qcm2=((ecm*ecm-m3*m3-m4*m4)**2-(2.d0*m3*m4)**2)/ &
-        (4.d0*ecm*ecm)
+        qcm2=((ecm*ecm-m3*m3-m4*m4)**2-(2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
         if (qcm2 < 0.d0) then
           fffxn=0.d0
           return
@@ -504,8 +503,7 @@ function differential_cross_section(x,wgt)
         cf7=cos(x(1))
         sf7=sin(x(1))
         rq2=((ecm*ecm-m356*m356-m478*m478)**2 &
-        -(2.d0*m356*m478)**2)/ &
-        (4.d0*ecm*ecm)
+        -(2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
         if(rq2 < 0.d0)then
           fffxn=0.d0
           return
@@ -516,8 +514,7 @@ function differential_cross_section(x,wgt)
         p356(2)=rq*st*cos(phit)
         p356(1)=rq*st*sin(phit)
         p356(4)=sqrt(rq2+m356*m356)
-        rq562=((m356*m356-m3*m3-m56*m56)**2-(2.d0*m3*m56)**2)/ &
-        (4.d0*m356*m356)
+        rq562=((m356*m356-m3*m3-m56*m56)**2-(2.d0*m3*m56)**2)/(4.d0*m356*m356)
         if(rq562 < 0.d0)then
           fffxn=0.d0
           return
@@ -542,8 +539,7 @@ function differential_cross_section(x,wgt)
           p478(i)=-p356(i)
         end do
         p478(4)=sqrt(rq2+m478*m478)
-        rq782=((m478*m478-m4*m4-m78*m78)**2-(2.d0*m4*m78)**2)/ &
-        (4.d0*m478*m478)
+        rq782=((m478*m478-m4*m4-m78*m78)**2-(2.d0*m4*m78)**2)/(4.d0*m478*m478)
         if(rq782 < 0.d0)then
           fffxn=0.d0
           return
@@ -564,8 +560,7 @@ function differential_cross_section(x,wgt)
           p78(i)=q78(i)+p478(i)*(p78(4)+q78(4))/(p478(4)+m478)
           q(i,4)=p478(i)-p78(i)
         end do
-        rq52=((m56*m56-m5*m5-m6*m6)**2-(2.d0*m5*m6)**2)/ &
-        (4.d0*m56*m56)
+        rq52=((m56*m56-m5*m5-m6*m6)**2-(2.d0*m5*m6)**2)/(4.d0*m56*m56)
         if(rq52 < 0.d0)then
           fffxn=0.d0
           return
@@ -586,8 +581,7 @@ function differential_cross_section(x,wgt)
           q(i,5)=q5(i)+p56(i)*(q(4,5)+q5(4))/(p56(4)+m56)
           q(i,6)=p56(i)-q(i,5)
         end do
-        rq72=((m78*m78-m7*m7-m8*m8)**2-(2.d0*m7*m8)**2)/ &
-        (4.d0*m78*m78)
+        rq72=((m78*m78-m7*m7-m8*m8)**2-(2.d0*m7*m8)**2)/(4.d0*m78*m78)
         if(rq72 < 0.d0)then
           fffxn=0.d0
           return
@@ -1432,6 +1426,7 @@ function differential_cross_section(x,wgt)
         end do
       end if
 
+
     ! afb
       if(o_asym(4) == 1)then
         if(costheta_top_cm > 0.d0)then
@@ -2070,7 +2065,6 @@ function differential_cross_section(x,wgt)
           end if
         end if
       end if
-
 
       if(o_asym(9) == 1)then
         if((o_sigp == 1) .and. (cosfl > 0.d0))then

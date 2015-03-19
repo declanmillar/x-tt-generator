@@ -13,4 +13,17 @@ module kinematics
   real :: Xsec_polar(20,-1:1,-1:1),error_polar(20,-1:1,-1:1)
   real :: Xsec_FB(n_fb_asymmetries,20,-1:1),error_FB(n_fb_asymmetries,20,-1:1)
   integer :: npoints
-end module Kinematics
+
+  public :: reconstruct_neutrino
+
+contains
+
+  subroutine reconstruct_neutrino
+
+    ! finds the longitudinal neutrino momentum for semi-hadronic decay
+
+    
+
+  end subroutine reconstruct_neutrino
+
+end module kinematics

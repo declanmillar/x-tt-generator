@@ -35,7 +35,7 @@ module quantum_field_theory
   real, parameter :: rm_w=80.23d0,rm_z=91.19d0,gamma_w=2.08d0,gamma_z=2.5d0
   real, parameter :: rm_A=0d0, gamma_a=0d0, rm_h=125.d0, gamma_h=0.31278d-2
 
-  real :: Gamma_t
+  real :: Gamma_t=twidth
 
 ! Other SM parameters
   real, parameter :: a_EM = 0.0078125, s2w = 0.2320d0

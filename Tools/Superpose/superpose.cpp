@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
   h2->SetLineColor( kRed );
 
   // normalize histograms
-  normalize=true;
+  // normalize=true;
   if ( normalize == true )
   { 
     std::string yTitle;
