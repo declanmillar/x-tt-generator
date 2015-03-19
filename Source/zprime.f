@@ -18,7 +18,6 @@ program zprime
 
   external differential_cross_section
 
-  real :: o_width(5)
   real :: poltot(-1:1,-1:1),polchi(-1:1,-1:1)
   real :: spattot(n_fb_asymmetries,-1:1),spatchi(n_fb_asymmetries,-1:1)
 

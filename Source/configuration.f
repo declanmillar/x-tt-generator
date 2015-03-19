@@ -7,7 +7,7 @@ module configuration
   ! parameters in config file
   real    :: collider_energy
   integer :: initial_state ! 0 = pp, 1 = ppbar
-  integer :: final_state  ! 0 = no decay, 1 = dilepton, 2 = semi-had, 3 = full-had)
+  integer :: final_state  ! 0 = no decay, 1 = dilepton, 2 = semi-had, 3 = full-had
   
   integer :: structure_function
   character(50) :: model_name
@@ -16,7 +16,7 @@ module configuration
   integer :: include_bsm
   integer :: interference  
   integer :: use_nwa
-  integer :: use_branching_ratio
+  integer :: use_branching_ratio ! 0 = no, 1 = dilepton, 2 = semi-had, 3 = full-had
   integer :: include_transverse
   integer :: include_asymmetries
   real :: ytmax
@@ -100,47 +100,45 @@ module configuration
     end subroutine read_config
 
     subroutine modify_config
-      ! interpret config
-      ! number of external lines
+
       if(final_state == 0)then
         n_final=4
       else
         n_final=8
       end if
-      ! nwa only for six-body final state
-      if(final_state == 0) use_nwa=0
-      ! itmx no more than 20.
+
+      if(final_state == 0) use_nwa = 0
+      if(final_state > 0) use_branching_ratio = 0
+
       if(itmx > 20)then
         write(*,*)'itmx does not have to exceed 20!'
         stop
       end if
-      ! for every point in phase space with x1 and x2, include the point
-      ! in phase space with x1<->x2
+
       if(symmetrise_x1x2 == 1)then
         ixmax=2
       else
         ixmax=1
       end if
-      ! in phase space with cost->-cost
+
       if(symmetrise_costheta_t == 1)then
         jxmax=2
       else
         jxmax=1
       end if
-      ! do tops decay?
+
       if(final_state == 0)then
         tops_decay=0
       else
         tops_decay=1
       end if
-      ! in phase space with cost->-cost
+
       if(phase_space_only == 1)then
         include_qcd=0
         include_ew=0
         include_bsm=0
-      else
-        jxmax=1
       end if
+      
     end subroutine modify_config
 
 end module configuration
