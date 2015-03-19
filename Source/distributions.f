@@ -405,10 +405,18 @@ contains
       o_ct7ct5 = 0
       o_dphi2d = 0
       o_asym(9) = 0    ! turn off a_l
-    else if (final_state > 0)then
+    end if
+    if (final_state > 0)then
       o_asym(1) = 0   ! turn off a_ll
       o_asym(2) = 0   ! turn off a_l
       o_asym(3) = 0   ! turn off a_pv
+    end if
+    if (final_state == 2)then
+      o_cost5 = 0
+      o_ct7ct5 = 0
+      o_dphi = 0
+      o_dphi2d = 0
+      o_etmiss = 0
     end if
 
   end subroutine initialise_distributions

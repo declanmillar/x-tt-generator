@@ -30,6 +30,7 @@ function differential_cross_section(x,wgt)
   real :: sggbbffff_qcd
   real :: sqqbbffff_ewp
   real :: ctq6pdf
+  real :: longitudinal_neutrino_momentum
 
   ! implict to explicit variable dump
   real :: a_s
@@ -148,10 +149,12 @@ function differential_cross_section(x,wgt)
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
   integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, itrans
 
+  ! individual transverse momentum vectors   
+  real :: pT8(1:2)
 
+  ! reconstructed neutrino momentum
+  real :: pz_nu  
 
-  
-  
   ! phase space vectors.
   real :: q356(4), q478(4), p356(4), p478(4)
   real :: q56(4), q78(4), p56(4), p78(4)
@@ -608,11 +611,131 @@ function differential_cross_section(x,wgt)
       vcol = (x1 - x2)/(x1 + x2)
       gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
       do i = 1, n_final
-        qcol(4,i) = gcol*(q(4,i) + vcol*q(3,i))
-        qcol(3,i) = gcol*(q(3,i) + vcol*q(4,i))
-        qcol(2,i) = q(2,i)
-        qcol(1,i) = q(1,i)
+        qcol(4, i) = gcol*(q(4, i) + vcol*q(3, i))
+        qcol(3, i) = gcol*(q(3, i) + vcol*q(4, i))
+        qcol(2, i) = q(2, i)
+        qcol(1, i) = q(1, i)
       end do
+
+      if (final_state == 0) then
+        ! assign 2to2 madgraph momenta    
+        do i=1,3
+          p1(i)=q(i,1)
+          p2(i)=q(i,2)
+          p3(i)=q(i,3)
+          p4(i)=q(i,4)
+          p5(i)=0.d0
+          p6(i)=0.d0
+          p7(i)=0.d0
+          p8(i)=0.d0
+        end do
+        p1(0)=q(4,1)
+        p2(0)=q(4,2)
+        p3(0)=q(4,3)
+        p4(0)=q(4,4)
+        p5(0)=0.d0
+        p6(0)=0.d0
+        p7(0)=0.d0
+        p8(0)=0.d0
+
+        ! check 2to2 kinematics
+        ! print *,  'p1  =',p1
+        ! print *,  'p2  =',p2
+        ! print *,  'p3  =',p3
+        ! print *,  'p4  =',p4
+        ! delta_e=p1(0)+p2(0)-p3(0)-p4(0)
+        ! delta_x=p1(1)+p2(1)-p3(1)-p4(1)
+        ! delta_y=p1(2)+p2(2)-p3(2)-p4(2)
+        ! delta_z=p1(3)+p2(3)-p3(3)-p4(3)
+        ! print *,  'delta_e=',delta_e
+        ! print *,  'delta_x=',delta_x
+        ! print *,  'delta_y=',delta_y
+        ! print *,  'delta_z=',delta_z
+        ! rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
+        ! rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
+        ! rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
+        ! rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
+        ! print *,  'rm_1 =',rmassa1
+        ! print *,  'rm_2 =',rmassa2
+        ! print *,  'rm_3 =',rmassa3
+        ! print *,  'rm_4 =',rmassa4
+
+
+      else if (final_state > 0) then
+      ! assign 2to6 madgraph momenta
+        do i=1,3
+          p1(i)=q(i,1)
+          p2(i)=q(i,2)
+          p3(i)=q(i,3)
+          p4(i)=q(i,4)
+          p5(i)=q(i,5)
+          p6(i)=q(i,6)
+          p7(i)=q(i,7)
+          p8(i)=q(i,8)
+        end do
+        p1(0)=q(4,1)
+        p2(0)=q(4,2)
+        p3(0)=q(4,3)
+        p4(0)=q(4,4)
+        p5(0)=q(4,5)
+        p6(0)=q(4,6)
+        p7(0)=q(4,7)
+        p8(0)=q(4,8)
+
+      ! check 6-body kinematics
+      !       print *,  'p1  =',p1
+      !       print *,  'p2  =',p2
+      !       print *,  'p3  =',p3
+      !       print *,  'p4  =',p4
+      !       print *,  'p5  =',p5
+      !       print *,  'p6  =',p6
+      !       print *,  'p7  =',p7
+      !       print *,  'p8  =',p8
+      ! ! check conservation of 4-momentum.
+      !       delta_e=p1(0)+p2(0)
+      !    &         -p3(0)-p4(0)
+      !    &         -p5(0)-p6(0)
+      !    &         -p7(0)-p8(0)
+      !       delta_x=p1(1)+p2(1)
+      !    &         -p3(1)-p4(1)
+      !    &         -p5(1)-p6(1)
+      !    &         -p7(1)-p8(1)
+      !       delta_y=p1(2)+p2(2)
+      !    &         -p3(2)-p4(2)
+      !    &         -p5(2)-p6(2)
+      !    &         -p7(2)-p8(2)
+      !       delta_z=p1(3)+p2(3)
+      !    &         -p3(3)-p4(3)
+      !    &         -p5(3)-p6(3)
+      !    &         -p7(3)-p8(3)
+      !       print *,  'delta_e=',delta_e
+      !       print *,  'delta_px=',delta_x
+      !       print *,  'delta_py=',delta_y
+      !       print *,  'delta_pz=',delta_z
+      ! ! check invarient mass.
+      !       rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
+      !       rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
+      !       rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
+      !       rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
+      !       rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
+      !       rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
+      !       rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
+      !       rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
+      !       print *,  'rm_1 =',rmassa1
+      !       print *,  'rm_2 =',rmassa2
+      !       print *,  'rm_3 =',rmassa3
+      !       print *,  'rm_4 =',rmassa4
+      !       print *,  'rm_5 =',rmassa5
+      !       print *,  'rm_6 =',rmassa6
+      !       print *,  'rm_7 =',rmassa7
+      !       print *,  'rm_8 =',rmassa8
+      ! ! check missing momentum
+      !       pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
+      !       pt68=sqrt(pt682)
+      !       print *, 'etmiss :',etmiss
+      !       print *, 'pt(v+v):',pt68
+      end if
+
     
       ! additional kinematics
       ! these aren't required for the integration, but are used for
@@ -625,64 +748,64 @@ function differential_cross_section(x,wgt)
       end do
 
       ! calculate rapidity (collider frame)
-      do ip=3,n_final
-        ycol(ip)=0.5d0*log((qcol(4,ip)+qcol(3,ip)) &
+      do ip = 3, n_final
+        ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
         /(qcol(4,ip) - qcol(3,ip)))
       end do
 
       ! calculate pseudorapidity (eta) com frame
-      do ip=1,n_final
-        rps(ip)=(q(3,ip))/sqrt(q(1,ip)**2+q(2,ip)**2+q(3,ip)**2)
-        if (rps(ip) < - 1.d0)rps=-1.d0
-        if (rps(ip) > +1.d0)rps=+1.d0
-        rpl(ip)=acos(rps(ip))
-        arg(ip)=tan(rpl(ip)/2d0)
-        if (arg(ip) <= 0.d0)arg(ip)=1.d-9
-        eta(ip)=-log(arg(ip))
+      do ip = 1, n_final
+        rps(ip) = (q(3, ip))/sqrt(q(1, ip)**2 + q(2, ip)**2 + q(3, ip)**2)
+        if (rps(ip) < -1.d0) rps = -1.d0
+        if (rps(ip) > +1.d0) rps = +1.d0
+        rpl(ip) = acos(rps(ip))
+        arg(ip) = tan(rpl(ip)/2d0)
+        if (arg(ip) <= 0.d0) arg(ip) = 1.d-9
+        eta(ip) = -log(arg(ip))
       end do
 
       ! calculate azimuthal angle (phi) in lab frame
-      do ip=1,n_final
-        phi(ip)=atan2(qcol(2,ip),qcol(1,ip))
+      do ip = 1, n_final
+        phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
       end do
 
       ! calculate delta phi
       if (final_state == 1) then
-        dphi=abs(phi(5)-phi(7))
+        dphi = abs(phi(5) - phi(7))
       end if
 
       ! calculate visible and missing transverse momentum
       if (final_state == 1) then
-        etvis2=0d0
-        etmiss2=0d0
-        do i=1,2
-          ptvis(i)=qcol(i,3)+qcol(i,4)+qcol(i,5)+qcol(i,7)
-          ptmiss(i)=-ptvis(i)
-          etvis2=etvis2+ptvis(i)**2
-          etmiss2=etmiss2+ptmiss(i)**2
+        etvis2 = 0d0
+        etmiss2 = 0d0
+        do i = 1, 2
+          ptvis(i) = qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7)
+          ptmiss(i) = -ptvis(i)
+          etvis2 = etvis2 + ptvis(i)**2
+          etmiss2 = etmiss2 + ptmiss(i)**2
         end do
-        etvis=sqrt(etvis2)
-        etmiss=sqrt(etmiss2)
+        etvis = sqrt(etvis2)
+        etmiss = sqrt(etmiss2)
       end if
 
       ! calculate truth level top/antitop pt, eta and phi
       if (final_state > 0) then
-        pt356=sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6))**2 &
-                  +(qcol(2,3)+qcol(2,5)+qcol(2,6))**2)
+        pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
+                     + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
 
-        pt478=sqrt((qcol(1,4)+qcol(1,7)+qcol(1,8))**2 &
-                  +(qcol(2,4)+qcol(2,7)+qcol(2,8))**2)
+        pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
+                     + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
 
-        rps356=(q(3,3)+q(3,5)+q(3,6)) &
-        /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
-        +(q(2,3)+q(2,5)+q(2,6))**2 &
-        +(q(3,3)+q(3,5)+q(3,6))**2)
-        if (rps356 < -1.d0)rps=-1.d0
-        if (rps356 > +1.d0)rps=+1.d0
-        rpl356=acos(rps356)
-        arg356=tan(rpl356/2d0)
-        if (arg356 <= 0.d0)arg356=1.d-9
-        eta356=-log(arg356)
+        rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
+        /sqrt((q(1, 3)+q(1, 5)+q(1, 6))**2 &
+              +(q(2, 3)+q(2, 5)+q(2, 6))**2 &
+              +(q(3, 3)+q(3, 5)+q(3, 6))**2)
+        if (rps356 < -1.d0) rps = -1.d0
+        if (rps356 > +1.d0) rps = +1.d0
+        rpl356 = acos(rps356)
+        arg356 = tan(rpl356/2d0)
+        if (arg356 <= 0.d0)arg356 = 1.d-9
+        eta356 = -log(arg356)
 
         rps478=(q(3,4)+q(3,7)+q(3,8)) &
         /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
@@ -905,10 +1028,20 @@ function differential_cross_section(x,wgt)
         -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
 
-    ! calculate delta_absy for arfb
+      ! calculate delta_absy for arfb
       delta_absy=abs(yt)-abs(ytb)
 
-    ! calculate cos(theta_l+)
+      if (final_state > 0) then
+        pT8(1) = p8(1)
+        pT8(2) = p8(2)
+        pz_nu = longitudinal_neutrino_momentum(p7, pT8)
+      else 
+        pz_nu = p8(3)
+      end if
+
+      write(*,*)pz_nu, p8(3)
+
+      ! calculate cos(theta_l+)
       if (final_state > 0) then
         costheta5=+(q(1,5)*q(1,1) &
         +q(2,5)*q(2,1) &
@@ -1021,125 +1154,6 @@ function differential_cross_section(x,wgt)
         go to 666
       end if
     
-      if (final_state == 0) then
-        ! assign 2to2 madgraph momenta    
-        do i=1,3
-          p1(i)=q(i,1)
-          p2(i)=q(i,2)
-          p3(i)=q(i,3)
-          p4(i)=q(i,4)
-          p5(i)=0.d0
-          p6(i)=0.d0
-          p7(i)=0.d0
-          p8(i)=0.d0
-        end do
-        p1(0)=q(4,1)
-        p2(0)=q(4,2)
-        p3(0)=q(4,3)
-        p4(0)=q(4,4)
-        p5(0)=0.d0
-        p6(0)=0.d0
-        p7(0)=0.d0
-        p8(0)=0.d0
-
-        ! check 2to2 kinematics
-        ! print *,  'p1  =',p1
-        ! print *,  'p2  =',p2
-        ! print *,  'p3  =',p3
-        ! print *,  'p4  =',p4
-        ! delta_e=p1(0)+p2(0)-p3(0)-p4(0)
-        ! delta_x=p1(1)+p2(1)-p3(1)-p4(1)
-        ! delta_y=p1(2)+p2(2)-p3(2)-p4(2)
-        ! delta_z=p1(3)+p2(3)-p3(3)-p4(3)
-        ! print *,  'delta_e=',delta_e
-        ! print *,  'delta_x=',delta_x
-        ! print *,  'delta_y=',delta_y
-        ! print *,  'delta_z=',delta_z
-        ! rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-        ! rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-        ! rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-        ! rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-        ! print *,  'rm_1 =',rmassa1
-        ! print *,  'rm_2 =',rmassa2
-        ! print *,  'rm_3 =',rmassa3
-        ! print *,  'rm_4 =',rmassa4
-
-
-      else if (final_state > 0) then
-      ! assign 2to6 madgraph momenta
-        do i=1,3
-          p1(i)=q(i,1)
-          p2(i)=q(i,2)
-          p3(i)=q(i,3)
-          p4(i)=q(i,4)
-          p5(i)=q(i,5)
-          p6(i)=q(i,6)
-          p7(i)=q(i,7)
-          p8(i)=q(i,8)
-        end do
-        p1(0)=q(4,1)
-        p2(0)=q(4,2)
-        p3(0)=q(4,3)
-        p4(0)=q(4,4)
-        p5(0)=q(4,5)
-        p6(0)=q(4,6)
-        p7(0)=q(4,7)
-        p8(0)=q(4,8)
-
-      ! check 6-body kinematics
-      !       print *,  'p1  =',p1
-      !       print *,  'p2  =',p2
-      !       print *,  'p3  =',p3
-      !       print *,  'p4  =',p4
-      !       print *,  'p5  =',p5
-      !       print *,  'p6  =',p6
-      !       print *,  'p7  =',p7
-      !       print *,  'p8  =',p8
-      ! ! check conservation of 4-momentum.
-      !       delta_e=p1(0)+p2(0)
-      !    &         -p3(0)-p4(0)
-      !    &         -p5(0)-p6(0)
-      !    &         -p7(0)-p8(0)
-      !       delta_x=p1(1)+p2(1)
-      !    &         -p3(1)-p4(1)
-      !    &         -p5(1)-p6(1)
-      !    &         -p7(1)-p8(1)
-      !       delta_y=p1(2)+p2(2)
-      !    &         -p3(2)-p4(2)
-      !    &         -p5(2)-p6(2)
-      !    &         -p7(2)-p8(2)
-      !       delta_z=p1(3)+p2(3)
-      !    &         -p3(3)-p4(3)
-      !    &         -p5(3)-p6(3)
-      !    &         -p7(3)-p8(3)
-      !       print *,  'delta_e=',delta_e
-      !       print *,  'delta_px=',delta_x
-      !       print *,  'delta_py=',delta_y
-      !       print *,  'delta_pz=',delta_z
-      ! ! check invarient mass.
-      !       rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-      !       rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-      !       rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-      !       rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-      !       rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
-      !       rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
-      !       rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
-      !       rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
-      !       print *,  'rm_1 =',rmassa1
-      !       print *,  'rm_2 =',rmassa2
-      !       print *,  'rm_3 =',rmassa3
-      !       print *,  'rm_4 =',rmassa4
-      !       print *,  'rm_5 =',rmassa5
-      !       print *,  'rm_6 =',rmassa6
-      !       print *,  'rm_7 =',rmassa7
-      !       print *,  'rm_8 =',rmassa8
-      ! ! check missing momentum
-      !       pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
-      !       pt68=sqrt(pt682)
-      !       print *, 'etmiss :',etmiss
-      !       print *, 'pt(v+v):',pt68
-      end if
-
     ! square matrix elements
     ! calculate strong coupling
       a_s=alfas(qq,rlambdaqcd4,nloops)
