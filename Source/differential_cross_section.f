@@ -741,6 +741,15 @@ function differential_cross_section(x,wgt)
       ! these aren't required for the integration, but are used for
       ! distributions and cuts.
 
+      if (final_state == 2) then
+        ! reconstruct the neutrino momentum in the semi-hadronic channel
+        pT8(1) = p8(1)
+        pT8(2) = p8(2)
+        pz_nu = longitudinal_neutrino_momentum(p7, pT8)
+      else 
+        pz_nu = p8(3)
+      end if
+
       ! calculate transverse momenta (pt)
       do ip = 1, n_final
         pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
@@ -903,6 +912,7 @@ function differential_cross_section(x,wgt)
         end do
       end if
       rmtt=sqrt(abs(rmtt2))
+
     ! calculate invariant mass of visible decay products
       if (o_tran(1) == 1) then
         rmvis2=(qcol(4,3)+qcol(4,4) &
@@ -1029,7 +1039,7 @@ function differential_cross_section(x,wgt)
       end if
 
       ! calculate delta_absy for arfb
-      delta_absy=abs(yt)-abs(ytb)
+      delta_absy = abs(yt) - abs(ytb)
 
       if (final_state > 0) then
         pT8(1) = p8(1)
@@ -1038,8 +1048,6 @@ function differential_cross_section(x,wgt)
       else 
         pz_nu = p8(3)
       end if
-
-      write(*,*)pz_nu, p8(3)
 
       ! calculate cos(theta_l+)
       if (final_state > 0) then
