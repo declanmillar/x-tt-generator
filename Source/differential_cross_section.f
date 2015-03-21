@@ -607,9 +607,13 @@ function differential_cross_section(x,wgt)
         end do
       end if
 
-      ! boost initial and final state momenta to the collider frame
+      ! velocity of ttbar system in collider frame
       vcol = (x1 - x2)/(x1 + x2)
+
+      ! 
       gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
+
+      ! boost initial and final state momenta to the collider frame
       do i = 1, n_final
         qcol(4, i) = gcol*(q(4, i) + vcol*q(3, i))
         qcol(3, i) = gcol*(q(3, i) + vcol*q(4, i))
@@ -913,6 +917,15 @@ function differential_cross_section(x,wgt)
       end if
       rmtt=sqrt(abs(rmtt2))
 
+      if (final_state == 2) then
+        ! calculate Mtt_reco
+        p8_reco(1) = p8(0) 
+        p8_reco(0) = sqrt(p8(1)*p8(1) + p8(2)*p8(2) + p8(3)*p8(3))
+        Mtt_reco = (qcol(4,3)+qcol(4,4) &
+        +qcol(4,5)+qcol(4,6) &
+        +qcol(4,7)+qcol(4,8))**2
+      end if
+
     ! calculate invariant mass of visible decay products
       if (o_tran(1) == 1) then
         rmvis2=(qcol(4,3)+qcol(4,4) &
@@ -923,6 +936,7 @@ function differential_cross_section(x,wgt)
         end do
         trans(1)=sqrt(abs(rmvis2))
       end if
+
     ! calculate transverse energy energies of visible particles
       if (final_state > 0) then
         et3=sqrt(m3**2+pt2(3))
