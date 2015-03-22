@@ -9,10 +9,10 @@ program zprime
   ! authors: declan millar, stefano moretti.
 
   use configuration
-  use quantum_field_theory
+  use modelling
   use kinematics
-  use distributions
   use integration
+  use distributions  
 
   implicit none
 
@@ -113,12 +113,12 @@ program zprime
     end do
 
   else if (final_state >= 1) then
-    m3 = fmass(12)
-    m4 = m3
-    m5 = 0.d0
-    m6 = 0.d0
-    m7 = 0.d0
-    m8 = 0.d0
+    m3 = bmass
+    m4 = bmass
+    m5 = emass
+    m6 = nuemass
+    m7 = emass
+    m8 = nuemass
 
     ! integrates on:         
     ! x(15) = (x1 - tau)/(1 - tau),

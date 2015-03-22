@@ -1,7 +1,7 @@
 subroutine initialise_madgraph(o_NWA,model_name)
   ! sets up masses and coupling constants of particles
 
-  use quantum_field_theory
+  use modelling
 
   implicit none
 

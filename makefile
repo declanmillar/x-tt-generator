@@ -9,7 +9,7 @@
 BIN = zprime
 
 # object files
-OBJ = vegas.o cteq61pdf.o mathematics.o configuration.o quantum_field_theory.o kinematics.o distributions.o  alpha_EWNG.o helas.o differential_cross_section.o ggbbffff_qcd.o ggff_qcd.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o zprime.o
+OBJ = vegas.o cteq61pdf.o mathematics.o configuration.o modelling.o kinematics.o distributions.o  alpha_EWNG.o helas.o differential_cross_section.o ggbbffff_qcd.o ggff_qcd.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o zprime.o
 
 # Source directory
 SRC = Source

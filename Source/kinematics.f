@@ -18,7 +18,7 @@ end module kinematics
 function longitudinal_neutrino_momentum(p_l, pT_nu)
 
   use mathematics, only: solve_quadratic
-  use quantum_field_theory, only: rm_W
+  use modelling, only: rm_W
 
   implicit none
 

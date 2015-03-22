@@ -72,7 +72,7 @@ function ggff_qcd(iq, p1, p2, p3, p4,lam3,lam4,nhel)
 ! and helicity nhel(1),nhel(2),....
 
 ! for process : g g  -> t t~
-  use quantum_field_theory, only: gg, g, fmass, fwidth
+  use modelling, only: gg, g, fmass, fwidth
 
   implicit none
 

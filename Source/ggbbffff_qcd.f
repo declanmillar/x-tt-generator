@@ -324,7 +324,7 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   
   ! for process : g g  -> b b~ ta+ ta- vt vt~
 
-  use quantum_field_theory
+  use modelling
 
   implicit none
 

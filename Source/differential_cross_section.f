@@ -12,11 +12,11 @@ function differential_cross_section(x,wgt)
   ! authors: declan millar, stefano moretti
 
   use configuration
-  use quantum_field_theory
+  use modelling
   use kinematics
-  use distributions
   use integration
-
+  use distributions
+  
   implicit none
 
   real :: x(100), wgt

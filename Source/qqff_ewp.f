@@ -70,7 +70,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   !   qqb -> ttb (via A,Z,{Z'})
 
   use Configuration, only: include_EW, include_BSM, interference
-  use quantum_field_theory
+  use modelling
 
   implicit none
 

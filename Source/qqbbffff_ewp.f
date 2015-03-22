@@ -311,7 +311,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   ! for process : q q -> b b l+ l- v_l v_l via (via A ,Z ,{Z'})
 
   use Configuration, only: include_EW, include_BSM, interference
-  use quantum_field_theory
+  use modelling
 
   implicit none
 

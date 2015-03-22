@@ -69,7 +69,7 @@ function qqff_qcd(iq,p1, p2, p3, p4,lam3,lam4,nhel)
 
   ! for process : u u~  -> t t~
 
-  use quantum_field_theory, only: g, gg, fmass, fwidth
+  use modelling, only: g, gg, fmass, fwidth
   
   implicit none
 

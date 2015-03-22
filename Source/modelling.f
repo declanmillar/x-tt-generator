@@ -1,4 +1,4 @@
-module quantum_field_theory
+module modelling
 
   use configuration, only: use_nwa, model_name
 
@@ -306,4 +306,4 @@ function widthZp(rm_Zp)
   return
 end function widthZp
 
-end module quantum_field_theory
+end module modelling
