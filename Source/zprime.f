@@ -90,8 +90,8 @@ program zprime
   nprn = 0
 
   if (final_state == 0) then
-    m3 = fmass(11)
-    m4 = m3
+    m3 = tmass
+    m4 = tmass
     m5 = 0.d0
     m6 = 0.d0
     m7 = 0.d0

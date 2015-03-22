@@ -76,10 +76,16 @@ module distributions
   integer :: ndiv_phi478
 
   ! distribution in invarient mass of the top pair
-  real :: rmttmax,rmttmin,rmttw
-  real :: xrmtt(500),fxrmtt(500,20),fxrmtttot(500)
-  integer :: o_rmtt
-  integer :: ndiv_rmtt
+  real :: mttmax,mttmin,mttw
+  real :: xmtt(500),fxmtt(500,20),fxmtttot(500)
+  integer :: o_mtt
+  integer :: ndiv_mtt
+
+  ! distribution in invarient mass of the top pair
+  real :: mtt_recomax,mtt_recomin,mtt_recow
+  real :: xmtt_reco(500),fxmtt_reco(500,20),fxmtt_recotot(500)
+  integer :: o_mtt_reco
+  integer :: ndiv_mtt_reco
 
   ! distribution in boost of top pair centre of mass frame
   real :: betamax,betamin,betaw
@@ -183,8 +189,8 @@ module distributions
   real, private :: sfxpttot(8), sfxetatot(8), sfxphitot(8), sfxycoltot(8)
   real, private :: sfxsigptot(n_asymmetries), sfxsigmtot(n_asymmetries), asym_int(n_asymmetries)
   real, private :: sfxbetatot, sfxcosfltot, sfxcosttot, sfxdphitot, sfxeta356tot, sfxeta478tot, sfxetmisstot, sfxettot, sfxfltot, & 
-          sfxphi356tot, sfxphi478tot, sfxpt356tot, sfxpt478tot, sfxrmtttot, sfxcost5tot, sfxcost7tot, sfxct7ct5tot, sfxdelta_ytot, &
-          sfxdphi2dtot
+          sfxphi356tot, sfxphi478tot, sfxpt356tot, sfxpt478tot, sfxmtttot, sfxcost5tot, sfxcost7tot, sfxct7ct5tot, sfxdelta_ytot, &
+          sfxdphi2dtot, sfxmtt_recotot
 
 contains
 
@@ -249,10 +255,15 @@ contains
     phi478min=-pi
     ndiv_phi478=50
     ! invarient mass of tt pair (always on)
-    o_rmtt=1
-    rmttmax=14000.d0/(1+initial_state*6)
-    rmttmin=0.d0
-    ndiv_rmtt=140
+    o_mtt=1
+    mttmax=14000.d0/(1+initial_state*6)
+    mttmin=0.d0
+    ndiv_mtt=140
+    ! reconstructed invarient mass of tt pair (always on)
+    o_mtt_reco = print_all_distributions
+    mtt_recomax = 14000.d0/(1 + initial_state*6)
+    mtt_recomin = 0.d0
+    ndiv_mtt_reco = 140
     ! boost of parton com
     o_beta=print_all_distributions
     betamax=1000.d0
@@ -353,16 +364,16 @@ contains
     ndiv_ct7ct5=10
     ! sigp
     o_sigp=include_asymmetries
-    sigpmax=rmttmax
-    sigpmin=rmttmin
-    ndiv_sigp=ndiv_rmtt/5
+    sigpmax=mttmax
+    sigpmin=mttmin
+    ndiv_sigp=ndiv_mtt/5
     ! sigm
     o_sigm=include_asymmetries
-    sigmmax=rmttmax
-    sigmmin=rmttmin
-    ndiv_sigm=ndiv_rmtt/5
+    sigmmax=mttmax
+    sigmmin=mttmin
+    ndiv_sigm=ndiv_mtt/5
     ! dphi2d
-    if((o_dphi == 1) .and. (o_rmtt == 1))then
+    if((o_dphi == 1) .and. (o_mtt == 1))then
       o_dphi2d=print_2d_distributions
     else
       o_dphi2d=0
@@ -405,11 +416,15 @@ contains
       o_ct7ct5 = 0
       o_dphi2d = 0
       o_asym(9) = 0    ! turn off a_l
+      o_mtt_reco = 0
     end if
     if (final_state > 0)then
       o_asym(1) = 0   ! turn off a_ll
       o_asym(2) = 0   ! turn off a_l
       o_asym(3) = 0   ! turn off a_pv
+    end if
+    if (final_state == 1)then
+      o_mtt_reco = 0
     end if
     if (final_state == 2)then
       o_cost5 = 0
@@ -500,10 +515,17 @@ contains
       end do
     end if
 
-    if(o_rmtt == 1)then
-      rmttw=(rmttmax-rmttmin)/ndiv_rmtt
-      do i=1,ndiv_rmtt
-        xrmtt(i)=rmttmin+rmttw*(i-1)+rmttw/2.d0
+    if(o_mtt == 1)then
+      mttw=(mttmax-mttmin)/ndiv_mtt
+      do i=1,ndiv_mtt
+        xmtt(i)=mttmin+mttw*(i-1)+mttw/2.d0
+      end do
+    end if
+
+    if(o_mtt_reco == 1)then
+      mtt_recow=(mtt_recomax-mtt_recomin)/ndiv_mtt_reco
+      do i=1,ndiv_mtt_reco
+        xmtt_reco(i)=mtt_recomin+mtt_recow*(i-1)+mtt_recow/2.d0
       end do
     end if
 
@@ -835,25 +857,47 @@ contains
       write(*,*)'END'
     end if
     ! plot distribution in mtt
-    if(o_rmtt == 1)then
-      sfxrmtttot=0d0
-      do j=1,ndiv_rmtt
-        fxrmtttot(j)=0.d0
+    if(o_mtt == 1)then
+      sfxmtttot=0d0
+      do j=1,ndiv_mtt
+        fxmtttot(j)=0.d0
         do i=1,it
-          fxrmtt(j,i)=fxrmtt(j,i)*sigma/cnorm(i)/rmttw
-          fxrmtttot(j)=fxrmtttot(j)+fxrmtt(j,i)
+          fxmtt(j,i)=fxmtt(j,i)*sigma/cnorm(i)/mttw
+          fxmtttot(j)=fxmtttot(j)+fxmtt(j,i)
         end do
-        sfxrmtttot=sfxrmtttot+fxrmtttot(j)*rmttw
+        sfxmtttot=sfxmtttot+fxmtttot(j)*mttw
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'Mtt'
       write(*,*)'d#sigma-/dm_{tt}--[pb/gev]'
       write(*,*)'m_{tt}--[gev]'
-      do i=1,ndiv_rmtt
-        write(*,*)xrmtt(i),fxrmtttot(i)
+      do i=1,ndiv_mtt
+        write(*,*)xmtt(i),fxmtttot(i)
       end do
       write(*,*)'END'
     end if
+
+    ! plot distribution in mtt_reco
+    if(o_mtt_reco == 1)then
+      sfxmtt_recotot=0d0
+      do j=1,ndiv_mtt_reco
+        fxmtt_recotot(j)=0.d0
+        do i=1,it
+          fxmtt_reco(j,i)=fxmtt_reco(j,i)*sigma/cnorm(i)/mtt_recow
+          fxmtt_recotot(j)=fxmtt_recotot(j)+fxmtt_reco(j,i)
+        end do
+        sfxmtt_recotot=sfxmtt_recotot+fxmtt_recotot(j)*mtt_recow
+      end do
+      write(*,*)'DISTRIBUTION'
+      write(*,*)'Mtt_reco'
+      write(*,*)'d#sigma-/dM^{reco}_{tt}--[pb/gev]'
+      write(*,*)'m^{reco}_{tt}--[gev]'
+      do i=1,ndiv_mtt_reco
+        write(*,*)xmtt_reco(i),fxmtt_recotot(i)
+      end do
+      write(*,*)'END'
+    end if
+
     ! plot distribution in beta.
     if(o_beta == 1)then
       sfxbetatot=0d0
@@ -874,6 +918,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in cost
     if(o_cost == 1)then
       sfxcosttot=0d0
@@ -894,9 +939,9 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in et
     if(o_et == 1)then
-
       sfxettot=0d0
       do j=1,ndiv_et
         fxettot(j)=0.d0
@@ -915,6 +960,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in delta y
     if(o_delta_y == 1)then
       sfxdelta_ytot=0d0
@@ -935,6 +981,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distributions in all transverse variables
     do itrans=1,ntrans
       if(o_tran(itrans) == 1)then
@@ -1000,6 +1047,7 @@ contains
         write(*,*)'END'
       end if
     end do
+
     ! plot distribution in fl
     if(o_fl == 1)then
       sfxfltot=0d0
@@ -1020,6 +1068,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in cosfl
     if(o_cosfl == 1)then
       sfxcosfltot=0d0
@@ -1040,6 +1089,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in delta phi
     if(o_dphi == 1)then
       sfxdphitot=0d0
@@ -1060,14 +1110,15 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot 2d-distribution in delta phi
     if(o_dphi2d == 1)then
       sfxdphi2dtot=0d0
       do i=1,ndiv_dphi
-        do j=1,ndiv_rmtt
+        do j=1,ndiv_mtt
           fxdphi2dtot(i,j)=0.d0
           do k=1,it
-            fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/rmttw
+            fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/mttw
             fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
           end do
           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
@@ -1081,16 +1132,17 @@ contains
       write(*,*) dphimin
       write(*,*) dphimax
       write(*,*)'#m_{tt}--[gev]'
-      write(*,*) ndiv_rmtt
-      write(*,*) rmttmin
-      write(*,*) rmttmax
+      write(*,*) ndiv_mtt
+      write(*,*) mttmin
+      write(*,*) mttmax
       do i=1,ndiv_dphi
-        do j=1,ndiv_rmtt
-          write(*,*)xdphi(i),xrmtt(j),fxdphi2dtot(i,j)
+        do j=1,ndiv_mtt
+          write(*,*)xdphi(i),xmtt(j),fxdphi2dtot(i,j)
         end do
       end do
       write(*,*)'END'
     end if
+
     ! plot 2d-distributions in delta_phi and all transverse variables
     do itrans=1,ntrans
       if(include_transversedp(itrans) == 1)then
@@ -1181,6 +1233,7 @@ contains
         write(*,*)'END'
       end if
     end do
+
     ! plot distribution in cost5
     if(o_cost5 == 1)then
       sfxcost5tot=0d0
@@ -1201,6 +1254,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in cost7
     if(o_cost7 == 1)then
       sfxcost7tot=0d0
@@ -1221,6 +1275,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distribution in ct7ct5
     if(o_ct7ct5 == 1)then
       sfxct7ct5tot=0d0
@@ -1242,6 +1297,7 @@ contains
       end do
       write(*,*)'END'
     end if
+
     ! plot distributions in all asymmetries
     if((o_sigp == 1) .and. (o_sigm == 1))then
       do jasy=1,n_asymmetries
@@ -1309,7 +1365,7 @@ contains
               !             snorm(jasy)=snorm(jasy)+
               !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
               !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-              !    &               *fxrmtttot(i)*rmttw/sigma
+              !    &               *fxmtttot(i)*mttw/sigma
             end if
           end do
           asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/(sfxsigptot(jasy)+sfxsigmtot(jasy))
@@ -1320,8 +1376,6 @@ contains
       end do
     end if
   end subroutine print_distributions
-
-
 
   subroutine  check_distributions
     real :: diff_max = 1e-12
@@ -1388,9 +1442,17 @@ contains
         n_error=n_error+1
       end if
     end if
-    if(o_rmtt == 1)then
-      if(abs(sigma-sfxrmtttot)>diff_max)then
-        write(*,*)'rmtt error:',sfxrmtttot
+
+    if(o_mtt == 1)then
+      if(abs(sigma-sfxmtttot)>diff_max)then
+        write(*,*)'mtt error:',sfxmtttot
+        n_error=n_error+1
+      end if
+    end if
+
+    if(o_mtt_reco == 1)then
+      if(abs(sigma-sfxmtt_recotot)>diff_max)then
+        write(*,*)'mtt_reco error:',sfxmtt_recotot
         n_error=n_error+1
       end if
     end if

@@ -21,6 +21,7 @@ function differential_cross_section(x,wgt)
 
   real :: x(100), wgt
 
+  ! functions
   real :: differential_cross_section
   real :: alfas
   real :: sqqff_qcd
@@ -99,8 +100,6 @@ function differential_cross_section(x,wgt)
   real :: rm_t32
   real :: rmlct2
   real :: rmlt2
-  real :: rmtt
-  real :: rmtt2
   real :: rmvis2
   real :: rpl356
   real :: rpl478
@@ -130,11 +129,15 @@ function differential_cross_section(x,wgt)
   real :: st78
   real :: tau
   real :: vcol
+
+  ! parton momentum fraction
   real :: x1
   real :: x2
   real :: xx
   real :: xx1
   real :: xx2
+
+  ! 
   real :: xx356max
   real :: xx356min
   real :: xx478max
@@ -143,28 +146,40 @@ function differential_cross_section(x,wgt)
   real :: xx56min
   real :: xx78max
   real :: xx78min
+
+  ! rapidity
   real :: yt
   real :: ytb
   real :: ytt
+
+  ! square matrix elements
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
+
+  ! iterators
   integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, itrans
-
-  ! individual transverse momentum vectors   
-  real :: pT8(1:2)
-
-  ! reconstructed neutrino momentum
-  real :: pz_nu  
 
   ! phase space vectors.
   real :: q356(4), q478(4), p356(4), p478(4)
   real :: q56(4), q78(4), p56(4), p78(4)
   real :: q5(4), q7(4)
   real :: q(4, 8), qcol(4, 8)
-  ! momentum 4-vectors
+
+  ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
-  ! kinematic vectors
-  real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
+  real :: p1col(0:3), p2col(0:3), p3col(0:3), p4col(0:3), p5col(0:3), p6col(0:3), p7col(0:3), p8col(0:3)
+  real :: p8col_reco(0:3)
+
+  ! invarient masses
+  real :: mtt, mtt_reco
+  real :: mtt2, mtt_reco2
+
+  ! Transverse momentum vectors   
+  real :: pT8col(1:2)
   real :: ptvis(2), ptmiss(2)
+
+  ! kinematic scalar arrays
+  real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
+  
   ! lepton azimuthal angle coordinate system
   real :: xp(3), yp(3), zp(3)
 
@@ -194,13 +209,17 @@ function differential_cross_section(x,wgt)
   integer :: jseed
   data jseed/987654321/
 
-  ! maximum centre of mass energy
-  ecm_max = collider_energy
+  ! store top parameters
+  rmt = tmass
+  gamt = fwidth(11)
+
   ! centre of mass energy
+  ecm_max = collider_energy
   ecm = x(2 + 12*tops_decay)*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8) &
         + m3 + m4 + m5 + m6 + m7 + m8
   shat = ecm*ecm
   tau = shat/s
+
   ! x1 and x2 of the partons
   xx1 = x(3+12*tops_decay) * (1.d0-tau) + tau
   xx2 = tau/xx1
@@ -208,20 +227,21 @@ function differential_cross_section(x,wgt)
   x1x2(1, 2) = xx2
   x1x2(2, 1) = xx2
   x1x2(2, 2) = xx1
-  ! loop over x1 and x2
-  differential_cross_section=0.d0
+
+  ! loop over x1 and x2  
+  differential_cross_section = 0.d0
   do ix = 1, ixmax
     ffxn = 0.d0
     x1 = x1x2(ix, 1)
     x2 = x1x2(ix, 2)
+
     ! loop over costheta_cm
     do jx = 1, jxmax
       fffxn = 0.d0
-      ! structure functions
+      
       ! scale for the pdfs
-      rmt = fmass(11)
-      gamt = fwidth(11)
       qq = 2.d0*rmt
+
       ! construct hadronic structure functions.
       if (structure_function <= 4) then
         q2 = qq*qq
@@ -242,7 +262,6 @@ function differential_cross_section(x,wgt)
         ! it later. this is for compatibility with mrs, which return xf(x).)
         ! recent changes may screw up compatabilty with mrs. sea->bar in names
         ! below reflecting change in cteq61pdf iparton variable.
-
 
         u1 = x1*ctq6pdf(1, x1, qq)
         d1 = x1*ctq6pdf(2, x1, qq)
@@ -623,24 +642,24 @@ function differential_cross_section(x,wgt)
 
       if (final_state == 0) then
         ! assign 2to2 madgraph momenta    
-        do i=1,3
-          p1(i)=q(i,1)
-          p2(i)=q(i,2)
-          p3(i)=q(i,3)
-          p4(i)=q(i,4)
-          p5(i)=0.d0
-          p6(i)=0.d0
-          p7(i)=0.d0
-          p8(i)=0.d0
+        do i = 1, 3
+          p1(i) = q(i,1)
+          p2(i) = q(i,2)
+          p3(i) = q(i,3)
+          p4(i) = q(i,4)
+          p5(i) = 0.d0
+          p6(i) = 0.d0
+          p7(i) = 0.d0
+          p8(i) = 0.d0
         end do
-        p1(0)=q(4,1)
-        p2(0)=q(4,2)
-        p3(0)=q(4,3)
-        p4(0)=q(4,4)
-        p5(0)=0.d0
-        p6(0)=0.d0
-        p7(0)=0.d0
-        p8(0)=0.d0
+        p1(0) = q(4,1)
+        p2(0) = q(4,2)
+        p3(0) = q(4,3)
+        p4(0) = q(4,4)
+        p5(0) = 0.d0
+        p6(0) = 0.d0
+        p7(0) = 0.d0
+        p8(0) = 0.d0
 
         ! check 2to2 kinematics
         ! print *,  'p1  =',p1
@@ -666,25 +685,45 @@ function differential_cross_section(x,wgt)
 
 
       else if (final_state > 0) then
-      ! assign 2to6 madgraph momenta
-        do i=1,3
-          p1(i)=q(i,1)
-          p2(i)=q(i,2)
-          p3(i)=q(i,3)
-          p4(i)=q(i,4)
-          p5(i)=q(i,5)
-          p6(i)=q(i,6)
-          p7(i)=q(i,7)
-          p8(i)=q(i,8)
+        ! assign 2to6 madgraph momenta
+        do i = 1, 3
+          p1(i) = q(i,1)
+          p2(i) = q(i,2)
+          p3(i) = q(i,3)
+          p4(i) = q(i,4)
+          p5(i) = q(i,5)
+          p6(i) = q(i,6)
+          p7(i) = q(i,7)
+          p8(i) = q(i,8)
         end do
-        p1(0)=q(4,1)
-        p2(0)=q(4,2)
-        p3(0)=q(4,3)
-        p4(0)=q(4,4)
-        p5(0)=q(4,5)
-        p6(0)=q(4,6)
-        p7(0)=q(4,7)
-        p8(0)=q(4,8)
+        p1(0) = q(4,1)
+        p2(0) = q(4,2)
+        p3(0) = q(4,3)
+        p4(0) = q(4,4)
+        p5(0) = q(4,5)
+        p6(0) = q(4,6)
+        p7(0) = q(4,7)
+        p8(0) = q(4,8)
+
+        ! collider 4-momentum 
+        do i = 1, 3
+          p1col(i) = qcol(i,1)
+          p2col(i) = qcol(i,2)
+          p3col(i) = qcol(i,3)
+          p4col(i) = qcol(i,4)
+          p5col(i) = qcol(i,5)
+          p6col(i) = qcol(i,6)
+          p7col(i) = qcol(i,7)
+          p8col(i) = qcol(i,8)
+        end do
+        p1col(0) = qcol(4,1)
+        p2col(0) = qcol(4,2)
+        p3col(0) = qcol(4,3)
+        p4col(0) = qcol(4,4)
+        p5col(0) = qcol(4,5)
+        p6col(0) = qcol(4,6)
+        p7col(0) = qcol(4,7)
+        p8col(0) = qcol(4,8)
 
       ! check 6-body kinematics
       !       print *,  'p1  =',p1
@@ -747,11 +786,12 @@ function differential_cross_section(x,wgt)
 
       if (final_state == 2) then
         ! reconstruct the neutrino momentum in the semi-hadronic channel
-        pT8(1) = p8(1)
-        pT8(2) = p8(2)
-        pz_nu = longitudinal_neutrino_momentum(p7, pT8)
-      else 
-        pz_nu = p8(3)
+        do i = 1, 2
+          pT8col(i) = p8col(i)
+          p8col_reco = p8col(i)
+        end do
+        p8col_reco(3) = longitudinal_neutrino_momentum(p7col, pT8col)
+        p8col_reco(0) = sqrt(p8col_reco(1)*p8col_reco(1) + p8col_reco(2)*p8col_reco(2) + p8col_reco(3)*p8col_reco(3))
       end if
 
       ! calculate transverse momenta (pt)
@@ -810,9 +850,9 @@ function differential_cross_section(x,wgt)
                      + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
 
         rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
-        /sqrt((q(1, 3)+q(1, 5)+q(1, 6))**2 &
-              +(q(2, 3)+q(2, 5)+q(2, 6))**2 &
-              +(q(3, 3)+q(3, 5)+q(3, 6))**2)
+        /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
+              +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
+              +(q(3, 3) + q(3, 5) + q(3, 6))**2)
         if (rps356 < -1.d0) rps = -1.d0
         if (rps356 > +1.d0) rps = +1.d0
         rpl356 = acos(rps356)
@@ -899,31 +939,35 @@ function differential_cross_section(x,wgt)
     ! calculate rapidity of the tt system
       ytt = 0.5d0*log(x1/x2)
 
-    ! calculate rmtt
+    ! calculate mtt
       if (final_state == 0) then
-        rmtt2=(qcol(4,3)+qcol(4,4))**2
+        mtt2=(qcol(4,3)+qcol(4,4))**2
         do i=1,3
-          rmtt2=rmtt2-(qcol(i,3)+qcol(i,4))**2
+          mtt2=mtt2-(qcol(i,3)+qcol(i,4))**2
         end do
       else if (final_state > 0) then
-        rmtt2=(qcol(4,3)+qcol(4,4) &
+        mtt2=(qcol(4,3)+qcol(4,4) &
         +qcol(4,5)+qcol(4,6) &
         +qcol(4,7)+qcol(4,8))**2
         do i=1,3
-          rmtt2=rmtt2-(qcol(i,3)+qcol(i,4) &
+          mtt2=mtt2-(qcol(i,3)+qcol(i,4) &
           +qcol(i,5)+qcol(i,6) &
           +qcol(i,7)+qcol(i,8))**2
         end do
       end if
-      rmtt=sqrt(abs(rmtt2))
+      mtt=sqrt(abs(mtt2))
 
       if (final_state == 2) then
         ! calculate Mtt_reco
-        p8_reco(1) = p8(0) 
-        p8_reco(0) = sqrt(p8(1)*p8(1) + p8(2)*p8(2) + p8(3)*p8(3))
-        Mtt_reco = (qcol(4,3)+qcol(4,4) &
-        +qcol(4,5)+qcol(4,6) &
-        +qcol(4,7)+qcol(4,8))**2
+        mtt_reco2 = (qcol(4,3) + qcol(4,4) &
+                + qcol(4,5) + qcol(4,6) &
+                + qcol(4,7) + p8col_reco(0))**2
+        do i=1,3
+          mtt_reco2 = mtt_reco2-(qcol(i,3) + qcol(i,4) &
+                       + qcol(i,5) + qcol(i,6) &
+                       + qcol(i,7) + p8col_reco(i))**2
+        end do
+        mtt_reco = sqrt(mtt_reco2)
       end if
 
     ! calculate invariant mass of visible decay products
@@ -1054,14 +1098,6 @@ function differential_cross_section(x,wgt)
 
       ! calculate delta_absy for arfb
       delta_absy = abs(yt) - abs(ytb)
-
-      if (final_state > 0) then
-        pT8(1) = p8(1)
-        pT8(2) = p8(2)
-        pz_nu = longitudinal_neutrino_momentum(p7, pT8)
-      else 
-        pz_nu = p8(3)
-      end if
 
       ! calculate cos(theta_l+)
       if (final_state > 0) then
@@ -1705,15 +1741,15 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if (o_rmtt == 1) then
+      if (o_mtt == 1) then
         ! generate distribution in mtt.
-        nbin=int((rmtt-rmttmin)/rmttw)+1
-        if (nbin >= (ndiv_rmtt+1)) then
+        nbin=int((mtt-mttmin)/mttw)+1
+        if (nbin >= (ndiv_mtt+1)) then
           continue
         else if (nbin < 1) then
           continue
         else
-          fxrmtt(nbin,it)=fxrmtt(nbin,it)+hist
+          fxmtt(nbin,it)=fxmtt(nbin,it)+hist
         end if
       end if
 
@@ -1854,8 +1890,8 @@ function differential_cross_section(x,wgt)
       if (o_dphi2d == 1) then
       ! generate distribution in dphi2d.
         ibin=int((dphi-dphimin)/dphiw)+1
-        jbin=int((rmtt-rmttmin)/rmttw)+1
-        if ((ibin > ndiv_dphi) .or. (jbin > ndiv_rmtt)) then
+        jbin=int((mtt-mttmin)/mttw)+1
+        if ((ibin > ndiv_dphi) .or. (jbin > ndiv_mtt)) then
           continue
         else if ((ibin < 1) .or. (jbin < 1)) then
           continue
@@ -2104,7 +2140,7 @@ function differential_cross_section(x,wgt)
 
       if (o_asym(9) == 1) then
         if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
-        ! generate distribution in sigp for a_l.
+          ! generate distribution in sigp for a_l.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if (nbin >= (ndiv_sigp+1)) then
@@ -2116,7 +2152,7 @@ function differential_cross_section(x,wgt)
           end if
         end if
         if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
-        ! generate distribution in sigm for a_l.
+          ! generate distribution in sigm for a_l.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if (nbin >= (ndiv_sigm+1)) then
@@ -2130,11 +2166,11 @@ function differential_cross_section(x,wgt)
       end if
     
       ! stats
-      npoints=npoints+1
+      npoints = npoints+1
       
-      ffxn=ffxn+fffxn
+      ffxn = ffxn + fffxn
     end do ! end loop costheta_t<->-cost
-    differential_cross_section=differential_cross_section+ffxn  
+    differential_cross_section = differential_cross_section + ffxn  
   end do ! end loop x1 <-> x2
   return
 end function differential_cross_section
