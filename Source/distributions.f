@@ -286,7 +286,7 @@ contains
     ndiv_delta_y=100
     ! transverse variables
     do itrans=1,ntrans
-      if(final_state == 0)then
+      if(final_state == 0 )then
         o_tran(itrans)=0
       else
         o_tran(itrans)=include_transverse
@@ -427,11 +427,16 @@ contains
       o_mtt_reco = 0
     end if
     if (final_state == 2)then
+      do itrans=1,ntrans
+        o_tran(itrans)=0
+        include_transversedp(itrans) = 0
+      end do
       o_cost5 = 0
       o_ct7ct5 = 0
       o_dphi = 0
       o_dphi2d = 0
       o_etmiss = 0
+      o_asym(9) = 0    ! turn off a_l
     end if
 
   end subroutine initialise_distributions

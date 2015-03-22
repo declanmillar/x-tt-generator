@@ -1657,8 +1657,9 @@ function differential_cross_section(x,wgt)
           end if
         end if
       end do
-    ! generate distribution in pt356.
+
       if (o_pt356 == 1) then
+        ! generate distribution in pt356.
         nbin=int((pt356-pt356min)/pt356w)+1
         if (nbin >= (ndiv_pt356+1)) then
           continue
@@ -1682,7 +1683,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_phi356 == 1) then
-      ! generate distribution in phi356.
+        ! generate distribution in phi356.
         nbin=int((phi356-phi356min)/phi356w)+1
         if (nbin >= (ndiv_phi356+1)) then
           continue
@@ -1753,8 +1754,20 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
+      if (o_mtt_reco == 1) then
+        ! generate distribution in mtt.
+        nbin=int((mtt_reco-mtt_recomin)/mtt_recow)+1
+        if (nbin >= (ndiv_mtt_reco+1)) then
+          continue
+        else if (nbin < 1) then
+          continue
+        else
+          fxmtt_reco(nbin,it)=fxmtt_reco(nbin,it)+hist
+        end if
+      end if
+
       if (o_beta == 1) then
-      ! generate distribution in beta.
+        ! generate distribution in beta.
         beta=shat/4.d0/rmt**2-1.d0
         nbin=int((beta-betamin)/betaw)+1
         if (nbin >= (ndiv_beta+1)) then
@@ -1778,7 +1791,8 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if (o_et == 1) then   !enerate distribution in et.
+      if (o_et == 1) then   
+        ! generate distribution in et.
         nbin=int((et-etmin)/etw)+1
         if (nbin >= (ndiv_et+1)) then
           continue
@@ -1789,7 +1803,8 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if (o_delta_y == 1) then   !enerate distribution in delta_absy.
+      if (o_delta_y == 1) then   
+        ! generate distribution in delta_absy.
         nbin=int((delta_absy-delta_ymin)/delta_yw)+1
         if (nbin >= (ndiv_delta_y+1)) then
           continue
@@ -1815,7 +1830,7 @@ function differential_cross_section(x,wgt)
       end do
 
       if (o_fl == 1) then
-      ! generate distribution in phi_l.
+        ! generate distribution in phi_l.
         nbin=int((phi_l-flmin)/flw)+1
         if (nbin >= (ndiv_fl+1)) then
           continue
@@ -1828,7 +1843,7 @@ function differential_cross_section(x,wgt)
 
 
       if (o_cosfl == 1) then
-      ! generate distribution in cosfl.
+        ! generate distribution in cosfl.
         nbin=int((cosfl-cosflmin)/cosflw)+1
         if (nbin >= (ndiv_cosfl+1)) then
           continue
@@ -1841,7 +1856,7 @@ function differential_cross_section(x,wgt)
 
 
       if (o_dphi == 1) then
-      ! generate distribution in dphi.
+        ! generate distribution in dphi.
         nbin=int((dphi-dphimin)/dphiw)+1
         if (nbin >= (ndiv_dphi+1)) then
           continue
@@ -1853,7 +1868,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_cost5 == 1) then
-      ! generate distribution in costheta5.
+        ! generate distribution in costheta5.
         nbin=int((costheta5-cost5min)/cost5w)+1
         if (nbin >= (ndiv_cost5+1)) then
           continue
@@ -1865,7 +1880,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_cost7 == 1) then
-      ! generate distribution in costheta7.
+        ! generate distribution in costheta7.
         nbin=int((costheta7-cost7min)/cost7w)+1
         if (nbin >= (ndiv_cost7+1)) then
           continue
@@ -1888,7 +1903,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_dphi2d == 1) then
-      ! generate distribution in dphi2d.
+        ! generate distribution in dphi2d.
         ibin=int((dphi-dphimin)/dphiw)+1
         jbin=int((mtt-mttmin)/mttw)+1
         if ((ibin > ndiv_dphi) .or. (jbin > ndiv_mtt)) then
@@ -1899,6 +1914,8 @@ function differential_cross_section(x,wgt)
           fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
         end if
       end if
+
+
 
       do itrans=1,ntrans
         if (include_transversedp(itrans) == 1) then
