@@ -652,8 +652,8 @@ contains
         end do
         write(*,*)'DISTRIBUTION'
         write(*,'(a,i1)')'pt',ip
-        write(*,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/gev]'
-        write(*,'(a,i1,a)')'p_{t}(',ip,')--[gev]'
+        write(*,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/GeV]'
+        write(*,'(a,i1,a)')'p_{t}(',ip,')--[GeV]'
         do i=1,ndiv_pt(ip)
           write(*,*)xpt(ip,i),fxpttot(ip,i)
         end do
@@ -734,8 +734,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'etmiss'
-      write(*,*)'d#sigma-/dp_{tmiss}--[pb/gev]'
-      write(*,*)'p_{t}(miss)--[gev]'
+      write(*,*)'d#sigma-/dp_{tmiss}--[pb/GeV]'
+      write(*,*)'p_{t}(miss)--[GeV]'
       do i=1,ndiv_etmiss
         write(*,*)xetmiss(i),fxetmisstot(i)
       end do
@@ -755,8 +755,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'pt356'
-      write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
-      write(*,*)'p_{t}(t)--[gev]'
+      write(*,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(*,*)'p_{t}(t)--[GeV]'
       do i=1,ndiv_pt356
         write(*,*)xpt356(i),fxpt356tot(i)
       end do
@@ -815,8 +815,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'pt478'
-      write(*,*)'d#sigma-/dp_{t}--[pb/gev]'
-      write(*,*)'p_{t}(#bar{t})--[gev]'
+      write(*,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(*,*)'p_{t}(#bar{t})--[GeV]'
       do i=1,ndiv_pt478
         write(*,*)xpt478(i),fxpt478tot(i)
       end do
@@ -875,8 +875,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'Mtt'
-      write(*,*)'d#sigma-/dm_{tt}--[pb/gev]'
-      write(*,*)'m_{tt}--[gev]'
+      write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
+      write(*,*)'M_{tt}--[GeV]'
       do i=1,ndiv_mtt
         write(*,*)xmtt(i),fxmtttot(i)
       end do
@@ -896,8 +896,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'Mtt_reco'
-      write(*,*)'d#sigma-/dM^{reco}_{tt}--[pb/gev]'
-      write(*,*)'m^{reco}_{tt}--[gev]'
+      write(*,*)'d#sigma-/dM^{reco}_{tt}--[pb/GeV]'
+      write(*,*)'m^{reco}_{tt}--[GeV]'
       do i=1,ndiv_mtt_reco
         write(*,*)xmtt_reco(i),fxmtt_recotot(i)
       end do
@@ -959,8 +959,8 @@ contains
       end do
       write(*,*)'DISTRIBUTION'
       write(*,*)'et'
-      write(*,*)'d#sigma-/de_{t}--[pb/gev]'
-      write(*,*)'e_{t}--[gev]'
+      write(*,*)'d#sigma-/de_{t}--[pb/GeV]'
+      write(*,*)'e_{t}--[GeV]'
       do i=1,ndiv_et
         write(*,*)xet(i),fxettot(i)
       end do
@@ -1006,44 +1006,44 @@ contains
         write(*,*)'DISTRIBUTION'
         if (itrans == 1)then
           write(*,*)'mvis'
-          write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
-          write(*,*)'m_{vis}--[gev]'
+          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
+          write(*,*)'m_{vis}--[GeV]'
         else if (itrans == 2)then
           write(*,*)'ht'
-          write(*,*)'d#sigma-/dh_{t}--[pb/gev]'
-          write(*,*)'h_{t}--[gev]'
+          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
+          write(*,*)'h_{t}--[GeV]'
         else if (itrans == 3)then
           write(*,*)'m_t1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 4)then
           write(*,*)'m_t2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 5)then
           write(*,*)'m_t3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 6)then
           write(*,*)'mlt'
-          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 7)then
           write(*,*)'m_ct1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 8)then
           write(*,*)'m_ct2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 9)then
           write(*,*)'m_ct3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 10)then
           write(*,*)'mlct'
-          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/gev]'
-          write(*,*)'m^{l}_{ct}--[gev]'
+          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
+          write(*,*)'m^{l}_{ct}--[GeV]'
         else
           continue
         end if
@@ -1132,12 +1132,12 @@ contains
       end do
       write(*,*)'2D-DISTRIBUTION'
       write(*,*)'dphi2d'
-      write(*,*)'d^2#sigma-/d#delta#phi-dm_{tt}--[pb/gev]'
+      write(*,*)'d^2#sigma-/d#delta#phi-dM_{tt}--[pb/GeV]'
       write(*,*)'#delta#phi--[rad]'
       write(*,*) ndiv_dphi
       write(*,*) dphimin
       write(*,*) dphimax
-      write(*,*)'#m_{tt}--[gev]'
+      write(*,*)'#M_{tt}--[GeV]'
       write(*,*) ndiv_mtt
       write(*,*) mttmin
       write(*,*) mttmax
@@ -1169,34 +1169,34 @@ contains
         write(*,*)'2D-DISTRIBUTION'
         if (itrans == 1)then
           write(*,*)'dphimvis'
-          write(*,*)'d#sigma-/dm_{vis}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
         else if (itrans == 2)then
           write(*,*)'ht'
-          write(*,*)'d#sigma-/dh_{t}--[pb/gev]'
+          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
         else if (itrans == 3)then
           write(*,*)'dphim_t1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
         else if (itrans == 4)then
           write(*,*)'dphim_t2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
         else if (itrans == 5)then
           write(*,*)'dphim_t3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
         else if (itrans == 6)then
           write(*,*)'dphimlt'
-          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/gev]'
+          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
         else if (itrans == 7)then
           write(*,*)'dphim_ct1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
         else if (itrans == 8)then
           write(*,*)'dphim_ct2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
         else if (itrans == 9)then
           write(*,*)'dphim_ct3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/gev]'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
         else if (itrans == 10)then
           write(*,*)'dphimlct'
-          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/gev]'
+          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
         else
           continue
         end if
@@ -1205,25 +1205,25 @@ contains
         write(*,*) dphimin
         write(*,*) dphimax
         if (itrans == 1)then
-          write(*,*)'m_{vis}--[gev]'
+          write(*,*)'m_{vis}--[GeV]'
         else if (itrans == 2)then
-          write(*,*)'h_{t}--[gev]'
+          write(*,*)'h_{t}--[GeV]'
         else if (itrans == 3)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 4)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 5)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 6)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 7)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 8)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 9)then
-          write(*,*)'m_{t}--[gev]'
+          write(*,*)'m_{t}--[GeV]'
         else if (itrans == 10)then
-          write(*,*)'m^{l}_{ct}--[gev]'
+          write(*,*)'m^{l}_{ct}--[GeV]'
         else
           continue
         end if
@@ -1357,7 +1357,7 @@ contains
             write(*,*)'A_l'
             write(*,*)'a_{l}'
           end if
-          write(*,*)'m_{tt}'
+          write(*,*)'M_{tt}'
           ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
           do i=1,ndiv_sig
             if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
