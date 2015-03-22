@@ -1,19 +1,9 @@
-// ================================= header ====================================
-// superpose.cpp
-// ------------------
-// Author: Declan Millar
-//
+// superpose
+// author: Declan Millar
+
 // Superimposes 2 histograms (TH1Ds) from 2 different root files. The
 // histograms must have the same name in all files.
 
-// usage:
-// $ superposeHistos <histName> <filename1.root> <filename2.root> --options
-
-// The executable can be added to $PATH and run in the directory
-// containing the root files.
-// ================================= start =====================================
-
-// c++ includes
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -37,16 +27,17 @@ int main(int argc, char *argv[])
 
   if (args<4)
   {
-    std::cout << "usage:  " << argv[0] << "<histName> " << " <fileName1.root> "
+    std::cout << "usage:  " << argv[0] << "<histName1> " << "<histName2> " << " <fileName1.root> "
     << " <fileName2.root> " << std::endl;
     return 0;
   }
 
   // compulsory arguments
-  std::string histName; // name of histogram to compare
-  std::string fileName1; // name of first root file
-  std::string fileName2; // name of second root file
-  std::string epsFileName; // name of epsoutput file
+  std::string histName1;
+  std::string histName2;
+  std::string fileName1;
+  std::string fileName2; 
+  std::string epsFileName;
 
   // optional arguments
   bool epsOutput;
@@ -54,7 +45,6 @@ int main(int argc, char *argv[])
   bool normalize;
   Double_t rangeMax;
   Double_t rangeMin;
-  std::string fileName3; // name of optional 3rd file
 
   // set optional arguments
   po::options_description desc("Options for my program");
@@ -76,8 +66,6 @@ int main(int argc, char *argv[])
         ("rangeMax,b", po::value<Double_t>(& rangeMax),
             "The maximum range of the x axis.")
 
-        ("optionalFile,o", po::value<std::string>(& fileName3)->default_value("NULL"),
-            "Optional third input root file.") 
         ;
 
     po::variables_map vm;
@@ -85,52 +73,24 @@ int main(int argc, char *argv[])
     po::notify(vm);
 
   // local variables
-  int nFiles;
+  int nFiles = 2;
   std::string name1;
   std::string name2;
-  std::string name3;
-
-  // ---------------------------------------------------------------------------
-  if (fileName3 != "NULL") nFiles=3;
-  else nFiles =2;
 
   // print 
   printf("Superimposing %i histograms...\n",nFiles);
 
-  histName  = argv[1];
-  fileName1 = argv[2];  
-  fileName2 = argv[3];
+  histName1 = argv[1];
+  histName2 = argv[2];
+  fileName1 = argv[3];  
+  fileName2 = argv[4];
 
   // check strings
   // printf("Argument strings: %s, %s, %s, %s\n",histName.c_str(),
   // fileName1.c_str(),fileName2.c_str());
 
-  name1 = histName+'@'+fileName1;
-  name2 = histName+'@'+fileName2;
-  // name3 = histName+'@'+fileName3;
-
-  // ---------------------------------------------------------------------------
-  // Find unique info for each histo
-  // we have remove 10 for the _<date> before the . and +4 to remove LHC_
-  // note this is very inflexible.
-  // int firstIndex;
-  // int lastIndex;
-
-  // std::string name1; // name of third root file  
-  // firstIndex = fileName1.find_first_of("LHC");
-  // lastIndex = fileName1.find_last_of(".");
-  // name1 = fileName1.substr(firstIndex+4,lastIndex-(firstIndex+3)-10);
-
-  // std::string name2; // name of third root file
-  // firstIndex = fileName2.find_first_of("LHC");
-  // lastIndex = fileName2.find_last_of(".");
-  // name2 = fileName2.substr(firstIndex+4,lastIndex-(firstIndex+3)-10);
-
-  // std::string name3; // name of third root file
-  // firstIndex = fileName3.find_first_of("LHC");
-  // lastIndex = fileName3.find_last_of(".");
-  // name3 = fileName3.substr(firstIndex+4,lastIndex-(firstIndex+3)-10);
-  // ---------------------------------------------------------------------------
+  name1 = histName1 + '@' + fileName1;
+  name2 = histName2 + '@' + fileName2;
   
   // TApplication changes argv so the arguments must have already been copied!
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
@@ -142,29 +102,26 @@ int main(int argc, char *argv[])
   gStyle->SetOptTitle(0);
   
   // create canvas
-  TCanvas *canvas = new TCanvas( histName.c_str() ,histName.c_str() );
+  TCanvas *canvas = new TCanvas(histName1.c_str(), histName1.c_str());
   canvas->cd();
 
   // 1st root file
-  TFile f1( fileName1.c_str() ,"READ" );
-  TH1D *h1 = ( TH1D* )f1.Get( histName.c_str() );
-  // h1->SetTitle( fileName1.c_str() );
-  h1->SetTitle( "SM" );
+  TFile f1( fileName1.c_str(), "READ" );
+  TH1D *h1 = ( TH1D* )f1.Get( histName1.c_str() );
+  h1->SetTitle( fileName1.c_str() );
   h1->Draw();
   h1->SetLineColor( kBlack );
   h1->GetYaxis()->SetTitleOffset( 1.3 );
   h1->GetXaxis()->SetTitleOffset( 1.2 );
 
   // 2nd root file
-  TFile f2( fileName2.c_str() ,"READ" );
-  TH1D *h2 = ( TH1D* )f2.Get( histName.c_str() );
-  // h2->SetTitle( fileName2.c_str() );
-  h2->SetTitle( "SSM Z' (M=2 TeV, #Gamma=200 GeV)" );
+  TFile f2( fileName2.c_str(), "READ" );
+  TH1D *h2 = ( TH1D* )f2.Get( histName2.c_str() );
+  h2->SetTitle( fileName2.c_str() );
   h2->Draw( "SAME" );
   h2->SetLineColor( kRed );
 
   // normalize histograms
-  // normalize=true;
   if ( normalize == true )
   { 
     std::string yTitle;
@@ -172,11 +129,10 @@ int main(int argc, char *argv[])
     yTitle="1/#sigma #times " + yTitle;
     h1->GetYaxis()->SetTitle(yTitle.c_str());
     // printf("yTitle=%s\n",yTitle.c_str());
-    h1->Scale( 1.0 / h1->Integral() );
-    h2->Scale( 1.0 / h2->Integral() );
+    h1->Scale(1.0/h1->Integral());
+    h2->Scale(1.0/h2->Integral());
     // if ( fileName3 != "NULL" )h3->Scale( 1.0 / h3->Integral() );
   }
-
 
   // set range user
   // if( rangeMax == rangeMax && rangeMax == rangeMax )
@@ -201,7 +157,7 @@ int main(int argc, char *argv[])
   }
   else if ( epsOutput == true )
   {
-    epsFileName=histName+"_2to6_SMMvsSM_EW.eps";
+    epsFileName=histName1 + "_2to6_SMMvsSM_EW.eps";
     printf("Saving to %s\n",epsFileName.c_str());
     canvas->SaveAs(epsFileName.c_str());
   }
@@ -210,4 +166,3 @@ int main(int argc, char *argv[])
   printf("Superposition complete. Have a nice day.\n");
   return 0; 
 }
-// ================================== end ======================================

@@ -259,12 +259,12 @@ contains
     o_mtt=1
     mttmax=14000.d0/(1+initial_state*6)
     mttmin=0.d0
-    ndiv_mtt=140
+    ndiv_mtt=560
     ! reconstructed invarient mass of tt pair (always on)
     o_mtt_reco = print_all_distributions
     mtt_recomax = 14000.d0/(1 + initial_state*6)
     mtt_recomin = 0.d0
-    ndiv_mtt_reco = 140
+    ndiv_mtt_reco = 560
     ! boost of parton com
     o_beta=print_all_distributions
     betamax=1000.d0
