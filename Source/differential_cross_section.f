@@ -11,6 +11,7 @@ function differential_cross_section(x,wgt)
   ! this is then passed to vegas in the main program.
   ! authors: declan millar, stefano moretti
 
+  use mathematics, only: pi
   use configuration
   use modelling
   use kinematics

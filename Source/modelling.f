@@ -29,7 +29,7 @@ module modelling
 
   ! lepton widths
   real, parameter :: eWidth=0.d0,   muwidth=0.d0,   tauwidth=0.d0
-  real, parameter :: nueWidth=0.d0, numuwidth=0.d0, nutauwidth=0.d0
+  real, parameter :: nuewidth=0.d0, numuwidth=0.d0, nutauwidth=0.d0
 
   ! SM boson masses
   real, parameter :: rm_w=80.23d0,rm_z=91.19d0,gamma_w=2.08d0,gamma_z=2.5d0

@@ -7,7 +7,6 @@ module kinematics
   real :: m3, m4, m5, m6, m7, m8
   real :: s
   real :: sigma
-  real, parameter :: pi = 3.14159265358979323846d0
   real, parameter :: unit_conv = 0.38937966d9 ! GeV^-2 to nb
   real :: Xsec_polar(20, -1:1, -1:1), error_polar(20, -1:1, -1:1)
   real :: Xsec_FB(n_fb_asymmetries, 20, -1:1), error_FB(n_fb_asymmetries, 20, -1:1)

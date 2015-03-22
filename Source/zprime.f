@@ -8,6 +8,7 @@ program zprime
   ! uses cteq6 and mrs99 pdf subroutines.
   ! authors: declan millar, stefano moretti.
 
+  use mathematics, only: pi
   use configuration
   use modelling
   use kinematics
@@ -305,6 +306,18 @@ program zprime
     ! multiply by branching ratios
     avgi = avgi*brtbln*brtbln
     sd = sd*brtbln*brtbln
+  end if
+
+  if (final_state == 2) then
+    ! multiply by dilepton to semi-hadronic conversion
+    avgi = avgi*12
+    sd = sd*12
+  end if
+
+  if (final_state == 3) then
+    ! multiply by dilepton to fully hadronic conversion
+    avgi = avgi*36
+    sd = sd*36
   end if
 
   ! collect total cross-section

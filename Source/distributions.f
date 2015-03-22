@@ -2,7 +2,8 @@ module distributions
 
   use configuration, only: print_all_distributions, print_2d_distributions, include_transverse, include_asymmetries, o_asym, &
                            n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final
-  use kinematics, only: pi, sigma
+  use mathematics, only: pi
+  use kinematics, only: sigma
   use integration, only: it
 
   implicit none
