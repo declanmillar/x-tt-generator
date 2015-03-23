@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
   bool epsOutput;
   bool logY;
   bool normalize;
-  Double_t rangeMax;
-  Double_t rangeMin;
 
   po::options_description desc("Options for my program");
     desc.add_options()
@@ -36,14 +34,6 @@ int main(int argc, char *argv[])
 
         ("normalize,n", po::value<bool>(& normalize)->default_value(false),
             "If true normalize histos")
-
-        // both rangeMin and rangeMax must be set simultaneously for any effect.
-
-        ("rangeMin,a", po::value<Double_t>(& rangeMin),
-            "The minimum range of the x axis.")
-
-        ("rangeMax,b", po::value<Double_t>(& rangeMax),
-            "The maximum range of the x axis.")
         ;
 
     po::variables_map vm;

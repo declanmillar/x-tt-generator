@@ -130,9 +130,7 @@ int main(int argc, char *argv[])
     h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
     if (nFiles > 1) h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
     if (nFiles > 2) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-    // if ( fileName3 != "NULL" )h3->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
   }
-  printf("%f,%f\n", rangeMin, rangeMax);
 
   if (logY == true) canvas->SetLogy();
 
