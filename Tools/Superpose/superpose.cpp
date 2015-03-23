@@ -68,14 +68,14 @@ int main(int argc, char *argv[])
   int nFiles = (args - 1)/2;   
   printf("Superimposing %i histograms...\n",nFiles);
   
-  TApplication* RootApp = new TApplication("RootApp", &argc, argv);
+  TApplication* rootApp = new TApplication("rootApp", &argc, argv);
 
   gStyle->SetOptStat(0);
   gStyle->SetLegendFont(132);
   gStyle->SetLegendBorderSize(0);
   gStyle->SetOptTitle(0);
   
-  TCanvas *canvas = new TCanvas("Superposition", "Superposition");
+  TCanvas *canvas = new TCanvas("Superposition", "Superposition", 1280, 751);
   canvas->cd();
 
   histName1 = argsv[1];
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     if (!f2->IsOpen()) printf("Failed to open %s\n", fileName2.c_str());
     name2 = histName2 + '@' + fileName2;
     h2 = (TH1D*) f2->Get(histName2.c_str());
-    h2->SetTitle( name2.c_str() );
+    h2->SetTitle(name2.c_str());
     h2->Draw("SAME");
     h2->SetLineColor(kRed);
   }
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
     if (!f3->IsOpen()) printf("Failed to open %s\n", fileName3.c_str());
     h3 = (TH1D*) f3->Get(histName3.c_str());
     name3 = histName3 + '@' + fileName3;
-    h3->SetTitle( name3.c_str() );
+    h3->SetTitle(name3.c_str());
     h3->Draw("SAME");
     h3->SetLineColor(kBlue);
   }
@@ -117,8 +117,8 @@ int main(int argc, char *argv[])
   // normalize histograms
   if (normalize == true) { 
     std::string yTitle;
-    yTitle=h1->GetYaxis()->GetTitle();
-    yTitle="1/#sigma #times " + yTitle;
+    yTitle = h1->GetYaxis()->GetTitle();
+    yTitle = "1/#sigma #times " + yTitle;
     h1->GetYaxis()->SetTitle(yTitle.c_str());
     if (nFiles > 0) h1->Scale(1.0/h1->Integral());
     if (nFiles > 1) h2->Scale(1.0/h2->Integral());
@@ -133,15 +133,16 @@ int main(int argc, char *argv[])
   // }
   // printf("%f,%f\n", rangeMin,rangeMax);
 
-  if ( logY == true ){ canvas->SetLogy(); }
+  if (logY == true) canvas->SetLogy();
 
-  canvas->BuildLegend( 0.70 ,0.70 ,0.88 ,0.88 ,"" );
+  canvas->BuildLegend(0.50, 0.60, 0.88, 0.88, "");
   
-  if ( epsOutput == false ) {
+  if (epsOutput == false) {
     printf("Running ROOT app...\n");
-    RootApp->Run( kTRUE );
+    canvas->Show();
+    rootApp->Run();
   }
-  else if ( epsOutput == true ) {
+  else if (epsOutput == true) {
     epsFileName = histName1 + "_2to6_SMMvsSM_EW.eps";
     printf("Saving to %s\n",epsFileName.c_str());
     canvas->SaveAs(epsFileName.c_str());
