@@ -1,8 +1,3 @@
-// ================================== header ===================================
-// function plotDistribution
-// -------------------
-// Author: Declan Millar
-// ================================== start ====================================
 TH1D* plotDistribution(double luminosity, double efficiency, ifstream * logStream){
 
   // declarations.

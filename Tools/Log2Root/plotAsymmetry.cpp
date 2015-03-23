@@ -1,8 +1,3 @@
-// ================================== header ===================================
-// function plotaAsymmetry
-// -------------------
-// Author: Declan Millar
-// ================================== start ====================================
 TH1D* plotAsymmetry(double luminosity, double efficiency, ifstream * logStream){
 
   // declarations.
