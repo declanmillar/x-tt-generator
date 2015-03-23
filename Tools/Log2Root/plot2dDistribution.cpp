@@ -49,7 +49,7 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
   // multiply by the luminosity if specified
   if (luminosity > 0) {
     for (int i = 0; i < zv.size(); i++) {
-      zv[i] = zv[i]*luminosity;
+      zv[i] = zv[i]*luminosity*efficiency;
     }
     zTitle = "Events";
   }

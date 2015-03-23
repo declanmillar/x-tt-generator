@@ -1,5 +1,5 @@
 // superpose
-// author: Declan Millar
+// Declan Millar
 
 #include <iostream>
 #include <fstream>

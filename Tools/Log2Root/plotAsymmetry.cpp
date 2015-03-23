@@ -69,8 +69,8 @@ TH1D* plotAsymmetry(double luminosity, double efficiency, ifstream * logStream){
     // Find errors
     for (int i=0; i<nBins; i++)
     {
-      deltaA1[i]=sqrt((1.0-AV[i]*AV[i])/(luminosity*(sigpV[i]+sigmV[i])));
-      deltaA2[i]=(2.0/(sigpV[i]+sigmV[i]))*sqrt((sigpV[i]*sigmV[i])/(luminosity*(sigpV[i]+sigmV[i])));
+      deltaA1[i]=sqrt((1.0-AV[i]*AV[i])/(luminosity*efficiency*(sigpV[i]+sigmV[i])));
+      deltaA2[i]=(2.0/(sigpV[i]+sigmV[i]))*sqrt((sigpV[i]*sigmV[i])/(luminosity*efficiency*(sigpV[i]+sigmV[i])));
       // printf ("%f,%f\n",sigpV[i],sigmV[i]);
       // printf ("%f,%f\n",deltaA1[i],deltaA2[i]);
     }

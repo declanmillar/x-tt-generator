@@ -66,7 +66,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream * logStrea
   {
     for (int i=0; i<nBins; i++)
     {
-      yV[i]=yV[i]*luminosity;
+      yV[i]=yV[i]*luminosity*efficiency;
       // printf("Bin Low Edge = %f\n",binLowEdges[i]);
     }
     yTitle="Events";
