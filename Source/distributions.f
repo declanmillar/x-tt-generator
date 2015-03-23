@@ -173,6 +173,18 @@ module distributions
   real :: xdphi2d(500,500),fxdphi2d(500,500,20), fxdphi2dtot(500,500)
   integer :: o_dphi2d
 
+  ! 2d dist
+  real :: xct7ct52d(500,500),fxct7ct52d(500,500,20), fxct7ct52dtot(500,500)
+  integer :: o_ct7ct52d
+
+  ! 2d dist
+  real :: xcost72d(500,500),fxcost72d(500,500,20), fxcost72dtot(500,500)
+  integer :: o_cost72d
+
+  ! 2d dist
+  real :: xcost52d(500,500),fxcost52d(500,500,20), fxcost52dtot(500,500)
+  integer :: o_cost52d
+
   ! trans 2d dist
   real :: xtransdp(ntrans,500,500), fxtransdp(ntrans,500,500,20),fxtransdptot(ntrans,500,500)
   integer :: include_transversedp(ntrans)
@@ -196,6 +208,8 @@ module distributions
 contains
 
   subroutine initialise_distributions
+
+    implicit none 
   
     ! sets flags, binning range and divisions.
 
@@ -416,6 +430,9 @@ contains
       o_cost5  = 0
       o_ct7ct5 = 0
       o_dphi2d = 0
+      o_ct7ct52d = 0
+      o_cost72d = 0
+      o_cost52d = 0
       o_asym(9) = 0    ! turn off a_l
       o_mtt_reco = 0
     end if
@@ -436,6 +453,9 @@ contains
       o_ct7ct5 = 0
       o_dphi = 0
       o_dphi2d = 0
+      o_ct7ct52d = 0
+      o_cost72d = 0
+      o_cost52d = 0
       o_etmiss = 0
       o_asym(9) = 0    ! turn off a_l
     end if
@@ -444,6 +464,7 @@ contains
 
   subroutine generate_bins
     ! (finds bin width, finds midpoints.)
+    implicit none
 
     do ip=3,n_final
       if(o_pt(ip) == 1)then
@@ -633,6 +654,8 @@ contains
   end subroutine generate_bins  
 
   subroutine print_distributions
+
+    implicit none
 
     integer :: ndiv_sig
 
@@ -1261,7 +1284,7 @@ contains
 
     ! plot 2d-distribution in delta phi
     if(o_dphi2d == 1)then
-      sfxdphi2dtot=0d0
+!       sfxdphi2dtot=0d0
       do i=1,ndiv_dphi
         do j=1,ndiv_mtt
           fxdphi2dtot(i,j)=0.d0
@@ -1269,7 +1292,7 @@ contains
             fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/mttw
             fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
           end do
-          sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+!           sfxdphi2dtot=sfxdphitot+fxdphitot(j)*dphiw
         end do
       end do
       write(*,*)'2D-DISTRIBUTION'
@@ -1291,11 +1314,107 @@ contains
       write(*,*)'END'
     end if
 
+    ! plot 2d-distribution in ct7ct5
+    if(o_ct7ct52d == 1)then
+!       sfxct7ct52dtot=0d0
+      do i=1,ndiv_ct7ct5
+        do j=1,ndiv_mtt
+          fxct7ct52dtot(i,j)=0.d0
+          do k=1,it
+            fxct7ct52d(i,j,k)=fxct7ct52d(i,j,k)*sigma/cnorm(k)/ct7ct5w/mttw
+            fxct7ct52dtot(i,j)=fxct7ct52dtot(i,j)+fxct7ct52d(i,j,k)
+          end do
+!           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+        end do
+      end do
+      write(*,*)'2D-DISTRIBUTION'
+      write(*,*)'ct7ct52d'
+      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
+      write(*,*)'cos#theta_{+}cos#theta_{-}'
+      write(*,*) ndiv_ct7ct5
+      write(*,*) ct7ct5min
+      write(*,*) ct7ct5max
+      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*) ndiv_mtt
+      write(*,*) mttmin
+      write(*,*) mttmax
+      do i=1,ndiv_ct7ct5
+        do j=1,ndiv_mtt
+          write(*,*)xct7ct5(i),xmtt(j),fxct7ct52dtot(i,j)
+        end do
+      end do
+      write(*,*)'END'
+    end if
+
+    ! plot 2d-distribution in cost7
+    if(o_cost72d == 1)then
+!       sfxcost72dtot=0d0
+      do i=1,ndiv_cost7
+        do j=1,ndiv_mtt
+          fxcost72dtot(i,j)=0.d0
+          do k=1,it
+            fxcost72d(i,j,k)=fxcost72d(i,j,k)*sigma/cnorm(k)/cost7w/mttw
+            fxcost72dtot(i,j)=fxcost72dtot(i,j)+fxcost72d(i,j,k)
+          end do
+!           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+        end do
+      end do
+      write(*,*)'2D-DISTRIBUTION'
+      write(*,*)'cost72d'
+      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{-})--[pb]'
+      write(*,*)'cos#theta_{-}'
+      write(*,*) ndiv_cost7
+      write(*,*) cost7min
+      write(*,*) cost7max
+      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*) ndiv_mtt
+      write(*,*) mttmin
+      write(*,*) mttmax
+      do i=1,ndiv_cost7
+        do j=1,ndiv_mtt
+          write(*,*)xcost7(i),xmtt(j),fxcost72dtot(i,j)
+        end do
+      end do
+      write(*,*)'END'
+    end if
+
+    ! plot 2d-distribution in cost5
+    if(o_cost52d == 1)then
+!       sfxcost52dtot=0d0
+      do i=1,ndiv_cost5
+        do j=1,ndiv_mtt
+          fxcost52dtot(i,j)=0.d0
+          do k=1,it
+            fxcost52d(i,j,k)=fxcost52d(i,j,k)*sigma/cnorm(k)/cost5w/mttw
+            fxcost52dtot(i,j)=fxcost52dtot(i,j)+fxcost52d(i,j,k)
+          end do
+!           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+        end do
+      end do
+      write(*,*)'2D-DISTRIBUTION'
+      write(*,*)'cost52d'
+      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
+      write(*,*)'cos#theta_{+}cos#theta_{-}'
+      write(*,*) ndiv_cost5
+      write(*,*) cost5min
+      write(*,*) cost5max
+      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*) ndiv_mtt
+      write(*,*) mttmin
+      write(*,*) mttmax
+      do i=1,ndiv_cost5
+        do j=1,ndiv_mtt
+          write(*,*)xcost5(i),xmtt(j),fxcost52dtot(i,j)
+        end do
+      end do
+      write(*,*)'END'
+    end if
+
     ! plot 2d-distributions in delta_phi and all transverse variables
     do itrans=1,ntrans
       if(include_transversedp(itrans) == 1)then
         sfxtransdptot(itrans)=0d0
-        do i=1,ndiv_dphi
+        do i=1,ndiv_ct7ct5
           do j=1,ndiv_trans(itrans)
             fxtransdptot(itrans,i,j)=0.d0
             do k=1,it

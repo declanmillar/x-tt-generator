@@ -1916,6 +1916,19 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
+      if (o_ct7ct52d == 1) then
+        ! generate distribution in ct7ct52d.
+        ibin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
+        jbin=int((mtt-mttmin)/mttw)+1
+        if ((ibin > ndiv_ct7ct5) .or. (jbin > ndiv_mtt)) then
+          continue
+        else if ((ibin < 1) .or. (jbin < 1)) then
+          continue
+        else
+          fxct7ct52d(ibin,jbin,it)=fxct7ct52d(ibin,jbin,it)+hist
+        end if
+      end if
+
       do itrans=1,ntrans
         if (include_transversedp(itrans) == 1) then
         ! generate distribution in transdp.
