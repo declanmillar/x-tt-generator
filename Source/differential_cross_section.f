@@ -1916,8 +1916,6 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-
-
       do itrans=1,ntrans
         if (include_transversedp(itrans) == 1) then
         ! generate distribution in transdp.
