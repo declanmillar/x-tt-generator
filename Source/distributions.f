@@ -1117,129 +1117,6 @@ contains
       write(*,*)'END'
     end if
 
-    ! plot 2d-distribution in delta phi
-    if(o_dphi2d == 1)then
-      sfxdphi2dtot=0d0
-      do i=1,ndiv_dphi
-        do j=1,ndiv_mtt
-          fxdphi2dtot(i,j)=0.d0
-          do k=1,it
-            fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/mttw
-            fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
-          end do
-          sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
-        end do
-      end do
-      write(*,*)'2D-DISTRIBUTION'
-      write(*,*)'dphi2d'
-      write(*,*)'d^2#sigma-/d#delta#phi-dM_{tt}--[pb/GeV]'
-      write(*,*)'#delta#phi--[rad]'
-      write(*,*) ndiv_dphi
-      write(*,*) dphimin
-      write(*,*) dphimax
-      write(*,*)'#M_{tt}--[GeV]'
-      write(*,*) ndiv_mtt
-      write(*,*) mttmin
-      write(*,*) mttmax
-      do i=1,ndiv_dphi
-        do j=1,ndiv_mtt
-          write(*,*)xdphi(i),xmtt(j),fxdphi2dtot(i,j)
-        end do
-      end do
-      write(*,*)'END'
-    end if
-
-    ! plot 2d-distributions in delta_phi and all transverse variables
-    do itrans=1,ntrans
-      if(include_transversedp(itrans) == 1)then
-        sfxtransdptot(itrans)=0d0
-        do i=1,ndiv_dphi
-          do j=1,ndiv_trans(itrans)
-            fxtransdptot(itrans,i,j)=0.d0
-            do k=1,it
-              fxtransdp(itrans,i,j,k)=fxtransdp(itrans,i,j,k) &
-              *sigma/cnorm(k)/transw(itrans)/dphiw
-              fxtransdptot(itrans,i,j)=fxtransdptot(itrans,i,j) &
-              +fxtransdp(itrans,i,j,k)
-            end do
-            sfxtransdptot(itrans)=sfxtransdptot(itrans)+ &
-            fxtransdptot(itrans,i,j)*transw(itrans)
-          end do
-        end do
-        write(*,*)'2D-DISTRIBUTION'
-        if (itrans == 1)then
-          write(*,*)'dphimvis'
-          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
-        else if (itrans == 2)then
-          write(*,*)'ht'
-          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
-        else if (itrans == 3)then
-          write(*,*)'dphim_t1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
-        else if (itrans == 4)then
-          write(*,*)'dphim_t2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
-        else if (itrans == 5)then
-          write(*,*)'dphim_t3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
-        else if (itrans == 6)then
-          write(*,*)'dphimlt'
-          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
-        else if (itrans == 7)then
-          write(*,*)'dphim_ct1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
-        else if (itrans == 8)then
-          write(*,*)'dphim_ct2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
-        else if (itrans == 9)then
-          write(*,*)'dphim_ct3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
-        else if (itrans == 10)then
-          write(*,*)'dphimlct'
-          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
-        else
-          continue
-        end if
-        write(*,*)'#delta#phi'
-        write(*,*) ndiv_dphi
-        write(*,*) dphimin
-        write(*,*) dphimax
-        if (itrans == 1)then
-          write(*,*)'m_{vis}--[GeV]'
-        else if (itrans == 2)then
-          write(*,*)'h_{t}--[GeV]'
-        else if (itrans == 3)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 4)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 5)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 6)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 7)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 8)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 9)then
-          write(*,*)'m_{t}--[GeV]'
-        else if (itrans == 10)then
-          write(*,*)'m^{l}_{ct}--[GeV]'
-        else
-          continue
-        end if
-        write(*,*)ndiv_trans(itrans)
-        write(*,*)transmin(itrans)
-        write(*,*)transmax(itrans)
-        do i=1,ndiv_dphi
-          do j=1,ndiv_trans(itrans)
-            write(*,*)xdphi(i),xtrans(itrans,j) &
-            ,fxtransdptot(itrans,i,j)
-          end do
-        end do
-        write(*,*)'END'
-      end if
-    end do
-
     ! plot distribution in cost5
     if(o_cost5 == 1)then
       sfxcost5tot=0d0
@@ -1381,6 +1258,130 @@ contains
         end if
       end do
     end if
+
+    ! plot 2d-distribution in delta phi
+    if(o_dphi2d == 1)then
+      sfxdphi2dtot=0d0
+      do i=1,ndiv_dphi
+        do j=1,ndiv_mtt
+          fxdphi2dtot(i,j)=0.d0
+          do k=1,it
+            fxdphi2d(i,j,k)=fxdphi2d(i,j,k)*sigma/cnorm(k)/dphiw/mttw
+            fxdphi2dtot(i,j)=fxdphi2dtot(i,j)+fxdphi2d(i,j,k)
+          end do
+          sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
+        end do
+      end do
+      write(*,*)'2D-DISTRIBUTION'
+      write(*,*)'dphi2d'
+      write(*,*)'d^2#sigma-/d#delta#phi-dM_{tt}--[pb/GeV]'
+      write(*,*)'#delta#phi--[rad]'
+      write(*,*) ndiv_dphi
+      write(*,*) dphimin
+      write(*,*) dphimax
+      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*) ndiv_mtt
+      write(*,*) mttmin
+      write(*,*) mttmax
+      do i=1,ndiv_dphi
+        do j=1,ndiv_mtt
+          write(*,*)xdphi(i),xmtt(j),fxdphi2dtot(i,j)
+        end do
+      end do
+      write(*,*)'END'
+    end if
+
+    ! plot 2d-distributions in delta_phi and all transverse variables
+    do itrans=1,ntrans
+      if(include_transversedp(itrans) == 1)then
+        sfxtransdptot(itrans)=0d0
+        do i=1,ndiv_dphi
+          do j=1,ndiv_trans(itrans)
+            fxtransdptot(itrans,i,j)=0.d0
+            do k=1,it
+              fxtransdp(itrans,i,j,k)=fxtransdp(itrans,i,j,k) &
+              *sigma/cnorm(k)/transw(itrans)/dphiw
+              fxtransdptot(itrans,i,j)=fxtransdptot(itrans,i,j) &
+              +fxtransdp(itrans,i,j,k)
+            end do
+            sfxtransdptot(itrans)=sfxtransdptot(itrans)+ &
+            fxtransdptot(itrans,i,j)*transw(itrans)
+          end do
+        end do
+        write(*,*)'2D-DISTRIBUTION'
+        if (itrans == 1)then
+          write(*,*)'dphimvis'
+          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
+        else if (itrans == 2)then
+          write(*,*)'ht'
+          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
+        else if (itrans == 3)then
+          write(*,*)'dphim_t1'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+        else if (itrans == 4)then
+          write(*,*)'dphim_t2'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+        else if (itrans == 5)then
+          write(*,*)'dphim_t3'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+        else if (itrans == 6)then
+          write(*,*)'dphimlt'
+          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
+        else if (itrans == 7)then
+          write(*,*)'dphim_ct1'
+          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+        else if (itrans == 8)then
+          write(*,*)'dphim_ct2'
+          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+        else if (itrans == 9)then
+          write(*,*)'dphim_ct3'
+          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+        else if (itrans == 10)then
+          write(*,*)'dphimlct'
+          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
+        else
+          continue
+        end if
+        write(*,*)'#delta#phi'
+        write(*,*) ndiv_dphi
+        write(*,*) dphimin
+        write(*,*) dphimax
+        if (itrans == 1)then
+          write(*,*)'m_{vis}--[GeV]'
+        else if (itrans == 2)then
+          write(*,*)'h_{t}--[GeV]'
+        else if (itrans == 3)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 4)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 5)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 6)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 7)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 8)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 9)then
+          write(*,*)'m_{t}--[GeV]'
+        else if (itrans == 10)then
+          write(*,*)'m^{l}_{ct}--[GeV]'
+        else
+          continue
+        end if
+        write(*,*)ndiv_trans(itrans)
+        write(*,*)transmin(itrans)
+        write(*,*)transmax(itrans)
+        do i=1,ndiv_dphi
+          do j=1,ndiv_trans(itrans)
+            write(*,*)xdphi(i),xtrans(itrans,j) &
+            ,fxtransdptot(itrans,i,j)
+          end do
+        end do
+        write(*,*)'END'
+      end if
+    end do
+
   end subroutine print_distributions
 
   subroutine  check_distributions

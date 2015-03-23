@@ -127,14 +127,6 @@ int main(int argc, char *argv[])
     if (nFiles > 2) h3->Scale(1.0/h3->Integral());
   }
 
-  // // set range user
-  // if( rangeMax == rangeMax && rangeMax == rangeMax ) {
-  //   h1->GetXaxis()->SetRangeUser( rangeMin ,rangeMax ); 
-  //   h2->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
-  //   // if ( fileName3 != "NULL" )h3->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
-  // }
-  // printf("%f,%f\n", rangeMin,rangeMax);
-
   if (logY == true) canvas->SetLogy();
 
   canvas->BuildLegend(0.7, 0.9, 1.0, 1.0, "");

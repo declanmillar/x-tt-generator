@@ -120,18 +120,19 @@ int main(int argc, char *argv[])
     yTitle = h1->GetYaxis()->GetTitle();
     yTitle = "1/#sigma #times " + yTitle;
     h1->GetYaxis()->SetTitle(yTitle.c_str());
-    if (nFiles > 0) h1->Scale(1.0/h1->Integral());
+    h1->Scale(1.0/h1->Integral());
     if (nFiles > 1) h2->Scale(1.0/h2->Integral());
     if (nFiles > 2) h3->Scale(1.0/h3->Integral());
   }
 
-  // // set range user
-  // if( rangeMax == rangeMax && rangeMax == rangeMax ) {
-  //   h1->GetXaxis()->SetRangeUser( rangeMin ,rangeMax ); 
-  //   h2->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
-  //   // if ( fileName3 != "NULL" )h3->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
-  // }
-  // printf("%f,%f\n", rangeMin,rangeMax);
+  // set range user
+  if(rangeMax == rangeMax && rangeMax == rangeMax) {
+    h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
+    if (nFiles > 1) h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+    if (nFiles > 2) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+    // if ( fileName3 != "NULL" )h3->GetXaxis()->SetRangeUser( rangeMin ,rangeMax );
+  }
+  printf("%f,%f\n", rangeMin, rangeMax);
 
   if (logY == true) canvas->SetLogy();
 
