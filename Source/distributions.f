@@ -1302,7 +1302,7 @@ contains
       write(*,*) ndiv_dphi
       write(*,*) dphimin
       write(*,*) dphimax
-      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*)'M_{tt}--[GeV]'
       write(*,*) ndiv_mtt
       write(*,*) mttmin
       write(*,*) mttmax
@@ -1334,7 +1334,7 @@ contains
       write(*,*) ndiv_ct7ct5
       write(*,*) ct7ct5min
       write(*,*) ct7ct5max
-      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*)'M_{tt}--[GeV]'
       write(*,*) ndiv_mtt
       write(*,*) mttmin
       write(*,*) mttmax
@@ -1366,7 +1366,7 @@ contains
       write(*,*) ndiv_cost7
       write(*,*) cost7min
       write(*,*) cost7max
-      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*)'M_{tt}--[GeV]'
       write(*,*) ndiv_mtt
       write(*,*) mttmin
       write(*,*) mttmax
@@ -1398,7 +1398,7 @@ contains
       write(*,*) ndiv_cost5
       write(*,*) cost5min
       write(*,*) cost5max
-      write(*,*)'#M_{tt}--[GeV]'
+      write(*,*)'M_{tt}--[GeV]'
       write(*,*) ndiv_mtt
       write(*,*) mttmin
       write(*,*) mttmax
@@ -1432,7 +1432,7 @@ contains
           write(*,*)'dphiMvis'
           write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
         else if (itrans == 2)then
-          write(*,*)'HT'
+          write(*,*)'dphiHT'
           write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
         else if (itrans == 3)then
           write(*,*)'dphiM_T1'

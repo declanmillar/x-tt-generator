@@ -81,6 +81,8 @@ int main(int argc, char *argv[])
   h1->SetLineColor(kBlack);
   h1->GetYaxis()->SetTitleOffset(2.0);
   h1->GetXaxis()->SetTitleOffset(2.0);
+  h1->GetYaxis()->SetRangeUser(0,4000);
+
 
   if (nFiles > 1) {
     histName2 = argsv[3];
@@ -90,8 +92,9 @@ int main(int argc, char *argv[])
     name2 = histName2 + '@' + fileName2;
     h2 = (TH2D*) f2->Get(histName2.c_str());
     h2->SetTitle(name2.c_str());
-    h2->Draw("LEGO SAME");
+    h2->Draw("LEGOSAME");
     h2->SetLineColor(kRed);
+    h2->GetYaxis()->SetRangeUser(0,4000);
   }
 
   if (nFiles > 2) {
@@ -102,8 +105,9 @@ int main(int argc, char *argv[])
     h3 = (TH2D*) f3->Get(histName3.c_str());
     name3 = histName3 + '@' + fileName3;
     h3->SetTitle(name3.c_str());
-    h3->Draw("LEGO SAME");
+    h3->Draw("LEGOSAME");
     h3->SetLineColor(kBlue);
+    h3->GetYaxis()->SetRangeUser(0,4000);
   }
 
   // normalize histograms
