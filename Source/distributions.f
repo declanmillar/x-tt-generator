@@ -1028,45 +1028,45 @@ contains
         end do
         write(*,*)'DISTRIBUTION'
         if (itrans == 1)then
-          write(*,*)'mvis'
-          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
-          write(*,*)'m_{vis}--[GeV]'
+          write(*,*)'Mvis'
+          write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+          write(*,*)'M_{vis}--[GeV]'
         else if (itrans == 2)then
-          write(*,*)'ht'
-          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
-          write(*,*)'h_{t}--[GeV]'
+          write(*,*)'HT'
+          write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
+          write(*,*)'H_{T}--[GeV]'
         else if (itrans == 3)then
-          write(*,*)'m_t1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_T1'
+          write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          write(*,*)'M_{T1}--[GeV]'
         else if (itrans == 4)then
-          write(*,*)'m_t2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_T2'
+          write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          write(*,*)'M_{T2}--[GeV]'
         else if (itrans == 5)then
-          write(*,*)'m_t3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_T3'
+          write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          write(*,*)'M_{T3}--[GeV]'
         else if (itrans == 6)then
-          write(*,*)'mlt'
-          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'MlT'
+          write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+          write(*,*)'M^{l}_{T}--[GeV]'
         else if (itrans == 7)then
-          write(*,*)'m_ct1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_CT1'
+          write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          write(*,*)'M_{T1}--[GeV]'
         else if (itrans == 8)then
-          write(*,*)'m_ct2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_CT2'
+          write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          write(*,*)'M_{T2}--[GeV]'
         else if (itrans == 9)then
-          write(*,*)'m_ct3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_CT3'
+          write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          write(*,*)'M_{T3}--[GeV]'
         else if (itrans == 10)then
-          write(*,*)'mlct'
-          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
-          write(*,*)'m^{l}_{ct}--[GeV]'
+          write(*,*)'MlCT'
+          write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+          write(*,*)'m^{l}_{CT}--[GeV]'
         else
           continue
         end if
@@ -1429,35 +1429,35 @@ contains
         end do
         write(*,*)'2D-DISTRIBUTION'
         if (itrans == 1)then
-          write(*,*)'dphimvis'
-          write(*,*)'d#sigma-/dm_{vis}--[pb/GeV]'
+          write(*,*)'dphiMvis'
+          write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
         else if (itrans == 2)then
-          write(*,*)'ht'
-          write(*,*)'d#sigma-/dh_{t}--[pb/GeV]'
+          write(*,*)'HT'
+          write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
         else if (itrans == 3)then
-          write(*,*)'dphim_t1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+          write(*,*)'dphiM_T1'
+          write(*,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
         else if (itrans == 4)then
-          write(*,*)'dphim_t2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+          write(*,*)'dphiM_T2'
+          write(*,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
         else if (itrans == 5)then
-          write(*,*)'dphim_t3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+          write(*,*)'dphiM_T3'
+          write(*,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
         else if (itrans == 6)then
-          write(*,*)'dphimlt'
-          write(*,*)'d#sigma-/dm^{l}_{t}--[pb/GeV]'
+          write(*,*)'dphiMlT'
+          write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
         else if (itrans == 7)then
-          write(*,*)'dphim_ct1'
-          write(*,*)'d#sigma-/dm_{t1}--[pb/GeV]'
+          write(*,*)'dphiM_CT1'
+          write(*,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
         else if (itrans == 8)then
-          write(*,*)'dphim_ct2'
-          write(*,*)'d#sigma-/dm_{t2}--[pb/GeV]'
+          write(*,*)'dphiM_CT2'
+          write(*,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
         else if (itrans == 9)then
-          write(*,*)'dphim_ct3'
-          write(*,*)'d#sigma-/dm_{t3}--[pb/GeV]'
+          write(*,*)'dphiM_CT3'
+          write(*,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
         else if (itrans == 10)then
-          write(*,*)'dphimlct'
-          write(*,*)'d#sigma-/dm^{l}_{ct}--[pb/GeV]'
+          write(*,*)'dphiMlCT'
+          write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
         else
           continue
         end if
@@ -1466,25 +1466,25 @@ contains
         write(*,*) dphimin
         write(*,*) dphimax
         if (itrans == 1)then
-          write(*,*)'m_{vis}--[GeV]'
+          write(*,*)'M_{vis}--[GeV]'
         else if (itrans == 2)then
-          write(*,*)'h_{t}--[GeV]'
+          write(*,*)'H_{T}--[GeV]'
         else if (itrans == 3)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T1}--[GeV]'
         else if (itrans == 4)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T2}--[GeV]'
         else if (itrans == 5)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T3}--[GeV]'
         else if (itrans == 6)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M^{l}_{T}--[GeV]'
         else if (itrans == 7)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T1}--[GeV]'
         else if (itrans == 8)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T2}--[GeV]'
         else if (itrans == 9)then
-          write(*,*)'m_{t}--[GeV]'
+          write(*,*)'M_{T3}--[GeV]'
         else if (itrans == 10)then
-          write(*,*)'m^{l}_{ct}--[GeV]'
+          write(*,*)'M^{l}_{CT}--[GeV]'
         else
           continue
         end if
