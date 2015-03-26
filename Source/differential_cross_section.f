@@ -47,8 +47,8 @@ function differential_cross_section(x,wgt)
   real :: cost
   real :: costheta5
   real :: costheta7
-  real :: costheta_top_cm
-  real :: costheta_top_star
+  real :: costhetat_cm
+  real :: costhetat_star
   real :: ct
   real :: ct5
   real :: ct56
@@ -168,6 +168,8 @@ function differential_cross_section(x,wgt)
   ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   real :: p1col(0:3), p2col(0:3), p3col(0:3), p4col(0:3), p5col(0:3), p6col(0:3), p7col(0:3), p8col(0:3)
+  real :: p356col(0:3), p356col_opp(0:3), p478col(0:3), p478col_opp(0:3)
+  real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356rest(0:3), p478rest(0:3)
   real :: p8col_reco(0:3)
 
   ! invarient masses
@@ -906,7 +908,7 @@ function differential_cross_section(x,wgt)
       end if
     ! calculate cos(theta^*_t)
       if (final_state == 0) then
-        costheta_top_cm=(q(1,3)*q(1,1) &
+        costhetat_cm=(q(1,3)*q(1,1) &
         +q(2,3)*q(2,1) &
         +q(3,3)*q(3,1)) &
         /sqrt(q(1,3)*q(1,3) &
@@ -916,7 +918,7 @@ function differential_cross_section(x,wgt)
         +q(2,1)*q(2,1) &
         +q(3,1)*q(3,1))
       else if (final_state > 0) then
-        costheta_top_cm= &
+        costhetat_cm= &
         ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
         +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
         +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
@@ -1100,36 +1102,86 @@ function differential_cross_section(x,wgt)
       ! calculate delta_absy for arfb
       delta_absy = abs(yt) - abs(ytb)
 
+      if (final_state > 0) then
+        p356col = p3col + p5col + p6col
+        p356col_opp(0) = p356col(0)
+        do i = 1, 3
+          p356col_opp(i) = -p356col(i)
+        end do
+
+        call boostx(p356col, p356col_opp, p356rest)
+        call boostx(p5col, p356col_opp, p5rest)
+
+        p478col = p4col + p7col + p8col
+        p478col_opp(0) = p478col(0)
+        do i = 1, 3
+          p478col_opp(i) = -p478col(i)
+        end do
+
+        call boostx(p478col, p478col_opp, p478rest)
+        call boostx(p7col, p478col_opp, p7rest)
+      end if
+
       ! calculate cos(theta_l+)
       if (final_state > 0) then
-        costheta5=+(q(1,5)*q(1,1) &
-        +q(2,5)*q(2,1) &
-        +q(3,5)*q(3,1)) &
-        /sqrt(q(1,5)*q(1,5) &
-        +q(2,5)*q(2,5) &
-        +q(3,5)*q(3,5)) &
-        /sqrt(q(1,1)*q(1,1) &
-        +q(2,1)*q(2,1) &
-        +q(3,1)*q(3,1))
+        costheta5 = (p5rest(1)*p356col(1) &
+                     +p5rest(2)*p356col(2) &
+                     +p5rest(3)*p356col(3)) &
+                    /sqrt(p5rest(1)*p5rest(1) &
+                          +p5rest(2)*p5rest(2) &
+                          +p5rest(3)*p5rest(3)) &
+                    /sqrt(p356col(1)*p356col(1) &
+                          +p356col(2)*p356col(2) &
+                          +p356col(3)*p356col(3))
       end if
-    ! calculate cos(theta_l-)
+
+      ! calculate cos(theta_l-)
       if (final_state > 0) then
-        costheta7=+(q(1,7)*q(1,1) &
-        +q(2,7)*q(2,1) &
-        +q(3,7)*q(3,1)) &
-        /sqrt(q(1,7)*q(1,7) &
-        +q(2,7)*q(2,7) &
-        +q(3,7)*q(3,7)) &
-        /sqrt(q(1,1)*q(1,1) &
-        +q(2,1)*q(2,1) &
-        +q(3,1)*q(3,1))
+        costheta7 = (p7rest(1)*p478col(1) &
+                     +p7rest(2)*p478col(2) &
+                     +p7rest(3)*p478col(3)) &
+                    /sqrt(p7rest(1)*p7rest(1) &
+                          +p7rest(2)*p7rest(2) &
+                          +p7rest(3)*p7rest(3)) &
+                    /sqrt(p478col(1)*p478col(1) &
+                          +p478col(2)*p478col(2) &
+                          +p478col(3)*p478col(3))
       end if
 
       if (final_state > 0) then
         ct7ct5=costheta7*costheta5
       end if
 
-      costheta_top_star=int(ytt/abs(ytt))*costheta_top_cm
+!       ! calculate cos(theta_l+)_cm
+!       if (final_state > 0) then
+!         costheta5_cm =+ (q(1,5)*q(1,1) &
+!         +q(2,5)*q(2,1) &
+!         +q(3,5)*q(3,1)) &
+!         /sqrt(q(1,5)*q(1,5) &
+!         +q(2,5)*q(2,5) &
+!         +q(3,5)*q(3,5)) &
+!         /sqrt(q(1,1)*q(1,1) &
+!         +q(2,1)*q(2,1) &
+!         +q(3,1)*q(3,1))
+!       end if
+!     ! calculate cos(theta_l-)
+!       if (final_state > 0) then
+!         costheta7_cm=+(q(1,7)*q(1,1) &
+!         +q(2,7)*q(2,1) &
+!         +q(3,7)*q(3,1)) &
+!         /sqrt(q(1,7)*q(1,7) &
+!         +q(2,7)*q(2,7) &
+!         +q(3,7)*q(3,7)) &
+!         /sqrt(q(1,1)*q(1,1) &
+!         +q(2,1)*q(2,1) &
+!         +q(3,1)*q(3,1))
+!       end if
+
+!       if (final_state > 0) then
+!         ct7ct5_cm=costheta7_cm*costheta5_cm
+!       end if
+
+      costhetat_star=int(ytt/abs(ytt))*costhetat_cm
     ! calculate cos(phi_l) (lepton azimuthal angle)
       if (final_state > 0) then
         p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
@@ -1502,13 +1554,13 @@ function differential_cross_section(x,wgt)
 
     ! afb
       if (o_asym(4) == 1) then
-        if (costheta_top_cm > 0.d0) then
+        if (costhetat_cm > 0.d0) then
           xsec_fb(1,it,+1)=xsec_fb(1,it,+1) &
           +fffxn &
           *wgt
           error_fb(1,it,+1)=error_fb(1,it,+1) &
           +xsec_fb(1,it,+1)**2
-        else if (costheta_top_cm < 0.d0) then
+        else if (costhetat_cm < 0.d0) then
           xsec_fb(1,it,-1)=xsec_fb(1,it,-1) &
           +fffxn &
           *wgt
@@ -1519,13 +1571,13 @@ function differential_cross_section(x,wgt)
 
     ! afbstar
       if (o_asym(5) == 1) then
-        if (costheta_top_star > 0.d0) then
+        if (costhetat_star > 0.d0) then
           xsec_fb(2,it,+1)=xsec_fb(2,it,+1) &
           +fffxn &
           *wgt
           error_fb(2,it,+1)=error_fb(2,it,+1) &
           +xsec_fb(2,it,+1)**2
-        else if (costheta_top_star < 0.d0) then
+        else if (costhetat_star < 0.d0) then
           xsec_fb(2,it,-1)=xsec_fb(2,it,-1) &
           +fffxn &
           *wgt
@@ -2033,7 +2085,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(4) == 1) then
-        if ((o_sigp == 1) .and. (costheta_top_cm > 0.d0)) then
+        if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
         ! generate distribution in sigp for afbcm.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2045,7 +2097,7 @@ function differential_cross_section(x,wgt)
             fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (costheta_top_cm < 0.d0)) then
+        if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
         ! generate distribution in sigm for afbcm.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2060,7 +2112,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(5) == 1) then
-        if ((o_sigp == 1) .and. (costheta_top_star > 0.d0)) then
+        if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
         ! generate distribution in sigp for afbstar.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2072,7 +2124,7 @@ function differential_cross_section(x,wgt)
             fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (costheta_top_star < 0.d0)) then
+        if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
         ! generate distribution in sigm for afbstar.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
