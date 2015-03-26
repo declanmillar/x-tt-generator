@@ -1,52 +1,40 @@
-TH1D* plotDistribution(double luminosity, double efficiency, ifstream * logStream){
+TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream){
 
   // declarations.
-  std::string distName, xTitle,  yTitle; // Distribution labels
-  // std::string xVar, xUnits, yVar, yUnits 
-  std::string xS, yS, stop; // for reading in data pairs as strings
-  int n_DataPairs; // number of x,y pairs  
-  double x, y; // for conversion of data pairs to integers
-  std::vector<double> xV,yV; // for storing data pairs
+  std::string distName, xTitle,  yTitle; 
+  std::string xS, yS, stop; 
+  int n_DataPairs; 
+  double x, y; 
+  std::vector<double> xV, yV; 
   int nBins, nBinEdges;
   double binWidth;
   std::vector<double> binLowEdges;
-  stop = "END"; // when found, stop reading the histograms
-
+  stop = "END"; 
 
   // name strings.
   *logStream >> distName >> yTitle >> xTitle;
 
   // replace hyphens with spaces
-  for(int i=0;i <xTitle.size();i++)
-    if(xTitle[i]=='-')
-        xTitle[i]=' ';
-  for(int i=0;i <yTitle.size();i++)
-    if(yTitle[i]=='-')
-        yTitle[i]=' ';  
+  for (int i = 0; i < xTitle.size(); i++)
+    if (xTitle[i] == '-') xTitle[i] = ' ';
+  for(int i = 0; i < yTitle.size(); i++)
+    if (yTitle[i] == '-') yTitle[i] = ' ';  
 
   // loop over data pairs.
-  n_DataPairs=0;
-  if (logStream->is_open()){
-    while(1){        
+  n_DataPairs = 0;
+  if (logStream->is_open()) {
+    while(1) {        
       *logStream >> xS;      
-      // if (!logStream->good()) break; // breaks loop when we stop finding data
-      if (xS == stop) // breaks the loop if reads stop
-      {
-        // printf("Stop string: %s\n",xS.c_str());
-        break;
-      }
+      if (xS == stop) break;
       *logStream >> yS;
       x = atof(xS.c_str());
       y = atof(yS.c_str());
-      n_DataPairs+=1;
-      // printf ("Data pairs number: %i\n",n_DataPairs);
-      // std::cout << x << ' ' << y << std::endl;
+      n_DataPairs += 1;
       xV.push_back(x);
       yV.push_back(y);
     }
   }
-  else printf("  Stream failed!");
-  // printf ("  Read in %i data pairs.\n",n_DataPairs);
+  else printf("Stream failed!");
 
   // histogram bin information.
   nBins = xV.size();

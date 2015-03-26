@@ -115,6 +115,7 @@ int main(int argc, char *argv[])
   }
 
   // normalize histograms
+  normalize = true;
   if (normalize == true) { 
     std::string yTitle;
     yTitle = h1->GetYaxis()->GetTitle();
@@ -126,15 +127,21 @@ int main(int argc, char *argv[])
   }
 
   // set range user
-  if(rangeMax == rangeMax && rangeMax == rangeMax) {
-    h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
-    if (nFiles > 1) h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-    if (nFiles > 2) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-  }
+  // if(rangeMax == rangeMax && rangeMax == rangeMax) {
+  //   h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
+  //   if (nFiles > 1) h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (nFiles > 2) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  // }
 
   if (logY == true) canvas->SetLogy();
 
   canvas->BuildLegend(0.50, 0.60, 0.88, 0.88, "");
+
+  double mean_h1 = h1->GetMean();
+
+  double ALL = -9*mean_h1;
+
+  printf("ALL = %f\n", ALL);
   
   if (epsOutput == false) {
     printf("Running ROOT app...\n");
