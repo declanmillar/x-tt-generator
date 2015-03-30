@@ -1118,10 +1118,10 @@ function differential_cross_section(x,wgt)
           p478_opp(i) = -q478(i)
         end do 
         call boostx(p5, p356_opp, p5rest)
-        call boostx(p3, p356_opp, p3rest)
-        call boostx(p6, p356_opp, p6rest)
+!         call boostx(p3, p356_opp, p3rest)
+!         call boostx(p6, p356_opp, p6rest)
         call boostx(p7, p478_opp, p7rest)
-        write(*,*) "sum top rest mom", p5rest + p3rest + p6rest
+!         write(*,*) "sum top rest mom", p5rest + p3rest + p6rest
         
 
       end if
