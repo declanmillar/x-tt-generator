@@ -1102,9 +1102,6 @@ function differential_cross_section(x,wgt)
       ! calculate delta_absy for arfb
       delta_absy = abs(yt) - abs(ytb)
 
-
-      write(*,*) 'tets'
-
       if (final_state > 0) then
         ! boost lepton to top rest frame
         p356(0) = q356(4)
@@ -1153,7 +1150,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (final_state > 0) then
-        ct7ct5=costheta7*costheta5
+        ct7ct5 = costheta7*costheta5
       end if
 
 !       ! calculate cos(theta_l+)_cm
