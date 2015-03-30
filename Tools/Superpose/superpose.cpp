@@ -141,6 +141,7 @@ int main(int argc, char *argv[])
 
   double ALL = -9*mean_h1;
 
+  printf("mean_h1 = %f\n", mean_h1);
   printf("ALL = %f\n", ALL);
   
   if (epsOutput == false) {

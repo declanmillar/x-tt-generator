@@ -160,7 +160,7 @@ function differential_cross_section(x,wgt)
   integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, itrans
 
   ! phase space vectors.
-  real :: q356(4), q478(4), p356(4), p478(4)
+  real :: q356(4), q478(4)
   real :: q56(4), q78(4), p56(4), p78(4)
   real :: q5(4), q7(4)
   real :: q(4, 8), qcol(4, 8)
@@ -168,8 +168,8 @@ function differential_cross_section(x,wgt)
   ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   real :: p1col(0:3), p2col(0:3), p3col(0:3), p4col(0:3), p5col(0:3), p6col(0:3), p7col(0:3), p8col(0:3)
-  real :: p356col(0:3), p356col_opp(0:3), p478col(0:3), p478col_opp(0:3)
-  real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356rest(0:3), p478rest(0:3)
+  real :: p356col(0:3), p356_opp(0:3), p478col(0:3), p478_opp(0:3)
+  real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356(0:3), p478(0:3)
   real :: p8col_reco(0:3)
 
   ! invarient masses
@@ -535,10 +535,10 @@ function differential_cross_section(x,wgt)
         else
           rq = sqrt(rq2)
         endif
-        p356(3) = rq*ct
-        p356(2) = rq*st*cos(phit)
-        p356(1) = rq*st*sin(phit)
-        p356(4) = sqrt(rq2 + m356*m356)
+        q356(3) = rq*ct
+        q356(2) = rq*st*cos(phit)
+        q356(1) = rq*st*sin(phit)
+        q356(4) = sqrt(rq2 + m356*m356)
         rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
         if (rq562 < 0.d0) then
           fffxn = 0.d0
@@ -552,18 +552,18 @@ function differential_cross_section(x,wgt)
         q56(4) = sqrt(rq562 + m56*m56)
         pq56 = 0.d0
         do i = 1,3
-          pq56 = pq56 + p356(i)*q56(i)
+          pq56 = pq56 + q356(i)*q56(i)
         end do
-        p56(4) = (p356(4)*q56(4) + pq56)/m356
-        q(4,3) = p356(4) - p56(4)
+        p56(4) = (q356(4)*q56(4) + pq56)/m356
+        q(4,3) = q356(4) - p56(4)
         do i = 1,3
-          p56(i) = q56(i) + p356(i)*(p56(4) + q56(4))/(p356(4) + m356)
-          q(i,3) = p356(i) - p56(i)
+          p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
+          q(i,3) = q356(i) - p56(i)
         end do
         do i = 1,3
-          p478(i) =  - p356(i)
+          q478(i) =  - q356(i)
         end do
-        p478(4) = sqrt(rq2 + m478*m478)
+        q478(4) = sqrt(rq2 + m478*m478)
         rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
         if (rq782 < 0.d0) then
           fffxn = 0.d0
@@ -577,13 +577,13 @@ function differential_cross_section(x,wgt)
         q78(4) = sqrt(rq782 + m78*m78)
         pq78 = 0.d0
         do i = 1,3
-          pq78 = pq78 + p478(i)*q78(i)
+          pq78 = pq78 + q478(i)*q78(i)
         end do
-        p78(4) = (p478(4)*q78(4) + pq78)/m478
-        q(4,4) = p478(4) - p78(4)
+        p78(4) = (q478(4)*q78(4) + pq78)/m478
+        q(4,4) = q478(4) - p78(4)
         do i = 1,3
-          p78(i) = q78(i) + p478(i)*(p78(4) + q78(4))/(p478(4) + m478)
-          q(i,4) = p478(i) - p78(i)
+          p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
+          q(i,4) = q478(i) - p78(i)
         end do
         rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
         if (rq52 < 0.d0) then
@@ -1102,50 +1102,54 @@ function differential_cross_section(x,wgt)
       ! calculate delta_absy for arfb
       delta_absy = abs(yt) - abs(ytb)
 
+
+      write(*,*) 'tets'
+
       if (final_state > 0) then
-        p356col = p3col + p5col + p6col
-        p356col_opp(0) = p356col(0)
+        ! boost lepton to top rest frame
+        p356(0) = q356(4)
+        p478(0) = q478(4)
+        p356_opp(0) = q356(4)
+        p478_opp(0) = q478(4)
         do i = 1, 3
-          p356col_opp(i) = -p356col(i)
-        end do
+          p356(i) = q356(i)
+          p478(i) = q478(i)
+          p356_opp(i) = -q356(i)
+          p478_opp(i) = -q478(i)
+        end do 
+        call boostx(p5, p356_opp, p5rest)
+        call boostx(p3, p356_opp, p3rest)
+        call boostx(p6, p356_opp, p6rest)
+        call boostx(p7, p478_opp, p7rest)
+        write(*,*) "sum top rest mom", p5rest + p3rest + p6rest
+        
 
-        call boostx(p356col, p356col_opp, p356rest)
-        call boostx(p5col, p356col_opp, p5rest)
-
-        p478col = p4col + p7col + p8col
-        p478col_opp(0) = p478col(0)
-        do i = 1, 3
-          p478col_opp(i) = -p478col(i)
-        end do
-
-        call boostx(p478col, p478col_opp, p478rest)
-        call boostx(p7col, p478col_opp, p7rest)
       end if
 
       ! calculate cos(theta_l+)
       if (final_state > 0) then
-        costheta5 = (p5rest(1)*p356col(1) &
-                     +p5rest(2)*p356col(2) &
-                     +p5rest(3)*p356col(3)) &
+        costheta5 = (p5rest(1)*q356(1) &
+                     +p5rest(2)*q356(2) &
+                     +p5rest(3)*q356(3)) &
                     /sqrt(p5rest(1)*p5rest(1) &
                           +p5rest(2)*p5rest(2) &
                           +p5rest(3)*p5rest(3)) &
-                    /sqrt(p356col(1)*p356col(1) &
-                          +p356col(2)*p356col(2) &
-                          +p356col(3)*p356col(3))
+                    /sqrt(q356(1)*q356(1) &
+                          +q356(2)*q356(2) &
+                          +q356(3)*q356(3))
       end if
 
       ! calculate cos(theta_l-)
       if (final_state > 0) then
-        costheta7 = (p7rest(1)*p478col(1) &
-                     +p7rest(2)*p478col(2) &
-                     +p7rest(3)*p478col(3)) &
+        costheta7 = (p7rest(1)*q478(1) &
+                     +p7rest(2)*q478(2) &
+                     +p7rest(3)*q478(3)) &
                     /sqrt(p7rest(1)*p7rest(1) &
                           +p7rest(2)*p7rest(2) &
                           +p7rest(3)*p7rest(3)) &
-                    /sqrt(p478col(1)*p478col(1) &
-                          +p478col(2)*p478col(2) &
-                          +p478col(3)*p478col(3))
+                    /sqrt(q478(1)*q478(1) &
+                          +q478(2)*q478(2) &
+                          +q478(3)*q478(3))
       end if
 
       if (final_state > 0) then
@@ -1193,7 +1197,7 @@ function differential_cross_section(x,wgt)
 
       ! p(5)_t^ is x^
         do i=1,2
-          xp(i)=p356(i)/sqrt(p356(1)*p356(1)+p356(2)*p356(2))
+          xp(i)=q356(i)/sqrt(q356(1)*q356(1)+q356(2)*q356(2))
         end do
         xp(3)=0
 
