@@ -113,7 +113,7 @@ else:
 filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
 
 # Logfile      
-logfile = '> Output/%s.log &' % (filename) if options.output else ''
+logfile = '> Logs/%s.log &' % (filename) if options.output else ''
 output_file = '%s.out' % filename
 
 # Print config file
