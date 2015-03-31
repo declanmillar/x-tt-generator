@@ -124,6 +124,7 @@ subroutine initialise_zprimes
   read(42,*) gA_u
   read(42,*) gV_d
   read(42,*) gA_d
+  close(42)
 
   ! Check whether width has been specified
   ! (If gamZp is zero, the function widthZp is used instead.)

@@ -658,9 +658,8 @@ contains
     implicit none
 
     integer :: ndiv_sig
-
-    write(*,*)''
-    write(*,*)'HISTOGRAMS'
+    write(10,*) '-----------------------------------------------------'
+    write(10,*)'HISTOGRAMS'
     do ip=3,8
       ! plot distributions in pt
       if(o_pt(ip) == 1)then
@@ -673,14 +672,14 @@ contains
           end do
           sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
         end do
-        write(*,*)'DISTRIBUTION'
-        write(*,'(a,i1)')'pt',ip
-        write(*,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/GeV]'
-        write(*,'(a,i1,a)')'p_{t}(',ip,')--[GeV]'
+        write(10,*)'DISTRIBUTION'
+        write(10,'(a,i1)')'pt',ip
+        write(10,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/GeV]'
+        write(10,'(a,i1,a)')'p_{t}(',ip,')--[GeV]'
         do i=1,ndiv_pt(ip)
-          write(*,*)xpt(ip,i),fxpttot(ip,i)
+          write(10,*)xpt(ip,i),fxpttot(ip,i)
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
       ! plot distributions in eta
       if(o_eta(ip) == 1)then
@@ -693,14 +692,14 @@ contains
           end do
           sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
         end do
-        write(*,*)'DISTRIBUTION'
-        write(*,'(a,i1)')'eta',ip
-        write(*,'(a,i1,a)')'d#sigma-/d#eta(',ip,')--[pb]'
-        write(*,'(a,i1,a)')'#eta(',ip,')'
+        write(10,*)'DISTRIBUTION'
+        write(10,'(a,i1)')'eta',ip
+        write(10,'(a,i1,a)')'d#sigma-/d#eta(',ip,')--[pb]'
+        write(10,'(a,i1,a)')'#eta(',ip,')'
         do i=1,ndiv_eta(ip)
-          write(*,*)xeta(ip,i),fxetatot(ip,i)
+          write(10,*)xeta(ip,i),fxetatot(ip,i)
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
       ! plot distributions in phi
       if(o_phi(ip) == 1)then
@@ -713,14 +712,14 @@ contains
           end do
           sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
         end do
-        write(*,*)'DISTRIBUTION'
-        write(*,'(a,i1)')'phi',ip
-        write(*,'(a,i1,a)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
-        write(*,'(a,i1,a)')'#phi(',ip,')--[rad]'
+        write(10,*)'DISTRIBUTION'
+        write(10,'(a,i1)')'phi',ip
+        write(10,'(a,i1,a)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
+        write(10,'(a,i1,a)')'#phi(',ip,')--[rad]'
         do i=1,ndiv_phi(ip)
-          write(*,*)xphi(ip,i),fxphitot(ip,i)
+          write(10,*)xphi(ip,i),fxphitot(ip,i)
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
       ! plot distributions in ycol
       if(o_ycol(ip) == 1)then
@@ -733,14 +732,14 @@ contains
           end do
           sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
         end do
-        write(*,*)'DISTRIBUTION'
-        write(*,'(a,i1)')'y',ip
-        write(*,'(a,i1,a)')'d#sigma-/dy(',ip,')--[pb]'
-        write(*,'(a,i1,a)')'y(',ip,')'
+        write(10,*)'DISTRIBUTION'
+        write(10,'(a,i1)')'y',ip
+        write(10,'(a,i1,a)')'d#sigma-/dy(',ip,')--[pb]'
+        write(10,'(a,i1,a)')'y(',ip,')'
         do i=1,ndiv_ycol(ip)
-          write(*,*)xycol(ip,i),fxycoltot(ip,i)
+          write(10,*)xycol(ip,i),fxycoltot(ip,i)
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
     end do
        
@@ -755,14 +754,14 @@ contains
         end do
         sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'etmiss'
-      write(*,*)'d#sigma-/dp_{tmiss}--[pb/GeV]'
-      write(*,*)'p_{t}(miss)--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'etmiss'
+      write(10,*)'d#sigma-/dp_{tmiss}--[pb/GeV]'
+      write(10,*)'p_{t}(miss)--[GeV]'
       do i=1,ndiv_etmiss
-        write(*,*)xetmiss(i),fxetmisstot(i)
+        write(10,*)xetmiss(i),fxetmisstot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in pt356
@@ -776,14 +775,14 @@ contains
         end do
         sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'pt356'
-      write(*,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(*,*)'p_{t}(t)--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'pt356'
+      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(10,*)'p_{t}(t)--[GeV]'
       do i=1,ndiv_pt356
-        write(*,*)xpt356(i),fxpt356tot(i)
+        write(10,*)xpt356(i),fxpt356tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in eta356
     if(o_eta356 == 1)then
@@ -796,14 +795,14 @@ contains
         end do
         sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'eta356'
-      write(*,*)'d#sigma-/d#eta--[pb]'
-      write(*,*)'#eta(#bar{t})'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'eta356'
+      write(10,*)'d#sigma-/d#eta--[pb]'
+      write(10,*)'#eta(#bar{t})'
       do i=1,ndiv_eta356
-        write(*,*)xeta356(i),fxeta356tot(i)
+        write(10,*)xeta356(i),fxeta356tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in phi356
     if(o_phi356 == 1)then
@@ -816,14 +815,14 @@ contains
         end do
         sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'phi356'
-      write(*,*)'d#sigma-/d#phi--[pb]'
-      write(*,*)'#phi(#bar{t})'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'phi356'
+      write(10,*)'d#sigma-/d#phi--[pb]'
+      write(10,*)'#phi(#bar{t})'
       do i=1,ndiv_phi356
-        write(*,*)xphi356(i),fxphi356tot(i)
+        write(10,*)xphi356(i),fxphi356tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in pt478
     if(o_pt478 == 1)then
@@ -836,14 +835,14 @@ contains
         end do
         sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'pt478'
-      write(*,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(*,*)'p_{t}(#bar{t})--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'pt478'
+      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(10,*)'p_{t}(#bar{t})--[GeV]'
       do i=1,ndiv_pt478
-        write(*,*)xpt478(i),fxpt478tot(i)
+        write(10,*)xpt478(i),fxpt478tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in eta478
     if(o_eta478 == 1)then
@@ -856,14 +855,14 @@ contains
         end do
         sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'eta478'
-      write(*,*)'d#sigma-/d#eta--[pb]'
-      write(*,*)'#eta(#bar{t})'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'eta478'
+      write(10,*)'d#sigma-/d#eta--[pb]'
+      write(10,*)'#eta(#bar{t})'
       do i=1,ndiv_eta478
-        write(*,*)xeta478(i),fxeta478tot(i)
+        write(10,*)xeta478(i),fxeta478tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in phi478
     if(o_phi478 == 1)then
@@ -876,14 +875,14 @@ contains
         end do
         sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'phi478'
-      write(*,*)'d#sigma-/d#phi--[pb]'
-      write(*,*)'#phi(#bar{t})'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'phi478'
+      write(10,*)'d#sigma-/d#phi--[pb]'
+      write(10,*)'#phi(#bar{t})'
       do i=1,ndiv_phi478
-        write(*,*)xphi478(i),fxphi478tot(i)
+        write(10,*)xphi478(i),fxphi478tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
     ! plot distribution in mtt
     if(o_mtt == 1)then
@@ -896,14 +895,14 @@ contains
         end do
         sfxmtttot=sfxmtttot+fxmtttot(j)*mttw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'Mtt'
-      write(*,*)'d#sigma-/dM_{tt}--[pb/GeV]'
-      write(*,*)'M_{tt}--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'Mtt'
+      write(10,*)'d#sigma-/dM_{tt}--[pb/GeV]'
+      write(10,*)'M_{tt}--[GeV]'
       do i=1,ndiv_mtt
-        write(*,*)xmtt(i),fxmtttot(i)
+        write(10,*)xmtt(i),fxmtttot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in mtt_reco
@@ -917,14 +916,14 @@ contains
         end do
         sfxmtt_recotot=sfxmtt_recotot+fxmtt_recotot(j)*mtt_recow
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'Mtt_reco'
-      write(*,*)'d#sigma-/dM^{reco}_{tt}--[pb/GeV]'
-      write(*,*)'m^{reco}_{tt}--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'Mtt_reco'
+      write(10,*)'d#sigma-/dM^{reco}_{tt}--[pb/GeV]'
+      write(10,*)'m^{reco}_{tt}--[GeV]'
       do i=1,ndiv_mtt_reco
-        write(*,*)xmtt_reco(i),fxmtt_recotot(i)
+        write(10,*)xmtt_reco(i),fxmtt_recotot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in beta.
@@ -938,14 +937,14 @@ contains
         end do
         sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'beta'
-      write(*,*)'d#sigma-/d#beta_{t}--[pb]'
-      write(*,*)'#beta_{t}'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'beta'
+      write(10,*)'d#sigma-/d#beta_{t}--[pb]'
+      write(10,*)'#beta_{t}'
       do i=1,ndiv_beta
-        write(*,*)xbeta(i),fxbetatot(i)
+        write(10,*)xbeta(i),fxbetatot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in cost
@@ -959,14 +958,14 @@ contains
         end do
         sfxcosttot=sfxcosttot+fxcosttot(j)*costw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'cost'
-      write(*,*)'d#sigma-/dcos#theta--[pb]'
-      write(*,*)'cos#theta'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'cost'
+      write(10,*)'d#sigma-/dcos#theta--[pb]'
+      write(10,*)'cos#theta'
       do i=1,ndiv_cost
-        write(*,*)xcost(i),fxcosttot(i)
+        write(10,*)xcost(i),fxcosttot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in et
@@ -980,14 +979,14 @@ contains
         end do
         sfxettot=sfxettot+fxettot(j)*etw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'et'
-      write(*,*)'d#sigma-/de_{t}--[pb/GeV]'
-      write(*,*)'e_{t}--[GeV]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'et'
+      write(10,*)'d#sigma-/de_{t}--[pb/GeV]'
+      write(10,*)'e_{t}--[GeV]'
       do i=1,ndiv_et
-        write(*,*)xet(i),fxettot(i)
+        write(10,*)xet(i),fxettot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in delta y
@@ -1001,14 +1000,14 @@ contains
         end do
         sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'delta_y'
-      write(*,*)'d#sigma-/d#delta-y--[pb]'
-      write(*,*)'#delta-y'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'delta_y'
+      write(10,*)'d#sigma-/d#delta-y--[pb]'
+      write(10,*)'#delta-y'
       do i=1,ndiv_delta_y
-        write(*,*)xdelta_y(i),fxdelta_ytot(i)
+        write(10,*)xdelta_y(i),fxdelta_ytot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distributions in all transverse variables
@@ -1026,54 +1025,54 @@ contains
           sfxtranstot(itrans)=sfxtranstot(itrans)+ &
           fxtranstot(itrans,j)*transw(itrans)
         end do
-        write(*,*)'DISTRIBUTION'
+        write(10,*)'DISTRIBUTION'
         if (itrans == 1)then
-          write(*,*)'Mvis'
-          write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
-          write(*,*)'M_{vis}--[GeV]'
+          write(10,*)'Mvis'
+          write(10,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+          write(10,*)'M_{vis}--[GeV]'
         else if (itrans == 2)then
-          write(*,*)'HT'
-          write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
-          write(*,*)'H_{T}--[GeV]'
+          write(10,*)'HT'
+          write(10,*)'d#sigma-/dH_{T}--[pb/GeV]'
+          write(10,*)'H_{T}--[GeV]'
         else if (itrans == 3)then
-          write(*,*)'M_T1'
-          write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-          write(*,*)'M_{T1}--[GeV]'
+          write(10,*)'M_T1'
+          write(10,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          write(10,*)'M_{T1}--[GeV]'
         else if (itrans == 4)then
-          write(*,*)'M_T2'
-          write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-          write(*,*)'M_{T2}--[GeV]'
+          write(10,*)'M_T2'
+          write(10,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          write(10,*)'M_{T2}--[GeV]'
         else if (itrans == 5)then
-          write(*,*)'M_T3'
-          write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-          write(*,*)'M_{T3}--[GeV]'
+          write(10,*)'M_T3'
+          write(10,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          write(10,*)'M_{T3}--[GeV]'
         else if (itrans == 6)then
-          write(*,*)'MlT'
-          write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
-          write(*,*)'M^{l}_{T}--[GeV]'
+          write(10,*)'MlT'
+          write(10,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+          write(10,*)'M^{l}_{T}--[GeV]'
         else if (itrans == 7)then
-          write(*,*)'M_CT1'
-          write(*,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-          write(*,*)'M_{T1}--[GeV]'
+          write(10,*)'M_CT1'
+          write(10,*)'d#sigma-/dM_{T1}--[pb/GeV]'
+          write(10,*)'M_{T1}--[GeV]'
         else if (itrans == 8)then
-          write(*,*)'M_CT2'
-          write(*,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-          write(*,*)'M_{T2}--[GeV]'
+          write(10,*)'M_CT2'
+          write(10,*)'d#sigma-/dM_{T2}--[pb/GeV]'
+          write(10,*)'M_{T2}--[GeV]'
         else if (itrans == 9)then
-          write(*,*)'M_CT3'
-          write(*,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-          write(*,*)'M_{T3}--[GeV]'
+          write(10,*)'M_CT3'
+          write(10,*)'d#sigma-/dM_{T3}--[pb/GeV]'
+          write(10,*)'M_{T3}--[GeV]'
         else if (itrans == 10)then
-          write(*,*)'MlCT'
-          write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
-          write(*,*)'m^{l}_{CT}--[GeV]'
+          write(10,*)'MlCT'
+          write(10,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+          write(10,*)'m^{l}_{CT}--[GeV]'
         else
           continue
         end if
         do i=1,ndiv_trans(itrans)
-          write(*,*)xtrans(itrans,i),fxtranstot(itrans,i)
+          write(10,*)xtrans(itrans,i),fxtranstot(itrans,i)
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
     end do
 
@@ -1088,14 +1087,14 @@ contains
         end do
         sfxfltot=sfxfltot+fxfltot(j)*flw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'fl'
-      write(*,*)'d#sigma-/d#phi_{l}--[pb]'
-      write(*,*)'#phi_{l}--[-rad-]'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'fl'
+      write(10,*)'d#sigma-/d#phi_{l}--[pb]'
+      write(10,*)'#phi_{l}--[-rad-]'
       do i=1,ndiv_fl
-        write(*,*)xfl(i),fxfltot(i)
+        write(10,*)xfl(i),fxfltot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in cosfl
@@ -1109,14 +1108,14 @@ contains
         end do
         sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'cosfl'
-      write(*,*)'d#sigma-/dcos#phi_{l}--[pb]'
-      write(*,*)'cos#phi_{l}'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'cosfl'
+      write(10,*)'d#sigma-/dcos#phi_{l}--[pb]'
+      write(10,*)'cos#phi_{l}'
       do i=1,ndiv_cosfl
-        write(*,*)xcosfl(i),fxcosfltot(i)
+        write(10,*)xcosfl(i),fxcosfltot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in delta phi
@@ -1130,14 +1129,14 @@ contains
         end do
         sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'dphi'
-      write(*,*)'d#sigma-/d#delta#phi--[pb]'
-      write(*,*)'#delta#phi'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'dphi'
+      write(10,*)'d#sigma-/d#delta#phi--[pb]'
+      write(10,*)'#delta#phi'
       do i=1,ndiv_dphi
-        write(*,*)xdphi(i),fxdphitot(i)
+        write(10,*)xdphi(i),fxdphitot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in cost5
@@ -1151,14 +1150,14 @@ contains
         end do
         sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'cost5'
-      write(*,*)'d#sigma-/dcos#theta_{+}--[pb]'
-      write(*,*)'cos#theta_{+}'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'cost5'
+      write(10,*)'d#sigma-/dcos#theta_{+}--[pb]'
+      write(10,*)'cos#theta_{+}'
       do i=1,ndiv_cost5
-        write(*,*)xcost5(i),fxcost5tot(i)
+        write(10,*)xcost5(i),fxcost5tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in cost7
@@ -1172,14 +1171,14 @@ contains
         end do
         sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'cost7'
-      write(*,*)'d#sigma-/dcos#theta_{-}--[pb]'
-      write(*,*)'cos#theta_{-}'
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'cost7'
+      write(10,*)'d#sigma-/dcos#theta_{-}--[pb]'
+      write(10,*)'cos#theta_{-}'
       do i=1,ndiv_cost7
-        write(*,*)xcost7(i),fxcost7tot(i)
+        write(10,*)xcost7(i),fxcost7tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distribution in ct7ct5
@@ -1193,15 +1192,15 @@ contains
         end do
         sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
       end do
-      write(*,*)'DISTRIBUTION'
-      write(*,*)'ct7ct5'
-      write(*,*) &
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'ct7ct5'
+      write(10,*) &
       'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
-      write(*,*)'cos#theta_{+}cos#theta_{-}'
+      write(10,*)'cos#theta_{+}cos#theta_{-}'
       do i=1,ndiv_ct7ct5
-        write(*,*)xct7ct5(i),fxct7ct5tot(i)
+        write(10,*)xct7ct5(i),fxct7ct5tot(i)
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot distributions in all asymmetries
@@ -1228,43 +1227,43 @@ contains
             end do
             sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
           end do
-          write(*,*)'ASYMMETRY'
+          write(10,*)'ASYMMETRY'
           if(jasy == 1)then
-            write(*,*)'ALL'
-            write(*,*)'a_{ll}'
+            write(10,*)'ALL'
+            write(10,*)'a_{ll}'
           else if(jasy == 2)then
-            write(*,*)'AL'
-            write(*,*)'a_{l}'
+            write(10,*)'AL'
+            write(10,*)'a_{l}'
           else if(jasy == 3)then
-            write(*,*)'APV'
-            write(*,*)'a_{pv}'
+            write(10,*)'APV'
+            write(10,*)'a_{pv}'
           else if(jasy == 4)then
-            write(*,*)'AFB'
-            write(*,*)'a_{fb}'
+            write(10,*)'AFB'
+            write(10,*)'a_{fb}'
           else if(jasy == 5)then
-            write(*,*)'AFBSTAR'
-            write(*,*)'a_{fb^{*}}'
+            write(10,*)'AFBSTAR'
+            write(10,*)'a_{fb^{*}}'
           else if(jasy == 6)then
-            write(*,*)'AtRFB'
-            write(*,*)'a^{t}_{rfb}'
+            write(10,*)'AtRFB'
+            write(10,*)'a^{t}_{rfb}'
           else if(jasy == 7)then
-            write(*,*)'AttbRFB'
-            write(*,*)"a^{b\bar{b}}_{rfb}"
+            write(10,*)'AttbRFB'
+            write(10,*)"a^{b\bar{b}}_{rfb}"
           else if(jasy == 8)then
-            write(*,*)'ARFB'
-            write(*,*)"a_{rfb}"
+            write(10,*)'ARFB'
+            write(10,*)"a_{rfb}"
           else if(jasy == 9)then
-            write(*,*)'A_l'
-            write(*,*)'a_{l}'
+            write(10,*)'A_l'
+            write(10,*)'a_{l}'
           end if
-          write(*,*)'M_{tt}'
+          write(10,*)'M_{tt}'
           ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
           do i=1,ndiv_sig
             if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
-              write(*,*)(xsigm(i)+xsigp(i))/2.d0,0.d0,0.d0,0.d0
+              write(10,*)(xsigm(i)+xsigp(i))/2.d0,0.d0,0.d0,0.d0
               !           snorm(jasy)=snorm(jasy)+0.d0
             else
-              write(*,*)(xsigm(i)+xsigp(i))/2.d0, &
+              write(10,*)(xsigm(i)+xsigp(i))/2.d0, &
               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/ &
               (fxsigptot(jasy,i)+fxsigmtot(jasy,i)), &
               fxsigptot(jasy,i),fxsigmtot(jasy,i)
@@ -1275,9 +1274,9 @@ contains
             end if
           end do
           asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/(sfxsigptot(jasy)+sfxsigmtot(jasy))
-          write(*,*)'END'
-          !         write(*,*)'(total asymmetry:',asym_int(jasy),')'
-          !         write(*,*)'(integrated asymmetry:',snorm(jasy),' )'
+          write(10,*)'END'
+          !         write(10,*)'(total asymmetry:',asym_int(jasy),')'
+          !         write(10,*)'(integrated asymmetry:',snorm(jasy),' )'
         end if
       end do
     end if
@@ -1295,23 +1294,23 @@ contains
 !           sfxdphi2dtot=sfxdphitot+fxdphitot(j)*dphiw
         end do
       end do
-      write(*,*)'2D-DISTRIBUTION'
-      write(*,*)'dphi2d'
-      write(*,*)'d^2#sigma-/d#delta#phi-dM_{tt}--[pb/GeV]'
-      write(*,*)'#delta#phi--[rad]'
-      write(*,*) ndiv_dphi
-      write(*,*) dphimin
-      write(*,*) dphimax
-      write(*,*)'M_{tt}--[GeV]'
-      write(*,*) ndiv_mtt
-      write(*,*) mttmin
-      write(*,*) mttmax
+      write(10,*)'2D-DISTRIBUTION'
+      write(10,*)'dphi2d'
+      write(10,*)'d^2#sigma-/d#delta#phi-dM_{tt}--[pb/GeV]'
+      write(10,*)'#delta#phi--[rad]'
+      write(10,*) ndiv_dphi
+      write(10,*) dphimin
+      write(10,*) dphimax
+      write(10,*)'M_{tt}--[GeV]'
+      write(10,*) ndiv_mtt
+      write(10,*) mttmin
+      write(10,*) mttmax
       do i=1,ndiv_dphi
         do j=1,ndiv_mtt
-          write(*,*)xdphi(i),xmtt(j),fxdphi2dtot(i,j)
+          write(10,*)xdphi(i),xmtt(j),fxdphi2dtot(i,j)
         end do
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot 2d-distribution in ct7ct5
@@ -1327,23 +1326,23 @@ contains
 !           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
         end do
       end do
-      write(*,*)'2D-DISTRIBUTION'
-      write(*,*)'ct7ct52d'
-      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
-      write(*,*)'cos#theta_{+}cos#theta_{-}'
-      write(*,*) ndiv_ct7ct5
-      write(*,*) ct7ct5min
-      write(*,*) ct7ct5max
-      write(*,*)'M_{tt}--[GeV]'
-      write(*,*) ndiv_mtt
-      write(*,*) mttmin
-      write(*,*) mttmax
+      write(10,*)'2D-DISTRIBUTION'
+      write(10,*)'ct7ct52d'
+      write(10,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
+      write(10,*)'cos#theta_{+}cos#theta_{-}'
+      write(10,*) ndiv_ct7ct5
+      write(10,*) ct7ct5min
+      write(10,*) ct7ct5max
+      write(10,*)'M_{tt}--[GeV]'
+      write(10,*) ndiv_mtt
+      write(10,*) mttmin
+      write(10,*) mttmax
       do i=1,ndiv_ct7ct5
         do j=1,ndiv_mtt
-          write(*,*)xct7ct5(i),xmtt(j),fxct7ct52dtot(i,j)
+          write(10,*)xct7ct5(i),xmtt(j),fxct7ct52dtot(i,j)
         end do
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot 2d-distribution in cost7
@@ -1359,23 +1358,23 @@ contains
 !           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
         end do
       end do
-      write(*,*)'2D-DISTRIBUTION'
-      write(*,*)'cost72d'
-      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{-})--[pb]'
-      write(*,*)'cos#theta_{-}'
-      write(*,*) ndiv_cost7
-      write(*,*) cost7min
-      write(*,*) cost7max
-      write(*,*)'M_{tt}--[GeV]'
-      write(*,*) ndiv_mtt
-      write(*,*) mttmin
-      write(*,*) mttmax
+      write(10,*)'2D-DISTRIBUTION'
+      write(10,*)'cost72d'
+      write(10,*)'d^{2}#sigma-/d(cos#theta^{*}_{-})--[pb]'
+      write(10,*)'cos#theta_{-}'
+      write(10,*) ndiv_cost7
+      write(10,*) cost7min
+      write(10,*) cost7max
+      write(10,*)'M_{tt}--[GeV]'
+      write(10,*) ndiv_mtt
+      write(10,*) mttmin
+      write(10,*) mttmax
       do i=1,ndiv_cost7
         do j=1,ndiv_mtt
-          write(*,*)xcost7(i),xmtt(j),fxcost72dtot(i,j)
+          write(10,*)xcost7(i),xmtt(j),fxcost72dtot(i,j)
         end do
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot 2d-distribution in cost5
@@ -1391,23 +1390,23 @@ contains
 !           sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
         end do
       end do
-      write(*,*)'2D-DISTRIBUTION'
-      write(*,*)'cost52d'
-      write(*,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
-      write(*,*)'cos#theta_{+}cos#theta_{-}'
-      write(*,*) ndiv_cost5
-      write(*,*) cost5min
-      write(*,*) cost5max
-      write(*,*)'M_{tt}--[GeV]'
-      write(*,*) ndiv_mtt
-      write(*,*) mttmin
-      write(*,*) mttmax
+      write(10,*)'2D-DISTRIBUTION'
+      write(10,*)'cost52d'
+      write(10,*)'d^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
+      write(10,*)'cos#theta_{+}cos#theta_{-}'
+      write(10,*) ndiv_cost5
+      write(10,*) cost5min
+      write(10,*) cost5max
+      write(10,*)'M_{tt}--[GeV]'
+      write(10,*) ndiv_mtt
+      write(10,*) mttmin
+      write(10,*) mttmax
       do i=1,ndiv_cost5
         do j=1,ndiv_mtt
-          write(*,*)xcost5(i),xmtt(j),fxcost52dtot(i,j)
+          write(10,*)xcost5(i),xmtt(j),fxcost52dtot(i,j)
         end do
       end do
-      write(*,*)'END'
+      write(10,*)'END'
     end if
 
     ! plot 2d-distributions in delta_phi and all transverse variables
@@ -1427,77 +1426,77 @@ contains
             fxtransdptot(itrans,i,j)*transw(itrans)
           end do
         end do
-        write(*,*)'2D-DISTRIBUTION'
+        write(10,*)'2D-DISTRIBUTION'
         if (itrans == 1)then
-          write(*,*)'dphiMvis'
-          write(*,*)'d#sigma-/dM_{vis}--[pb/GeV]'
+          write(10,*)'dphiMvis'
+          write(10,*)'d#sigma-/dM_{vis}--[pb/GeV]'
         else if (itrans == 2)then
-          write(*,*)'dphiHT'
-          write(*,*)'d#sigma-/dH_{T}--[pb/GeV]'
+          write(10,*)'dphiHT'
+          write(10,*)'d#sigma-/dH_{T}--[pb/GeV]'
         else if (itrans == 3)then
-          write(*,*)'dphiM_T1'
-          write(*,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
+          write(10,*)'dphiM_T1'
+          write(10,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
         else if (itrans == 4)then
-          write(*,*)'dphiM_T2'
-          write(*,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
+          write(10,*)'dphiM_T2'
+          write(10,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
         else if (itrans == 5)then
-          write(*,*)'dphiM_T3'
-          write(*,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
+          write(10,*)'dphiM_T3'
+          write(10,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
         else if (itrans == 6)then
-          write(*,*)'dphiMlT'
-          write(*,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
+          write(10,*)'dphiMlT'
+          write(10,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
         else if (itrans == 7)then
-          write(*,*)'dphiM_CT1'
-          write(*,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
+          write(10,*)'dphiM_CT1'
+          write(10,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
         else if (itrans == 8)then
-          write(*,*)'dphiM_CT2'
-          write(*,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
+          write(10,*)'dphiM_CT2'
+          write(10,*)'d#sigma-/dM_{CT2}--[pb/GeV]'
         else if (itrans == 9)then
-          write(*,*)'dphiM_CT3'
-          write(*,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
+          write(10,*)'dphiM_CT3'
+          write(10,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
         else if (itrans == 10)then
-          write(*,*)'dphiMlCT'
-          write(*,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
+          write(10,*)'dphiMlCT'
+          write(10,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
         else
           continue
         end if
-        write(*,*)'#delta#phi'
-        write(*,*) ndiv_dphi
-        write(*,*) dphimin
-        write(*,*) dphimax
+        write(10,*)'#delta#phi'
+        write(10,*) ndiv_dphi
+        write(10,*) dphimin
+        write(10,*) dphimax
         if (itrans == 1)then
-          write(*,*)'M_{vis}--[GeV]'
+          write(10,*)'M_{vis}--[GeV]'
         else if (itrans == 2)then
-          write(*,*)'H_{T}--[GeV]'
+          write(10,*)'H_{T}--[GeV]'
         else if (itrans == 3)then
-          write(*,*)'M_{T1}--[GeV]'
+          write(10,*)'M_{T1}--[GeV]'
         else if (itrans == 4)then
-          write(*,*)'M_{T2}--[GeV]'
+          write(10,*)'M_{T2}--[GeV]'
         else if (itrans == 5)then
-          write(*,*)'M_{T3}--[GeV]'
+          write(10,*)'M_{T3}--[GeV]'
         else if (itrans == 6)then
-          write(*,*)'M^{l}_{T}--[GeV]'
+          write(10,*)'M^{l}_{T}--[GeV]'
         else if (itrans == 7)then
-          write(*,*)'M_{T1}--[GeV]'
+          write(10,*)'M_{T1}--[GeV]'
         else if (itrans == 8)then
-          write(*,*)'M_{T2}--[GeV]'
+          write(10,*)'M_{T2}--[GeV]'
         else if (itrans == 9)then
-          write(*,*)'M_{T3}--[GeV]'
+          write(10,*)'M_{T3}--[GeV]'
         else if (itrans == 10)then
-          write(*,*)'M^{l}_{CT}--[GeV]'
+          write(10,*)'M^{l}_{CT}--[GeV]'
         else
           continue
         end if
-        write(*,*)ndiv_trans(itrans)
-        write(*,*)transmin(itrans)
-        write(*,*)transmax(itrans)
+        write(10,*)ndiv_trans(itrans)
+        write(10,*)transmin(itrans)
+        write(10,*)transmax(itrans)
         do i=1,ndiv_dphi
           do j=1,ndiv_trans(itrans)
-            write(*,*)xdphi(i),xtrans(itrans,j) &
+            write(10,*)xdphi(i),xtrans(itrans,j) &
             ,fxtransdptot(itrans,i,j)
           end do
         end do
-        write(*,*)'END'
+        write(10,*)'END'
       end if
     end do
 
@@ -1509,114 +1508,114 @@ contains
     do ip=3,n_final
       if(o_pt(ip) == 1)then
         if(abs(sigma-sfxpttot(ip))>diff_max)then
-          write(*,*)'pt',ip,' error:',sfxpttot(ip)
+          write(10,*)'pt',ip,' error:',sfxpttot(ip)
           n_error=n_error+1
         end if
       end if
       if(o_eta(ip) == 1)then
         if(abs(sigma-sfxetatot(ip))>diff_max)then
-          write(*,*)'eta',ip,' error:',sfxetatot(ip)
+          write(10,*)'eta',ip,' error:',sfxetatot(ip)
           n_error=n_error+1
         end if
       end if
       if(o_phi(ip) == 1)then
         if(abs(sigma-sfxphitot(ip))>diff_max)then
-          write(*,*)'phi',ip,' error:',sfxphitot(ip)
+          write(10,*)'phi',ip,' error:',sfxphitot(ip)
           n_error=n_error+1
         end if
       end if
     end do
     if(o_etmiss == 1)then
       if(abs(sigma-sfxetmisstot)>diff_max)then
-        write(*,*)'etmiss error:',sfxetmisstot
+        write(10,*)'etmiss error:',sfxetmisstot
         n_error=n_error+1
       end if
     end if
     if(o_pt356 == 1)then
       if(abs(sigma-sfxpt356tot)>diff_max)then
-        write(*,*)'pt356 error:',sfxpt356tot
+        write(10,*)'pt356 error:',sfxpt356tot
         n_error=n_error+1
       end if
     end if
     if(o_eta356 == 1)then
       if(abs(sigma-sfxeta356tot)>diff_max)then
-        write(*,*)'eta356 error:',sfxeta356tot
+        write(10,*)'eta356 error:',sfxeta356tot
         n_error=n_error+1
       end if
     end if
     if(o_phi356 == 1)then
       if(abs(sigma-sfxphi356tot)>diff_max)then
-        write(*,*)'phi356 error:',sfxphi356tot
+        write(10,*)'phi356 error:',sfxphi356tot
         n_error=n_error+1
       end if
     end if
     if(o_pt478 == 1)then
       if(abs(sigma-sfxpt478tot)>diff_max)then
-        write(*,*)'pt478 error:',sfxpt478tot
+        write(10,*)'pt478 error:',sfxpt478tot
         n_error=n_error+1
       end if
     end if
     if(o_eta478 == 1)then
       if(abs(sigma-sfxeta478tot)>diff_max)then
-        write(*,*)'eta478 error:',sfxeta478tot
+        write(10,*)'eta478 error:',sfxeta478tot
         n_error=n_error+1
       end if
     end if
     if(o_phi478 == 1)then
       if(abs(sigma-sfxphi478tot)>diff_max)then
-        write(*,*)'phi478 error:',sfxphi478tot
+        write(10,*)'phi478 error:',sfxphi478tot
         n_error=n_error+1
       end if
     end if
 
     if(o_mtt == 1)then
       if(abs(sigma-sfxmtttot)>diff_max)then
-        write(*,*)'mtt error:',sfxmtttot
+        write(10,*)'mtt error:',sfxmtttot
         n_error=n_error+1
       end if
     end if
 
     if(o_mtt_reco == 1)then
       if(abs(sigma-sfxmtt_recotot)>diff_max)then
-        write(*,*)'mtt_reco error:',sfxmtt_recotot
+        write(10,*)'mtt_reco error:',sfxmtt_recotot
         n_error=n_error+1
       end if
     end if
 
     if(o_beta == 1)then
       if(abs(sigma-sfxbetatot)>diff_max)then
-        write(*,*)'beta error:',sfxbetatot
+        write(10,*)'beta error:',sfxbetatot
         n_error=n_error+1
       end if
     end if
 
     if(o_cost == 1)then
       if(abs(sigma-sfxcosttot)>diff_max)then
-        write(*,*)'cost error:',sfxcosttot
+        write(10,*)'cost error:',sfxcosttot
         n_error=n_error+1
       end if
     end if
     if(o_et == 1)then
       if(abs(sigma-sfxettot)>diff_max)then
-        write(*,*)'et error:',sfxettot
+        write(10,*)'et error:',sfxettot
         n_error=n_error+1
       end if
     end if
     if(o_fl == 1)then
       if(abs(sigma-sfxfltot)>diff_max)then
-        write(*,*)'fl error:',sfxfltot
+        write(10,*)'fl error:',sfxfltot
         n_error=n_error+1
       end if
     end if
     if(o_cosfl == 1)then
       if(abs(sigma-sfxcosfltot)>diff_max)then
-        write(*,*)'cosfl error:',sfxcosfltot
+        write(10,*)'cosfl error:',sfxcosfltot
         n_error=n_error+1
       end if
     end if
     if(o_dphi == 1)then
       if(abs(sigma-sfxdphitot)>diff_max)then
-        write(*,*)'dphi error:',sfxdphitot
+        write(10,*)'dphi error:',sfxdphitot
         n_error=n_error+1
       end if
     end if 
@@ -1626,14 +1625,15 @@ contains
       else
         if(abs(atot(iasy)-asym_int(iasy))>diff_max)then
           if(iasy /= 7)then ! fuck AttbRFB
-            write(*,*)'a error:',iasy,asym_int(iasy)
+            write(10,*)'a error:',iasy,asym_int(iasy)
             n_error=n_error+1
           end if
         end if
       end if
     end do
-    if(n_error > 0)write(*,*)'integration errors:',n_error
-    write(*,*)'CLOSE'
+    if(n_error > 0)write(10,*)'integration errors:',n_error
+    write(10,*)'CLOSE'
+    close(10)
 
   end subroutine check_distributions
 

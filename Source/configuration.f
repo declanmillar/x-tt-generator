@@ -11,6 +11,7 @@ module configuration
   
   integer :: structure_function
   character(50) :: model_name
+  character(50) :: output_file
   integer :: include_qcd
   integer :: include_ew
   integer :: include_bsm
@@ -48,6 +49,8 @@ module configuration
     subroutine read_config
 
       ! read config file
+
+      read(5,*) output_file
       
       read(5,*) initial_state ! 0 = pp, 1 = ppbar
 

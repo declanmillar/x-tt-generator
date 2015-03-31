@@ -109,7 +109,16 @@ elif (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==1):
 else:
   symmetrization = ""
 
+# Filename
+filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
+
+# Logfile      
+write = '' # if options.output else '> Output/%s.log &' % (filename)
+output_file = '%s.out' % filename
+
 # Print config file
+
+print >> config, '%s  ! output file' % output_file
 
 print >> config, '%s ! initial_state' % options.initial_state
 
@@ -159,17 +168,12 @@ print >> config, '%s ! print_all_distributions' % options.print_all_distribution
 
 print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
 
-# Filename
-filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
             cfile1.write(config.getvalue())
 except IOError:
       print "Not in right directory?"
       sys.exit()
-
-# Logfile      
-write = '' if options.output else '> Output/%s.log &' % (filename)
 
 # Command
 command = './%s < Config/%s.com %s' % (executable,filename,write)
