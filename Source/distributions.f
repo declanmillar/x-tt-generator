@@ -1,7 +1,7 @@
 module distributions
 
   use configuration, only: print_all_distributions, print_2d_distributions, include_transverse, include_asymmetries, o_asym, &
-                           n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final
+                           n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final, tops_decay
   use mathematics, only: pi
   use kinematics, only: sigma
   use integration, only: it
@@ -217,7 +217,7 @@ contains
 
     do i=1,n_final
       o_pt(i)=print_all_distributions
-      ptmax(i)=7000.d0/(1+initial_state*6)
+      ptmax(i)=7000.d0/(1+tops_decay*6)
       ptmin(i)=0.d0
       ndiv_pt(i)=70
       ! eta distributions
@@ -238,12 +238,12 @@ contains
     end do
     ! missing transverse momentum
     o_etmiss=print_all_distributions
-    etmissmax=7000.d0/(1+initial_state*6)
+    etmissmax=7000.d0/(1+tops_decay*6)
     etmissmin=0.d0
     ndiv_etmiss=70
     ! top transverse momentum
     o_pt356=print_all_distributions
-    pt356max=7000.d0/(1+initial_state*6)
+    pt356max=7000.d0/(1+tops_decay*6)
     pt356min=0.d0
     ndiv_pt356=70
     ! 2to6 top pseudorapidity
@@ -258,7 +258,7 @@ contains
     ndiv_phi356=50
     ! anti-top transverse momentum
     o_pt478=print_all_distributions
-    pt478max=7000.d0/(1+initial_state*6)
+    pt478max=7000.d0/(1+tops_decay*6)
     pt478min=0.d0
     ndiv_pt478=70
     ! 2to6 anti-top pseudorapidity
@@ -271,16 +271,16 @@ contains
     phi478max=+pi
     phi478min=-pi
     ndiv_phi478=50
-    ! invarient mass of tt pair (always on)
+    ! invariant mass of tt pair (always on)
     o_mtt=1
-    mttmax=14000.d0/(1+initial_state*6)
+    mttmax=14000.d0
     mttmin=0.d0
-    ndiv_mtt=560
+    ndiv_mtt=140
     ! reconstructed invarient mass of tt pair (always on)
     o_mtt_reco = print_all_distributions
-    mtt_recomax = 14000.d0/(1 + initial_state*6)
+    mtt_recomax = 14000.d0
     mtt_recomin = 0.d0
-    ndiv_mtt_reco = 560
+    ndiv_mtt_reco = 140
     ! boost of parton com
     o_beta=print_all_distributions
     betamax=1000.d0
@@ -293,7 +293,7 @@ contains
     ndiv_cost=50
     ! top energy
     o_et=print_all_distributions
-    etmax=7000.d0/(1+initial_state*6)
+    etmax=7000.d0/(1+tops_decay*6)
     etmin=0.d0
     ndiv_et=70
     ! delta_y
