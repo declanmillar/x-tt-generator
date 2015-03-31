@@ -49,6 +49,7 @@ module configuration
     subroutine read_config
 
       ! read config file
+      print *, "Reading config file" 
 
       read(5,*) output_file
       
@@ -103,6 +104,8 @@ module configuration
     end subroutine read_config
 
     subroutine modify_config
+
+      print*, "Modifying config file"
 
       if(final_state == 0)then
         n_final=4

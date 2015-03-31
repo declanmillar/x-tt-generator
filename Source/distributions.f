@@ -210,6 +210,8 @@ contains
   subroutine initialise_distributions
 
     implicit none 
+
+    print*, "Initialising distributions"
   
     ! sets flags, binning range and divisions.
 
@@ -466,6 +468,8 @@ contains
     ! (finds bin width, finds midpoints.)
     implicit none
 
+    print*, "Generating bins"
+
     do ip=3,n_final
       if(o_pt(ip) == 1)then
         ptw(ip)=(ptmax(ip)-ptmin(ip))/ndiv_pt(ip)
@@ -658,6 +662,9 @@ contains
     implicit none
 
     integer :: ndiv_sig
+
+    print*, "Printing histograms"
+
     write(10,*) '-----------------------------------------------------'
     write(10,*)'HISTOGRAMS'
     do ip=3,8
@@ -1505,6 +1512,9 @@ contains
   subroutine  check_distributions
     real :: diff_max = 1e-12
     integer :: n_error = 0
+
+    print*, "Checking histograms"
+
     do ip=3,n_final
       if(o_pt(ip) == 1)then
         if(abs(sigma-sfxpttot(ip))>diff_max)then

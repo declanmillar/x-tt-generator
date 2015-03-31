@@ -17,7 +17,7 @@ import os,StringIO,re,optparse,subprocess,time,sys,random
 parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
 
 # Local options
-parser.add_option("-o", "--output" , default=False, action="store_true"               , help="output to terminal")
+parser.add_option("-l", "--output" , default=False, action="store_true"               , help="output to logfile")
 parser.add_option("-t", "--tag"    , default=""   ,   type="string"                   , help="add a name tag to logfile")
 
 # Physics options
@@ -113,7 +113,7 @@ else:
 filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
 
 # Logfile      
-write = '' # if options.output else '> Output/%s.log &' % (filename)
+logfile = '> Output/%s.log &' % (filename) if options.output else ''
 output_file = '%s.out' % filename
 
 # Print config file
@@ -176,7 +176,7 @@ except IOError:
       sys.exit()
 
 # Command
-command = './%s < Config/%s.com %s' % (executable,filename,write)
+command = './%s < Config/%s.com %s' % (executable,filename,logfile)
 print 'executing: ',command
 subprocess.call(command, shell=True)
    

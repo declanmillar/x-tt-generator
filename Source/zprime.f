@@ -36,6 +36,9 @@ program zprime
 
   integer :: i, j, k
   integer :: today(3), now(3)
+  real :: start_time, finish_time
+
+  call cpu_time(start_time)
 
   call read_config
 
@@ -303,9 +306,11 @@ program zprime
   end if
 
   ! integrate 
-  print *, 'Starting integration...'
+  print *, 'Starting integration'
   it = 0 
   call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
+
+  print *, 'Finished integration'  
 
   if (final_state == 0 .and. use_branching_ratio == 1) then
     ! multiply by branching ratios
@@ -474,5 +479,8 @@ program zprime
   call check_distributions
 
   close(10)
+  call cpu_time(finish_time)
+  print*, 'Program complete'
+  print '("Time = ",f6.3," seconds.")', finish_time-start_time
   stop
 end program zprime
