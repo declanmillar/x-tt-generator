@@ -18,13 +18,13 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
              >> yTitle >> nBinsy >> ylow >> yup ;
 
   // replace hyphens with spaces
-  for(int i = 0; i < xTitle.size(); i++)
+  for(int i = 0; i < (int) xTitle.size(); i++)
     if(xTitle[i] == '-') xTitle[i] = ' ';
 
-  for(int i = 0; i < yTitle.size(); i++)
+  for(int i = 0; i < (int) yTitle.size(); i++)
     if(yTitle[i] == '-') yTitle[i] = ' '; 
 
-  for(int i = 0; i < zTitle.size(); i++)
+  for(int i = 0; i < (int) zTitle.size(); i++)
     if(zTitle[i] == '-') zTitle[i] = ' ';  
 
   // loop over data pairs.
@@ -48,7 +48,7 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
 
   // multiply by the luminosity if specified
   if (luminosity > 0) {
-    for (int i = 0; i < zv.size(); i++) {
+    for (int i = 0; i < (int) zv.size(); i++) {
       zv[i] = zv[i]*luminosity*efficiency;
     }
     zTitle = "Events";
@@ -74,7 +74,7 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
   hist->GetXaxis()->CenterTitle();
 
   // fill histogram
-  for (int i = 0; i < xv.size(); i++){
+  for (int i = 0; i < (int) xv.size(); i++){
     hist->Fill(xv[i], yv[i], zv[i]);
   }
 

@@ -15,9 +15,9 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   *logStream >> distName >> yTitle >> xTitle;
 
   // replace hyphens with spaces
-  for (int i = 0; i < xTitle.size(); i++)
+  for (int i = 0; i < (int) xTitle.size(); i++)
     if (xTitle[i] == '-') xTitle[i] = ' ';
-  for(int i = 0; i < yTitle.size(); i++)
+  for(int i = 0; i < (int) yTitle.size(); i++)
     if (yTitle[i] == '-') yTitle[i] = ' ';  
 
   // loop over data pairs.
@@ -43,7 +43,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   binLowEdges.resize(nBinEdges);
 
   // Find lower edges of bins.
-  for (int i=0; i<nBins; i++){
+  for (int i = 0; i < (int) nBins; i++){
     binLowEdges[i]=xV[i]-binWidth/2;
     // printf("Bin Low Edge = %f\n",binLowEdges[i]);
   }
@@ -52,7 +52,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   // multiply by the luminosity if specified
   if (luminosity > 0)
   {
-    for (int i=0; i<nBins; i++)
+    for (int i = 0; i < (int) nBins; i++)
     {
       yV[i]=yV[i]*luminosity*efficiency;
       // printf("Bin Low Edge = %f\n",binLowEdges[i]);
@@ -68,15 +68,17 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   printf ("  bin_width: %f\n",binWidth);  
 
   // create Histogram.
-  TH1D *hist = new TH1D(distName.c_str(), " " , nBins, &(binLowEdges[0]));
-  hist -> GetYaxis() -> SetTitle(yTitle.c_str());
-  hist -> GetYaxis() -> CenterTitle();
-  hist -> GetXaxis() -> SetTitle(xTitle.c_str());
-  hist -> GetXaxis() -> CenterTitle();
+  TH1D *hist = new TH1D(distName.c_str(), " ", nBins, &(binLowEdges[0]));
+  hist->GetYaxis()->SetTitle(yTitle.c_str());
+  hist->GetYaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitle(xTitle.c_str());
+  hist->GetXaxis()->CenterTitle();
 
   // fill Histogram.
-  for (int i=0; i<nBins; i++){
-    hist->Fill(xV[i],yV[i]);
+  for (int i = 1; i < nBins+1; i++) {
+    hist->Fill(xV[i-1], yV[i-1]);
+    if (distName == "cost5") printf("%f\n", sqrt(9829928*yV[i-1]/hist->Integral()));
+    hist->SetBinError(i, sqrt(9829928*yV[i-1]/hist->Integral()));
   }
 
   return hist;

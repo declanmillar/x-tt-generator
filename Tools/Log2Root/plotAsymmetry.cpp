@@ -77,10 +77,10 @@ TH1D* plotAsymmetry(double luminosity, double efficiency, ifstream * logStream){
   }
 
   // replace hyphens with spaces
-  for(int i=0;i <xTitle.size();i++)
+  for(int i=0;i < (int) xTitle.size();i++)
     if(xTitle[i]=='-')
         xTitle[i]=' ';
-  for(int i=0;i <yTitle.size();i++)
+  for(int i=0;i < (int) yTitle.size();i++)
     if(yTitle[i]=='-')
         yTitle[i]=' ';
 
@@ -100,9 +100,9 @@ TH1D* plotAsymmetry(double luminosity, double efficiency, ifstream * logStream){
   hist -> GetXaxis() -> CenterTitle();
 
   // fill Histogram.
-  for (int i=0; i<nBins; i++){
-    hist->Fill(xV[i],AV[i]);
-    hist->SetBinError(i,deltaA1[i]);
+  for (int i = 0; i < nBins; i++) {
+    hist->Fill(xV[i], AV[i]);
+    hist->SetBinError(i, deltaA1[i]);
   }
 
   return hist;

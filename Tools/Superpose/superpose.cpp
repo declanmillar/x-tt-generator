@@ -84,7 +84,8 @@ int main(int argc, char *argv[])
   if (!f1->IsOpen()) printf("Failed to open %s\n", fileName1.c_str());
   h1 = (TH1D*) f1->Get(histName1.c_str());
   name1 = histName1 + '@' + fileName1;
-  h1->SetTitle(name1.c_str());
+  // h1->SetTitle(name1.c_str());
+  h1->SetTitle("SM");
   h1->Draw();
   h1->SetLineColor(kBlack);
   h1->GetYaxis()->SetTitleOffset(1.3);
@@ -97,7 +98,8 @@ int main(int argc, char *argv[])
     if (!f2->IsOpen()) printf("Failed to open %s\n", fileName2.c_str());
     name2 = histName2 + '@' + fileName2;
     h2 = (TH1D*) f2->Get(histName2.c_str());
-    h2->SetTitle(name2.c_str());
+    // h2->SetTitle(name2.c_str());
+    h2->SetTitle("SSM (M=2 TeV, #Gamma=600 GeV)");
     h2->Draw("SAME");
     h2->SetLineColor(kRed);
   }

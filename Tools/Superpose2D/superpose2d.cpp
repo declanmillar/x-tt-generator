@@ -14,7 +14,7 @@
 #include <TH2.h>
 #include <TFile.h>
 
-#include <term_colours.cpp>
+#include "term_colours.cpp"
 
 namespace po = boost::program_options;
 

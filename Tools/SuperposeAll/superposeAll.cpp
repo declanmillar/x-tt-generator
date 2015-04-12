@@ -80,7 +80,8 @@ int main(int argc, char *argv[])
     const char* histName = list->At(i)->GetName();
     
     h1 = (TH1D*) f1->Get(list->At(i)->GetName());
-    h1->SetTitle(fileName1.c_str());
+    // h1->SetTitle(fileName1.c_str());
+    h1->SetTitle("SSM (M=2 TeV, #Gamma=500 GeV)");
     h1->Draw();
     h1->SetStats(false);
     h1->SetLineColor(kBlack);
@@ -89,14 +90,16 @@ int main(int argc, char *argv[])
 
     if (nFiles > 1) { 
       h2 = (TH1D*) f2->Get(list->At(i)->GetName());
-      h2->SetTitle(fileName2.c_str());
+      // h2->SetTitle(fileName2.c_str());
+      h2->SetTitle("SSM (M=2.5 TeV, #Gamma=500 GeV)");
       h2->Draw("SAME");
       h2->SetLineColor(kRed);
     }
 
     if (nFiles > 2) {   
       h3 = (TH1D*) f3->Get(list->At(i)->GetName());
-      h3->SetTitle(fileName3.c_str());
+      // h3->SetTitle(fileName3.c_str());
+      h3->SetTitle("SSM (M=3 TeV, #Gamma=500 GeV)");
       h3->Draw("SAME");
       h3->SetLineColor(kBlue);
     }
