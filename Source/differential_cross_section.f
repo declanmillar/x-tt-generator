@@ -1674,6 +1674,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxpt(ip,nbin,it)=fxpt(ip,nbin,it)+hist
+            if (include_errors == 1) sumw2pt(ip,nbin,it) = sumw2pt(ip,nbin,it)+hist*hist
             ! print *, fxpt(ip,nbin,it)
           end if
         end if
@@ -1686,6 +1687,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxeta(ip,nbin,it)=fxeta(ip,nbin,it)+hist
+            if (include_errors == 1) sumw2eta(ip,nbin,it) = sumw2eta(ip,nbin,it)+hist*hist
           end if
         end if
       ! generate distribution in phi
@@ -1697,6 +1699,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxphi(ip,nbin,it)=fxphi(ip,nbin,it)+hist
+            if (include_errors == 1) sumw2phi(ip,nbin,it) = sumw2phi(ip,nbin,it)+hist*hist
           end if
         end if
       ! generate distribution in ycol
@@ -1708,6 +1711,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxycol(ip,nbin,it)=fxycol(ip,nbin,it)+hist
+            if (include_errors == 1) sumw2ycol(ip,nbin,it) = sumw2ycol(ip,nbin,it)+hist*hist
           end if
         end if
       end do
@@ -1721,6 +1725,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxpt356(nbin,it)=fxpt356(nbin,it)+hist
+          if (include_errors == 1) sumw2pt356(nbin,it) = sumw2pt356(nbin,it)+hist*hist
         end if
       end if
 
@@ -1733,6 +1738,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxeta356(nbin,it)=fxeta356(nbin,it)+hist
+          if (include_errors == 1) sumw2eta356(nbin,it) = sumw2eta356(nbin,it)+hist*hist
         end if
       end if
 
@@ -1745,6 +1751,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxphi356(nbin,it)=fxphi356(nbin,it)+hist
+          if (include_errors == 1) sumw2phi356(nbin,it) = sumw2phi356(nbin,it)+hist*hist
         end if
       end if
 
@@ -1757,6 +1764,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxpt478(nbin,it)=fxpt478(nbin,it)+hist
+          if (include_errors == 1) sumw2pt478(nbin,it) = sumw2pt478(nbin,it)+hist*hist
         end if
       end if
 
@@ -1769,6 +1777,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxeta478(nbin,it)=fxeta478(nbin,it)+hist
+          if (include_errors == 1) sumw2eta478(nbin,it) = sumw2eta478(nbin,it)+hist*hist
         end if
       end if
 
@@ -1781,6 +1790,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxphi478(nbin,it)=fxphi478(nbin,it)+hist
+          if (include_errors == 1) sumw2phi478(nbin,it) = sumw2phi478(nbin,it)+hist*hist
         end if
       end if
 
@@ -1793,6 +1803,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxetmiss(nbin,it)=fxetmiss(nbin,it)+hist
+          if (include_errors == 1) sumw2etmiss(nbin,it) = sumw2etmiss(nbin,it)+hist*hist
         end if
       end if
 
@@ -1805,6 +1816,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxmtt(nbin,it)=fxmtt(nbin,it)+hist
+          if (include_errors == 1) sumw2mtt(nbin,it) = sumw2mtt(nbin,it)+hist*hist
         end if
       end if
 
@@ -1817,6 +1829,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxmtt_reco(nbin,it)=fxmtt_reco(nbin,it)+hist
+          if (include_errors == 1) sumw2mtt_reco(nbin,it) = sumw2mtt_reco(nbin,it)+hist*hist
         end if
       end if
 
@@ -1830,6 +1843,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxbeta(nbin,it)=fxbeta(nbin,it)+hist
+          if (include_errors == 1) sumw2beta(nbin,it) = sumw2beta(nbin,it)+hist*hist
         end if
       end if
 
@@ -1842,6 +1856,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxcost(nbin,it)=fxcost(nbin,it)+hist
+          if (include_errors == 1) sumw2cost(nbin,it) = sumw2cost(nbin,it)+hist*hist
         end if
       end if
 
@@ -1854,6 +1869,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxet(nbin,it)=fxet(nbin,it)+hist
+          if (include_errors == 1) sumw2et(nbin,it) = sumw2et(nbin,it)+hist*hist
         end if
       end if
 
@@ -1866,6 +1882,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxdelta_y(nbin,it)=fxdelta_y(nbin,it)+hist
+          if (include_errors == 1) sumw2delta_y(nbin,it) = sumw2delta_y(nbin,it)+hist*hist
         end if
       end if
 
@@ -1879,6 +1896,7 @@ function differential_cross_section(x,wgt)
             continue
           else
             fxtrans(itrans,nbin,it)=fxtrans(itrans,nbin,it)+hist
+            if (include_errors == 1) sumw2trans(itrans,nbin,it) = sumw2trans(itrans,nbin,it)+hist*hist
           end if
         end if
       end do
@@ -1892,6 +1910,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxfl(nbin,it)=fxfl(nbin,it)+hist
+          if (include_errors == 1) sumw2fl(nbin,it) = sumw2fl(nbin,it)+hist*hist
         end if
       end if
 
@@ -1905,6 +1924,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxcosfl(nbin,it)=fxcosfl(nbin,it)+hist
+          if (include_errors == 1) sumw2cosfl(nbin,it) = sumw2cosfl(nbin,it)+hist*hist
         end if
       end if
 
@@ -1918,6 +1938,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxdphi(nbin,it)=fxdphi(nbin,it)+hist
+          if (include_errors == 1) sumw2dphi(nbin,it) = sumw2dphi(nbin,it)+hist*hist
         end if
       end if
 
@@ -1943,6 +1964,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxcost7(nbin,it)=fxcost7(nbin,it)+hist
+          if (include_errors == 1) sumw2cost7(nbin,it) = sumw2cost7(nbin,it)+hist*hist
         end if
       end if
 
@@ -1954,6 +1976,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxct7ct5(nbin,it)=fxct7ct5(nbin,it)+hist
+          if (include_errors == 1) sumw2ct7ct5(nbin,it) = sumw2ct7ct5(nbin,it)+hist*hist
         end if
       end if
 

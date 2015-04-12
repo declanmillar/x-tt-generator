@@ -13,102 +13,119 @@ module distributions
   ! distributions in pts of asymptotic particles
   real :: ptmax(8),ptmin(8),ptw(8)
   real :: xpt(8,500),fxpt(8,500,20),fxpttot(8,500)
+  real :: sumw2pt(8,500,20),sumw2pttot(8,500)
   integer :: o_pt(8)
   integer :: ndiv_pt(8)
 
   ! distributions in etas of asymptotic particles
   real :: etamax(8),etamin(8),etaw(8)
   real :: xeta(8,500),fxeta(8,500,20),fxetatot(8,500)
+  real :: sumw2eta(8,500,20),sumw2etatot(8,500)
   integer :: o_eta(8)
   integer :: ndiv_eta(8)
 
   ! distributions in phis of asymptotic particles
   real :: phimax(8),phimin(8),phiw(8)
   real :: xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
+  real :: sumw2phi(8,500,20),sumw2phitot(8,500)
   integer :: o_phi(8)
   integer :: ndiv_phi(8)
 
   ! distributions in ycol of asymptotic particles
   real :: ycolmax(8),ycolmin(8),ycolw(8)
   real :: xycol(8,500),fxycol(8,500,20),fxycoltot(8,500)
+  real :: sumw2ycol(8,500,20),sumw2ycoltot(8,500)
   integer :: o_ycol(8)
   integer :: ndiv_ycol(8)
 
   ! distribution in etmiss
   real :: etmissmax,etmissmin,etmissw
   real :: xetmiss(500),fxetmiss(500,20),fxetmisstot(500)
+  real :: sumw2etmiss(500,20),sumw2etmisstot(500)
   integer :: o_etmiss
   integer :: ndiv_etmiss
 
   ! distribution in pt of the top
   real :: pt356max,pt356min,pt356w
   real :: xpt356(500),fxpt356(500,20),fxpt356tot(500)
+  real :: sumw2pt356(500,20),sumw2pt356tot(500)
   integer :: o_pt356
   integer :: ndiv_pt356
 
   ! distribution in eta of the top
   real :: eta356max,eta356min,eta356w
   real :: xeta356(500),fxeta356(500,20),fxeta356tot(500)
+  real :: sumw2eta356(500,20),sumw2eta356tot(500)
   integer :: o_eta356
   integer :: ndiv_eta356
 
   ! distribution in phi of the top
   real :: phi356max,phi356min,phi356w
   real :: xphi356(500),fxphi356(500,20),fxphi356tot(500)
+  real :: sumw2phi356(500,20),sumw2phi356tot(500)
   integer :: o_phi356
   integer :: ndiv_phi356
 
   ! distribution in pt of the anti-top
   real :: pt478max,pt478min,pt478w
   real :: xpt478(500),fxpt478(500,20),fxpt478tot(500)
+  real :: sumw2pt478(500,20),sumw2pt478tot(500)
   integer :: o_pt478
   integer :: ndiv_pt478
 
   ! distribution in eta of the anti-top
   real :: eta478max,eta478min,eta478w
   real :: xeta478(500),fxeta478(500,20),fxeta478tot(500)
+  real :: sumw2eta478(500,20),sumw2eta478tot(500)
   integer :: o_eta478
   integer :: ndiv_eta478
 
   ! distribution in phi of the anti-top
   real :: phi478max,phi478min,phi478w
   real :: xphi478(500),fxphi478(500,20),fxphi478tot(500)
+  real :: sumw2phi478(500,20),sumw2phi478tot(500)
   integer :: o_phi478
   integer :: ndiv_phi478
 
   ! distribution in invarient mass of the top pair
   real :: mttmax,mttmin,mttw
   real :: xmtt(500),fxmtt(500,20),fxmtttot(500)
+  real :: sumw2mtt(500,20),sumw2mtttot(500)
   integer :: o_mtt
   integer :: ndiv_mtt
 
   ! distribution in invarient mass of the top pair
   real :: mtt_recomax,mtt_recomin,mtt_recow
   real :: xmtt_reco(500),fxmtt_reco(500,20),fxmtt_recotot(500)
+  real :: sumw2mtt_reco(500,20),sumw2mtt_recotot(500)
   integer :: o_mtt_reco
   integer :: ndiv_mtt_reco
 
   ! distribution in boost of top pair centre of mass frame
   real :: betamax,betamin,betaw
   real :: xbeta(500),fxbeta(500,20),fxbetatot(500)
+  real :: sumw2beta(500,20),sumw2betatot(500)
   integer :: o_beta
   integer :: ndiv_beta
 
   ! distribution in cos(theta_t)
   real :: costmax,costmin,costw
   real :: xcost(500),fxcost(500,20),fxcosttot(500)
+  real :: sumw2cost(500,20),sumw2costtot(500)
   integer :: o_cost
   integer :: ndiv_cost
 
   ! distribution in top energy
   real :: etmax,etmin,etw
   real :: xet(500),fxet(500,20),fxettot(500)
+  real :: sumw2et(500,20),sumw2ettot(500)
   integer :: o_et
   integer :: ndiv_et
 
   ! distribution in delta_y
   real :: delta_ymax,delta_ymin,delta_yw
   real :: xdelta_y(500),fxdelta_y(500,20), fxdelta_ytot(500)
+  real :: sumw2delta_y(500,20), sumw2delta_ytot(500)
   integer :: o_delta_y
   integer :: ndiv_delta_y
 
@@ -117,6 +134,7 @@ module distributions
   parameter (ntrans=10)
   real :: transmax(ntrans),transmin(ntrans),transw(ntrans)
   real :: xtrans(ntrans,500),fxtrans(ntrans,500,20) ,fxtranstot(ntrans,500)
+  real :: sumw2trans(ntrans,500,20) ,sumw2transtot(ntrans,500)
   integer :: o_tran(ntrans)
   integer :: ndiv_trans(ntrans)
   real :: sfxtranstot(ntrans),sfxtransdptot(ntrans)
@@ -124,18 +142,21 @@ module distributions
   ! distribution in phi_l (lepton azimuthal angle)
   real :: flmax,flmin,flw
   real :: xfl(500),fxfl(500,20),fxfltot(500)
+  real :: sumw2fl(500,20),sumw2fltot(500)
   integer :: o_fl
   integer :: ndiv_fl
 
   ! distribution in cos_phi_l
   real :: cosflmax,cosflmin,cosflw
   real :: xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
+  real :: sumw2cosfl(500,20),sumw2cosfltot(500)
   integer :: o_cosfl
   integer :: ndiv_cosfl
 
   ! distribution in delta phi
   real :: dphimax,dphimin,dphiw
   real :: xdphi(500),fxdphi(500,20),fxdphitot(500)
+  real :: sumw2dphi(500,20),sumw2dphitot(500)
   integer :: o_dphi
   integer :: ndiv_dphi
 
@@ -149,12 +170,14 @@ module distributions
   ! distribution in cost7
   real :: cost7max,cost7min,cost7w
   real :: xcost7(500),fxcost7(500,20),fxcost7tot(500)
+  real :: sumw2cost7(500,20),sumw2cost7tot(500)
   integer :: o_cost7
   integer :: ndiv_cost7
 
-  ! distribution in cost7
+  ! distribution in ct7ct5
   real :: ct7ct5max,ct7ct5min,ct7ct5w
   real :: xct7ct5(500),fxct7ct5(500,20),fxct7ct5tot(500)
+  real :: sumw2ct7ct5(500,20),sumw2ct7ct5tot(500)
   integer :: o_ct7ct5
   integer :: ndiv_ct7ct5
 
@@ -677,6 +700,12 @@ contains
           do i=1,it
             fxpt(ip,j,i)=fxpt(ip,j,i)*sigma/cnorm(i)/ptw(ip)
             fxpttot(ip,j)=fxpttot(ip,j)+fxpt(ip,j,i)
+            if (include_errors == 1) then 
+            sumw2pt(ip,j,i)=sumw2pt(ip,j,i)*sigma/cnorm(i)/ptw(ip)*sigma/cnorm(i)/ptw(ip)
+            sumw2pttot(ip,j)=sumw2pttot(ip,j)+sumw2pt(ip,j,i)
+            else
+              sumw2pttot(ip,j)=0
+            end if
           end do
           sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
         end do
@@ -697,6 +726,12 @@ contains
           do i=1,it
             fxeta(ip,j,i)=fxeta(ip,j,i)*sigma/cnorm(i)/etaw(ip)
             fxetatot(ip,j)=fxetatot(ip,j)+fxeta(ip,j,i)
+            if (include_errors == 1) then 
+            sumw2eta(ip,j,i)=sumw2eta(ip,j,i)*sigma/cnorm(i)/etaw(ip)*sigma/cnorm(i)/etaw(ip)
+            sumw2etatot(ip,j)=sumw2etatot(ip,j)+sumw2eta(ip,j,i)
+            else
+              sumw2etatot(ip,j)=0
+            end if
           end do
           sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
         end do
@@ -717,6 +752,12 @@ contains
           do i=1,it
             fxphi(ip,j,i)=fxphi(ip,j,i)*sigma/cnorm(i)/phiw(ip)
             fxphitot(ip,j)=fxphitot(ip,j)+fxphi(ip,j,i)
+            if (include_errors == 1) then 
+            sumw2phi(ip,j,i)=sumw2phi(ip,j,i)*sigma/cnorm(i)/phiw(ip)*sigma/cnorm(i)/phiw(ip)
+            sumw2phitot(ip,j)=sumw2phitot(ip,j)+sumw2phi(ip,j,i)
+            else
+              sumw2phitot(ip,j)=0
+            end if
           end do
           sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
         end do
@@ -737,6 +778,12 @@ contains
           do i=1,it
             fxycol(ip,j,i)=fxycol(ip,j,i)*sigma/cnorm(i)/ycolw(ip)
             fxycoltot(ip,j)=fxycoltot(ip,j)+fxycol(ip,j,i)
+            if (include_errors == 1) then 
+            sumw2ycol(ip,j,i)=sumw2ycol(ip,j,i)*sigma/cnorm(i)/ycolw(ip)*sigma/cnorm(i)/ycolw(ip)
+            sumw2ycoltot(ip,j)=sumw2ycoltot(ip,j)+sumw2ycol(ip,j,i)
+            else
+              sumw2ycoltot(ip,j)=0
+            end if
           end do
           sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
         end do
@@ -759,6 +806,12 @@ contains
         do i=1,it
           fxetmiss(j,i)=fxetmiss(j,i)*sigma/cnorm(i)/etmissw
           fxetmisstot(j)=fxetmisstot(j)+fxetmiss(j,i)
+          if (include_errors == 1) then 
+          sumw2etmiss(j,i)=sumw2etmiss(j,i)*sigma/cnorm(i)/etmissw*sigma/cnorm(i)/etmissw
+          sumw2etmisstot(j)=sumw2etmisstot(j)+sumw2etmiss(j,i)
+          else
+            sumw2etmisstot(j)=0
+          end if
         end do
         sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
       end do
@@ -780,6 +833,12 @@ contains
         do i=1,it
           fxpt356(j,i)=fxpt356(j,i)*sigma/cnorm(i)/pt356w
           fxpt356tot(j)=fxpt356tot(j)+fxpt356(j,i)
+          if (include_errors == 1) then 
+          sumw2pt356(j,i)=sumw2pt356(j,i)*sigma/cnorm(i)/pt356w*sigma/cnorm(i)/pt356w
+          sumw2pt356tot(j)=sumw2pt356tot(j)+sumw2pt356(j,i)
+          else
+            sumw2pt356tot(j)=0
+          end if
         end do
         sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
       end do
@@ -800,6 +859,12 @@ contains
         do i=1,it
           fxeta356(j,i)=fxeta356(j,i)*sigma/cnorm(i)/eta356w
           fxeta356tot(j)=fxeta356tot(j)+fxeta356(j,i)
+          if (include_errors == 1) then 
+          sumw2eta356(j,i)=sumw2eta356(j,i)*sigma/cnorm(i)/eta356w*sigma/cnorm(i)/eta356w
+          sumw2eta356tot(j)=sumw2eta356tot(j)+sumw2eta356(j,i)
+          else
+            sumw2eta356tot(j)=0
+          end if
         end do
         sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
       end do
@@ -820,6 +885,12 @@ contains
         do i=1,it
           fxphi356(j,i)=fxphi356(j,i)*sigma/cnorm(i)/phi356w
           fxphi356tot(j)=fxphi356tot(j)+fxphi356(j,i)
+          if (include_errors == 1) then 
+          sumw2phi356(j,i)=sumw2phi356(j,i)*sigma/cnorm(i)/phi356w*sigma/cnorm(i)/phi356w
+          sumw2phi356tot(j)=sumw2phi356tot(j)+sumw2phi356(j,i)
+          else
+            sumw2phi356tot(j)=0
+          end if
         end do
         sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
       end do
@@ -840,6 +911,12 @@ contains
         do i=1,it
           fxpt478(j,i)=fxpt478(j,i)*sigma/cnorm(i)/pt478w
           fxpt478tot(j)=fxpt478tot(j)+fxpt478(j,i)
+          if (include_errors == 1) then 
+          sumw2pt478(j,i)=sumw2pt478(j,i)*sigma/cnorm(i)/pt478w*sigma/cnorm(i)/pt478w
+          sumw2pt478tot(j)=sumw2pt478tot(j)+sumw2pt478(j,i)
+          else
+            sumw2pt478tot(j)=0
+          end if
         end do
         sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
       end do
@@ -860,6 +937,12 @@ contains
         do i=1,it
           fxeta478(j,i)=fxeta478(j,i)*sigma/cnorm(i)/eta478w
           fxeta478tot(j)=fxeta478tot(j)+fxeta478(j,i)
+          if (include_errors == 1) then 
+          sumw2eta478(j,i)=sumw2eta478(j,i)*sigma/cnorm(i)/eta478w*sigma/cnorm(i)/eta478w
+          sumw2eta478tot(j)=sumw2eta478tot(j)+sumw2eta478(j,i)
+          else
+            sumw2eta478tot(j)=0
+          end if
         end do
         sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
       end do
@@ -880,6 +963,12 @@ contains
         do i=1,it
           fxphi478(j,i)=fxphi478(j,i)*sigma/cnorm(i)/phi478w
           fxphi478tot(j)=fxphi478tot(j)+fxphi478(j,i)
+          if (include_errors == 1) then 
+          sumw2phi478(j,i)=sumw2phi478(j,i)*sigma/cnorm(i)/phi478w*sigma/cnorm(i)/phi478w
+          sumw2phi478tot(j)=sumw2phi478tot(j)+sumw2phi478(j,i)
+          else
+            sumw2phi478tot(j)=0
+          end if
         end do
         sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
       end do
@@ -900,6 +989,12 @@ contains
         do i=1,it
           fxmtt(j,i)=fxmtt(j,i)*sigma/cnorm(i)/mttw
           fxmtttot(j)=fxmtttot(j)+fxmtt(j,i)
+          if (include_errors == 1) then 
+          sumw2mtt(j,i)=sumw2mtt(j,i)*sigma/cnorm(i)/mttw*sigma/cnorm(i)/mttw
+          sumw2mtttot(j)=sumw2mtttot(j)+sumw2mtt(j,i)
+          else
+            sumw2mtttot(j)=0
+          end if
         end do
         sfxmtttot=sfxmtttot+fxmtttot(j)*mttw
       end do
@@ -921,6 +1016,12 @@ contains
         do i=1,it
           fxmtt_reco(j,i)=fxmtt_reco(j,i)*sigma/cnorm(i)/mtt_recow
           fxmtt_recotot(j)=fxmtt_recotot(j)+fxmtt_reco(j,i)
+          if (include_errors == 1) then 
+          sumw2mtt_reco(j,i)=sumw2mtt_reco(j,i)*sigma/cnorm(i)/mtt_recow*sigma/cnorm(i)/mtt_recow
+          sumw2mtt_recotot(j)=sumw2mtt_recotot(j)+sumw2mtt_reco(j,i)
+          else
+            sumw2mtt_recotot(j)=0
+          end if
         end do
         sfxmtt_recotot=sfxmtt_recotot+fxmtt_recotot(j)*mtt_recow
       end do
@@ -942,6 +1043,12 @@ contains
         do i=1,it
           fxbeta(j,i)=fxbeta(j,i)*sigma/cnorm(i)/betaw
           fxbetatot(j)=fxbetatot(j)+fxbeta(j,i)
+          if (include_errors == 1) then 
+          sumw2beta(j,i)=sumw2beta(j,i)*sigma/cnorm(i)/betaw*sigma/cnorm(i)/betaw
+          sumw2betatot(j)=sumw2betatot(j)+sumw2beta(j,i)
+          else
+            sumw2betatot(j)=0
+          end if
         end do
         sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
       end do
@@ -963,6 +1070,12 @@ contains
         do i=1,it
           fxcost(j,i)=fxcost(j,i)*sigma/cnorm(i)/costw
           fxcosttot(j)=fxcosttot(j)+fxcost(j,i)
+          if (include_errors == 1) then 
+          sumw2cost(j,i)=sumw2cost(j,i)*sigma/cnorm(i)/costw*sigma/cnorm(i)/costw
+          sumw2costtot(j)=sumw2costtot(j)+sumw2cost(j,i)
+          else
+            sumw2costtot(j)=0
+          end if
         end do
         sfxcosttot=sfxcosttot+fxcosttot(j)*costw
       end do
@@ -984,6 +1097,12 @@ contains
         do i=1,it
           fxet(j,i)=fxet(j,i)*sigma/cnorm(i)/etw
           fxettot(j)=fxettot(j)+fxet(j,i)
+          if (include_errors == 1) then 
+          sumw2et(j,i)=sumw2et(j,i)*sigma/cnorm(i)/etw*sigma/cnorm(i)/etw
+          sumw2ettot(j)=sumw2ettot(j)+sumw2et(j,i)
+          else
+            sumw2ettot(j)=0
+          end if
         end do
         sfxettot=sfxettot+fxettot(j)*etw
       end do
@@ -1005,6 +1124,12 @@ contains
         do i=1,it
           fxdelta_y(j,i)=fxdelta_y(j,i)*sigma/cnorm(i)/delta_yw
           fxdelta_ytot(j)=fxdelta_ytot(j)+fxdelta_y(j,i)
+          if (include_errors == 1) then 
+          sumw2delta_y(j,i)=sumw2delta_y(j,i)*sigma/cnorm(i)/delta_yw*sigma/cnorm(i)/delta_yw
+          sumw2delta_ytot(j)=sumw2delta_ytot(j)+sumw2delta_y(j,i)
+          else
+            sumw2delta_ytot(j)=0
+          end if
         end do
         sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
       end do
@@ -1029,6 +1154,14 @@ contains
             *sigma/cnorm(i)/transw(itrans)
             fxtranstot(itrans,j)=fxtranstot(itrans,j) &
             +fxtrans(itrans,j,i)
+            if (include_errors == 1) then 
+              sumw2trans(itrans,j,i)=sumw2trans(itrans,j,i) &
+              *sigma/cnorm(i)/transw(itrans)*sigma/cnorm(i)/transw(itrans)
+              sumw2transtot(itrans,j)=sumw2transtot(itrans,j) &
+              +sumw2trans(itrans,j,i)
+            else
+              sumw2transtot(itrans,j)=0
+            end if
           end do
           sfxtranstot(itrans)=sfxtranstot(itrans)+ &
           fxtranstot(itrans,j)*transw(itrans)
@@ -1092,6 +1225,12 @@ contains
         do i=1,it
           fxfl(j,i)=fxfl(j,i)*sigma/cnorm(i)/flw
           fxfltot(j)=fxfltot(j)+fxfl(j,i)
+          if (include_errors == 1) then 
+          sumw2fl(j,i)=sumw2fl(j,i)*sigma/cnorm(i)/flw*sigma/cnorm(i)/flw
+          sumw2fltot(j)=sumw2fltot(j)+sumw2fl(j,i)
+          else
+            sumw2fltot(j)=0
+          end if
         end do
         sfxfltot=sfxfltot+fxfltot(j)*flw
       end do
@@ -1113,6 +1252,12 @@ contains
         do i=1,it
           fxcosfl(j,i)=fxcosfl(j,i)*sigma/cnorm(i)/cosflw
           fxcosfltot(j)=fxcosfltot(j)+fxcosfl(j,i)
+          if (include_errors == 1) then 
+          sumw2cosfl(j,i)=sumw2cosfl(j,i)*sigma/cnorm(i)/cosflw*sigma/cnorm(i)/cosflw
+          sumw2cosfltot(j)=sumw2cosfltot(j)+sumw2cosfl(j,i)
+          else
+            sumw2cosfltot(j)=0
+          end if
         end do
         sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
       end do
@@ -1134,6 +1279,12 @@ contains
         do i=1,it
           fxdphi(j,i)=fxdphi(j,i)*sigma/cnorm(i)/dphiw
           fxdphitot(j)=fxdphitot(j)+fxdphi(j,i)
+          if (include_errors == 1) then 
+          sumw2dphi(j,i)=sumw2dphi(j,i)*sigma/cnorm(i)/dphiw*sigma/cnorm(i)/dphiw
+          sumw2dphitot(j)=sumw2dphitot(j)+sumw2dphi(j,i)
+          else
+            sumw2dphitot(j)=0
+          end if
         end do
         sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
       end do
@@ -1182,6 +1333,12 @@ contains
         do i=1,it
           fxcost7(j,i)=fxcost7(j,i)*sigma/cnorm(i)/cost7w
           fxcost7tot(j)=fxcost7tot(j)+fxcost7(j,i)
+          if (include_errors == 1) then 
+          sumw2cost7(j,i)=sumw2cost7(j,i)*sigma/cnorm(i)/cost7w*sigma/cnorm(i)/cost7w
+          sumw2cost7tot(j)=sumw2cost7tot(j)+sumw2cost7(j,i)
+          else
+            sumw2cost7tot(j)=0
+          end if
         end do
         sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
       end do
@@ -1203,6 +1360,12 @@ contains
         do i=1,it
           fxct7ct5(j,i)=fxct7ct5(j,i)*sigma/cnorm(i)/ct7ct5w
           fxct7ct5tot(j)=fxct7ct5tot(j)+fxct7ct5(j,i)
+          if (include_errors == 1) then 
+          sumw2ct7ct5(j,i)=sumw2ct7ct5(j,i)*sigma/cnorm(i)/ct7ct5w*sigma/cnorm(i)/ct7ct5w
+          sumw2ct7ct5tot(j)=sumw2ct7ct5tot(j)+sumw2ct7ct5(j,i)
+          else
+            sumw2ct7ct5tot(j)=0
+          end if
         end do
         sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
       end do

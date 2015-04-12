@@ -1,9 +1,10 @@
 // program log2root
-// Author: Declan Millar
+// author: Declan Millar
 
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <numeric>
 #include <boost/program_options.hpp>
 
 #include <stdlib.h>
@@ -93,8 +94,8 @@ int main(int argc, char *argv[])
 
   // input stream.
   ifstream logStream(logFileName);  
-  if (!logStream.is_open()){
-   printf("Failed to open: %s\n",logFileName.c_str());
+  if (!logStream.is_open()) {
+   printf("Failed to open: %s\n", logFileName.c_str());
    return 0;
   }    
 

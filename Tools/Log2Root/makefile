@@ -16,7 +16,7 @@ HEADERS = $(wildcard $(SRC)/*.h)
 # Clang compiler w/ debug info, optimisation, warnings, and compile as a sharable option
 CPP = gcc
 # I would use -pedantic but it throws a billion warnings about the ROOT libraries
-CXXFLAGS = -g -O -fPIC -Wall -pedantic -I/usr/local/Cellar/boost/1.57.0/include
+CXXFLAGS = -g -O -fPIC -Wall #-pedantic -I/usr/local/Cellar/boost/1.57.0/include
 
 # ROOT compiler flags
 CXXFLAGS += $(shell root-config --cflags)
