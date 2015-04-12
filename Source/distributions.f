@@ -1059,16 +1059,16 @@ contains
           write(10,*)'M^{l}_{T}--[GeV]'
         else if (itrans == 7)then
           write(10,*)'M_CT1'
-          write(10,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-          write(10,*)'M_{T1}--[GeV]'
+          write(10,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
+          write(10,*)'M_{CT1}--[GeV]'
         else if (itrans == 8)then
           write(10,*)'M_CT2'
-          write(10,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-          write(10,*)'M_{T2}--[GeV]'
+          write(10,*)'d#sigma-/dM_{CCT2}--[pb/GeV]'
+          write(10,*)'M_{CT2}--[GeV]'
         else if (itrans == 9)then
           write(10,*)'M_CT3'
-          write(10,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-          write(10,*)'M_{T3}--[GeV]'
+          write(10,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
+          write(10,*)'M_{CT3}--[GeV]'
         else if (itrans == 10)then
           write(10,*)'MlCT'
           write(10,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
