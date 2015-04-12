@@ -84,9 +84,11 @@ int main(int argc, char *argv[])
   if (!f1->IsOpen()) printf("Failed to open %s\n", fileName1.c_str());
   h1 = (TH1D*) f1->Get(histName1.c_str());
   name1 = histName1 + '@' + fileName1;
-  // h1->SetTitle(name1.c_str());
-  h1->SetTitle("SM");
-  h1->Draw();
+  h1->SetTitle(name1.c_str());
+  h1->SetTitle("50,000 points");
+  h1->SetMarkerStyle(20);
+  h1->Draw("E1x0P");
+  h1->SetMarkerColor(kBlack);
   h1->SetLineColor(kBlack);
   h1->GetYaxis()->SetTitleOffset(1.3);
   h1->GetXaxis()->SetTitleOffset(1.2);
@@ -98,10 +100,12 @@ int main(int argc, char *argv[])
     if (!f2->IsOpen()) printf("Failed to open %s\n", fileName2.c_str());
     name2 = histName2 + '@' + fileName2;
     h2 = (TH1D*) f2->Get(histName2.c_str());
-    // h2->SetTitle(name2.c_str());
-    h2->SetTitle("SSM (M=2 TeV, #Gamma=600 GeV)");
-    h2->Draw("SAME");
+    h2->SetTitle(name2.c_str());
+    h2->SetTitle("500,000 points");
+    h2->SetMarkerStyle(20);
+    h2->Draw("E1x0PSAME");
     h2->SetLineColor(kRed);
+    h2->SetMarkerColor(kRed);
   }
 
   if (nFiles > 2) {
@@ -112,12 +116,15 @@ int main(int argc, char *argv[])
     h3 = (TH1D*) f3->Get(histName3.c_str());
     name3 = histName3 + '@' + fileName3;
     h3->SetTitle(name3.c_str());
-    h3->Draw("SAME");
+    h3->SetTitle("500,000 points, 2 VEGAS iterations");
+    h3->SetMarkerStyle(20);
+    h3->Draw("E1x0PSAME");
     h3->SetLineColor(kBlue);
+    h3->SetMarkerColor(kBlue);
   }
 
   // normalize histograms
-  normalize = true;
+  // normalize = true;
   if (normalize == true) { 
     std::string yTitle;
     yTitle = h1->GetYaxis()->GetTitle();
