@@ -2,10 +2,10 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
 
   // declarations.
   std::string distName, xTitle,  yTitle; 
-  std::string xS, yS, stop; 
+  std::string xS, yS, stop, sumw2S; 
   int n_DataPairs; 
-  double x, y; 
-  std::vector<double> xV, yV; 
+  double x, y, sumw2; 
+  std::vector<double> xV, yV, sumw2V; 
   int nBins, nBinEdges;
   double binWidth;
   std::vector<double> binLowEdges;
@@ -27,11 +27,14 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
       *logStream >> xS;      
       if (xS == stop) break;
       *logStream >> yS;
+      if (distName == "cost5") *logStream >> sumw2S;
       x = atof(xS.c_str());
       y = atof(yS.c_str());
+      if (distName == "cost5") sumw2 = atof(sumw2S.c_str());
       n_DataPairs += 1;
       xV.push_back(x);
       yV.push_back(y);
+      if (distName == "cost5") sumw2V.push_back(sumw2);
     }
   }
   else printf("Stream failed!");
@@ -61,11 +64,11 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   }
 
   // print histogram information.
-  printf ("  Name:      %s\n",distName.c_str());
-  printf ("  x-Title:   %s\n",xTitle.c_str());
-  printf ("  y-Title:   %s\n",yTitle.c_str());
-  printf ("  n_bins:    %i\n",nBins);
-  printf ("  bin_width: %f\n",binWidth);  
+  printf ("  Name:      %s\n", distName.c_str());
+  printf ("  x-Title:   %s\n", xTitle.c_str());
+  printf ("  y-Title:   %s\n", yTitle.c_str());
+  printf ("  n_bins:    %i\n", nBins);
+  printf ("  bin_width: %f\n", binWidth);  
 
   // create Histogram.
   TH1D *hist = new TH1D(distName.c_str(), " ", nBins, &(binLowEdges[0]));
@@ -77,8 +80,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   // fill Histogram.
   for (int i = 1; i < nBins+1; i++) {
     hist->Fill(xV[i-1], yV[i-1]);
-    if (distName == "cost5") printf("%f\n", sqrt(9829928*yV[i-1]/hist->Integral()));
-    hist->SetBinError(i, sqrt(9829928*yV[i-1]/hist->Integral()));
+    if (distName == "cost5") hist->SetBinError(i, sqrt(sumw2V[i-1]));
   }
 
   return hist;

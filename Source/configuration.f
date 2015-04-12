@@ -26,6 +26,7 @@ module configuration
   integer :: symmetrise_costheta_t
   integer :: print_all_distributions
   integer :: print_2d_distributions
+  integer :: include_errors
   integer :: phase_space_only
 
   ! derived parameters
@@ -100,6 +101,8 @@ module configuration
       read(5,*) print_all_distributions
 
       read(5,*) print_2d_distributions
+
+      read(5,*) include_errors
       
     end subroutine read_config
 

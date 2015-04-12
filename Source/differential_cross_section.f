@@ -1930,6 +1930,7 @@ function differential_cross_section(x,wgt)
           continue
         else
           fxcost5(nbin,it)=fxcost5(nbin,it)+hist
+          if (include_errors == 1) sumw2cost5(nbin,it) = sumw2cost5(nbin,it) + hist*hist
         end if
       end if
 

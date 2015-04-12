@@ -42,6 +42,7 @@ parser.add_option("-x", "--symmetries_x1x2", default=0    , const=1     , action
 parser.add_option("-c", "--symmetrise_costheta_t", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
 parser.add_option("-D", "--print_all_distributions", default=1    , const=0     , action="store_const", help="turn off distributions")
 parser.add_option("-2", "--print_2d_distributions" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
+parser.add_option("-E", "--include_errors" , default=0    , const=1     , action="store_const", help="turn on distribution errors")
 
 # Debug options
 parser.add_option("-M", "--phase_space_only",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
@@ -167,6 +168,8 @@ print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
 print >> config, '%s ! print_all_distributions' % options.print_all_distributions
 
 print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
+
+print >> config, '%s ! include distribution errors' % options.include_errors
 
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:

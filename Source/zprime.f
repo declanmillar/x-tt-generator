@@ -243,6 +243,8 @@ program zprime
   if (phase_space_only == 1) write(10,*) 'phase space only'
   if (symmetrise_x1x2 == 1) write(10,*) 'symmetrical integration over x1<->x2'
   if (symmetrise_costheta_t == 1) write(10,*) 'symmetrical integration over cost'
+  if (include_errors == 1) write(10,*) 'Distribution errors included.'
+  if (include_errors == 0) write(10,*) 'Distribution errors excluded.'
   write(10,*) 'seed: ', seed
   write(10,*) '-----------------------------------------------------'
   write(10,*) 'parameters'

@@ -1,7 +1,7 @@
 module distributions
 
   use configuration, only: print_all_distributions, print_2d_distributions, include_transverse, include_asymmetries, o_asym, &
-                           n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final, tops_decay
+                           n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final, tops_decay, include_errors
   use mathematics, only: pi
   use kinematics, only: sigma
   use integration, only: it
@@ -142,6 +142,7 @@ module distributions
   ! distribution in cost5
   real :: cost5max,cost5min,cost5w
   real :: xcost5(500),fxcost5(500,20),fxcost5tot(500)
+  real :: sumw2cost5(500,20),sumw2cost5tot(500)
   integer :: o_cost5
   integer :: ndiv_cost5
 
@@ -1154,6 +1155,12 @@ contains
         do i=1,it
           fxcost5(j,i)=fxcost5(j,i)*sigma/cnorm(i)/cost5w
           fxcost5tot(j)=fxcost5tot(j)+fxcost5(j,i)
+          if (include_errors == 1) then
+            sumw2cost5(j,i)=sumw2cost5(j,i)*sigma/cnorm(i)/cost5w*sigma/cnorm(i)/cost5w
+            sumw2cost5tot(j)=sumw2cost5tot(j)+sumw2cost5(j,i)
+          else 
+            sumw2cost5tot(j) = 0.d0
+          end if
         end do
         sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
       end do
@@ -1162,7 +1169,7 @@ contains
       write(10,*)'d#sigma-/dcos#theta_{+}--[pb]'
       write(10,*)'cos#theta_{+}'
       do i=1,ndiv_cost5
-        write(10,*)xcost5(i),fxcost5tot(i)
+        write(10,*)xcost5(i),fxcost5tot(i),sumw2cost5tot(i)
       end do
       write(10,*)'END'
     end if
