@@ -38,7 +38,7 @@ parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",               
 # Monte Carlo options
 parser.add_option("-s", "--iseed"  , default=False,               action="store_true" , help="used fixed iseed for random number generator")
 parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,                       help="maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetries_x1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
+parser.add_option("-x", "--symmetrise_x1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
 parser.add_option("-D", "--print_all_distributions", default=1    , const=0     , action="store_const", help="turn off distributions")
 parser.add_option("-2", "--print_2d_distributions" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
@@ -56,13 +56,15 @@ if options.phase_space_only==1:
   
 # Collect arguments
 model_name = args[0]
-if   options.include_bsm==1:
+
+if   options.include_bsm == 1:
   smodel = args[0]
-elif options.include_bsm==0:
+elif options.include_bsm == 0:
   smodel = ""
-collider_energy=args[1]
-final_state=args[2]
-ncall=args[3]
+
+collider_energy = args[1]
+final_state = args[2]
+ncall = args[3]
 
 # Default iseed
 seed = 12345 if options.iseed else random.randint(0,100000)
@@ -72,52 +74,65 @@ executable="Binary/"+"zprime"
 sfinal = "2to2" if (final_state=="0") else "2to6"
 config=StringIO.StringIO()
 
+if (final_state == "1"):
+  sfinal += "_DL"
+elif (final_state == "2"):
+  sfinal += "_SL"
+elif (final_state == "3"):
+  sfinal += "_FH"
+
 # Gauge sectors
-if   options.include_qcd==1 and options.include_ew==1 and options.include_bsm==1:
+if   options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 1:
   sector = ""
-elif options.include_qcd==1 and options.include_ew==1 and options.include_bsm==0:
+elif options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 0:
   sector = "SM"
-elif options.include_qcd==1 and options.include_ew==0 and options.include_bsm==1:
+elif options.include_qcd == 1 and options.include_ew == 0 and options.include_bsm == 1:
   sector = "_QCD-Zp"  
-elif options.include_qcd==0 and options.include_ew==1 and options.include_bsm==1:
+elif options.include_qcd == 0 and options.include_ew == 1 and options.include_bsm == 1:
   sector = "_EW-Zp" 
-elif options.include_qcd==1 and options.include_ew==0 and options.include_bsm==0:
+elif options.include_qcd == 1 and options.include_ew == 0 and options.include_bsm == 0:
   sector = "QCD"    
-elif options.include_qcd==0 and options.include_ew==1 and options.include_bsm==0:
+elif options.include_qcd == 0 and options.include_ew == 1 and options.include_bsm == 0:
   sector = "EW"
-elif options.include_qcd==0 and options.include_ew==0 and options.include_bsm==1:
+elif options.include_qcd == 0 and options.include_ew == 0 and options.include_bsm == 1:
   sector = "_Zp"
-elif options.include_qcd==0 and options.include_ew==0 and options.include_bsm==0:
+elif options.include_qcd == 0 and options.include_ew == 0 and options.include_bsm == 0:
   sector = "PS"
 
-# Interference  
-if   options.interference==0:
-  interference="_int0"
-elif options.interference==1:
-  interference="_int1"
-elif options.interference==2:
-  interference=""
-elif options.interference==3:
-  interference="_int3"
+all_options = ""
 
-# Symmetrization
-if   (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==0):
-  symmetrization = "_x"
-elif (options.symmetries_x1x2==0) and (options.symmetrise_costheta_t==1):
-  symmetrization = "_c"
-elif (options.symmetries_x1x2==1) and (options.symmetrise_costheta_t==1):
-  symmetrization = "_xc"
-else:
-  symmetrization = ""
+# Interference
+if (options.interference == 4) and (options.include_ew == 0):
+  options.interference = 2
+  print 'EW sector must be active to calculate interference with Zprimes.'
+  print 'Switching to default interference.'
 
-# Filename
-filename = '%s%s_%s%s_%s%s%s_%sx%s' % (smodel,sector,sfinal,interference,collider_energy,symmetrization,options.tag,options.itmx,ncall)
+if options.interference == 0:
+  all_options += "i0"
+elif options.interference == 1:
+  all_options += "i1"
+elif options.interference == 3:
+  all_options += "i3"
+elif options.interference == 4:
+  all_options += "i4"
 
-# Logfile      
+# symmetrization
+if options.symmetrise_x1x2 == 1:
+  all_options += "x"
+if options.symmetrise_costheta_t == 1:
+  all_options += "c"
+
+if len(all_options) > 0:
+  all_options = "_" + all_options
+
+# filename
+filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, all_options, options.tag, options.itmx, ncall)
+
+# logfile      
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
 output_file = '%s.out' % filename
 
-# Print config file
+# print config file
 
 print >> config, '%s  ! output file' % output_file
 
@@ -161,7 +176,7 @@ print >> config, '%s ! ncall' % ncall
 
 print >> config, '-1.d0 ! acc'
 
-print >> config, '%s ! symmetries_x1x2' % options.symmetries_x1x2
+print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 
 print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
 

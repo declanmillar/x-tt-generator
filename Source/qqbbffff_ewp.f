@@ -444,11 +444,13 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 ! total M*M for given helicity combination
   qqbbffff_EWp = 0.d0
   amp_tmp = (0.d0,0.d0)
-  if (interference == 0)then ! no interference
+
+  if (interference == 0) then ! no interference
     do i=1,ngraphs
       qqbbffff_EWp = qqbbffff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (interference == 1)then ! SM interference
+
+  else if (interference == 1) then ! SM interference zprimes no interference
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -456,19 +458,31 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     do i=3,ngraphs
       qqbbffff_EWp = qqbbffff_EWp+amp(i)*conjg(amp(i))
     end do
-  else if (interference == 2)then ! full interference
+
+  else if (interference == 2) then ! full interference
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
     qqbbffff_EWp =qqbbffff_EWp+amp_tmp*conjg(amp_tmp)
-  else if (interference == 3)then ! interference only
+
+  else if (interference == 3) then ! Zp interference only
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqbbffff_EWp =qqbbffff_EWp+amp_tmp*conjg(amp_tmp)
-    do i=3,ngraphs
-      qqbbffff_EWp = qqbbffff_EWp-amp(i)*conjg(amp(i))
+    qqbbffff_EWp = qqbbffff_EWp + amp_tmp*conjg(amp_tmp)
+    do i = 3, ngraphs
+      qqbbffff_EWp = qqbbffff_EWp - amp(i)*conjg(amp(i))
     end do
+
+  else if (interference == 4) then ! Z's + EW interference only (|M_EW|^2)
+    do i = 1, ngraphs
+      amp_tmp = amp_tmp + amp(i)
+    end do
+    qqbbffff_EWp = qqbbffff_EWp + amp_tmp*conjg(amp_tmp)
+    do i = 1, 2  
+      qqbbffff_EWp = qqbbffff_EWp - amp(i)*conjg(amp(i))
+    end do
+
   else
     write(*,*)'Error: interference flag not set.'
     stop

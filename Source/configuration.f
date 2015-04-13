@@ -119,8 +119,8 @@ module configuration
       if(final_state == 0) use_nwa = 0
       if(final_state > 0) use_branching_ratio = 0
 
-      if(itmx > 20)then
-        write(*,*)'itmx does not have to exceed 20!'
+      if (itmx > 20 )then
+        write(*,*) 'itmx does not have to exceed 20!'
         stop
       end if
 

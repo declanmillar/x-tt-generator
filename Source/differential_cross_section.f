@@ -984,56 +984,62 @@ function differential_cross_section(x,wgt)
         trans(1)=sqrt(abs(rmvis2))
       end if
 
-    ! calculate transverse energy energies of visible particles
       if (final_state > 0) then
-        et3=sqrt(m3**2+pt2(3))
-        et4=sqrt(m4**2+pt2(4))
-        et5=sqrt(m5**2+pt2(5))
-        et7=sqrt(m6**2+pt2(7))
+        ! calculate transverse energy energies of visible particles
+        et3 = sqrt(m3**2 + pt2(3))
+        et4 = sqrt(m4**2 + pt2(4))
+        et5 = sqrt(m5**2 + pt2(5))
+        et7 = sqrt(m6**2 + pt2(7))
       end if
-    ! calculate ht
+    
       if (o_tran(2) == 1) then
-        trans(2)=et3+et4+et5+et7+etmiss
+        ! calculate ht
+        trans(2) = et3 + et4 + et5 + et7 + etmiss
       end if
 
-    ! calculate *full* transverse mass 1
       if (o_tran(3) == 1) then
-        rm_t12=(et3+et4+et5+et7+etmiss)**2 &
-        +(pt(3)+pt(4)+pt(5)+pt(7)+etmiss)**2
+        ! calculate *full* transverse mass 1
+        rm_t12=(et3 + et4 + et5 + et7 + etmiss)**2 &
+         + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
         trans(3)=sqrt(abs(rm_t12))
       end if
-    ! calculate *full* transverse mass 2
+    
       if (o_tran(4) == 1) then
-        rm_t22=(et3+et4+et5+et7+etmiss)**2
+        ! calculate *full* transverse mass 2
+        rm_t22=(et3 + et4 + et5 + et7 + etmiss)**2
         do i=1,2
-          rm_t22=rm_t22-(ptvis(i)+ptmiss(i))**2
+          rm_t22=rm_t22-(ptvis(i) + ptmiss(i))**2
         end do
         trans(4)=sqrt(abs(rm_t22))
       end if
-    ! calculate *full* transverse mass 3
+
       if (o_tran(5) == 1) then
-        rm_t32=(etvis+etmiss)**2
+        ! calculate *full* transverse mass 3
+        rm_t32=(etvis + etmiss)**2
         do i=1,2
-          rm_t32=rm_t32-(ptvis(i)+ptmiss(i))**2
+          rm_t32=rm_t32-(ptvis(i) + ptmiss(i))**2
         end do
         trans(5)=sqrt(abs(rm_t32))
       end if
-    ! calculate lepton transverse mass
+
       if (o_tran(6) == 1) then
-        et5=sqrt(m5**2+pt2(5))
-        et7=sqrt(m7**2+pt2(7))
-        rmlt2=(et5+et7)**2
+        ! calculate lepton transverse mass
+        et5=sqrt(m5**2 + pt2(5))
+        et7=sqrt(m7**2 + pt2(7))
+        rmlt2=(et5 + et7)**2
         do i=1,2
-          rmlt2=rmlt2-(qcol(i,5)+qcol(i,7))**2
+          rmlt2=rmlt2-(qcol(i,5) + qcol(i,7))**2
         end do
         trans(6)=sqrt(abs(rmlt2))
       end if
-    ! calculate *full* contranverse mass 1
+    
       if (o_tran(7) == 1) then
+        ! calculate *full* contranverse mass 1
         rm_ct12=(et3+et4+et5+et7+etmiss)**2 &
         +(pt(3)+pt(4)+pt(5)+pt(7)-etmiss)**2
         trans(7)=sqrt(abs(rm_ct12))
       end if
+
     ! calculate *full* contranverse mass 2
       if (o_tran(8) == 1) then
         rm_ct22=(et3+et4+et5+et7+etmiss)**2
