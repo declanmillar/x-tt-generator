@@ -934,54 +934,54 @@ function differential_cross_section(x,wgt)
       end if
     ! calculate the energy of the top
       if (final_state == 0) then
-        et=qcol(4,3)
+        et = qcol(4,3)
       else if (final_state > 0) then
-        et=qcol(4,3)+qcol(4,5)+qcol(4,6)
+        et = qcol(4,3) + qcol(4,5) + qcol(4,6)
       end if
 
-    ! calculate rapidity of the tt system
+      ! calculate rapidity of the tt system
       ytt = 0.5d0*log(x1/x2)
 
-    ! calculate mtt
       if (final_state == 0) then
-        mtt2=(qcol(4,3)+qcol(4,4))**2
-        do i=1,3
-          mtt2=mtt2-(qcol(i,3)+qcol(i,4))**2
+        ! calculate mtt
+        mtt2 = (qcol(4,3) + qcol(4,4))**2
+        do i = 1, 3
+          mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
         end do
       else if (final_state > 0) then
-        mtt2=(qcol(4,3)+qcol(4,4) &
-        +qcol(4,5)+qcol(4,6) &
-        +qcol(4,7)+qcol(4,8))**2
-        do i=1,3
-          mtt2=mtt2-(qcol(i,3)+qcol(i,4) &
-          +qcol(i,5)+qcol(i,6) &
-          +qcol(i,7)+qcol(i,8))**2
+        mtt2 = (qcol(4,3) + qcol(4,4) &
+              + qcol(4,5) + qcol(4,6) &
+              + qcol(4,7) + qcol(4,8))**2
+        do i = 1, 3
+          mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
+                       + qcol(i,5) + qcol(i,6) &
+                       + qcol(i,7) + qcol(i,8))**2
         end do
       end if
-      mtt=sqrt(abs(mtt2))
+      mtt = sqrt(abs(mtt2))
 
       if (final_state == 2) then
         ! calculate Mtt_reco
         mtt_reco2 = (qcol(4,3) + qcol(4,4) &
-                + qcol(4,5) + qcol(4,6) &
-                + qcol(4,7) + p8col_reco(0))**2
-        do i=1,3
-          mtt_reco2 = mtt_reco2-(qcol(i,3) + qcol(i,4) &
-                       + qcol(i,5) + qcol(i,6) &
-                       + qcol(i,7) + p8col_reco(i))**2
+                   + qcol(4,5) + qcol(4,6) &
+                   + qcol(4,7) + p8col_reco(0))**2
+        do i = 1, 3
+          mtt_reco2 = mtt_reco2 - (qcol(i,3) + qcol(i,4) &
+                                +  qcol(i,5) + qcol(i,6) &
+                                +  qcol(i,7) + p8col_reco(i))**2
         end do
         mtt_reco = sqrt(mtt_reco2)
       end if
 
-    ! calculate invariant mass of visible decay products
       if (o_tran(1) == 1) then
-        rmvis2=(qcol(4,3)+qcol(4,4) &
-        +qcol(4,5)+qcol(4,7))**2
-        do i=1,3
-          rmvis2=rmvis2-(qcol(i,3)+qcol(i,4) &
-          +qcol(i,5)+qcol(i,7))**2
+        ! calculate invariant mass of visible decay products
+        rmvis2 = (qcol(4,3) + qcol(4,4) &
+        +qcol(4,5) + qcol(4,7))**2
+        do i = 1, 3
+          rmvis2 = rmvis2 - (qcol(i,3) + qcol(i,4) &
+          +qcol(i,5) + qcol(i,7))**2
         end do
-        trans(1)=sqrt(abs(rmvis2))
+        trans(1) = sqrt(abs(rmvis2))
       end if
 
       if (final_state > 0) then
@@ -999,73 +999,76 @@ function differential_cross_section(x,wgt)
 
       if (o_tran(3) == 1) then
         ! calculate *full* transverse mass 1
-        rm_t12=(et3 + et4 + et5 + et7 + etmiss)**2 &
+        rm_t12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
          + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
-        trans(3)=sqrt(abs(rm_t12))
+        trans(3) = sqrt(abs(rm_t12))
       end if
     
       if (o_tran(4) == 1) then
         ! calculate *full* transverse mass 2
-        rm_t22=(et3 + et4 + et5 + et7 + etmiss)**2
-        do i=1,2
-          rm_t22=rm_t22-(ptvis(i) + ptmiss(i))**2
+        rm_t22 = (et3 + et4 + et5 + et7 + etmiss)**2
+        do i  = 1, 2
+          rm_t22 = rm_t22 - (ptvis(i) + ptmiss(i))**2
         end do
-        trans(4)=sqrt(abs(rm_t22))
+        trans(4) = sqrt(abs(rm_t22))
       end if
 
       if (o_tran(5) == 1) then
         ! calculate *full* transverse mass 3
-        rm_t32=(etvis + etmiss)**2
-        do i=1,2
-          rm_t32=rm_t32-(ptvis(i) + ptmiss(i))**2
+        rm_t32 = (etvis + etmiss)**2
+        do i = 1, 2
+          rm_t32 = rm_t32 - (ptvis(i) + ptmiss(i))**2
         end do
-        trans(5)=sqrt(abs(rm_t32))
+        trans(5) = sqrt(abs(rm_t32))
       end if
 
       if (o_tran(6) == 1) then
         ! calculate lepton transverse mass
-        et5=sqrt(m5**2 + pt2(5))
-        et7=sqrt(m7**2 + pt2(7))
-        rmlt2=(et5 + et7)**2
-        do i=1,2
-          rmlt2=rmlt2-(qcol(i,5) + qcol(i,7))**2
+        et5 = sqrt(m5**2 + pt2(5))
+        et7 = sqrt(m7**2 + pt2(7))
+        rmlt2 = (et5 + et7)**2
+        do i = 1, 2
+          rmlt2 = rmlt2 - (qcol(i,5) + qcol(i,7))**2
         end do
-        trans(6)=sqrt(abs(rmlt2))
+        trans(6) = sqrt(abs(rmlt2))
       end if
     
       if (o_tran(7) == 1) then
         ! calculate *full* contranverse mass 1
-        rm_ct12=(et3+et4+et5+et7+etmiss)**2 &
-        +(pt(3)+pt(4)+pt(5)+pt(7)-etmiss)**2
-        trans(7)=sqrt(abs(rm_ct12))
+        rm_ct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+        + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
+        trans(7) = sqrt(abs(rm_ct12))
       end if
 
-    ! calculate *full* contranverse mass 2
       if (o_tran(8) == 1) then
-        rm_ct22=(et3+et4+et5+et7+etmiss)**2
-        do i=1,2
-          rm_ct22=rm_ct22-(ptvis(i)-ptmiss(i))**2
+        ! calculate *full* contranverse mass 2
+        rm_ct22 = (et3 + et4 + et5 + et7 + etmiss)**2
+        do i = 1, 2
+          rm_ct22 = rm_ct22 - (ptvis(i) - ptmiss(i))**2
         end do
-        trans(8)=sqrt(abs(rm_ct22))
+        trans(8) = sqrt(abs(rm_ct22))
       end if
-    ! calculate *full* contranverse mass 3
+
       if (o_tran(9) == 1) then
-        rm_ct32=(etvis+etmiss)**2
-        do i=1,2
-          rm_ct32=rm_ct32-(ptvis(i)-ptmiss(i))**2
+         ! calculate *full* contranverse mass 3
+        rm_ct32 = (etvis + etmiss)**2
+        do i = 1, 2
+          rm_ct32 = rm_ct32 - (ptvis(i) - ptmiss(i))**2
         end do
-        trans(9)=sqrt(abs(rm_ct32))
+        trans(9) = sqrt(abs(rm_ct32))
       end if
-    ! calculate lepton contransverse mass
+
       if (o_tran(10) == 1) then
-        et5=sqrt(m5**2+pt2(5))
-        et7=sqrt(m7**2+pt2(7))
-        rmlct2=(et5+et7)**2
-        do i=1,2
-          rmlct2=rmlct2-(qcol(i,5)-qcol(i,7))**2
+        ! calculate lepton contransverse mass
+        et5 = sqrt(m5**2 + pt2(5))
+        et7 = sqrt(m7**2 + pt2(7))
+        rmlct2 = (et5 + et7)**2
+        do i = 1, 2
+          rmlct2 = rmlct2 - (qcol(i,5) - qcol(i,7))**2
         end do
-        trans(10)=sqrt(abs(rmlct2))
+        trans(10) = sqrt(abs(rmlct2))
       end if
+
     ! calculate top pseudorapidity
       if (final_state > 0) then
         rps356=(q(3,3)+q(3,5)+q(3,6)) &

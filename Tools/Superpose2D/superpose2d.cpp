@@ -121,6 +121,21 @@ int main(int argc, char *argv[])
     if (nFiles > 2) h3->Scale(1.0/h3->Integral());
   }
 
+  // find overlapping area (histograms must be have the same user ranges and same number of bins)
+  double overlap = 0;
+  for (int i = 0; i < h1->GetNbinsX(); i++) {
+    for (int j = 0; j < h1->GetNbinsY(); j++) {
+      int bin1 = h1->GetBin(i, j);
+      int bin2 = h2->GetBin(i, j);
+      double one = h1->GetBinContent(bin1);
+      double two = h2->GetBinContent(bin2);
+      if (one <= two) overlap += one;
+      else if (one > two) overlap += two;
+    }
+  }
+
+  printf("Overlapping volume: %f\n", overlap);
+
   if (logY == true) canvas->SetLogy();
 
   canvas->BuildLegend(0.7, 0.9, 1.0, 1.0, "");
