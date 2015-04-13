@@ -1081,8 +1081,8 @@ contains
       end do
       write(10,*)'DISTRIBUTION'
       write(10,*)'cost'
-      write(10,*)'d#sigma-/dcos#theta--[pb]'
-      write(10,*)'cos#theta'
+      write(10,*)'d#sigma-/dcos#theta_t--[pb]'
+      write(10,*)'cos#theta_t'
       do i=1,ndiv_cost
         write(10,*)xcost(i),fxcosttot(i)
       end do
@@ -1263,8 +1263,8 @@ contains
       end do
       write(10,*)'DISTRIBUTION'
       write(10,*)'cosfl'
-      write(10,*)'d#sigma-/dcos#phi_{l}--[pb]'
-      write(10,*)'cos#phi_{l}'
+      write(10,*)'d#sigma-/dcos#phi_{l^+}--[pb]'
+      write(10,*)'cos#phi_{l^+}'
       do i=1,ndiv_cosfl
         write(10,*)xcosfl(i),fxcosfltot(i)
       end do
@@ -1317,8 +1317,8 @@ contains
       end do
       write(10,*)'DISTRIBUTION'
       write(10,*)'cost5'
-      write(10,*)'d#sigma-/dcos#theta_{+}--[pb]'
-      write(10,*)'cos#theta_{+}'
+      write(10,*)'d#sigma-/dcos#theta_{l^+}--[pb]'
+      write(10,*)'cos#theta_{l^+}'
       do i=1,ndiv_cost5
         write(10,*)xcost5(i),fxcost5tot(i),sumw2cost5tot(i)
       end do
@@ -1344,8 +1344,8 @@ contains
       end do
       write(10,*)'DISTRIBUTION'
       write(10,*)'cost7'
-      write(10,*)'d#sigma-/dcos#theta_{-}--[pb]'
-      write(10,*)'cos#theta_{-}'
+      write(10,*)'d#sigma-/dcos#theta_{l^-}--[pb]'
+      write(10,*)'cos#theta_{l^-}'
       do i=1,ndiv_cost7
         write(10,*)xcost7(i),fxcost7tot(i)
       end do
@@ -1372,8 +1372,8 @@ contains
       write(10,*)'DISTRIBUTION'
       write(10,*)'ct7ct5'
       write(10,*) &
-      'd^{2}#sigma-/d(cos#theta^{*}_{+}cos#theta^{*}_{-})--[pb]'
-      write(10,*)'cos#theta_{+}cos#theta_{-}'
+      'd^{2}#sigma-/d(cos#theta^{*}_{l^+}cos#theta^{*}_{l^-})--[pb]'
+      write(10,*)'cos#theta_{l^+}cos#theta_{l^-}'
       do i=1,ndiv_ct7ct5
         write(10,*)xct7ct5(i),fxct7ct5tot(i)
       end do
