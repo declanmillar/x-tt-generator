@@ -134,7 +134,7 @@ output_file = '%s.out' % filename
 
 # print config file
 
-print >> config, '%s  ! output file' % output_file
+print >> config, '%s ! output file' % output_file
 
 print >> config, '%s ! initial_state' % options.initial_state
 

@@ -35,9 +35,9 @@ module configuration
 
   ! distributions in asymmetries
   integer n_asymmetries
-  parameter (n_asymmetries=9)
+  parameter (n_asymmetries = 12)
   integer n_fb_asymmetries
-  parameter (n_fb_asymmetries=6)
+  parameter (n_fb_asymmetries = 9)
   integer :: o_asym(n_asymmetries)
 
   integer :: ixmax,jxmax

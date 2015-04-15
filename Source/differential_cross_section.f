@@ -45,8 +45,7 @@ function differential_cross_section(x,wgt)
   real :: cf78
   real :: cosfl
   real :: cost
-  real :: costheta5
-  real :: costheta7
+  real :: costheta5, costheta7, costheta5_cm, costheta7_cm
   real :: costhetat_cm
   real :: costhetat_star
   real :: ct
@@ -170,14 +169,15 @@ function differential_cross_section(x,wgt)
   real :: p1col(0:3), p2col(0:3), p3col(0:3), p4col(0:3), p5col(0:3), p6col(0:3), p7col(0:3), p8col(0:3)
   real :: p356col(0:3), p356_opp(0:3), p478col(0:3), p478_opp(0:3)
   real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356(0:3), p478(0:3)
-  real :: p8col_reco(0:3)
+  real :: p6col_reco(0:3)
 
   ! invarient masses
   real :: mtt, mtt_reco
   real :: mtt2, mtt_reco2
+  real :: rmassa1, rmassa2, rmassa3, rmassa4, rmassa5, rmassa6, rmassa7, rmassa8
 
   ! Transverse momentum vectors   
-  real :: pT8col(1:2)
+  real :: pT6col(1:2)
   real :: ptvis(2), ptmiss(2)
 
   ! kinematic scalar arrays
@@ -728,60 +728,62 @@ function differential_cross_section(x,wgt)
         p7col(0) = qcol(4,7)
         p8col(0) = qcol(4,8)
 
-      ! check 6-body kinematics
-      !       print *,  'p1  =',p1
-      !       print *,  'p2  =',p2
-      !       print *,  'p3  =',p3
-      !       print *,  'p4  =',p4
-      !       print *,  'p5  =',p5
-      !       print *,  'p6  =',p6
-      !       print *,  'p7  =',p7
-      !       print *,  'p8  =',p8
-      ! ! check conservation of 4-momentum.
-      !       delta_e=p1(0)+p2(0)
-      !    &         -p3(0)-p4(0)
-      !    &         -p5(0)-p6(0)
-      !    &         -p7(0)-p8(0)
-      !       delta_x=p1(1)+p2(1)
-      !    &         -p3(1)-p4(1)
-      !    &         -p5(1)-p6(1)
-      !    &         -p7(1)-p8(1)
-      !       delta_y=p1(2)+p2(2)
-      !    &         -p3(2)-p4(2)
-      !    &         -p5(2)-p6(2)
-      !    &         -p7(2)-p8(2)
-      !       delta_z=p1(3)+p2(3)
-      !    &         -p3(3)-p4(3)
-      !    &         -p5(3)-p6(3)
-      !    &         -p7(3)-p8(3)
-      !       print *,  'delta_e=',delta_e
-      !       print *,  'delta_px=',delta_x
-      !       print *,  'delta_py=',delta_y
-      !       print *,  'delta_pz=',delta_z
-      ! ! check invarient mass.
-      !       rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-      !       rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-      !       rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-      !       rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-      !       rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
-      !       rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
-      !       rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
-      !       rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
-      !       print *,  'rm_1 =',rmassa1
-      !       print *,  'rm_2 =',rmassa2
-      !       print *,  'rm_3 =',rmassa3
-      !       print *,  'rm_4 =',rmassa4
-      !       print *,  'rm_5 =',rmassa5
-      !       print *,  'rm_6 =',rmassa6
-      !       print *,  'rm_7 =',rmassa7
-      !       print *,  'rm_8 =',rmassa8
-      ! ! check missing momentum
-      !       pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
-      !       pt68=sqrt(pt682)
-      !       print *, 'etmiss :',etmiss
-      !       print *, 'pt(v+v):',pt68
+!       go to 333
+!       !check 6-body kinematics
+!             print *,  'p1  =',p1
+!             print *,  'p2  =',p2
+!             print *,  'p3  =',p3
+!             print *,  'p4  =',p4
+!             print *,  'p5  =',p5
+!             print *,  'p6  =',p6
+!             print *,  'p7  =',p7
+!             print *,  'p8  =',p8
+!       ! check conservation of 4-momentum.
+!             delta_e=p1(0)+p2(0)         &
+!                      -p3(0)-p4(0)         &  
+!                            -p5(0)-p6(0)         &  
+!                                   -p7(0)-p8(0)
+!             delta_x=p1(1)+p2(1)         &   
+!                   -p3(1)-p4(1)         &   
+!                         -p5(1)-p6(1)         &  
+!                                -p7(1)-p8(1)
+!             delta_y=p1(2)+p2(2)         &   
+!                   -p3(2)-p4(2) &
+!                   -p5(2)-p6(2)         &  
+!                 -p7(2)-p8(2)
+!             delta_z=p1(3)+p2(3)         &   
+!                   -p3(3)-p4(3)         &   
+!                         -p5(3)-p6(3)         &   
+!                               -p7(3)-p8(3)
+!             print *,  'delta_e=',delta_e
+!             print *,  'delta_px=',delta_x
+!             print *,  'delta_py=',delta_y
+!             print *,  'delta_pz=',delta_z
+!       ! check invarient mass.
+!             rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
+!             rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
+!             rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
+!             rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
+!             rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
+!             rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
+!             rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
+!             rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
+!             print *,  'rm_1 =',rmassa1
+!             print *,  'rm_2 =',rmassa2
+!             print *,  'rm_3 =',rmassa3
+!             print *,  'rm_4 =',rmassa4
+!             print *,  'rm_5 =',rmassa5
+!             print *,  'rm_6 =',rmassa6
+!             print *,  'rm_7 =',rmassa7
+!             print *,  'rm_8 =',rmassa8
+!       ! check missing momentum
+!             pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
+!             pt68=sqrt(pt682)
+!             print *, 'etmiss :',etmiss
+!             print *, 'pt(v+v):',pt68
+!       333 continue      
       end if
-
+      
     
       ! additional kinematics
       ! these aren't required for the integration, but are used for
@@ -790,11 +792,11 @@ function differential_cross_section(x,wgt)
       if (final_state == 2) then
         ! reconstruct the neutrino momentum in the semi-hadronic channel
         do i = 1, 2
-          pT8col(i) = p8col(i)
-          p8col_reco = p8col(i)
+          pT6col(i) = p6col(i)
+          p6col_reco(i) = p6col(i)
         end do
-        p8col_reco(3) = longitudinal_neutrino_momentum(p7col, pT8col)
-        p8col_reco(0) = sqrt(p8col_reco(1)*p8col_reco(1) + p8col_reco(2)*p8col_reco(2) + p8col_reco(3)*p8col_reco(3))
+        p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
+        p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
       end if
 
       ! calculate transverse momenta (pt)
@@ -963,12 +965,12 @@ function differential_cross_section(x,wgt)
       if (final_state == 2) then
         ! calculate Mtt_reco
         mtt_reco2 = (qcol(4,3) + qcol(4,4) &
-                   + qcol(4,5) + qcol(4,6) &
-                   + qcol(4,7) + p8col_reco(0))**2
+                   + qcol(4,5) + p6col_reco(0) &
+                   + qcol(4,7) + qcol(4,8))**2
         do i = 1, 3
           mtt_reco2 = mtt_reco2 - (qcol(i,3) + qcol(i,4) &
-                                +  qcol(i,5) + qcol(i,6) &
-                                +  qcol(i,7) + p8col_reco(i))**2
+                                +  qcol(i,5) + p6col_reco(i) &
+                                +  qcol(i,7) + qcol(i,8))**2
         end do
         mtt_reco = sqrt(mtt_reco2)
       end if
@@ -1069,19 +1071,20 @@ function differential_cross_section(x,wgt)
         trans(10) = sqrt(abs(rmlct2))
       end if
 
-    ! calculate top pseudorapidity
       if (final_state > 0) then
-        rps356=(q(3,3)+q(3,5)+q(3,6)) &
+        ! calculate top pseudorapidity
+        rps356 = (q(3,3)+q(3,5)+q(3,6)) &
         /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
         +(q(2,3)+q(2,5)+q(2,6))**2 &
         +(q(3,3)+q(3,5)+q(3,6))**2)
-        if (rps356 < -1.d0)rps=-1.d0
-        if (rps356 > +1.d0)rps=+1.d0
-        rpl356=acos(rps356)
-        arg356=tan(rpl356/2d0)
-        if (arg356 <= 0.d0)arg356=1.d-9
-        eta356=-log(arg356)
+        if (rps356 < -1.d0)rps = -1.d0
+        if (rps356 > +1.d0)rps = +1.d0
+        rpl356 = acos(rps356)
+        arg356 = tan(rpl356/2d0)
+        if (arg356 <=  0.d0)arg356 = 1.d-9
+        eta356 = -log(arg356)
 
+        ! calculate anti-top pseudorapidity
         rps478=(q(3,4)+q(3,7)+q(3,8)) &
         /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
         +(q(2,4)+q(2,7)+q(2,8))**2 &
@@ -1091,8 +1094,9 @@ function differential_cross_section(x,wgt)
         rpl478=acos(rps478)
         arg478=tan(rpl478/2d0)
         if (arg478 <= 0.d0)arg478=1.d-9
-        eta478=-log(arg478)   ! no cuts on pseudorapidity yet
+        eta478=-log(arg478)
       end if
+
     ! calculate rapidity (y) of top and antitop
       if (final_state == 0) then
         yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3)))
@@ -1128,12 +1132,10 @@ function differential_cross_section(x,wgt)
 !         call boostx(p6, p356_opp, p6rest)
         call boostx(p7, p478_opp, p7rest)
 !         write(*,*) "sum top rest mom", p5rest + p3rest + p6rest
-        
-
       end if
 
-      ! calculate cos(theta_l+)
-      if (final_state > 0) then
+      if (o_cost5 == 1) then
+        ! calculate cos(theta_l+)
         costheta5 = (p5rest(1)*q356(1) &
                      +p5rest(2)*q356(2) &
                      +p5rest(3)*q356(3)) &
@@ -1145,8 +1147,8 @@ function differential_cross_section(x,wgt)
                           +q356(3)*q356(3))
       end if
 
-      ! calculate cos(theta_l-)
-      if (final_state > 0) then
+      if ((o_cost7 == 1)) then
+        ! calculate cos(theta_l-)
         costheta7 = (p7rest(1)*q478(1) &
                      +p7rest(2)*q478(2) &
                      +p7rest(3)*q478(3)) &
@@ -1162,82 +1164,81 @@ function differential_cross_section(x,wgt)
         ct7ct5 = costheta7*costheta5
       end if
 
-!       ! calculate cos(theta_l+)_cm
-!       if (final_state > 0) then
-!         costheta5_cm =+ (q(1,5)*q(1,1) &
-!         +q(2,5)*q(2,1) &
-!         +q(3,5)*q(3,1)) &
-!         /sqrt(q(1,5)*q(1,5) &
-!         +q(2,5)*q(2,5) &
-!         +q(3,5)*q(3,5)) &
-!         /sqrt(q(1,1)*q(1,1) &
-!         +q(2,1)*q(2,1) &
-!         +q(3,1)*q(3,1))
-!       end if
-!     ! calculate cos(theta_l-)
-!       if (final_state > 0) then
-!         costheta7_cm=+(q(1,7)*q(1,1) &
-!         +q(2,7)*q(2,1) &
-!         +q(3,7)*q(3,1)) &
-!         /sqrt(q(1,7)*q(1,7) &
-!         +q(2,7)*q(2,7) &
-!         +q(3,7)*q(3,7)) &
-!         /sqrt(q(1,1)*q(1,1) &
-!         +q(2,1)*q(2,1) &
-!         +q(3,1)*q(3,1))
-!       end if
+      if (o_asym(12) == 1) then
+        ! calculate cos(theta_l+)_cm
+        costheta5_cm = (q(1,5)*q(1,1) &
+                      + q(2,5)*q(2,1) &
+                      + q(3,5)*q(3,1)) &
+                      /sqrt(q(1,5)*q(1,5) &
+                      + q(2,5)*q(2,5) &
+                      + q(3,5)*q(3,5)) &
+                      /sqrt(q(1,1)*q(1,1) &
+                      + q(2,1)*q(2,1) &
+                      + q(3,1)*q(3,1))
+        ! calculate cos(theta_l-)_cm
+        costheta7_cm = (q(1,7)*q(1,1) &
+                      + q(2,7)*q(2,1) &
+                      + q(3,7)*q(3,1)) &
+                      /sqrt(q(1,7)*q(1,7) &
+                      + q(2,7)*q(2,7) &
+                      + q(3,7)*q(3,7)) &
+                      /sqrt(q(1,1)*q(1,1) &
+                      + q(2,1)*q(2,1) &
+                      + q(3,1)*q(3,1))
+      end if
 
-!       if (final_state > 0) then
-!         ct7ct5_cm=costheta7_cm*costheta5_cm
-!       end if
+      if ((o_asym(5) == 1) .or. (o_asym(6) == 1)) then
+        ! reconstructed costheta_t
+        costhetat_star = int(ytt/abs(ytt))*costhetat_cm
+      end if
 
-      costhetat_star=int(ytt/abs(ytt))*costhetat_cm
-    ! calculate cos(phi_l) (lepton azimuthal angle)
       if (final_state > 0) then
-        p5m=sqrt(q(1,5)*q(1,5)+q(2,5)*q(2,5)+q(3,5)*q(3,5))
+        ! calculate cos(phi_l) (lepton azimuthal angle)
+        p5m = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
 
-      ! p(1)^ is z^
-        do i=1,3
-          zp(i)=q(i,1)/sqrt(q(1,1)*q(1,1)+q(2,1)*q(2,1)+q(3,1)*q(3,1))
+        ! p(1)^ is z^
+        do i = 1, 3
+          zp(i) = q(i,1)/sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
         end do
 
-      ! p(5)_t^ is x^
-        do i=1,2
-          xp(i)=q356(i)/sqrt(q356(1)*q356(1)+q356(2)*q356(2))
+        ! p(5)_t^ is x^
+        do i = 1, 2
+          xp(i) = q356(i)/sqrt(q356(1)*q356(1) + q356(2)*q356(2))
         end do
-        xp(3)=0
+        xp(3) = 0
 
-      ! y^ obtained using cross product
-        yp(1) = zp(2) * xp(3) - zp(3) * xp(2)
-        yp(2) = zp(3) * xp(1) - zp(1) * xp(3)
-        yp(3) = zp(1) * xp(2) - zp(2) * xp(1)
+        ! y^ obtained using cross product
+        yp(1) = zp(2)*xp(3) - zp(3)*xp(2)
+        yp(2) = zp(3)*xp(1) - zp(1)*xp(3)
+        yp(3) = zp(1)*xp(2) - zp(2)*xp(1)
 
-        p5xp=0
-        do i=1,3
-          p5xp=p5xp+q(i,5)*xp(i)
+        p5xp = 0
+        do i = 1, 3
+          p5xp = p5xp + q(i,5)*xp(i)
         end do
-        p5yp=0
-        do i=1,3
-          p5yp=p5yp+q(i,5)*yp(i)
+        p5yp = 0
+        do i = 1, 3
+          p5yp = p5yp + q(i,5)*yp(i)
         end do
-        p5zp=0
-        do i=1,3
-          p5zp=p5zp+q(i,5)*zp(i)
+        p5zp = 0
+        do i = 1, 3
+          p5zp = p5zp + q(i,5)*zp(i)
         end do
 
-        p5mp=sqrt(p5xp*p5xp+p5yp*p5yp+p5zp*p5zp)
+        p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
 
-        if (abs(p5m-p5mp) >= 1e-11)print *, 'error in coord transform.'
+        if (abs(p5m - p5mp) >= 1e-11)print *, 'error in coord transform.'
 
-        phi_l=atan2(p5yp,p5xp)
+        phi_l = atan2(p5yp,p5xp)
 
-        if (phi_l < 0)phi_l=phi_l+2*pi
+        if (phi_l < 0)phi_l = phi_l + 2*pi
 
-        cosfl=cos(phi_l)
+        cosfl = cos(phi_l)
       end if
     
-    ! selections
-    ! cut on top pt
+      ! selections
+
+      ! cut on top pt
       if (final_state == 0) then
         if (abs(eta(3)) > ytmax) then
           fffxn=0.d0
@@ -1457,15 +1458,16 @@ function differential_cross_section(x,wgt)
 
       if (final_state == 0) then
         ! weight for distributions
-        do lam3=-1,1,2
-          do lam4=-1,1,2
-            pfx1(lam3,lam4)=pfx1(lam3,lam4)/(pfx1tot+pfx2tot)
-            pfx2(lam3,lam4)=pfx2(lam3,lam4)/(pfx1tot+pfx2tot)
+        do lam3 = -1, 1, 2
+          do lam4 = -1, 1, 2
+            pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
+            pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
           end do
         end do
       end if
 
       666 continue
+
     ! phase space volume
     ! jacobians from dx1 dx2 -> dx(2) dx(3)
       pfx1tot=pfx1tot*(1.d0-tau)*2.d0*ecm/s &
@@ -1541,8 +1543,6 @@ function differential_cross_section(x,wgt)
     ! categorised cross sections / asymmetries
          
     ! polarised total cross sections
-    ! polarised cross section for each point is calculated.
-    ! (note that above pfx was divided by fffxn.)
       if (final_state == 0) then
         do iphel=-1,+1,2
           do jphel=-1,+1,2
@@ -1596,15 +1596,15 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! atrfb
+      ! afbstar reco
       if (o_asym(6) == 1) then
-        if (yt > 0.d0) then
+        if (costhetat_star > 0.d0) then
           xsec_fb(3,it,+1)=xsec_fb(3,it,+1) &
           +fffxn &
           *wgt
           error_fb(3,it,+1)=error_fb(3,it,+1) &
           +xsec_fb(3,it,+1)**2
-        else if (yt < 0.d0) then
+        else if (costhetat_star < 0.d0) then
           xsec_fb(3,it,-1)=xsec_fb(3,it,-1) &
           +fffxn &
           *wgt
@@ -1613,16 +1613,15 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! attbrfb/a
+    ! atrfb
       if (o_asym(7) == 1) then
-        if (yt >= 0.d0) then
+        if (yt > 0.d0) then
           xsec_fb(4,it,+1)=xsec_fb(4,it,+1) &
           +fffxn &
           *wgt
           error_fb(4,it,+1)=error_fb(4,it,+1) &
           +xsec_fb(4,it,+1)**2
-        end if
-        if (ytb >= 0.d0) then
+        else if (yt < 0.d0) then
           xsec_fb(4,it,-1)=xsec_fb(4,it,-1) &
           +fffxn &
           *wgt
@@ -1631,18 +1630,16 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! arfb/a'
-
-      if ((o_asym(8) == 1) .and. (abs(ytt) > yttmin)) then
-        if (delta_absy == 0.d0) then
-          continue
-        else if (delta_absy > 0.d0) then
+    ! attbrfb/a
+      if (o_asym(8) == 1) then
+        if (yt >= 0.d0) then
           xsec_fb(5,it,+1)=xsec_fb(5,it,+1) &
           +fffxn &
           *wgt
           error_fb(5,it,+1)=error_fb(5,it,+1) &
           +xsec_fb(5,it,+1)**2
-        else if (delta_absy < 0.d0) then
+        end if
+        if (ytb >= 0.d0) then
           xsec_fb(5,it,-1)=xsec_fb(5,it,-1) &
           +fffxn &
           *wgt
@@ -1651,15 +1648,18 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! a_l
-      if (o_asym(9) == 1) then
-        if (cosfl > 0.d0) then
+    ! arfb/a'
+
+      if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
+        if (delta_absy == 0.d0) then
+          continue
+        else if (delta_absy > 0.d0) then
           xsec_fb(6,it,+1)=xsec_fb(6,it,+1) &
           +fffxn &
           *wgt
           error_fb(6,it,+1)=error_fb(6,it,+1) &
           +xsec_fb(6,it,+1)**2
-        else if (cosfl < 0.d0) then
+        else if (delta_absy < 0.d0) then
           xsec_fb(6,it,-1)=xsec_fb(6,it,-1) &
           +fffxn &
           *wgt
@@ -1667,13 +1667,65 @@ function differential_cross_section(x,wgt)
           +xsec_fb(6,it,-1)**2
         end if
       end if
+
+      if ((o_asym(10) == 1) .and. (abs(ytt) > yttmin)) then
+        if (delta_absy == 0.d0) then
+          continue
+        else if (delta_absy > 0.d0) then
+          xsec_fb(7,it,+1)=xsec_fb(7,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(7,it,+1)=error_fb(7,it,+1) &
+          +xsec_fb(7,it,+1)**2
+        else if (delta_absy < 0.d0) then
+          xsec_fb(7,it,-1)=xsec_fb(7,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(7,it,-1)=error_fb(7,it,-1) &
+          +xsec_fb(7,it,-1)**2
+        end if
+      end if
+
+      ! a_l
+      if (o_asym(11) == 1) then
+        if (cosfl > 0.d0) then
+          xsec_fb(8,it,+1)=xsec_fb(8,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(8,it,+1)=error_fb(8,it,+1) &
+          +xsec_fb(8,it,+1)**2
+        else if (cosfl < 0.d0) then
+          xsec_fb(8,it,-1)=xsec_fb(8,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(8,it,-1)=error_fb(8,it,-1) &
+          +xsec_fb(8,it,-1)**2
+        end if
+      end if
+
+      ! a_l
+      if (o_asym(12) == 1) then
+        if (costheta5_cm > 0.d0) then
+          xsec_fb(9,it,+1)=xsec_fb(9,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(9,it,+1)=error_fb(9,it,+1) &
+          +xsec_fb(9,it,+1)**2
+        else if (costheta5_cm < 0.d0) then
+          xsec_fb(9,it,-1)=xsec_fb(9,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(9,it,-1)=error_fb(9,it,-1) &
+          +xsec_fb(9,it,-1)**2
+        end if
+      end if
     
-    ! binning
-    ! scale by weight
-      hist1=fffxn1*wgt
-      hist2=fffxn2*wgt
-      hist=hist1+hist2
-      do ip=3,n_final
+      ! binning
+      hist1 = fffxn1*wgt
+      hist2 = fffxn2*wgt
+      hist = hist1 + hist2
+      do ip = 3, n_final
+
       ! generate distribution in pt
         if (o_pt(ip) == 1) then
           nbin=int((pt(ip)-ptmin(ip))/ptw(ip))+1
@@ -1687,6 +1739,7 @@ function differential_cross_section(x,wgt)
             ! print *, fxpt(ip,nbin,it)
           end if
         end if
+
       ! generate distribution in eta
         if (o_eta(ip) == 1) then
           nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
@@ -1699,6 +1752,7 @@ function differential_cross_section(x,wgt)
             if (include_errors == 1) sumw2eta(ip,nbin,it) = sumw2eta(ip,nbin,it)+hist*hist
           end if
         end if
+
       ! generate distribution in phi
         if (o_phi(ip) == 1) then
           nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
@@ -1711,6 +1765,7 @@ function differential_cross_section(x,wgt)
             if (include_errors == 1) sumw2phi(ip,nbin,it) = sumw2phi(ip,nbin,it)+hist*hist
           end if
         end if
+
       ! generate distribution in ycol
         if (o_ycol(ip) == 1) then
           nbin=int((ycol(ip)-ycolmin(ip))/ycolw(ip))+1
@@ -2033,7 +2088,7 @@ function differential_cross_section(x,wgt)
 
       if (o_asym(1) == 1) then
         if (o_sigp == 1) then
-        ! generate distribution in sigp for all.
+          ! generate distribution in sigp for all.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if (nbin >= (ndiv_sigp+1)) then
@@ -2046,7 +2101,7 @@ function differential_cross_section(x,wgt)
           end if
         end if
         if (o_sigm == 1) then
-        ! generate distribution in sigm for all.
+          ! generate distribution in sigm for all.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if (nbin >= (ndiv_sigm+1)) then
@@ -2173,8 +2228,8 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(6) == 1) then
-        if ((o_sigp == 1) .and. (yt > 0.d0)) then
-        ! generate distribution in sigp for atfb.
+        if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+        ! generate distribution in sigp for afbstar reco.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if (nbin >= (ndiv_sigp+1)) then
@@ -2185,8 +2240,8 @@ function differential_cross_section(x,wgt)
             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (yt < 0.d0)) then
-        ! generate distribution in sigm for atfb.
+        if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+        ! generate distribution in sigm for afbstar.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if (nbin >= (ndiv_sigm+1)) then
@@ -2200,8 +2255,8 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(7) == 1) then
-        if ((o_sigp == 1) .and. (yt >= 0.d0)) then
-        ! generate distribution in sigp for a.
+        if ((o_sigp == 1) .and. (yt > 0.d0)) then
+        ! generate distribution in sigp for atfb.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
           if (nbin >= (ndiv_sigp+1)) then
@@ -2212,8 +2267,8 @@ function differential_cross_section(x,wgt)
             fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
-        ! generate distribution in sigm for a.
+        if ((o_sigm == 1) .and. (yt < 0.d0)) then
+        ! generate distribution in sigm for atfb.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
           if (nbin >= (ndiv_sigm+1)) then
@@ -2227,6 +2282,33 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(8) == 1) then
+        if ((o_sigp == 1) .and. (yt >= 0.d0)) then
+        ! generate distribution in sigp for a.
+          sigp=ecm
+          nbin=int((sigp-sigpmin)/sigpw)+1
+          if (nbin >= (ndiv_sigp+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+          end if
+        end if
+        if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
+        ! generate distribution in sigm for a.
+          sigm=ecm
+          nbin=int((sigm-sigmmin)/sigmw)+1
+          if (nbin >= (ndiv_sigm+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+          end if
+        end if
+      end if
+
+      if (o_asym(9) == 1) then
         if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
         ! generate distribution in sigp for arfb.
           sigp=ecm
@@ -2236,7 +2318,7 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            if (abs(ytt) > yttmin)fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+            if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
           end if
         end if
         if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
@@ -2248,12 +2330,39 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            if (abs(ytt) > yttmin)fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+            if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
           end if
         end if
       end if
 
-      if (o_asym(9) == 1) then
+      if (o_asym(10) == 1) then
+        if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+        ! generate distribution in sigp for arfb reco.
+          sigp=ecm
+          nbin=int((sigp-sigpmin)/sigpw)+1
+          if (nbin >= (ndiv_sigp+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            if (abs(ytt) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+          end if
+        end if
+        if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+        ! generate distribution in sigm for arfb.
+          sigm=ecm
+          nbin=int((sigm-sigmmin)/sigmw)+1
+          if (nbin >= (ndiv_sigm+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            if (abs(ytt) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+          end if
+        end if
+      end if
+
+      if (o_asym(11) == 1) then
         if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
           ! generate distribution in sigp for a_l.
           sigp=ecm
@@ -2263,7 +2372,7 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+            fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
           end if
         end if
         if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
@@ -2275,13 +2384,40 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+            fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
           end if
         end if
       end if
     
+      if (o_asym(12) == 1) then
+        if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
+          ! generate distribution in sigp for alFB.
+          sigp=ecm
+          nbin=int((sigp-sigpmin)/sigpw)+1
+          if (nbin >= (ndiv_sigp+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
+          end if
+        end if
+        if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
+          ! generate distribution in sigm for alFB.
+          sigm=ecm
+          nbin=int((sigm-sigmmin)/sigmw)+1
+          if (nbin >= (ndiv_sigm+1)) then
+            continue
+          else if (nbin < 1) then
+            continue
+          else
+            fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
+          end if
+        end if
+      end if
+
       ! stats
-      npoints = npoints+1
+      npoints = npoints + 1
       
       ffxn = ffxn + fffxn
     end do ! end loop costheta_t<->-cost

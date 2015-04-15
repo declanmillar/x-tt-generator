@@ -432,50 +432,78 @@ contains
       o_asym(iasy)=include_asymmetries
     end do
 
-    if (final_state == 0)then
-      do ip=5,8
-        o_pt(i)   = 0
-        o_eta(i)  = 0
-        o_phi(i)  = 0
+    if (initial_state == 0) then
+      ! disable non-useful variables for pp
+      o_asym(4) = 0
+      o_asym(7) = 0
+      o_asym(8) = 0 
+    end if
+
+    if (initial_state == 1) then
+      ! disable non-useful variables for ppbar
+      o_asym(5) = 0
+      o_asym(6) = 0
+    end if
+
+    ! disable A_PV
+    o_asym(3) = 0
+
+    if (final_state == 0) then
+      ! disable 2to6 variables 
+      do ip = 5, 8
+        o_pt(i) = 0
+        o_eta(i) = 0
+        o_phi(i) = 0
       end do
-      do itrans=1,ntrans
-        o_tran(itrans)=0
+      do itrans = 1, ntrans
+        o_tran(itrans) = 0
       end do
-      o_tran  = 0
-      o_pt356  = 0
+      o_tran = 0
+      o_pt356 = 0
       o_eta356 = 0
       o_phi356 = 0
       o_pt478  = 0
       o_eta478 = 0
       o_phi478 = 0
       o_etmiss = 0
-      o_fl     = 0
-      o_dphi   = 0
-      o_cosfl  = 0
-      o_cost7  = 0
-      o_cost5  = 0
+      o_fl = 0
+      o_dphi = 0
+      o_cosfl = 0
+      o_cost7 = 0
+      o_cost5 = 0
       o_ct7ct5 = 0
       o_dphi2d = 0
       o_ct7ct52d = 0
       o_cost72d = 0
       o_cost52d = 0
-      o_asym(9) = 0    ! turn off a_l
+      o_asym(6) = 0
+      o_asym(10) = 0
+      o_asym(11) = 0
+      o_asym(12) = 0
       o_mtt_reco = 0
     end if
-    if (final_state > 0)then
-      o_asym(1) = 0   ! turn off a_ll
-      o_asym(2) = 0   ! turn off a_l
-      o_asym(3) = 0   ! turn off a_pv
+
+    if (final_state > 0) then
+      ! disable non 2to6 variables
+      o_asym(1) = 0
+      o_asym(2) = 0
+      o_asym(3) = 0
     end if
-    if (final_state == 1)then
-      o_mtt_reco = 0
+
+    if (final_state == 1) then 
+      ! disable non-useful variables in dileptonic
+      do i = 4, 10
+        o_asym(i) = 0
+      end do
     end if
-    if (final_state == 2)then
-      do itrans=1,ntrans
-        o_tran(itrans)=0
+
+    if (final_state == 2) then
+      ! disable non-useful variables in semi-hadronic
+      do itrans = 1, ntrans
+        o_tran(itrans) = 0
         include_transversedp(itrans) = 0
       end do
-      o_cost5 = 0
+      o_cost7 = 0
       o_ct7ct5 = 0
       o_dphi = 0
       o_dphi2d = 0
@@ -483,7 +511,29 @@ contains
       o_cost72d = 0
       o_cost52d = 0
       o_etmiss = 0
-      o_asym(9) = 0    ! turn off a_l
+      o_asym(11) = 0
+    end if
+
+    if (final_state == 3) then
+      ! disable non-useful variables in fully hadronic
+      do itrans = 1, ntrans
+        o_tran(itrans) = 0
+        include_transversedp(itrans) = 0
+      end do
+      o_mtt_reco = 0
+      o_cost5 = 0
+      o_cost7 = 0
+      o_ct7ct5 = 0
+      o_dphi = 0
+      o_dphi2d = 0
+      o_ct7ct52d = 0
+      o_cost72d = 0
+      o_cost52d = 0
+      o_etmiss = 0
+      o_asym(6) = 0
+      o_asym(10) = 0
+      o_asym(11) = 0
+      o_asym(12) = 0
     end if
 
   end subroutine initialise_distributions
@@ -1407,31 +1457,40 @@ contains
           write(10,*)'ASYMMETRY'
           if(jasy == 1)then
             write(10,*)'ALL'
-            write(10,*)'a_{ll}'
+            write(10,*)'A_{ll}'
           else if(jasy == 2)then
             write(10,*)'AL'
-            write(10,*)'a_{l}'
+            write(10,*)'A_{l}'
           else if(jasy == 3)then
             write(10,*)'APV'
-            write(10,*)'a_{pv}'
+            write(10,*)'A_{pv}'
           else if(jasy == 4)then
             write(10,*)'AFB'
-            write(10,*)'a_{fb}'
+            write(10,*)'A_{fb}'
           else if(jasy == 5)then
             write(10,*)'AFBSTAR'
-            write(10,*)'a_{fb^{*}}'
-          else if(jasy == 6)then
+            write(10,*)'A_{fb^{*}}'
+          else if(jasy == 5)then
+            write(10,*)'AFBSTAR_reco'
+            write(10,*)'A_{fb^{*}}(reco)'
+          else if(jasy == 7)then
             write(10,*)'AtRFB'
             write(10,*)'a^{t}_{rfb}'
-          else if(jasy == 7)then
+          else if(jasy == 8)then
             write(10,*)'AttbRFB'
             write(10,*)"a^{b\bar{b}}_{rfb}"
-          else if(jasy == 8)then
-            write(10,*)'ARFB'
-            write(10,*)"a_{rfb}"
           else if(jasy == 9)then
+            write(10,*)'ARFB'
+            write(10,*)"A_{rfb}"
+           else if(jasy == 9)then
+            write(10,*)'ARFB_reco'
+            write(10,*)"A_{rfb}(reco)"
+          else if(jasy == 11)then
             write(10,*)'A_l'
-            write(10,*)'a_{l}'
+            write(10,*)'A_{l^+}'
+          else if(jasy == 12)then
+            write(10,*)'AlFB'
+            write(10,*)'A^{l^+}_{FB}'
           end if
           write(10,*)'M_{tt}'
           ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
