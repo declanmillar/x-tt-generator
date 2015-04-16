@@ -68,3 +68,22 @@ function longitudinal_neutrino_momentum(p_l, pT_nu)
   return
 
 end function longitudinal_neutrino_momentum
+
+function mass(p)
+
+  ! finds the longitudinal neutrino momentum for semi-hadronic decay
+  ! assuming all particles are massless
+
+    implicit none
+
+  real :: mass, mass2
+  real :: p(0:3)
+  integer :: i
+  mass2 = p(0)*p(0) 
+  do i = 1, 3
+    mass2 = mass2 - p(i)*p(i)
+  end do
+  mass = sqrt(mass2)
+  return
+
+end function mass

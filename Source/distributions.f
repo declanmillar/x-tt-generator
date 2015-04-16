@@ -94,12 +94,26 @@ module distributions
   integer :: o_mtt
   integer :: ndiv_mtt
 
-  ! distribution in invarient mass of the top pair
+  ! distribution in reconstructed invarient mass of the top pair
   real :: mtt_recomax,mtt_recomin,mtt_recow
   real :: xmtt_reco(500),fxmtt_reco(500,20),fxmtt_recotot(500)
   real :: sumw2mtt_reco(500,20),sumw2mtt_recotot(500)
   integer :: o_mtt_reco
   integer :: ndiv_mtt_reco
+
+  ! distribution in invarient mass of the antitop
+  real :: m478up,m478low,m478w
+  real :: xm478(500),fxm478(500,20),fxm478tot(500)
+  real :: sumw2m478(500,20),sumw2m478tot(500)
+  integer :: o_m478
+  integer :: ndiv_m478
+
+  ! distribution in reconstructed invarient mass of the top
+  real :: m356_recomax,m356_recomin,m356_recow
+  real :: xm356_reco(500),fxm356_reco(500,20),fxm356_recotot(500)
+  real :: sumw2m356_reco(500,20),sumw2m356_recotot(500)
+  integer :: o_m356_reco
+  integer :: ndiv_m356_reco
 
   ! distribution in boost of top pair centre of mass frame
   real :: betamax,betamin,betaw
@@ -227,7 +241,7 @@ module distributions
   real, private :: sfxsigptot(n_asymmetries), sfxsigmtot(n_asymmetries), asym_int(n_asymmetries)
   real, private :: sfxbetatot, sfxcosfltot, sfxcosttot, sfxdphitot, sfxeta356tot, sfxeta478tot, sfxetmisstot, sfxettot, sfxfltot, & 
           sfxphi356tot, sfxphi478tot, sfxpt356tot, sfxpt478tot, sfxmtttot, sfxcost5tot, sfxcost7tot, sfxct7ct5tot, sfxdelta_ytot, &
-          sfxdphi2dtot, sfxmtt_recotot
+          sfxdphi2dtot, sfxmtt_recotot, sfxm356_recotot, sfxm478tot
 
 contains
 
@@ -295,6 +309,16 @@ contains
     phi478max=+pi
     phi478min=-pi
     ndiv_phi478=50
+    ! invarient mass of the antitop
+    o_m478=print_all_distributions
+    m478up=+10
+    m478low=-10
+    ndiv_m478=50
+    ! reco invarient mass of the top
+    o_m356_reco=print_all_distributions
+    m356_recomax=+10
+    m356_recomin=-10
+    ndiv_m356_reco=50
     ! invariant mass of tt pair (always on)
     o_mtt=1
     mttmax=14000.d0
@@ -481,6 +505,8 @@ contains
       o_asym(11) = 0
       o_asym(12) = 0
       o_mtt_reco = 0
+      o_m356_reco = 0
+      o_m478 = 0
     end if
 
     if (final_state > 0) then
@@ -495,6 +521,8 @@ contains
       do i = 4, 10
         o_asym(i) = 0
       end do
+      o_m356_reco = 0
+      o_m478 = 0
     end if
 
     if (final_state == 2) then
@@ -534,6 +562,8 @@ contains
       o_asym(10) = 0
       o_asym(11) = 0
       o_asym(12) = 0
+      o_m356_reco = 0
+      o_m478 = 0
     end if
 
   end subroutine initialise_distributions
@@ -631,6 +661,20 @@ contains
       mtt_recow=(mtt_recomax-mtt_recomin)/ndiv_mtt_reco
       do i=1,ndiv_mtt_reco
         xmtt_reco(i)=mtt_recomin+mtt_recow*(i-1)+mtt_recow/2.d0
+      end do
+    end if
+
+    if(o_m478 == 1)then
+      m478w=(m478up-m478low)/ndiv_m478
+      do i=1,ndiv_m478
+        xm478(i)=m478low+m478w*(i-1)+m478w/2.d0
+      end do
+    end if
+
+    if(o_m356_reco == 1)then
+      m356_recow=(m356_recomax-m356_recomin)/ndiv_m356_reco
+      do i=1,ndiv_m356_reco
+        xm356_reco(i)=m356_recomin+m356_recow*(i-1)+m356_recow/2.d0
       end do
     end if
 
@@ -1085,6 +1129,60 @@ contains
       write(10,*)'END'
     end if
 
+    ! plot distribution in m478
+    if(o_m478 == 1)then
+      sfxm478tot=0d0
+      do j=1,ndiv_m478
+        fxm478tot(j)=0.d0
+        do i=1,it
+          fxm478(j,i)=fxm478(j,i)*sigma/cnorm(i)/m478w
+          fxm478tot(j)=fxm478tot(j)+fxm478(j,i)
+          if (include_errors == 1) then 
+          sumw2m478(j,i)=sumw2m478(j,i)*sigma/cnorm(i)/m478w*sigma/cnorm(i)/m478w
+          sumw2m478tot(j)=sumw2m478tot(j)+sumw2m478(j,i)
+          else
+            sumw2m478tot(j)=0
+          end if
+        end do
+        sfxm478tot=sfxm478tot+fxm478tot(j)*m478w
+      end do
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'m478'
+      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(10,*)'p_{t}(t)--[GeV]'
+      do i=1,ndiv_m478
+        write(10,*)xm478(i),fxm478tot(i)
+      end do
+      write(10,*)'END'
+    end if
+
+    ! plot distribution in m356_reco
+    if(o_m356_reco == 1)then
+      sfxm356_recotot=0d0
+      do j=1,ndiv_m356_reco
+        fxm356_recotot(j)=0.d0
+        do i=1,it
+          fxm356_reco(j,i)=fxm356_reco(j,i)*sigma/cnorm(i)/m356_recow
+          fxm356_recotot(j)=fxm356_recotot(j)+fxm356_reco(j,i)
+          if (include_errors == 1) then 
+          sumw2m356_reco(j,i)=sumw2m356_reco(j,i)*sigma/cnorm(i)/m356_recow*sigma/cnorm(i)/m356_recow
+          sumw2m356_recotot(j)=sumw2m356_recotot(j)+sumw2m356_reco(j,i)
+          else
+            sumw2m356_recotot(j)=0
+          end if
+        end do
+        sfxm356_recotot=sfxm356_recotot+fxm356_recotot(j)*m356_recow
+      end do
+      write(10,*)'DISTRIBUTION'
+      write(10,*)'m356_reco'
+      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
+      write(10,*)'p_{t}(t)--[GeV]'
+      do i=1,ndiv_m356_reco
+        write(10,*)xm356_reco(i),fxm356_recotot(i)
+      end do
+      write(10,*)'END'
+    end if
+
     ! plot distribution in beta.
     if(o_beta == 1)then
       sfxbetatot=0d0
@@ -1470,7 +1568,7 @@ contains
           else if(jasy == 5)then
             write(10,*)'AFBSTAR'
             write(10,*)'A_{fb^{*}}'
-          else if(jasy == 5)then
+          else if(jasy == 6)then
             write(10,*)'AFBSTAR_reco'
             write(10,*)'A_{fb^{*}}(reco)'
           else if(jasy == 7)then
@@ -1482,7 +1580,7 @@ contains
           else if(jasy == 9)then
             write(10,*)'ARFB'
             write(10,*)"A_{rfb}"
-           else if(jasy == 9)then
+           else if(jasy == 10)then
             write(10,*)'ARFB_reco'
             write(10,*)"A_{rfb}(reco)"
           else if(jasy == 11)then
@@ -1490,7 +1588,7 @@ contains
             write(10,*)'A_{l^+}'
           else if(jasy == 12)then
             write(10,*)'AlFB'
-            write(10,*)'A^{l^+}_{FB}'
+            write(10,*)'A^{l^{+}}_{FB}'
           end if
           write(10,*)'M_{tt}'
           ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
@@ -1817,6 +1915,27 @@ contains
     if(o_mtt_reco == 1)then
       if(abs(sigma-sfxmtt_recotot)>diff_max)then
         write(10,*)'mtt_reco error:',sfxmtt_recotot
+        n_error=n_error+1
+      end if
+    end if
+
+    if(o_mtt_reco == 1)then
+      if(abs(sigma-sfxmtt_recotot)>diff_max)then
+        write(10,*)'m356_reco error:',sfxmtt_recotot
+        n_error=n_error+1
+      end if
+    end if
+
+    if(o_m478 == 1)then
+      if(abs(sigma-sfxm478tot)>diff_max)then
+        write(10,*)'m478 error:',sfxm478tot
+        n_error=n_error+1
+      end if
+    end if
+
+    if(o_m356_reco == 1)then
+      if(abs(sigma-sfxm356_recotot)>diff_max)then
+        write(10,*)'m356_reco error:',sfxm356_recotot
         n_error=n_error+1
       end if
     end if

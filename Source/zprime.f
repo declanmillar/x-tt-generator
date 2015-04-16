@@ -36,7 +36,7 @@ program zprime
 
   integer :: i, j, k
   integer :: today(3), now(3)
-  real :: start_time, finish_time
+  double precision :: start_time, finish_time
 
   call cpu_time(start_time)
 

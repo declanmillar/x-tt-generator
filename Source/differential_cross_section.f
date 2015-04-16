@@ -33,6 +33,7 @@ function differential_cross_section(x,wgt)
   real :: sqqbbffff_ewp
   real :: ctq6pdf
   real :: longitudinal_neutrino_momentum
+  real :: mass
 
   ! implict to explicit variable dump
   real :: a_s
@@ -46,7 +47,7 @@ function differential_cross_section(x,wgt)
   real :: cosfl
   real :: cost
   real :: costheta5, costheta7, costheta5_cm, costheta7_cm
-  real :: costhetat_cm
+  real :: costhetat_cm, costhetat_reco, costhetat_star_reco
   real :: costhetat_star
   real :: ct
   real :: ct5
@@ -57,7 +58,6 @@ function differential_cross_section(x,wgt)
   real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, p5xp, p5yp, p5zp
   real :: ffxn, fffxn, fffxn1, fffxn2
   real :: rmt, gamt
-  real :: delta_absy
   real :: dphi
   real :: ecm, ecm_max, pcm, qcm2
   real :: hist, hist1, hist2
@@ -76,31 +76,6 @@ function differential_cross_section(x,wgt)
   real :: rl478
   real :: rl56
   real :: rl78
-  real :: m356
-  real :: m356_2
-  real :: m356max
-  real :: m356min
-  real :: m478
-  real :: m478_2
-  real :: m478max
-  real :: m478min
-  real :: m56
-  real :: m56_2
-  real :: m56max
-  real :: m56min
-  real :: m78
-  real :: m78_2
-  real :: m78max
-  real :: m78min
-  real :: rm_ct12
-  real :: rm_ct22
-  real :: rm_ct32
-  real :: rm_t12
-  real :: rm_t22
-  real :: rm_t32
-  real :: rmlct2
-  real :: rmlt2
-  real :: rmvis2
   real :: rpl356
   real :: rpl478
   real :: rps356
@@ -148,9 +123,8 @@ function differential_cross_section(x,wgt)
   real :: xx78min
 
   ! rapidity
-  real :: yt
-  real :: ytb
-  real :: ytt
+  real :: yt, ytb, ytt, ytt_reco, yt_reco
+  real :: delta_absy, delta_absy_reco
 
   ! square matrix elements
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
@@ -167,14 +141,19 @@ function differential_cross_section(x,wgt)
   ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   real :: p1col(0:3), p2col(0:3), p3col(0:3), p4col(0:3), p5col(0:3), p6col(0:3), p7col(0:3), p8col(0:3)
-  real :: p356col(0:3), p356_opp(0:3), p478col(0:3), p478_opp(0:3)
+  real :: p356col(0:3), p356_opp(0:3), p478col(0:3), p478_opp(0:3), p356col_reco(0:3)
   real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356(0:3), p478(0:3)
-  real :: p6col_reco(0:3)
+  real :: p6col_reco(0:3), p6_boost(0:3), p6_reco(0:3)
+  real :: ptotalcol(0:3), ptotalcol_opp(0:3), ptotalcol_reco(0:3), ptotalcol_reco_opp(0:3)
 
   ! invarient masses
   real :: mtt, mtt_reco
   real :: mtt2, mtt_reco2
   real :: rmassa1, rmassa2, rmassa3, rmassa4, rmassa5, rmassa6, rmassa7, rmassa8
+  real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
+  real :: m356_reco
+  real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
+  real :: rm_ct12, rm_ct22, rm_ct32, rm_t12, rm_t22, rm_t32, rmlct2, rmlt2, rmvis2
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2)
@@ -783,7 +762,6 @@ function differential_cross_section(x,wgt)
 !             print *, 'pt(v+v):',pt68
 !       333 continue      
       end if
-      
     
       ! additional kinematics
       ! these aren't required for the integration, but are used for
@@ -845,7 +823,6 @@ function differential_cross_section(x,wgt)
         etvis = sqrt(etvis2)
         etmiss = sqrt(etmiss2)
       end if
-
       ! calculate truth level top/antitop pt, eta and phi
       if (final_state > 0) then
         pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
@@ -908,7 +885,8 @@ function differential_cross_section(x,wgt)
         +qcol(2,1)*qcol(2,1) &
         +qcol(3,1)*qcol(3,1))
       end if
-    ! calculate cos(theta^*_t)
+
+    ! calculate cos(theta_t)
       if (final_state == 0) then
         costhetat_cm=(q(1,3)*q(1,1) &
         +q(2,3)*q(2,1) &
@@ -934,6 +912,19 @@ function differential_cross_section(x,wgt)
         +q(2,1)*q(2,1) &
         +q(3,1)*q(3,1))
       end if
+
+      ! calculate cos(theta_t) reco
+      if (o_asym(6) == 1) then
+        costhetat_reco = &
+        ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
+        + (q(2,3) + q(2,5) + p6_reco(2))*q(2,1) &
+        + (q(3,3) + q(3,5) + p6_reco(3))*q(3,1)) &
+        /sqrt((q(1,3) + q(1,5) + p6_reco(1))*(q(1,3) + q(1,5) + p6_reco(1)) &
+            + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
+            + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
+        /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
+      end if
+
     ! calculate the energy of the top
       if (final_state == 0) then
         et = qcol(4,3)
@@ -973,6 +964,11 @@ function differential_cross_section(x,wgt)
                                 +  qcol(i,7) + qcol(i,8))**2
         end do
         mtt_reco = sqrt(mtt_reco2)
+
+        ! calculate mt reco
+        p356col_reco = p3col + p5col + p6col_reco
+        m356_reco = mass(p356col_reco)
+
       end if
 
       if (o_tran(1) == 1) then
@@ -993,7 +989,6 @@ function differential_cross_section(x,wgt)
         et5 = sqrt(m5**2 + pt2(5))
         et7 = sqrt(m6**2 + pt2(7))
       end if
-    
       if (o_tran(2) == 1) then
         ! calculate ht
         trans(2) = et3 + et4 + et5 + et7 + etmiss
@@ -1070,7 +1065,6 @@ function differential_cross_section(x,wgt)
         end do
         trans(10) = sqrt(abs(rmlct2))
       end if
-
       if (final_state > 0) then
         ! calculate top pseudorapidity
         rps356 = (q(3,3)+q(3,5)+q(3,6)) &
@@ -1112,26 +1106,62 @@ function differential_cross_section(x,wgt)
         -qcol(3,4)-qcol(3,7)-qcol(3,8)))
       end if
 
-      ! calculate delta_absy for arfb
-      delta_absy = abs(yt) - abs(ytb)
+      if (o_asym(10) == 1) then
+        yt_reco = 0.5*log((qcol(4,3)+qcol(4,5)+p6col_reco(0) &
+        +qcol(3,3)+qcol(3,5)+p6col_reco(3)) &
+        /(qcol(4,3)+qcol(4,5)+p6col_reco(0) &
+        -qcol(3,3)-qcol(3,5)-p6col_reco(3)))
+        delta_absy_reco = abs(yt_reco) - abs(ytb)
+      end if
 
-      if (final_state > 0) then
-        ! boost lepton to top rest frame
+
+      ! calculate delta_absy for arfb
+      if (o_asym(9) == 1) delta_absy = abs(yt) - abs(ytb)
+
+      if (o_cost5 == 1)  then
+        ! boost anti lepton to top rest frame
         p356(0) = q356(4)
-        p478(0) = q478(4)
         p356_opp(0) = q356(4)
-        p478_opp(0) = q478(4)
         do i = 1, 3
           p356(i) = q356(i)
-          p478(i) = q478(i)
           p356_opp(i) = -q356(i)
-          p478_opp(i) = -q478(i)
         end do 
         call boostx(p5, p356_opp, p5rest)
 !         call boostx(p3, p356_opp, p3rest)
 !         call boostx(p6, p356_opp, p6rest)
-        call boostx(p7, p478_opp, p7rest)
 !         write(*,*) "sum top rest mom", p5rest + p3rest + p6rest
+      end if
+
+      if (o_cost7 == 1) then
+        ! boost lepton to antitop rest frame
+        p478(0) = q478(4)
+        p478_opp(0) = q478(4)
+        do i = 1, 3
+          p478(i) = q478(i)
+          p478_opp(i) = -q478(i)
+        end do
+        call boostx(p7, p478_opp, p7rest)
+      end if
+
+      if ((o_asym(6) == 1) .or. (o_asym(10) == 1)) then
+!         ptotalcol = p1col + p2col + p3col + p4col + p5col + p6col + p7col + p8col
+        ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
+
+!         ptotalcol_opp(0) = ptotalcol(0)
+        ptotalcol_reco_opp(0) = ptotalcol_reco(0)
+        do i = 1, 3
+!           ptotalcol_opp(i) = -ptotalcol(i)
+            ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
+        end do
+        call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
+
+  !       ! check truth 
+  !       call boostx(p6col, ptotalcol_opp, p6_boost)      
+  !       print *, 'p6', p6
+  !       print *, ' p6_boost', p6_boost
+
+        ! calculate rapidity of the reconstructed tt system
+        ytt_reco = 0.5*log((ptotalcol_reco(0) + ptotalcol_reco(3))/(ptotalcol_reco(0) - ptotalcol_reco(3)))
       end if
 
       if (o_cost5 == 1) then
@@ -1147,7 +1177,7 @@ function differential_cross_section(x,wgt)
                           +q356(3)*q356(3))
       end if
 
-      if ((o_cost7 == 1)) then
+      if (o_cost7 == 1) then
         ! calculate cos(theta_l-)
         costheta7 = (p7rest(1)*q478(1) &
                      +p7rest(2)*q478(2) &
@@ -1187,9 +1217,14 @@ function differential_cross_section(x,wgt)
                       + q(3,1)*q(3,1))
       end if
 
-      if ((o_asym(5) == 1) .or. (o_asym(6) == 1)) then
+      if (o_asym(5) == 1) then
         ! reconstructed costheta_t
         costhetat_star = int(ytt/abs(ytt))*costhetat_cm
+      end if
+
+      if (o_asym(6) == 1) then
+        ! reconstructed reconstructed costheta_t
+        costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
       end if
 
       if (final_state > 0) then
@@ -1227,7 +1262,7 @@ function differential_cross_section(x,wgt)
 
         p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
 
-        if (abs(p5m - p5mp) >= 1e-11)print *, 'error in coord transform.'
+        if (abs(p5m - p5mp) >= 1e-11) print *, 'error in coord transform.'
 
         phi_l = atan2(p5yp,p5xp)
 
@@ -1598,13 +1633,13 @@ function differential_cross_section(x,wgt)
 
       ! afbstar reco
       if (o_asym(6) == 1) then
-        if (costhetat_star > 0.d0) then
+        if (costhetat_star_reco > 0.d0) then
           xsec_fb(3,it,+1)=xsec_fb(3,it,+1) &
           +fffxn &
           *wgt
           error_fb(3,it,+1)=error_fb(3,it,+1) &
           +xsec_fb(3,it,+1)**2
-        else if (costhetat_star < 0.d0) then
+        else if (costhetat_star_reco < 0.d0) then
           xsec_fb(3,it,-1)=xsec_fb(3,it,-1) &
           +fffxn &
           *wgt
@@ -1613,7 +1648,7 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! atrfb
+      ! atrfb
       if (o_asym(7) == 1) then
         if (yt > 0.d0) then
           xsec_fb(4,it,+1)=xsec_fb(4,it,+1) &
@@ -1630,7 +1665,7 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    ! attbrfb/a
+      ! attbrfb/a
       if (o_asym(8) == 1) then
         if (yt >= 0.d0) then
           xsec_fb(5,it,+1)=xsec_fb(5,it,+1) &
@@ -1668,16 +1703,16 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if ((o_asym(10) == 1) .and. (abs(ytt) > yttmin)) then
+      if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
         if (delta_absy == 0.d0) then
           continue
-        else if (delta_absy > 0.d0) then
+        else if (delta_absy_reco > 0.d0) then
           xsec_fb(7,it,+1)=xsec_fb(7,it,+1) &
           +fffxn &
           *wgt
           error_fb(7,it,+1)=error_fb(7,it,+1) &
           +xsec_fb(7,it,+1)**2
-        else if (delta_absy < 0.d0) then
+        else if (delta_absy_reco < 0.d0) then
           xsec_fb(7,it,-1)=xsec_fb(7,it,-1) &
           +fffxn &
           *wgt
@@ -2228,7 +2263,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(6) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+        if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
         ! generate distribution in sigp for afbstar reco.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2240,7 +2275,7 @@ function differential_cross_section(x,wgt)
             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+        if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
         ! generate distribution in sigm for afbstar.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
@@ -2336,7 +2371,7 @@ function differential_cross_section(x,wgt)
       end if
 
       if (o_asym(10) == 1) then
-        if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+        if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
         ! generate distribution in sigp for arfb reco.
           sigp=ecm
           nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2348,7 +2383,7 @@ function differential_cross_section(x,wgt)
             if (abs(ytt) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
           end if
         end if
-        if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+        if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
         ! generate distribution in sigm for arfb.
           sigm=ecm
           nbin=int((sigm-sigmmin)/sigmw)+1
