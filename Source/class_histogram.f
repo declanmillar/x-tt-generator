@@ -33,15 +33,7 @@ module class_Histogram
       procedure :: print => histogram_print
   end type Histogram
 
-  interface Histogram
-    module procedure new_Histogram
-  end interface Histogram
 contains
-
-  function new_Histogram(this)
-    class(Histogram), intent(inout) :: this
-    type(Histogram) new_Histogram
-  end function new_Histogram
 
   subroutine histogram_initialise(this)
     class(Histogram), intent(inout) :: this

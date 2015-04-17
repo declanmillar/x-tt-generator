@@ -39,113 +39,6 @@ module distributions
   integer :: o_ycol(8)
   integer :: ndiv_ycol(8)
 
-  ! distribution in etmiss
-  real :: etmissmax,etmissmin,etmissw
-  real :: xetmiss(500),fxetmiss(500,20),fxetmisstot(500)
-  real :: sumw2etmiss(500,20),sumw2etmisstot(500)
-  integer :: o_etmiss
-  integer :: ndiv_etmiss
-
-  ! distribution in pt of the top
-  real :: pt356max,pt356min,pt356w
-  real :: xpt356(500),fxpt356(500,20),fxpt356tot(500)
-  real :: sumw2pt356(500,20),sumw2pt356tot(500)
-  integer :: o_pt356
-  integer :: ndiv_pt356
-
-  ! distribution in eta of the top
-  real :: eta356max,eta356min,eta356w
-  real :: xeta356(500),fxeta356(500,20),fxeta356tot(500)
-  real :: sumw2eta356(500,20),sumw2eta356tot(500)
-  integer :: o_eta356
-  integer :: ndiv_eta356
-
-  ! distribution in phi of the top
-  real :: phi356max,phi356min,phi356w
-  real :: xphi356(500),fxphi356(500,20),fxphi356tot(500)
-  real :: sumw2phi356(500,20),sumw2phi356tot(500)
-  integer :: o_phi356
-  integer :: ndiv_phi356
-
-  ! distribution in pt of the anti-top
-  real :: pt478max,pt478min,pt478w
-  real :: xpt478(500),fxpt478(500,20),fxpt478tot(500)
-  real :: sumw2pt478(500,20),sumw2pt478tot(500)
-  integer :: o_pt478
-  integer :: ndiv_pt478
-
-  ! distribution in eta of the anti-top
-  real :: eta478max,eta478min,eta478w
-  real :: xeta478(500),fxeta478(500,20),fxeta478tot(500)
-  real :: sumw2eta478(500,20),sumw2eta478tot(500)
-  integer :: o_eta478
-  integer :: ndiv_eta478
-
-  ! distribution in phi of the anti-top
-  real :: phi478max,phi478min,phi478w
-  real :: xphi478(500),fxphi478(500,20),fxphi478tot(500)
-  real :: sumw2phi478(500,20),sumw2phi478tot(500)
-  integer :: o_phi478
-  integer :: ndiv_phi478
-
-  ! distribution in invarient mass of the top pair
-  real :: mttmax,mttmin,mttw
-  real :: xmtt(500),fxmtt(500,20),fxmtttot(500)
-  real :: sumw2mtt(500,20),sumw2mtttot(500)
-  integer :: o_mtt
-  integer :: ndiv_mtt
-
-  type(histogram) :: histmtt
-
-  ! distribution in reconstructed invarient mass of the top pair
-  real :: mtt_recomax,mtt_recomin,mtt_recow
-  real :: xmtt_reco(500),fxmtt_reco(500,20),fxmtt_recotot(500)
-  real :: sumw2mtt_reco(500,20),sumw2mtt_recotot(500)
-  integer :: o_mtt_reco
-  integer :: ndiv_mtt_reco
-
-  ! distribution in invarient mass of the antitop
-  real :: m478up,m478low,m478w
-  real :: xm478(500),fxm478(500,20),fxm478tot(500)
-  real :: sumw2m478(500,20),sumw2m478tot(500)
-  integer :: o_m478
-  integer :: ndiv_m478
-
-  ! distribution in reconstructed invarient mass of the top
-  real :: m356_recomax,m356_recomin,m356_recow
-  real :: xm356_reco(500),fxm356_reco(500,20),fxm356_recotot(500)
-  real :: sumw2m356_reco(500,20),sumw2m356_recotot(500)
-  integer :: o_m356_reco
-  integer :: ndiv_m356_reco
-
-  ! distribution in boost of top pair centre of mass frame
-  real :: betamax,betamin,betaw
-  real :: xbeta(500),fxbeta(500,20),fxbetatot(500)
-  real :: sumw2beta(500,20),sumw2betatot(500)
-  integer :: o_beta
-  integer :: ndiv_beta
-
-  ! distribution in cos(theta_t)
-  real :: costmax,costmin,costw
-  real :: xcost(500),fxcost(500,20),fxcosttot(500)
-  real :: sumw2cost(500,20),sumw2costtot(500)
-  integer :: o_cost
-  integer :: ndiv_cost
-
-  ! distribution in top energy
-  real :: etmax,etmin,etw
-  real :: xet(500),fxet(500,20),fxettot(500)
-  real :: sumw2et(500,20),sumw2ettot(500)
-  integer :: o_et
-  integer :: ndiv_et
-
-  ! distribution in delta_y
-  real :: delta_ymax,delta_ymin,delta_yw
-  real :: xdelta_y(500),fxdelta_y(500,20), fxdelta_ytot(500)
-  real :: sumw2delta_y(500,20), sumw2delta_ytot(500)
-  integer :: o_delta_y
-  integer :: ndiv_delta_y
-
   ! distributions in transverse variables
   integer :: ntrans
   parameter (ntrans=10)
@@ -155,48 +48,6 @@ module distributions
   integer :: o_tran(ntrans)
   integer :: ndiv_trans(ntrans)
   real :: sfxtranstot(ntrans),sfxtransdptot(ntrans)
-
-  ! distribution in phi_l (lepton azimuthal angle)
-  real :: flmax,flmin,flw
-  real :: xfl(500),fxfl(500,20),fxfltot(500)
-  real :: sumw2fl(500,20),sumw2fltot(500)
-  integer :: o_fl
-  integer :: ndiv_fl
-
-  ! distribution in cos_phi_l
-  real :: cosflmax,cosflmin,cosflw
-  real :: xcosfl(500),fxcosfl(500,20),fxcosfltot(500)
-  real :: sumw2cosfl(500,20),sumw2cosfltot(500)
-  integer :: o_cosfl
-  integer :: ndiv_cosfl
-
-  ! distribution in delta phi
-  real :: dphimax,dphimin,dphiw
-  real :: xdphi(500),fxdphi(500,20),fxdphitot(500)
-  real :: sumw2dphi(500,20),sumw2dphitot(500)
-  integer :: o_dphi
-  integer :: ndiv_dphi
-
-  ! distribution in cost5
-  real :: cost5max,cost5min,cost5w
-  real :: xcost5(500),fxcost5(500,20),fxcost5tot(500)
-  real :: sumw2cost5(500,20),sumw2cost5tot(500)
-  integer :: o_cost5
-  integer :: ndiv_cost5
-
-  ! distribution in cost7
-  real :: cost7max,cost7min,cost7w
-  real :: xcost7(500),fxcost7(500,20),fxcost7tot(500)
-  real :: sumw2cost7(500,20),sumw2cost7tot(500)
-  integer :: o_cost7
-  integer :: ndiv_cost7
-
-  ! distribution in ct7ct5
-  real :: ct7ct5max,ct7ct5min,ct7ct5w
-  real :: xct7ct5(500),fxct7ct5(500,20),fxct7ct5tot(500)
-  real :: sumw2ct7ct5(500,20),sumw2ct7ct5tot(500)
-  integer :: o_ct7ct5
-  integer :: ndiv_ct7ct5
 
   ! distribution in sigp
   real :: sigpmax,sigpmin,sigpw
@@ -277,85 +128,39 @@ contains
       ycolmin(i)=-4.d0
       ndiv_ycol(i)=100
     end do
-    ! missing transverse momentum
-    o_etmiss=print_all_distributions
-    etmissmax=7000.d0/(1+tops_decay*6)
-    etmissmin=0.d0
-    ndiv_etmiss=70
-    ! top transverse momentum
-    o_pt356=print_all_distributions
-    pt356max=7000.d0/(1+tops_decay*6)
-    pt356min=0.d0
-    ndiv_pt356=70
-    ! 2to6 top pseudorapidity
-    o_eta356=print_all_distributions
-    eta356max=+10
-    eta356min=-10
-    ndiv_eta356=50
-    ! 2to6 top pseudorapidity
-    o_phi356=print_all_distributions
-    phi356max=+pi
-    phi356min=-pi
-    ndiv_phi356=50
-    ! anti-top transverse momentum
-    o_pt478=print_all_distributions
-    pt478max=7000.d0/(1+tops_decay*6)
-    pt478min=0.d0
-    ndiv_pt478=70
-    ! 2to6 anti-top pseudorapidity
-    o_eta478=print_all_distributions
-    eta478max=+10
-    eta478min=-10
-    ndiv_eta478=50
-    ! 2to6 top pseudorapidity
-    o_phi478=print_all_distributions
-    phi478max=+pi
-    phi478min=-pi
-    ndiv_phi478=50
-    ! invarient mass of the antitop
-    o_m478=print_all_distributions
-    m478up=+10
-    m478low=-10
-    ndiv_m478=50
-    ! reco invarient mass of the top
-    o_m356_reco=print_all_distributions
-    m356_recomax=+10
-    m356_recomin=-10
-    ndiv_m356_reco=50
-    ! invariant mass of tt pair (always on)
-    o_mtt=1
-    mttmax=14000.d0
-    mttmin=0.d0
-    ndiv_mtt=140
 
-    histmtt = Histogram("mtt","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-    call histmtt%initialise
+    call histetmiss%initialise()
+    call histpt356%initialise()
+    call histeta35%initialise()
+    call histphi35%initialise()
+    call histpt478%initialise()
+    call histeta478%initialise()
+    call histphi478%initialise()
+    call histm478%initialise()
+    call histm356%initialise()
 
-    ! reconstructed invarient mass of tt pair (always on)
-    o_mtt_reco = print_all_distributions
-    mtt_recomax = 14000.d0
-    mtt_recomin = 0.d0
-    ndiv_mtt_reco = 140
-    ! boost of parton com
-    o_beta=print_all_distributions
-    betamax=1000.d0
-    betamin=0.d0
-    ndiv_beta=100
-    ! costheta
-    o_cost=print_all_distributions
-    costmax=+1.d0
-    costmin=-1.d0
-    ndiv_cost=50
-    ! top energy
-    o_et=print_all_distributions
-    etmax=7000.d0/(1+tops_decay*6)
-    etmin=0.d0
-    ndiv_et=70
-    ! delta_y
-    o_delta_y=print_all_distributions
-    delta_ymax=4.d0
-    delta_ymin=-4.d0
-    ndiv_delta_y=100
+    histmtt = Histogram("Mtt","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+    histmtt_reco = Histogram("Mtt_reco","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+    histbeta = Histogram("beta","d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
+
+    call histetmiss%initialise()
+    call histpt356%initialise()
+    call histeta35%initialise()
+    call histphi35%initialise()
+    call histpt478%initialise()
+    call histeta478%initialise()
+    call histphi478%initialise()
+    call histm478%initialise()
+    call histm356%initialise()
+    if (o_beta == 1) call histbeta%initialise()
+    if (o_mtt == 1) call histmtt%initialise
+    if (o_mtt_reco == 1) call histmtt_reco%initialise()
+    if (o_beta == 1) call histbeta%initialise()
+    if (o_cost == 1) call histcost%initialise()
+    if (o_et == 1) call histet%initialise()
+    if (o_delta_y == 1) call histdelta_y%initialise()
+
+
     ! transverse variables
     do itrans=1,ntrans
       if(final_state == 0 )then
@@ -404,36 +209,13 @@ contains
     transmax(10)=500
     transmin(10)=0.d0
     ndiv_trans(10)=50
-    ! phi_l
-    o_fl=include_asymmetries
-    flmax=+2*pi
-    flmin=0
-    ndiv_fl=100
-    ! cosphi_l
-    o_cosfl=include_asymmetries
-    cosflmax=+1.d0
-    cosflmin=-1.d0
-    ndiv_cosfl=100
-    ! delta phi
-    o_dphi=include_asymmetries
-    dphimax=+pi
-    dphimin=0
-    ndiv_dphi=10
-    ! cost5
-    o_cost5=include_asymmetries
-    cost5max=+1
-    cost5min=-1
-    ndiv_cost5=10
-    ! cost7
-    o_cost7=include_asymmetries
-    cost7max=+1
-    cost7min=-1
-    ndiv_cost7=10
-    !  ct7ct5
-    o_ct7ct5=include_asymmetries
-    ct7ct5max=+1
-    ct7ct5min=-1
-    ndiv_ct7ct5=10
+
+    call histfl%initialise()
+    call histcosfl%initialise()
+    call histdphi%initialise()
+    call histcost5%initialise()
+    call histcost7%initialise()
+    call histct7ct%initialise()
     ! sigp
     o_sigp=include_asymmetries
     sigpmax=mttmax
@@ -899,406 +681,21 @@ contains
       end if
     end do
        
-    ! plot distribution in etmiss
-    if(o_etmiss == 1)then
-      sfxetmisstot=0d0
-      do j=1,ndiv_etmiss
-        fxetmisstot(j)=0.d0
-        do i=1,it
-          fxetmiss(j,i)=fxetmiss(j,i)*sigma/cnorm(i)/etmissw
-          fxetmisstot(j)=fxetmisstot(j)+fxetmiss(j,i)
-          if (include_errors == 1) then 
-          sumw2etmiss(j,i)=sumw2etmiss(j,i)*sigma/cnorm(i)/etmissw*sigma/cnorm(i)/etmissw
-          sumw2etmisstot(j)=sumw2etmisstot(j)+sumw2etmiss(j,i)
-          else
-            sumw2etmisstot(j)=0
-          end if
-        end do
-        sfxetmisstot=sfxetmisstot+fxetmisstot(j)*etmissw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'etmiss'
-      write(10,*)'d#sigma-/dp_{tmiss}--[pb/GeV]'
-      write(10,*)'p_{t}(miss)--[GeV]'
-      do i=1,ndiv_etmiss
-        write(10,*)xetmiss(i),fxetmisstot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in pt356
-    if(o_pt356 == 1)then
-      sfxpt356tot=0d0
-      do j=1,ndiv_pt356
-        fxpt356tot(j)=0.d0
-        do i=1,it
-          fxpt356(j,i)=fxpt356(j,i)*sigma/cnorm(i)/pt356w
-          fxpt356tot(j)=fxpt356tot(j)+fxpt356(j,i)
-          if (include_errors == 1) then 
-          sumw2pt356(j,i)=sumw2pt356(j,i)*sigma/cnorm(i)/pt356w*sigma/cnorm(i)/pt356w
-          sumw2pt356tot(j)=sumw2pt356tot(j)+sumw2pt356(j,i)
-          else
-            sumw2pt356tot(j)=0
-          end if
-        end do
-        sfxpt356tot=sfxpt356tot+fxpt356tot(j)*pt356w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'pt356'
-      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(10,*)'p_{t}(t)--[GeV]'
-      do i=1,ndiv_pt356
-        write(10,*)xpt356(i),fxpt356tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in eta356
-    if(o_eta356 == 1)then
-      sfxeta356tot=0d0
-      do j=1,ndiv_eta356
-        fxeta356tot(j)=0.d0
-        do i=1,it
-          fxeta356(j,i)=fxeta356(j,i)*sigma/cnorm(i)/eta356w
-          fxeta356tot(j)=fxeta356tot(j)+fxeta356(j,i)
-          if (include_errors == 1) then 
-          sumw2eta356(j,i)=sumw2eta356(j,i)*sigma/cnorm(i)/eta356w*sigma/cnorm(i)/eta356w
-          sumw2eta356tot(j)=sumw2eta356tot(j)+sumw2eta356(j,i)
-          else
-            sumw2eta356tot(j)=0
-          end if
-        end do
-        sfxeta356tot=sfxeta356tot+fxeta356tot(j)*eta356w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'eta356'
-      write(10,*)'d#sigma-/d#eta--[pb]'
-      write(10,*)'#eta(#bar{t})'
-      do i=1,ndiv_eta356
-        write(10,*)xeta356(i),fxeta356tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in phi356
-    if(o_phi356 == 1)then
-      sfxphi356tot=0d0
-      do j=1,ndiv_phi356
-        fxphi356tot(j)=0.d0
-        do i=1,it
-          fxphi356(j,i)=fxphi356(j,i)*sigma/cnorm(i)/phi356w
-          fxphi356tot(j)=fxphi356tot(j)+fxphi356(j,i)
-          if (include_errors == 1) then 
-          sumw2phi356(j,i)=sumw2phi356(j,i)*sigma/cnorm(i)/phi356w*sigma/cnorm(i)/phi356w
-          sumw2phi356tot(j)=sumw2phi356tot(j)+sumw2phi356(j,i)
-          else
-            sumw2phi356tot(j)=0
-          end if
-        end do
-        sfxphi356tot=sfxphi356tot+fxphi356tot(j)*phi356w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'phi356'
-      write(10,*)'d#sigma-/d#phi--[pb]'
-      write(10,*)'#phi(#bar{t})'
-      do i=1,ndiv_phi356
-        write(10,*)xphi356(i),fxphi356tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in pt478
-    if(o_pt478 == 1)then
-      sfxpt478tot=0d0
-      do j=1,ndiv_pt478
-        fxpt478tot(j)=0.d0
-        do i=1,it
-          fxpt478(j,i)=fxpt478(j,i)*sigma/cnorm(i)/pt478w
-          fxpt478tot(j)=fxpt478tot(j)+fxpt478(j,i)
-          if (include_errors == 1) then 
-          sumw2pt478(j,i)=sumw2pt478(j,i)*sigma/cnorm(i)/pt478w*sigma/cnorm(i)/pt478w
-          sumw2pt478tot(j)=sumw2pt478tot(j)+sumw2pt478(j,i)
-          else
-            sumw2pt478tot(j)=0
-          end if
-        end do
-        sfxpt478tot=sfxpt478tot+fxpt478tot(j)*pt478w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'pt478'
-      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(10,*)'p_{t}(#bar{t})--[GeV]'
-      do i=1,ndiv_pt478
-        write(10,*)xpt478(i),fxpt478tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in eta478
-    if(o_eta478 == 1)then
-      sfxeta478tot=0d0
-      do j=1,ndiv_eta478
-        fxeta478tot(j)=0.d0
-        do i=1,it
-          fxeta478(j,i)=fxeta478(j,i)*sigma/cnorm(i)/eta478w
-          fxeta478tot(j)=fxeta478tot(j)+fxeta478(j,i)
-          if (include_errors == 1) then 
-          sumw2eta478(j,i)=sumw2eta478(j,i)*sigma/cnorm(i)/eta478w*sigma/cnorm(i)/eta478w
-          sumw2eta478tot(j)=sumw2eta478tot(j)+sumw2eta478(j,i)
-          else
-            sumw2eta478tot(j)=0
-          end if
-        end do
-        sfxeta478tot=sfxeta478tot+fxeta478tot(j)*eta478w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'eta478'
-      write(10,*)'d#sigma-/d#eta--[pb]'
-      write(10,*)'#eta(#bar{t})'
-      do i=1,ndiv_eta478
-        write(10,*)xeta478(i),fxeta478tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in phi478
-    if(o_phi478 == 1)then
-      sfxphi478tot=0d0
-      do j=1,ndiv_phi478
-        fxphi478tot(j)=0.d0
-        do i=1,it
-          fxphi478(j,i)=fxphi478(j,i)*sigma/cnorm(i)/phi478w
-          fxphi478tot(j)=fxphi478tot(j)+fxphi478(j,i)
-          if (include_errors == 1) then 
-          sumw2phi478(j,i)=sumw2phi478(j,i)*sigma/cnorm(i)/phi478w*sigma/cnorm(i)/phi478w
-          sumw2phi478tot(j)=sumw2phi478tot(j)+sumw2phi478(j,i)
-          else
-            sumw2phi478tot(j)=0
-          end if
-        end do
-        sfxphi478tot=sfxphi478tot+fxphi478tot(j)*phi478w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'phi478'
-      write(10,*)'d#sigma-/d#phi--[pb]'
-      write(10,*)'#phi(#bar{t})'
-      do i=1,ndiv_phi478
-        write(10,*)xphi478(i),fxphi478tot(i)
-      end do
-      write(10,*)'END'
-    end if
-    ! plot distribution in mtt
-    if(o_mtt == 1)then
-      sfxmtttot=0d0
-      do j=1,ndiv_mtt
-        fxmtttot(j)=0.d0
-        do i=1,it
-          fxmtt(j,i)=fxmtt(j,i)*sigma/cnorm(i)/mttw
-          fxmtttot(j)=fxmtttot(j)+fxmtt(j,i)
-          if (include_errors == 1) then 
-          sumw2mtt(j,i)=sumw2mtt(j,i)*sigma/cnorm(i)/mttw*sigma/cnorm(i)/mttw
-          sumw2mtttot(j)=sumw2mtttot(j)+sumw2mtt(j,i)
-          else
-            sumw2mtttot(j)=0
-          end if
-        end do
-        sfxmtttot=sfxmtttot+fxmtttot(j)*mttw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'Mtt'
-      write(10,*)'d#sigma-/dM_{tt}--[pb/GeV]'
-      write(10,*)'M_{tt}--[GeV]'
-      do i=1,ndiv_mtt
-        write(10,*)xmtt(i),fxmtttot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    call histmtt%finalise()
-
-    ! plot distribution in mtt_reco
-    if(o_mtt_reco == 1)then
-      sfxmtt_recotot=0d0
-      do j=1,ndiv_mtt_reco
-        fxmtt_recotot(j)=0.d0
-        do i=1,it
-          fxmtt_reco(j,i)=fxmtt_reco(j,i)*sigma/cnorm(i)/mtt_recow
-          fxmtt_recotot(j)=fxmtt_recotot(j)+fxmtt_reco(j,i)
-          if (include_errors == 1) then 
-          sumw2mtt_reco(j,i)=sumw2mtt_reco(j,i)*sigma/cnorm(i)/mtt_recow*sigma/cnorm(i)/mtt_recow
-          sumw2mtt_recotot(j)=sumw2mtt_recotot(j)+sumw2mtt_reco(j,i)
-          else
-            sumw2mtt_recotot(j)=0
-          end if
-        end do
-        sfxmtt_recotot=sfxmtt_recotot+fxmtt_recotot(j)*mtt_recow
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'Mtt_reco'
-      write(10,*)'d#sigma-/dM^{reco}_{tt}--[pb/GeV]'
-      write(10,*)'m^{reco}_{tt}--[GeV]'
-      do i=1,ndiv_mtt_reco
-        write(10,*)xmtt_reco(i),fxmtt_recotot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in m478
-    if(o_m478 == 1)then
-      sfxm478tot=0d0
-      do j=1,ndiv_m478
-        fxm478tot(j)=0.d0
-        do i=1,it
-          fxm478(j,i)=fxm478(j,i)*sigma/cnorm(i)/m478w
-          fxm478tot(j)=fxm478tot(j)+fxm478(j,i)
-          if (include_errors == 1) then 
-          sumw2m478(j,i)=sumw2m478(j,i)*sigma/cnorm(i)/m478w*sigma/cnorm(i)/m478w
-          sumw2m478tot(j)=sumw2m478tot(j)+sumw2m478(j,i)
-          else
-            sumw2m478tot(j)=0
-          end if
-        end do
-        sfxm478tot=sfxm478tot+fxm478tot(j)*m478w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'m478'
-      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(10,*)'p_{t}(t)--[GeV]'
-      do i=1,ndiv_m478
-        write(10,*)xm478(i),fxm478tot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in m356_reco
-    if(o_m356_reco == 1)then
-      sfxm356_recotot=0d0
-      do j=1,ndiv_m356_reco
-        fxm356_recotot(j)=0.d0
-        do i=1,it
-          fxm356_reco(j,i)=fxm356_reco(j,i)*sigma/cnorm(i)/m356_recow
-          fxm356_recotot(j)=fxm356_recotot(j)+fxm356_reco(j,i)
-          if (include_errors == 1) then 
-          sumw2m356_reco(j,i)=sumw2m356_reco(j,i)*sigma/cnorm(i)/m356_recow*sigma/cnorm(i)/m356_recow
-          sumw2m356_recotot(j)=sumw2m356_recotot(j)+sumw2m356_reco(j,i)
-          else
-            sumw2m356_recotot(j)=0
-          end if
-        end do
-        sfxm356_recotot=sfxm356_recotot+fxm356_recotot(j)*m356_recow
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'m356_reco'
-      write(10,*)'d#sigma-/dp_{t}--[pb/GeV]'
-      write(10,*)'p_{t}(t)--[GeV]'
-      do i=1,ndiv_m356_reco
-        write(10,*)xm356_reco(i),fxm356_recotot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in beta.
-    if(o_beta == 1)then
-      sfxbetatot=0d0
-      do j=1,ndiv_beta
-        fxbetatot(j)=0.d0
-        do i=1,it
-          fxbeta(j,i)=fxbeta(j,i)*sigma/cnorm(i)/betaw
-          fxbetatot(j)=fxbetatot(j)+fxbeta(j,i)
-          if (include_errors == 1) then 
-          sumw2beta(j,i)=sumw2beta(j,i)*sigma/cnorm(i)/betaw*sigma/cnorm(i)/betaw
-          sumw2betatot(j)=sumw2betatot(j)+sumw2beta(j,i)
-          else
-            sumw2betatot(j)=0
-          end if
-        end do
-        sfxbetatot=sfxbetatot+fxbetatot(j)*betaw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'beta'
-      write(10,*)'d#sigma-/d#beta_{t}--[pb]'
-      write(10,*)'#beta_{t}'
-      do i=1,ndiv_beta
-        write(10,*)xbeta(i),fxbetatot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in cost
-    if(o_cost == 1)then
-      sfxcosttot=0d0
-      do j=1,ndiv_cost
-        fxcosttot(j)=0.d0
-        do i=1,it
-          fxcost(j,i)=fxcost(j,i)*sigma/cnorm(i)/costw
-          fxcosttot(j)=fxcosttot(j)+fxcost(j,i)
-          if (include_errors == 1) then 
-          sumw2cost(j,i)=sumw2cost(j,i)*sigma/cnorm(i)/costw*sigma/cnorm(i)/costw
-          sumw2costtot(j)=sumw2costtot(j)+sumw2cost(j,i)
-          else
-            sumw2costtot(j)=0
-          end if
-        end do
-        sfxcosttot=sfxcosttot+fxcosttot(j)*costw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'cost'
-      write(10,*)'d#sigma-/dcos#theta_t--[pb]'
-      write(10,*)'cos#theta_t'
-      do i=1,ndiv_cost
-        write(10,*)xcost(i),fxcosttot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in et
-    if(o_et == 1)then
-      sfxettot=0d0
-      do j=1,ndiv_et
-        fxettot(j)=0.d0
-        do i=1,it
-          fxet(j,i)=fxet(j,i)*sigma/cnorm(i)/etw
-          fxettot(j)=fxettot(j)+fxet(j,i)
-          if (include_errors == 1) then 
-          sumw2et(j,i)=sumw2et(j,i)*sigma/cnorm(i)/etw*sigma/cnorm(i)/etw
-          sumw2ettot(j)=sumw2ettot(j)+sumw2et(j,i)
-          else
-            sumw2ettot(j)=0
-          end if
-        end do
-        sfxettot=sfxettot+fxettot(j)*etw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'et'
-      write(10,*)'d#sigma-/de_{t}--[pb/GeV]'
-      write(10,*)'e_{t}--[GeV]'
-      do i=1,ndiv_et
-        write(10,*)xet(i),fxettot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in delta y
-    if(o_delta_y == 1)then
-      sfxdelta_ytot=0d0
-      do j=1,ndiv_delta_y
-        fxdelta_ytot(j)=0.d0
-        do i=1,it
-          fxdelta_y(j,i)=fxdelta_y(j,i)*sigma/cnorm(i)/delta_yw
-          fxdelta_ytot(j)=fxdelta_ytot(j)+fxdelta_y(j,i)
-          if (include_errors == 1) then 
-          sumw2delta_y(j,i)=sumw2delta_y(j,i)*sigma/cnorm(i)/delta_yw*sigma/cnorm(i)/delta_yw
-          sumw2delta_ytot(j)=sumw2delta_ytot(j)+sumw2delta_y(j,i)
-          else
-            sumw2delta_ytot(j)=0
-          end if
-        end do
-        sfxdelta_ytot=sfxdelta_ytot+fxdelta_ytot(j)*delta_yw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'delta_y'
-      write(10,*)'d#sigma-/d#delta-y--[pb]'
-      write(10,*)'#delta-y'
-      do i=1,ndiv_delta_y
-        write(10,*)xdelta_y(i),fxdelta_ytot(i)
-      end do
-      write(10,*)'END'
-    end if
+    call histetmiss % finalise()
+    call histpt356 % finalise()
+    call histeta356 % finalise()
+    call histphi356 % finalise()
+    call histpt478 % finalise()
+    call histeta478 % finalise()
+    call histphi478 % finalise()
+    call histmtt % finalise()
+    call histmtt_reco % finalise()
+    call histm478 % finalise()
+    call histm356_reco % finalise()
+    call histbeta. % finalise()
+    call histcost % finalise()
+    call histet % finalise()
+    call histdelta_y % finalise()
 
     ! plot distributions in all transverse variables
     do itrans=1,ntrans
@@ -1374,168 +771,13 @@ contains
       end if
     end do
 
-    ! plot distribution in fl
-    if(o_fl == 1)then
-      sfxfltot=0d0
-      do j=1,ndiv_fl
-        fxfltot(j)=0.d0
-        do i=1,it
-          fxfl(j,i)=fxfl(j,i)*sigma/cnorm(i)/flw
-          fxfltot(j)=fxfltot(j)+fxfl(j,i)
-          if (include_errors == 1) then 
-          sumw2fl(j,i)=sumw2fl(j,i)*sigma/cnorm(i)/flw*sigma/cnorm(i)/flw
-          sumw2fltot(j)=sumw2fltot(j)+sumw2fl(j,i)
-          else
-            sumw2fltot(j)=0
-          end if
-        end do
-        sfxfltot=sfxfltot+fxfltot(j)*flw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'fl'
-      write(10,*)'d#sigma-/d#phi_{l}--[pb]'
-      write(10,*)'#phi_{l}--[-rad-]'
-      do i=1,ndiv_fl
-        write(10,*)xfl(i),fxfltot(i)
-      end do
-      write(10,*)'END'
-    end if
+    call histfl%finalise()
+    call histcosfl%finalise()
+    call histdelta phi%finalise()
+    call histcost5%finalise()
+    call histcost7%finalise()
+    call histct7ct5%finalise()
 
-    ! plot distribution in cosfl
-    if(o_cosfl == 1)then
-      sfxcosfltot=0d0
-      do j=1,ndiv_cosfl
-        fxcosfltot(j)=0.d0
-        do i=1,it
-          fxcosfl(j,i)=fxcosfl(j,i)*sigma/cnorm(i)/cosflw
-          fxcosfltot(j)=fxcosfltot(j)+fxcosfl(j,i)
-          if (include_errors == 1) then 
-          sumw2cosfl(j,i)=sumw2cosfl(j,i)*sigma/cnorm(i)/cosflw*sigma/cnorm(i)/cosflw
-          sumw2cosfltot(j)=sumw2cosfltot(j)+sumw2cosfl(j,i)
-          else
-            sumw2cosfltot(j)=0
-          end if
-        end do
-        sfxcosfltot=sfxcosfltot+fxcosfltot(j)*cosflw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'cosfl'
-      write(10,*)'d#sigma-/dcos#phi_{l^+}--[pb]'
-      write(10,*)'cos#phi_{l^+}'
-      do i=1,ndiv_cosfl
-        write(10,*)xcosfl(i),fxcosfltot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in delta phi
-    if(o_dphi == 1)then
-      sfxdphitot=0d0
-      do j=1,ndiv_dphi
-        fxdphitot(j)=0.d0
-        do i=1,it
-          fxdphi(j,i)=fxdphi(j,i)*sigma/cnorm(i)/dphiw
-          fxdphitot(j)=fxdphitot(j)+fxdphi(j,i)
-          if (include_errors == 1) then 
-          sumw2dphi(j,i)=sumw2dphi(j,i)*sigma/cnorm(i)/dphiw*sigma/cnorm(i)/dphiw
-          sumw2dphitot(j)=sumw2dphitot(j)+sumw2dphi(j,i)
-          else
-            sumw2dphitot(j)=0
-          end if
-        end do
-        sfxdphitot=sfxdphitot+fxdphitot(j)*dphiw
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'dphi'
-      write(10,*)'d#sigma-/d#delta#phi--[pb]'
-      write(10,*)'#delta#phi'
-      do i=1,ndiv_dphi
-        write(10,*)xdphi(i),fxdphitot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in cost5
-    if(o_cost5 == 1)then
-      sfxcost5tot=0d0
-      do j=1,ndiv_cost5
-        fxcost5tot(j)=0.d0
-        do i=1,it
-          fxcost5(j,i)=fxcost5(j,i)*sigma/cnorm(i)/cost5w
-          fxcost5tot(j)=fxcost5tot(j)+fxcost5(j,i)
-          if (include_errors == 1) then
-            sumw2cost5(j,i)=sumw2cost5(j,i)*sigma/cnorm(i)/cost5w*sigma/cnorm(i)/cost5w
-            sumw2cost5tot(j)=sumw2cost5tot(j)+sumw2cost5(j,i)
-          else 
-            sumw2cost5tot(j) = 0.d0
-          end if
-        end do
-        sfxcost5tot=sfxcost5tot+fxcost5tot(j)*cost5w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'cost5'
-      write(10,*)'d#sigma-/dcos#theta_{l^+}--[pb]'
-      write(10,*)'cos#theta_{l^+}'
-      do i=1,ndiv_cost5
-        write(10,*)xcost5(i),fxcost5tot(i),sumw2cost5tot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in cost7
-    if(o_cost7 == 1)then
-      sfxcost7tot=0d0
-      do j=1,ndiv_cost7
-        fxcost7tot(j)=0.d0
-        do i=1,it
-          fxcost7(j,i)=fxcost7(j,i)*sigma/cnorm(i)/cost7w
-          fxcost7tot(j)=fxcost7tot(j)+fxcost7(j,i)
-          if (include_errors == 1) then 
-          sumw2cost7(j,i)=sumw2cost7(j,i)*sigma/cnorm(i)/cost7w*sigma/cnorm(i)/cost7w
-          sumw2cost7tot(j)=sumw2cost7tot(j)+sumw2cost7(j,i)
-          else
-            sumw2cost7tot(j)=0
-          end if
-        end do
-        sfxcost7tot=sfxcost7tot+fxcost7tot(j)*cost7w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'cost7'
-      write(10,*)'d#sigma-/dcos#theta_{l^-}--[pb]'
-      write(10,*)'cos#theta_{l^-}'
-      do i=1,ndiv_cost7
-        write(10,*)xcost7(i),fxcost7tot(i)
-      end do
-      write(10,*)'END'
-    end if
-
-    ! plot distribution in ct7ct5
-    if(o_ct7ct5 == 1)then
-      sfxct7ct5tot=0d0
-      do j=1,ndiv_ct7ct5
-        fxct7ct5tot(j)=0.d0
-        do i=1,it
-          fxct7ct5(j,i)=fxct7ct5(j,i)*sigma/cnorm(i)/ct7ct5w
-          fxct7ct5tot(j)=fxct7ct5tot(j)+fxct7ct5(j,i)
-          if (include_errors == 1) then 
-          sumw2ct7ct5(j,i)=sumw2ct7ct5(j,i)*sigma/cnorm(i)/ct7ct5w*sigma/cnorm(i)/ct7ct5w
-          sumw2ct7ct5tot(j)=sumw2ct7ct5tot(j)+sumw2ct7ct5(j,i)
-          else
-            sumw2ct7ct5tot(j)=0
-          end if
-        end do
-        sfxct7ct5tot=sfxct7ct5tot+fxct7ct5tot(j)*ct7ct5w
-      end do
-      write(10,*)'DISTRIBUTION'
-      write(10,*)'ct7ct5'
-      write(10,*) &
-      'd^{2}#sigma-/d(cos#theta^{*}_{l^+}cos#theta^{*}_{l^-})--[pb]'
-      write(10,*)'cos#theta_{l^+}cos#theta_{l^-}'
-      do i=1,ndiv_ct7ct5
-        write(10,*)xct7ct5(i),fxct7ct5tot(i)
-      end do
-      write(10,*)'END'
-    end if
 
     ! plot distributions in all asymmetries
     if((o_sigp == 1) .and. (o_sigm == 1))then
