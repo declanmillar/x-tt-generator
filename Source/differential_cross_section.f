@@ -1759,6 +1759,29 @@ function differential_cross_section(x,wgt)
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
+
+      if(o_etmiss == 1) call histetmiss % fill(etmiss, hist)
+      if(o_pt356 == 1) call histpt356 % fill(pt356, hist)
+      if(o_eta356 == 1) call histeta356 % fill(eta356, hist)
+      if(o_phi356 == 1) call histphi356 % fill(phi356, hist)
+      if(o_pt478 == 1) call histpt478 % fill(pt478, hist)
+      if(o_eta478 == 1) call histeta478 % fill(eta478, hist)
+      if(o_phi478 == 1) call histphi478 % fill(phi478, hist)
+      if(o_mtt == 1) call histmtt % fill(mtt, hist)
+      if(o_mtt_reco == 1) call histmtt_reco % fill(mtt_reco, hist)
+      if(o_m478 == 1) call histm478 % fill(m478, hist)
+      if(o_m356_reco == 1) call histm356_reco % fill(m356_reco, hist)
+      if(o_beta == 1) call histbeta % fill(beta, hist)
+      if(o_cost == 1) call histcost % fill(cost, hist)
+      if(o_et == 1) call histet % fill(et, hist)
+      if(o_delta_y == 1) call histdelta_y % fill(delta_absy, hist)
+      if(o_fl == 1) call histfl % fill(phi_l, hist)
+      if(o_cosfl == 1) call histcosfl % fill(cosfl, hist)
+      if(o_dphi == 1) call histdphi % fill(dphi, hist)
+      if(o_cost5 == 1) call histcost5 % fill(costheta5, hist)
+      if(o_cost7 == 1) call histcost7 % fill(costheta7, hist)
+      if(o_ct7ct5 == 1) call histct7ct5 % fill(ct7ct5, hist)
+
       do ip = 3, n_final
 
       ! generate distribution in pt
@@ -1815,646 +1838,392 @@ function differential_cross_section(x,wgt)
         end if
       end do
 
-      if (o_pt356 == 1) then
-        ! generate distribution in pt356.
-        nbin=int((pt356-pt356min)/pt356w)+1
-        if (nbin >= (ndiv_pt356+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxpt356(nbin,it)=fxpt356(nbin,it)+hist
-          if (include_errors == 1) sumw2pt356(nbin,it) = sumw2pt356(nbin,it)+hist*hist
-        end if
-      end if
+!       do itrans=1,ntrans
+!         if (o_tran(itrans) == 1) then
+!         ! generate distribution in trans.
+!           nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
+!           if (nbin >= (ndiv_trans(itrans)+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxtrans(itrans,nbin,it)=fxtrans(itrans,nbin,it)+hist
+!             if (include_errors == 1) sumw2trans(itrans,nbin,it) = sumw2trans(itrans,nbin,it)+hist*hist
+!           end if
+!         end if
+!       end do
 
-      if (o_eta356 == 1) then
-      ! generate distribution in eta356.
-        nbin=int((eta356-eta356min)/eta356w)+1
-        if (nbin >= (ndiv_eta356+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxeta356(nbin,it)=fxeta356(nbin,it)+hist
-          if (include_errors == 1) sumw2eta356(nbin,it) = sumw2eta356(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_dphi2d == 1) then
+!         ! generate distribution in dphi2d.
+!         ibin=int((dphi-dphimin)/dphiw)+1
+!         jbin=int((mtt-mttmin)/mttw)+1
+!         if ((ibin > ndiv_dphi) .or. (jbin > ndiv_mtt)) then
+!           continue
+!         else if ((ibin < 1) .or. (jbin < 1)) then
+!           continue
+!         else
+!           fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
+!         end if
+!       end if
 
-      if (o_phi356 == 1) then
-        ! generate distribution in phi356.
-        nbin=int((phi356-phi356min)/phi356w)+1
-        if (nbin >= (ndiv_phi356+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxphi356(nbin,it)=fxphi356(nbin,it)+hist
-          if (include_errors == 1) sumw2phi356(nbin,it) = sumw2phi356(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_ct7ct52d == 1) then
+!         ! generate distribution in ct7ct52d.
+!         ibin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
+!         jbin=int((mtt-mttmin)/mttw)+1
+!         if ((ibin > ndiv_ct7ct5) .or. (jbin > ndiv_mtt)) then
+!           continue
+!         else if ((ibin < 1) .or. (jbin < 1)) then
+!           continue
+!         else
+!           fxct7ct52d(ibin,jbin,it)=fxct7ct52d(ibin,jbin,it)+hist
+!         end if
+!       end if
 
-      if (o_pt478 == 1) then
-      ! generate distribution in pt478.
-        nbin=int((pt478-pt478min)/pt478w)+1
-        if (nbin >= (ndiv_pt478+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxpt478(nbin,it)=fxpt478(nbin,it)+hist
-          if (include_errors == 1) sumw2pt478(nbin,it) = sumw2pt478(nbin,it)+hist*hist
-        end if
-      end if
+!       do itrans=1,ntrans
+!         if (include_transversedp(itrans) == 1) then
+!         ! generate distribution in transdp.
+!           ibin=int((dphi-dphimin)/dphiw)+1
+!           jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
+!           if ((ibin > ndiv_dphi) .or. (jbin >= (ndiv_trans(itrans)+1))) then
+!             continue
+!           else if ((ibin < 1) .or. (jbin < 1)) then
+!             continue
+!           else
+!             fxtransdp(itrans,ibin,jbin,it)= &
+!             fxtransdp(itrans,ibin,jbin,it)+hist
+!           end if
+!         end if
+!       end do
 
-      if (o_eta478 == 1) then
-      ! generate distribution in eta478.
-        nbin=int((eta478-eta478min)/eta478w)+1
-        if (nbin >= (ndiv_eta478+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxeta478(nbin,it)=fxeta478(nbin,it)+hist
-          if (include_errors == 1) sumw2eta478(nbin,it) = sumw2eta478(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(1) == 1) then
+!         if (o_sigp == 1) then
+!           ! generate distribution in sigp for all.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
+!             (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
+!           end if
+!         end if
+!         if (o_sigm == 1) then
+!           ! generate distribution in sigm for all.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
+!             (weight(it,+1,-1)+weight(it,-1,+1))
+!           end if
+!         end if
+!       end if
 
-      if (o_phi478 == 1) then
-      ! generate distribution in phi478.
-        nbin=int((phi478-phi478min)/phi478w)+1
-        if (nbin >= (ndiv_phi478+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxphi478(nbin,it)=fxphi478(nbin,it)+hist
-          if (include_errors == 1) sumw2phi478(nbin,it) = sumw2phi478(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(2) == 1) then
+!         if (o_sigp == 1) then
+!         ! generate distribution in sigp for al.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
+!             (weight(it,-1,-1)+weight(it,-1,+1))
+!           end if
+!         end if
+!         if (o_sigm == 1) then
+!         ! generate distribution in sigm for al.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
+!             (weight(it,+1,-1)+weight(it,+1,+1))
+!           end if
+!         end if
+!       end if
 
-      if (o_etmiss == 1) then
-      ! generate distribution in etmiss.
-        nbin=int((etmiss-etmissmin)/etmissw)+1
-        if (nbin >= (ndiv_etmiss+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxetmiss(nbin,it)=fxetmiss(nbin,it)+hist
-          if (include_errors == 1) sumw2etmiss(nbin,it) = sumw2etmiss(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(3) == 1) then
+!         if (o_sigp == 1) then
+!         ! generate distribution in sigp for apv.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
+!             (weight(it,-1,-1))
+!           end if
+!         end if
+!         if (o_sigm == 1) then
+!         ! generate distribution in sigm for apv.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
+!             (weight(it,+1,+1))
+!           end if
+!         end if
+!       end if
 
-      if (o_mtt == 1) then
-        ! generate distribution in mtt.
-        nbin=int((mtt-mttmin)/mttw)+1
-        if (nbin >= (ndiv_mtt+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxmtt(nbin,it)=fxmtt(nbin,it)+hist
-          if (include_errors == 1) sumw2mtt(nbin,it) = sumw2mtt(nbin,it)+hist*hist
-        end if
-        write(*,*)'old nbin',nbin
-                write(*,*)'old hist',hist
-      end if
+!       if (o_asym(4) == 1) then
+!         if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
+!         ! generate distribution in sigp for afbcm.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
+!         ! generate distribution in sigm for afbcm.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_mtt == 1) call histmtt%fill(mtt, hist)
+!       if (o_asym(5) == 1) then
+!         if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+!         ! generate distribution in sigp for afbstar.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+!         ! generate distribution in sigm for afbstar.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_mtt_reco == 1) then
-        ! generate distribution in mtt.
-        nbin=int((mtt_reco-mtt_recomin)/mtt_recow)+1
-        if (nbin >= (ndiv_mtt_reco+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxmtt_reco(nbin,it)=fxmtt_reco(nbin,it)+hist
-          if (include_errors == 1) sumw2mtt_reco(nbin,it) = sumw2mtt_reco(nbin,it)+hist*hist
-        end if
+!       if (o_asym(6) == 1) then
+!         if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
+!         ! generate distribution in sigp for afbstar reco.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
+!         ! generate distribution in sigm for afbstar.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      end if
+!       if (o_asym(7) == 1) then
+!         if ((o_sigp == 1) .and. (yt > 0.d0)) then
+!         ! generate distribution in sigp for atfb.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (yt < 0.d0)) then
+!         ! generate distribution in sigm for atfb.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_beta == 1) then
-        ! generate distribution in beta.
-        beta=shat/4.d0/rmt**2-1.d0
-        nbin=int((beta-betamin)/betaw)+1
-        if (nbin >= (ndiv_beta+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxbeta(nbin,it)=fxbeta(nbin,it)+hist
-          if (include_errors == 1) sumw2beta(nbin,it) = sumw2beta(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(8) == 1) then
+!         if ((o_sigp == 1) .and. (yt >= 0.d0)) then
+!         ! generate distribution in sigp for a.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
+!         ! generate distribution in sigm for a.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_cost == 1) then
-      ! generate distribution in cost.
-        nbin=int((cost-costmin)/costw)+1
-        if (nbin >= (ndiv_cost+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxcost(nbin,it)=fxcost(nbin,it)+hist
-          if (include_errors == 1) sumw2cost(nbin,it) = sumw2cost(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(9) == 1) then
+!         if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+!         ! generate distribution in sigp for arfb.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+!         ! generate distribution in sigm for arfb.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_et == 1) then   
-        ! generate distribution in et.
-        nbin=int((et-etmin)/etw)+1
-        if (nbin >= (ndiv_et+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxet(nbin,it)=fxet(nbin,it)+hist
-          if (include_errors == 1) sumw2et(nbin,it) = sumw2et(nbin,it)+hist*hist
-        end if
-      end if
+!       if (o_asym(10) == 1) then
+!         if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
+!         ! generate distribution in sigp for arfb reco.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             if (abs(ytt) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
+!         ! generate distribution in sigm for arfb.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             if (abs(ytt) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
-      if (o_delta_y == 1) then   
-        ! generate distribution in delta_absy.
-        nbin=int((delta_absy-delta_ymin)/delta_yw)+1
-        if (nbin >= (ndiv_delta_y+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxdelta_y(nbin,it)=fxdelta_y(nbin,it)+hist
-          if (include_errors == 1) sumw2delta_y(nbin,it) = sumw2delta_y(nbin,it)+hist*hist
-        end if
-      end if
-
-      do itrans=1,ntrans
-        if (o_tran(itrans) == 1) then
-        ! generate distribution in trans.
-          nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-          if (nbin >= (ndiv_trans(itrans)+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxtrans(itrans,nbin,it)=fxtrans(itrans,nbin,it)+hist
-            if (include_errors == 1) sumw2trans(itrans,nbin,it) = sumw2trans(itrans,nbin,it)+hist*hist
-          end if
-        end if
-      end do
-
-      if (o_fl == 1) then
-        ! generate distribution in phi_l.
-        nbin=int((phi_l-flmin)/flw)+1
-        if (nbin >= (ndiv_fl+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxfl(nbin,it)=fxfl(nbin,it)+hist
-          if (include_errors == 1) sumw2fl(nbin,it) = sumw2fl(nbin,it)+hist*hist
-        end if
-      end if
-
-
-      if (o_cosfl == 1) then
-        ! generate distribution in cosfl.
-        nbin=int((cosfl-cosflmin)/cosflw)+1
-        if (nbin >= (ndiv_cosfl+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxcosfl(nbin,it)=fxcosfl(nbin,it)+hist
-          if (include_errors == 1) sumw2cosfl(nbin,it) = sumw2cosfl(nbin,it)+hist*hist
-        end if
-      end if
-
-
-      if (o_dphi == 1) then
-        ! generate distribution in dphi.
-        nbin=int((dphi-dphimin)/dphiw)+1
-        if (nbin >= (ndiv_dphi+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxdphi(nbin,it)=fxdphi(nbin,it)+hist
-          if (include_errors == 1) sumw2dphi(nbin,it) = sumw2dphi(nbin,it)+hist*hist
-        end if
-      end if
-
-      if (o_cost5 == 1) then
-        ! generate distribution in costheta5.
-        nbin=int((costheta5-cost5min)/cost5w)+1
-        if (nbin >= (ndiv_cost5+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxcost5(nbin,it)=fxcost5(nbin,it)+hist
-          if (include_errors == 1) sumw2cost5(nbin,it) = sumw2cost5(nbin,it) + hist*hist
-        end if
-      end if
-
-      if (o_cost7 == 1) then
-        ! generate distribution in costheta7.
-        nbin=int((costheta7-cost7min)/cost7w)+1
-        if (nbin >= (ndiv_cost7+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxcost7(nbin,it)=fxcost7(nbin,it)+hist
-          if (include_errors == 1) sumw2cost7(nbin,it) = sumw2cost7(nbin,it)+hist*hist
-        end if
-      end if
-
-      if (o_ct7ct5 == 1) then
-        nbin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
-        if (nbin >= (ndiv_ct7ct5+1)) then
-          continue
-        else if (nbin < 1) then
-          continue
-        else
-          fxct7ct5(nbin,it)=fxct7ct5(nbin,it)+hist
-          if (include_errors == 1) sumw2ct7ct5(nbin,it) = sumw2ct7ct5(nbin,it)+hist*hist
-        end if
-      end if
-
-      if (o_dphi2d == 1) then
-        ! generate distribution in dphi2d.
-        ibin=int((dphi-dphimin)/dphiw)+1
-        jbin=int((mtt-mttmin)/mttw)+1
-        if ((ibin > ndiv_dphi) .or. (jbin > ndiv_mtt)) then
-          continue
-        else if ((ibin < 1) .or. (jbin < 1)) then
-          continue
-        else
-          fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
-        end if
-      end if
-
-      if (o_ct7ct52d == 1) then
-        ! generate distribution in ct7ct52d.
-        ibin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
-        jbin=int((mtt-mttmin)/mttw)+1
-        if ((ibin > ndiv_ct7ct5) .or. (jbin > ndiv_mtt)) then
-          continue
-        else if ((ibin < 1) .or. (jbin < 1)) then
-          continue
-        else
-          fxct7ct52d(ibin,jbin,it)=fxct7ct52d(ibin,jbin,it)+hist
-        end if
-      end if
-
-      do itrans=1,ntrans
-        if (include_transversedp(itrans) == 1) then
-        ! generate distribution in transdp.
-          ibin=int((dphi-dphimin)/dphiw)+1
-          jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-          if ((ibin > ndiv_dphi) .or. (jbin >= (ndiv_trans(itrans)+1))) then
-            continue
-          else if ((ibin < 1) .or. (jbin < 1)) then
-            continue
-          else
-            fxtransdp(itrans,ibin,jbin,it)= &
-            fxtransdp(itrans,ibin,jbin,it)+hist
-          end if
-        end if
-      end do
-
-      if (o_asym(1) == 1) then
-        if (o_sigp == 1) then
-          ! generate distribution in sigp for all.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
-            (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
-          end if
-        end if
-        if (o_sigm == 1) then
-          ! generate distribution in sigm for all.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
-            (weight(it,+1,-1)+weight(it,-1,+1))
-          end if
-        end if
-      end if
-
-      if (o_asym(2) == 1) then
-        if (o_sigp == 1) then
-        ! generate distribution in sigp for al.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
-            (weight(it,-1,-1)+weight(it,-1,+1))
-          end if
-        end if
-        if (o_sigm == 1) then
-        ! generate distribution in sigm for al.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
-            (weight(it,+1,-1)+weight(it,+1,+1))
-          end if
-        end if
-      end if
-
-      if (o_asym(3) == 1) then
-        if (o_sigp == 1) then
-        ! generate distribution in sigp for apv.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
-            (weight(it,-1,-1))
-          end if
-        end if
-        if (o_sigm == 1) then
-        ! generate distribution in sigm for apv.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
-            (weight(it,+1,+1))
-          end if
-        end if
-      end if
-
-      if (o_asym(4) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
-        ! generate distribution in sigp for afbcm.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
-        ! generate distribution in sigm for afbcm.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(5) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
-        ! generate distribution in sigp for afbstar.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
-        ! generate distribution in sigm for afbstar.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(6) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
-        ! generate distribution in sigp for afbstar reco.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
-        ! generate distribution in sigm for afbstar.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(7) == 1) then
-        if ((o_sigp == 1) .and. (yt > 0.d0)) then
-        ! generate distribution in sigp for atfb.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (yt < 0.d0)) then
-        ! generate distribution in sigm for atfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(8) == 1) then
-        if ((o_sigp == 1) .and. (yt >= 0.d0)) then
-        ! generate distribution in sigp for a.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
-        ! generate distribution in sigm for a.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(9) == 1) then
-        if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
-        ! generate distribution in sigp for arfb.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
-        ! generate distribution in sigm for arfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(10) == 1) then
-        if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
-        ! generate distribution in sigp for arfb reco.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
-        ! generate distribution in sigm for arfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(11) == 1) then
-        if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
-          ! generate distribution in sigp for a_l.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
-          ! generate distribution in sigm for a_l.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
-          end if
-        end if
-      end if
+!       if (o_asym(11) == 1) then
+!         if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
+!           ! generate distribution in sigp for a_l.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
+!           ! generate distribution in sigm for a_l.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
+!           end if
+!         end if
+!       end if
     
-      if (o_asym(12) == 1) then
-        if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
-          ! generate distribution in sigp for alFB.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
-          ! generate distribution in sigm for alFB.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
-          end if
-        end if
-      end if
+!       if (o_asym(12) == 1) then
+!         if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
+!           ! generate distribution in sigp for alFB.
+!           sigp=ecm
+!           nbin=int((sigp-sigpmin)/sigpw)+1
+!           if (nbin >= (ndiv_sigp+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
+!           end if
+!         end if
+!         if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
+!           ! generate distribution in sigm for alFB.
+!           sigm=ecm
+!           nbin=int((sigm-sigmmin)/sigmw)+1
+!           if (nbin >= (ndiv_sigm+1)) then
+!             continue
+!           else if (nbin < 1) then
+!             continue
+!           else
+!             fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
+!           end if
+!         end if
+!       end if
 
       ! stats
       npoints = npoints + 1

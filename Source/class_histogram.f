@@ -76,8 +76,6 @@ contains
       this%fx(nbin,it) = this%fx(nbin,it) + weight
       if (include_errors == 1) this%sumw2(nbin, it) = this%sumw2(nbin, it) + weight*weight
     end if
-    write(*,*)'new nbin',nbin
-    write(*,*)'new hist',weight
   end subroutine histogram_fill
 
   subroutine histogram_collate(this)
