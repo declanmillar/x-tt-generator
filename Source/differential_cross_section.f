@@ -1917,7 +1917,11 @@ function differential_cross_section(x,wgt)
           fxmtt(nbin,it)=fxmtt(nbin,it)+hist
           if (include_errors == 1) sumw2mtt(nbin,it) = sumw2mtt(nbin,it)+hist*hist
         end if
+        write(*,*)'old nbin',nbin
+                write(*,*)'old hist',hist
       end if
+
+      if (o_mtt == 1) call histmtt%fill(mtt, hist)
 
       if (o_mtt_reco == 1) then
         ! generate distribution in mtt.
@@ -1930,6 +1934,7 @@ function differential_cross_section(x,wgt)
           fxmtt_reco(nbin,it)=fxmtt_reco(nbin,it)+hist
           if (include_errors == 1) sumw2mtt_reco(nbin,it) = sumw2mtt_reco(nbin,it)+hist*hist
         end if
+
       end if
 
       if (o_beta == 1) then

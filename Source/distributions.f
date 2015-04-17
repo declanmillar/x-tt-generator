@@ -5,6 +5,7 @@ module distributions
   use mathematics, only: pi
   use kinematics, only: sigma
   use integration, only: it
+  use class_Histogram
 
   implicit none
 
@@ -93,6 +94,8 @@ module distributions
   real :: sumw2mtt(500,20),sumw2mtttot(500)
   integer :: o_mtt
   integer :: ndiv_mtt
+
+  type(histogram) :: histmtt
 
   ! distribution in reconstructed invarient mass of the top pair
   real :: mtt_recomax,mtt_recomin,mtt_recow
@@ -233,7 +236,7 @@ module distributions
   public :: check_distributions
 
   
-  real :: cnorm(20)
+!   real :: cnorm(20)
   real :: atot(n_asymmetries),atoterr(n_asymmetries)
 
   integer, private :: i, j, k, ip, iasy, jasy, itrans
@@ -324,6 +327,10 @@ contains
     mttmax=14000.d0
     mttmin=0.d0
     ndiv_mtt=140
+
+    histmtt = Histogram("mtt","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+    call histmtt%initialise
+
     ! reconstructed invarient mass of tt pair (always on)
     o_mtt_reco = print_all_distributions
     mtt_recomax = 14000.d0
@@ -1101,6 +1108,8 @@ contains
       end do
       write(10,*)'END'
     end if
+
+    call histmtt%finalise()
 
     ! plot distribution in mtt_reco
     if(o_mtt_reco == 1)then
