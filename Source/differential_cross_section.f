@@ -805,6 +805,8 @@ function differential_cross_section(x,wgt)
         phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
       end do
 
+      if (o_beta == 1) beta = shat/4.d0/rmt**2 - 1.d0
+
       ! calculate delta phi
       if (final_state == 1) then
         dphi = abs(phi(5) - phi(7))
