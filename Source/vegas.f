@@ -10,6 +10,7 @@ module integration
   integer :: ndmx,mds
   real :: resl(20),standdevl(20)
   integer :: seed
+  real :: cnorm(20)
 
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
   xl/100*0.d0/,xu/100*1.d0/, &

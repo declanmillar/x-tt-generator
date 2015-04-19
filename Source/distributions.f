@@ -6,6 +6,7 @@ module distributions
   use kinematics, only: sigma
   use integration, only: it
   use class_histogram
+  use class_histogram2d
 
   implicit none
 
@@ -127,6 +128,8 @@ module distributions
   type(histogram) :: h_mlt
   type(histogram) :: h_mlct
 
+  type(histogram2d) :: h2_mttdphi
+
   ! distribution in sigp
   real :: sigpmax,sigpmin,sigpw
   real :: xsigp(1000),fxsigp(n_asymmetries,1000,20) ,fxsigptot(n_asymmetries,1000)
@@ -139,21 +142,21 @@ module distributions
   integer :: o_sigm
   integer :: ndiv_sigm
 
-  ! 2d dist
-  real :: xdphi2d(500,500),fxdphi2d(500,500,20), fxdphi2dtot(500,500)
-  integer :: o_dphi2d
+!   ! 2d dist
+!   real :: xdphi2d(500,500),fxdphi2d(500,500,20), fxdphi2dtot(500,500)
+!   integer :: o_dphi2d
 
-  ! 2d dist
-  real :: xct7ct52d(500,500),fxct7ct52d(500,500,20), fxct7ct52dtot(500,500)
-  integer :: o_ct7ct52d
+!   ! 2d dist
+!   real :: xct7ct52d(500,500),fxct7ct52d(500,500,20), fxct7ct52dtot(500,500)
+!   integer :: o_ct7ct52d
 
-  ! 2d dist
-  real :: xcost72d(500,500),fxcost72d(500,500,20), fxcost72dtot(500,500)
-  integer :: o_cost72d
+!   ! 2d dist
+!   real :: xcost72d(500,500),fxcost72d(500,500,20), fxcost72dtot(500,500)
+!   integer :: o_cost72d
 
-  ! 2d dist
-  real :: xcost52d(500,500),fxcost52d(500,500,20), fxcost52dtot(500,500)
-  integer :: o_cost52d
+!   ! 2d dist
+!   real :: xcost52d(500,500),fxcost52d(500,500,20), fxcost52dtot(500,500)
+!   integer :: o_cost52d
 
 !   integer :: include_transversedp(ntrans)
 
@@ -162,11 +165,9 @@ module distributions
   public :: generate_bins
   public :: finalise_distributions
 
-  
 !   real :: cnorm(20)
   real :: atot(n_asymmetries),atoterr(n_asymmetries)
-  integer, private :: i, j, k, ip, iasy, jasy
-  real, private :: sfxpttot(8), sfxetatot(8), sfxphitot(8), sfxycoltot(8)
+  integer, private :: i, j, k, iasy, jasy
   real, private :: sfxsigptot(n_asymmetries), sfxsigmtot(n_asymmetries), asym_int(n_asymmetries)
 
 contains
@@ -175,7 +176,7 @@ subroutine create_distributions
 
   implicit none 
 
-  print*, "Initialising distributions"
+  print*, "Creating distributions"
 
   h_ptb = histogram("pTb", "d#sigma-/dp_{T}^{b}", "p_{T}^{b}", 0.d0, 1000.d0, 100)
   h_ptbb = histogram("pTbb", "d#sigma-/dp_{T}^{#bar{b}}", "p_{T}^{#bar{b}}", 0.d0, 1000.d0, 100)
@@ -219,8 +220,8 @@ subroutine create_distributions
   h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
   h_mtb = histogram("mtb", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 0.d0, 1000.d0, 100)
   h_mt_reco = histogram("mt_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 0.d0, 1000.d0, 100)
-  h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 1000.d0, 100)
-  h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1000.d0, 100)
+  h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 50.d0, 100)
+  h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1.d0, 100)
   h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 0.d0, 1000.d0, 100)
   h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", -4.d0, 4.d0, 100)
   h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_l", 0.d0, 1000.d0, 100)
@@ -237,14 +238,20 @@ subroutine create_distributions
   h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
   h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
   h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
-  h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}", 0.d0, 500.d0, 50)
-  h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}", 0.d0, 500.d0, 50)
+  h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}", 0.d0, 100.d0, 50)
+  h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}", 0.d0, 100.d0, 50)
+
+  h2_mttdphi = histogram2d("Mttdphi", "d#sigma-/dM_{tt}#Delta-#phi--[pb/GeV]", "M_{tt}--[GeV]", 0.d0, 14000.d0, 140, &
+                                                                             "#delta #phi_l", 0.d0, 2*pi, 100)
+
 
 end subroutine create_distributions
 
 subroutine initialise_distributions
 
   implicit none
+
+  print*, "Initialising distributions"
 
   if (o_ptb == 1) call h_ptb%initialise()
   if (o_ptbb == 1) call h_ptbb%initialise()
@@ -304,6 +311,7 @@ subroutine initialise_distributions
   if (o_mct3 == 1) call h_mct3%initialise()
   if (o_mlt == 1) call h_mlt%initialise()
   if (o_mlct == 1) call h_mlct%initialise()
+  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%initialise()
 
   ! sigp
   o_sigp=include_asymmetries
@@ -315,21 +323,7 @@ subroutine initialise_distributions
   sigmmax=14000
   sigmmin=0
   ndiv_sigm=100/5
-!     ! dphi2d
-!     if((o_dphi == 1) .and. (o_mtt == 1))then
-!       o_dphi2d=print_2d_distributions
-!     else
-!       o_dphi2d=0
-!     end if
-!     ! dtransph
-!     do itrans=1, ntrans
-!       if((o_dphi == 1) .and. (o_tran(itrans) == 1))then
-!         include_transversedp(itrans)=print_2d_distributions
-!       else
-!         include_transversedp(itrans)=0
-!       end if
-!     end do
-!     ! asymmetries
+
   do iasy=1,n_asymmetries
     o_asym(iasy)=include_asymmetries
   end do
@@ -384,10 +378,10 @@ subroutine disable_distributions
     o_cost7 = 0
     o_cost5 = 0
     o_ct7ct5 = 0
-    o_dphi2d = 0
-    o_ct7ct52d = 0
-    o_cost72d = 0
-    o_cost52d = 0
+!     o_dphi2d = 0
+!     o_ct7ct52d = 0
+!     o_cost72d = 0
+!     o_cost52d = 0
     o_asym(6) = 0
     o_asym(10) = 0
     o_asym(11) = 0
@@ -429,10 +423,10 @@ subroutine disable_distributions
     o_cost7 = 0
     o_ct7ct5 = 0
     o_dphi = 0
-    o_dphi2d = 0
-    o_ct7ct52d = 0
-    o_cost72d = 0
-    o_cost52d = 0
+!     o_dphi2d = 0
+!     o_ct7ct52d = 0
+!     o_cost72d = 0
+!     o_cost52d = 0
     o_etmiss = 0
     o_ht = 0
     o_mttvis = 0
@@ -454,10 +448,10 @@ subroutine disable_distributions
     o_cost7 = 0
     o_ct7ct5 = 0
     o_dphi = 0
-    o_dphi2d = 0
-    o_ct7ct52d = 0
-    o_cost72d = 0
-    o_cost52d = 0
+!     o_dphi2d = 0
+!     o_ct7ct52d = 0
+!     o_cost72d = 0
+!     o_cost52d = 0
     o_etmiss = 0
     o_mt_reco = 0
     o_mtb = 0
@@ -573,6 +567,8 @@ subroutine finalise_distributions
   if (o_mct3 == 1) call h_mct3%finalise()
   if (o_mlt == 1) call h_mlt%finalise()
   if (o_mlct == 1) call h_mlct%finalise()
+  write(*,*) 'test'
+  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%initialise()
 
 !     ! plot distributions in all asymmetries
 !     if((o_sigp == 1) .and. (o_sigm == 1))then

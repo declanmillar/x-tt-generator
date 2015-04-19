@@ -14,8 +14,8 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
 
   // Precusor info
   *logStream >> distName >> zTitle
-             >> xTitle >> nBinsx >> xlow >> xup
-             >> yTitle >> nBinsy >> ylow >> yup ;
+             >> xTitle >> xlow >> xup >> nBinsx
+             >> yTitle >> ylow >> yup >> nBinsy;
 
   // replace hyphens with spaces
   for(int i = 0; i < (int) xTitle.size(); i++)

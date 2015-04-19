@@ -1,11 +1,10 @@
 module class_Histogram
   use Configuration, only: include_errors
   use kinematics, only: sigma
-  use integration, only: it
+  use integration, only: it, cnorm
   implicit none
   private
 
-  real, public :: cnorm(20)
   real :: diff_max = 1e-12
 
   type, public :: Histogram

@@ -795,6 +795,7 @@ function differential_cross_section(x,wgt)
         phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
       end do
 
+
       ! calculate truth level top/antitop pt, eta and phi
       if (final_state > 0) then
         ptt = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
@@ -883,7 +884,6 @@ function differential_cross_section(x,wgt)
         p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
       end if
 
-
     ! calculate collider frame cos(theta_t)
       if (final_state == 0) then
         cost= &
@@ -911,7 +911,6 @@ function differential_cross_section(x,wgt)
         +qcol(2,1)*qcol(2,1) &
         +qcol(3,1)*qcol(3,1))
       end if
-
 
     ! calculate parton CoM cos(theta_t)
       if (final_state == 0) then
@@ -996,8 +995,6 @@ function differential_cross_section(x,wgt)
         p356col_reco = p3col + p5col + p6col_reco
         m356_reco = mass(p356col_reco)
       end if
-
-
 
       if (o_mttvis == 1) then
         ! calculate invariant mass of visible decay products
@@ -1175,7 +1172,7 @@ function differential_cross_section(x,wgt)
                           +q478(3)*q478(3))
       end if
 
-      if (final_state > 0) then
+      if (final_state == 1) then
         ct7ct5 = costheta7*costheta5
       end if
 
@@ -1268,8 +1265,6 @@ function differential_cross_section(x,wgt)
         fffxn=0.d0
         return
       end if
-
-
 
     ! matrix elements
     ! phase space only
@@ -1746,7 +1741,6 @@ function differential_cross_section(x,wgt)
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
-
 
 
       if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
