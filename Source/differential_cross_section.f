@@ -62,10 +62,10 @@ function differential_cross_section(x,wgt)
   real :: ecm, ecm_max, pcm, qcm2
   real :: hist, hist1, hist2
   real :: gs, gs2
-  real :: et, et3, et4, et5, et7, etmiss, etmiss2, eta356, eta478, etvis, etvis2
+  real :: et, et3, et4, et5, et7, etmiss, etmiss2, etat, etatb, etvis, etvis2
   real :: pfx1tot, pfx2tot
   real :: gcol, qcm
-  real :: pt356, pt478, phi356, phi478
+  real :: ptt, pttb, phicolt, phicoltb, ycolt, ycoltb
   real :: phit
   real :: pq5, pq52, pq56, pq7, pq78, p5m, p5mp
   real :: phi_l
@@ -764,34 +764,24 @@ function differential_cross_section(x,wgt)
       end if
     
       ! additional kinematics
-      ! these aren't required for the integration, but are used for
+      ! these aren't required for event generation, but are used for
       ! distributions and cuts.
 
-      if (final_state == 2) then
-        ! reconstruct the neutrino momentum in the semi-hadronic channel
-        do i = 1, 2
-          pT6col(i) = p6col(i)
-          p6col_reco(i) = p6col(i)
-        end do
-        p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
-        p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
-      end if
-
-      ! calculate transverse momenta (pt)
+      ! calculate asympotic collider frame transverse momenta
       do ip = 1, n_final
         pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
         pt(ip) = sqrt(pt2(ip))
       end do
 
-      ! calculate rapidity (collider frame)
+      ! calculate asympotic collider frame rapidity
       do ip = 3, n_final
         ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
         /(qcol(4,ip) - qcol(3,ip)))
       end do
 
-      ! calculate pseudorapidity (eta) com frame
+      ! calculate asympotic collider frame pseudorapidity
       do ip = 1, n_final
-        rps(ip) = (q(3, ip))/sqrt(q(1, ip)**2 + q(2, ip)**2 + q(3, ip)**2)
+        rps(ip) = (qcol(3, ip))/sqrt(qcol(1, ip)**2 + qcol(2, ip)**2 + qcol(3, ip)**2)
         if (rps(ip) < -1.d0) rps = -1.d0
         if (rps(ip) > +1.d0) rps = +1.d0
         rpl(ip) = acos(rps(ip))
@@ -800,15 +790,72 @@ function differential_cross_section(x,wgt)
         eta(ip) = -log(arg(ip))
       end do
 
-      ! calculate azimuthal angle (phi) in lab frame
+      ! calculate asympotic collider frame azimuthal angle
       do ip = 1, n_final
         phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
       end do
 
+      ! calculate truth level top/antitop pt, eta and phi
+      if (final_state > 0) then
+        ptt = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
+                     + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
+
+        pttb = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
+                     + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
+
+        rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
+        /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
+              +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
+              +(q(3, 3) + q(3, 5) + q(3, 6))**2)
+        if (rps356 < -1.d0) rps = -1.d0
+        if (rps356 > +1.d0) rps = +1.d0
+        rpl356 = acos(rps356)
+        arg356 = tan(rpl356/2d0)
+        if (arg356 <= 0.d0)arg356 = 1.d-9
+        etat = -log(arg356)
+
+        rps478=(q(3,4)+q(3,7)+q(3,8)) &
+        /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
+        +(q(2,4)+q(2,7)+q(2,8))**2 &
+        +(q(3,4)+q(3,7)+q(3,8))**2)
+        if (rps478 < -1.d0)rps=-1.d0
+        if (rps478 > +1.d0)rps=+1.d0
+        rpl478=acos(rps478)
+        arg478=tan(rpl478/2d0)
+        if (arg478 <= 0.d0)arg478=1.d-9
+        etatb=-log(arg478)
+
+        phicolt=atan2(qcol(2,3)+qcol(2,5)+qcol(2,6) &
+        ,qcol(1,3)+qcol(1,5)+qcol(1,6))
+        phicoltb=atan2(qcol(2,4)+qcol(2,7)+qcol(2,8) &
+        ,qcol(1,4)+qcol(1,7)+qcol(1,8))
+
+        ycolt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6) &
+        +qcol(3,3)+qcol(3,5)+qcol(3,6)) &
+        /(qcol(4,3)+qcol(4,5)+qcol(4,6) &
+        -qcol(3,3)-qcol(3,5)-qcol(3,6)))
+        ycoltb=0.5*log((qcol(4,4)+qcol(4,7)+qcol(4,8) &
+        +qcol(3,4)+qcol(3,7)+qcol(3,8)) &
+        /(qcol(4,4)+qcol(4,7)+qcol(4,8) &
+        -qcol(3,4)-qcol(3,7)-qcol(3,8)))
+
+      else if (final_state == 0) then
+        ! or set to asymmtotics
+        ptt = pt(3)
+        pttb = pt(4)
+        etat = eta(3)
+        etatb = eta(4)
+        phicolt = phi(3)
+        phicoltb = phi(4)
+        ycolt = ycol(3)
+        ycoltb = ycol(4)
+      end if
+
+
       if (o_beta == 1) beta = shat/4.d0/rmt**2 - 1.d0
 
       ! calculate delta phi
-      if (final_state == 1) then
+      if (o_dphi == 1) then
         dphi = abs(phi(5) - phi(7))
       end if
 
@@ -825,42 +872,19 @@ function differential_cross_section(x,wgt)
         etvis = sqrt(etvis2)
         etmiss = sqrt(etmiss2)
       end if
-      ! calculate truth level top/antitop pt, eta and phi
-      if (final_state > 0) then
-        pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
-                     + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
 
-        pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
-                     + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
-
-        rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
-        /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
-              +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
-              +(q(3, 3) + q(3, 5) + q(3, 6))**2)
-        if (rps356 < -1.d0) rps = -1.d0
-        if (rps356 > +1.d0) rps = +1.d0
-        rpl356 = acos(rps356)
-        arg356 = tan(rpl356/2d0)
-        if (arg356 <= 0.d0)arg356 = 1.d-9
-        eta356 = -log(arg356)
-
-        rps478=(q(3,4)+q(3,7)+q(3,8)) &
-        /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
-        +(q(2,4)+q(2,7)+q(2,8))**2 &
-        +(q(3,4)+q(3,7)+q(3,8))**2)
-        if (rps478 < -1.d0)rps=-1.d0
-        if (rps478 > +1.d0)rps=+1.d0
-        rpl478=acos(rps478)
-        arg478=tan(rpl478/2d0)
-        if (arg478 <= 0.d0)arg478=1.d-9
-        eta478=-log(arg478)
-
-        phi356=atan2(qcol(2,3)+qcol(2,5)+qcol(2,6) &
-        ,qcol(1,3)+qcol(1,5)+qcol(1,6))
-        phi478=atan2(qcol(2,4)+qcol(2,7)+qcol(2,8) &
-        ,qcol(1,4)+qcol(1,7)+qcol(1,8))
+      if (final_state == 2) then
+        ! reconstruct the neutrino momentum in the semi-hadronic channel
+        do i = 1, 2
+          pT6col(i) = p6col(i)
+          p6col_reco(i) = p6col(i)
+        end do
+        p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
+        p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
       end if
-    ! calculate cos(theta_t)
+
+
+    ! calculate collider frame cos(theta_t)
       if (final_state == 0) then
         cost= &
         (qcol(1,3)*qcol(1,1) &
@@ -888,7 +912,8 @@ function differential_cross_section(x,wgt)
         +qcol(3,1)*qcol(3,1))
       end if
 
-    ! calculate cos(theta_t)
+
+    ! calculate parton CoM cos(theta_t)
       if (final_state == 0) then
         costhetat_cm=(q(1,3)*q(1,1) &
         +q(2,3)*q(2,1) &
@@ -955,7 +980,7 @@ function differential_cross_section(x,wgt)
       end if
       mtt = sqrt(abs(mtt2))
 
-      if (final_state == 2) then
+      if (o_mtt_reco == 1) then
         ! calculate Mtt_reco
         mtt_reco2 = (qcol(4,3) + qcol(4,4) &
                    + qcol(4,5) + p6col_reco(0) &
@@ -970,8 +995,8 @@ function differential_cross_section(x,wgt)
         ! calculate mt reco
         p356col_reco = p3col + p5col + p6col_reco
         m356_reco = mass(p356col_reco)
-
       end if
+
 
 
       if (o_mttvis == 1) then
@@ -992,6 +1017,7 @@ function differential_cross_section(x,wgt)
         et5 = sqrt(m5**2 + pt2(5))
         et7 = sqrt(m6**2 + pt2(7))
       end if
+
 
       if (o_ht == 1) then
         ht = et3 + et4 + et5 + et7 + etmiss
@@ -1066,47 +1092,6 @@ function differential_cross_section(x,wgt)
         mlct = sqrt(abs(mlct2))
       end if
 
-      if (final_state > 0) then
-        ! calculate true top pseudorapidity
-        rps356 = (q(3,3)+q(3,5)+q(3,6)) &
-        /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
-        +(q(2,3)+q(2,5)+q(2,6))**2 &
-        +(q(3,3)+q(3,5)+q(3,6))**2)
-        if (rps356 < -1.d0)rps = -1.d0
-        if (rps356 > +1.d0)rps = +1.d0
-        rpl356 = acos(rps356)
-        arg356 = tan(rpl356/2d0)
-        if (arg356 <=  0.d0)arg356 = 1.d-9
-        eta356 = -log(arg356)
-
-        ! calculate true antitop pseudorapidity
-        rps478=(q(3,4)+q(3,7)+q(3,8)) &
-        /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
-        +(q(2,4)+q(2,7)+q(2,8))**2 &
-        +(q(3,4)+q(3,7)+q(3,8))**2)
-        if (rps478 < -1.d0)rps=-1.d0
-        if (rps478 > +1.d0)rps=+1.d0
-        rpl478=acos(rps478)
-        arg478=tan(rpl478/2d0)
-        if (arg478 <= 0.d0)arg478=1.d-9
-        eta478=-log(arg478)
-      end if
-
-    ! calculate rapidity (y) of top and antitop
-      if (final_state == 0) then
-        yt= 0.5*log((qcol(4,3)+qcol(3,3))/(qcol(4,3)-qcol(3,3)))
-        ytb=0.5*log((qcol(4,4)+qcol(3,4))/(qcol(4,4)-qcol(3,4)))
-      else if (final_state > 0) then
-        yt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6) &
-        +qcol(3,3)+qcol(3,5)+qcol(3,6)) &
-        /(qcol(4,3)+qcol(4,5)+qcol(4,6) &
-        -qcol(3,3)-qcol(3,5)-qcol(3,6)))
-        ytb=0.5*log((qcol(4,4)+qcol(4,7)+qcol(4,8) &
-        +qcol(3,4)+qcol(3,7)+qcol(3,8)) &
-        /(qcol(4,4)+qcol(4,7)+qcol(4,8) &
-        -qcol(3,4)-qcol(3,7)-qcol(3,8)))
-      end if
-
       if (o_asym(10) == 1) then
         yt_reco = 0.5*log((qcol(4,3)+qcol(4,5)+p6col_reco(0) &
         +qcol(3,3)+qcol(3,5)+p6col_reco(3)) &
@@ -1115,9 +1100,8 @@ function differential_cross_section(x,wgt)
         delta_absy_reco = abs(yt_reco) - abs(ytb)
       end if
 
-
       ! calculate delta_absy for arfb
-      if (o_asym(9) == 1) delta_absy = abs(yt) - abs(ytb)
+      if (o_asym(9) == 1) delta_absy = abs(ycolt) - abs(ycoltb)
 
       if (o_cost5 == 1)  then
         ! boost anti lepton to top rest frame
@@ -1280,10 +1264,11 @@ function differential_cross_section(x,wgt)
           fffxn=0.d0
           return
         end if
-      else if (abs(eta356) > ytmax) then
+      else if (abs(etat) > ytmax) then
         fffxn=0.d0
         return
       end if
+
 
 
     ! matrix elements
@@ -1757,23 +1742,54 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-    
       ! binning
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
-      
+
+
+
+      if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
+      if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
+      if (o_ptlp == 1) call h_ptlp%fill(pt(5), hist)
+      if (o_ptlm == 1) call h_ptlm%fill(pt(7), hist)
+      if (o_ptnu == 1) call h_ptnu%fill(pt(6), hist)
+      if (o_ptnub == 1) call h_ptnub%fill(pt(8), hist)
+      if (o_ptt == 1) call h_ptt%fill(ptt, hist)
+      if (o_pttb == 1) call h_pttb%fill(pttb, hist)
+
+      if (o_etab == 1) call h_etab%fill(eta(3), hist)
+      if (o_etabb == 1) call h_etabb%fill(eta(4), hist)
+      if (o_etalp == 1) call h_etalp%fill(eta(5), hist)
+      if (o_etalm == 1) call h_etalm%fill(eta(7), hist)
+      if (o_etanu == 1) call h_etanu%fill(eta(6), hist)
+      if (o_etanub == 1) call h_etanub%fill(eta(8), hist)
+      if (o_etat == 1) call h_etat%fill(etat, hist)
+      if (o_etatb == 1) call h_etatb%fill(etatb, hist)
+
+      if (o_phib == 1) call h_phib%fill(phi(3), hist)
+      if (o_phibb == 1) call h_phibb%fill(phi(4), hist)
+      if (o_philp == 1) call h_philp%fill(phi(5), hist)
+      if (o_philm == 1) call h_philm%fill(phi(7), hist)
+      if (o_phinu == 1) call h_phinu%fill(phi(6), hist)
+      if (o_phinub == 1) call h_phinub%fill(phi(8), hist)
+      if (o_phit == 1) call h_phit%fill(phicolt, hist)
+      if (o_phitb == 1) call h_phitb%fill(phicoltb, hist)
+
+      if (o_ycolb == 1) call h_ycolb%fill(ycol(3), hist)
+      if (o_ycolbb == 1) call h_ycolbb%fill(ycol(4), hist)
+      if (o_ycollp == 1) call h_ycollp%fill(ycol(5), hist)
+      if (o_ycollm == 1) call h_ycollm%fill(ycol(7), hist)
+      if (o_ycolnu == 1) call h_ycolnu%fill(ycol(6), hist)
+      if (o_ycolnub == 1) call h_ycolnub%fill(ycol(8), hist)
+      if (o_ycolt == 1) call h_ycolt%fill(ycolt, hist)
+      if (o_ycoltb == 1) call h_ycoltb%fill(ycoltb, hist) 
+
       if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
-      if (o_pt356 == 1) call h_pt356%fill(pt356, hist)
-      if (o_eta356 == 1) call h_eta356%fill(eta356, hist)
-      if (o_phi356 == 1) call h_phi356%fill(phi356, hist)
-      if (o_pt478 == 1) call h_pt478%fill(pt478, hist)
-      if (o_eta478 == 1) call h_eta478%fill(eta478, hist)
-      if (o_phi478 == 1) call h_phi478%fill(phi478, hist)
       if (o_mtt == 1) call h_mtt%fill(mtt, hist)
       if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
-      if (o_m478 == 1) call h_m478%fill(m478, hist)
-      if (o_m356_reco == 1) call h_m356_reco%fill(m356_reco, hist)
+      if (o_mtb == 1) call h_mtb%fill(m478, hist)
+      if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
       if (o_beta == 1) call h_beta%fill(beta, hist)
       if (o_cost == 1) call h_cost%fill(cost, hist)
       if (o_et == 1) call h_et%fill(et, hist)
@@ -1794,61 +1810,6 @@ function differential_cross_section(x,wgt)
       if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
       if (o_mlt == 1) call h_mlt%fill(mlt, hist)
       if (o_mlct == 1) call h_mlct%fill(mlct, hist)
-
-      do ip = 3, n_final
-      ! generate distribution in pt
-        if (o_pt(ip) == 1) then
-          nbin=int((pt(ip)-ptmin(ip))/ptw(ip))+1
-          if (nbin >= (ndiv_pt(ip)+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxpt(ip,nbin,it)=fxpt(ip,nbin,it)+hist
-            if (include_errors == 1) sumw2pt(ip,nbin,it) = sumw2pt(ip,nbin,it)+hist*hist
-            ! print *, fxpt(ip,nbin,it)
-          end if
-        end if
-
-      ! generate distribution in eta
-        if (o_eta(ip) == 1) then
-          nbin=int((eta(ip)-etamin(ip))/etaw(ip))+1
-          if (nbin >= (ndiv_eta(ip)+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxeta(ip,nbin,it)=fxeta(ip,nbin,it)+hist
-            if (include_errors == 1) sumw2eta(ip,nbin,it) = sumw2eta(ip,nbin,it)+hist*hist
-          end if
-        end if
-
-      ! generate distribution in phi
-        if (o_phi(ip) == 1) then
-          nbin=int((phi(ip)-phimin(ip))/phiw(ip))+1
-          if (nbin >= (ndiv_phi(ip)+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxphi(ip,nbin,it)=fxphi(ip,nbin,it)+hist
-            if (include_errors == 1) sumw2phi(ip,nbin,it) = sumw2phi(ip,nbin,it)+hist*hist
-          end if
-        end if
-
-      ! generate distribution in ycol
-        if (o_ycol(ip) == 1) then
-          nbin=int((ycol(ip)-ycolmin(ip))/ycolw(ip))+1
-          if (nbin >= (ndiv_ycol(ip)+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxycol(ip,nbin,it)=fxycol(ip,nbin,it)+hist
-            if (include_errors == 1) sumw2ycol(ip,nbin,it) = sumw2ycol(ip,nbin,it)+hist*hist
-          end if
-        end if
-      end do
 
 !       if (o_dphi2d == 1) then
 !         ! generate distribution in dphi2d.

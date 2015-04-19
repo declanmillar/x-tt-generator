@@ -132,13 +132,13 @@ contains
 
 
     if (o_etmiss == 1) call histetmiss%initialise()
-    if (o_pt356 == 1) call histpt356%initialise()
+    if (o_ptt == 1) call histptt%initialise()
     if (o_eta35 == 1) call histeta35%initialise()
     if (o_phi35 == 1) call histphi35%initialise()
-    if (o_pt478 == 1) call histpt478%initialise()
-    if (o_eta478 == 1) call histeta478%initialise()
-    if (o_phi478 == 1) call histphi478%initialise()
-    if (o_m478 == 1) call histm478%initialise()
+    if (o_pttb == 1) call histpttb%initialise()
+    if (o_etatb == 1) call histetatb%initialise()
+    if (o_phitb == 1) call histphitb%initialise()
+    if (o_mtb == 1) call histm478%initialise()
     if (o_m356 == 1) call histm356%initialise()
     if (o_beta == 1) call histbeta%initialise()
     if (o_mtt == 1) call histmtt%initialise
@@ -260,12 +260,12 @@ contains
         o_tran(itrans) = 0
       end do
       o_tran = 0
-      o_pt356 = 0
-      o_eta356 = 0
-      o_phi356 = 0
-      o_pt478  = 0
-      o_eta478 = 0
-      o_phi478 = 0
+      o_ptt = 0
+      o_etat = 0
+      o_phit = 0
+      o_pttb  = 0
+      o_etatb = 0
+      o_phitb = 0
       o_etmiss = 0
       o_fl = 0
       o_dphi = 0
@@ -282,8 +282,8 @@ contains
       o_asym(11) = 0
       o_asym(12) = 0
       o_mtt_reco = 0
-      o_m356_reco = 0
-      o_m478 = 0
+      o_mt_reco = 0
+      o_mtb = 0
     end if
 
     if (final_state > 0) then
@@ -298,8 +298,8 @@ contains
       do i = 4, 10
         o_asym(i) = 0
       end do
-      o_m356_reco = 0
-      o_m478 = 0
+      o_mt_reco = 0
+      o_mtb = 0
     end if
 
     if (final_state == 2) then
@@ -339,8 +339,8 @@ contains
       o_asym(10) = 0
       o_asym(11) = 0
       o_asym(12) = 0
-      o_m356_reco = 0
-      o_m478 = 0
+      o_mt_reco = 0
+      o_mtb = 0
     end if
 
   end subroutine initialise_distributions
@@ -385,45 +385,45 @@ contains
       end do
     end if
 
-    if(o_pt356 == 1)then
-      pt356w=(pt356max-pt356min)/ndiv_pt356
-      do i=1,ndiv_pt356
-        xpt356(i)=pt356min+pt356w*(i-1)+pt356w/2.d0
+    if(o_ptt == 1)then
+      pttw=(pttmax-pttmin)/ndiv_ptt
+      do i=1,ndiv_ptt
+        xptt(i)=pttmin+pttw*(i-1)+pttw/2.d0
       end do
     end if
 
-    if(o_eta356 == 1)then
-      eta356w=(eta356max-eta356min)/ndiv_eta356
-      do i=1,ndiv_eta356
-        xeta356(i)=eta356min+eta356w*(i-1)+eta356w/2.d0
+    if(o_etat == 1)then
+      etatw=(etatmax-etatmin)/ndiv_etat
+      do i=1,ndiv_etat
+        xetat(i)=etatmin+etatw*(i-1)+etatw/2.d0
       end do
     end if
 
-    if(o_phi356 == 1)then
-      phi356w=(phi356max-phi356min)/ndiv_phi356
-      do i=1,ndiv_phi356
-        xphi356(i)=phi356min+phi356w*(i-1)+phi356w/2.d0
+    if(o_phit == 1)then
+      phitw=(phitmax-phitmin)/ndiv_phit
+      do i=1,ndiv_phit
+        xphit(i)=phitmin+phitw*(i-1)+phitw/2.d0
       end do
     end if
 
-    if(o_pt478 == 1)then
-      pt478w=(pt478max-pt478min)/ndiv_pt478
-      do i=1,ndiv_pt478
-        xpt478(i)=pt478min+pt478w*(i-1)+pt478w/2.d0
+    if(o_pttb == 1)then
+      pttbw=(pttbmax-pttbmin)/ndiv_pttb
+      do i=1,ndiv_pttb
+        xpttb(i)=pttbmin+pttbw*(i-1)+pttbw/2.d0
       end do
     end if
 
-    if(o_eta478 == 1)then
-      eta478w=(eta478max-eta478min)/ndiv_eta478
-      do i=1,ndiv_eta478
-        xeta478(i)=eta478min+eta478w*(i-1)+eta478w/2.d0
+    if(o_etatb == 1)then
+      etatbw=(etatbmax-etatbmin)/ndiv_etatb
+      do i=1,ndiv_etatb
+        xetatb(i)=etatbmin+etatbw*(i-1)+etatbw/2.d0
       end do
     end if
 
-    if(o_phi478 == 1)then
-      phi478w=(phi478max-phi478min)/ndiv_phi478
-      do i=1,ndiv_phi478
-        xphi478(i)=phi478min+phi478w*(i-1)+phi478w/2.d0
+    if(o_phitb == 1)then
+      phitbw=(phitbmax-phitbmin)/ndiv_phitb
+      do i=1,ndiv_phitb
+        xphitb(i)=phitbmin+phitbw*(i-1)+phitbw/2.d0
       end do
     end if
 
@@ -441,14 +441,14 @@ contains
       end do
     end if
 
-    if(o_m478 == 1)then
+    if(o_mtb == 1)then
       m478w=(m478up-m478low)/ndiv_m478
       do i=1,ndiv_m478
         xm478(i)=m478low+m478w*(i-1)+m478w/2.d0
       end do
     end if
 
-    if(o_m356_reco == 1)then
+    if(o_mt_reco == 1)then
       m356_recow=(m356_recomax-m356_recomin)/ndiv_m356_reco
       do i=1,ndiv_m356_reco
         xm356_reco(i)=m356_recomin+m356_recow*(i-1)+m356_recow/2.d0
@@ -670,12 +670,12 @@ contains
     end do
        
     call histetmiss % finalise()
-    call histpt356 % finalise()
-    call histeta356 % finalise()
-    call histphi356 % finalise()
-    call histpt478 % finalise()
-    call histeta478 % finalise()
-    call histphi478 % finalise()
+    call histptt % finalise()
+    call histetat % finalise()
+    call histphit % finalise()
+    call histpttb % finalise()
+    call histetatb % finalise()
+    call histphitb % finalise()
     call histmtt % finalise()
     call histmtt_reco % finalise()
     call histm478 % finalise()
@@ -1107,39 +1107,39 @@ contains
         n_error=n_error+1
       end if
     end if
-    if(o_pt356 == 1)then
-      if(abs(sigma-sfxpt356tot)>diff_max)then
-        write(10,*)'pt356 error:',sfxpt356tot
+    if(o_ptt == 1)then
+      if(abs(sigma-sfxptttot)>diff_max)then
+        write(10,*)'ptt error:',sfxptttot
         n_error=n_error+1
       end if
     end if
-    if(o_eta356 == 1)then
-      if(abs(sigma-sfxeta356tot)>diff_max)then
-        write(10,*)'eta356 error:',sfxeta356tot
+    if(o_etat == 1)then
+      if(abs(sigma-sfxetattot)>diff_max)then
+        write(10,*)'etat error:',sfxetattot
         n_error=n_error+1
       end if
     end if
-    if(o_phi356 == 1)then
-      if(abs(sigma-sfxphi356tot)>diff_max)then
-        write(10,*)'phi356 error:',sfxphi356tot
+    if(o_phit == 1)then
+      if(abs(sigma-sfxphittot)>diff_max)then
+        write(10,*)'phit error:',sfxphittot
         n_error=n_error+1
       end if
     end if
-    if(o_pt478 == 1)then
-      if(abs(sigma-sfxpt478tot)>diff_max)then
-        write(10,*)'pt478 error:',sfxpt478tot
+    if(o_pttb == 1)then
+      if(abs(sigma-sfxpttbtot)>diff_max)then
+        write(10,*)'pttb error:',sfxpttbtot
         n_error=n_error+1
       end if
     end if
-    if(o_eta478 == 1)then
-      if(abs(sigma-sfxeta478tot)>diff_max)then
-        write(10,*)'eta478 error:',sfxeta478tot
+    if(o_etatb == 1)then
+      if(abs(sigma-sfxetatbtot)>diff_max)then
+        write(10,*)'etatb error:',sfxetatbtot
         n_error=n_error+1
       end if
     end if
-    if(o_phi478 == 1)then
-      if(abs(sigma-sfxphi478tot)>diff_max)then
-        write(10,*)'phi478 error:',sfxphi478tot
+    if(o_phitb == 1)then
+      if(abs(sigma-sfxphitbtot)>diff_max)then
+        write(10,*)'phitb error:',sfxphitbtot
         n_error=n_error+1
       end if
     end if
@@ -1165,14 +1165,14 @@ contains
       end if
     end if
 
-    if(o_m478 == 1)then
+    if(o_mtb == 1)then
       if(abs(sigma-sfxm478tot)>diff_max)then
         write(10,*)'m478 error:',sfxm478tot
         n_error=n_error+1
       end if
     end if
 
-    if(o_m356_reco == 1)then
+    if(o_mt_reco == 1)then
       if(abs(sigma-sfxm356_recotot)>diff_max)then
         write(10,*)'m356_reco error:',sfxm356_recotot
         n_error=n_error+1

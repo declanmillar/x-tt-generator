@@ -47,7 +47,9 @@ program zprime
   open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
   close(10)
 
+  call create_distributions
   call initialise_distributions
+  call disable_distributions
 
   s = collider_energy*collider_energy
 
@@ -477,8 +479,7 @@ program zprime
     end if
   end if
 
-  call print_distributions
-  call check_distributions
+  call finalise_distributions
 
   close(10)
   call cpu_time(finish_time)

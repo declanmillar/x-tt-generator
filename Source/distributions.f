@@ -11,49 +11,101 @@ module distributions
 
   public
 
-  integer :: o_etmiss
-  integer :: o_pt356
-  integer :: o_eta356
-  integer :: o_phi356
-  integer :: o_pt478
-  integer :: o_eta478
-  integer :: o_phi478
-  integer :: o_mtt
-  integer :: o_mtt_reco
-  integer :: o_m478
-  integer :: o_m356_reco
-  integer :: o_beta
-  integer :: o_cost
-  integer :: o_et
-  integer :: o_delta_y
-  integer :: o_fl
-  integer :: o_cosfl
-  integer :: o_dphi
-  integer :: o_cost5
-  integer :: o_cost7
-  integer :: o_ct7ct5
-  integer :: o_ht
-  integer :: o_mttvis
-  integer :: o_mt1
-  integer :: o_mt2
-  integer :: o_mt3
-  integer :: o_mct1
-  integer :: o_mct2
-  integer :: o_mct3
-  integer :: o_mlt
-  integer :: o_mlct
+  integer :: o_ptb = 1
+  integer :: o_ptbb = 1
+  integer :: o_ptlp = 1
+  integer :: o_ptlm = 1
+  integer :: o_ptnu = 1
+  integer :: o_ptnub = 1
+  integer :: o_ptt = 1
+  integer :: o_pttb = 1
+  integer :: o_etab = 1
+  integer :: o_etabb = 1
+  integer :: o_etalp = 1
+  integer :: o_etalm = 1
+  integer :: o_etanu = 1
+  integer :: o_etanub = 1
+  integer :: o_etat = 1
+  integer :: o_etatb = 1
+  integer :: o_phib = 1
+  integer :: o_phibb = 1
+  integer :: o_philp = 1
+  integer :: o_philm = 1
+  integer :: o_phinu = 1
+  integer :: o_phinub = 1
+  integer :: o_phit   = 1
+  integer :: o_phitb = 1
+  integer :: o_ycolb = 1
+  integer :: o_ycolbb = 1
+  integer :: o_ycollp = 1
+  integer :: o_ycollm = 1
+  integer :: o_ycolnu = 1
+  integer :: o_ycolnub = 1
+  integer :: o_ycolt   = 1
+  integer :: o_ycoltb = 1
+  integer :: o_mtt = 1
+  integer :: o_mtt_reco = 1
+  integer :: o_mtb = 1
+  integer :: o_mt_reco = 1
+  integer :: o_etmiss = 1
+  integer :: o_beta = 1
+  integer :: o_cost = 1
+  integer :: o_et = 1
+  integer :: o_delta_y = 1
+  integer :: o_fl = 1
+  integer :: o_cosfl = 1
+  integer :: o_dphi = 1
+  integer :: o_cost5 = 1
+  integer :: o_cost7 = 1
+  integer :: o_ct7ct5 = 1
+  integer :: o_ht = 1
+  integer :: o_mttvis = 1
+  integer :: o_mt1 = 1
+  integer :: o_mt2 = 1
+  integer :: o_mt3 = 1
+  integer :: o_mct1 = 1
+  integer :: o_mct2 = 1
+  integer :: o_mct3 = 1
+  integer :: o_mlt = 1
+  integer :: o_mlct = 1
 
-  type(histogram) :: h_etmiss
-  type(histogram) :: h_pt356
-  type(histogram) :: h_eta356
-  type(histogram) :: h_phi356
-  type(histogram) :: h_pt478
-  type(histogram) :: h_eta478
-  type(histogram) :: h_phi478
+  type(histogram) :: h_ptb
+  type(histogram) :: h_ptbb
+  type(histogram) :: h_ptlp
+  type(histogram) :: h_ptlm
+  type(histogram) :: h_ptnu
+  type(histogram) :: h_ptnub
+  type(histogram) :: h_ptt
+  type(histogram) :: h_pttb
+  type(histogram) :: h_etab
+  type(histogram) :: h_etabb
+  type(histogram) :: h_etalp
+  type(histogram) :: h_etalm
+  type(histogram) :: h_etanu
+  type(histogram) :: h_etanub
+  type(histogram) :: h_etat
+  type(histogram) :: h_etatb
+  type(histogram) :: h_phib
+  type(histogram) :: h_phibb
+  type(histogram) :: h_philp
+  type(histogram) :: h_philm
+  type(histogram) :: h_phinu
+  type(histogram) :: h_phinub
+  type(histogram) :: h_phit  
+  type(histogram) :: h_phitb
+  type(histogram) :: h_ycolb
+  type(histogram) :: h_ycolbb
+  type(histogram) :: h_ycollp
+  type(histogram) :: h_ycollm
+  type(histogram) :: h_ycolnu
+  type(histogram) :: h_ycolnub
+  type(histogram) :: h_ycolt  
+  type(histogram) :: h_ycoltb
   type(histogram) :: h_mtt
   type(histogram) :: h_mtt_reco
-  type(histogram) :: h_m478
-  type(histogram) :: h_m356_reco
+  type(histogram) :: h_mtb
+  type(histogram) :: h_mt_reco
+  type(histogram) :: h_etmiss
   type(histogram) :: h_beta
   type(histogram) :: h_cost
   type(histogram) :: h_et
@@ -74,34 +126,6 @@ module distributions
   type(histogram) :: h_mct3
   type(histogram) :: h_mlt
   type(histogram) :: h_mlct
-
-  ! distributions in pts of asymptotic particles
-  real :: ptmax(8),ptmin(8),ptw(8)
-  real :: xpt(8,500),fxpt(8,500,20),fxpttot(8,500)
-  real :: sumw2pt(8,500,20),sumw2pttot(8,500)
-  integer :: o_pt(8)
-  integer :: ndiv_pt(8)
-
-  ! distributions in etas of asymptotic particles
-  real :: etamax(8),etamin(8),etaw(8)
-  real :: xeta(8,500),fxeta(8,500,20),fxetatot(8,500)
-  real :: sumw2eta(8,500,20),sumw2etatot(8,500)
-  integer :: o_eta(8)
-  integer :: ndiv_eta(8)
-
-  ! distributions in phis of asymptotic particles
-  real :: phimax(8),phimin(8),phiw(8)
-  real :: xphi(8,500),fxphi(8,500,20),fxphitot(8,500)
-  real :: sumw2phi(8,500,20),sumw2phitot(8,500)
-  integer :: o_phi(8)
-  integer :: ndiv_phi(8)
-
-  ! distributions in ycol of asymptotic particles
-  real :: ycolmax(8),ycolmin(8),ycolw(8)
-  real :: xycol(8,500),fxycol(8,500,20),fxycoltot(8,500)
-  real :: sumw2ycol(8,500,20),sumw2ycoltot(8,500)
-  integer :: o_ycol(8)
-  integer :: ndiv_ycol(8)
 
   ! distribution in sigp
   real :: sigpmax,sigpmin,sigpw
@@ -133,10 +157,10 @@ module distributions
 
 !   integer :: include_transversedp(ntrans)
 
+  public :: create_distributions
   public :: initialise_distributions
   public :: generate_bins
-  public :: print_distributions
-  public :: check_distributions
+  public :: finalise_distributions
 
   
 !   real :: cnorm(20)
@@ -147,141 +171,150 @@ module distributions
 
 contains
 
-  subroutine initialise_distributions
+subroutine create_distributions
 
-    implicit none 
+  implicit none 
 
-    print*, "Initialising distributions"
-  
-    do i=1,n_final
-      o_pt(i)=print_all_distributions
-      ptmax(i)=7000.d0/(1+tops_decay*6)
-      ptmin(i)=0.d0
-      ndiv_pt(i)=70
-      ! eta distributions
-      o_eta(i)=print_all_distributions
-      etamax(i)=+10
-      etamin(i)=-10
-      ndiv_eta(i)=50
-      ! phi distributions
-      o_phi(i)=print_all_distributions
-      phimax(i)=+pi
-      phimin(i)=-pi
-      ndiv_phi(i)=50
-      ! ycol distributions
-      o_ycol(i)=print_all_distributions
-      ycolmax(i)=+4.d0
-      ycolmin(i)=-4.d0
-      ndiv_ycol(i)=100
-    end do
-    o_etmiss = print_all_distributions
-    o_pt356 = print_all_distributions
-    o_eta356 = print_all_distributions
-    o_phi356 = print_all_distributions
-    o_pt478 = print_all_distributions
-    o_eta478 = print_all_distributions
-    o_phi478 = print_all_distributions
-    o_m478 = print_all_distributions
-    o_m356_reco = print_all_distributions
-    o_mtt = 1
-    o_mtt_reco = print_all_distributions
-    o_beta = print_all_distributions
-    o_cost = print_all_distributions
-    o_et = print_all_distributions
-    o_delta_y = print_all_distributions
-    o_fl = include_asymmetries
-    o_cosfl = include_asymmetries
-    o_dphi = include_asymmetries
-    o_cost5 = include_asymmetries
-    o_cost7 = include_asymmetries
-    o_ct7ct5 = include_asymmetries    
-    o_ht = include_transverse
-    o_mttvis = include_transverse
-    o_mt1 = include_transverse
-    o_mt2 = include_transverse
-    o_mt3 = include_transverse
-    o_mct1 = include_transverse
-    o_mct2 = include_transverse
-    o_mct3 = include_transverse
-    o_mlt = include_transverse
-    o_mlct = include_transverse
+  print*, "Initialising distributions"
 
-    h_etmiss = histogram("ETmiss", "d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 1000.d0, 140)
-    h_mtt = histogram("Mtt", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-    h_mtt_reco = histogram("Mtt_reco", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-    h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
-    h_pt356 = histogram("pt356", "d#sigma-/dp^{t}_{T}--[pb]", "p^{t}_{T}", 0.d0, 1000.d0, 100)
-    h_eta356 = histogram("eta356", "d#sigma-/dd#eta_{t}--[pb]", "#eta_{t}", 0.d0, 1000.d0, 100)
-    h_phi356 = histogram("phi356", "d#sigma-/dd#phi_{t}--[pb]", "#phi_{t}", -10.d0, 10.d0, 50)
-    h_pt478 = histogram("pt478", "d#sigma-/dp^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 0.d0, 1000.d0, 100)
-    h_eta478 = histogram("eta478", "d#sigma-/d#eta_{#bar{t}}--[pb]", "#eta_{#bar{t}}", -10.d0, 10.d0, 100)
-    h_phi478 = histogram("phi478", "d#sigma-/d#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", -pi, pi, 100)
-    h_m478 = histogram("m478", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 0.d0, 1000.d0, 100)
-    h_m356_reco = histogram("m356_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 0.d0, 1000.d0, 100)
-    h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 1000.d0, 100)
-    h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1000.d0, 100)
-    h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 0.d0, 1000.d0, 100)
-    h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", -4.d0, 4.d0, 100)
-    h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_l", 0.d0, 1000.d0, 100)
-    h_cosfl = histogram("cosphil", "d#sigma-/dcos#phi_l--[pb]", "cos#phi_l", -1.d0, 1.d0, 100)
-    h_dphi = histogram("dphi", "d#sigma-/d#delta #phi_l--[pb]", "#delta #phi_l", 0.d0, 2*pi, 100)
-    h_cost5 = histogram("cost5", "d#sigma-/dcos#theta_{l^+}--[pb]", "cos#theta_{l^+}", -1.d0, 1.d0, 100)
-    h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^-}--[pb]", "cos#theta_{l^-}", -1.d0, 1.d0, 100)
-    h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^+}cos#theta_{l^-}--[pb]","cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
-    h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}", 0.d0, 4000.d0, 40)
-    h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}", 0.d0, 4000.d0, 40)
-    h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}", 0.d0, 4000.d0, 40)
-    h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}", 0.d0, 4000.d0, 40)
-    h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}", 0.d0, 4000.d0, 40)
-    h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
-    h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
-    h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
-    h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}", 0.d0, 500.d0, 50)
-    h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}", 0.d0, 500.d0, 50)
+  h_ptb = histogram("pTb", "d#sigma-/dp_{T}^{b}", "p_{T}^{b}", 0.d0, 1000.d0, 100)
+  h_ptbb = histogram("pTbb", "d#sigma-/dp_{T}^{#bar{b}}", "p_{T}^{#bar{b}}", 0.d0, 1000.d0, 100)
+  h_ptlp = histogram("pTlp", "d#sigma-/dp_{T}^{l^{+}}", "p_{T}^{l^{+}}", 0.d0, 1000.d0, 100)
+  h_ptlm = histogram("pTlm", "d#sigma-/dp_{T}^{l^{-}}", "p_{T}^{l^{-}}", 0.d0, 1000.d0, 100)
+  h_ptnu = histogram("pTnu", "d#sigma-/dp_{T}^{#nu}", "p_{T}^{#nu}", 0.d0, 1000.d0, 100)
+  h_ptnub = histogram("pTnub", "d#sigma-/dp_{T}^{#bar{#nu}}", "p_{T}^{#bar{#nu}}", 0.d0, 1000.d0, 100)
+  h_ptt = histogram("pTt", "d#sigma-/dp^{t}_{T}--[pb]", "p^{t}_{T}", 0.d0, 1000.d0, 100)
+  h_pttb = histogram("pTtb", "d#sigma-/dp^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 0.d0, 1000.d0, 100)
 
-    if (o_etmiss == 1) call h_etmiss%initialise()
-    if (o_pt356 == 1) call h_pt356%initialise()
-    if (o_eta356 == 1) call h_eta356%initialise()
-    if (o_phi356 == 1) call h_phi356%initialise()
-    if (o_pt478 == 1) call h_pt478%initialise()
-    if (o_eta478 == 1) call h_eta478%initialise()
-    if (o_phi478 == 1) call h_phi478%initialise()
-    if (o_m478 == 1) call h_m478%initialise()
-    if (o_m356_reco == 1) call h_m356_reco%initialise()
-    if (o_beta == 1) call h_beta%initialise()
-    if (o_mtt == 1) call h_mtt%initialise
-    if (o_mtt_reco == 1) call h_mtt_reco%initialise()
-    if (o_beta == 1) call h_beta%initialise()
-    if (o_cost == 1) call h_cost%initialise()
-    if (o_et == 1) call h_et%initialise()
-    if (o_delta_y == 1) call h_delta_y%initialise()
-    if (o_fl == 1) call h_fl%initialise()
-    if (o_cosfl == 1) call h_cosfl%initialise()
-    if (o_dphi == 1) call h_dphi%initialise()
-    if (o_cost5 == 1) call h_cost5%initialise()
-    if (o_cost7 == 1) call h_cost7%initialise()
-    if (o_ct7ct5 == 1) call h_ct7ct5%initialise()
-    if (o_ht == 1) call h_ht%initialise()
-    if (o_mttvis == 1) call h_mttvis%initialise()
-    if (o_mt1 == 1) call h_mt1%initialise()
-    if (o_mt2 == 1) call h_mt2%initialise()
-    if (o_mt3 == 1) call h_mt3%initialise()
-    if (o_mct1 == 1) call h_mct1%initialise()
-    if (o_mct2 == 1) call h_mct2%initialise()
-    if (o_mct3 == 1) call h_mct3%initialise()
-    if (o_mlt == 1) call h_mlt%initialise()
-    if (o_mlct == 1) call h_mlct%initialise()
+  h_etab = histogram("etab", "d#sigma-/d#eta_{b}", "#eta_{b}", -10.d0, 10.d0, 100)
+  h_etabb = histogram("etabb", "d#sigma-/d#eta_{#bar{b}}", "#eta_{#bar{b}}", -10.d0, 10.d0, 100)
+  h_etalp = histogram("etalp", "d#sigma-/d#eta_{l^{+}}", "#eta_{l^{+}}", -10.d0, 10.d0, 100)
+  h_etalm = histogram("etalm", "d#sigma-/d#eta_{l^{-}}", "#eta_{l^{-}}", -10.d0, 10.d0, 100)
+  h_etanu = histogram("etanu", "d#sigma-/d#eta_{#nu}", "#eta_{#nu}", -10.d0, 10.d0, 100)
+  h_etanub = histogram("etanub", "d#sigma-/d#eta_{#bar{#nu}}", "#eta_{#bar{#nu}}", -10.d0, 10.d0, 100)
+  h_etat = histogram("etat", "d#sigma-/dd#eta_{t}--[pb]", "#eta_{t}", -10.d0, 10.d0, 100)
+  h_etatb = histogram("etatb", "d#sigma-/d#eta_{#bar{t}}--[pb]", "#eta_{#bar{t}}", -10.d0, 10.d0, 100)
 
-    ! sigp
-    o_sigp=include_asymmetries
-    sigpmax=14000
-    sigpmin=0
-    ndiv_sigp=100/5
-    ! sigm
-    o_sigm=include_asymmetries
-    sigmmax=14000
-    sigmmin=0
-    ndiv_sigm=100/5
+  h_phib = histogram("phib", "d#sigma-/d#phi_{b}", "#phi_{b}", -pi, pi, 100)
+  h_phibb = histogram("phibb", "d#sigma-/d#phi_{#bar{b}}", "#phi_{#bar{b}}", -pi, pi, 100)
+  h_philp = histogram("philp", "d#sigma-/d#phi_{l^{+}}", "#phi_{l^{+}}", -pi, pi, 100)
+  h_philm = histogram("philm", "d#sigma-/d#phi_{l^{-}}", "#phi_{l^{-}}", -pi, pi, 100)
+  h_phinu = histogram("phinu", "d#sigma-/d#phi_{#nu}", "#phi_{#nu}", -pi, pi, 100)
+  h_phinub = histogram("phinub", "d#sigma-/d#phi_{#bar{#nu}}", "#phi_{#bar{#nu}}", -pi, pi, 100)
+  h_phit = histogram("phit", "d#sigma-/dd#phi_{t}--[pb]", "#phi_{t}", -pi, pi, 100)
+  h_phitb = histogram("phitb", "d#sigma-/d#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", -pi, pi, 100)
+
+  h_ycolb = histogram("ycolb", "d#sigma-/dy^b}", "#phi_{b}", -10.d0, 10.d0, 100)
+  h_ycolbb = histogram("ycolbb", "d#sigma-/dy^{#bar{b}}_{col}--[pb]", "#phi_{#bar{b}}", -10.d0, 10.d0, 100)
+  h_ycollp = histogram("ycollp", "d#sigma-/dy^{l^{+}}_{col}--[pb]", "#phi_{l^{+}}", -10.d0, 10.d0, 100)
+  h_ycollm = histogram("ycollm", "d#sigma-/dy^{l^{-}}_{col}--[pb]", "#phi_{l^{-}}", -10.d0, 10.d0, 100)
+  h_ycolnu = histogram("ycolnu", "d#sigma-/dy^{#nu}_{col}--[pb]", "#phi_{#nu}", -10.d0, 10.d0, 100)
+  h_ycolnub = histogram("ycolnub", "d#sigma-/y^{#bar{#nu}}_{col}--[pb]", "#phi_{#bar{#nu}}", -10.d0, 10.d0, 100)
+  h_ycolt = histogram("ycolt", "d#sigma-/dy^{t}_{col}--[pb]", "#phi_{t}", -10.d0, 10.d0, 100)
+  h_ycoltb = histogram("ycoltb", "d#sigma-/dy^{#bar{t}}_{col}--[pb]", "#phi_{#bar{t}}", -10.d0, 10.d0, 100)
+
+  h_etmiss = histogram("ETmiss", "d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 1000.d0, 140)
+  h_mtt = histogram("Mtt", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+  h_mtt_reco = histogram("Mtt_reco", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+  h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
+  h_mtb = histogram("mtb", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 0.d0, 1000.d0, 100)
+  h_mt_reco = histogram("mt_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 0.d0, 1000.d0, 100)
+  h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 1000.d0, 100)
+  h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1000.d0, 100)
+  h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 0.d0, 1000.d0, 100)
+  h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", -4.d0, 4.d0, 100)
+  h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_l", 0.d0, 1000.d0, 100)
+  h_cosfl = histogram("cosphil", "d#sigma-/dcos#phi_l--[pb]", "cos#phi_l", -1.d0, 1.d0, 100)
+  h_dphi = histogram("dphi", "d#sigma-/d#delta #phi_l--[pb]", "#delta #phi_l", 0.d0, 2*pi, 100)
+  h_cost5 = histogram("cost5", "d#sigma-/dcos#theta_{l^+}--[pb]", "cos#theta_{l^+}", -1.d0, 1.d0, 100)
+  h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^-}--[pb]", "cos#theta_{l^-}", -1.d0, 1.d0, 100)
+  h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^+}cos#theta_{l^-}--[pb]","cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
+  h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}", 0.d0, 4000.d0, 40)
+  h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}", 0.d0, 4000.d0, 40)
+  h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}", 0.d0, 4000.d0, 40)
+  h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}", 0.d0, 4000.d0, 40)
+  h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}", 0.d0, 4000.d0, 40)
+  h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+  h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+  h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+  h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}", 0.d0, 500.d0, 50)
+  h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}", 0.d0, 500.d0, 50)
+
+end subroutine create_distributions
+
+subroutine initialise_distributions
+
+  implicit none
+
+  if (o_ptb == 1) call h_ptb%initialise()
+  if (o_ptbb == 1) call h_ptbb%initialise()
+  if (o_ptlp == 1) call h_ptlp%initialise()
+  if (o_ptlm == 1) call h_ptlm%initialise()
+  if (o_ptnu == 1) call h_ptnu%initialise()
+  if (o_ptnub == 1) call h_ptnub%initialise()
+  if (o_ptt == 1) call h_ptt%initialise()
+  if (o_pttb == 1) call h_pttb%initialise()
+  if (o_etab == 1) call h_etab%initialise()
+  if (o_etabb == 1) call h_etabb%initialise()
+  if (o_etalp == 1) call h_etalp%initialise()
+  if (o_etalm == 1) call h_etalm%initialise()
+  if (o_etanu == 1) call h_etanu%initialise()
+  if (o_etanub == 1) call h_etanub%initialise()
+  if (o_etat == 1) call h_etat%initialise()
+  if (o_etatb == 1) call h_etatb%initialise()
+  if (o_phib == 1) call h_phib%initialise()
+  if (o_phibb == 1) call h_phibb%initialise()
+  if (o_philp == 1) call h_philp%initialise()
+  if (o_philm == 1) call h_philm%initialise()
+  if (o_phinu == 1) call h_phinu%initialise()
+  if (o_phinub == 1) call h_phinub%initialise()
+  if (o_phit == 1) call h_phit%initialise()
+  if (o_phitb == 1) call h_phitb%initialise()
+  if (o_ycolb == 1) call h_ycolb%initialise()
+  if (o_ycolbb == 1) call h_ycolbb%initialise()
+  if (o_ycollp == 1) call h_ycollp%initialise()
+  if (o_ycollm == 1) call h_ycollm%initialise()
+  if (o_ycolnu == 1) call h_ycolnu%initialise()
+  if (o_ycolnub == 1) call h_ycolnub%initialise()
+  if (o_ycolt == 1) call h_ycolt%initialise()
+  if (o_ycoltb == 1) call h_ycoltb%initialise()
+  if (o_etmiss == 1) call h_etmiss%initialise()
+  if (o_mtb == 1) call h_mtb%initialise()
+  if (o_mt_reco == 1) call h_mt_reco%initialise()
+  if (o_beta == 1) call h_beta%initialise()
+  if (o_mtt == 1) call h_mtt%initialise
+  if (o_mtt_reco == 1) call h_mtt_reco%initialise()
+  if (o_beta == 1) call h_beta%initialise()
+  if (o_cost == 1) call h_cost%initialise()
+  if (o_et == 1) call h_et%initialise()
+  if (o_delta_y == 1) call h_delta_y%initialise()
+  if (o_fl == 1) call h_fl%initialise()
+  if (o_cosfl == 1) call h_cosfl%initialise()
+  if (o_dphi == 1) call h_dphi%initialise()
+  if (o_cost5 == 1) call h_cost5%initialise()
+  if (o_cost7 == 1) call h_cost7%initialise()
+  if (o_ct7ct5 == 1) call h_ct7ct5%initialise()
+  if (o_ht == 1) call h_ht%initialise()
+  if (o_mttvis == 1) call h_mttvis%initialise()
+  if (o_mt1 == 1) call h_mt1%initialise()
+  if (o_mt2 == 1) call h_mt2%initialise()
+  if (o_mt3 == 1) call h_mt3%initialise()
+  if (o_mct1 == 1) call h_mct1%initialise()
+  if (o_mct2 == 1) call h_mct2%initialise()
+  if (o_mct3 == 1) call h_mct3%initialise()
+  if (o_mlt == 1) call h_mlt%initialise()
+  if (o_mlct == 1) call h_mlct%initialise()
+
+  ! sigp
+  o_sigp=include_asymmetries
+  sigpmax=14000
+  sigpmin=0
+  ndiv_sigp=100/5
+  ! sigm
+  o_sigm=include_asymmetries
+  sigmmax=14000
+  sigmmin=0
+  ndiv_sigm=100/5
 !     ! dphi2d
 !     if((o_dphi == 1) .and. (o_mtt == 1))then
 !       o_dphi2d=print_2d_distributions
@@ -297,424 +330,249 @@ contains
 !       end if
 !     end do
 !     ! asymmetries
-    do iasy=1,n_asymmetries
-      o_asym(iasy)=include_asymmetries
-    end do
+  do iasy=1,n_asymmetries
+    o_asym(iasy)=include_asymmetries
+  end do
 
-    if (initial_state == 0) then
-      ! disable non-useful variables for pp
-      o_asym(4) = 0
-      o_asym(7) = 0
-      o_asym(8) = 0 
-    end if
+end subroutine initialise_distributions
 
-    if (initial_state == 1) then
-      ! disable non-useful variables for ppbar
-      o_asym(5) = 0
-      o_asym(6) = 0
-    end if
+subroutine disable_distributions
 
-    ! disable A_PV
+  if (initial_state == 0) then
+    ! disable non-useful variables for pp
+    o_asym(4) = 0
+    o_asym(7) = 0
+    o_asym(8) = 0 
+  end if
+
+  if (initial_state == 1) then
+    ! disable non-useful variables for ppbar
+    o_asym(5) = 0
+    o_asym(6) = 0
+  end if
+
+  if (final_state == 0) then
+    ! disable 2to6 variables 
+    o_ptb = 0
+    o_ptbb = 0
+    o_ptlp = 0
+    o_ptlm = 0
+    o_ptnu = 0
+    o_ptnub = 0
+    o_etab = 0
+    o_etabb = 0
+    o_etalp = 0
+    o_etalm = 0
+    o_etanu = 0
+    o_etanub = 0
+    o_phib = 0
+    o_phibb = 0
+    o_philp = 0
+    o_philm = 0
+    o_phinu = 0
+    o_phinub = 0
+    o_ycolb = 0
+    o_ycolbb = 0
+    o_ycollp = 0
+    o_ycollm = 0
+    o_ycolnu = 0
+    o_ycolnub = 0
+    o_etmiss = 0
+    o_fl = 0
+    o_dphi = 0
+    o_cosfl = 0
+    o_cost7 = 0
+    o_cost5 = 0
+    o_ct7ct5 = 0
+    o_dphi2d = 0
+    o_ct7ct52d = 0
+    o_cost72d = 0
+    o_cost52d = 0
+    o_asym(6) = 0
+    o_asym(10) = 0
+    o_asym(11) = 0
+    o_asym(12) = 0
+    o_mtt_reco = 0
+    o_mt_reco = 0
+    o_mtb = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
+  end if
+
+  if (final_state > 0) then
+    ! disable non 2to6 variables
+    o_asym(1) = 0
+    o_asym(2) = 0
     o_asym(3) = 0
+  end if
 
-    if (final_state == 0) then
-      ! disable 2to6 variables 
-      do ip = 5, 8
-        o_pt(i) = 0
-        o_eta(i) = 0
-        o_phi(i) = 0
-      end do
-!       do itrans = 1, ntrans
-!         o_tran(itrans) = 0
-!       end do
-!       o_tran = 0
-      o_pt356 = 0
-      o_eta356 = 0
-      o_phi356 = 0
-      o_pt478  = 0
-      o_eta478 = 0
-      o_phi478 = 0
-      o_etmiss = 0
-      o_fl = 0
-      o_dphi = 0
-      o_cosfl = 0
-      o_cost7 = 0
-      o_cost5 = 0
-      o_ct7ct5 = 0
-      o_dphi2d = 0
-      o_ct7ct52d = 0
-      o_cost72d = 0
-      o_cost52d = 0
-      o_asym(6) = 0
-      o_asym(10) = 0
-      o_asym(11) = 0
-      o_asym(12) = 0
-      o_mtt_reco = 0
-      o_m356_reco = 0
-      o_m478 = 0
-      o_ht = 0
-      o_mttvis = 0
-      o_mt1 = 0
-      o_mt2 = 0
-      o_mt3 = 0
-      o_mct1 = 0
-      o_mct2 = 0
-      o_mct3 = 0
-      o_mlt = 0
-      o_mlct = 0
-    end if
-
-    if (final_state > 0) then
-      ! disable non 2to6 variables
-      o_asym(1) = 0
-      o_asym(2) = 0
-      o_asym(3) = 0
-    end if
-
-    if (final_state == 1) then 
-      ! disable non-useful variables in dileptonic
-      do i = 4, 10
-        o_asym(i) = 0
-      end do
-      o_mtt_reco = 0 
-      o_m356_reco = 0
-      o_m478 = 0
-    end if
-
-    if (final_state == 2) then
-      ! disable non-useful variables in semi-hadronic
-!       do itrans = 1, ntrans
-!         o_tran(itrans) = 0
-!         include_transversedp(itrans) = 0
-!       end do
-      o_cost7 = 0
-      o_ct7ct5 = 0
-      o_dphi = 0
-      o_dphi2d = 0
-      o_ct7ct52d = 0
-      o_cost72d = 0
-      o_cost52d = 0
-      o_etmiss = 0
-      o_asym(11) = 0
-      o_ht = 0
-      o_mttvis = 0
-      o_mt1 = 0
-      o_mt2 = 0
-      o_mt3 = 0
-      o_mct1 = 0
-      o_mct2 = 0
-      o_mct3 = 0
-      o_mlt = 0
-      o_mlct = 0
-    end if
-
-    if (final_state == 3) then
-      ! disable non-useful variables in fully hadronic
-!       do itrans = 1, ntrans
-!         o_tran(itrans) = 0
-!         include_transversedp(itrans) = 0
-!       end do
-      o_mtt_reco = 0
-      o_cost5 = 0
-      o_cost7 = 0
-      o_ct7ct5 = 0
-      o_dphi = 0
-      o_dphi2d = 0
-      o_ct7ct52d = 0
-      o_cost72d = 0
-      o_cost52d = 0
-      o_etmiss = 0
-      o_asym(6) = 0
-      o_asym(10) = 0
-      o_asym(11) = 0
-      o_asym(12) = 0
-      o_m356_reco = 0
-      o_m478 = 0
-      o_ht = 0
-      o_mttvis = 0
-      o_mt1 = 0
-      o_mt2 = 0
-      o_mt3 = 0
-      o_mct1 = 0
-      o_mct2 = 0
-      o_mct3 = 0
-      o_mlt = 0
-      o_mlct = 0
-    end if
-
-  end subroutine initialise_distributions
-
-  subroutine generate_bins
-    ! (finds bin width, finds midpoints.)
-    implicit none
-
-    print*, "Generating bins"
-
-    do ip=3,n_final
-      if(o_pt(ip) == 1)then
-        ptw(ip)=(ptmax(ip)-ptmin(ip))/ndiv_pt(ip)
-        do j=1,ndiv_pt(ip)
-          xpt(ip,j)=ptmin(ip)+ptw(ip)*(j-1)+ptw(ip)/2.d0
-        end do
-      end if
-      if(o_eta(ip) == 1)then
-        etaw(ip)=(etamax(ip)-etamin(ip))/ndiv_eta(ip)
-        do j=1,ndiv_eta(ip)
-          xeta(ip,j)=etamin(ip)+etaw(ip)*(j-1)+etaw(ip)/2.d0
-        end do
-      end if
-      if(o_phi(ip) == 1)then
-        phiw(ip)=(phimax(ip)-phimin(ip))/ndiv_phi(ip)
-        do j=1,ndiv_phi(ip)
-          xphi(ip,j)=phimin(ip)+phiw(ip)*(j-1)+phiw(ip)/2.d0
-        end do
-      end if
-      if(o_ycol(ip) == 1)then
-        ycolw(ip)=(ycolmax(ip)-ycolmin(ip))/ndiv_ycol(ip)
-        do j=1,ndiv_ycol(ip)
-          xycol(ip,j)=ycolmin(ip)+ycolw(ip)*(j-1)+ycolw(ip)/2.d0
-        end do
-      end if
+  if (final_state == 1) then 
+    ! disable non-useful variables in dileptonic
+    o_mtt_reco = 0 
+    o_mt_reco = 0
+    o_mtb = 0
+    do i = 4, 10
+      o_asym(i) = 0
     end do
+  end if
 
-    if(o_sigp == 1)then
-      sigpw=(sigpmax-sigpmin)/ndiv_sigp
-      do i=1,ndiv_sigp
-        xsigp(i)=sigpmin+sigpw*(i-1)+sigpw/2.d0
-      end do
-    end if
+  if (final_state == 2) then
+    ! disable non-useful variables in semi-leptonic
+    o_cost7 = 0
+    o_ct7ct5 = 0
+    o_dphi = 0
+    o_dphi2d = 0
+    o_ct7ct52d = 0
+    o_cost72d = 0
+    o_cost52d = 0
+    o_etmiss = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
+    o_asym(11) = 0
+  end if
 
-    if(o_sigm == 1)then
-      sigmw=(sigmmax-sigmmin)/ndiv_sigm
-      do i=1,ndiv_sigm
-        xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
-      end do
-    end if
+  if (final_state == 3) then
+    ! disable non-useful variables in fully hadronic
+    o_mtt_reco = 0
+    o_cost5 = 0
+    o_cost7 = 0
+    o_ct7ct5 = 0
+    o_dphi = 0
+    o_dphi2d = 0
+    o_ct7ct52d = 0
+    o_cost72d = 0
+    o_cost52d = 0
+    o_etmiss = 0
+    o_mt_reco = 0
+    o_mtb = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
 
-  end subroutine generate_bins  
+    o_asym(6) = 0
+    o_asym(10) = 0
+    o_asym(11) = 0
+    o_asym(12) = 0
+  end if
 
-  subroutine print_distributions
+  ! disable A_PV
+  o_asym(3) = 0
 
-    implicit none
+end subroutine disable_distributions
 
-    integer :: ndiv_sig
+subroutine generate_bins
+  ! (finds bin width, finds midpoints.)
+  implicit none
 
-    print*, "Printing histograms"
+  print*, "Generating bins"
 
-    write(10,*) '-----------------------------------------------------'
-    write(10,*)'HISTOGRAMS'
-    do ip=3,8
-      ! plot distributions in pt
-      if(o_pt(ip) == 1)then
-        sfxpttot(ip)=0d0
-        do j=1,ndiv_pt(ip)
-          fxpttot(ip,j)=0.d0
-          do i=1,it
-            fxpt(ip,j,i)=fxpt(ip,j,i)*sigma/cnorm(i)/ptw(ip)
-            fxpttot(ip,j)=fxpttot(ip,j)+fxpt(ip,j,i)
-            if (include_errors == 1) then 
-            sumw2pt(ip,j,i)=sumw2pt(ip,j,i)*sigma/cnorm(i)/ptw(ip)*sigma/cnorm(i)/ptw(ip)
-            sumw2pttot(ip,j)=sumw2pttot(ip,j)+sumw2pt(ip,j,i)
-            else
-              sumw2pttot(ip,j)=0
-            end if
-          end do
-          sfxpttot(ip)=sfxpttot(ip)+fxpttot(ip,j)*ptw(ip)
-        end do
-        write(10,*)'DISTRIBUTION'
-        write(10,'(a,i1)')'pt',ip
-        write(10,'(a,i1,a)')'d#sigma-/dp_{t}(',ip,')--[pb/GeV]'
-        write(10,'(a,i1,a)')'p_{t}(',ip,')--[GeV]'
-        do i=1,ndiv_pt(ip)
-          write(10,*)xpt(ip,i),fxpttot(ip,i)
-        end do
-        write(10,*)'END'
-      end if
-      ! plot distributions in eta
-      if(o_eta(ip) == 1)then
-        sfxetatot(ip)=0d0
-        do j=1,ndiv_eta(ip)
-          fxetatot(ip,j)=0.d0
-          do i=1,it
-            fxeta(ip,j,i)=fxeta(ip,j,i)*sigma/cnorm(i)/etaw(ip)
-            fxetatot(ip,j)=fxetatot(ip,j)+fxeta(ip,j,i)
-            if (include_errors == 1) then 
-            sumw2eta(ip,j,i)=sumw2eta(ip,j,i)*sigma/cnorm(i)/etaw(ip)*sigma/cnorm(i)/etaw(ip)
-            sumw2etatot(ip,j)=sumw2etatot(ip,j)+sumw2eta(ip,j,i)
-            else
-              sumw2etatot(ip,j)=0
-            end if
-          end do
-          sfxetatot(ip)=sfxetatot(ip)+fxetatot(ip,j)*etaw(ip)
-        end do
-        write(10,*)'DISTRIBUTION'
-        write(10,'(a,i1)')'eta',ip
-        write(10,'(a,i1,a)')'d#sigma-/d#eta(',ip,')--[pb]'
-        write(10,'(a,i1,a)')'#eta(',ip,')'
-        do i=1,ndiv_eta(ip)
-          write(10,*)xeta(ip,i),fxetatot(ip,i)
-        end do
-        write(10,*)'END'
-      end if
-      ! plot distributions in phi
-      if(o_phi(ip) == 1)then
-        sfxphitot(ip)=0d0
-        do j=1,ndiv_phi(ip)
-          fxphitot(ip,j)=0.d0
-          do i=1,it
-            fxphi(ip,j,i)=fxphi(ip,j,i)*sigma/cnorm(i)/phiw(ip)
-            fxphitot(ip,j)=fxphitot(ip,j)+fxphi(ip,j,i)
-            if (include_errors == 1) then 
-            sumw2phi(ip,j,i)=sumw2phi(ip,j,i)*sigma/cnorm(i)/phiw(ip)*sigma/cnorm(i)/phiw(ip)
-            sumw2phitot(ip,j)=sumw2phitot(ip,j)+sumw2phi(ip,j,i)
-            else
-              sumw2phitot(ip,j)=0
-            end if
-          end do
-          sfxphitot(ip)=sfxphitot(ip)+fxphitot(ip,j)*phiw(ip)
-        end do
-        write(10,*)'DISTRIBUTION'
-        write(10,'(a,i1)')'phi',ip
-        write(10,'(a,i1,a)')'d#sigma-/d#phi(',ip,')--[pb/rad]'
-        write(10,'(a,i1,a)')'#phi(',ip,')--[rad]'
-        do i=1,ndiv_phi(ip)
-          write(10,*)xphi(ip,i),fxphitot(ip,i)
-        end do
-        write(10,*)'END'
-      end if
-      ! plot distributions in ycol
-      if(o_ycol(ip) == 1)then
-        sfxycoltot(ip)=0d0
-        do j=1,ndiv_ycol(ip)
-          fxycoltot(ip,j)=0.d0
-          do i=1,it
-            fxycol(ip,j,i)=fxycol(ip,j,i)*sigma/cnorm(i)/ycolw(ip)
-            fxycoltot(ip,j)=fxycoltot(ip,j)+fxycol(ip,j,i)
-            if (include_errors == 1) then 
-            sumw2ycol(ip,j,i)=sumw2ycol(ip,j,i)*sigma/cnorm(i)/ycolw(ip)*sigma/cnorm(i)/ycolw(ip)
-            sumw2ycoltot(ip,j)=sumw2ycoltot(ip,j)+sumw2ycol(ip,j,i)
-            else
-              sumw2ycoltot(ip,j)=0
-            end if
-          end do
-          sfxycoltot(ip)=sfxycoltot(ip)+fxycoltot(ip,j)*ycolw(ip)
-        end do
-        write(10,*)'DISTRIBUTION'
-        write(10,'(a,i1)')'y',ip
-        write(10,'(a,i1,a)')'d#sigma-/dy(',ip,')--[pb]'
-        write(10,'(a,i1,a)')'y(',ip,')'
-        do i=1,ndiv_ycol(ip)
-          write(10,*)xycol(ip,i),fxycoltot(ip,i)
-        end do
-        write(10,*)'END'
-      end if
+  if(o_sigp == 1)then
+    sigpw=(sigpmax-sigpmin)/ndiv_sigp
+    do i=1,ndiv_sigp
+      xsigp(i)=sigpmin+sigpw*(i-1)+sigpw/2.d0
     end do
-       
-    if(o_etmiss == 1) call h_etmiss % finalise()
-    if(o_pt356 == 1) call h_pt356 % finalise()
-    if(o_eta356 == 1) call h_eta356 % finalise()
-    if(o_phi356 == 1) call h_phi356 % finalise()
-    if(o_pt478 == 1) call h_pt478 % finalise()
-    if(o_eta478 == 1) call h_eta478 % finalise()
-    if(o_phi478 == 1) call h_phi478 % finalise()
-    if(o_mtt == 1) call h_mtt % finalise()
-    if(o_mtt_reco == 1) call h_mtt_reco % finalise()
-    if(o_m478 == 1) call h_m478 % finalise()
-    if(o_m356_reco == 1) call h_m356_reco % finalise()
-    if(o_beta == 1) call h_beta % finalise()
-    if(o_cost == 1) call h_cost % finalise()
-    if(o_et == 1) call h_et % finalise()
-    if(o_delta_y == 1) call h_delta_y % finalise()
-    if(o_fl == 1) call h_fl%finalise()
-    if(o_cosfl == 1) call h_cosfl%finalise()
-    if(o_dphi == 1) call h_dphi%finalise()
-    if(o_cost5 == 1) call h_cost5%finalise()
-    if(o_cost7 == 1) call h_cost7%finalise()
-    if(o_ct7ct5 == 1) call h_ct7ct5%finalise()
-    if(o_ht == 1) call h_ht%finalise()
-    if(o_mttvis == 1) call h_mttvis%finalise()
-    if(o_mt1 == 1) call h_mt1%finalise()
-    if(o_mt2 == 1) call h_mt2%finalise()
-    if(o_mt3 == 1) call h_mt3%finalise()
-    if(o_mct1 == 1) call h_mct1%finalise()
-    if(o_mct2 == 1) call h_mct2%finalise()
-    if(o_mct3 == 1) call h_mct3%finalise()
-    if(o_mlt == 1) call h_mlt%finalise()
-    if(o_mlct == 1) call h_mlct%finalise()
+  end if
 
-!     ! plot distributions in all transverse variables
-!     do itrans=1,ntrans
-!       if(o_tran(itrans) == 1)then
-!         sfxtranstot(itrans)=0d0
-!         do j=1,ndiv_trans(itrans)
-!           fxtranstot(itrans,j)=0.d0
-!           do i=1,it
-!             fxtrans(itrans,j,i)=fxtrans(itrans,j,i) &
-!             *sigma/cnorm(i)/transw(itrans)
-!             fxtranstot(itrans,j)=fxtranstot(itrans,j) &
-!             +fxtrans(itrans,j,i)
-!             if (include_errors == 1) then 
-!               sumw2trans(itrans,j,i)=sumw2trans(itrans,j,i) &
-!               *sigma/cnorm(i)/transw(itrans)*sigma/cnorm(i)/transw(itrans)
-!               sumw2transtot(itrans,j)=sumw2transtot(itrans,j) &
-!               +sumw2trans(itrans,j,i)
-!             else
-!               sumw2transtot(itrans,j)=0
-!             end if
-!           end do
-!           sfxtranstot(itrans)=sfxtranstot(itrans)+ &
-!           fxtranstot(itrans,j)*transw(itrans)
-!         end do
-!         write(10,*)'DISTRIBUTION'
-!         if (itrans == 1)then
-!           write(10,*)'Mvis'
-!           write(10,*)'d#sigma-/dM_{vis}--[pb/GeV]'
-!           write(10,*)'M_{vis}--[GeV]'
-!         else if (itrans == 2)then
-!           write(10,*)'HT'
-!           write(10,*)'d#sigma-/dH_{T}--[pb/GeV]'
-!           write(10,*)'H_{T}--[GeV]'
-!         else if (itrans == 3)then
-!           write(10,*)'M_T1'
-!           write(10,*)'d#sigma-/dM_{T1}--[pb/GeV]'
-!           write(10,*)'M_{T1}--[GeV]'
-!         else if (itrans == 4)then
-!           write(10,*)'M_T2'
-!           write(10,*)'d#sigma-/dM_{T2}--[pb/GeV]'
-!           write(10,*)'M_{T2}--[GeV]'
-!         else if (itrans == 5)then
-!           write(10,*)'M_T3'
-!           write(10,*)'d#sigma-/dM_{T3}--[pb/GeV]'
-!           write(10,*)'M_{T3}--[GeV]'
-!         else if (itrans == 6)then
-!           write(10,*)'MlT'
-!           write(10,*)'d#sigma-/dM^{l}_{T}--[pb/GeV]'
-!           write(10,*)'M^{l}_{T}--[GeV]'
-!         else if (itrans == 7)then
-!           write(10,*)'M_CT1'
-!           write(10,*)'d#sigma-/dM_{CT1}--[pb/GeV]'
-!           write(10,*)'M_{CT1}--[GeV]'
-!         else if (itrans == 8)then
-!           write(10,*)'M_CT2'
-!           write(10,*)'d#sigma-/dM_{CCT2}--[pb/GeV]'
-!           write(10,*)'M_{CT2}--[GeV]'
-!         else if (itrans == 9)then
-!           write(10,*)'M_CT3'
-!           write(10,*)'d#sigma-/dM_{CT3}--[pb/GeV]'
-!           write(10,*)'M_{CT3}--[GeV]'
-!         else if (itrans == 10)then
-!           write(10,*)'MlCT'
-!           write(10,*)'d#sigma-/dM^{l}_{CT}--[pb/GeV]'
-!           write(10,*)'m^{l}_{CT}--[GeV]'
-!         else
-!           continue
-!         end if
-!         do i=1,ndiv_trans(itrans)
-!           write(10,*)xtrans(itrans,i),fxtranstot(itrans,i)
-!         end do
-!         write(10,*)'END'
-!       end if
-!     end do
+  if(o_sigm == 1)then
+    sigmw=(sigmmax-sigmmin)/ndiv_sigm
+    do i=1,ndiv_sigm
+      xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
+    end do
+  end if
+
+end subroutine generate_bins  
+
+subroutine finalise_distributions
+
+  implicit none
+
+  integer :: ndiv_sig
+
+  print*, "Printing histograms"
+
+  write(10,*) '-----------------------------------------------------'
+  write(10,*)'HISTOGRAMS'
+    
+  if (o_ptb == 1) call h_ptb%finalise()
+  if (o_ptbb == 1) call h_ptbb%finalise()
+  if (o_ptlp == 1) call h_ptlp%finalise()
+  if (o_ptlm == 1) call h_ptlm%finalise()
+  if (o_ptnu == 1) call h_ptnu%finalise()
+  if (o_ptnub == 1) call h_ptnub%finalise()
+  if (o_ptt == 1) call h_ptt%finalise()
+  if (o_pttb == 1) call h_pttb%finalise()
+  if (o_etab == 1) call h_etab%finalise()
+  if (o_etabb == 1) call h_etabb%finalise()
+  if (o_etalp == 1) call h_etalp%finalise()
+  if (o_etalm == 1) call h_etalm%finalise()
+  if (o_etanu == 1) call h_etanu%finalise()
+  if (o_etanub == 1) call h_etanub%finalise()
+  if (o_etat == 1) call h_etat%finalise()
+  if (o_etatb == 1) call h_etatb%finalise()
+  if (o_phib == 1) call h_phib%finalise()
+  if (o_phibb == 1) call h_phibb%finalise()
+  if (o_philp == 1) call h_philp%finalise()
+  if (o_philm == 1) call h_philm%finalise()
+  if (o_phinu == 1) call h_phinu%finalise()
+  if (o_phinub == 1) call h_phinub%finalise()
+  if (o_phit == 1) call h_phit%finalise()
+  if (o_phitb == 1) call h_phitb%finalise()
+  if (o_ycolb == 1) call h_ycolb%finalise()
+  if (o_ycolbb == 1) call h_ycolbb%finalise()
+  if (o_ycollp == 1) call h_ycollp%finalise()
+  if (o_ycollm == 1) call h_ycollm%finalise()
+  if (o_ycolnu == 1) call h_ycolnu%finalise()
+  if (o_ycolnub == 1) call h_ycolnub%finalise()
+  if (o_ycolt == 1) call h_ycolt%finalise()
+  if (o_ycoltb == 1) call h_ycoltb%finalise()
+  if (o_etmiss == 1) call h_etmiss % finalise()
+  if (o_mtt == 1) call h_mtt % finalise()
+  if (o_mtt_reco == 1) call h_mtt_reco % finalise()
+  if (o_mtb == 1) call h_mtb % finalise()
+  if (o_mt_reco == 1) call h_mt_reco % finalise()
+  if (o_beta == 1) call h_beta % finalise()
+  if (o_cost == 1) call h_cost % finalise()
+  if (o_et == 1) call h_et % finalise()
+  if (o_delta_y == 1) call h_delta_y % finalise()
+  if (o_fl == 1) call h_fl%finalise()
+  if (o_cosfl == 1) call h_cosfl%finalise()
+  if (o_dphi == 1) call h_dphi%finalise()
+  if (o_cost5 == 1) call h_cost5%finalise()
+  if (o_cost7 == 1) call h_cost7%finalise()
+  if (o_ct7ct5 == 1) call h_ct7ct5%finalise()
+  if (o_ht == 1) call h_ht%finalise()
+  if (o_mttvis == 1) call h_mttvis%finalise()
+  if (o_mt1 == 1) call h_mt1%finalise()
+  if (o_mt2 == 1) call h_mt2%finalise()
+  if (o_mt3 == 1) call h_mt3%finalise()
+  if (o_mct1 == 1) call h_mct1%finalise()
+  if (o_mct2 == 1) call h_mct2%finalise()
+  if (o_mct3 == 1) call h_mct3%finalise()
+  if (o_mlt == 1) call h_mlt%finalise()
+  if (o_mlct == 1) call h_mlct%finalise()
 
 !     ! plot distributions in all asymmetries
 !     if((o_sigp == 1) .and. (o_sigm == 1))then
@@ -1022,51 +880,6 @@ contains
 !       end if
 !     end do
 
-  end subroutine print_distributions
-
-  subroutine  check_distributions
-    real :: diff_max = 1e-12
-    integer :: n_error = 0
-
-    print*, "Checking histograms"
-
-    do ip=3,n_final
-      if(o_pt(ip) == 1)then
-        if(abs(sigma-sfxpttot(ip))>diff_max)then
-          write(10,*)'pt',ip,' error:',sfxpttot(ip)
-          n_error=n_error+1
-        end if
-      end if
-      if(o_eta(ip) == 1)then
-        if(abs(sigma-sfxetatot(ip))>diff_max)then
-          write(10,*)'eta',ip,' error:',sfxetatot(ip)
-          n_error=n_error+1
-        end if
-      end if
-      if(o_phi(ip) == 1)then
-        if(abs(sigma-sfxphitot(ip))>diff_max)then
-          write(10,*)'phi',ip,' error:',sfxphitot(ip)
-          n_error=n_error+1
-        end if
-      end if
-    end do
-
-    do iasy=1,n_asymmetries
-      if(o_asym(iasy) == 0)then
-        continue
-      else
-        if(abs(atot(iasy)-asym_int(iasy))>diff_max)then
-          if(iasy /= 7)then ! fuck AttbRFB
-            write(10,*)'a error:',iasy,asym_int(iasy)
-            n_error=n_error+1
-          end if
-        end if
-      end if
-    end do
-    if(n_error > 0)write(10,*)'integration errors:',n_error
-    write(10,*)'CLOSE'
-    close(10)
-
-  end subroutine check_distributions
+end subroutine finalise_distributions
 
 end module distributions
