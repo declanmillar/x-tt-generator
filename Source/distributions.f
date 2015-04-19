@@ -5,7 +5,7 @@ module distributions
   use mathematics, only: pi
   use kinematics, only: sigma
   use integration, only: it
-  use class_Histogram
+  use class_histogram
 
   implicit none
 
@@ -32,28 +32,48 @@ module distributions
   integer :: o_cost5
   integer :: o_cost7
   integer :: o_ct7ct5
+  integer :: o_ht
+  integer :: o_mttvis
+  integer :: o_mt1
+  integer :: o_mt2
+  integer :: o_mt3
+  integer :: o_mct1
+  integer :: o_mct2
+  integer :: o_mct3
+  integer :: o_mlt
+  integer :: o_mlct
 
-  type(histogram) :: histetmiss
-  type(histogram) :: histpt356
-  type(histogram) :: histeta356
-  type(histogram) :: histphi356
-  type(histogram) :: histpt478
-  type(histogram) :: histeta478
-  type(histogram) :: histphi478
-  type(histogram) :: histmtt
-  type(histogram) :: histmtt_reco
-  type(histogram) :: histm478
-  type(histogram) :: histm356_reco
-  type(histogram) :: histbeta
-  type(histogram) :: histcost
-  type(histogram) :: histet
-  type(histogram) :: histdelta_y
-  type(histogram) :: histfl
-  type(histogram) :: histcosfl
-  type(histogram) :: histdphi
-  type(histogram) :: histcost5
-  type(histogram) :: histcost7
-  type(histogram) :: histct7ct5
+  type(histogram) :: h_etmiss
+  type(histogram) :: h_pt356
+  type(histogram) :: h_eta356
+  type(histogram) :: h_phi356
+  type(histogram) :: h_pt478
+  type(histogram) :: h_eta478
+  type(histogram) :: h_phi478
+  type(histogram) :: h_mtt
+  type(histogram) :: h_mtt_reco
+  type(histogram) :: h_m478
+  type(histogram) :: h_m356_reco
+  type(histogram) :: h_beta
+  type(histogram) :: h_cost
+  type(histogram) :: h_et
+  type(histogram) :: h_delta_y
+  type(histogram) :: h_fl
+  type(histogram) :: h_cosfl
+  type(histogram) :: h_dphi
+  type(histogram) :: h_cost5
+  type(histogram) :: h_cost7
+  type(histogram) :: h_ct7ct5
+  type(histogram) :: h_ht
+  type(histogram) :: h_mttvis
+  type(histogram) :: h_mt1
+  type(histogram) :: h_mt2
+  type(histogram) :: h_mt3
+  type(histogram) :: h_mct1
+  type(histogram) :: h_mct2
+  type(histogram) :: h_mct3
+  type(histogram) :: h_mlt
+  type(histogram) :: h_mlct
 
   ! distributions in pts of asymptotic particles
   real :: ptmax(8),ptmin(8),ptw(8)
@@ -83,16 +103,6 @@ module distributions
   integer :: o_ycol(8)
   integer :: ndiv_ycol(8)
 
-  ! distributions in transverse variables
-  integer :: ntrans
-  parameter (ntrans=10)
-  real :: transmax(ntrans),transmin(ntrans),transw(ntrans)
-  real :: xtrans(ntrans,500),fxtrans(ntrans,500,20) ,fxtranstot(ntrans,500)
-  real :: sumw2trans(ntrans,500,20) ,sumw2transtot(ntrans,500)
-  integer :: o_tran(ntrans)
-  integer :: ndiv_trans(ntrans)
-  real :: sfxtranstot(ntrans),sfxtransdptot(ntrans)
-
   ! distribution in sigp
   real :: sigpmax,sigpmin,sigpw
   real :: xsigp(1000),fxsigp(n_asymmetries,1000,20) ,fxsigptot(n_asymmetries,1000)
@@ -121,9 +131,7 @@ module distributions
   real :: xcost52d(500,500),fxcost52d(500,500,20), fxcost52dtot(500,500)
   integer :: o_cost52d
 
-  ! trans 2d dist
-  real :: xtransdp(ntrans,500,500), fxtransdp(ntrans,500,500,20),fxtransdptot(ntrans,500,500)
-  integer :: include_transversedp(ntrans)
+!   integer :: include_transversedp(ntrans)
 
   public :: initialise_distributions
   public :: generate_bins
@@ -133,7 +141,7 @@ module distributions
   
 !   real :: cnorm(20)
   real :: atot(n_asymmetries),atoterr(n_asymmetries)
-  integer, private :: i, j, k, ip, iasy, jasy, itrans
+  integer, private :: i, j, k, ip, iasy, jasy
   real, private :: sfxpttot(8), sfxetatot(8), sfxphitot(8), sfxycoltot(8)
   real, private :: sfxsigptot(n_asymmetries), sfxsigmtot(n_asymmetries), asym_int(n_asymmetries)
 
@@ -145,8 +153,6 @@ contains
 
     print*, "Initialising distributions"
   
-    ! sets flags, binning range and divisions.
-
     do i=1,n_final
       o_pt(i)=print_all_distributions
       ptmax(i)=7000.d0/(1+tops_decay*6)
@@ -178,7 +184,7 @@ contains
     o_m478 = print_all_distributions
     o_m356_reco = print_all_distributions
     o_mtt = 1
-    o_mtt_reco  =  print_all_distributions
+    o_mtt_reco = print_all_distributions
     o_beta = print_all_distributions
     o_cost = print_all_distributions
     o_et = print_all_distributions
@@ -189,101 +195,82 @@ contains
     o_cost5 = include_asymmetries
     o_cost7 = include_asymmetries
     o_ct7ct5 = include_asymmetries    
+    o_ht = include_transverse
+    o_mttvis = include_transverse
+    o_mt1 = include_transverse
+    o_mt2 = include_transverse
+    o_mt3 = include_transverse
+    o_mct1 = include_transverse
+    o_mct2 = include_transverse
+    o_mct3 = include_transverse
+    o_mlt = include_transverse
+    o_mlct = include_transverse
 
-    histetmiss = histogram("ETmiss","d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 1000.d0, 140)
-    histmtt = histogram("Mtt","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-    histmtt_reco = histogram("Mtt_reco","d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-    histbeta = histogram("beta","d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
-    histpt356 = histogram("pt356","d#sigma-/p^{t}_{T}--[pb]", "p^{t}_{T}", 0.d0, 1000.d0, 100)
-    histeta356 = histogram("eta356","d#sigma-/-#eta_{t}-[pb]", "#eta_{t}", 0.d0, 1000.d0, 100)
-    histphi356 = histogram("phi356","d#sigma-/-#phi_{t}-[pb]", "#phi_{t}", -10.d0, 10.d0, 50)
-    histpt478 = histogram("pt478","d#sigma-/p^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 0.d0, 1000.d0, 100)
-    histeta478 = histogram("eta478","d#sigma-/-#eta_{#bar{t}}-[pb]", "#eta_{#bar{t}}", -10, 10, 100)
-    histphi478 = histogram("phi478","d#sigma-/#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", -pi, pi, 100)
-    histm478 = histogram("m478","d#sigma-/--[pb]", "", 0.d0, 1000.d0, 100)
-    histm356_reco = histogram("m356_reco","d#sigma-/--[pb]", "", 0.d0, 1000.d0, 100)
-    histbeta = histogram("beta","d#sigma-/--[pb]", "", 0.d0, 1000.d0, 100)
-    histcost = histogram("cost","d#sigma-/--[pb]", "", -1.d0, 1000.d0, 100)
-    histet = histogram("Et","d#sigma-/--[pb]", "", 0.d0, 1000.d0, 100)
-    histdelta_y = histogram("delta_y","d#sigma-/--[pb]", "", -4, 4, 100)
-    histfl = histogram("phil","d#sigma-/--[pb]", "", 0.d0, 1000.d0, 100)
-    histcosfl = histogram("cosphil","d#sigma-/--[pb]", "", -1, 1, 100)
-    histdphi = histogram("dphi","d#sigma-/--[pb]", "", 0.d0, 2*pi, 100)
-    histcost5 = histogram("cost5","d#sigma-/--[pb]", "", -1.d0, 1.d0, 100)
-    histcost7 = histogram("cost7","d#sigma-/--[pb]", "", -1.d0, 1.d0, 100)
-    histct7ct5 = histogram("ct7ct5","d#sigma-/--[pb]", "", -1.d0, 1.d0, 100)
+    h_etmiss = histogram("ETmiss", "d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 1000.d0, 140)
+    h_mtt = histogram("Mtt", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+    h_mtt_reco = histogram("Mtt_reco", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
+    h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
+    h_pt356 = histogram("pt356", "d#sigma-/dp^{t}_{T}--[pb]", "p^{t}_{T}", 0.d0, 1000.d0, 100)
+    h_eta356 = histogram("eta356", "d#sigma-/dd#eta_{t}--[pb]", "#eta_{t}", 0.d0, 1000.d0, 100)
+    h_phi356 = histogram("phi356", "d#sigma-/dd#phi_{t}--[pb]", "#phi_{t}", -10.d0, 10.d0, 50)
+    h_pt478 = histogram("pt478", "d#sigma-/dp^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 0.d0, 1000.d0, 100)
+    h_eta478 = histogram("eta478", "d#sigma-/d#eta_{#bar{t}}--[pb]", "#eta_{#bar{t}}", -10.d0, 10.d0, 100)
+    h_phi478 = histogram("phi478", "d#sigma-/d#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", -pi, pi, 100)
+    h_m478 = histogram("m478", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 0.d0, 1000.d0, 100)
+    h_m356_reco = histogram("m356_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 0.d0, 1000.d0, 100)
+    h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 1000.d0, 100)
+    h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1000.d0, 100)
+    h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 0.d0, 1000.d0, 100)
+    h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", -4.d0, 4.d0, 100)
+    h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_l", 0.d0, 1000.d0, 100)
+    h_cosfl = histogram("cosphil", "d#sigma-/dcos#phi_l--[pb]", "cos#phi_l", -1.d0, 1.d0, 100)
+    h_dphi = histogram("dphi", "d#sigma-/d#delta #phi_l--[pb]", "#delta #phi_l", 0.d0, 2*pi, 100)
+    h_cost5 = histogram("cost5", "d#sigma-/dcos#theta_{l^+}--[pb]", "cos#theta_{l^+}", -1.d0, 1.d0, 100)
+    h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^-}--[pb]", "cos#theta_{l^-}", -1.d0, 1.d0, 100)
+    h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^+}cos#theta_{l^-}--[pb]","cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
+    h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}", 0.d0, 4000.d0, 40)
+    h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}", 0.d0, 4000.d0, 40)
+    h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}", 0.d0, 4000.d0, 40)
+    h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}", 0.d0, 4000.d0, 40)
+    h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}", 0.d0, 4000.d0, 40)
+    h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+    h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+    h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}", 0.d0, 4000.d0, 40)
+    h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}", 0.d0, 500.d0, 50)
+    h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}", 0.d0, 500.d0, 50)
 
-    if (o_etmiss == 1) call histetmiss%initialise()
-    if (o_pt356 == 1) call histpt356%initialise()
-    if (o_eta356 == 1) call histeta356%initialise()
-    if (o_phi356 == 1) call histphi356%initialise()
-    if (o_pt478 == 1) call histpt478%initialise()
-    if (o_eta478 == 1) call histeta478%initialise()
-    if (o_phi478 == 1) call histphi478%initialise()
-    if (o_m478 == 1) call histm478%initialise()
-    if (o_m356_reco == 1) call histm356_reco%initialise()
-    if (o_beta == 1) call histbeta%initialise()
-    if (o_mtt == 1) call histmtt%initialise
-    if (o_mtt_reco == 1) call histmtt_reco%initialise()
-    if (o_beta == 1) call histbeta%initialise()
-    if (o_cost == 1) call histcost%initialise()
-    if (o_et == 1) call histet%initialise()
-    if (o_delta_y == 1) call histdelta_y%initialise()
-    if (o_fl == 1) call histfl%initialise()
-    if (o_cosfl == 1) call histcosfl%initialise()
-    if (o_dphi == 1) call histdphi%initialise()
-    if (o_cost5 == 1) call histcost5%initialise()
-    if (o_cost7 == 1) call histcost7%initialise()
-    if (o_ct7ct5 == 1) call histct7ct5%initialise()
-
-    ! transverse variables
-    do itrans=1,ntrans
-      if(final_state == 0 )then
-        o_tran(itrans)=0
-      else
-        o_tran(itrans)=include_transverse
-      end if
-    end do
-    ! invarient mass of the visible decay products of the tt pair
-    transmax(1)=4000
-    transmin(1)=0.d0
-    ndiv_trans(1)=40
-    ! sum of tranvserse energy
-    transmax(2)=4000
-    transmin(2)=0.d0
-    ndiv_trans(2)=40
-    ! transverse mass 1
-    transmax(3)=4000
-    transmin(3)=0.d0
-    ndiv_trans(3)=40
-    ! transverse mass 2
-    transmax(4)=4000
-    transmin(4)=0.d0
-    ndiv_trans(4)=40
-    ! transverse mass 3
-    transmax(5)=4000
-    transmin(5)=0.d0
-    ndiv_trans(5)=40
-    !  lepton transverse mass
-    transmax(6)=500
-    transmin(6)=0.d0
-    ndiv_trans(6)=40
-    ! contransverse mass 1
-    transmax(7)=4000
-    transmin(7)=0.d0
-    ndiv_trans(7)=40
-    ! contransverse mass 2
-    transmax(8)=4000
-    transmin(8)=0.d0
-    ndiv_trans(8)=40
-    ! contransverse mass 3
-    transmax(9)=4000
-    transmin(9)=0.d0
-    ndiv_trans(9)=40
-    ! lepton contransverse mass
-    transmax(10)=500
-    transmin(10)=0.d0
-    ndiv_trans(10)=50
+    if (o_etmiss == 1) call h_etmiss%initialise()
+    if (o_pt356 == 1) call h_pt356%initialise()
+    if (o_eta356 == 1) call h_eta356%initialise()
+    if (o_phi356 == 1) call h_phi356%initialise()
+    if (o_pt478 == 1) call h_pt478%initialise()
+    if (o_eta478 == 1) call h_eta478%initialise()
+    if (o_phi478 == 1) call h_phi478%initialise()
+    if (o_m478 == 1) call h_m478%initialise()
+    if (o_m356_reco == 1) call h_m356_reco%initialise()
+    if (o_beta == 1) call h_beta%initialise()
+    if (o_mtt == 1) call h_mtt%initialise
+    if (o_mtt_reco == 1) call h_mtt_reco%initialise()
+    if (o_beta == 1) call h_beta%initialise()
+    if (o_cost == 1) call h_cost%initialise()
+    if (o_et == 1) call h_et%initialise()
+    if (o_delta_y == 1) call h_delta_y%initialise()
+    if (o_fl == 1) call h_fl%initialise()
+    if (o_cosfl == 1) call h_cosfl%initialise()
+    if (o_dphi == 1) call h_dphi%initialise()
+    if (o_cost5 == 1) call h_cost5%initialise()
+    if (o_cost7 == 1) call h_cost7%initialise()
+    if (o_ct7ct5 == 1) call h_ct7ct5%initialise()
+    if (o_ht == 1) call h_ht%initialise()
+    if (o_mttvis == 1) call h_mttvis%initialise()
+    if (o_mt1 == 1) call h_mt1%initialise()
+    if (o_mt2 == 1) call h_mt2%initialise()
+    if (o_mt3 == 1) call h_mt3%initialise()
+    if (o_mct1 == 1) call h_mct1%initialise()
+    if (o_mct2 == 1) call h_mct2%initialise()
+    if (o_mct3 == 1) call h_mct3%initialise()
+    if (o_mlt == 1) call h_mlt%initialise()
+    if (o_mlct == 1) call h_mlct%initialise()
 
     ! sigp
     o_sigp=include_asymmetries
@@ -295,21 +282,21 @@ contains
     sigmmax=14000
     sigmmin=0
     ndiv_sigm=100/5
-    ! dphi2d
-    if((o_dphi == 1) .and. (o_mtt == 1))then
-      o_dphi2d=print_2d_distributions
-    else
-      o_dphi2d=0
-    end if
-    ! dtransph
-    do itrans=1, ntrans
-      if((o_dphi == 1) .and. (o_tran(itrans) == 1))then
-        include_transversedp(itrans)=print_2d_distributions
-      else
-        include_transversedp(itrans)=0
-      end if
-    end do
-    ! asymmetries
+!     ! dphi2d
+!     if((o_dphi == 1) .and. (o_mtt == 1))then
+!       o_dphi2d=print_2d_distributions
+!     else
+!       o_dphi2d=0
+!     end if
+!     ! dtransph
+!     do itrans=1, ntrans
+!       if((o_dphi == 1) .and. (o_tran(itrans) == 1))then
+!         include_transversedp(itrans)=print_2d_distributions
+!       else
+!         include_transversedp(itrans)=0
+!       end if
+!     end do
+!     ! asymmetries
     do iasy=1,n_asymmetries
       o_asym(iasy)=include_asymmetries
     end do
@@ -337,10 +324,10 @@ contains
         o_eta(i) = 0
         o_phi(i) = 0
       end do
-      do itrans = 1, ntrans
-        o_tran(itrans) = 0
-      end do
-      o_tran = 0
+!       do itrans = 1, ntrans
+!         o_tran(itrans) = 0
+!       end do
+!       o_tran = 0
       o_pt356 = 0
       o_eta356 = 0
       o_phi356 = 0
@@ -365,6 +352,16 @@ contains
       o_mtt_reco = 0
       o_m356_reco = 0
       o_m478 = 0
+      o_ht = 0
+      o_mttvis = 0
+      o_mt1 = 0
+      o_mt2 = 0
+      o_mt3 = 0
+      o_mct1 = 0
+      o_mct2 = 0
+      o_mct3 = 0
+      o_mlt = 0
+      o_mlct = 0
     end if
 
     if (final_state > 0) then
@@ -379,16 +376,17 @@ contains
       do i = 4, 10
         o_asym(i) = 0
       end do
+      o_mtt_reco = 0 
       o_m356_reco = 0
       o_m478 = 0
     end if
 
     if (final_state == 2) then
       ! disable non-useful variables in semi-hadronic
-      do itrans = 1, ntrans
-        o_tran(itrans) = 0
-        include_transversedp(itrans) = 0
-      end do
+!       do itrans = 1, ntrans
+!         o_tran(itrans) = 0
+!         include_transversedp(itrans) = 0
+!       end do
       o_cost7 = 0
       o_ct7ct5 = 0
       o_dphi = 0
@@ -398,14 +396,24 @@ contains
       o_cost52d = 0
       o_etmiss = 0
       o_asym(11) = 0
+      o_ht = 0
+      o_mttvis = 0
+      o_mt1 = 0
+      o_mt2 = 0
+      o_mt3 = 0
+      o_mct1 = 0
+      o_mct2 = 0
+      o_mct3 = 0
+      o_mlt = 0
+      o_mlct = 0
     end if
 
     if (final_state == 3) then
       ! disable non-useful variables in fully hadronic
-      do itrans = 1, ntrans
-        o_tran(itrans) = 0
-        include_transversedp(itrans) = 0
-      end do
+!       do itrans = 1, ntrans
+!         o_tran(itrans) = 0
+!         include_transversedp(itrans) = 0
+!       end do
       o_mtt_reco = 0
       o_cost5 = 0
       o_cost7 = 0
@@ -422,6 +430,16 @@ contains
       o_asym(12) = 0
       o_m356_reco = 0
       o_m478 = 0
+      o_ht = 0
+      o_mttvis = 0
+      o_mt1 = 0
+      o_mt2 = 0
+      o_mt3 = 0
+      o_mct1 = 0
+      o_mct2 = 0
+      o_mct3 = 0
+      o_mlt = 0
+      o_mlct = 0
     end if
 
   end subroutine initialise_distributions
@@ -455,17 +473,6 @@ contains
         ycolw(ip)=(ycolmax(ip)-ycolmin(ip))/ndiv_ycol(ip)
         do j=1,ndiv_ycol(ip)
           xycol(ip,j)=ycolmin(ip)+ycolw(ip)*(j-1)+ycolw(ip)/2.d0
-        end do
-      end if
-    end do
-
-    do itrans=1,ntrans
-      if(o_tran(itrans) == 1)then
-        transw(itrans)=(transmax(itrans)-transmin(itrans)) &
-        /ndiv_trans(itrans)
-        do i=1,ndiv_trans(itrans)
-          xtrans(itrans,i)=transmin(itrans)+transw(itrans)*(i-1) &
-          +transw(itrans)/2.d0
         end do
       end if
     end do
@@ -603,27 +610,37 @@ contains
       end if
     end do
        
-    if(o_etmiss == 1) call histetmiss % finalise()
-    if(o_pt356 == 1) call histpt356 % finalise()
-    if(o_eta356 == 1) call histeta356 % finalise()
-    if(o_phi356 == 1) call histphi356 % finalise()
-    if(o_pt478 == 1) call histpt478 % finalise()
-    if(o_eta478 == 1) call histeta478 % finalise()
-    if(o_phi478 == 1) call histphi478 % finalise()
-    if(o_mtt == 1) call histmtt % finalise()
-    if(o_mtt_reco == 1) call histmtt_reco % finalise()
-    if(o_m478 == 1) call histm478 % finalise()
-    if(o_m356_reco == 1) call histm356_reco % finalise()
-    if(o_beta == 1) call histbeta % finalise()
-    if(o_cost == 1) call histcost % finalise()
-    if(o_et == 1) call histet % finalise()
-    if(o_delta_y == 1) call histdelta_y % finalise()
-    if(o_fl == 1) call histfl%finalise()
-    if(o_cosfl == 1) call histcosfl%finalise()
-    if(o_dphi == 1) call histdphi%finalise()
-    if(o_cost5 == 1) call histcost5%finalise()
-    if(o_cost7 == 1) call histcost7%finalise()
-    if(o_ct7ct5 == 1) call histct7ct5%finalise()
+    if(o_etmiss == 1) call h_etmiss % finalise()
+    if(o_pt356 == 1) call h_pt356 % finalise()
+    if(o_eta356 == 1) call h_eta356 % finalise()
+    if(o_phi356 == 1) call h_phi356 % finalise()
+    if(o_pt478 == 1) call h_pt478 % finalise()
+    if(o_eta478 == 1) call h_eta478 % finalise()
+    if(o_phi478 == 1) call h_phi478 % finalise()
+    if(o_mtt == 1) call h_mtt % finalise()
+    if(o_mtt_reco == 1) call h_mtt_reco % finalise()
+    if(o_m478 == 1) call h_m478 % finalise()
+    if(o_m356_reco == 1) call h_m356_reco % finalise()
+    if(o_beta == 1) call h_beta % finalise()
+    if(o_cost == 1) call h_cost % finalise()
+    if(o_et == 1) call h_et % finalise()
+    if(o_delta_y == 1) call h_delta_y % finalise()
+    if(o_fl == 1) call h_fl%finalise()
+    if(o_cosfl == 1) call h_cosfl%finalise()
+    if(o_dphi == 1) call h_dphi%finalise()
+    if(o_cost5 == 1) call h_cost5%finalise()
+    if(o_cost7 == 1) call h_cost7%finalise()
+    if(o_ct7ct5 == 1) call h_ct7ct5%finalise()
+    if(o_ht == 1) call h_ht%finalise()
+    if(o_mttvis == 1) call h_mttvis%finalise()
+    if(o_mt1 == 1) call h_mt1%finalise()
+    if(o_mt2 == 1) call h_mt2%finalise()
+    if(o_mt3 == 1) call h_mt3%finalise()
+    if(o_mct1 == 1) call h_mct1%finalise()
+    if(o_mct2 == 1) call h_mct2%finalise()
+    if(o_mct3 == 1) call h_mct3%finalise()
+    if(o_mlt == 1) call h_mlt%finalise()
+    if(o_mlct == 1) call h_mlct%finalise()
 
 !     ! plot distributions in all transverse variables
 !     do itrans=1,ntrans

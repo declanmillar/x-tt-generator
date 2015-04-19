@@ -14,7 +14,7 @@ OBJS = $(patsubst $(SRC)/%.cpp, $(LIB)/%.o, $(CPPFILES))
 HEADERS = $(wildcard $(SRC)/*.h)
 
 # Clang compiler w/ debug info, optimisation, warnings, and compile as a sharable option
-CPP = gcc
+CPP = clang++
 # I would use -pedantic but it throws a billion warnings about the ROOT libraries
 CXXFLAGS = -g -O -fPIC -Wall #-pedantic -I/usr/local/Cellar/boost/1.57.0/include
 
@@ -22,7 +22,7 @@ CXXFLAGS = -g -O -fPIC -Wall #-pedantic -I/usr/local/Cellar/boost/1.57.0/include
 CXXFLAGS += $(shell root-config --cflags)
 
 # Use Clang as the linker
-LD = gcc
+LD = clang++
 
 # ROOT linker flags, including the non-default TMVA, RooFit, RooStats, and NeuroBayes libraries
 LDFLAGS = -O $(shell root-config --libs) -L/usr/local/Cellar/boost/1.57.0/lib -lboost_program_options-mt -lboost_filesystem-mt -lboost_thread-mt -lTreePlayer

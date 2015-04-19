@@ -42,12 +42,12 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   // sum all elements in sumw2 array
   double sumsumw2 = std::accumulate( sumw2V.begin(), sumw2V.end(), 0 );
 
-  printf("%f\n", sumsumw2);
+  // printf("%f\n", sumsumw2);
 
   // histogram bin information.
   nBins = xV.size();
   nBinEdges = nBins + 1;
-  binWidth = xV[1]-xV[0]; // only works for fixed bin width!
+  binWidth = abs(xV[1]-xV[0]); // only works for fixed bin width!
   binLowEdges.resize(nBinEdges);
 
   // Find lower edges of bins.

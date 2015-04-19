@@ -130,7 +130,7 @@ function differential_cross_section(x,wgt)
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
 
   ! iterators
-  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, itrans
+  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4
 
   ! phase space vectors.
   real :: q356(4), q478(4)
@@ -153,7 +153,8 @@ function differential_cross_section(x,wgt)
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m356_reco
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
-  real :: rm_ct12, rm_ct22, rm_ct32, rm_t12, rm_t22, rm_t32, rmlct2, rmlt2, rmvis2
+  real :: mttvis, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
+  real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2, mttvis2
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2)
@@ -185,7 +186,6 @@ function differential_cross_section(x,wgt)
   ! pdfs
   real :: fx1(13), fx2(13)
   real :: x1x2(2, 2)
-  real :: trans(ntrans)
 
   ! internal random number seed
   integer :: jseed
@@ -973,102 +973,101 @@ function differential_cross_section(x,wgt)
 
       end if
 
-      if (o_tran(1) == 1) then
+
+      if (o_mttvis == 1) then
         ! calculate invariant mass of visible decay products
-        rmvis2 = (qcol(4,3) + qcol(4,4) &
+        mttvis2 = (qcol(4,3) + qcol(4,4) &
         +qcol(4,5) + qcol(4,7))**2
         do i = 1, 3
-          rmvis2 = rmvis2 - (qcol(i,3) + qcol(i,4) &
+          mttvis2 = mttvis2 - (qcol(i,3) + qcol(i,4) &
           +qcol(i,5) + qcol(i,7))**2
         end do
-        trans(1) = sqrt(abs(rmvis2))
+        mttvis = sqrt(abs(mttvis2))
       end if
 
-      if (final_state > 0) then
+      if (final_state == 1) then
         ! calculate transverse energy energies of visible particles
         et3 = sqrt(m3**2 + pt2(3))
         et4 = sqrt(m4**2 + pt2(4))
         et5 = sqrt(m5**2 + pt2(5))
         et7 = sqrt(m6**2 + pt2(7))
       end if
-      if (o_tran(2) == 1) then
-        ! calculate ht
-        trans(2) = et3 + et4 + et5 + et7 + etmiss
+
+      if (o_ht == 1) then
+        ht = et3 + et4 + et5 + et7 + etmiss
       end if
 
-      if (o_tran(3) == 1) then
-        ! calculate *full* transverse mass 1
-        rm_t12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+      if (o_mt1 == 1) then
+        mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
          + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
-        trans(3) = sqrt(abs(rm_t12))
+        mt1 = sqrt(abs(mt12))
       end if
     
-      if (o_tran(4) == 1) then
-        ! calculate *full* transverse mass 2
-        rm_t22 = (et3 + et4 + et5 + et7 + etmiss)**2
+      if (o_mt2 == 1) then
+        mt22 = (et3 + et4 + et5 + et7 + etmiss)**2
         do i  = 1, 2
-          rm_t22 = rm_t22 - (ptvis(i) + ptmiss(i))**2
+          mt22 = mt22 - (ptvis(i) + ptmiss(i))**2
         end do
-        trans(4) = sqrt(abs(rm_t22))
+        mt2 = sqrt(abs(mt22))
       end if
 
-      if (o_tran(5) == 1) then
-        ! calculate *full* transverse mass 3
-        rm_t32 = (etvis + etmiss)**2
+      if (o_mt3 == 1) then
+        mt32 = (etvis + etmiss)**2
         do i = 1, 2
-          rm_t32 = rm_t32 - (ptvis(i) + ptmiss(i))**2
+          mt32 = mt32 - (ptvis(i) + ptmiss(i))**2
         end do
-        trans(5) = sqrt(abs(rm_t32))
+        mt3 = sqrt(abs(mt32))
       end if
 
-      if (o_tran(6) == 1) then
+      if (o_mlt == 1) then
         ! calculate lepton transverse mass
         et5 = sqrt(m5**2 + pt2(5))
         et7 = sqrt(m7**2 + pt2(7))
-        rmlt2 = (et5 + et7)**2
+        mlt2 = (et5 + et7)**2
         do i = 1, 2
-          rmlt2 = rmlt2 - (qcol(i,5) + qcol(i,7))**2
+          mlt2 = mlt2 - (qcol(i,5) + qcol(i,7))**2
         end do
-        trans(6) = sqrt(abs(rmlt2))
+        mlt = sqrt(abs(mlt2))
       end if
     
-      if (o_tran(7) == 1) then
+      if (o_mct1 == 1) then
         ! calculate *full* contranverse mass 1
-        rm_ct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+        mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
         + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
-        trans(7) = sqrt(abs(rm_ct12))
+        mct1 = sqrt(abs(mct12))
       end if
 
-      if (o_tran(8) == 1) then
+      if (o_mct2 == 1) then
         ! calculate *full* contranverse mass 2
-        rm_ct22 = (et3 + et4 + et5 + et7 + etmiss)**2
+        mct22 = (et3 + et4 + et5 + et7 + etmiss)**2
         do i = 1, 2
-          rm_ct22 = rm_ct22 - (ptvis(i) - ptmiss(i))**2
+          mct22 = mct22 - (ptvis(i) - ptmiss(i))**2
         end do
-        trans(8) = sqrt(abs(rm_ct22))
+        mct2 = sqrt(abs(mct22))
       end if
 
-      if (o_tran(9) == 1) then
+      if (o_mct3 == 1) then
          ! calculate *full* contranverse mass 3
-        rm_ct32 = (etvis + etmiss)**2
+        mct32 = (etvis + etmiss)**2
         do i = 1, 2
-          rm_ct32 = rm_ct32 - (ptvis(i) - ptmiss(i))**2
+          mct32 = mct32 - (ptvis(i) - ptmiss(i))**2
         end do
-        trans(9) = sqrt(abs(rm_ct32))
+        mct3 = sqrt(abs(mct32))
       end if
 
-      if (o_tran(10) == 1) then
+      if (o_mlct == 1) then
         ! calculate lepton contransverse mass
         et5 = sqrt(m5**2 + pt2(5))
         et7 = sqrt(m7**2 + pt2(7))
-        rmlct2 = (et5 + et7)**2
+        mlct2 = (et5 + et7)**2
         do i = 1, 2
-          rmlct2 = rmlct2 - (qcol(i,5) - qcol(i,7))**2
+          mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
         end do
-        trans(10) = sqrt(abs(rmlct2))
+        mlct = sqrt(abs(mlct2))
       end if
+
       if (final_state > 0) then
-        ! calculate top pseudorapidity
+        ! calculate true top pseudorapidity
         rps356 = (q(3,3)+q(3,5)+q(3,6)) &
         /sqrt((q(1,3)+q(1,5)+q(1,6))**2 &
         +(q(2,3)+q(2,5)+q(2,6))**2 &
@@ -1080,7 +1079,7 @@ function differential_cross_section(x,wgt)
         if (arg356 <=  0.d0)arg356 = 1.d-9
         eta356 = -log(arg356)
 
-        ! calculate anti-top pseudorapidity
+        ! calculate true antitop pseudorapidity
         rps478=(q(3,4)+q(3,7)+q(3,8)) &
         /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
         +(q(2,4)+q(2,7)+q(2,8))**2 &
@@ -1285,6 +1284,7 @@ function differential_cross_section(x,wgt)
         fffxn=0.d0
         return
       end if
+
 
     ! matrix elements
     ! phase space only
@@ -1756,36 +1756,46 @@ function differential_cross_section(x,wgt)
           +xsec_fb(9,it,-1)**2
         end if
       end if
+
     
       ! binning
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
-
-      if(o_etmiss == 1) call histetmiss % fill(etmiss, hist)
-      if(o_pt356 == 1) call histpt356 % fill(pt356, hist)
-      if(o_eta356 == 1) call histeta356 % fill(eta356, hist)
-      if(o_phi356 == 1) call histphi356 % fill(phi356, hist)
-      if(o_pt478 == 1) call histpt478 % fill(pt478, hist)
-      if(o_eta478 == 1) call histeta478 % fill(eta478, hist)
-      if(o_phi478 == 1) call histphi478 % fill(phi478, hist)
-      if(o_mtt == 1) call histmtt % fill(mtt, hist)
-      if(o_mtt_reco == 1) call histmtt_reco % fill(mtt_reco, hist)
-      if(o_m478 == 1) call histm478 % fill(m478, hist)
-      if(o_m356_reco == 1) call histm356_reco % fill(m356_reco, hist)
-      if(o_beta == 1) call histbeta % fill(beta, hist)
-      if(o_cost == 1) call histcost % fill(cost, hist)
-      if(o_et == 1) call histet % fill(et, hist)
-      if(o_delta_y == 1) call histdelta_y % fill(delta_absy, hist)
-      if(o_fl == 1) call histfl % fill(phi_l, hist)
-      if(o_cosfl == 1) call histcosfl % fill(cosfl, hist)
-      if(o_dphi == 1) call histdphi % fill(dphi, hist)
-      if(o_cost5 == 1) call histcost5 % fill(costheta5, hist)
-      if(o_cost7 == 1) call histcost7 % fill(costheta7, hist)
-      if(o_ct7ct5 == 1) call histct7ct5 % fill(ct7ct5, hist)
+      
+      if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
+      if (o_pt356 == 1) call h_pt356%fill(pt356, hist)
+      if (o_eta356 == 1) call h_eta356%fill(eta356, hist)
+      if (o_phi356 == 1) call h_phi356%fill(phi356, hist)
+      if (o_pt478 == 1) call h_pt478%fill(pt478, hist)
+      if (o_eta478 == 1) call h_eta478%fill(eta478, hist)
+      if (o_phi478 == 1) call h_phi478%fill(phi478, hist)
+      if (o_mtt == 1) call h_mtt%fill(mtt, hist)
+      if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
+      if (o_m478 == 1) call h_m478%fill(m478, hist)
+      if (o_m356_reco == 1) call h_m356_reco%fill(m356_reco, hist)
+      if (o_beta == 1) call h_beta%fill(beta, hist)
+      if (o_cost == 1) call h_cost%fill(cost, hist)
+      if (o_et == 1) call h_et%fill(et, hist)
+      if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
+      if (o_fl == 1) call h_fl%fill(phi_l, hist)
+      if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
+      if (o_dphi == 1) call h_dphi%fill(dphi, hist)
+      if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
+      if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
+      if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+      if (o_ht == 1) call h_ht%fill(ht, hist)
+      if (o_mttvis == 1) call h_mttvis%fill(mttvis, hist)
+      if (o_mt1 == 1) call h_mt1%fill(mt1, hist)
+      if (o_mt2 == 1) call h_mt2%fill(mt2, hist)
+      if (o_mt3 == 1) call h_mt3%fill(mt3, hist)
+      if (o_mct1 == 1) call h_mct1%fill(mct1, hist)
+      if (o_mct2 == 1) call h_mct2%fill(mct2, hist)
+      if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
+      if (o_mlt == 1) call h_mlt%fill(mlt, hist)
+      if (o_mlct == 1) call h_mlct%fill(mlct, hist)
 
       do ip = 3, n_final
-
       ! generate distribution in pt
         if (o_pt(ip) == 1) then
           nbin=int((pt(ip)-ptmin(ip))/ptw(ip))+1
@@ -1839,21 +1849,6 @@ function differential_cross_section(x,wgt)
           end if
         end if
       end do
-
-!       do itrans=1,ntrans
-!         if (o_tran(itrans) == 1) then
-!         ! generate distribution in trans.
-!           nbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-!           if (nbin >= (ndiv_trans(itrans)+1)) then
-!             continue
-!           else if (nbin < 1) then
-!             continue
-!           else
-!             fxtrans(itrans,nbin,it)=fxtrans(itrans,nbin,it)+hist
-!             if (include_errors == 1) sumw2trans(itrans,nbin,it) = sumw2trans(itrans,nbin,it)+hist*hist
-!           end if
-!         end if
-!       end do
 
 !       if (o_dphi2d == 1) then
 !         ! generate distribution in dphi2d.
