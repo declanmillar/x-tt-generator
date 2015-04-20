@@ -60,6 +60,7 @@ module distributions
   integer :: o_cost5 = 1
   integer :: o_cost7 = 1
   integer :: o_ct7ct5 = 1
+  integer :: o_mll = 0
   integer :: o_ht = 1
   integer :: o_mttvis = 1
   integer :: o_mt1 = 1
@@ -133,6 +134,7 @@ module distributions
   type(histogram) :: h_cost5
   type(histogram) :: h_cost7
   type(histogram) :: h_ct7ct5
+  type(histogram) :: h_mll
   type(histogram) :: h_ht
   type(histogram) :: h_mttvis
   type(histogram) :: h_mt1
@@ -238,6 +240,7 @@ subroutine create_distributions
   if (o_cost7 == 1) h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^{-}}--[pb]", "cos#theta_{l^{-}}", -1.d0, 1.d0, 100)
   if (o_ct7ct5 == 1) h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^{+}}cos#theta_{l^{-}}--[pb]", &
      "cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
+  if (o_mll == 1) h_ht = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 0.d0, 100.d0, 100)
   if (o_ht == 1) h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}--[GeV]", 0.d0, 4000.d0, 40)
   if (o_mttvis == 1) h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}^{vis}_{T}--[GeV]",0.d0, 4000.d0,40)
   if (o_mt1 == 1) h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}--[GeV]", 0.d0, 4000.d0, 40)
@@ -348,6 +351,7 @@ subroutine initialise_distributions
   if (o_cost7 == 1) call h_cost7%initialise()
   if (o_ct7ct5 == 1) call h_ct7ct5%initialise()
 
+  if (o_mll == 1) call h_mll%initialise()
   if (o_ht == 1) call h_ht%initialise()
   if (o_mttvis == 1) call h_mttvis%initialise()
   if (o_mt1 == 1) call h_mt1%initialise()
@@ -358,6 +362,7 @@ subroutine initialise_distributions
   if (o_mct3 == 1) call h_mct3%initialise()
   if (o_mlt == 1) call h_mlt%initialise()
   if (o_mlct == 1) call h_mlct%initialise()
+
   if (o_mttdphi == 1) call h2_mttdphi%initialise()
   if (o_mttct7ct5 == 1) call h2_mttct7ct5%initialise()
   if (o_mttcost7 == 1) call h2_mttcost7%initialise()
@@ -473,6 +478,7 @@ subroutine disable_distributions
 
   if (final_state == 1) then 
     ! disable non-useful variables in dileptonic
+    o_mll = 1
     o_mtt_reco = 0 
     o_mt_reco = 0
     o_mtb = 0
@@ -604,6 +610,7 @@ subroutine finalise_distributions
   if (o_beta == 1) call h_beta % finalise()
   if (o_cost == 1) call h_cost % finalise()
   if (o_et == 1) call h_et % finalise()
+
   if (o_delta_y == 1) call h_delta_y % finalise()
   if (o_fl == 1) call h_fl%finalise()
   if (o_cosfl == 1) call h_cosfl%finalise()
@@ -611,6 +618,8 @@ subroutine finalise_distributions
   if (o_cost5 == 1) call h_cost5%finalise()
   if (o_cost7 == 1) call h_cost7%finalise()
   if (o_ct7ct5 == 1) call h_ct7ct5%finalise()
+
+  if (o_mll == 1) call h_mll%finalise()
   if (o_ht == 1) call h_ht%finalise()
   if (o_mttvis == 1) call h_mttvis%finalise()
   if (o_mt1 == 1) call h_mt1%finalise()

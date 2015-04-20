@@ -155,6 +155,7 @@ function differential_cross_section(x,wgt)
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
   real :: mttvis, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
   real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2, mttvis2
+  real :: mll
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2)
@@ -996,6 +997,8 @@ function differential_cross_section(x,wgt)
         m356_reco = mass(p356col_reco)
       end if
 
+      if(o_mll == 1) mll = mass(p5col + p6col)
+
       if (o_mttvis == 1) then
         ! calculate invariant mass of visible decay products
         mttvis2 = (qcol(4,3) + qcol(4,4) &
@@ -1780,6 +1783,7 @@ function differential_cross_section(x,wgt)
       if (o_beta == 1) call h_beta%fill(beta, hist)
       if (o_cost == 1) call h_cost%fill(cost, hist)
       if (o_et == 1) call h_et%fill(et, hist)
+
       if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
       if (o_fl == 1) call h_fl%fill(phi_l, hist)
       if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
@@ -1787,6 +1791,8 @@ function differential_cross_section(x,wgt)
       if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
       if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
       if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+
+      if (o_mll == 1) call h_mll%fill(mll, hist)
       if (o_ht == 1) call h_ht%fill(ht, hist)
       if (o_mttvis == 1) call h_mttvis%fill(mttvis, hist)
       if (o_mt1 == 1) call h_mt1%fill(mt1, hist)
@@ -1797,6 +1803,7 @@ function differential_cross_section(x,wgt)
       if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
       if (o_mlt == 1) call h_mlt%fill(mlt, hist)
       if (o_mlct == 1) call h_mlct%fill(mlct, hist)
+
       if (o_mttdphi == 1) call h2_mttdphi%fill(mtt, dphi, hist)
       if (o_mttct7ct5 == 1) call h2_mttct7ct5%fill(mtt, ct7ct5, hist)
       if (o_mttcost7 == 1) call h2_mttcost7%fill(mtt, costheta7, hist)
