@@ -151,7 +151,7 @@ program zprime
     ! x(2) = fi5_cm_56,
     ! x(1) = fi8_cm_78;
 
-    ! limits:
+    ! set integration limits:
     do i = 15, 14, -1
       xl(i) = 0.d0
       xu(i) = 1.d0
@@ -169,8 +169,6 @@ program zprime
       xu(i) = 2.d0*pi
     end do
   end if
-
-  call generate_bins
 
   ! output information before integration
   open(unit = 10, file = 'Output/'//output_file, status = "old", action = "write", position="append")

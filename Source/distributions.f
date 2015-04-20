@@ -172,9 +172,9 @@ module distributions
   integer :: o_sigm
   integer :: ndiv_sigm
 
+  public :: disable_distributions
   public :: create_distributions
   public :: initialise_distributions
-  public :: generate_bins
   public :: finalise_distributions
 
   real :: atot(n_asymmetries),atoterr(n_asymmetries)
@@ -280,6 +280,17 @@ subroutine create_distributions
   if (o_mlctdphi == 1) h2_mlctdphi = histogram2d("mlctdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
     ,"M^{l}_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
 
+  ! sigp
+  o_sigp=include_asymmetries
+  sigpmax=14000
+  sigpmin=0
+  ndiv_sigp=100/5
+  ! sigm
+  o_sigm=include_asymmetries
+  sigmmax=14000
+  sigmmin=0
+  ndiv_sigm=100/5
+
   print *, "done."
 end subroutine create_distributions
 
@@ -363,16 +374,19 @@ subroutine initialise_distributions
   if (o_mltdphi == 1) call h2_mltdphi%initialise()
   if (o_mlctdphi == 1) call h2_mlctdphi%initialise()
 
-  ! sigp
-  o_sigp=include_asymmetries
-  sigpmax=14000
-  sigpmin=0
-  ndiv_sigp=100/5
-  ! sigm
-  o_sigm=include_asymmetries
-  sigmmax=14000
-  sigmmin=0
-  ndiv_sigm=100/5
+  if(o_sigp == 1)then
+    sigpw=(sigpmax-sigpmin)/ndiv_sigp
+    do i=1,ndiv_sigp
+      xsigp(i)=sigpmin+sigpw*(i-1)+sigpw/2.d0
+    end do
+  end if
+
+  if(o_sigm == 1)then
+    sigmw=(sigmmax-sigmmin)/ndiv_sigm
+    do i=1,ndiv_sigm
+      xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
+    end do
+  end if
 
   print *, "done."
 
@@ -382,8 +396,8 @@ subroutine disable_distributions
 
   print *, "Disabling irrelevent distributions..."
 
-  do iasy=1,n_asymmetries
-    o_asym(iasy)=include_asymmetries
+  do iasy = 1, n_asymmetries
+    o_asym(iasy) = include_asymmetries
   end do
 
   if (initial_state == 0) then
@@ -546,28 +560,6 @@ subroutine disable_distributions
   print *, "done."
 
 end subroutine disable_distributions
-
-subroutine generate_bins
-  ! (finds bin width, finds midpoints.)
-  implicit none
-
-  print*, "Generating bins"
-
-  if(o_sigp == 1)then
-    sigpw=(sigpmax-sigpmin)/ndiv_sigp
-    do i=1,ndiv_sigp
-      xsigp(i)=sigpmin+sigpw*(i-1)+sigpw/2.d0
-    end do
-  end if
-
-  if(o_sigm == 1)then
-    sigmw=(sigmmax-sigmmin)/ndiv_sigm
-    do i=1,ndiv_sigm
-      xsigm(i)=sigmmin+sigmw*(i-1)+sigmw/2.d0
-    end do
-  end if
-
-end subroutine generate_bins  
 
 subroutine finalise_distributions
 
