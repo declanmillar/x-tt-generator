@@ -1293,7 +1293,7 @@ function differential_cross_section(x,wgt)
         go to 666
       end if
     
-    ! square matrix elements
+  ! square matrix elements
     ! calculate strong coupling
       a_s=alfas(qq,rlambdaqcd4,nloops)
       gs2=4.d0*pi*a_s
@@ -1561,107 +1561,101 @@ function differential_cross_section(x,wgt)
          
     ! polarised total cross sections
       if (final_state == 0) then
-        do iphel=-1,+1,2
-          do jphel=-1,+1,2
-            xsec_polar(it,iphel,jphel)=xsec_polar(it,iphel,jphel) &
-            +fffxn &
-            *wgt &
-            *(pfx1(iphel,jphel) &
-            +pfx2(iphel,jphel))
-            weight(it,iphel,jphel)=+fffxn &
-            *wgt &
-            *(pfx1(iphel,jphel) &
-            +pfx2(iphel,jphel))
-            error_polar(it,iphel,jphel)=error_polar(it,iphel,jphel) &
-            +xsec_polar(it,iphel,jphel)**2
+        do lam3=-1,+1,2
+          do lam4=-1,+1,2
+            sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
+            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+            weight(lam3,lam4,it) = &
+            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+            error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
+            +sigma_pol(lam3,lam4,it)**2
           end do
         end do
       end if
 
-
     ! afb
       if (o_asym(4) == 1) then
         if (costhetat_cm > 0.d0) then
-          xsec_fb(1,it,+1)=xsec_fb(1,it,+1) &
+          sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
           +fffxn &
           *wgt
           error_fb(1,it,+1)=error_fb(1,it,+1) &
-          +xsec_fb(1,it,+1)**2
+          +sigma_fb(1,it,+1)**2
         else if (costhetat_cm < 0.d0) then
-          xsec_fb(1,it,-1)=xsec_fb(1,it,-1) &
+          sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
           +fffxn &
           *wgt
           error_fb(1,it,-1)=error_fb(1,it,-1) &
-          +xsec_fb(1,it,-1)**2
+          +sigma_fb(1,it,-1)**2
         end if
       end if
 
     ! afbstar
       if (o_asym(5) == 1) then
         if (costhetat_star > 0.d0) then
-          xsec_fb(2,it,+1)=xsec_fb(2,it,+1) &
+          sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
           +fffxn &
           *wgt
           error_fb(2,it,+1)=error_fb(2,it,+1) &
-          +xsec_fb(2,it,+1)**2
+          +sigma_fb(2,it,+1)**2
         else if (costhetat_star < 0.d0) then
-          xsec_fb(2,it,-1)=xsec_fb(2,it,-1) &
+          sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
           +fffxn &
           *wgt
           error_fb(2,it,-1)=error_fb(2,it,-1) &
-          +xsec_fb(2,it,-1)**2
+          +sigma_fb(2,it,-1)**2
         end if
       end if
 
       ! afbstar reco
       if (o_asym(6) == 1) then
         if (costhetat_star_reco > 0.d0) then
-          xsec_fb(3,it,+1)=xsec_fb(3,it,+1) &
+          sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
           +fffxn &
           *wgt
           error_fb(3,it,+1)=error_fb(3,it,+1) &
-          +xsec_fb(3,it,+1)**2
+          +sigma_fb(3,it,+1)**2
         else if (costhetat_star_reco < 0.d0) then
-          xsec_fb(3,it,-1)=xsec_fb(3,it,-1) &
+          sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
           +fffxn &
           *wgt
           error_fb(3,it,-1)=error_fb(3,it,-1) &
-          +xsec_fb(3,it,-1)**2
+          +sigma_fb(3,it,-1)**2
         end if
       end if
 
       ! atrfb
       if (o_asym(7) == 1) then
         if (yt > 0.d0) then
-          xsec_fb(4,it,+1)=xsec_fb(4,it,+1) &
+          sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
           +fffxn &
           *wgt
           error_fb(4,it,+1)=error_fb(4,it,+1) &
-          +xsec_fb(4,it,+1)**2
+          +sigma_fb(4,it,+1)**2
         else if (yt < 0.d0) then
-          xsec_fb(4,it,-1)=xsec_fb(4,it,-1) &
+          sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
           +fffxn &
           *wgt
           error_fb(4,it,-1)=error_fb(4,it,-1) &
-          +xsec_fb(4,it,-1)**2
+          +sigma_fb(4,it,-1)**2
         end if
       end if
 
       ! attbrfb/a
       if (o_asym(8) == 1) then
         if (yt >= 0.d0) then
-          xsec_fb(5,it,+1)=xsec_fb(5,it,+1) &
+          sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
           +fffxn &
           *wgt
           error_fb(5,it,+1)=error_fb(5,it,+1) &
-          +xsec_fb(5,it,+1)**2
+          +sigma_fb(5,it,+1)**2
         end if
         if (ytb >= 0.d0) then
-          xsec_fb(5,it,-1)=xsec_fb(5,it,-1) &
+          sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
           +fffxn &
           *wgt
           error_fb(5,it,-1)=error_fb(5,it,-1) &
-          +xsec_fb(5,it,-1)**2
+          +sigma_fb(5,it,-1)**2
         end if
       end if
 
@@ -1671,17 +1665,17 @@ function differential_cross_section(x,wgt)
         if (delta_absy == 0.d0) then
           continue
         else if (delta_absy > 0.d0) then
-          xsec_fb(6,it,+1)=xsec_fb(6,it,+1) &
+          sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
           +fffxn &
           *wgt
           error_fb(6,it,+1)=error_fb(6,it,+1) &
-          +xsec_fb(6,it,+1)**2
+          +sigma_fb(6,it,+1)**2
         else if (delta_absy < 0.d0) then
-          xsec_fb(6,it,-1)=xsec_fb(6,it,-1) &
+          sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
           +fffxn &
           *wgt
           error_fb(6,it,-1)=error_fb(6,it,-1) &
-          +xsec_fb(6,it,-1)**2
+          +sigma_fb(6,it,-1)**2
         end if
       end if
 
@@ -1689,51 +1683,51 @@ function differential_cross_section(x,wgt)
         if (delta_absy == 0.d0) then
           continue
         else if (delta_absy_reco > 0.d0) then
-          xsec_fb(7,it,+1)=xsec_fb(7,it,+1) &
+          sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
           +fffxn &
           *wgt
           error_fb(7,it,+1)=error_fb(7,it,+1) &
-          +xsec_fb(7,it,+1)**2
+          +sigma_fb(7,it,+1)**2
         else if (delta_absy_reco < 0.d0) then
-          xsec_fb(7,it,-1)=xsec_fb(7,it,-1) &
+          sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
           +fffxn &
           *wgt
           error_fb(7,it,-1)=error_fb(7,it,-1) &
-          +xsec_fb(7,it,-1)**2
+          +sigma_fb(7,it,-1)**2
         end if
       end if
 
       ! a_l
       if (o_asym(11) == 1) then
         if (cosfl > 0.d0) then
-          xsec_fb(8,it,+1)=xsec_fb(8,it,+1) &
+          sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
           +fffxn &
           *wgt
           error_fb(8,it,+1)=error_fb(8,it,+1) &
-          +xsec_fb(8,it,+1)**2
+          +sigma_fb(8,it,+1)**2
         else if (cosfl < 0.d0) then
-          xsec_fb(8,it,-1)=xsec_fb(8,it,-1) &
+          sigma_fb(8,it,-1)=sigma_fb(8,it,-1) &
           +fffxn &
           *wgt
           error_fb(8,it,-1)=error_fb(8,it,-1) &
-          +xsec_fb(8,it,-1)**2
+          +sigma_fb(8,it,-1)**2
         end if
       end if
 
       ! a_l
       if (o_asym(12) == 1) then
         if (costheta5_cm > 0.d0) then
-          xsec_fb(9,it,+1)=xsec_fb(9,it,+1) &
+          sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
           +fffxn &
           *wgt
           error_fb(9,it,+1)=error_fb(9,it,+1) &
-          +xsec_fb(9,it,+1)**2
+          +sigma_fb(9,it,+1)**2
         else if (costheta5_cm < 0.d0) then
-          xsec_fb(9,it,-1)=xsec_fb(9,it,-1) &
+          sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
           +fffxn &
           *wgt
           error_fb(9,it,-1)=error_fb(9,it,-1) &
-          +xsec_fb(9,it,-1)**2
+          +sigma_fb(9,it,-1)**2
         end if
       end if
 
@@ -1741,7 +1735,6 @@ function differential_cross_section(x,wgt)
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
-
 
       if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
       if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
@@ -2079,7 +2072,7 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            if (abs(ytt) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+            if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
           end if
         end if
         if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
@@ -2091,7 +2084,7 @@ function differential_cross_section(x,wgt)
           else if (nbin < 1) then
             continue
           else
-            if (abs(ytt) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+            if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
           end if
         end if
       end if

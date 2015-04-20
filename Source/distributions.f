@@ -177,7 +177,6 @@ module distributions
   public :: initialise_distributions
   public :: finalise_distributions
 
-  real :: atot(n_asymmetries),atoterr(n_asymmetries)
   integer, private :: i, j, k, iasy, jasy
   real, private :: sfxsigptot(n_asymmetries), sfxsigmtot(n_asymmetries), asym_int(n_asymmetries)
 
@@ -487,10 +486,6 @@ subroutine disable_distributions
     o_cost7 = 0
     o_ct7ct5 = 0
     o_dphi = 0
-!     o_dphi2d = 0
-!     o_ct7ct52d = 0
-!     o_cost72d = 0
-!     o_cost52d = 0
     o_etmiss = 0
     o_ht = 0
     o_mttvis = 0
@@ -502,7 +497,8 @@ subroutine disable_distributions
     o_mct3 = 0
     o_mlt = 0
     o_mlct = 0
-    o_asym(11) = 0
+    o_asym(5) = 0
+    o_asym(9) = 0
   end if
 
   if (final_state == 3) then
@@ -512,10 +508,6 @@ subroutine disable_distributions
     o_cost7 = 0
     o_ct7ct5 = 0
     o_dphi = 0
-!     o_dphi2d = 0
-!     o_ct7ct52d = 0
-!     o_cost72d = 0
-!     o_cost52d = 0
     o_etmiss = 0
     o_mt_reco = 0
     o_mtb = 0
@@ -567,7 +559,7 @@ subroutine finalise_distributions
 
   integer :: ndiv_sig
 
-  print*, "Printing histograms"
+  print*, "Printing histograms..."
 
   write(10,*) '-----------------------------------------------------'
   write(10,*)'HISTOGRAMS'
@@ -733,7 +725,7 @@ subroutine finalise_distributions
       end if
     end do
   end if
-
+  print *, "done."
 end subroutine finalise_distributions
 
 end module distributions

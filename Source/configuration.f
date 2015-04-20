@@ -50,7 +50,7 @@ module configuration
     subroutine read_config
 
       ! read config file
-      print *, "Reading config file" 
+      print *, "Reading config file..." 
 
       read(5,*) output_file
       
@@ -103,12 +103,14 @@ module configuration
       read(5,*) print_2d_distributions
 
       read(5,*) include_errors
+
+      print *, "done."
       
     end subroutine read_config
 
     subroutine modify_config
 
-      print*, "Modifying config file"
+      print*, "Modifying config file..."
 
       if(final_state == 0)then
         n_final=4
@@ -148,6 +150,7 @@ module configuration
         include_bsm=0
       end if
       
+      print *, "done."
     end subroutine modify_config
 
 end module configuration

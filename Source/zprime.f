@@ -19,11 +19,13 @@ program zprime
 
   external differential_cross_section
 
-  real :: poltot(-1:1, -1:1), polchi(-1:1, -1:1)
-  real :: spattot(n_fb_asymmetries, -1:1), spatchi(n_fb_asymmetries, -1:1)
+  real :: sigma_pol_tot(-1:1, -1:1), error_pol_tot(-1:1, -1:1)
+  real :: sigma_fb_tot(n_fb_asymmetries, -1:1), error_fb_tot(n_fb_asymmetries, -1:1)
 
-  real :: avgi, chi2a, cross, error, sd, stantot, alfas, qcdl4
-  integer :: iab, ndimensions, iasy, icteq, iphel,ispat,jphel
+  real :: avgi, chi2a, error, sd, stantot, alfas, qcdl4
+  integer :: ndimensions, iab, iasy, ifb, icteq
+  integer :: lam3,lam4
+  real :: atot(n_asymmetries), atoterr(n_asymmetries)
 
   ! branching ratio for t->bev=bmv=btv (with qcd corrections?)
   real :: brtbln = 0.10779733d0
@@ -292,27 +294,27 @@ program zprime
       resl(i) = 0.d0
       standdevl(i) = 0.d0
       cnorm(i) = 0.d0
-      do iphel = -1, +1, 2
-        do jphel = -1, +1, 2
-          xsec_polar(i, iphel, jphel) = 0.d0
-          error_polar(i, iphel, jphel) = 0.d0
+      do lam3 = -1, +1, 2
+        do lam4 = -1, +1, 2
+          sigma_pol(lam3, lam4, i) = 0.d0
+          error_pol(lam3, lam4, i) = 0.d0
         end do
       end do
-      do ispat = 1, n_fb_asymmetries
-        do iasy = -1, +1, 2
-          xsec_fb(ispat, i, iasy) = 0.d0
-          error_fb(ispat, i, iasy) = 0.d0
+      do ifb = 1, n_fb_asymmetries
+        do iab = -1, +1, 2
+          sigma_fb(ifb, i, iab) = 0.d0
+          error_fb(ifb, i, iab) = 0.d0
         end do
       end do
     end do
   end if
 
   ! integrate 
-  print *, 'Starting integration'
+  print *, 'Starting integration...'
   it = 0 
   call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
 
-  print *, 'Finished integration'  
+  print *, 'done.'  
 
   if (final_state == 0 .and. use_branching_ratio == 1) then
     ! multiply by branching ratios
@@ -333,19 +335,18 @@ program zprime
   end if
 
   ! collect total cross-section
-  cross = avgi
   sigma = avgi
   error = sd
 
   ! print integrated cross section
   open(unit = 10, file = 'Output/'//output_file, status = "old", action = "write", position="append")
   write(10,*) 'integrated cross section'
-  if (cross == 0.d0) then
+  if (sigma == 0.d0) then
     write(10,*) 'sigma = 0  ! check permitted gauge sectors.'
     stop
   else
     write(10,*) 'sigma (pb)', 'error (same units)'
-    write(10,*) cross, error
+    write(10,*) sigma, error
     write(10,*) '(using ', npoints, ' points)'
   end if
 
@@ -364,117 +365,130 @@ program zprime
   ! total asymmetries
   ! collect polarised cross sections.
   if (include_asymmetries == 1) then
+    print *, "Collating polar cross sections..."
+    
     if (final_state == 0) then
-      do iphel = -1, +1, 2
-        do jphel = -1, +1, 2
+      do lam3 = -1, +1, 2
+        do lam4 = -1, +1, 2
           do i = 1, it
-            xsec_polar(i, iphel, jphel) = xsec_polar(i, iphel, jphel) &
-                                          *avgi/cnorm(i)
-            error_polar(i, iphel, jphel) = xsec_polar(i, iphel, jphel) &
+            sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
+                                          *sigma/cnorm(i)
+            error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
                                            *sd/cnorm(i)
           end do
-          poltot(iphel, jphel) = 0.d0
-          polchi(iphel, jphel) = 0.d0
+          sigma_pol_tot(lam3, lam4) = 0.d0
+          error_pol_tot(lam3, lam4) = 0.d0
           do i = 1, it
-            poltot(iphel, jphel) = poltot(iphel, jphel) &
-                                   + xsec_polar(i, iphel, jphel)
-            polchi(iphel, jphel) = polchi(iphel, jphel) &
-                                   + error_polar(i, iphel, jphel)
+            sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
+                                   + sigma_pol(lam3, lam4, i)
+            error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
+                                   + error_pol(lam3, lam4, i)
           end do
-          polchi(iphel, jphel) = polchi(iphel, jphel) &
-          /poltot(iphel, jphel)
-          !        polchi(iphel,jphel)=
-          ! & sqrt(abs(polchi(iphel,jphel)
-          ! &         -poltot(iphel,jphel)**2*dfloat(ncall)))
+          error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) &
+          /sigma_pol_tot(lam3, lam4)
+          !        sigma_pol_tot(lam3,lam4)=
+          ! & sqrt(abs(sigma_pol_tot(lam3,lam4)
+          ! &         -sigma_pol_tot(lam3,lam4)**2*dfloat(ncall)))
           ! & /dfloat(ncall)
         end do
       end do
     end if
+    print *, "done."
 
     ! collect unpolarised spatial asymmetry
-    do ispat = 1, n_fb_asymmetries
-      if (o_asym(ispat + 3) == 0) then
-        continue
-      else
+    print *, "Collating FB cross sections..."
+    do ifb = 1, n_fb_asymmetries
+      if (o_asym(ifb + 3) == 1) then
         do iab = -1,+1, 2
           do i = 1, it
-            xsec_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
+            sigma_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
                                      *avgi/cnorm(i)
-            error_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
+            error_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
                                       *sd/cnorm(i)
           end do
-          spattot(ispat, iab) = 0.d0
-          spatchi(ispat, iab) = 0.d0
+          sigma_fb_tot(ifb, iab) = 0.d0
+          error_fb_tot(ifb, iab) = 0.d0
           do i = 1, it
-            spattot(ispat, iab) = spattot(ispat, iab) &
-                                  + xsec_fb(ispat, i, iab)
-            spatchi(ispat, iab) = spatchi(ispat, iab) &
-                                  + error_fb(ispat, i, iab)
+            sigma_fb_tot(ifb, iab) = sigma_fb_tot(ifb, iab) &
+                                  + sigma_fb(ifb, i, iab)
+            error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
+                                  + error_fb(ifb, i, iab)
           end do
-          spatchi(ispat, iab) = spatchi(ispat, iab) &
-                                /spattot(ispat, iab)
-          !         spatchi(iasy)=
-          !    & sqrt(abs(spatchi(iasy)
-          !    &         -spattot(iasy)**2*dfloat(ncall)))
+          error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
+                                /sigma_fb_tot(ifb, iab)
+          !         error_fb_tot(iasy)=
+          !    & sqrt(abs(error_fb_tot(iasy)
+          !    &         -sigma_fb_tot(iasy)**2*dfloat(ncall)))
           !    & /dfloat(ncall)
         end do
       end if
     end do
+    print *, "done."
 
     ! define asymmetries
+    print *, "Calculating polar asymmetries..."
     if (final_state == 0) then
       ! all
-      atot(1) = (poltot(+1, +1) - poltot(+1, -1) &
-                 - poltot(-1, +1) + poltot(-1, -1)) &
-                /cross
-      atoterr(1) = (polchi(+1, +1) + polchi(+1, -1) &
-                    +polchi(-1, +1) + polchi(-1, -1)) &
+      atot(1) = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
+                 - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
+                /sigma
+      atoterr(1) = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
+                    +sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
                    /4.d0*atot(1)
       ! al
-      atot(2) = (poltot(-1, -1) - poltot(+1, -1) &
-                 + poltot(-1, +1) - poltot(+1, +1)) &
-                /cross
-      atoterr(2) = (polchi(-1, -1) + polchi(+1, -1) &
-                    +polchi(-1, +1) + polchi(+1, +1)) &
+      atot(2) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
+                 + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) &
+                /sigma
+      atoterr(2) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
+                    +sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) &
                    /4.d0*atot(2)
       ! apv
-      atot(3) = (poltot(-1, -1) - poltot(+1, +1)) &
-                /cross/2.d0
-      atoterr(3) = (polchi(-1, -1) + polchi(+1, +1)) &
+      atot(3) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) &
+                /sigma/2.d0
+      atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
                    /2.d0*atot(3)
     end if
+    print *, "done."
 
+    print *, "Calculating FB asymmetries..."
     do iasy = 4, n_asymmetries
-      ispat = iasy - 3
+      ifb = iasy - 3
       if (o_asym(iasy) > 0) then
-        atot(iasy) = (spattot(ispat, +1) - spattot(ispat, -1))/cross
+        atot(iasy) = (sigma_fb_tot(ifb, +1) - sigma_fb_tot(ifb, -1))/sigma
         atoterr(iasy) = sd/avgi*atot(iasy)
       end if
     end do
+    print *, "done."
+
 
     ! print asymmetries
+    print *, "Printing total asymmetries..."
     write(10,*) 'total asymmetries'
-    if (final_state == 0) then
-      write(10,*) 'ALL:                    uncertainty (same units):'
-      write(10,*) atot(1), atoterr(1)
-      write(10,*) 'AL:                     uncertainty (same units):'
-      write(10,*) atot(2), atoterr(2)
-      write(10,*) 'APV:                    uncertainty (same units):'
-      write(10,*) atot(3), atoterr(3)
-      write(10,*) 'AFB:                    uncertainty (same units):'
-      write(10,*) atot(4), atoterr(4)
-      write(10,*) 'AFB*:                   uncertainty (same units):'
-      write(10,*) atot(5), atoterr(5)
-      write(10,*) 'AtRFB:                  uncertainty (same units):'
-      write(10,*) atot(6), atoterr(6)
-      write(10,*) "AttbRFB:                uncertainty (same units):"
-      write(10,*) atot(7), atoterr(7)
-      write(10,*) "ARFB/:                  uncertainty (same units):"
-      write(10,*) atot(8), atoterr(8)
-    else if (final_state > 0) then
-      write(10,*) 'A_l:                    uncertainty (same units):'
-      write(10,*) atot(9), atoterr(9)
-    end if
+    if (o_asym(1) == 1)  write(10,*) 'ALL:                    uncertainty (same units):'
+    if (o_asym(1) == 1)  write(10,*) atot(1), atoterr(1)
+    if (o_asym(2) == 1)  write(10,*) 'AL:                     uncertainty (same units):'
+    if (o_asym(2) == 1)  write(10,*) atot(2), atoterr(2)
+    if (o_asym(3) == 1)  write(10,*) 'APV:                    uncertainty (same units):'
+    if (o_asym(3) == 1)  write(10,*) atot(3), atoterr(3)
+    if (o_asym(4) == 1)  write(10,*) 'AFB:                    uncertainty (same units):'
+    if (o_asym(4) == 1)  write(10,*) atot(4), atoterr(4)
+    if (o_asym(5) == 1)  write(10,*) 'AFB*:                   uncertainty (same units):'
+    if (o_asym(5) == 1)  write(10,*) atot(5), atoterr(5)
+    if (o_asym(6) == 1)  write(10,*) 'AFB*_reco:              uncertainty (same units):'
+    if (o_asym(6) == 1)  write(10,*) atot(6), atoterr(6)
+    if (o_asym(7) == 1)  write(10,*) 'AtRFB:                  uncertainty (same units):'
+    if (o_asym(7) == 1)  write(10,*) atot(7), atoterr(7)
+    if (o_asym(8) == 1)  write(10,*) "AttbRFB:                uncertainty (same units):"
+    if (o_asym(8) == 1)  write(10,*) atot(8), atoterr(8)
+    if (o_asym(9) == 1)  write(10,*) "ARFB:                   uncertainty (same units):"
+    if (o_asym(9) == 1)  write(10,*) atot(9), atoterr(9)
+    if (o_asym(10) == 1)  write(10,*) "ARFB_reco:              uncertainty (same units):"
+    if (o_asym(10) == 1)  write(10,*) atot(10), atoterr(10)
+    if (o_asym(11) == 1)  write(10,*) 'A_l:                   uncertainty (same units):'
+    if (o_asym(11) == 1)  write(10,*) atot(11), atoterr(11)
+    if (o_asym(12) == 1)  write(10,*) 'AlFB:                  uncertainty (same units):'
+    if (o_asym(12) == 1)  write(10,*) atot(12), atoterr(12)
+    print *, "done."
   end if
 
   call finalise_distributions

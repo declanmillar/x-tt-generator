@@ -8,8 +8,8 @@ module kinematics
   real :: s
   real :: sigma
   real, parameter :: unit_conv = 0.38937966d9 ! GeV^-2 to nb
-  real :: Xsec_polar(20, -1:1, -1:1), error_polar(20, -1:1, -1:1)
-  real :: Xsec_FB(n_fb_asymmetries, 20, -1:1), error_FB(n_fb_asymmetries, 20, -1:1)
+  real :: sigma_pol(-1:1, -1:1, 20), error_pol(-1:1, -1:1, 20)
+  real :: sigma_fb(n_fb_asymmetries, 20, -1:1), error_FB(n_fb_asymmetries, 20, -1:1)
   integer :: npoints
 
 end module kinematics
