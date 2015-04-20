@@ -20,9 +20,8 @@ OUT = Binary
 F = gfortran
 
 # Flags
-FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB)
-#-ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0 
-# -Wall # LFLAGS = -Wl,-stack_size,0x40000000
+FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0 
+LFLAGS = -Wl,-stack_size,0x40000000
 
 # Compile all files ending in .f in SRC
 $(LIB)/%.o: $(SRC)/%.f 
@@ -30,7 +29,7 @@ $(LIB)/%.o: $(SRC)/%.f
 
 # Link mainfile and all processes
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
-	$(F) $(FFLAGS) -o $@ $^
+	$(F) $(FFLAGS) $(LFLAGS) -o $@ $^
 
 # Clean up
 clean:

@@ -240,7 +240,7 @@ subroutine create_distributions
   if (o_cost7 == 1) h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^{-}}--[pb]", "cos#theta_{l^{-}}", -1.d0, 1.d0, 100)
   if (o_ct7ct5 == 1) h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^{+}}cos#theta_{l^{-}}--[pb]", &
      "cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
-  if (o_mll == 1) h_ht = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 0.d0, 100.d0, 100)
+  if (o_mll == 1) h_mll = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 0.d0, 100.d0, 100)
   if (o_ht == 1) h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}--[GeV]", 0.d0, 4000.d0, 40)
   if (o_mttvis == 1) h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}^{vis}_{T}--[GeV]",0.d0, 4000.d0,40)
   if (o_mt1 == 1) h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}--[GeV]", 0.d0, 4000.d0, 40)
