@@ -394,34 +394,34 @@ program zprime
     end if
 
     ! collect unpolarised spatial asymmetry
-!     do ispat = 1, n_fb_asymmetries
-!       if (o_asym(ispat + 3) == 0) then
-!         continue
-!       else
-!         do iab = -1,+1, 2
-!           do i = 1, it
-!             xsec_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
-!                                      *avgi/cnorm(i)
-!             error_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
-!                                       *sd/cnorm(i)
-!           end do
-!           spattot(ispat, iab) = 0.d0
-!           spatchi(ispat, iab) = 0.d0
-!           do i = 1, it
-!             spattot(ispat, iab) = spattot(ispat, iab) &
-!                                   + xsec_fb(ispat, i, iab)
-!             spatchi(ispat, iab) = spatchi(ispat, iab) &
-!                                   + error_fb(ispat, i, iab)
-!           end do
-!           spatchi(ispat, iab) = spatchi(ispat, iab) &
-!                                 /spattot(ispat, iab)
-!           !         spatchi(iasy)=
-!           !    & sqrt(abs(spatchi(iasy)
-!           !    &         -spattot(iasy)**2*dfloat(ncall)))
-!           !    & /dfloat(ncall)
-!         end do
-!       end if
-!     end do
+    do ispat = 1, n_fb_asymmetries
+      if (o_asym(ispat + 3) == 0) then
+        continue
+      else
+        do iab = -1,+1, 2
+          do i = 1, it
+            xsec_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
+                                     *avgi/cnorm(i)
+            error_fb(ispat, i, iab) = xsec_fb(ispat, i, iab) &
+                                      *sd/cnorm(i)
+          end do
+          spattot(ispat, iab) = 0.d0
+          spatchi(ispat, iab) = 0.d0
+          do i = 1, it
+            spattot(ispat, iab) = spattot(ispat, iab) &
+                                  + xsec_fb(ispat, i, iab)
+            spatchi(ispat, iab) = spatchi(ispat, iab) &
+                                  + error_fb(ispat, i, iab)
+          end do
+          spatchi(ispat, iab) = spatchi(ispat, iab) &
+                                /spattot(ispat, iab)
+          !         spatchi(iasy)=
+          !    & sqrt(abs(spatchi(iasy)
+          !    &         -spattot(iasy)**2*dfloat(ncall)))
+          !    & /dfloat(ncall)
+        end do
+      end if
+    end do
 
     ! define asymmetries
     if (final_state == 0) then
@@ -446,37 +446,37 @@ program zprime
                    /2.d0*atot(3)
     end if
 
-!     do iasy = 4, n_asymmetries
-!       ispat = iasy - 3
-!       if (o_asym(iasy) > 0) then
-!         atot(iasy) = (spattot(ispat, +1) - spattot(ispat, -1))/cross
-!         atoterr(iasy) = sd/avgi*atot(iasy)
-!       end if
-!     end do
+    do iasy = 4, n_asymmetries
+      ispat = iasy - 3
+      if (o_asym(iasy) > 0) then
+        atot(iasy) = (spattot(ispat, +1) - spattot(ispat, -1))/cross
+        atoterr(iasy) = sd/avgi*atot(iasy)
+      end if
+    end do
 
     ! print asymmetries
     write(10,*) 'total asymmetries'
-!     if (final_state == 0) then
-!       write(10,*) 'ALL:                    uncertainty (same units):'
-!       write(10,*) atot(1), atoterr(1)
-!       write(10,*) 'AL:                     uncertainty (same units):'
-!       write(10,*) atot(2), atoterr(2)
-!       write(10,*) 'APV:                    uncertainty (same units):'
-!       write(10,*) atot(3), atoterr(3)
-!       write(10,*) 'AFB:                    uncertainty (same units):'
-!       write(10,*) atot(4), atoterr(4)
-!       write(10,*) 'AFB*:                   uncertainty (same units):'
-!       write(10,*) atot(5), atoterr(5)
-!       write(10,*) 'AtRFB:                  uncertainty (same units):'
-!       write(10,*) atot(6), atoterr(6)
-!       write(10,*) "AttbRFB:                uncertainty (same units):"
-!       write(10,*) atot(7), atoterr(7)
-!       write(10,*) "ARFB/:                  uncertainty (same units):"
-!       write(10,*) atot(8), atoterr(8)
-!     else if (final_state > 0) then
-!       write(10,*) 'A_l:                    uncertainty (same units):'
-!       write(10,*) atot(9), atoterr(9)
-!     end if
+    if (final_state == 0) then
+      write(10,*) 'ALL:                    uncertainty (same units):'
+      write(10,*) atot(1), atoterr(1)
+      write(10,*) 'AL:                     uncertainty (same units):'
+      write(10,*) atot(2), atoterr(2)
+      write(10,*) 'APV:                    uncertainty (same units):'
+      write(10,*) atot(3), atoterr(3)
+      write(10,*) 'AFB:                    uncertainty (same units):'
+      write(10,*) atot(4), atoterr(4)
+      write(10,*) 'AFB*:                   uncertainty (same units):'
+      write(10,*) atot(5), atoterr(5)
+      write(10,*) 'AtRFB:                  uncertainty (same units):'
+      write(10,*) atot(6), atoterr(6)
+      write(10,*) "AttbRFB:                uncertainty (same units):"
+      write(10,*) atot(7), atoterr(7)
+      write(10,*) "ARFB/:                  uncertainty (same units):"
+      write(10,*) atot(8), atoterr(8)
+    else if (final_state > 0) then
+      write(10,*) 'A_l:                    uncertainty (same units):'
+      write(10,*) atot(9), atoterr(9)
+    end if
   end if
 
   call finalise_distributions
