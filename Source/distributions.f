@@ -311,7 +311,7 @@ subroutine initialise_distributions
   if (o_mct3 == 1) call h_mct3%initialise()
   if (o_mlt == 1) call h_mlt%initialise()
   if (o_mlct == 1) call h_mlct%initialise()
-  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%initialise()
+  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%initialise2d()
 
   ! sigp
   o_sigp=include_asymmetries
@@ -567,8 +567,7 @@ subroutine finalise_distributions
   if (o_mct3 == 1) call h_mct3%finalise()
   if (o_mlt == 1) call h_mlt%finalise()
   if (o_mlct == 1) call h_mlct%finalise()
-  write(*,*) 'test'
-  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%initialise()
+  if ((o_mtt == 1) .and. (o_dphi == 1)) call h2_mttdphi%finalise2d()
 
 !     ! plot distributions in all asymmetries
 !     if((o_sigp == 1) .and. (o_sigm == 1))then

@@ -9,13 +9,13 @@ module class_Histogram2d
 
   type, public :: Histogram2d
     private
-    character (len = 50), public :: name
-    character (len = 50), public :: ztitle
-    character (len = 50), public :: xtitle
+    character (len = 50), public :: name2d
+    character (len = 50), public :: ztitle2d
+    character (len = 50), public :: xtitle2d
     real, public :: xlow
     real, public :: xup
     integer, public :: nxbin
-    character (len = 50), public :: ytitle
+    character (len = 50), public :: ytitle2d
     real, public :: ylow
     real, public :: yup
     integer, public :: nybin
@@ -27,29 +27,29 @@ module class_Histogram2d
     real :: sumw2(500,500,20) = 0, sumw2tot(500,500) = 0
 
     contains
-      procedure :: bin_width => histogram2d_bin_width 
-      procedure :: midpoints => histogram2d_midpoints
-      procedure :: initialise => histogram2d_initialise
-      procedure :: finalise => histogram2d_finalise
-      procedure :: fill => histogram2d_fill
-      procedure :: collate => histogram2d_collate
-      procedure :: check => histogram2d_check
-      procedure :: print => histogram2d_print
+      procedure :: bin_width2d => histogram2d_bin_width 
+      procedure :: midpoints2d => histogram2d_midpoints
+      procedure :: initialise2d => histogram2d_initialise
+      procedure :: finalise2d => histogram2d_finalise
+      procedure :: fill2d => histogram2d_fill
+      procedure :: collate2d => histogram2d_collate
+      procedure :: check2d => histogram2d_check
+      procedure :: print2d => histogram2d_print
   end type Histogram2d
 
 contains
 
   subroutine histogram2d_initialise(this)
     class(histogram2d), intent(inout) :: this
-    call this%bin_width
-    call this%midpoints
+    call this%bin_width2d
+    call this%midpoints2d
   end subroutine histogram2d_initialise
 
   subroutine histogram2d_finalise(this)
     class(histogram2d), intent(inout) :: this
-    call this%collate
-    call this%check
-    call this%print
+    call this%collate2d
+    call this%check2d
+    call this%print2d
   end subroutine histogram2d_finalise
 
   subroutine histogram2d_bin_width(this)
@@ -116,7 +116,7 @@ contains
   subroutine histogram2d_check(this)
     class(histogram2d), intent(inout) :: this
       if(abs(sigma-this%sfxytot) > diff_max) then
-        write(10,*) this%name, ' error: ', this%sfxytot
+        write(10,*) this%name2d, ' error: ', this%sfxytot
       end if
   end subroutine histogram2d_check
 
@@ -124,21 +124,21 @@ contains
     class(histogram2d), intent(inout) :: this
     integer :: i, j
     write(10,*)'DISTRIBUTION'
-    write(10,*) this%name
-    write(10,*) this%ztitle
-    write(10,*) this%xtitle
+    write(10,*) this%name2d
+    write(10,*) this%ztitle2d
+    write(10,*) this%xtitle2d
     write(10,*) this%xlow
     write(10,*) this%xup
     write(10,*) this%nxbin
-    write(10,*) this%ytitle
+    write(10,*) this%ytitle2d
     write(10,*) this%ylow
     write(10,*) this%yup
     write(10,*) this%nybin
     do i = 1, this%nxbin
-        do j = 1, this%nybin
-          write(10,*) this%x(i), this%y(j), this%fxytot(i,j)
-        end do
+      do j = 1, this%nybin
+        write(10,*) this%x(i), this%y(j), this%fxytot(i,j)
       end do
+    end do
     write(10,*)'END'
   end subroutine histogram2d_print
 
