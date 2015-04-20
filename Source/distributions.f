@@ -4,7 +4,7 @@ module distributions
                            n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final, tops_decay, include_errors
   use mathematics, only: pi
   use kinematics, only: sigma
-  use integration, only: it
+  use integration, only: it, cnorm
   use class_histogram
   use class_histogram2d
 
@@ -363,20 +363,16 @@ subroutine initialise_distributions
   if (o_mltdphi == 1) call h2_mltdphi%initialise()
   if (o_mlctdphi == 1) call h2_mlctdphi%initialise()
 
-!   ! sigp
-!   o_sigp=include_asymmetries
-!   sigpmax=14000
-!   sigpmin=0
-!   ndiv_sigp=100/5
-!   ! sigm
-!   o_sigm=include_asymmetries
-!   sigmmax=14000
-!   sigmmin=0
-!   ndiv_sigm=100/5
-
-!   do iasy=1,n_asymmetries
-!     o_asym(iasy)=include_asymmetries
-!   end do
+  ! sigp
+  o_sigp=include_asymmetries
+  sigpmax=14000
+  sigpmin=0
+  ndiv_sigp=100/5
+  ! sigm
+  o_sigm=include_asymmetries
+  sigmmax=14000
+  sigmmin=0
+  ndiv_sigm=100/5
 
   print *, "done."
 
@@ -385,6 +381,10 @@ end subroutine initialise_distributions
 subroutine disable_distributions
 
   print *, "Disabling irrelevent distributions..."
+
+  do iasy=1,n_asymmetries
+    o_asym(iasy)=include_asymmetries
+  end do
 
   if (initial_state == 0) then
     ! disable non-useful variables for pp
@@ -655,92 +655,92 @@ subroutine finalise_distributions
   if (o_mlctdphi == 1) call h2_mlctdphi%finalise()
 
 
-!     ! plot distributions in all asymmetries
-!     if((o_sigp == 1) .and. (o_sigm == 1))then
-!       do jasy=1,n_asymmetries
-!         if(o_asym(jasy) == 0)then
-!           continue
-!         else
-!           ! snorm(jasy)=0.d0
-!           sfxsigptot(jasy)=0d0
-!           do j=1,ndiv_sigp
-!             fxsigptot(jasy,j)=0.d0
-!             do i=1,it
-!               fxsigp(jasy,j,i)=fxsigp(jasy,j,i)*sigma/cnorm(i)/sigpw
-!               fxsigptot(jasy,j)=fxsigptot(jasy,j)+fxsigp(jasy,j,i)
-!             end do
-!             sfxsigptot(jasy)=sfxsigptot(jasy)+fxsigptot(jasy,j)*sigpw
-!           end do
-!           sfxsigmtot(jasy)=0d0
-!           do j=1,ndiv_sigm
-!             do i=1,it
-!               fxsigm(jasy,j,i)=fxsigm(jasy,j,i)*sigma/cnorm(i)/sigmw
-!               fxsigmtot(jasy,j)=fxsigmtot(jasy,j)+fxsigm(jasy,j,i)
-!             end do
-!             sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
-!           end do
-!           write(10,*)'ASYMMETRY'
-!           if(jasy == 1)then
-!             write(10,*)'ALL'
-!             write(10,*)'A_{ll}'
-!           else if(jasy == 2)then
-!             write(10,*)'AL'
-!             write(10,*)'A_{l}'
-!           else if(jasy == 3)then
-!             write(10,*)'APV'
-!             write(10,*)'A_{pv}'
-!           else if(jasy == 4)then
-!             write(10,*)'AFB'
-!             write(10,*)'A_{fb}'
-!           else if(jasy == 5)then
-!             write(10,*)'AFBSTAR'
-!             write(10,*)'A_{fb^{*}}'
-!           else if(jasy == 6)then
-!             write(10,*)'AFBSTAR_reco'
-!             write(10,*)'A_{fb^{*}}(reco)'
-!           else if(jasy == 7)then
-!             write(10,*)'AtRFB'
-!             write(10,*)'a^{t}_{rfb}'
-!           else if(jasy == 8)then
-!             write(10,*)'AttbRFB'
-!             write(10,*)"a^{b\bar{b}}_{rfb}"
-!           else if(jasy == 9)then
-!             write(10,*)'ARFB'
-!             write(10,*)"A_{rfb}"
-!            else if(jasy == 10)then
-!             write(10,*)'ARFB_reco'
-!             write(10,*)"A_{rfb}(reco)"
-!           else if(jasy == 11)then
-!             write(10,*)'A_l'
-!             write(10,*)'A_{l^+}'
-!           else if(jasy == 12)then
-!             write(10,*)'AlFB'
-!             write(10,*)'A^{l^{+}}_{FB}'
-!           end if
-!           write(10,*)'M_{tt}'
-!           ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
-!           do i=1,ndiv_sig
-!             if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
-!               write(10,*)(xsigm(i)+xsigp(i))/2.d0,0.d0,0.d0,0.d0
-!               !           snorm(jasy)=snorm(jasy)+0.d0
-!             else
-!               write(10,*)(xsigm(i)+xsigp(i))/2.d0, &
-!               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/ &
-!               (fxsigptot(jasy,i)+fxsigmtot(jasy,i)), &
-!               fxsigptot(jasy,i),fxsigmtot(jasy,i)
-!               !             snorm(jasy)=snorm(jasy)+
-!               !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
-!               !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
-!               !    &               *fxmtttot(i)*mttw/sigma
-!             end if
-!           end do
-!           asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/(sfxsigptot(jasy)+sfxsigmtot(jasy))
-!           write(10,*)'END'
-!           !         write(10,*)'(total asymmetry:',asym_int(jasy),')'
-!           !         write(10,*)'(integrated asymmetry:',snorm(jasy),' )'
-!         end if
-!       end do
-!     end if
+  ! plot distributions in all asymmetries
+  if((o_sigp == 1) .and. (o_sigm == 1))then
+    do jasy=1,n_asymmetries
+      if(o_asym(jasy) == 0)then
+        continue
+      else
+        ! snorm(jasy)=0.d0
+        sfxsigptot(jasy)=0d0
+        do j=1,ndiv_sigp
+          fxsigptot(jasy,j)=0.d0
+          do i=1,it
+            fxsigp(jasy,j,i)=fxsigp(jasy,j,i)*sigma/cnorm(i)/sigpw
+            fxsigptot(jasy,j)=fxsigptot(jasy,j)+fxsigp(jasy,j,i)
+          end do
+          sfxsigptot(jasy)=sfxsigptot(jasy)+fxsigptot(jasy,j)*sigpw
+        end do
+        sfxsigmtot(jasy)=0d0
+        do j=1,ndiv_sigm
+          do i=1,it
+            fxsigm(jasy,j,i)=fxsigm(jasy,j,i)*sigma/cnorm(i)/sigmw
+            fxsigmtot(jasy,j)=fxsigmtot(jasy,j)+fxsigm(jasy,j,i)
+          end do
+          sfxsigmtot(jasy)=sfxsigmtot(jasy)+fxsigmtot(jasy,j)*sigmw
+        end do
+        write(10,*)'ASYMMETRY'
+        if(jasy == 1)then
+          write(10,*)'ALL'
+          write(10,*)'A_{ll}'
+        else if(jasy == 2)then
+          write(10,*)'AL'
+          write(10,*)'A_{l}'
+        else if(jasy == 3)then
+          write(10,*)'APV'
+          write(10,*)'A_{pv}'
+        else if(jasy == 4)then
+          write(10,*)'AFB'
+          write(10,*)'A_{fb}'
+        else if(jasy == 5)then
+          write(10,*)'AFBSTAR'
+          write(10,*)'A_{fb^{*}}'
+        else if(jasy == 6)then
+          write(10,*)'AFBSTAR_reco'
+          write(10,*)'A_{fb^{*}}(reco)'
+        else if(jasy == 7)then
+          write(10,*)'AtRFB'
+          write(10,*)'a^{t}_{rfb}'
+        else if(jasy == 8)then
+          write(10,*)'AttbRFB'
+          write(10,*)"a^{b\bar{b}}_{rfb}"
+        else if(jasy == 9)then
+          write(10,*)'ARFB'
+          write(10,*)"A_{rfb}"
+         else if(jasy == 10)then
+          write(10,*)'ARFB_reco'
+          write(10,*)"A_{rfb}(reco)"
+        else if(jasy == 11)then
+          write(10,*)'A_l'
+          write(10,*)'A_{l^+}'
+        else if(jasy == 12)then
+          write(10,*)'AlFB'
+          write(10,*)'A^{l^{+}}_{FB}'
+        end if
+        write(10,*)'M_{tt}'
+        ndiv_sig=(ndiv_sigm+ndiv_sigp)/2
+        do i=1,ndiv_sig
+          if(fxsigptot(jasy,i)+fxsigmtot(jasy,i) == 0.d0)then
+            write(10,*)(xsigm(i)+xsigp(i))/2.d0,0.d0,0.d0,0.d0
+            !           snorm(jasy)=snorm(jasy)+0.d0
+          else
+            write(10,*)(xsigm(i)+xsigp(i))/2.d0, &
+            (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/ &
+            (fxsigptot(jasy,i)+fxsigmtot(jasy,i)), &
+            fxsigptot(jasy,i),fxsigmtot(jasy,i)
+            !             snorm(jasy)=snorm(jasy)+
+            !    &               (fxsigptot(jasy,i)-fxsigmtot(jasy,i))/
+            !    &               (fxsigptot(jasy,i)+fxsigmtot(jasy,i))
+            !    &               *fxmtttot(i)*mttw/sigma
+          end if
+        end do
+        asym_int(jasy)=(sfxsigptot(jasy)-sfxsigmtot(jasy))/(sfxsigptot(jasy)+sfxsigmtot(jasy))
+        write(10,*)'END'
+        !         write(10,*)'(total asymmetry:',asym_int(jasy),')'
+        !         write(10,*)'(integrated asymmetry:',snorm(jasy),' )'
+      end if
+    end do
+  end if
 
 end subroutine finalise_distributions
 
