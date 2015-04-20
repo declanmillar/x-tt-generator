@@ -21,7 +21,7 @@ F = gfortran
 
 # Flags
 FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0 -J$(LIB)
-# -Wall
+# -Wall # LFLAGS = -Wl,-stack_size,0x40000000
 
 # Compile all files ending in .f in SRC
 $(LIB)/%.o: $(SRC)/%.f 

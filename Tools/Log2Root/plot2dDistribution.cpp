@@ -16,7 +16,7 @@ TH2D *plot2dDistribution(double luminosity, double efficiency, ifstream *logStre
   *logStream >> distName >> zTitle
              >> xTitle >> xlow >> xup >> nBinsx
              >> yTitle >> ylow >> yup >> nBinsy;
-
+  printf("nbinsy: %i\n",nBinsy);
   // replace hyphens with spaces
   for(int i = 0; i < (int) xTitle.size(); i++)
     if(xTitle[i] == '-') xTitle[i] = ' ';
