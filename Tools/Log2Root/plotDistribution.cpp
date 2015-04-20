@@ -27,20 +27,20 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
       *logStream >> xS;      
       if (xS == stop) break;
       *logStream >> yS;
-      if (distName == "cost5") *logStream >> sumw2S;
+      // if (distName == "cost5") *logStream >> sumw2S;
       x = atof(xS.c_str());
       y = atof(yS.c_str());
-      if (distName == "cost5") sumw2 = atof(sumw2S.c_str());
+      // if (distName == "cost5") sumw2 = atof(sumw2S.c_str());
       n_DataPairs += 1;
       xV.push_back(x);
       yV.push_back(y);
-      if (distName == "cost5") sumw2V.push_back(sumw2);
+      // if (distName == "cost5") sumw2V.push_back(sumw2);
     }
   }
   else printf("Stream failed!");
 
   // sum all elements in sumw2 array
-  double sumsumw2 = std::accumulate( sumw2V.begin(), sumw2V.end(), 0 );
+  // double sumsumw2 = std::accumulate( sumw2V.begin(), sumw2V.end(), 0 );
 
   // printf("%f\n", sumsumw2);
 
@@ -85,7 +85,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   // fill Histogram.
   for (int i = 1; i < nBins+1; i++) {
     hist->Fill(xV[i-1], yV[i-1]);
-    if (distName == "cost5") hist->SetBinError(i, sqrt(sumw2V[i-1]));
+    // if (distName == "cost5") hist->SetBinError(i, sqrt(sumw2V[i-1]));
   }
 
   return hist;

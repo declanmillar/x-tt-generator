@@ -1097,8 +1097,8 @@ function differential_cross_section(x,wgt)
         delta_absy_reco = abs(yt_reco) - abs(ytb)
       end if
 
-      ! calculate delta_absy for arfb
-      if (o_asym(9) == 1) delta_absy = abs(ycolt) - abs(ycoltb)
+      ! calculate delta_absy (for arfb)
+      delta_absy = abs(ycolt) - abs(ycoltb)
 
       if (o_cost5 == 1)  then
         ! boost anti lepton to top rest frame
@@ -1804,48 +1804,21 @@ function differential_cross_section(x,wgt)
       if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
       if (o_mlt == 1) call h_mlt%fill(mlt, hist)
       if (o_mlct == 1) call h_mlct%fill(mlct, hist)
+      if (o_mttdphi == 1) call h2_mttdphi%fill(mtt, dphi, hist)
+      if (o_mttct7ct5 == 1) call h2_mttct7ct5%fill(mtt, ct7ct5, hist)
+      if (o_mttcost7 == 1) call h2_mttcost7%fill(mtt, costheta7, hist)
+      if (o_mttcost5 == 1) call h2_mttcost5%fill(mtt, costheta5, hist)
+      if (o_mvisdphi == 1) call h2_mvisdphi%fill(mtt, dphi, hist)
+      if (o_htdphi == 1) call h2_htdphi%fill(ht, dphi, hist)
+      if (o_mt1dphi == 1) call h2_mt1dphi%fill(mt1, dphi, hist)
+      if (o_mt2dphi == 1) call h2_mt2dphi%fill(mt2, dphi, hist)
+      if (o_mt3dphi == 1) call h2_mt3dphi%fill(mt3, dphi, hist)
+      if (o_mct1dphi == 1) call h2_mct1dphi%fill(mct1, dphi, hist)
+      if (o_mct2dphi == 1) call h2_mct2dphi%fill(mct2, dphi, hist)
+      if (o_mct3dphi == 1) call h2_mct3dphi%fill(mct3, dphi, hist)
+      if (o_mltdphi == 1) call h2_mltdphi%fill(mlt, dphi, hist)
+      if (o_mlctdphi == 1) call h2_mlctdphi%fill(mlct, dphi, hist)
 
-!       if (o_dphi2d == 1) then
-!         ! generate distribution in dphi2d.
-!         ibin=int((dphi-dphimin)/dphiw)+1
-!         jbin=int((mtt-mttmin)/mttw)+1
-!         if ((ibin > ndiv_dphi) .or. (jbin > ndiv_mtt)) then
-!           continue
-!         else if ((ibin < 1) .or. (jbin < 1)) then
-!           continue
-!         else
-!           fxdphi2d(ibin,jbin,it)=fxdphi2d(ibin,jbin,it)+hist
-!         end if
-!       end if
-
-!       if (o_ct7ct52d == 1) then
-!         ! generate distribution in ct7ct52d.
-!         ibin=int((ct7ct5-ct7ct5min)/ct7ct5w)+1
-!         jbin=int((mtt-mttmin)/mttw)+1
-!         if ((ibin > ndiv_ct7ct5) .or. (jbin > ndiv_mtt)) then
-!           continue
-!         else if ((ibin < 1) .or. (jbin < 1)) then
-!           continue
-!         else
-!           fxct7ct52d(ibin,jbin,it)=fxct7ct52d(ibin,jbin,it)+hist
-!         end if
-!       end if
-
-!       do itrans=1,ntrans
-!         if (include_transversedp(itrans) == 1) then
-!         ! generate distribution in transdp.
-!           ibin=int((dphi-dphimin)/dphiw)+1
-!           jbin=int((trans(itrans)-transmin(itrans))/transw(itrans))+1
-!           if ((ibin > ndiv_dphi) .or. (jbin >= (ndiv_trans(itrans)+1))) then
-!             continue
-!           else if ((ibin < 1) .or. (jbin < 1)) then
-!             continue
-!           else
-!             fxtransdp(itrans,ibin,jbin,it)= &
-!             fxtransdp(itrans,ibin,jbin,it)+hist
-!           end if
-!         end if
-!       end do
 
 !       if (o_asym(1) == 1) then
 !         if (o_sigp == 1) then

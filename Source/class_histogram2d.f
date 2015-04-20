@@ -7,7 +7,7 @@ module class_Histogram2d
 
   real :: diff_max = 1e-12
 
-  type, public :: Histogram2d
+    type, public :: Histogram2d
     private
     character (len = 50), public :: name
     character (len = 50), public :: ztitle
@@ -20,9 +20,9 @@ module class_Histogram2d
     real, public :: yup
     integer, public :: nybin
 
-    real :: xbinw = 0, ybinw = 0
-    real :: x(500) = 0, y(500) = 0
-    real :: fxy(500,500,20) = 0, fxytot(500,500) = 0
+    real :: xbinw = 0.d0, ybinw = 0.d0
+    real :: x(500) = 0.d0, y(500) = 0.d0
+    real ::fxy(500,500,20) = 0.d0, fxytot(500,500) = 0
     real :: sfxytot=0
     real :: sumw2(500,500,20) = 0, sumw2tot(500,500) = 0
 
@@ -60,7 +60,7 @@ contains
 
   subroutine histogram2d_midpoints(this)
     class(histogram2d), intent(inout) :: this
-    integer :: i
+    integer :: i, j
     do i = 1, this%nxbin
       this%x(i) = this%xlow + this%xbinw * (i - 1) + this%xbinw / 2.d0
     end do
@@ -116,14 +116,14 @@ contains
   subroutine histogram2d_check(this)
     class(histogram2d), intent(inout) :: this
       if(abs(sigma-this%sfxytot) > diff_max) then
-        write(10,*) this%name, ' error: ', this%sfxytot
+        write(*,*) this%name, ' error: ', this%sfxytot
       end if
   end subroutine histogram2d_check
 
   subroutine histogram2d_print(this)
     class(histogram2d), intent(inout) :: this
     integer :: i, j
-    write(10,*)'DISTRIBUTION'
+    write(10,*)'2D-DISTRIBUTION'
     write(10,*) this%name
     write(10,*) this%ztitle
     write(10,*) this%xtitle
@@ -134,11 +134,12 @@ contains
     write(10,*) this%ylow
     write(10,*) this%yup
     write(10,*) this%nybin
+
     do i = 1, this%nxbin
-        do j = 1, this%nybin
-          write(10,*) this%x(i), this%y(j), this%fxytot(i,j)
-        end do
+      do j = 1, this%nybin
+        write(10,*) this%x(i), this%y(j), this%fxytot(i,j)
       end do
+    end do
     write(10,*)'END'
   end subroutine histogram2d_print
 
