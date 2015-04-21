@@ -40,6 +40,8 @@ program zprime
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
 
+  call rootinit("test")
+
   call cpu_time(start_time)
 
   call read_config
