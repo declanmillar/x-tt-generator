@@ -2157,5 +2157,8 @@ function differential_cross_section(x,wgt)
     end do ! end loop costheta_t<->-cost
     differential_cross_section = differential_cross_section + ffxn  
   end do ! end loop x1 <-> x2
+  call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+  call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
+  call rootaddevent(hist)
   return
 end function differential_cross_section

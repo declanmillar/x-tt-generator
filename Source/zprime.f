@@ -40,7 +40,10 @@ program zprime
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
 
-  call rootinit("test")
+  character (len = 50) filename
+
+  filename ="test.root"
+  call rootinit(filename)
 
   call cpu_time(start_time)
 
@@ -496,7 +499,7 @@ program zprime
   call finalise_distributions
 
   write(10,*) 'CLOSE'
-
+  call rootclose
   close(10)
   call cpu_time(finish_time)
   print*, 'Program complete'
