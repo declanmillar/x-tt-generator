@@ -42,7 +42,7 @@ program zprime
 
   character (len = 50) filename
 
-  filename ="test.root"
+  filename ="../Analysis_Zprime/output.root"
   call rootinit(filename)
 
   call cpu_time(start_time)
@@ -315,11 +315,11 @@ program zprime
   end if
 
   ! integrate 
-  print *, 'Starting integration...'
+  print *, 'Starting integration ... '
   it = 0 
   call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
 
-  print *, 'done.'  
+  print *, ' ... done.'  
 
   if (final_state == 0 .and. use_branching_ratio == 1) then
     ! multiply by branching ratios

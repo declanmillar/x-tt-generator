@@ -2149,6 +2149,12 @@ function differential_cross_section(x,wgt)
           end if
         end if
       end if
+
+      if (final_state == 0) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+      end if
+
       if (final_state == 1) then
         call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
         call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
@@ -2156,7 +2162,6 @@ function differential_cross_section(x,wgt)
         call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
         call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
-        call rootaddevent(hist)
       end if
 
       if (final_state == 2) then
@@ -2166,7 +2171,6 @@ function differential_cross_section(x,wgt)
         call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
         call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-        call rootaddevent(hist)
       end if
 
       if (final_state == 3) then
@@ -2176,8 +2180,10 @@ function differential_cross_section(x,wgt)
         call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
         call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-        call rootaddevent(hist)
       end if
+!       print *, mtt
+      call rootadddouble(mtt, "Mtt")
+      call rootaddevent(hist)
 
       ! stats
       npoints = npoints + 1

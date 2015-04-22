@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
   h1->SetTitle(name1.c_str());
   h1->SetTitle("50,000 points");
   h1->SetMarkerStyle(20);
-  h1->Draw("E1x0P");
+  h1->Draw();//("E1x0P");
   h1->SetMarkerColor(kBlack);
   h1->SetLineColor(kBlack);
   h1->GetYaxis()->SetTitleOffset(1.3);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     h2->SetTitle(name2.c_str());
     h2->SetTitle("500,000 points");
     h2->SetMarkerStyle(20);
-    h2->Draw("E1x0PSAME");
+    h2->Draw("SAME");//("E1x0PSAME");
     h2->SetLineColor(kRed);
     h2->SetMarkerColor(kRed);
   }
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     h3->SetTitle(name3.c_str());
     h3->SetTitle("500,000 points, 2 VEGAS iterations");
     h3->SetMarkerStyle(20);
-    h3->Draw("E1x0PSAME");
+    h3->Draw("SAME");//("E1x0PSAME");
     h3->SetLineColor(kBlue);
     h3->SetMarkerColor(kBlue);
   }
