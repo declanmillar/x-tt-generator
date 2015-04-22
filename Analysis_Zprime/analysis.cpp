@@ -20,7 +20,7 @@ void AnalysisZprime::EachEvent()
 {
   if( this->PassCuts() )
   {
-    cout << "Event = " << m_ntup->eventNumber()<<endl;
+    // cout << "Event = " << m_ntup->eventNumber()<<endl;
     
     float eventWeight = m_ntup->weight();
     
@@ -180,9 +180,9 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupInputFiles()
 {   
   m_inputFiles = new vector<TString>;
-  TString base("");
+  TString base("../Ntuples_Zprime/");
   
-  m_inputFiles->push_back(base + "output.root");
+  m_inputFiles->push_back(base + "SM_13_2to6_DL_1x500000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()

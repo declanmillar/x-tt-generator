@@ -17,35 +17,35 @@ import os,StringIO,re,optparse,subprocess,time,sys,random
 parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
 
 # Local options
-parser.add_option("-l", "--output" , default=False, action="store_true"               , help="output to logfile")
-parser.add_option("-t", "--tag"    , default=""   ,   type="string"                   , help="add a name tag to logfile")
+parser.add_option("-l", "--output", default=False, action="store_true" , help="output to logfile")
+parser.add_option("-t", "--tag", default="",  type="string", help="add a name tag to logfile")
 
 # Physics options
-parser.add_option("-p", "--initial_state"   ,  default=0   , const=1      , action="store_const", help="switch to p-pbar collisions")
-parser.add_option("-P", "--structure_function"   ,  default=4   ,  type="int"                        , help="structure_functions set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
-parser.add_option("-q", "--include_qcd"   ,  default=1   , const=0      , action="store_const", help="turn off QCD")
-parser.add_option("-e", "--include_ew"    ,  default=1   , const=0      , action="store_const", help="turn off EW")
-parser.add_option("-z", "--include_bsm"   ,  default=1   , const=0      , action="store_const", help="turn off Z'")
-parser.add_option("-i", "--interference"   ,  default=2   ,  type="int"                        , help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
-parser.add_option("-w", "--use_NWA"   ,  default=0   , const=1      , action="store_const", help="turn on use_NWA")
-parser.add_option("-B", "--use_branching_ratio"    ,  default=0   , const=1      , action="store_const", help="multiply 2to2 process by use_branching_ratio")
-parser.add_option("-T", "--include_transverse"  ,  default=1   , const=0      , action="store_const", help="switch off include_transversesverse mass variables")
-parser.add_option("-A", "--include_asymmetries"  ,  default=1   , const=0      , action="store_const", help="switch off asymmetry variables")
-parser.add_option("-C", "--cuts"  ,  default=1   , const=0      , action="store_const", help="turn off all cuts")
-parser.add_option("-y", "--ytmax" ,  default=100 ,  type="float",                       help="rapidity cut")
-parser.add_option("-Y", "--yttmin",  default=0   ,  type="float",                       help="top pair rapidity cut")
+parser.add_option("-p", "--initial_state", default=0, const=1, action="store_const", help="switch to p-pbar collisions")
+parser.add_option("-P", "--structure_function", default=4, type="int", help="structure_functions set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
+parser.add_option("-q", "--include_qcd", default=1, const=0, action="store_const", help="turn off QCD")
+parser.add_option("-e", "--include_ew", default=1, const=0, action="store_const", help="turn off EW")
+parser.add_option("-z", "--include_bsm", default=1, const=0, action="store_const", help="turn off Z'")
+parser.add_option("-i", "--interference", default=2, type="int", help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
+parser.add_option("-w", "--use_NWA", default=0, const=1, action="store_const", help="turn on use_NWA")
+parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="store_const", help="multiply 2to2 process by use_branching_ratio")
+parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include_transversesverse mass variables")
+parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
+parser.add_option("-C", "--cuts", default=1, const=0, action="store_const", help="turn off all cuts")
+parser.add_option("-y", "--ytmax", default=100, type="float", help="rapidity cut")
+parser.add_option("-Y", "--yttmin", default=0, type="float", help="top pair rapidity cut")
 
 # Monte Carlo options
-parser.add_option("-s", "--iseed"  , default=False,               action="store_true" , help="used fixed iseed for random number generator")
-parser.add_option("-m", "--itmx"   , default=5    ,  type="int" ,                       help="maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise_x1x2", default=0    , const=1     , action="store_const", help="symmatrise phase space over x1 and x2")
-parser.add_option("-c", "--symmetrise_costheta_t", default=0    , const=1     , action="store_const", help="symmatrise phase space over costheta_t")
-parser.add_option("-D", "--print_all_distributions", default=1    , const=0     , action="store_const", help="turn off distributions")
-parser.add_option("-2", "--print_2d_distributions" , default=1    , const=0     , action="store_const", help="turn off 2d-distributions")
-parser.add_option("-E", "--include_errors" , default=0    , const=1     , action="store_const", help="turn on distribution errors")
+parser.add_option("-s", "--iseed", default=False, action="store_true", help="used fixed iseed for random number generator")
+parser.add_option("-m", "--itmx", default=5, type="int", help="maximum number of VEGAS iterations")
+parser.add_option("-x", "--symmetrise_x1x2", default=0, const=1, action="store_const", help="symmatrise phase space over x1 and x2")
+parser.add_option("-c", "--symmetrise_costheta_t", default=0, const=1, action="store_const", help="symmatrise phase space over costheta_t")
+parser.add_option("-D", "--print_all_distributions", default=1, const=0, action="store_const", help="turn off distributions")
+parser.add_option("-2", "--print_2d_distributions", default=1, const=0, action="store_const", help="turn off 2d-distributions")
+parser.add_option("-E", "--include_errors", default=0, const=1, action="store_const", help="turn on distribution errors")
 
 # Debug options
-parser.add_option("-M", "--phase_space_only",  default=0    , const=1     , action="store_const", help="Set |M|^2 = 1")
+parser.add_option("-M", "--phase_space_only", default=0, const=1, action="store_const", help="Set |M|^2 = 1")
 
 (options, args) = parser.parse_args()
 
@@ -130,9 +130,11 @@ filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, al
 
 # logfile      
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
-output_file = '%s.out' % filename
+output_file = "%s.out" % filename
+ntuple_file = '%s.root' % filename
 
 # print config file
+print >> config, '%s ! ntuple file' % ntuple_file
 
 print >> config, '%s ! output file' % output_file
 
@@ -142,7 +144,7 @@ print >> config, '%s ! final_state' % final_state
 
 print >> config, '%s ! model_name' % model_name
 
-print >> config, '%s ! ISTRUCTURE' % options.structure_function
+print >> config, '%s ! istructure' % options.structure_function
 
 print >> config, '%s ! include_qcd' % options.include_qcd
 

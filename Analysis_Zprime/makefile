@@ -2,9 +2,11 @@ CXX             = g++
 # CXXFLAGS        = -O -Wall -fPIC -ggdb -Weffc++
 CXXFLAGS        = -O -Wall -fPIC -ggdb
 LD              = g++  
-ROOTCFLAGS      = -I$(ROOTSYS)/include  
-ROOTLIBS        = -L$(ROOTSYS)/lib  $(shell $(ROOTSYS)/bin/root-config --libs) 
-TREEPLAYER	:= -L $(ROOTSYS)/lib -lTreePlayer
+# ROOTCFLAGS      = -I$(ROOTSYS)/include  
+ROOTCFLAGS      = $(shell root-config --cflags)
+# ROOTLIBS        = -L$(ROOTSYS)/lib  $(shell $(ROOTSYS)/bin/root-config --libs) 
+ROOTLIBS        = $(shell root-config --libs)
+# TREEPLAYER	:= -L $(ROOTSYS)/lib -lTreePlayer
 
 CXXFLAGS        += $(ROOTCFLAGS)   
 LIBS            = $(ROOTLIBS) $(TREEPLAYER)

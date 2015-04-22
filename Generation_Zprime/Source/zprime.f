@@ -40,16 +40,13 @@ program zprime
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
 
-  character (len = 50) filename
-
-  filename ="../Analysis_Zprime/output.root"
-  call rootinit(filename)
-
   call cpu_time(start_time)
 
   call read_config
 
   call modify_config
+
+  call rootinit("../Ntuples_Zprime/"//ntuple_file)
 
   open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
   close(10)

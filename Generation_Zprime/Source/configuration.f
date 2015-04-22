@@ -11,6 +11,7 @@ module configuration
   
   integer :: structure_function
   character(50) :: model_name
+  character(100) :: ntuple_file
   character(50) :: output_file
   integer :: include_qcd
   integer :: include_ew
@@ -50,7 +51,9 @@ module configuration
     subroutine read_config
 
       ! read config file
-      print *, "Reading config file..." 
+      print *, "Reading config file..."
+
+      read(5,*) ntuple_file
 
       read(5,*) output_file
       
