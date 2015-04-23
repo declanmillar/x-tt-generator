@@ -29,7 +29,7 @@ parser.add_option("-z", "--include_bsm", default=1, const=0, action="store_const
 parser.add_option("-i", "--interference", default=2, type="int", help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
 parser.add_option("-w", "--use_NWA", default=0, const=1, action="store_const", help="turn on use_NWA")
 parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="store_const", help="multiply 2to2 process by use_branching_ratio")
-parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include_transversesverse mass variables")
+parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
 parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
 parser.add_option("-C", "--cuts", default=1, const=0, action="store_const", help="turn off all cuts")
 parser.add_option("-y", "--ytmax", default=100, type="float", help="rapidity cut")
@@ -37,17 +37,18 @@ parser.add_option("-Y", "--yttmin", default=0, type="float", help="top pair rapi
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default=False, action="store_true", help="used fixed iseed for random number generator")
-parser.add_option("-m", "--itmx", default=5, type="int", help="maximum number of VEGAS iterations")
+parser.add_option("-m", "--itmx", default=1, type="int", help="maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default=0, const=1, action="store_const", help="symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default=0, const=1, action="store_const", help="symmatrise phase space over costheta_t")
-parser.add_option("-D", "--print_all_distributions", default=1, const=0, action="store_const", help="turn off distributions")
-parser.add_option("-2", "--print_2d_distributions", default=1, const=0, action="store_const", help="turn off 2d-distributions")
+parser.add_option("-D", "--print_all_distributions", default=0, const=1, action="store_const", help="turn on built in histogams")
+parser.add_option("-2", "--print_2d_distributions", default=0, const=1, action="store_const", help="turn on built in 2d-distributions")
 parser.add_option("-E", "--include_errors", default=0, const=1, action="store_const", help="turn on distribution errors")
 
 # Debug options
 parser.add_option("-M", "--phase_space_only", default=0, const=1, action="store_const", help="Set |M|^2 = 1")
 
 (options, args) = parser.parse_args()
+print "\n Generating config file..."
 
 if options.phase_space_only==1:
   options.include_qcd=0
@@ -197,7 +198,6 @@ except IOError:
 
 # Command
 command = './%s < Config/%s.com %s' % (executable,filename,logfile)
-print 'executing: ',command
+print " ...done."
+print ' Executing ', command, '...'
 subprocess.call(command, shell=True)
-   
-

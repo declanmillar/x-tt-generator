@@ -1,4 +1,4 @@
-function differential_cross_section(x,wgt)
+function dsigma(x,wgt)
 
   ! computes the fully differential cross section for
   ! * pp -> tt,
@@ -23,7 +23,7 @@ function differential_cross_section(x,wgt)
   real :: x(100), wgt
 
   ! functions
-  real :: differential_cross_section
+  real :: dsigma
   real :: alfas
   real :: sqqff_qcd
   real :: sggff_qcd
@@ -124,7 +124,7 @@ function differential_cross_section(x,wgt)
 
   ! rapidity
   real :: yt, ytb, ytt, ytt_reco, yt_reco
-  real :: delta_absy, delta_absy_reco
+  real :: delta_absy = -999, delta_absy_reco = -999
 
   ! square matrix elements
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
@@ -183,6 +183,7 @@ function differential_cross_section(x,wgt)
 
   ! weight per polarisation
   real :: weight(20, -1:1, -1:1)
+  real :: weightLL = -999, weightLR = -999, weightRL = -999, weightRR = -999
 
   ! pdfs
   real :: fx1(13), fx2(13)
@@ -212,7 +213,7 @@ function differential_cross_section(x,wgt)
   x1x2(2, 2) = xx1
 
   ! loop over x1 and x2  
-  differential_cross_section = 0.d0
+  dsigma = 0.d0
   do ix = 1, ixmax
     ffxn = 0.d0
     x1 = x1x2(ix, 1)
@@ -1092,7 +1093,7 @@ function differential_cross_section(x,wgt)
         mlct = sqrt(abs(mlct2))
       end if
 
-      if (o_asym(10) == 1) then
+      if (final_state == 2) then
         yt_reco = 0.5*log((qcol(4,3)+qcol(4,5)+p6col_reco(0) &
         +qcol(3,3)+qcol(3,5)+p6col_reco(3)) &
         /(qcol(4,3)+qcol(4,5)+p6col_reco(0) &
@@ -1574,6 +1575,10 @@ function differential_cross_section(x,wgt)
             +sigma_pol(lam3,lam4,it)**2
           end do
         end do
+        weightLL = weight(it,-1,-1)
+        weightLR = weight(it,-1, 1)
+        weightRL = weight(it, 1,-1)
+        weightRR = weight(it, 1, 1)
       end if
 
     ! afb
@@ -1739,85 +1744,195 @@ function differential_cross_section(x,wgt)
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
 
-      if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
-      if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
-      if (o_ptlp == 1) call h_ptlp%fill(pt(5), hist)
-      if (o_ptlm == 1) call h_ptlm%fill(pt(7), hist)
-      if (o_ptnu == 1) call h_ptnu%fill(pt(6), hist)
-      if (o_ptnub == 1) call h_ptnub%fill(pt(8), hist)
-      if (o_ptt == 1) call h_ptt%fill(ptt, hist)
-      if (o_pttb == 1) call h_pttb%fill(pttb, hist)
+      if (final_state == 0) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+      end if
 
-      if (o_etab == 1) call h_etab%fill(eta(3), hist)
-      if (o_etabb == 1) call h_etabb%fill(eta(4), hist)
-      if (o_etalp == 1) call h_etalp%fill(eta(5), hist)
-      if (o_etalm == 1) call h_etalm%fill(eta(7), hist)
-      if (o_etanu == 1) call h_etanu%fill(eta(6), hist)
-      if (o_etanub == 1) call h_etanub%fill(eta(8), hist)
-      if (o_etat == 1) call h_etat%fill(etat, hist)
-      if (o_etatb == 1) call h_etatb%fill(etatb, hist)
+      if (final_state == 1) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
 
-      if (o_phib == 1) call h_phib%fill(phi(3), hist)
-      if (o_phibb == 1) call h_phibb%fill(phi(4), hist)
-      if (o_philp == 1) call h_philp%fill(phi(5), hist)
-      if (o_philm == 1) call h_philm%fill(phi(7), hist)
-      if (o_phinu == 1) call h_phinu%fill(phi(6), hist)
-      if (o_phinub == 1) call h_phinub%fill(phi(8), hist)
-      if (o_phit == 1) call h_phit%fill(phicolt, hist)
-      if (o_phitb == 1) call h_phitb%fill(phicoltb, hist)
+      if (final_state == 2) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
 
-      if (o_ycolb == 1) call h_ycolb%fill(ycol(3), hist)
-      if (o_ycolbb == 1) call h_ycolbb%fill(ycol(4), hist)
-      if (o_ycollp == 1) call h_ycollp%fill(ycol(5), hist)
-      if (o_ycollm == 1) call h_ycollm%fill(ycol(7), hist)
-      if (o_ycolnu == 1) call h_ycolnu%fill(ycol(6), hist)
-      if (o_ycolnub == 1) call h_ycolnub%fill(ycol(8), hist)
-      if (o_ycolt == 1) call h_ycolt%fill(ycolt, hist)
-      if (o_ycoltb == 1) call h_ycoltb%fill(ycoltb, hist) 
+      if (final_state == 3) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
 
-      if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
-      if (o_mtt == 1) call h_mtt%fill(mtt, hist)
-      if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
-      if (o_mtb == 1) call h_mtb%fill(m478, hist)
-      if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
-      if (o_beta == 1) call h_beta%fill(beta, hist)
-      if (o_cost == 1) call h_cost%fill(cost, hist)
-      if (o_et == 1) call h_et%fill(et, hist)
+      call rootadddouble(weightLL, "weightLL")
+      call rootadddouble(weightLR, "weightLR")
+      call rootadddouble(weightRL, "weightRL")
+      call rootadddouble(weightRR, "weightRR")
 
-      if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
-      if (o_fl == 1) call h_fl%fill(phi_l, hist)
-      if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
-      if (o_dphi == 1) call h_dphi%fill(dphi, hist)
-      if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
-      if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
-      if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+      if (o_ptb == 1) call rootadddouble(pt(3), "ptb")
+      if (o_ptbb == 1) call rootadddouble(pt(4), "ptbb")
+      if (o_ptlp == 1) call rootadddouble(pt(5), "ptlp")
+      if (o_ptlm == 1) call rootadddouble(pt(7), "ptlm")
+      if (o_ptnu == 1) call rootadddouble(pt(6), "ptnu")
+      if (o_ptnub == 1) call rootadddouble(pt(8), "ptnub")
+      if (o_ptt == 1) call rootadddouble(ptt, "ptt")
+      if (o_pttb == 1) call rootadddouble(pttb, "pttb")
 
-      if (o_mll == 1) call h_mll%fill(mll, hist)
-      if (o_ht == 1) call h_ht%fill(ht, hist)
-      if (o_mttvis == 1) call h_mttvis%fill(mttvis, hist)
-      if (o_mt1 == 1) call h_mt1%fill(mt1, hist)
-      if (o_mt2 == 1) call h_mt2%fill(mt2, hist)
-      if (o_mt3 == 1) call h_mt3%fill(mt3, hist)
-      if (o_mct1 == 1) call h_mct1%fill(mct1, hist)
-      if (o_mct2 == 1) call h_mct2%fill(mct2, hist)
-      if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
-      if (o_mlt == 1) call h_mlt%fill(mlt, hist)
-      if (o_mlct == 1) call h_mlct%fill(mlct, hist)
+      if (o_etab == 1) call rootadddouble(eta(3), "etab")
+      if (o_etabb == 1) call rootadddouble(eta(4), "etabb")
+      if (o_etalp == 1) call rootadddouble(eta(5), "etalp")
+      if (o_etalm == 1) call rootadddouble(eta(7), "etalm")
+      if (o_etanu == 1) call rootadddouble(eta(6), "etanu")
+      if (o_etanub == 1) call rootadddouble(eta(8), "etanub")
+      if (o_etat == 1) call rootadddouble(etat, "etat")
+      if (o_etatb == 1) call rootadddouble(etatb, "etatb")
 
-      if (o_mttdphi == 1) call h2_mttdphi%fill(mtt, dphi, hist)
-      if (o_mttct7ct5 == 1) call h2_mttct7ct5%fill(mtt, ct7ct5, hist)
-      if (o_mttcost7 == 1) call h2_mttcost7%fill(mtt, costheta7, hist)
-      if (o_mttcost5 == 1) call h2_mttcost5%fill(mtt, costheta5, hist)
-      if (o_mvisdphi == 1) call h2_mvisdphi%fill(mtt, dphi, hist)
-      if (o_htdphi == 1) call h2_htdphi%fill(ht, dphi, hist)
-      if (o_mt1dphi == 1) call h2_mt1dphi%fill(mt1, dphi, hist)
-      if (o_mt2dphi == 1) call h2_mt2dphi%fill(mt2, dphi, hist)
-      if (o_mt3dphi == 1) call h2_mt3dphi%fill(mt3, dphi, hist)
-      if (o_mct1dphi == 1) call h2_mct1dphi%fill(mct1, dphi, hist)
-      if (o_mct2dphi == 1) call h2_mct2dphi%fill(mct2, dphi, hist)
-      if (o_mct3dphi == 1) call h2_mct3dphi%fill(mct3, dphi, hist)
-      if (o_mltdphi == 1) call h2_mltdphi%fill(mlt, dphi, hist)
-      if (o_mlctdphi == 1) call h2_mlctdphi%fill(mlct, dphi, hist)
+      if (o_phib == 1) call rootadddouble(phi(3), "phib")
+      if (o_phibb == 1) call rootadddouble(phi(4), "phibb")
+      if (o_philp == 1) call rootadddouble(phi(5), "philp")
+      if (o_philm == 1) call rootadddouble(phi(7), "philm")
+      if (o_phinu == 1) call rootadddouble(phi(6), "phinu")
+      if (o_phinub == 1) call rootadddouble(phi(8), "phinub")
+      if (o_phit == 1) call rootadddouble(phicolt, "phit")
+      if (o_phitb == 1) call rootadddouble(phicoltb, "phitb")
+
+      if (o_ycolb == 1) call rootadddouble(ycol(3), "ycolb")
+      if (o_ycolbb == 1) call rootadddouble(ycol(4), "ycolbb")
+      if (o_ycollp == 1) call rootadddouble(ycol(5), "ycollp")
+      if (o_ycollm == 1) call rootadddouble(ycol(7), "ycollm")
+      if (o_ycolnu == 1) call rootadddouble(ycol(6), "ycolnu")
+      if (o_ycolnub == 1) call rootadddouble(ycol(8), "ycolnub")
+      if (o_ycolt == 1) call rootadddouble(ycolt, "ycolt")
+      if (o_ycoltb == 1) call rootadddouble(ycoltb, "ycoltb") 
+
+      if (o_etmiss == 1) call rootadddouble(etmiss, "etmiss")
+      if (o_mtt == 1) call rootadddouble(mtt, "mtt")
+      if (o_mtt_reco == 1) call rootadddouble(mtt_reco, "mtt_reco")
+      if (o_mtb == 1) call rootadddouble(m478, "mtb")
+      if (o_mt_reco == 1) call rootadddouble(m356_reco, "mt_reco")
+      if (o_beta == 1) call rootadddouble(beta, "beta")
+      if (o_cost == 1) call rootadddouble(cost, "cost")
+      if (o_et == 1) call rootadddouble(et, "et")
+
+      if (o_delta_y == 1) call rootadddouble(delta_absy, "delta_y")
+      if (o_fl == 1) call rootadddouble(phi_l, "fl")
+      if (o_cosfl == 1) call rootadddouble(cosfl, "cosfl")
+      if (o_dphi == 1) call rootadddouble(dphi, "dphi")
+      if (o_cost5 == 1) call rootadddouble(costheta5, "cost5")
+      if (o_cost7 == 1) call rootadddouble(costheta7, "cost7")
+      if (o_ct7ct5 == 1) call rootadddouble(ct7ct5, "ct7ct5")
+
+      if (o_mll == 1) call rootadddouble(mll, "mll")
+      if (o_ht == 1) call rootadddouble(ht, "ht")
+      if (o_mttvis == 1) call rootadddouble(mttvis, "mttvis")
+      if (o_mt1 == 1) call rootadddouble(mt1, "mt1")
+      if (o_mt2 == 1) call rootadddouble(mt2, "mt2")
+      if (o_mt3 == 1) call rootadddouble(mt3, "mt3")
+      if (o_mct1 == 1) call rootadddouble(mct1, "mct1")
+      if (o_mct2 == 1) call rootadddouble(mct2, "mct2")
+      if (o_mct3 == 1) call rootadddouble(mct3, "mct3")
+      if (o_mlt == 1) call rootadddouble(mlt, "mlt")
+      if (o_mlct == 1) call rootadddouble(mlct, "mlct")
+
+      call rootadddouble()
+
+      call rootaddevent(hist)
+
+      if(print_all_distributions == 1) then
+        ! print distributions
+        if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
+        if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
+        if (o_ptlp == 1) call h_ptlp%fill(pt(5), hist)
+        if (o_ptlm == 1) call h_ptlm%fill(pt(7), hist)
+        if (o_ptnu == 1) call h_ptnu%fill(pt(6), hist)
+        if (o_ptnub == 1) call h_ptnub%fill(pt(8), hist)
+        if (o_ptt == 1) call h_ptt%fill(ptt, hist)
+        if (o_pttb == 1) call h_pttb%fill(pttb, hist)
+
+        if (o_etab == 1) call h_etab%fill(eta(3), hist)
+        if (o_etabb == 1) call h_etabb%fill(eta(4), hist)
+        if (o_etalp == 1) call h_etalp%fill(eta(5), hist)
+        if (o_etalm == 1) call h_etalm%fill(eta(7), hist)
+        if (o_etanu == 1) call h_etanu%fill(eta(6), hist)
+        if (o_etanub == 1) call h_etanub%fill(eta(8), hist)
+        if (o_etat == 1) call h_etat%fill(etat, hist)
+        if (o_etatb == 1) call h_etatb%fill(etatb, hist)
+
+        if (o_phib == 1) call h_phib%fill(phi(3), hist)
+        if (o_phibb == 1) call h_phibb%fill(phi(4), hist)
+        if (o_philp == 1) call h_philp%fill(phi(5), hist)
+        if (o_philm == 1) call h_philm%fill(phi(7), hist)
+        if (o_phinu == 1) call h_phinu%fill(phi(6), hist)
+        if (o_phinub == 1) call h_phinub%fill(phi(8), hist)
+        if (o_phit == 1) call h_phit%fill(phicolt, hist)
+        if (o_phitb == 1) call h_phitb%fill(phicoltb, hist)
+
+        if (o_ycolb == 1) call h_ycolb%fill(ycol(3), hist)
+        if (o_ycolbb == 1) call h_ycolbb%fill(ycol(4), hist)
+        if (o_ycollp == 1) call h_ycollp%fill(ycol(5), hist)
+        if (o_ycollm == 1) call h_ycollm%fill(ycol(7), hist)
+        if (o_ycolnu == 1) call h_ycolnu%fill(ycol(6), hist)
+        if (o_ycolnub == 1) call h_ycolnub%fill(ycol(8), hist)
+        if (o_ycolt == 1) call h_ycolt%fill(ycolt, hist)
+        if (o_ycoltb == 1) call h_ycoltb%fill(ycoltb, hist) 
+
+        if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
+        if (o_mtt == 1) call h_mtt%fill(mtt, hist)
+        if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
+        if (o_mtb == 1) call h_mtb%fill(m478, hist)
+        if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
+        if (o_beta == 1) call h_beta%fill(beta, hist)
+        if (o_cost == 1) call h_cost%fill(cost, hist)
+        if (o_et == 1) call h_et%fill(et, hist)
+
+        if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
+        if (o_fl == 1) call h_fl%fill(phi_l, hist)
+        if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
+        if (o_dphi == 1) call h_dphi%fill(dphi, hist)
+        if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
+        if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
+        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+
+        if (o_mll == 1) call h_mll%fill(mll, hist)
+        if (o_ht == 1) call h_ht%fill(ht, hist)
+        if (o_mttvis == 1) call h_mttvis%fill(mttvis, hist)
+        if (o_mt1 == 1) call h_mt1%fill(mt1, hist)
+        if (o_mt2 == 1) call h_mt2%fill(mt2, hist)
+        if (o_mt3 == 1) call h_mt3%fill(mt3, hist)
+        if (o_mct1 == 1) call h_mct1%fill(mct1, hist)
+        if (o_mct2 == 1) call h_mct2%fill(mct2, hist)
+        if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
+        if (o_mlt == 1) call h_mlt%fill(mlt, hist)
+        if (o_mlct == 1) call h_mlct%fill(mlct, hist)
+
+        if (o_mttdphi == 1) call h2_mttdphi%fill(mtt, dphi, hist)
+        if (o_mttct7ct5 == 1) call h2_mttct7ct5%fill(mtt, ct7ct5, hist)
+        if (o_mttcost7 == 1) call h2_mttcost7%fill(mtt, costheta7, hist)
+        if (o_mttcost5 == 1) call h2_mttcost5%fill(mtt, costheta5, hist)
+        if (o_mvisdphi == 1) call h2_mvisdphi%fill(mtt, dphi, hist)
+        if (o_htdphi == 1) call h2_htdphi%fill(ht, dphi, hist)
+        if (o_mt1dphi == 1) call h2_mt1dphi%fill(mt1, dphi, hist)
+        if (o_mt2dphi == 1) call h2_mt2dphi%fill(mt2, dphi, hist)
+        if (o_mt3dphi == 1) call h2_mt3dphi%fill(mt3, dphi, hist)
+        if (o_mct1dphi == 1) call h2_mct1dphi%fill(mct1, dphi, hist)
+        if (o_mct2dphi == 1) call h2_mct2dphi%fill(mct2, dphi, hist)
+        if (o_mct3dphi == 1) call h2_mct3dphi%fill(mct3, dphi, hist)
+        if (o_mltdphi == 1) call h2_mltdphi%fill(mlt, dphi, hist)
+        if (o_mlctdphi == 1) call h2_mlctdphi%fill(mlct, dphi, hist)
+      end if
+
 
 
       if (o_asym(1) == 1) then
@@ -2150,47 +2265,12 @@ function differential_cross_section(x,wgt)
         end if
       end if
 
-      if (final_state == 0) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-      end if
-
-      if (final_state == 1) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 2) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 3) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-!       print *, mtt
-      call rootadddouble(mtt, "Mtt")
-      call rootaddevent(hist)
-
       ! stats
       npoints = npoints + 1
       
       ffxn = ffxn + fffxn
     end do ! end loop costheta_t<->-cost
-    differential_cross_section = differential_cross_section + ffxn  
+    dsigma = dsigma + ffxn  
   end do ! end loop x1 <-> x2
   return
-end function differential_cross_section
+end function dsigma

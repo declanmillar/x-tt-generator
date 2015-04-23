@@ -1,7 +1,6 @@
 module distributions
 
-  use configuration, only: print_all_distributions, print_2d_distributions, include_transverse, include_asymmetries, o_asym, &
-                           n_fb_asymmetries, n_asymmetries, final_state, initial_state, n_final, tops_decay, include_errors
+  use configuration
   use mathematics, only: pi
   use kinematics, only: sigma
   use integration, only: it, cnorm
@@ -12,65 +11,6 @@ module distributions
 
   public
 
-! disribution flags
-  integer :: o_ptb = 1
-  integer :: o_ptbb = 1
-  integer :: o_ptlp = 1
-  integer :: o_ptlm = 1
-  integer :: o_ptnu = 1
-  integer :: o_ptnub = 1
-  integer :: o_ptt = 1
-  integer :: o_pttb = 1
-  integer :: o_etab = 1
-  integer :: o_etabb = 1
-  integer :: o_etalp = 1
-  integer :: o_etalm = 1
-  integer :: o_etanu = 1
-  integer :: o_etanub = 1
-  integer :: o_etat = 1
-  integer :: o_etatb = 1
-  integer :: o_phib = 1
-  integer :: o_phibb = 1
-  integer :: o_philp = 1
-  integer :: o_philm = 1
-  integer :: o_phinu = 1
-  integer :: o_phinub = 1
-  integer :: o_phit = 1
-  integer :: o_phitb = 1
-  integer :: o_ycolb = 1
-  integer :: o_ycolbb = 1
-  integer :: o_ycollp = 1
-  integer :: o_ycollm = 1
-  integer :: o_ycolnu = 1
-  integer :: o_ycolnub = 1
-  integer :: o_ycolt   = 1
-  integer :: o_ycoltb = 1
-  integer :: o_mtt = 1
-  integer :: o_mtt_reco = 1
-  integer :: o_mtb = 1
-  integer :: o_mt_reco = 1
-  integer :: o_etmiss = 1
-  integer :: o_beta = 1
-  integer :: o_cost = 1
-  integer :: o_et = 1
-  integer :: o_delta_y = 1
-  integer :: o_fl = 1
-  integer :: o_cosfl = 1
-  integer :: o_dphi = 1
-  integer :: o_cost5 = 1
-  integer :: o_cost7 = 1
-  integer :: o_ct7ct5 = 1
-  integer :: o_mll = 0
-  integer :: o_ht = 1
-  integer :: o_mttvis = 1
-  integer :: o_mt1 = 1
-  integer :: o_mt2 = 1
-  integer :: o_mt3 = 1
-  integer :: o_mct1 = 1
-  integer :: o_mct2 = 1
-  integer :: o_mct3 = 1
-  integer :: o_mlt = 1
-  integer :: o_mlct = 1
   integer :: o_mttdphi = 1
   integer :: o_mttct7ct5 = 1
   integer :: o_mttcost7 = 1
@@ -190,67 +130,67 @@ subroutine create_distributions
 
   print *, "Creating distributions..."
 
-  if (o_ptb == 1) h_ptb = histogram("pTb", "d#sigma-/dp_{T}^{b}", "p_{T}^{b}", 0.d0, 1000.d0, 100)
-  if (o_ptbb == 1) h_ptbb = histogram("pTbb", "d#sigma-/dp_{T}^{#bar{b}}", "p_{T}^{#bar{b}}", 0.d0, 1000.d0, 100)
-  if (o_ptlp == 1) h_ptlp = histogram("pTlp", "d#sigma-/dp_{T}^{l^{+}}", "p_{T}^{l^{+}}", 0.d0, 1000.d0, 100)
-  if (o_ptlm == 1) h_ptlm = histogram("pTlm", "d#sigma-/dp_{T}^{l^{-}}", "p_{T}^{l^{-}}", 0.d0, 1000.d0, 100)
-  if (o_ptnu == 1) h_ptnu = histogram("pTnu", "d#sigma-/dp_{T}^{#nu}", "p_{T}^{#nu}", 0.d0, 1000.d0, 100)
-  if (o_ptnub == 1) h_ptnub = histogram("pTnub", "d#sigma-/dp_{T}^{#bar{#nu}}", "p_{T}^{#bar{#nu}}", 0.d0, 1000.d0, 100)
-  if (o_ptt == 1) h_ptt = histogram("pTt", "d#sigma-/dp^{t}_{T}--[pb]", "p^{t}_{T}", 0.d0, 1000.d0, 100)
-  if (o_pttb == 1) h_pttb = histogram("pTtb", "d#sigma-/dp^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 0.d0, 1000.d0, 100)
-  if (o_etab == 1) h_etab = histogram("etab", "d#sigma-/d#eta_{b}", "#eta_{b}", -10.d0, 10.d0, 100)
-  if (o_etabb == 1) h_etabb = histogram("etabb", "d#sigma-/d#eta_{#bar{b}}", "#eta_{#bar{b}}", -10.d0, 10.d0, 100)
-  if (o_etalp == 1) h_etalp = histogram("etalp", "d#sigma-/d#eta_{l^{+}}", "#eta_{l^{+}}", -10.d0, 10.d0, 100)
-  if (o_etalm == 1) h_etalm = histogram("etalm", "d#sigma-/d#eta_{l^{-}}", "#eta_{l^{-}}", -10.d0, 10.d0, 100)
-  if (o_etanu == 1) h_etanu = histogram("etanu", "d#sigma-/d#eta_{#nu}", "#eta_{#nu}", -10.d0, 10.d0, 100)
-  if (o_etanub == 1) h_etanub = histogram("etanub", "d#sigma-/d#eta_{#bar{#nu}}", "#eta_{#bar{#nu}}", -10.d0, 10.d0, 100)
-  if (o_etat == 1) h_etat = histogram("etat", "d#sigma-/dd#eta_{t}--[pb]", "#eta_{t}", -10.d0, 10.d0, 100)
-  if (o_etatb == 1) h_etatb = histogram("etatb", "d#sigma-/d#eta_{#bar{t}}--[pb]", "#eta_{#bar{t}}", -10.d0, 10.d0, 100)
-  if (o_phib == 1) h_phib = histogram("phib", "d#sigma-/d#phi_{b}", "#phi_{b}", -pi, pi, 100)
-  if (o_phibb == 1) h_phibb = histogram("phibb", "d#sigma-/d#phi_{#bar{b}}", "#phi_{#bar{b}}", -pi, pi, 100)
-  if (o_philp == 1) h_philp = histogram("philp", "d#sigma-/d#phi_{l^{+}}", "#phi_{l^{+}}", -pi, pi, 100)
-  if (o_philm == 1) h_philm = histogram("philm", "d#sigma-/d#phi_{l^{-}}", "#phi_{l^{-}}", -pi, pi, 100)
-  if (o_phinu == 1) h_phinu = histogram("phinu", "d#sigma-/d#phi_{#nu}", "#phi_{#nu}", -pi, pi, 100)
-  if (o_phinub == 1) h_phinub = histogram("phinub", "d#sigma-/d#phi_{#bar{#nu}}", "#phi_{#bar{#nu}}", -pi, pi, 100)
-  if (o_phit == 1) h_phit = histogram("phit", "d#sigma-/dd#phi_{t}--[pb]", "#phi_{t}", -pi, pi, 100)
-  if (o_phitb == 1) h_phitb = histogram("phitb", "d#sigma-/d#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", -pi, pi, 100)
-  if (o_ycolb == 1) h_ycolb = histogram("ycolb", "d#sigma-/dy^b}", "#phi_{b}", -10.d0, 10.d0, 100)
-  if (o_ycolbb == 1) h_ycolbb = histogram("ycolbb", "d#sigma-/dy^{#bar{b}}_{col}--[pb]", "#phi_{#bar{b}}", -10.d0, 10.d0, 100)
-  if (o_ycollp == 1) h_ycollp = histogram("ycollp", "d#sigma-/dy^{l^{+}}_{col}--[pb]", "#phi_{l^{+}}", -10.d0, 10.d0, 100)
-  if (o_ycollm == 1) h_ycollm = histogram("ycollm", "d#sigma-/dy^{l^{-}}_{col}--[pb]", "#phi_{l^{-}}", -10.d0, 10.d0, 100)
-  if (o_ycolnu == 1) h_ycolnu = histogram("ycolnu", "d#sigma-/dy^{#nu}_{col}--[pb]", "#phi_{#nu}", -10.d0, 10.d0, 100)
-  if (o_ycolnub == 1) h_ycolnub = histogram("ycolnub", "d#sigma-/y^{#bar{#nu}}_{col}--[pb]", "#phi_{#bar{#nu}}", -10.d0, 10.d0,100)
-  if (o_ycolt == 1) h_ycolt = histogram("ycolt", "d#sigma-/dy^{t}_{col}--[pb]", "#phi_{t}", -10.d0, 10.d0, 100)
-  if (o_ycoltb == 1) h_ycoltb = histogram("ycoltb", "d#sigma-/dy^{#bar{t}}_{col}--[pb]", "#phi_{#bar{t}}", -10.d0, 10.d0, 100)
-  if (o_etmiss == 1) h_etmiss = histogram("ETmiss", "d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 1000.d0, 140)
-  if (o_mtb == 1) h_mtt = histogram("Mtt", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-  if (o_mt_reco == 1) h_mtt_reco = histogram("Mtt_reco", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 0.d0, 14000.d0, 140)
-  if (o_beta == 1) h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 0.d0, 1000.d0, 100)
-  if (o_mtb == 1) h_mtb = histogram("mtb", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 0.d0, 1000.d0, 100)
-  if (o_mtt == 1) h_mtt = histogram("mtt", "d#sigma-/dM_{tt}--[pb]", "M_{tt}", 0.d0, 14000.d0, 100)
-  if (o_mtt_reco == 1) h_mt_reco = histogram("mt_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 0.d0, 1000.d0, 100)
-  if (o_beta == 1) h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 0.d0, 50.d0, 100)
-  if (o_cost == 1) h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", -1.d0, 1.d0, 100)
-  if (o_et == 1) h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 0.d0, 1000.d0, 100)
-  if (o_delta_y == 1) h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", -4.d0, 4.d0, 100)
-  if (o_fl == 1) h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_{l}", 0.d0, 1000.d0, 100)
-  if (o_cosfl == 1) h_cosfl = histogram("cosphil", "d#sigma-/dcos#phi_{l}--[pb]", "cos#phi_{l}", -1.d0, 1.d0, 100)
-  if (o_dphi == 1) h_dphi = histogram("dphi", "d#sigma-/d#delta-#phi_{l}--[pb]", "#delta-#phi_{l}", 0.d0, 2*pi, 100)
-  if (o_cost5 == 1) h_cost5 = histogram("cost5", "d#sigma-/dcos#theta_{l^{+}}--[pb]", "cos#theta_{l^{+}}", -1.d0, 1.d0, 100)
-  if (o_cost7 == 1) h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^{-}}--[pb]", "cos#theta_{l^{-}}", -1.d0, 1.d0, 100)
+  if (o_ptb == 1) h_ptb = histogram("pTb", "d#sigma-/dp_{T}^{b}", "p_{T}^{b}", 100, 0.d0, 1000.d0)
+  if (o_ptbb == 1) h_ptbb = histogram("pTbb", "d#sigma-/dp_{T}^{#bar{b}}", "p_{T}^{#bar{b}}", 100, 0.d0, 1000.d0)
+  if (o_ptlp == 1) h_ptlp = histogram("pTlp", "d#sigma-/dp_{T}^{l^{+}}", "p_{T}^{l^{+}}", 100, 0.d0, 1000.d0)
+  if (o_ptlm == 1) h_ptlm = histogram("pTlm", "d#sigma-/dp_{T}^{l^{-}}", "p_{T}^{l^{-}}", 100, 0.d0, 1000.d0)
+  if (o_ptnu == 1) h_ptnu = histogram("pTnu", "d#sigma-/dp_{T}^{#nu}", "p_{T}^{#nu}", 100, 0.d0, 1000.d0)
+  if (o_ptnub == 1) h_ptnub = histogram("pTnub", "d#sigma-/dp_{T}^{#bar{#nu}}", "p_{T}^{#bar{#nu}}", 100, 0.d0, 1000.d0)
+  if (o_ptt == 1) h_ptt = histogram("pTt", "d#sigma-/dp^{t}_{T}--[pb]", "p^{t}_{T}", 100, 0.d0, 1000.d0)
+  if (o_pttb == 1) h_pttb = histogram("pTtb", "d#sigma-/dp^{#bar{t}}_{T}--[pb]", "p^{#bar{t}}_{T}", 100, 0.d0, 1000.d0)
+  if (o_etab == 1) h_etab = histogram("etab", "d#sigma-/d#eta_{b}", "#eta_{b}", 100, -10.d0, 10.d0)
+  if (o_etabb == 1) h_etabb = histogram("etabb", "d#sigma-/d#eta_{#bar{b}}", "#eta_{#bar{b}}", 100, -10.d0, 10.d0)
+  if (o_etalp == 1) h_etalp = histogram("etalp", "d#sigma-/d#eta_{l^{+}}", "#eta_{l^{+}}", 100, -10.d0, 10.d0)
+  if (o_etalm == 1) h_etalm = histogram("etalm", "d#sigma-/d#eta_{l^{-}}", "#eta_{l^{-}}", 100, -10.d0, 10.d0)
+  if (o_etanu == 1) h_etanu = histogram("etanu", "d#sigma-/d#eta_{#nu}", "#eta_{#nu}", 100, -10.d0, 10.d0)
+  if (o_etanub == 1) h_etanub = histogram("etanub", "d#sigma-/d#eta_{#bar{#nu}}", "#eta_{#bar{#nu}}", 100, -10.d0, 10.d0)
+  if (o_etat == 1) h_etat = histogram("etat", "d#sigma-/dd#eta_{t}--[pb]", "#eta_{t}", 100, -10.d0, 10.d0)
+  if (o_etatb == 1) h_etatb = histogram("etatb", "d#sigma-/d#eta_{#bar{t}}--[pb]", "#eta_{#bar{t}}", 100, -10.d0, 10.d0)
+  if (o_phib == 1) h_phib = histogram("phib", "d#sigma-/d#phi_{b}", "#phi_{b}", 100, -pi, pi)
+  if (o_phibb == 1) h_phibb = histogram("phibb", "d#sigma-/d#phi_{#bar{b}}", "#phi_{#bar{b}}", 100,  -pi, pi)
+  if (o_philp == 1) h_philp = histogram("philp", "d#sigma-/d#phi_{l^{+}}", "#phi_{l^{+}}", 100, -pi, pi)
+  if (o_philm == 1) h_philm = histogram("philm", "d#sigma-/d#phi_{l^{-}}", "#phi_{l^{-}}", 100, -pi, pi)
+  if (o_phinu == 1) h_phinu = histogram("phinu", "d#sigma-/d#phi_{#nu}", "#phi_{#nu}", 100, -pi, pi)
+  if (o_phinub == 1) h_phinub = histogram("phinub", "d#sigma-/d#phi_{#bar{#nu}}", "#phi_{#bar{#nu}}", 100, -pi, pi)
+  if (o_phit == 1) h_phit = histogram("phit", "d#sigma-/dd#phi_{t}--[pb]", "#phi_{t}", 100, -pi, pi)
+  if (o_phitb == 1) h_phitb = histogram("phitb", "d#sigma-/d#phi_{#bar{t}}--[pb]", "#phi_{#bar{t}}", 100, -pi, pi)
+  if (o_ycolb == 1) h_ycolb = histogram("ycolb", "d#sigma-/dy^b}", "#phi_{b}", 100, -10.d0, 10.d0)
+  if (o_ycolbb == 1) h_ycolbb = histogram("ycolbb", "d#sigma-/dy^{#bar{b}}_{col}--[pb]", "#phi_{#bar{b}}", 100, -10.d0, 10.d0)
+  if (o_ycollp == 1) h_ycollp = histogram("ycollp", "d#sigma-/dy^{l^{+}}_{col}--[pb]", "#phi_{l^{+}}", 100, -10.d0, 10.d0)
+  if (o_ycollm == 1) h_ycollm = histogram("ycollm", "d#sigma-/dy^{l^{-}}_{col}--[pb]", "#phi_{l^{-}}", 100, -10.d0, 10.d0)
+  if (o_ycolnu == 1) h_ycolnu = histogram("ycolnu", "d#sigma-/dy^{#nu}_{col}--[pb]", "#phi_{#nu}", 100, -10.d0, 10.d0)
+  if (o_ycolnub == 1) h_ycolnub = histogram("ycolnub", "d#sigma-/y^{#bar{#nu}}_{col}--[pb]", "#phi_{#bar{#nu}}",100, -10.d0, 10.d0)
+  if (o_ycolt == 1) h_ycolt = histogram("ycolt", "d#sigma-/dy^{t}_{col}--[pb]", "#phi_{t}", 100, -10.d0, 10.d0)
+  if (o_ycoltb == 1) h_ycoltb = histogram("ycoltb", "d#sigma-/dy^{#bar{t}}_{col}--[pb]", "#phi_{#bar{t}}", 100, -10.d0, 10.d0)
+  if (o_etmiss == 1) h_etmiss = histogram("ETmiss", "d#sigma-/dE_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 140, 0.d0, 1000.d0)
+  if (o_mtb == 1) h_mtt = histogram("Mtt", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 140, 0.d0, 14000.d0)
+  if (o_mt_reco == 1) h_mtt_reco = histogram("Mtt_reco", "d#sigma-/dM_{tt}--[pb/GeV]", 'M_{tt}--[GeV]', 140, 0.d0, 14000.d0)
+  if (o_beta == 1) h_beta = histogram("beta", "d#sigma-/d#beta_{tt}--[pb/GeV]", 'beta_{t}', 100, 0.d0, 1000.d0)
+  if (o_mtb == 1) h_mtb = histogram("mtb", "d#sigma-/d#m_{#bar{t}}--[pb]", "#m_{#bar{t}}", 100, 0.d0, 1000.d0)
+  if (o_mtt == 1) h_mtt = histogram("mtt", "d#sigma-/dM_{tt}--[pb]", "M_{tt}", 100, 0.d0, 14000.d0)
+  if (o_mtt_reco == 1) h_mt_reco = histogram("mt_reco", "d#sigma-/dm^{reco}_{t}--[pb]", "m^{reco}_{t}", 100, 0.d0, 1000.d0)
+  if (o_beta == 1) h_beta = histogram("beta", "d#sigma-/d#beta--[pb]", "#beta", 100, 0.d0, 50.d0)
+  if (o_cost == 1) h_cost = histogram("cost", "d#sigma-/dcos#theta_{t}--[pb]", "cos#theta_{t}", 100, -1.d0, 1.d0)
+  if (o_et == 1) h_et = histogram("Et","d#sigma-/dE_{t}--[pb]", "E_{t}", 100, 0.d0, 1000.d0)
+  if (o_delta_y == 1) h_delta_y = histogram("delta_y", "d#sigma-/d#Delta-y--[pb]", "#Delta-y", 100, -4.d0, 4.d0)
+  if (o_fl == 1) h_fl = histogram("phil", "d#sigma-/d#phi_l--[pb]", "#phi_{l}", 100, 0.d0, 1000.d0)
+  if (o_cosfl == 1) h_cosfl = histogram("cosphil", "d#sigma-/dcos#phi_{l}--[pb]", "cos#phi_{l}", 100, -1.d0, 1.d0)
+  if (o_dphi == 1) h_dphi = histogram("dphi", "d#sigma-/d#delta-#phi_{l}--[pb]", "#delta-#phi_{l}", 100, 0.d0, 2*pi)
+  if (o_cost5 == 1) h_cost5 = histogram("cost5", "d#sigma-/dcos#theta_{l^{+}}--[pb]", "cos#theta_{l^{+}}", 100, -1.d0, 1.d0)
+  if (o_cost7 == 1) h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^{-}}--[pb]", "cos#theta_{l^{-}}", 100, -1.d0, 1.d0)
   if (o_ct7ct5 == 1) h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^{+}}cos#theta_{l^{-}}--[pb]", &
-     "cos#theta_{l^+}cos#theta_{l^-}",-1.d0,1.d0,100)
-  if (o_mll == 1) h_mll = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 0.d0, 100.d0, 100)
-  if (o_ht == 1) h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mttvis == 1) h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}^{vis}_{T}--[GeV]",0.d0, 4000.d0,40)
-  if (o_mt1 == 1) h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mt2 == 1) h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mt3 == 1) h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mct1 == 1) h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mct2 == 1) h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mct3 == 1) h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}--[GeV]", 0.d0, 4000.d0, 40)
-  if (o_mlt == 1) h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}--[GeV]", 0.d0, 100.d0, 50)
-  if (o_mlct == 1) h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}--[GeV]", 0.d0, 100.d0, 50)
+     "cos#theta_{l^+}cos#theta_{l^-}", 100,-1.d0,1.d0)
+  if (o_mll == 1) h_mll = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 100, 0.d0, 100.d0)
+  if (o_ht == 1) h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mttvis == 1) h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}^{vis}_{T}--[GeV]",40,0.d0, 4000.d0)
+  if (o_mt1 == 1) h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mt2 == 1) h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mt3 == 1) h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mct1 == 1) h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mct2 == 1) h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mct3 == 1) h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
+  if (o_mlt == 1) h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}--[GeV]", 50, 0.d0, 100.d0)
+  if (o_mlct == 1) h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}--[GeV]", 50, 0.d0, 100.d0)
 
   if (o_mttdphi == 1) h2_mttdphi = histogram2d("Mttdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
     ,"M_{tt}--[GeV]",0.d0,14000.d0,10,"Ddelta-#phi_{l}", 0.d0, 2*pi, 10)
@@ -399,143 +339,6 @@ end subroutine initialise_distributions
 subroutine disable_distributions
 
   print *, "Disabling irrelevent distributions..."
-
-  do iasy = 1, n_asymmetries
-    o_asym(iasy) = include_asymmetries
-  end do
-
-  if (initial_state == 0) then
-    ! disable non-useful variables for pp
-    o_asym(4) = 0
-    o_asym(7) = 0
-    o_asym(8) = 0 
-  end if
-
-  if (initial_state == 1) then
-    ! disable non-useful variables for ppbar
-    o_asym(5) = 0
-    o_asym(6) = 0
-  end if
-
-  if (final_state == 0) then
-    ! disable 2to6 variables 
-    o_ptb = 0
-    o_ptbb = 0
-    o_ptlp = 0
-    o_ptlm = 0
-    o_ptnu = 0
-    o_ptnub = 0
-    o_etab = 0
-    o_etabb = 0
-    o_etalp = 0
-    o_etalm = 0
-    o_etanu = 0
-    o_etanub = 0
-    o_phib = 0
-    o_phibb = 0
-    o_philp = 0
-    o_philm = 0
-    o_phinu = 0
-    o_phinub = 0
-    o_ycolb = 0
-    o_ycolbb = 0
-    o_ycollp = 0
-    o_ycollm = 0
-    o_ycolnu = 0
-    o_ycolnub = 0
-    o_etmiss = 0
-    o_fl = 0
-    o_dphi = 0
-    o_cosfl = 0
-    o_cost7 = 0
-    o_cost5 = 0
-    o_ct7ct5 = 0
-    o_asym(6) = 0
-    o_asym(10) = 0
-    o_asym(11) = 0
-    o_asym(12) = 0
-    o_mtt_reco = 0
-    o_mt_reco = 0
-    o_mtb = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
-  end if
-
-  if (final_state > 0) then
-    ! disable non 2to6 variables
-    o_asym(1) = 0
-    o_asym(2) = 0
-    o_asym(3) = 0
-  end if
-
-  if (final_state == 1) then 
-    ! disable non-useful variables in dileptonic
-    o_mll = 1
-    o_mtt_reco = 0 
-    o_mt_reco = 0
-    o_mtb = 0
-    do i = 4, 10
-      o_asym(i) = 0
-    end do
-  end if
-
-  if (final_state == 2) then
-    ! disable non-useful variables in semi-leptonic
-    o_cost7 = 0
-    o_ct7ct5 = 0
-    o_dphi = 0
-    o_etmiss = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
-    o_asym(5) = 0
-    o_asym(9) = 0
-  end if
-
-  if (final_state == 3) then
-    ! disable non-useful variables in fully hadronic
-    o_mtt_reco = 0
-    o_cost5 = 0
-    o_cost7 = 0
-    o_ct7ct5 = 0
-    o_dphi = 0
-    o_etmiss = 0
-    o_mt_reco = 0
-    o_mtb = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
-
-    o_asym(6) = 0
-    o_asym(10) = 0
-    o_asym(11) = 0
-    o_asym(12) = 0
-  end if
-
-  ! disable A_PV
-  o_asym(3) = 0
 
   if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_dphi == 0)) o_mttdphi = 0
   if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_ct7ct5 == 0)) o_mttct7ct5 = 0

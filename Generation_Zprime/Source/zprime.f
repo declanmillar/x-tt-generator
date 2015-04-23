@@ -17,7 +17,7 @@ program zprime
 
   implicit none
 
-  external differential_cross_section
+  external dsigma
 
   real :: sigma_pol_tot(-1:1, -1:1), error_pol_tot(-1:1, -1:1)
   real :: sigma_fb_tot(n_fb_asymmetries, -1:1), error_fb_tot(n_fb_asymmetries, -1:1)
@@ -39,6 +39,8 @@ program zprime
   integer :: i, j, k
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
+  character(44) :: ntuple_directory
+  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
 
   call cpu_time(start_time)
 
@@ -46,14 +48,19 @@ program zprime
 
   call modify_config
 
-  call rootinit("../Ntuples_Zprime/"//ntuple_file)
+  call setup_channels
+
+  print *, "Output Ntuple will be written to "//ntuple_directory//ntuple_file
+  call rootinit(ntuple_directory//ntuple_file)
 
   open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
   close(10)
 
-  call disable_distributions
-  call create_distributions
-  call initialise_distributions
+  if (print_all_distributions == 1) then
+    call disable_distributions
+    call create_distributions
+    call initialise_distributions
+  end if
 
   s = collider_energy*collider_energy
 
@@ -312,9 +319,9 @@ program zprime
   end if
 
   ! integrate 
-  print *, 'Starting integration ... '
+  print *, 'Starting integration... '
   it = 0 
-  call vegas(ndimensions, differential_cross_section, avgi, sd, chi2a)
+  call vegas(ndimensions, dsigma, avgi, sd, chi2a)
 
   print *, ' ... done.'  
 
@@ -493,7 +500,7 @@ program zprime
     print *, "done."
   end if
 
-  call finalise_distributions
+  if (print_all_distributions == 1) call finalise_distributions
 
   write(10,*) 'CLOSE'
   call rootclose

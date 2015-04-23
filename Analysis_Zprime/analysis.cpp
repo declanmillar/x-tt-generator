@@ -21,7 +21,7 @@ void AnalysisZprime::EachEvent()
   {
     // cout << "Event = " << m_ntup->eventNumber()<<endl;
     
-    float eventWeight = m_ntup->weight();
+    double eventWeight = m_ntup->weight();
     
     // Fill Histograms (assumes fixed bin width!)
     // if(m_ntup->barcode()->at(2) == -11)  h_positron_pz->Fill(m_ntup->Pz()->at(2), m_ntup->weight());
@@ -32,6 +32,8 @@ void AnalysisZprime::EachEvent()
     h_mttLR->Fill(m_ntup->mtt(), m_ntup->weightLR()/h_mttLR->GetXaxis()->GetBinWidth(1));
     h_mttRL->Fill(m_ntup->mtt(), m_ntup->weightRL()/h_mttRL->GetXaxis()->GetBinWidth(1));
     h_mttRR->Fill(m_ntup->mtt(), m_ntup->weightRR()/h_mttRR->GetXaxis()->GetBinWidth(1));
+
+    printf("%e %e\n", m_ntup->weightLL() + m_ntup->weightLR() + m_ntup->weightRL() + m_ntup->weightRR(), eventWeight);
 
     // if(m_ntup->Pz()->size() > 0)
     // {
@@ -53,14 +55,14 @@ void AnalysisZprime::PreLoop()
   // Define Histograms  
 
   h_positron_pz = new TH1D( "pz", "pz" ,50 ,0.0 , 10000.0);
-  h_mtt = new TH1D( "mtt", "mtt", 100, 0.0, 13000.0);
-  h_mttLL = new TH1D( "mttLL", "mttLL", 100, 0.0, 13000.0);
-  h_mttLR = new TH1D( "mttLR", "mttLR", 100, 0.0, 13000.0);
-  h_mttRL = new TH1D( "mttRL", "mttRL", 100, 0.0, 13000.0);
-  h_mttRR = new TH1D( "mttRR", "mttRR", 100, 0.0, 13000.0);
-  h_mttALLnum = new TH1D( "mttALLnum", "mttALLnum", 100, 0.0, 13000.0);
-  h_mttALLden = new TH1D( "mttALLden", "mttALLden", 100, 0.0, 13000.0);
-  h_mttALL = new TH1D( "mttALL", "mttALL", 100, 0.0, 13000.0);
+  h_mtt = new TH1D( "mtt", "mtt", 20, 0.0, 14000.0);
+  h_mttLL = new TH1D( "mttLL", "mttLL", 20, 0.0, 14000.0);
+  h_mttLR = new TH1D( "mttLR", "mttLR", 20, 0.0, 14000.0);
+  h_mttRL = new TH1D( "mttRL", "mttRL", 20, 0.0, 14000.0);
+  h_mttRR = new TH1D( "mttRR", "mttRR", 20, 0.0, 14000.0);
+  h_mttALLnum = new TH1D( "mttALLnum", "mttALLnum", 20, 0.0, 14000.0);
+  h_mttALLden = new TH1D( "mttALLden", "mttALLden", 20, 0.0, 14000.0);
+  h_mttALL = new TH1D( "mttALL", "mttALL", 20, 0.0, 14000.0);
   // h_positron_pz->Sumw2();
   // h_mtt->Sumw2();
   // h_mttLL->Sumw2();
@@ -82,11 +84,25 @@ void AnalysisZprime::PostLoop()
   h_mttALL->Add(h_mttRL,-1);
   h_mttALL->Add(h_mttLR,-1);
 
-  h_mttALL->Divide(h_mtt);
+  h_mttALLden->Add(h_mttRR, 1);
+  h_mttALLden->Add(h_mttLL, 1);
+  h_mttALLden->Add(h_mttRL, 1);
+  h_mttALLden->Add(h_mttLR, 1);
+
+  h_mttALL->Divide(h_mttALLden);
 
   double sigma = h_mtt->Integral("width");
 
+  double sigmaLL = h_mttLL->Integral("width");
+  double sigmaLR = h_mttLR->Integral("width");
+  double sigmaRL = h_mttRL->Integral("width");
+  double sigmaRR = h_mttRR->Integral("width");
+
+  double ALL = (sigmaLL + sigmaRR - sigmaRL - sigmaLR)/
+               (sigmaLL + sigmaRR + sigmaRL + sigmaLR);
+
   printf("sigma = %f\n", sigma);
+  printf("ALL = %f\n", ALL);
 
   this->MakeGraphs();
   

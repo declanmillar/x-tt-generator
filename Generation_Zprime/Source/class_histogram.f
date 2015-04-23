@@ -12,9 +12,9 @@ module class_Histogram
     character (len = 50), public :: name
     character (len = 50), public :: ytitle
     character (len = 50), public :: xtitle
+    integer, public :: ndiv
     real, public :: low
     real, public :: up
-    integer, public :: ndiv
 
     real, private :: binw = 0
     real :: x(500)=0,fx(500,20)=0,fxtot(500)=0
