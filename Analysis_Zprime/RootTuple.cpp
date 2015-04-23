@@ -8,7 +8,7 @@
 //  *   Author: John Morris (john.morris@cern.ch)                             * 
 //  *           Queen Mary University of London                               * 
 //  *   Editor: Declan Millar (declan.millar@cern.ch)                         * 
-//  *   File Generated on Wed Apr 22 18:56:54 2015                            * 
+//  *   File Generated on Thu Apr 23 17:05:45 2015                            * 
 //  *                                                                         * 
 //  ***************************************************************************/ 
 
@@ -66,12 +66,28 @@ Long64_t RootTuple::LoadTree(Long64_t entry){
 
 void RootTuple::Init(TTree* tree){ 
   m_E = 0; 
-  m_Mtt = 0; 
   m_Px = 0; 
   m_Py = 0; 
   m_Pz = 0; 
   m_barcode = 0; 
+  m_beta = 0; 
+  m_cost = 0; 
+  m_delta_y = 0; 
+  m_et = 0; 
+  m_etat = 0; 
+  m_etatb = 0; 
+  m_mtt = 0; 
+  m_phit = 0; 
+  m_phitb = 0; 
+  m_ptt = 0; 
+  m_pttb = 0; 
   m_weight = 0; 
+  m_weightLL = 0; 
+  m_weightLR = 0; 
+  m_weightRL = 0; 
+  m_weightRR = 0; 
+  m_ycolt = 0; 
+  m_ycoltb = 0; 
 
   if (!tree) return; 
   fChain = tree; 
@@ -79,11 +95,27 @@ void RootTuple::Init(TTree* tree){
   fChain->SetMakeClass(1); 
 
   fChain->SetBranchAddress("E", &m_E, &b_E); 
-  fChain->SetBranchAddress("Mtt", &m_Mtt, &b_Mtt); 
   fChain->SetBranchAddress("Px", &m_Px, &b_Px); 
   fChain->SetBranchAddress("Py", &m_Py, &b_Py); 
   fChain->SetBranchAddress("Pz", &m_Pz, &b_Pz); 
   fChain->SetBranchAddress("barcode", &m_barcode, &b_barcode); 
+  fChain->SetBranchAddress("beta", &m_beta, &b_beta); 
+  fChain->SetBranchAddress("cost", &m_cost, &b_cost); 
+  fChain->SetBranchAddress("delta_y", &m_delta_y, &b_delta_y); 
+  fChain->SetBranchAddress("et", &m_et, &b_et); 
+  fChain->SetBranchAddress("etat", &m_etat, &b_etat); 
+  fChain->SetBranchAddress("etatb", &m_etatb, &b_etatb); 
+  fChain->SetBranchAddress("mtt", &m_mtt, &b_mtt); 
+  fChain->SetBranchAddress("phit", &m_phit, &b_phit); 
+  fChain->SetBranchAddress("phitb", &m_phitb, &b_phitb); 
+  fChain->SetBranchAddress("ptt", &m_ptt, &b_ptt); 
+  fChain->SetBranchAddress("pttb", &m_pttb, &b_pttb); 
   fChain->SetBranchAddress("weight", &m_weight, &b_weight); 
+  fChain->SetBranchAddress("weightLL", &m_weightLL, &b_weightLL); 
+  fChain->SetBranchAddress("weightLR", &m_weightLR, &b_weightLR); 
+  fChain->SetBranchAddress("weightRL", &m_weightRL, &b_weightRL); 
+  fChain->SetBranchAddress("weightRR", &m_weightRR, &b_weightRR); 
+  fChain->SetBranchAddress("ycolt", &m_ycolt, &b_ycolt); 
+  fChain->SetBranchAddress("ycoltb", &m_ycoltb, &b_ycoltb); 
 } 
 

@@ -58,9 +58,15 @@ private:
   TFile* m_outputFile;
   
   // Define Histograms
-  TH1* h_positron_pz;
-  TH1* h_mtt;
-  
+  TH1D* h_positron_pz;
+  TH1D* h_mtt;
+  TH1D* h_mttLL;
+  TH1D* h_mttLR;
+  TH1D* h_mttRL;
+  TH1D* h_mttRR;
+  TH1D* h_mttALLnum;
+  TH1D* h_mttALLden;
+  TH1D* h_mttALL;
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif

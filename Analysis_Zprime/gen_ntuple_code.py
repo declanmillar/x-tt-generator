@@ -158,8 +158,8 @@ class genNtupleCode(object):
     myVars = self.variables[outputClass]
     # if not os.path.exists('D3PDLibs/'):
     #   os.system('mkdir D3PDLibs')
-    # fileName = 'D3PDLibs/' + outputClass + '.cxx'
-    fileName = outputClass + '.cxx'
+    # fileName = 'D3PDLibs/' + outputClass + '.cpp'
+    fileName = outputClass + '.cpp'
     file = open(fileName,'w')
     self.gnugpl(file)
     file.write('// This class is for accessing the ' + outputClass + ' Ntuples  \n')
