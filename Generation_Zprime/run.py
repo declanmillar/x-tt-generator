@@ -46,6 +46,7 @@ parser.add_option("-E", "--include_errors", default=0, const=1, action="store_co
 
 # Debug options
 parser.add_option("-M", "--phase_space_only", default=0, const=1, action="store_const", help="Set |M|^2 = 1")
+parser.add_option("-d", "--debug", default=0, const=1, action="store_const", help="Run in debug mode.")
 
 (options, args) = parser.parse_args()
 print "\n Generating config file..."
@@ -188,6 +189,8 @@ print >> config, '%s ! print_all_distributions' % options.print_all_distribution
 print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
 
 print >> config, '%s ! include distribution errors' % options.include_errors
+
+print >> config, '%s ! debug mode' % options.debug
 
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:

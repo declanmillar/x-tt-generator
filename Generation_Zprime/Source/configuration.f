@@ -29,6 +29,7 @@ module configuration
   integer :: print_2d_distributions
   integer :: include_errors
   integer :: phase_space_only
+  integer :: debug_mode
 
   ! derived parameters
   integer :: n_final
@@ -166,6 +167,8 @@ module configuration
       read(5,*) print_2d_distributions
 
       read(5,*) include_errors
+
+      read(5,*) debug_mode
 
       print *, "...done."
       

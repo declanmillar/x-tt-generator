@@ -1744,6 +1744,8 @@ function dsigma(x,wgt)
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
 
+      if (debug_mode == 1) print *, 'Writing event to Ntuple...' 
+
       if (final_state == 0) then
         call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
         call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
@@ -1846,9 +1848,11 @@ function dsigma(x,wgt)
       if (o_mlt == 1) call rootadddouble(mlt, "mlt")
       if (o_mlct == 1) call rootadddouble(mlct, "mlct")
 
-      call rootadddouble()
+!       call rootadddouble()
 
       call rootaddevent(hist)
+
+      if (debug_mode == 1) print *, '...done.'
 
       if(print_all_distributions == 1) then
         ! print distributions

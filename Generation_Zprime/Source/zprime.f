@@ -323,7 +323,7 @@ program zprime
   it = 0 
   call vegas(ndimensions, dsigma, avgi, sd, chi2a)
 
-  print *, ' ... done.'  
+  print *, ' ...done.'  
 
   if (final_state == 0 .and. use_branching_ratio == 1) then
     ! multiply by branching ratios
@@ -402,7 +402,7 @@ program zprime
         end do
       end do
     end if
-    print *, "done."
+    print *, "...done."
 
     ! collect unpolarised spatial asymmetry
     print *, "Collating FB cross sections..."
@@ -432,7 +432,7 @@ program zprime
         end do
       end if
     end do
-    print *, "done."
+    print *, "...done."
 
     ! define asymmetries
     print *, "Calculating polar asymmetries..."
@@ -457,7 +457,7 @@ program zprime
       atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
                    /2.d0*atot(3)
     end if
-    print *, "done."
+    print *, "...done."
 
     print *, "Calculating FB asymmetries..."
     do iasy = 4, n_asymmetries
@@ -467,7 +467,7 @@ program zprime
         atoterr(iasy) = sd/avgi*atot(iasy)
       end if
     end do
-    print *, "done."
+    print *, "...done."
 
 
     ! print asymmetries
@@ -497,7 +497,7 @@ program zprime
     if (o_asym(11) == 1)  write(10,*) atot(11), atoterr(11)
     if (o_asym(12) == 1)  write(10,*) 'AlFB:                  uncertainty (same units):'
     if (o_asym(12) == 1)  write(10,*) atot(12), atoterr(12)
-    print *, "done."
+    print *, "...done."
   end if
 
   if (print_all_distributions == 1) call finalise_distributions
