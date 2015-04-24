@@ -22,9 +22,9 @@ F = gfortran
 # Flags
 FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0 
 # add roottuple libraries qmulpc007
-LFLAGS = -L/usr/local/lib -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
+# LFLAGS = -L/usr/local/lib -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
 # add roottuple libraries os x
-# LFLAGS = -L/usr/lib -lRootTuple -L/usr/local/Cellar/root/5.34.26/lib/root -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer -Wl,-stack_size,0x40000000
+LFLAGS = -L/usr/lib -lRootTuple -L/usr/local/Cellar/root/5.34.26/lib/root -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer -Wl,-stack_size,0x40000000
 # Compile all files ending in .f in SRC
 $(LIB)/%.o: $(SRC)/%.f 
 	$(F) $(FFLAGS) -c -o  $@ $<
