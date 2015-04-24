@@ -11,7 +11,7 @@
 
 class AnalysisTransverse{
 public:
-  AnalysisTransverse(const TString& outputFileName);
+  AnalysisTransverse(const TString& inputFileName, const TString& outputFileName);
   virtual ~AnalysisTransverse();
   
 protected:
@@ -47,6 +47,7 @@ private:
   float m_pi;
   float m_GeV;
   // TString m_channel;  
+  TString m_inputFileName;
   TString m_outputFileName;
 
   // Input Data
@@ -58,15 +59,28 @@ private:
   TFile* m_outputFile;
   
   // Define Histograms
-  TH1D* h_positron_pz;
   TH1D* h_mtt;
-  TH1D* h_mttLL;
-  TH1D* h_mttLR;
-  TH1D* h_mttRL;
-  TH1D* h_mttRR;
-  TH1D* h_mttALLnum;
-  TH1D* h_mttALLden;
-  TH1D* h_mttALL;
+  TH1D* h_ht;
+  TH1D* h_mttvis;
+  TH1D* h_mt1;
+  TH1D* h_mt2;
+  TH1D* h_mt3;
+  TH1D* h_mct1;
+  TH1D* h_mct2;
+  TH1D* h_mct3;
+  TH1D* h_mlt;
+  TH1D* h_mlct;
+  TH2D* h_dphi_mtt;
+  TH2D* h_dphi_ht;
+  TH2D* h_dphi_mttvis;
+  TH2D* h_dphi_mt1;
+  TH2D* h_dphi_mt2;
+  TH2D* h_dphi_mt3;
+  TH2D* h_dphi_mct1;
+  TH2D* h_dphi_mct2;
+  TH2D* h_dphi_mct3;
+  TH2D* h_dphi_mlt;
+  TH2D* h_dphi_mlct;
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif

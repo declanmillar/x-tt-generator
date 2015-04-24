@@ -10,7 +10,7 @@ ROOTLIBS        = $(shell root-config --libs)
 
 CXXFLAGS        += $(ROOTCFLAGS)   
 LIBS            = $(ROOTLIBS) $(TREEPLAYER)
-OBJS            =  main.o atlas_style.o RootTuple.o analysis_transverse.o 
+OBJS            =  main.o atlas_style.o RootTuple.o analysis_transverse.o superpose.o
 
 PROGRAM         = go
   

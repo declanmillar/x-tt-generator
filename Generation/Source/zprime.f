@@ -183,6 +183,7 @@ program zprime
   end if
 
   ! output information before integration
+  call rootadddouble(-999, "test")
   open(unit = 10, file = 'Output/'//output_file, status = "old", action = "write", position="append")
   write(10,*) '====================================================='
   call idate(today)     ! today(1) = day, (2) = month, (3) = year

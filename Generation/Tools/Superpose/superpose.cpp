@@ -85,7 +85,6 @@ int main(int argc, char *argv[])
   h1 = (TH1D*) f1->Get(histName1.c_str());
   name1 = histName1 + '@' + fileName1;
   h1->SetTitle(name1.c_str());
-  h1->SetTitle("50,000 points");
   h1->SetMarkerStyle(20);
   h1->Draw();//("E1x0P");
   h1->SetMarkerColor(kBlack);
@@ -101,7 +100,6 @@ int main(int argc, char *argv[])
     name2 = histName2 + '@' + fileName2;
     h2 = (TH1D*) f2->Get(histName2.c_str());
     h2->SetTitle(name2.c_str());
-    h2->SetTitle("500,000 points");
     h2->SetMarkerStyle(20);
     h2->Draw("SAME");//("E1x0PSAME");
     h2->SetLineColor(kRed);
@@ -116,7 +114,6 @@ int main(int argc, char *argv[])
     h3 = (TH1D*) f3->Get(histName3.c_str());
     name3 = histName3 + '@' + fileName3;
     h3->SetTitle(name3.c_str());
-    h3->SetTitle("500,000 points, 2 VEGAS iterations");
     h3->SetMarkerStyle(20);
     h3->Draw("SAME");//("E1x0PSAME");
     h3->SetLineColor(kBlue);
@@ -124,7 +121,7 @@ int main(int argc, char *argv[])
   }
 
   // normalize histograms
-  // normalize = true;
+  normalize = true;
   if (normalize == true) { 
     std::string yTitle;
     yTitle = h1->GetYaxis()->GetTitle();
