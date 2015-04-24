@@ -55,14 +55,14 @@ void AnalysisZprime::PreLoop()
   // Define Histograms  
 
   h_positron_pz = new TH1D( "pz", "pz" ,50 ,0.0 , 10000.0);
-  h_mtt = new TH1D( "mtt", "mtt", 20, 0.0, 14000.0);
-  h_mttLL = new TH1D( "mttLL", "mttLL", 20, 0.0, 14000.0);
-  h_mttLR = new TH1D( "mttLR", "mttLR", 20, 0.0, 14000.0);
-  h_mttRL = new TH1D( "mttRL", "mttRL", 20, 0.0, 14000.0);
-  h_mttRR = new TH1D( "mttRR", "mttRR", 20, 0.0, 14000.0);
-  h_mttALLnum = new TH1D( "mttALLnum", "mttALLnum", 20, 0.0, 14000.0);
-  h_mttALLden = new TH1D( "mttALLden", "mttALLden", 20, 0.0, 14000.0);
-  h_mttALL = new TH1D( "mttALL", "mttALL", 20, 0.0, 14000.0);
+  h_mtt = new TH1D( "mtt", "mtt", 100, 0.0, 14000.0);
+  h_mttLL = new TH1D( "mttLL", "mttLL", 100, 0.0, 14000.0);
+  h_mttLR = new TH1D( "mttLR", "mttLR", 100, 0.0, 14000.0);
+  h_mttRL = new TH1D( "mttRL", "mttRL", 100, 0.0, 14000.0);
+  h_mttRR = new TH1D( "mttRR", "mttRR", 100, 0.0, 14000.0);
+  h_mttALLnum = new TH1D( "mttALLnum", "mttALLnum", 100, 0.0, 14000.0);
+  h_mttALLden = new TH1D( "mttALLden", "mttALLden", 100, 0.0, 14000.0);
+  h_mttALL = new TH1D( "mttALL", "mttALL", 100, 0.0, 14000.0);
   // h_positron_pz->Sumw2();
   // h_mtt->Sumw2();
   // h_mttLL->Sumw2();
@@ -254,7 +254,8 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupInputFiles()
 {   
   m_inputFiles = new vector<TString>;
-  TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  // TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  TString base("/Users/declan/Data/Ntuples_Zprime/");
   
   m_inputFiles->push_back(base + "SM_13_2to2_1x500000.root");
 }

@@ -41,6 +41,7 @@ program zprime
   double precision :: start_time, finish_time
   character(44) :: ntuple_directory
   ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
+!   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
 
   call cpu_time(start_time)
 

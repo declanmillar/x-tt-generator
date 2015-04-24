@@ -1,0 +1,4 @@
+*.o
+go
+gmon.out
+*.root
