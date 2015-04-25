@@ -16,26 +16,26 @@ module modelling
   real :: fmass(12), fwidth(12)
 
   ! quark masses
-  real, parameter :: umass=0.d0,  cmass=0.d0,       tmass=175.d0
-  real, parameter :: dmass=0.d0,  smass=0.d0,       bmass=4.18d0
+  real, parameter :: umass = 0.d0, cmass = 0.d0, tmass = 175.d0
+  real, parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
 
   ! leptons masses
-  real, parameter :: emass=0.d0,   mumass=0.d0,     taumass=1.78d0
-  real, parameter :: nuemass=0d0,  numumass=0d0,    nutaumass=0d0
+  real, parameter :: emass = 0.d0, mumass = 0.d0, taumass = 1.78d0
+  real, parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
 
   ! quark widths
-  real, parameter :: uwidth=0.d0,  cwidth=0.d0,     twidth=1.55d0
-  real, parameter :: dwidth=0.d0,  swidth=0.d0,     bwidth=0.d0
+  real, parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.55d0
+  real, parameter :: dwidth = 0.d0,  swidth = 0.d0, bwidth = 0.d0
 
   ! lepton widths
-  real, parameter :: eWidth=0.d0,   muwidth=0.d0,   tauwidth=0.d0
-  real, parameter :: nuewidth=0.d0, numuwidth=0.d0, nutauwidth=0.d0
+  real, parameter :: eWidth = 0.d0,   muwidth = 0.d0, tauwidth = 0.d0
+  real, parameter :: nuewidth = 0.d0, numuwidth = 0.d0, nutauwidth = 0.d0
 
   ! SM boson masses
-  real, parameter :: rm_w=80.23d0,rm_z=91.19d0,gamma_w=2.08d0,gamma_z=2.5d0
-  real, parameter :: rm_A=0d0, gamma_a=0d0, rm_h=125.d0, gamma_h=0.31278d-2
+  real, parameter :: rm_w = 80.23d0,rm_z = 91.19d0,gamma_w = 2.08d0,gamma_z = 2.5d0
+  real, parameter :: rm_A = 0d0, gamma_a = 0d0, rm_h = 125.d0, gamma_h = 0.31278d-2
 
-  real :: Gamma_t=twidth
+  real :: Gamma_t = twidth
 
 ! Other SM parameters
   real, parameter :: a_EM = 0.0078125, s2w = 0.2320d0

@@ -136,7 +136,7 @@ function dsigma(x,wgt)
   real :: q356(4), q478(4)
   real :: q56(4), q78(4), p56(4), p78(4)
   real :: q5(4), q7(4)
-  real :: q(4, 8), qcol(4, 8)
+  real :: q(4,8), qcol(4,8)
 
   ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
@@ -145,6 +145,9 @@ function dsigma(x,wgt)
   real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356(0:3), p478(0:3)
   real :: p6col_reco(0:3), p6_boost(0:3), p6_reco(0:3)
   real :: ptotalcol(0:3), ptotalcol_opp(0:3), ptotalcol_reco(0:3), ptotalcol_reco_opp(0:3)
+
+  ! check phase space
+  real :: delta_e, delta_x, delta_y, delta_z, pt68, pt682
 
   ! invarient masses
   real :: mtt, mtt_reco
@@ -221,12 +224,20 @@ function dsigma(x,wgt)
 
     ! loop over costheta_cm
     do jx = 1, jxmax
+
+      ! initialisation
       fffxn = 0.d0
-      
+      do i = 1, 4
+        do j = 1, 8
+          q(i,j) = 0.d0
+          qcol(i,j) = 0.d0
+        end do
+      end do
+
       ! scale for the pdfs
       qq = 2.d0*rmt
 
-      ! construct hadronic structure functions.
+      if (verbose == 1) print*, "Constructing hadronic structure functions..."
       if (structure_function <= 4) then
         q2 = qq*qq
         if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
@@ -350,7 +361,9 @@ function dsigma(x,wgt)
       ! note that cteq do too now!)
       ! parton distribution functions (pdfs)
       end if
-     
+      if (verbose == 1) print*, "...done."
+
+      if (verbose == 1) print*, "Constructing PDFs..."
       ! initialise pdfs
       fx1(1) = d1
       fx1(2) = u1
@@ -384,8 +397,9 @@ function dsigma(x,wgt)
       do i = 1, 13
         fx2(i) = fx2(i)/x2
       end do
-    
-      ! initial particle momenta (all approximately massless)
+      if (verbose == 1) print*, "...done."
+
+      if (verbose == 1) print*, "Creating initial (massless) parton momenta."
       pcm = ecm/2.d0
       q(4,1) = pcm
       q(3,1) = pcm
@@ -395,17 +409,17 @@ function dsigma(x,wgt)
       q(3,2) = -pcm
       q(2,2) = 0.d0
       q(1,2) = 0.d0
-
+      if(verbose == 1) print*, "...done."
 
       if (final_state == 0) then
-        ! calculate 2to2 kinematics in parton cm frame
+        if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame..."
         phit = 2.d0*pi*ran(jseed)
         if (jx == 1) then
           ct = x(1)
         else if (jx == 2) then
           ct = -x(1)
         else
-          print *, 'invalid jx.'
+          print*, "Error: invalid jx."
         end if
         st=sqrt(1.d0 - ct*ct)
         qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
@@ -429,8 +443,9 @@ function dsigma(x,wgt)
           q(i,7) = 0.d0
           q(i,8) = 0.d0
         end do
+        if (verbose == 1) print*, "...done."
       else if (final_state > 0) then
-        ! calculate 2to6 kinematics in parton cm frame
+        if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame..."
         phit = 2.d0*pi*ran(jseed)
         m356min = m3 + m5 + m6
         m356max = ecm - m4 - m7 - m8
@@ -489,7 +504,7 @@ function dsigma(x,wgt)
         else if (jx == 2) then
           ct =  - x(9)
         else
-          print *, 'invalid jx.'
+          print*, "Error: invalid jx."
         end if
         st = sqrt(abs(1.d0 - ct*ct))
         ct56 = x(8)
@@ -608,12 +623,14 @@ function dsigma(x,wgt)
           q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
           q(i,8) = p78(i) - q(i,7)
         end do
+        if (verbose == 1) print*, "...done."
       end if
 
+      if (verbose == 1) print*, "Boosting parton CoM momenta to collider frame..."
       ! velocity of ttbar system in collider frame
       vcol = (x1 - x2)/(x1 + x2)
 
-      ! 
+      ! gamma factor
       gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
 
       ! boost initial and final state momenta to the collider frame
@@ -623,53 +640,32 @@ function dsigma(x,wgt)
         qcol(2, i) = q(2, i)
         qcol(1, i) = q(1, i)
       end do
+      if (verbose == 1) print*, "...done."
 
-      if (final_state == 0) then
-        ! assign 2to2 madgraph momenta    
-        do i = 1, 3
-          p1(i) = q(i,1)
-          p2(i) = q(i,2)
-          p3(i) = q(i,3)
-          p4(i) = q(i,4)
-          p5(i) = 0.d0
-          p6(i) = 0.d0
-          p7(i) = 0.d0
-          p8(i) = 0.d0
-        end do
-        p1(0) = q(4,1)
-        p2(0) = q(4,2)
-        p3(0) = q(4,3)
-        p4(0) = q(4,4)
-        p5(0) = 0.d0
-        p6(0) = 0.d0
-        p7(0) = 0.d0
-        p8(0) = 0.d0
+      if (verbose == 1) print*, "Assigning particle 4-momenta..."
 
-        ! check 2to2 kinematics
-        ! print *,  'p1  =',p1
-        ! print *,  'p2  =',p2
-        ! print *,  'p3  =',p3
-        ! print *,  'p4  =',p4
-        ! delta_e=p1(0)+p2(0)-p3(0)-p4(0)
-        ! delta_x=p1(1)+p2(1)-p3(1)-p4(1)
-        ! delta_y=p1(2)+p2(2)-p3(2)-p4(2)
-        ! delta_z=p1(3)+p2(3)-p3(3)-p4(3)
-        ! print *,  'delta_e=',delta_e
-        ! print *,  'delta_x=',delta_x
-        ! print *,  'delta_y=',delta_y
-        ! print *,  'delta_z=',delta_z
-        ! rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-        ! rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-        ! rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-        ! rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-        ! print *,  'rm_1 =',rmassa1
-        ! print *,  'rm_2 =',rmassa2
-        ! print *,  'rm_3 =',rmassa3
-        ! print *,  'rm_4 =',rmassa4
+!       if (final_state == 0) then
+!         ! assign 2to2 madgraph momenta    
+!         do i = 1, 3
+!           p1(i) = q(i,1)
+!           p2(i) = q(i,2)
+!           p3(i) = q(i,3)
+!           p4(i) = q(i,4)
+!           p5(i) = 0.d0
+!           p6(i) = 0.d0
+!           p7(i) = 0.d0
+!           p8(i) = 0.d0
+!         end do
+!         p1(0) = q(4,1)
+!         p2(0) = q(4,2)
+!         p3(0) = q(4,3)
+!         p4(0) = q(4,4)
+!         p5(0) = 0.d0
+!         p6(0) = 0.d0
+!         p7(0) = 0.d0
+!         p8(0) = 0.d0
 
-
-      else if (final_state > 0) then
-        ! assign 2to6 madgraph momenta
+        ! parton CoM 4 -momenta
         do i = 1, 3
           p1(i) = q(i,1)
           p2(i) = q(i,2)
@@ -709,65 +705,616 @@ function dsigma(x,wgt)
         p7col(0) = qcol(4,7)
         p8col(0) = qcol(4,8)
 
-!       go to 333
-!       !check 6-body kinematics
-!             print *,  'p1  =',p1
-!             print *,  'p2  =',p2
-!             print *,  'p3  =',p3
-!             print *,  'p4  =',p4
-!             print *,  'p5  =',p5
-!             print *,  'p6  =',p6
-!             print *,  'p7  =',p7
-!             print *,  'p8  =',p8
-!       ! check conservation of 4-momentum.
-!             delta_e=p1(0)+p2(0)         &
-!                      -p3(0)-p4(0)         &  
-!                            -p5(0)-p6(0)         &  
-!                                   -p7(0)-p8(0)
-!             delta_x=p1(1)+p2(1)         &   
-!                   -p3(1)-p4(1)         &   
-!                         -p5(1)-p6(1)         &  
-!                                -p7(1)-p8(1)
-!             delta_y=p1(2)+p2(2)         &   
-!                   -p3(2)-p4(2) &
-!                   -p5(2)-p6(2)         &  
-!                 -p7(2)-p8(2)
-!             delta_z=p1(3)+p2(3)         &   
-!                   -p3(3)-p4(3)         &   
-!                         -p5(3)-p6(3)         &   
-!                               -p7(3)-p8(3)
-!             print *,  'delta_e=',delta_e
-!             print *,  'delta_px=',delta_x
-!             print *,  'delta_py=',delta_y
-!             print *,  'delta_pz=',delta_z
-!       ! check invarient mass.
-!             rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-!             rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-!             rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-!             rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-!             rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
-!             rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
-!             rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
-!             rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
-!             print *,  'rm_1 =',rmassa1
-!             print *,  'rm_2 =',rmassa2
-!             print *,  'rm_3 =',rmassa3
-!             print *,  'rm_4 =',rmassa4
-!             print *,  'rm_5 =',rmassa5
-!             print *,  'rm_6 =',rmassa6
-!             print *,  'rm_7 =',rmassa7
-!             print *,  'rm_8 =',rmassa8
-!       ! check missing momentum
-!             pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
-!             pt68=sqrt(pt682)
-!             print *, 'etmiss :',etmiss
-!             print *, 'pt(v+v):',pt68
-!       333 continue      
+      if (verbose == 1) print*, "..done."
+
+      if (verbose == 1) then
+        if (final_state == 0) then
+          print*, "Checking 2to2 kinematics..."
+          print*,  'p1  =',p1
+          print*,  'p2  =',p2
+          print*,  'p3  =',p3
+          print*,  'p4  =',p4
+          delta_e=p1(0)+p2(0)-p3(0)-p4(0)
+          delta_x=p1(1)+p2(1)-p3(1)-p4(1)
+          delta_y=p1(2)+p2(2)-p3(2)-p4(2)
+          delta_z=p1(3)+p2(3)-p3(3)-p4(3)
+          print*,  'delta_e=',delta_e
+          print*,  'delta_x=',delta_x
+          print*,  'delta_y=',delta_y
+          print*,  'delta_z=',delta_z
+          rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
+          rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
+          rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
+          rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
+          print*,  'rm_1 =',rmassa1
+          print*,  'rm_2 =',rmassa2
+          print*,  'rm_3 =',rmassa3
+          print*,  'rm_4 =',rmassa4
+        else if (final_state > 0) then
+          print*, "Checking 2to6 kinematics..."
+          print*,  'p1  =',p1
+          print*,  'p2  =',p2
+          print*,  'p3  =',p3
+          print*,  'p4  =',p4
+          print*,  'p5  =',p5
+          print*,  'p6  =',p6
+          print*,  'p7  =',p7
+          print*,  'p8  =',p8
+          ! check conservation of 4-momentum.
+          delta_e=p1(0)+p2(0)         &
+                   -p3(0)-p4(0)         &  
+                         -p5(0)-p6(0)         &  
+                                -p7(0)-p8(0)
+          delta_x=p1(1)+p2(1)         &   
+                -p3(1)-p4(1)         &   
+                      -p5(1)-p6(1)         &  
+                             -p7(1)-p8(1)
+          delta_y=p1(2)+p2(2)         &   
+                -p3(2)-p4(2) &
+                -p5(2)-p6(2)         &  
+              -p7(2)-p8(2)
+          delta_z=p1(3)+p2(3)         &   
+                -p3(3)-p4(3)         &   
+                      -p5(3)-p6(3)         &   
+                            -p7(3)-p8(3)
+          print*,  'delta_e=',delta_e
+          print*,  'delta_px=',delta_x
+          print*,  'delta_py=',delta_y
+          print*,  'delta_pz=',delta_z
+          ! check invarient mass.
+          rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
+          rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
+          rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
+          rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
+          rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
+          rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
+          rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
+          rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
+          print*,  'rm_1 =',rmassa1
+          print*,  'rm_2 =',rmassa2
+          print*,  'rm_3 =',rmassa3
+          print*,  'rm_4 =',rmassa4
+          print*,  'rm_5 =',rmassa5
+          print*,  'rm_6 =',rmassa6
+          print*,  'rm_7 =',rmassa7
+          print*,  'rm_8 =',rmassa8
+          ! check missing momentum
+          pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
+          pt68=sqrt(pt682)
+          print*, 'etmiss :',etmiss
+          print*, 'pt(v+v):',pt68    
+        end if
+        print*, "...done."
+      end if
+
+      if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
+      if (final_state == 0) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+      end if
+
+      if (final_state == 1) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+
+      if (final_state == 2) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+
+      if (final_state == 3) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+      if(verbose == 1) print*, "...done."
+
+      if (phase_space_only == 1) then
+        if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
+        if (ix == 1) then
+          pfx1tot = 0.5/x1
+          pfx2tot = 0.5/x1
+        else if (ix == 2) then
+          pfx1tot = 0.5/x2
+          pfx2tot = 0.5/x2
+        end if
+        if (final_state == 0) then
+          do lam3 = -1,1,2
+            do lam4 = -1,1,2
+              if (ix == 1) then
+                pfx1(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
+                pfx2(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
+              else if (ix == 2) then
+                pfx1(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+                pfx2(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+              end if
+            end do
+          end do
+        end if
+        go to 666
       end if
     
-      ! additional kinematics
-      ! these aren't required for event generation, but are used for
-      ! distributions and cuts.
+      if (verbose == 1) print*, "Calculating QCD coupling..."
+      a_s = alfas(qq,rlambdaqcd4,nloops)
+      gs2 = 4.d0*pi*a_s
+      gs = sqrt(gs2)
+      if (verbose == 1) print*, "...done."
+
+    ! initilize
+      qcdqq1 = 0
+      qcdbb1 = 0
+      qcdgg1 = 0
+      ewzuu1 = 0
+      ewzdd1 = 0
+      ewzbb1 = 0
+      qcdqq2 = 0
+      qcdbb2 = 0
+      qcdgg2 = 0
+      ewzuu2 = 0
+      ewzdd2 = 0
+      ewzbb2 = 0
+      do ii = -1, 1
+        do jj = -1, 1
+          qcdpolqq1(ii,jj) = 0
+          qcdpolbb1(ii,jj) = 0
+          qcdpolgg1(ii,jj) = 0
+          ewzpoluu1(ii,jj) = 0
+          ewzpoldd1(ii,jj) = 0
+          ewzpolbb1(ii,jj) = 0
+          qcdpolqq2(ii,jj) = 0
+          qcdpolbb2(ii,jj) = 0
+          qcdpolgg2(ii,jj) = 0
+          ewzpoluu2(ii,jj) = 0
+          ewzpoldd2(ii,jj) = 0
+          ewzpolbb2(ii,jj) = 0
+          do kk = 1, 20
+            weight(kk,ii,jj) = 0.d0
+          end do
+        end do
+      end do
+
+      resall=0
+      if (final_state == 0) then
+        if (verbose == 1) print*, "Computing 2to2 square matrix elements..."
+        if (include_qcd == 1) then
+          if (verbose == 1) print*, "Computing QCD matrix elements..."
+          do lam3=-1,1,2
+            do lam4=-1,1,2
+              qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
+              qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
+              qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+              qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
+              qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+              qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+              resall = resall &
+              +qcdpolgg1(lam3,lam4) &
+              +qcdpolgg2(lam3,lam4) &
+              +qcdpolqq1(lam3,lam4) &
+              +qcdpolqq2(lam3,lam4) &
+              +qcdpolbb1(lam3,lam4) &
+              +qcdpolbb2(lam3,lam4)
+            end do
+          end do
+          if (verbose == 1) print*, "...done."
+        end if
+        if ((include_ew == 1) .or. (include_bsm == 1)) then
+          if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+          do lam3 = -1,1,2
+            do lam4 = -1,1,2
+              ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
+              ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
+              ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
+              ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
+              ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
+              ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
+              resall = resall &
+             +ewzpoluu1(lam3,lam4) &
+             +ewzpoluu2(lam3,lam4) &
+             +ewzpoldd1(lam3,lam4) &
+             +ewzpoldd2(lam3,lam4) &
+             +ewzpolbb1(lam3,lam4) &
+             +ewzpolbb2(lam3,lam4)
+            end do
+          end do
+          if (verbose == 1) print*, "...done."
+        end if
+
+      else if (final_state > 0) then
+        if (verbose == 1) print*, "Computing 2to6 square matrix elements..."
+        ! (Do not change the deliberate order of p6 and p7.)
+        if (include_qcd == 1) then
+          if (verbose == 1) print*, "Computing QCD matrix elements..."
+          qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
+          qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
+          qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
+          qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
+          qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
+          qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
+          if (verbose == 1) print*, "...done."
+        end if
+        if ((include_ew == 1) .or. (include_bsm == 1)) then
+          if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+          ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+          ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+          ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
+          ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
+          if (verbose == 1) print*, "...done."
+        end if
+        resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
+         + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
+      end if
+
+      if ((resall) == 0.d0) then
+        ! print*, '|m|^2 = 0 for phase space point ',npoints
+        fffxn=0.d0
+        return
+      end if
+
+      ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
+      qcdqq1 = qcdqq1*gs**4
+      qcdgg1 = qcdgg1*gs**4
+      qcdqq2 = qcdqq2*gs**4
+      qcdgg2 = qcdgg2*gs**4
+  
+      pfx1tot = 0.d0
+      pfx2tot = 0.d0
+      if (final_state == 0) then
+        if (verbose == 1) print*, "Summing over 2to2 |m|^2 with pdfs of all initial partons..." 
+        do lam3=-1,1,2
+          do lam4=-1,1,2
+            pfx1(lam3,lam4)=qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
+            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
+            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
+            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
+            +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
+            pfx2(lam3,lam4)=qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
+            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
+            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
+            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
+            +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+            if (ix == 1) then
+              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
+              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
+            else if (ix == 2) then
+              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x2
+              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x2
+            end if
+            pfx1tot=pfx1tot &
+            +pfx1(lam3,lam4)
+            pfx2tot=pfx2tot &
+            +pfx2(lam3,lam4)
+          end do
+        end do
+        if (verbose == 1) print*, "...done."
+      else if (final_state > 0) then
+        if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
+        qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
+        +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1) &
+        +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1) &
+        +fx1( 4)*fx2(10)*(qcdqq1+ewzuu1) &
+        +fx1( 5)*fx2(11)*(qcdbb1+ewzbb1)
+        qqd2=fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2) &
+        +fx1( 8)*fx2( 2)*(qcdqq2+ewzuu2) &
+        +fx1( 9)*fx2( 3)*(qcdqq2+ewzdd2) &
+        +fx1(10)*fx2( 4)*(qcdqq2+ewzuu2) &
+        +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
+        ggd1=fx1(13)*fx2(13)*qcdgg1/2.d0
+        ggd2=fx1(13)*fx2(13)*qcdgg2/2.d0
+        if (ix == 1) then
+          pfx1tot=(qqd1+ggd1)/x1
+          pfx2tot=(qqd2+ggd2)/x1
+        else if (ix == 2) then
+          pfx1tot=(qqd1+ggd1)/x2
+          pfx2tot=(qqd2+ggd2)/x2
+        end if
+        if (verbose == 1) print*, "...done." 
+      end if
+
+      if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
+          fffxn = 0.d0
+        return
+      end if
+
+      if (final_state == 0) then
+        ! weight for distributions
+        do lam3 = -1, 1, 2
+          do lam4 = -1, 1, 2
+            pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
+            pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
+          end do
+        end do
+      end if
+
+      666 continue
+      if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...done."
+
+      if (verbose == 1) print*, "Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)..."
+      pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
+      *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+      pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
+      *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+      if (verbose == 1) print*, "...done."
+
+      fffxn1 = pfx1tot
+      fffxn2 = pfx2tot
+
+      if (verbose == 1) print*, "Applying unit converstion and trivial azimuthal angle integration..."
+      fffxn1 = fffxn1*2.d0*pi*unit_conv
+      fffxn2 = fffxn2*2.d0*pi*unit_conv
+      if (verbose == 1) print*, "...done."
+
+      if (verbose == 1) print*, "Multiplying by phase space volume..."
+      if (final_state == 0) then
+      ! 2-body phase space factor
+        fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
+        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
+        fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
+        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
+
+      else if (final_state > 0) then
+        ! 6-body flux factor, pi's and phase space integral
+        fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
+        /(2.d0*m356) &
+        /rmt/gamt &
+        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
+        fffxn1=fffxn1*(xx356max-xx356min) &
+        /(2.d0*m478) &
+        /rmt/gamt &
+        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
+        fffxn1=fffxn1*(xx478max-xx478min) &
+        /(2.d0*m56) &
+        /rm_w/gamma_w &
+        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        fffxn1=fffxn1*(xx56max-xx56min) &
+        /(2.d0*m78) &
+        /rm_w/gamma_w &
+        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        fffxn1=fffxn1*(xx78max-xx78min)
+
+        ! nwa
+        fffxn1=fffxn1 &
+        *gamt/gamma_t &
+        *gamt/gamma_t
+
+        ! flux and pi factors.
+        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
+        fffxn2=fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
+        /(2.d0*m356) &
+        /rmt/gamt &
+        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
+        fffxn2=fffxn2*(xx356max-xx356min) &
+        /(2.d0*m478) &
+        /rmt/gamt &
+        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
+        fffxn2=fffxn2*(xx478max-xx478min) &
+        /(2.d0*m56) &
+        /rm_w/gamma_w &
+        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        fffxn2=fffxn2*(xx56max-xx56min) &
+        /(2.d0*m78) &
+        /rm_w/gamma_w &
+        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
+        fffxn2=fffxn2*(xx78max-xx78min)
+      ! nwa
+        fffxn2=fffxn2 &
+        *gamt/gamma_t &
+        *gamt/gamma_t
+      ! flux and pi factors.
+        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
+      end if
+
+      fffxn1=fffxn1/real(ixmax)/real(jxmax)
+      fffxn2=fffxn2/real(ixmax)/real(jxmax)
+      fffxn=fffxn1+fffxn2
+      
+      if (verbose == 1) print*, "...done."
+         
+      if (verbose == 1) print*, "Computing polarised event weightings..."
+      if (final_state == 0) then
+        do lam3=-1,+1,2
+          do lam4=-1,+1,2
+            sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
+            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+            weight(lam3,lam4,it) = &
+            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+            error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
+            +sigma_pol(lam3,lam4,it)**2
+          end do
+        end do
+        weightLL = weight(it,-1,-1)
+        weightLR = weight(it,-1, 1)
+        weightRL = weight(it, 1,-1)
+        weightRR = weight(it, 1, 1)
+      end if
+      call rootadddouble(weightLL, "weightLL")
+      call rootadddouble(weightLR, "weightLR")
+      call rootadddouble(weightRL, "weightRL")
+      call rootadddouble(weightRR, "weightRR")
+
+      if (verbose == 1) print*, "...done."
+
+      if (verbose == 1) print*, "Computing FB event weightings..."
+      ! afb
+      if (o_asym(4) == 1) then
+        if (costhetat_cm > 0.d0) then
+          sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(1,it,+1)=error_fb(1,it,+1) &
+          +sigma_fb(1,it,+1)**2
+        else if (costhetat_cm < 0.d0) then
+          sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(1,it,-1)=error_fb(1,it,-1) &
+          +sigma_fb(1,it,-1)**2
+        end if
+      end if
+
+      ! afbstar
+      if (o_asym(5) == 1) then
+        if (costhetat_star > 0.d0) then
+          sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(2,it,+1)=error_fb(2,it,+1) &
+          +sigma_fb(2,it,+1)**2
+        else if (costhetat_star < 0.d0) then
+          sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(2,it,-1)=error_fb(2,it,-1) &
+          +sigma_fb(2,it,-1)**2
+        end if
+      end if
+
+        ! afbstar reco
+      if (o_asym(6) == 1) then
+        if (costhetat_star_reco > 0.d0) then
+          sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(3,it,+1)=error_fb(3,it,+1) &
+          +sigma_fb(3,it,+1)**2
+        else if (costhetat_star_reco < 0.d0) then
+          sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(3,it,-1)=error_fb(3,it,-1) &
+          +sigma_fb(3,it,-1)**2
+        end if
+      end if
+
+        ! atrfb
+      if (o_asym(7) == 1) then
+        if (yt > 0.d0) then
+          sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(4,it,+1)=error_fb(4,it,+1) &
+          +sigma_fb(4,it,+1)**2
+        else if (yt < 0.d0) then
+          sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(4,it,-1)=error_fb(4,it,-1) &
+          +sigma_fb(4,it,-1)**2
+        end if
+      end if
+
+        ! attbrfb/a
+      if (o_asym(8) == 1) then
+        if (yt >= 0.d0) then
+          sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(5,it,+1)=error_fb(5,it,+1) &
+          +sigma_fb(5,it,+1)**2
+        end if
+        if (ytb >= 0.d0) then
+          sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(5,it,-1)=error_fb(5,it,-1) &
+          +sigma_fb(5,it,-1)**2
+        end if
+      end if
+
+      ! arfb/a'
+
+      if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
+        if (delta_absy == 0.d0) then
+          continue
+        else if (delta_absy > 0.d0) then
+          sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(6,it,+1)=error_fb(6,it,+1) &
+          +sigma_fb(6,it,+1)**2
+        else if (delta_absy < 0.d0) then
+          sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(6,it,-1)=error_fb(6,it,-1) &
+          +sigma_fb(6,it,-1)**2
+        end if
+      end if
+
+      if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
+        if (delta_absy == 0.d0) then
+          continue
+        else if (delta_absy_reco > 0.d0) then
+          sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(7,it,+1)=error_fb(7,it,+1) &
+          +sigma_fb(7,it,+1)**2
+        else if (delta_absy_reco < 0.d0) then
+          sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(7,it,-1)=error_fb(7,it,-1) &
+          +sigma_fb(7,it,-1)**2
+        end if
+      end if
+
+      ! a_l
+      if (o_asym(11) == 1) then
+        if (cosfl > 0.d0) then
+          sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(8,it,+1)=error_fb(8,it,+1) &
+          +sigma_fb(8,it,+1)**2
+        else if (cosfl < 0.d0) then
+          sigma_fb(8,it,-1)=sigma_fb(8,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(8,it,-1)=error_fb(8,it,-1) &
+          +sigma_fb(8,it,-1)**2
+        end if
+      end if
+
+      ! a_l
+      if (o_asym(12) == 1) then
+        if (costheta5_cm > 0.d0) then
+          sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(9,it,+1)=error_fb(9,it,+1) &
+          +sigma_fb(9,it,+1)**2
+        else if (costheta5_cm < 0.d0) then
+          sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(9,it,-1)=error_fb(9,it,-1) &
+          +sigma_fb(9,it,-1)**2
+        end if
+      end if
+      if (verbose == 1) print*, "...done."
+
+      ! binning
+      hist1 = fffxn1*wgt
+      hist2 = fffxn2*wgt
+      hist = hist1 + hist2
+
+      if (verbose == 1) print*, "Computing additional kinematic variables..."
 
       ! calculate asympotic collider frame transverse momenta
       do ip = 1, n_final
@@ -1019,7 +1566,6 @@ function dsigma(x,wgt)
         et7 = sqrt(m6**2 + pt2(7))
       end if
 
-
       if (o_ht == 1) then
         ht = et3 + et4 + et5 + et7 + etmiss
       end if
@@ -1143,8 +1689,8 @@ function dsigma(x,wgt)
 
   !       ! check truth 
   !       call boostx(p6col, ptotalcol_opp, p6_boost)      
-  !       print *, 'p6', p6
-  !       print *, ' p6_boost', p6_boost
+  !       print*, 'p6', p6
+  !       print*, ' p6_boost', p6_boost
 
         ! calculate rapidity of the reconstructed tt system
         ytt_reco = 0.5*log((ptotalcol_reco(0) + ptotalcol_reco(3))/(ptotalcol_reco(0) - ptotalcol_reco(3)))
@@ -1248,7 +1794,7 @@ function dsigma(x,wgt)
 
         p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
 
-        if (abs(p5m - p5mp) >= 1e-11) print *, 'error in coord transform.'
+        if (abs(p5m - p5mp) >= 1e-11) print*, 'Error: coordinate transform mismatch.'
 
         phi_l = atan2(p5yp,p5xp)
 
@@ -1256,532 +1802,19 @@ function dsigma(x,wgt)
 
         cosfl = cos(phi_l)
       end if
-    
-      ! selections
 
-      ! cut on top pt
+      if (verbose == 1) print*, "...done."
+
+      ! cut on top rapidity
       if (final_state == 0) then
         if (abs(eta(3)) > ytmax) then
-          fffxn=0.d0
+          fffxn = 0.d0
           return
         end if
       else if (abs(etat) > ytmax) then
-        fffxn=0.d0
+        fffxn = 0.d0
         return
       end if
-
-    ! matrix elements
-    ! phase space only
-    ! set |m|^2 =1 (for bug squishing) and skip matrix element calculation
-      if (phase_space_only == 1) then
-        if (ix == 1) then
-          pfx1tot=0.5/x1
-          pfx2tot=0.5/x1
-        else if (ix == 2) then
-          pfx1tot=0.5/x2
-          pfx2tot=0.5/x2
-        end if
-        if (final_state == 0) then
-          do lam3=-1,1,2
-            do lam4=-1,1,2
-              if (ix == 1) then
-                pfx1(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
-                pfx2(lam3,lam4)=0.5/x1/(pfx1tot+pfx2tot)
-              else if (ix == 2) then
-                pfx1(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
-                pfx2(lam3,lam4)=0.5/x2/(pfx1tot+pfx2tot)
-              end if
-            end do
-          end do
-        end if
-        go to 666
-      end if
-    
-  ! square matrix elements
-    ! calculate strong coupling
-      a_s=alfas(qq,rlambdaqcd4,nloops)
-      gs2=4.d0*pi*a_s
-      gs=sqrt(gs2)
-
-    ! (do not change the deliberate order of p6 and p7 in the ew code.)
-    ! initilize
-      qcdqq1=0
-      qcdbb1=0
-      qcdgg1=0
-      ewzuu1=0
-      ewzdd1=0
-      ewzbb1=0
-      qcdqq2=0
-      qcdbb2=0
-      qcdgg2=0
-      ewzuu2=0
-      ewzdd2=0
-      ewzbb2=0
-      do ii=-1,1,1
-        do jj=-1,1,1
-          qcdpolqq1(ii,jj)=0
-          qcdpolbb1(ii,jj)=0
-          qcdpolgg1(ii,jj)=0
-          ewzpoluu1(ii,jj)=0
-          ewzpoldd1(ii,jj)=0
-          ewzpolbb1(ii,jj)=0
-          qcdpolqq2(ii,jj)=0
-          qcdpolbb2(ii,jj)=0
-          qcdpolgg2(ii,jj)=0
-          ewzpoluu2(ii,jj)=0
-          ewzpoldd2(ii,jj)=0
-          ewzpolbb2(ii,jj)=0
-          do kk=1,20
-            weight(kk,ii,jj)=0.d0
-          end do
-        end do
-      end do
-      resall=0
-      if (final_state == 0) then
-        ! compute 2to2 mes
-        if (include_qcd == 1) then
-          ! compute qcd square matrix elements
-          do lam3=-1,1,2
-            do lam4=-1,1,2
-              qcdpolgg1(lam3,lam4)=sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolgg2(lam3,lam4)=sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
-              qcdpolqq1(lam3,lam4)=sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolqq2(lam3,lam4)=sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-              qcdpolbb1(lam3,lam4)=sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolbb2(lam3,lam4)=sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
-              resall=resall &
-              +qcdpolgg1(lam3,lam4) &
-              +qcdpolgg2(lam3,lam4) &
-              +qcdpolqq1(lam3,lam4) &
-              +qcdpolqq2(lam3,lam4) &
-              +qcdpolbb1(lam3,lam4) &
-              +qcdpolbb2(lam3,lam4)
-            end do
-          end do
-        end if
-        if ((include_ew == 1) .or. (include_bsm == 1)) then
-          ! compute ew and z' square matrix elements
-          do lam3=-1,1,2
-            do lam4=-1,1,2
-              ewzpoluu1(lam3,lam4)=sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpoluu2(lam3,lam4)=sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
-              ewzpoldd1(lam3,lam4)=sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpoldd2(lam3,lam4)=sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
-              ewzpolbb1(lam3,lam4)=sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpolbb2(lam3,lam4)=sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
-              resall=resall &
-             +ewzpoluu1(lam3,lam4) &
-             +ewzpoluu2(lam3,lam4) &
-             +ewzpoldd1(lam3,lam4) &
-             +ewzpoldd2(lam3,lam4) &
-             +ewzpolbb1(lam3,lam4) &
-             +ewzpolbb2(lam3,lam4)
-            end do
-          end do
-        end if
-
-      else if (final_state > 0) then
-        ! 6-body mes
-        if (include_qcd == 1) then
-          ! compute qcd square matrix elements
-          qcdqq1=sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8 )
-          qcdqq2=sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8 )
-          qcdbb1=sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8 )
-          qcdbb2=sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8 )
-          qcdgg1=sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8 )
-          qcdgg2=sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8 )
-        end if
-        if ((include_ew == 1) .or. (include_bsm == 1)) then
-          ! compute ew and z' square matrix elements
-          ewzuu1=sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzuu2=sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzdd1=sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzdd2=sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzbb1=sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzbb2=sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
-        end if
-        resall=qcdqq1+qcdgg1+qcdbb1+ewzuu1+ewzdd1+ewzbb1 &
-        +qcdqq2+qcdgg2+qcdbb2+ewzuu2+ewzdd2+ewzbb2
-      end if
-
-      if ((resall) == 0.d0) then
-        ! print *, '|m|^2 = 0 for phase space point ',npoints
-        fffxn=0.d0
-        return
-      end if
-
-      ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
-      qcdqq1=qcdqq1*gs**4
-      qcdgg1=qcdgg1*gs**4
-      qcdqq2=qcdqq2*gs**4
-      qcdgg2=qcdgg2*gs**4
-
-      ! sum over |m|^2 with pdfs for all initial partons    
-      pfx1tot=0.d0
-      pfx2tot=0.d0
-      if (final_state == 0) then
-        ! sum over all polarised |m|^2
-        do lam3=-1,1,2
-          do lam4=-1,1,2
-            pfx1(lam3,lam4)=qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-            +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
-            pfx2(lam3,lam4)=qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-            +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
-            if (ix == 1) then
-              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
-              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
-            else if (ix == 2) then
-              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x2
-              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x2
-            end if
-            pfx1tot=pfx1tot &
-            +pfx1(lam3,lam4)
-            pfx2tot=pfx2tot &
-            +pfx2(lam3,lam4)
-          end do
-        end do
-
-      else if (final_state > 0) then
-        qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
-        +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1) &
-        +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1) &
-        +fx1( 4)*fx2(10)*(qcdqq1+ewzuu1) &
-        +fx1( 5)*fx2(11)*(qcdbb1+ewzbb1)
-        qqd2=fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2) &
-        +fx1( 8)*fx2( 2)*(qcdqq2+ewzuu2) &
-        +fx1( 9)*fx2( 3)*(qcdqq2+ewzdd2) &
-        +fx1(10)*fx2( 4)*(qcdqq2+ewzuu2) &
-        +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
-        ggd1=fx1(13)*fx2(13)*qcdgg1/2.d0
-        ggd2=fx1(13)*fx2(13)*qcdgg2/2.d0
-        if (ix == 1) then
-          pfx1tot=(qqd1+ggd1)/x1
-          pfx2tot=(qqd2+ggd2)/x1
-        else if (ix == 2) then
-          pfx1tot=(qqd1+ggd1)/x2
-          pfx2tot=(qqd2+ggd2)/x2
-        end if
-      end if
-
-      if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
-          ! print *, 'f(x1)f(x2)|m|^2 = 0 for phase space point ',npoints
-          fffxn=0.d0
-        return
-      end if
-
-      if (final_state == 0) then
-        ! weight for distributions
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
-            pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
-          end do
-        end do
-      end if
-
-      666 continue
-
-    ! phase space volume
-    ! jacobians from dx1 dx2 -> dx(2) dx(3)
-      pfx1tot=pfx1tot*(1.d0-tau)*2.d0*ecm/s &
-      *(ecm_max-m3-m4-m5-m6-m7-m8)
-      pfx2tot=pfx2tot*(1.d0-tau)*2.d0*ecm/s &
-      *(ecm_max-m3-m4-m5-m6-m7-m8)
-    ! fffxn is now m*m*pdfs
-      fffxn1=pfx1tot
-      fffxn2=pfx2tot
-    ! multiply by 2pi from phit integration and convert from gev^-2 to pb
-      fffxn1=fffxn1*2.d0*pi*unit_conv
-      fffxn2=fffxn2*2.d0*pi*unit_conv
-      if (final_state == 0) then
-      ! 2-body phase space factor
-        fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
-        fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
-      else if (final_state > 0) then
-      ! 6-body flux factor, pi's and phase space integral
-        fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
-        /(2.d0*m356) &
-        /rmt/gamt &
-        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn1=fffxn1*(xx356max-xx356min) &
-        /(2.d0*m478) &
-        /rmt/gamt &
-        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn1=fffxn1*(xx478max-xx478min) &
-        /(2.d0*m56) &
-        /rm_w/gamma_w &
-        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn1=fffxn1*(xx56max-xx56min) &
-        /(2.d0*m78) &
-        /rm_w/gamma_w &
-        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn1=fffxn1*(xx78max-xx78min)
-      ! nwa
-        fffxn1=fffxn1 &
-        *gamt/gamma_t &
-        *gamt/gamma_t
-      ! flux and pi factors.
-        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
-
-        fffxn2=fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
-        /(2.d0*m356) &
-        /rmt/gamt &
-        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn2=fffxn2*(xx356max-xx356min) &
-        /(2.d0*m478) &
-        /rmt/gamt &
-        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn2=fffxn2*(xx478max-xx478min) &
-        /(2.d0*m56) &
-        /rm_w/gamma_w &
-        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn2=fffxn2*(xx56max-xx56min) &
-        /(2.d0*m78) &
-        /rm_w/gamma_w &
-        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn2=fffxn2*(xx78max-xx78min)
-      ! nwa
-        fffxn2=fffxn2 &
-        *gamt/gamma_t &
-        *gamt/gamma_t
-      ! flux and pi factors.
-        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
-      end if
-      fffxn1=fffxn1/real(ixmax)/real(jxmax)
-      fffxn2=fffxn2/real(ixmax)/real(jxmax)
-      fffxn=fffxn1+fffxn2
-    
-    ! categorised cross sections / asymmetries
-         
-    ! polarised total cross sections
-      if (final_state == 0) then
-        do lam3=-1,+1,2
-          do lam4=-1,+1,2
-            sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
-            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-            weight(lam3,lam4,it) = &
-            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-            error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
-            +sigma_pol(lam3,lam4,it)**2
-          end do
-        end do
-        weightLL = weight(it,-1,-1)
-        weightLR = weight(it,-1, 1)
-        weightRL = weight(it, 1,-1)
-        weightRR = weight(it, 1, 1)
-      end if
-
-    ! afb
-      if (o_asym(4) == 1) then
-        if (costhetat_cm > 0.d0) then
-          sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(1,it,+1)=error_fb(1,it,+1) &
-          +sigma_fb(1,it,+1)**2
-        else if (costhetat_cm < 0.d0) then
-          sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(1,it,-1)=error_fb(1,it,-1) &
-          +sigma_fb(1,it,-1)**2
-        end if
-      end if
-
-    ! afbstar
-      if (o_asym(5) == 1) then
-        if (costhetat_star > 0.d0) then
-          sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(2,it,+1)=error_fb(2,it,+1) &
-          +sigma_fb(2,it,+1)**2
-        else if (costhetat_star < 0.d0) then
-          sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(2,it,-1)=error_fb(2,it,-1) &
-          +sigma_fb(2,it,-1)**2
-        end if
-      end if
-
-      ! afbstar reco
-      if (o_asym(6) == 1) then
-        if (costhetat_star_reco > 0.d0) then
-          sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(3,it,+1)=error_fb(3,it,+1) &
-          +sigma_fb(3,it,+1)**2
-        else if (costhetat_star_reco < 0.d0) then
-          sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(3,it,-1)=error_fb(3,it,-1) &
-          +sigma_fb(3,it,-1)**2
-        end if
-      end if
-
-      ! atrfb
-      if (o_asym(7) == 1) then
-        if (yt > 0.d0) then
-          sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(4,it,+1)=error_fb(4,it,+1) &
-          +sigma_fb(4,it,+1)**2
-        else if (yt < 0.d0) then
-          sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(4,it,-1)=error_fb(4,it,-1) &
-          +sigma_fb(4,it,-1)**2
-        end if
-      end if
-
-      ! attbrfb/a
-      if (o_asym(8) == 1) then
-        if (yt >= 0.d0) then
-          sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(5,it,+1)=error_fb(5,it,+1) &
-          +sigma_fb(5,it,+1)**2
-        end if
-        if (ytb >= 0.d0) then
-          sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(5,it,-1)=error_fb(5,it,-1) &
-          +sigma_fb(5,it,-1)**2
-        end if
-      end if
-
-    ! arfb/a'
-
-      if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
-        if (delta_absy == 0.d0) then
-          continue
-        else if (delta_absy > 0.d0) then
-          sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(6,it,+1)=error_fb(6,it,+1) &
-          +sigma_fb(6,it,+1)**2
-        else if (delta_absy < 0.d0) then
-          sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(6,it,-1)=error_fb(6,it,-1) &
-          +sigma_fb(6,it,-1)**2
-        end if
-      end if
-
-      if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
-        if (delta_absy == 0.d0) then
-          continue
-        else if (delta_absy_reco > 0.d0) then
-          sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(7,it,+1)=error_fb(7,it,+1) &
-          +sigma_fb(7,it,+1)**2
-        else if (delta_absy_reco < 0.d0) then
-          sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(7,it,-1)=error_fb(7,it,-1) &
-          +sigma_fb(7,it,-1)**2
-        end if
-      end if
-
-      ! a_l
-      if (o_asym(11) == 1) then
-        if (cosfl > 0.d0) then
-          sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(8,it,+1)=error_fb(8,it,+1) &
-          +sigma_fb(8,it,+1)**2
-        else if (cosfl < 0.d0) then
-          sigma_fb(8,it,-1)=sigma_fb(8,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(8,it,-1)=error_fb(8,it,-1) &
-          +sigma_fb(8,it,-1)**2
-        end if
-      end if
-
-      ! a_l
-      if (o_asym(12) == 1) then
-        if (costheta5_cm > 0.d0) then
-          sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(9,it,+1)=error_fb(9,it,+1) &
-          +sigma_fb(9,it,+1)**2
-        else if (costheta5_cm < 0.d0) then
-          sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(9,it,-1)=error_fb(9,it,-1) &
-          +sigma_fb(9,it,-1)**2
-        end if
-      end if
-
-      ! binning
-      hist1 = fffxn1*wgt
-      hist2 = fffxn2*wgt
-      hist = hist1 + hist2
-
-      if (debug_mode == 1) print *, 'Writing event to Ntuple...' 
-
-      if (final_state == 0) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-      end if
-
-      if (final_state == 1) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 2) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 3) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      call rootadddouble(weightLL, "weightLL")
-      call rootadddouble(weightLR, "weightLR")
-      call rootadddouble(weightRL, "weightRL")
-      call rootadddouble(weightRR, "weightRR")
 
       if (o_ptb == 1) call rootadddouble(pt(3), "ptb")
       if (o_ptbb == 1) call rootadddouble(pt(4), "ptbb")
@@ -1852,9 +1885,11 @@ function dsigma(x,wgt)
 
       call rootaddevent(hist)
 
-      if (debug_mode == 1) print *, '...done.'
+      if (verbose == 1) print*, '...done.'
 
-      if(print_all_distributions == 1) then
+      if (print_all_distributions == 1) then
+        if (verbose == 1) print*, 'Filling histograms...'
+
         ! print distributions
         if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
         if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
@@ -1935,338 +1970,337 @@ function dsigma(x,wgt)
         if (o_mct3dphi == 1) call h2_mct3dphi%fill(mct3, dphi, hist)
         if (o_mltdphi == 1) call h2_mltdphi%fill(mlt, dphi, hist)
         if (o_mlctdphi == 1) call h2_mlctdphi%fill(mlct, dphi, hist)
-      end if
 
+        if (o_asym(1) == 1) then
+          if (o_sigp == 1) then
+            ! generate distribution in sigp for all.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
+              (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
+            end if
+          end if
+          if (o_sigm == 1) then
+            ! generate distribution in sigm for all.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
+              (weight(it,+1,-1)+weight(it,-1,+1))
+            end if
+          end if
+        end if
 
+        if (o_asym(2) == 1) then
+          if (o_sigp == 1) then
+          ! generate distribution in sigp for al.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
+              (weight(it,-1,-1)+weight(it,-1,+1))
+            end if
+          end if
+          if (o_sigm == 1) then
+          ! generate distribution in sigm for al.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
+              (weight(it,+1,-1)+weight(it,+1,+1))
+            end if
+          end if
+        end if
 
-      if (o_asym(1) == 1) then
-        if (o_sigp == 1) then
-          ! generate distribution in sigp for all.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
-            (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
+        if (o_asym(3) == 1) then
+          if (o_sigp == 1) then
+          ! generate distribution in sigp for apv.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
+              (weight(it,-1,-1))
+            end if
+          end if
+          if (o_sigm == 1) then
+          ! generate distribution in sigm for apv.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
+              (weight(it,+1,+1))
+            end if
           end if
         end if
-        if (o_sigm == 1) then
-          ! generate distribution in sigm for all.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
-            (weight(it,+1,-1)+weight(it,-1,+1))
-          end if
-        end if
-      end if
 
-      if (o_asym(2) == 1) then
-        if (o_sigp == 1) then
-        ! generate distribution in sigp for al.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
-            (weight(it,-1,-1)+weight(it,-1,+1))
+        if (o_asym(4) == 1) then
+          if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
+          ! generate distribution in sigp for afbcm.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
+          ! generate distribution in sigm for afbcm.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
+            end if
           end if
         end if
-        if (o_sigm == 1) then
-        ! generate distribution in sigm for al.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
-            (weight(it,+1,-1)+weight(it,+1,+1))
-          end if
-        end if
-      end if
 
-      if (o_asym(3) == 1) then
-        if (o_sigp == 1) then
-        ! generate distribution in sigp for apv.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
-            (weight(it,-1,-1))
+        if (o_asym(5) == 1) then
+          if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+          ! generate distribution in sigp for afbstar.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+          ! generate distribution in sigm for afbstar.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
+            end if
           end if
         end if
-        if (o_sigm == 1) then
-        ! generate distribution in sigm for apv.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
-            (weight(it,+1,+1))
-          end if
-        end if
-      end if
 
-      if (o_asym(4) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
-        ! generate distribution in sigp for afbcm.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
+        if (o_asym(6) == 1) then
+          if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
+          ! generate distribution in sigp for afbstar reco.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
+          ! generate distribution in sigm for afbstar.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
-        ! generate distribution in sigm for afbcm.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
-          end if
-        end if
-      end if
 
-      if (o_asym(5) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
-        ! generate distribution in sigp for afbstar.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
+        if (o_asym(7) == 1) then
+          if ((o_sigp == 1) .and. (yt > 0.d0)) then
+          ! generate distribution in sigp for atfb.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (yt < 0.d0)) then
+          ! generate distribution in sigm for atfb.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
-        ! generate distribution in sigm for afbstar.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
-          end if
-        end if
-      end if
 
-      if (o_asym(6) == 1) then
-        if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
-        ! generate distribution in sigp for afbstar reco.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
+        if (o_asym(8) == 1) then
+          if ((o_sigp == 1) .and. (yt >= 0.d0)) then
+          ! generate distribution in sigp for a.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
+          ! generate distribution in sigm for a.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
-        ! generate distribution in sigm for afbstar.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
-          end if
-        end if
-      end if
 
-      if (o_asym(7) == 1) then
-        if ((o_sigp == 1) .and. (yt > 0.d0)) then
-        ! generate distribution in sigp for atfb.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
+        if (o_asym(9) == 1) then
+          if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+          ! generate distribution in sigp for arfb.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+          ! generate distribution in sigm for arfb.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (yt < 0.d0)) then
-        ! generate distribution in sigm for atfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
-          end if
-        end if
-      end if
 
-      if (o_asym(8) == 1) then
-        if ((o_sigp == 1) .and. (yt >= 0.d0)) then
-        ! generate distribution in sigp for a.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+        if (o_asym(10) == 1) then
+          if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
+          ! generate distribution in sigp for arfb reco.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
+          ! generate distribution in sigm for arfb.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
-        ! generate distribution in sigm for a.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
-          end if
-        end if
-      end if
 
-      if (o_asym(9) == 1) then
-        if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
-        ! generate distribution in sigp for arfb.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+        if (o_asym(11) == 1) then
+          if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
+            ! generate distribution in sigp for a_l.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
+            ! generate distribution in sigm for a_l.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
+            end if
           end if
         end if
-        if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
-        ! generate distribution in sigm for arfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+      
+        if (o_asym(12) == 1) then
+          if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
+            ! generate distribution in sigp for alFB.
+            sigp=ecm
+            nbin=int((sigp-sigpmin)/sigpw)+1
+            if (nbin >= (ndiv_sigp+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
+            end if
+          end if
+          if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
+            ! generate distribution in sigm for alFB.
+            sigm=ecm
+            nbin=int((sigm-sigmmin)/sigmw)+1
+            if (nbin >= (ndiv_sigm+1)) then
+              continue
+            else if (nbin < 1) then
+              continue
+            else
+              fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
+            end if
           end if
         end if
-      end if
-
-      if (o_asym(10) == 1) then
-        if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
-        ! generate distribution in sigp for arfb reco.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
-        ! generate distribution in sigm for arfb.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
-          end if
-        end if
-      end if
-
-      if (o_asym(11) == 1) then
-        if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
-          ! generate distribution in sigp for a_l.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
-          ! generate distribution in sigm for a_l.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
-          end if
-        end if
-      end if
-    
-      if (o_asym(12) == 1) then
-        if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
-          ! generate distribution in sigp for alFB.
-          sigp=ecm
-          nbin=int((sigp-sigpmin)/sigpw)+1
-          if (nbin >= (ndiv_sigp+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
-          end if
-        end if
-        if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
-          ! generate distribution in sigm for alFB.
-          sigm=ecm
-          nbin=int((sigm-sigmmin)/sigmw)+1
-          if (nbin >= (ndiv_sigm+1)) then
-            continue
-          else if (nbin < 1) then
-            continue
-          else
-            fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
-          end if
-        end if
+        if (verbose == 1) print*, '...done.'
       end if
 
       ! stats

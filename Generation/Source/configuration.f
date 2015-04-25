@@ -11,7 +11,6 @@ module configuration
   
   integer :: structure_function
   character(50) :: model_name
-  character(100) :: ntuple_directory
   character(100) :: ntuple_file
   character(50) :: output_file
   integer :: include_qcd
@@ -31,6 +30,7 @@ module configuration
   integer :: include_errors
   integer :: phase_space_only
   integer :: verbose
+  integer :: idir
 
   ! derived parameters
   integer :: n_final
@@ -113,17 +113,15 @@ module configuration
     subroutine read_config
 
       ! read config file
-      print *, "Reading config file..."
+      print*, "Reading config file..."
 
-      read(5,*) ntuple_directory
-
-      read(5,*) ntuple_file
+      read(5,"(a)") ntuple_file
 
       read(5,*) output_file
       
       read(5,*) initial_state ! 0 = pp, 1 = ppbar
 
-      read(5,*) final_state ! 1=no decay,1=dilepton,2=semi-had,4=full-had)
+      read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
       
       read(5,*) model_name
       
@@ -173,7 +171,7 @@ module configuration
 
       read(5,*) verbose
 
-      print *, "...done."
+      print*, "...done."
       
     end subroutine read_config
 
@@ -219,7 +217,7 @@ module configuration
         include_bsm=0
       end if
       
-      print *, "...done."
+      print*, "...done."
     end subroutine modify_config
 
     subroutine setup_channels
@@ -365,7 +363,7 @@ module configuration
       ! disable A_PV
       o_asym(3) = 0
 
-      print *, "...done."
+      print*, "...done."
       
     end subroutine setup_channels
 
