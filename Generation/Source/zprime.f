@@ -51,9 +51,6 @@ program zprime
   print *, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
 
-  open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
-  close(10)
-
   if (print_all_distributions == 1) then
     call disable_distributions
     call create_distributions
@@ -180,118 +177,112 @@ program zprime
   end if
 
   ! output information before integration
-  call rootadddouble(-999, "test")
-  open(unit = 10, file = 'Output/'//output_file, status = "old", action = "write", position="append")
-  write(10,*) '====================================================='
+  print*, '====================================================='
   call idate(today)     ! today(1) = day, (2) = month, (3) = year
   call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
-  write(10,*) 'date ', today(3), today(2), today(1)
-  write(10,*) 'time ', now(1), now(2), now(3)
-  write(10,*) '-----------------------------------------------------'
-  write(10,*) 'process'
+  print*, 'date ', today(3), today(2), today(1)
+  print*, 'time ', now(1), now(2), now(3)
+  print*, '-----------------------------------------------------'
+  print*, 'process'
   if (initial_state == 0) then
     if (final_state == 0) then
-      write(10,*) 'pp #rightarrow t#bar{t}', &
+      print*, 'pp #rightarrow t#bar{t}', &
                ' #times br(t#rightarrow bl#nu)^{2}'
     else if (final_state == 1) then
-      write(10,*) 'pp #rightarrow t#bar{t}', &
+      print*, 'pp #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
     else if (final_state == 2) then
-      write(10,*) 'pp #rightarrow t#bar{t}', &
+      print*, 'pp #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} q#bar{q} l #nu'
     else if (final_state == 3) then
-      write(10,*) 'pp #rightarrow t#bar{t}', &
+      print*, 'pp #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
     end if
   else if (initial_state == 1) then
     if (final_state == 0) then
-      write(10,*) 'p#bar{p} #rightarrow t#bar{t}', &
+      print*, 'p#bar{p} #rightarrow t#bar{t}', &
                ' #times br(t#rightarrow bl#nu)^{2}'
     else if (final_state == 1) then
-      write(10,*) 'p#bar{p} #rightarrow t#bar{t}', &
+      print*, 'p#bar{p} #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
     else if (final_state == 2) then
-      write(10,*) 'p#bar{p} #rightarrow t#bar{t}', &
+      print*, 'p#bar{p} #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} q#bar{q} l #nu'
     else if (final_state == 3) then
-      write(10,*) 'p#bar{p} #rightarrow t#bar{t}', &
+      print*, 'p#bar{p} #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
     end if
   end if
-  write(10,*) '-----------------------------------------------------'
-  write(10,*) 'notes'
-  write(10,*) 'units: gev'
-  write(10,*) 'quarks: all massless except t, b.'
-  if (structure_function == 1) write(10,*) 'pdfs: cteq6m.'
-  if (structure_function == 2) write(10,*) 'pdfs: cteq6d.'
-  if (structure_function == 3) write(10,*) 'pdfs: cteq6l.'
-  if (structure_function == 4) write(10,*) 'pdfs: cteq6l1.'
-  if (structure_function == 5) write(10,*) 'pdfs: mrs99 (cor01).'
-  if (structure_function == 6) write(10,*) 'pdfs: mrs99 (cor02).'
-  if (structure_function == 7) write(10,*) 'pdfs: mrs99 (cor03).'
-  if (structure_function == 8) write(10,*) 'pdfs: mrs99 (cor04).'
-  if (structure_function == 9) write(10,*) 'pdfs: mrs99 (cor05).'
-  if ((final_state >= 1) .and. (use_nwa == 0)) write(10,*) 'tops: off-shell.'
-  if ((final_state >= 1) .and. (use_nwa == 1)) write(10,*) 'tops: nwa.'
-  write(10,*) 'bsm model_name: ', model_name
-  if (include_qcd == 1) write(10,*) 'qcd: on '
-  if (include_qcd == 0) write(10,*) 'qcd: off'
-  if (include_ew == 1) write(10,*) 'ew:  on '
-  if (include_ew == 0) write(10,*) 'ew:  off'
-  if (include_bsm == 1) write(10,*) 'bsm: on '
-  if (include_bsm == 0) write(10,*) 'bsm: off'
-  if (interference == 0) write(10,*) 'interference: none'
-  if (interference == 1) write(10,*) 'interference: sm'
-  if (interference == 2) write(10,*) 'interference: full'
-  if (interference == 3) write(10,*) 'interference: no square terms.'
-  if (phase_space_only == 1) write(10,*) 'phase space only'
-  if (symmetrise_x1x2 == 1) write(10,*) 'symmetrical integration over x1<->x2'
-  if (symmetrise_costheta_t == 1) write(10,*) 'symmetrical integration over cost'
-  if (include_errors == 1) write(10,*) 'Distribution errors included.'
-  if (include_errors == 0) write(10,*) 'Distribution errors excluded.'
-  write(10,*) 'seed: ', seed
-  write(10,*) '-----------------------------------------------------'
-  write(10,*) 'parameters'
-  write(10,*) '#sqrt{s}              ', collider_energy
-  write(10,*) 'at |y| <              ', abs(ytmax)
-  write(10,*) 'loops a_s evaluated at', nloops
-  write(10,*) 'a_{s}(m_{z})          ', alfas(rm_z, rlambdaqcd4, nloops)
-  write(10,*) '#lambda_{qcd}(4)      ', qcdl4
-  write(10,*) 'm_{b}                 ', fmass(12)
-  write(10,*) '#gamma_{b}            ', fwidth(12)
-  write(10,*) 'm_{t}                 ', fmass(11)
-  write(10,*) '#gamma_{t}            ', fwidth(11)
-  write(10,*) 'm_{z}                 ', rm_z
-  write(10,*) '#gamma_{z}            ', gamma_z
-  write(10,*) 'm_{w}                 ', rm_w
-  write(10,*) '#gamma_{w}            ', gamma_w
-  write(10,*) 'm_{h}                 ', rm_h
-  write(10,*) '#gamma_{h}            ', gamma_h
-  write(10,*) '-----------------------------------------------------'
-  write(10,*) 'zprime parameters'
+  print*, '-----------------------------------------------------'
+  print*, 'notes'
+  print*, 'units: gev'
+  print*, 'quarks: all massless except t, b.'
+  if (structure_function == 1) print*, 'pdfs: cteq6m.'
+  if (structure_function == 2) print*, 'pdfs: cteq6d.'
+  if (structure_function == 3) print*, 'pdfs: cteq6l.'
+  if (structure_function == 4) print*, 'pdfs: cteq6l1.'
+  if (structure_function == 5) print*, 'pdfs: mrs99 (cor01).'
+  if (structure_function == 6) print*, 'pdfs: mrs99 (cor02).'
+  if (structure_function == 7) print*, 'pdfs: mrs99 (cor03).'
+  if (structure_function == 8) print*, 'pdfs: mrs99 (cor04).'
+  if (structure_function == 9) print*, 'pdfs: mrs99 (cor05).'
+  if ((final_state >= 1) .and. (use_nwa == 0)) print*, 'tops: off-shell.'
+  if ((final_state >= 1) .and. (use_nwa == 1)) print*, 'tops: nwa.'
+  print*, 'bsm model_name: ', model_name
+  if (include_qcd == 1) print*, 'qcd: on '
+  if (include_qcd == 0) print*, 'qcd: off'
+  if (include_ew == 1) print*, 'ew:  on '
+  if (include_ew == 0) print*, 'ew:  off'
+  if (include_bsm == 1) print*, 'bsm: on '
+  if (include_bsm == 0) print*, 'bsm: off'
+  if (interference == 0) print*, 'interference: none'
+  if (interference == 1) print*, 'interference: sm'
+  if (interference == 2) print*, 'interference: full'
+  if (interference == 3) print*, 'interference: no square terms.'
+  if (phase_space_only == 1) print*, 'phase space only'
+  if (symmetrise_x1x2 == 1) print*, 'symmetrical integration over x1<->x2'
+  if (symmetrise_costheta_t == 1) print*, 'symmetrical integration over cost'
+  if (include_errors == 1) print*, 'Distribution errors included.'
+  if (include_errors == 0) print*, 'Distribution errors excluded.'
+  print*, 'seed: ', seed
+  print*, '-----------------------------------------------------'
+  print*, 'parameters'
+  print*, '#sqrt{s}              ', collider_energy
+  print*, 'at |y| <              ', abs(ytmax)
+  print*, 'loops a_s evaluated at', nloops
+  print*, 'a_{s}(m_{z})          ', alfas(rm_z, rlambdaqcd4, nloops)
+  print*, '#lambda_{qcd}(4)      ', qcdl4
+  print*, 'm_{b}                 ', fmass(12)
+  print*, '#gamma_{b}            ', fwidth(12)
+  print*, 'm_{t}                 ', fmass(11)
+  print*, '#gamma_{t}            ', fwidth(11)
+  print*, 'm_{z}                 ', rm_z
+  print*, '#gamma_{z}            ', gamma_z
+  print*, 'm_{w}                 ', rm_w
+  print*, '#gamma_{w}            ', gamma_w
+  print*, 'm_{h}                 ', rm_h
+  print*, '#gamma_{h}            ', gamma_h
+  print*, '-----------------------------------------------------'
+  print*, 'zprime parameters'
   do i = 1, 5
     if (rmzp(i) > 0) then
-      write(10,*) 'z#prime               ', i
-      write(10,*) 'm_{z#prime}           ', rmzp(i)
-      write(10,*) '#gamma_{z#prime}      ', gamzp(i)
-      write(10,*) 'g_{p}                 ', gp(i)
-      write(10,*) 'g_{v}^{u}             ', gv_u(i)
-      write(10,*) 'g_{a}^{u}             ', ga_u(i)
-      write(10,*) 'g_{v}^{d}             ', gv_d(i)
-      write(10,*) 'g_{a}^{d}             ', ga_d(i)
-      write(10,*)
+      print*, 'z#prime               ', i
+      print*, 'm_{z#prime}           ', rmzp(i)
+      print*, '#gamma_{z#prime}      ', gamzp(i)
+      print*, 'g_{p}                 ', gp(i)
+      print*, 'g_{v}^{u}             ', gv_u(i)
+      print*, 'g_{a}^{u}             ', ga_u(i)
+      print*, 'g_{v}^{d}             ', gv_d(i)
+      print*, 'g_{a}^{d}             ', ga_d(i)
+      print*,
     end if
   end do
-  write(10,*) '-----------------------------------------------------'
-  write(10,*) 'cuts'
-  write(10,*) '-----------------------------------------------------'
-  close(10)
 
   ! reset counter
   npoints = 0
@@ -322,7 +313,7 @@ program zprime
   it = 0 
   call vegas(ndimensions, dsigma, avgi, sd, chi2a)
 
-  print *, ' ...done.'  
+  print *, "...complete."  
 
   if (final_state == 0 .and. use_branching_ratio == 1) then
     ! multiply by branching ratios
@@ -347,15 +338,14 @@ program zprime
   error = sd
 
   ! print integrated cross section
-  open(unit = 10, file = 'Output/'//output_file, status = "old", action = "write", position="append")
-  write(10,*) 'integrated cross section'
+  print*, 'integrated cross section'
   if (sigma == 0.d0) then
-    write(10,*) 'sigma = 0  ! check permitted gauge sectors.'
+    print*, 'sigma = 0  ! check permitted gauge sectors.'
     stop
   else
-    write(10,*) 'sigma (pb)', 'error (same units)'
-    write(10,*) sigma, error
-    write(10,*) '(using ', npoints, ' points)'
+    print*, 'sigma (pb)', 'error (same units)'
+    print*, sigma, error
+    print*, '(using ', npoints, ' points)'
   end if
 
   ! re-weight distributions for different iterations
@@ -401,7 +391,7 @@ program zprime
         end do
       end do
     end if
-    print *, "...done."
+    print *, "...complete."
 
     ! collect unpolarised spatial asymmetry
     print *, "Collating FB cross sections..."
@@ -431,7 +421,7 @@ program zprime
         end do
       end if
     end do
-    print *, "...done."
+    print *, "...complete."
 
     ! define asymmetries
     print *, "Calculating polar asymmetries..."
@@ -456,7 +446,7 @@ program zprime
       atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
                    /2.d0*atot(3)
     end if
-    print *, "...done."
+    print *, "...complete."
 
     print *, "Calculating FB asymmetries..."
     do iasy = 4, n_asymmetries
@@ -466,46 +456,43 @@ program zprime
         atoterr(iasy) = sd/avgi*atot(iasy)
       end if
     end do
-    print *, "...done."
+    print *, "...complete."
 
 
     ! print asymmetries
     print *, "Printing total asymmetries..."
-    write(10,*) 'total asymmetries'
-    if (o_asym(1) == 1)  write(10,*) 'ALL:                    uncertainty (same units):'
-    if (o_asym(1) == 1)  write(10,*) atot(1), atoterr(1)
-    if (o_asym(2) == 1)  write(10,*) 'AL:                     uncertainty (same units):'
-    if (o_asym(2) == 1)  write(10,*) atot(2), atoterr(2)
-    if (o_asym(3) == 1)  write(10,*) 'APV:                    uncertainty (same units):'
-    if (o_asym(3) == 1)  write(10,*) atot(3), atoterr(3)
-    if (o_asym(4) == 1)  write(10,*) 'AFB:                    uncertainty (same units):'
-    if (o_asym(4) == 1)  write(10,*) atot(4), atoterr(4)
-    if (o_asym(5) == 1)  write(10,*) 'AFB*:                   uncertainty (same units):'
-    if (o_asym(5) == 1)  write(10,*) atot(5), atoterr(5)
-    if (o_asym(6) == 1)  write(10,*) 'AFB*_reco:              uncertainty (same units):'
-    if (o_asym(6) == 1)  write(10,*) atot(6), atoterr(6)
-    if (o_asym(7) == 1)  write(10,*) 'AtRFB:                  uncertainty (same units):'
-    if (o_asym(7) == 1)  write(10,*) atot(7), atoterr(7)
-    if (o_asym(8) == 1)  write(10,*) "AttbRFB:                uncertainty (same units):"
-    if (o_asym(8) == 1)  write(10,*) atot(8), atoterr(8)
-    if (o_asym(9) == 1)  write(10,*) "ARFB:                   uncertainty (same units):"
-    if (o_asym(9) == 1)  write(10,*) atot(9), atoterr(9)
-    if (o_asym(10) == 1)  write(10,*) "ARFB_reco:              uncertainty (same units):"
-    if (o_asym(10) == 1)  write(10,*) atot(10), atoterr(10)
-    if (o_asym(11) == 1)  write(10,*) 'A_l:                   uncertainty (same units):'
-    if (o_asym(11) == 1)  write(10,*) atot(11), atoterr(11)
-    if (o_asym(12) == 1)  write(10,*) 'AlFB:                  uncertainty (same units):'
-    if (o_asym(12) == 1)  write(10,*) atot(12), atoterr(12)
-    print *, "...done."
+    print*, 'total asymmetries'
+    if (o_asym(1) == 1)  print*, 'ALL:                    uncertainty (same units):'
+    if (o_asym(1) == 1)  print*, atot(1), atoterr(1)
+    if (o_asym(2) == 1)  print*, 'AL:                     uncertainty (same units):'
+    if (o_asym(2) == 1)  print*, atot(2), atoterr(2)
+    if (o_asym(3) == 1)  print*, 'APV:                    uncertainty (same units):'
+    if (o_asym(3) == 1)  print*, atot(3), atoterr(3)
+    if (o_asym(4) == 1)  print*, 'AFB:                    uncertainty (same units):'
+    if (o_asym(4) == 1)  print*, atot(4), atoterr(4)
+    if (o_asym(5) == 1)  print*, 'AFB*:                   uncertainty (same units):'
+    if (o_asym(5) == 1)  print*, atot(5), atoterr(5)
+    if (o_asym(6) == 1)  print*, 'AFB*_reco:              uncertainty (same units):'
+    if (o_asym(6) == 1)  print*, atot(6), atoterr(6)
+    if (o_asym(7) == 1)  print*, 'AtRFB:                  uncertainty (same units):'
+    if (o_asym(7) == 1)  print*, atot(7), atoterr(7)
+    if (o_asym(8) == 1)  print*, "AttbRFB:                uncertainty (same units):"
+    if (o_asym(8) == 1)  print*, atot(8), atoterr(8)
+    if (o_asym(9) == 1)  print*, "ARFB:                   uncertainty (same units):"
+    if (o_asym(9) == 1)  print*, atot(9), atoterr(9)
+    if (o_asym(10) == 1)  print*, "ARFB_reco:              uncertainty (same units):"
+    if (o_asym(10) == 1)  print*, atot(10), atoterr(10)
+    if (o_asym(11) == 1)  print*, 'A_l:                   uncertainty (same units):'
+    if (o_asym(11) == 1)  print*, atot(11), atoterr(11)
+    if (o_asym(12) == 1)  print*, 'AlFB:                  uncertainty (same units):'
+    if (o_asym(12) == 1)  print*, atot(12), atoterr(12)
+    print *, "...complete."
   end if
 
   if (print_all_distributions == 1) call finalise_distributions
 
-  write(10,*) 'CLOSE'
   call rootclose
-  close(10)
   call cpu_time(finish_time)
-  print*, 'Program complete'
-  print '("Time = ",f6.3," seconds.")', finish_time-start_time
+  print '(" Program completed in ",f10.6," seconds.")', finish_time - start_time
   stop
 end program zprime

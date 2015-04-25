@@ -174,7 +174,7 @@ module configuration
 
       read(5,*) verbose
 
-      print*, "...done."
+      print*, "...complete."
       
     end subroutine read_config
 
@@ -220,7 +220,7 @@ module configuration
         include_bsm=0
       end if
       
-      print*, "...done."
+      print*, "...complete."
     end subroutine modify_config
 
     subroutine setup_channels
@@ -366,7 +366,7 @@ module configuration
       ! disable A_PV
       o_asym(3) = 0
 
-      print*, "...done."
+      print*, "...complete."
       
     end subroutine setup_channels
 

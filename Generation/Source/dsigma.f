@@ -224,6 +224,7 @@ function dsigma(x,wgt)
 
     ! loop over costheta_cm
     do jx = 1, jxmax
+      if (verbose == 1) print*, "Generating event ", npoints + 1, "..."
 
       ! initialisation
       fffxn = 0.d0
@@ -361,7 +362,7 @@ function dsigma(x,wgt)
       ! note that cteq do too now!)
       ! parton distribution functions (pdfs)
       end if
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       if (verbose == 1) print*, "Constructing PDFs..."
       ! initialise pdfs
@@ -397,7 +398,7 @@ function dsigma(x,wgt)
       do i = 1, 13
         fx2(i) = fx2(i)/x2
       end do
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       if (verbose == 1) print*, "Creating initial (massless) parton momenta."
       pcm = ecm/2.d0
@@ -409,7 +410,7 @@ function dsigma(x,wgt)
       q(3,2) = -pcm
       q(2,2) = 0.d0
       q(1,2) = 0.d0
-      if(verbose == 1) print*, "...done."
+      if(verbose == 1) print*, "...complete."
 
       if (final_state == 0) then
         if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame..."
@@ -443,7 +444,7 @@ function dsigma(x,wgt)
           q(i,7) = 0.d0
           q(i,8) = 0.d0
         end do
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
       else if (final_state > 0) then
         if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame..."
         phit = 2.d0*pi*ran(jseed)
@@ -623,7 +624,7 @@ function dsigma(x,wgt)
           q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
           q(i,8) = p78(i) - q(i,7)
         end do
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
       end if
 
       if (verbose == 1) print*, "Boosting parton CoM momenta to collider frame..."
@@ -640,7 +641,7 @@ function dsigma(x,wgt)
         qcol(2, i) = q(2, i)
         qcol(1, i) = q(1, i)
       end do
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       if (verbose == 1) print*, "Assigning particle 4-momenta..."
 
@@ -773,7 +774,7 @@ function dsigma(x,wgt)
           print*, "Etmiss :", etmiss
           print*, "pt(v+v):", pt68    
         end if
-        print*, "...done."
+        print*, "...complete."
       end if
 
       if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
@@ -808,7 +809,7 @@ function dsigma(x,wgt)
         call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
         call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
       end if
-      if(verbose == 1) print*, "...done."
+      if(verbose == 1) print*, "...complete."
 
       if (phase_space_only == 1) then
         if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
@@ -839,7 +840,7 @@ function dsigma(x,wgt)
       a_s = alfas(qq,rlambdaqcd4,nloops)
       gs2 = 4.d0*pi*a_s
       gs = sqrt(gs2)
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       ! initilise
       qcdqq1 = 0
@@ -896,7 +897,7 @@ function dsigma(x,wgt)
               +qcdpolbb2(lam3,lam4)
             end do
           end do
-          if (verbose == 1) print*, "...done."
+          if (verbose == 1) print*, "...complete."
         end if
         if ((include_ew == 1) .or. (include_bsm == 1)) then
           if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
@@ -917,7 +918,7 @@ function dsigma(x,wgt)
              +ewzpolbb2(lam3,lam4)
             end do
           end do
-          if (verbose == 1) print*, "...done."
+          if (verbose == 1) print*, "...complete."
         end if
 
       else if (final_state > 0) then
@@ -931,7 +932,7 @@ function dsigma(x,wgt)
           qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
           qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
           qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
-          if (verbose == 1) print*, "...done."
+          if (verbose == 1) print*, "...complete."
         end if
         if ((include_ew == 1) .or. (include_bsm == 1)) then
           if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
@@ -941,7 +942,7 @@ function dsigma(x,wgt)
           ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
           ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
           ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          if (verbose == 1) print*, "...done."
+          if (verbose == 1) print*, "...complete."
         end if
         resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
          + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
@@ -990,7 +991,7 @@ function dsigma(x,wgt)
             +pfx2(lam3,lam4)
           end do
         end do
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
       else if (final_state > 0) then
         if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
         qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
@@ -1012,7 +1013,7 @@ function dsigma(x,wgt)
           pfx1tot = (qqd1+ggd1)/x2
           pfx2tot = (qqd2+ggd2)/x2
         end if
-        if (verbose == 1) print*, "...done." 
+        if (verbose == 1) print*, "...complete." 
       end if
 
       if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
@@ -1031,14 +1032,14 @@ function dsigma(x,wgt)
       end if
 
       666 continue
-      if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...done."
+      if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...complete."
 
       if (verbose == 1) print*, "Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)..."
       pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
       *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
       pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
       *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       fffxn1 = pfx1tot
       fffxn2 = pfx2tot
@@ -1046,7 +1047,7 @@ function dsigma(x,wgt)
       if (verbose == 1) print*, "Applying unit converstion and trivial azimuthal angle integration..."
       fffxn1 = fffxn1*2.d0*pi*unit_conv
       fffxn2 = fffxn2*2.d0*pi*unit_conv
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
 
       if (verbose == 1) print*, "Multiplying by phase space volume..."
       if (final_state == 0) then
@@ -1113,7 +1114,7 @@ function dsigma(x,wgt)
       fffxn2 = fffxn2/real(ixmax)/real(jxmax)
       fffxn = fffxn1+fffxn2
       
-      if (verbose == 1) print*, "...done."
+      if (verbose == 1) print*, "...complete."
          
       if (final_state == 0) then
         if (verbose == 1) print*, "Computing polarised event weightings..."
@@ -1131,7 +1132,7 @@ function dsigma(x,wgt)
         weightLR = weight(it,-1, 1)
         weightRL = weight(it, 1,-1)
         weightRR = weight(it, 1, 1)
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
       end if
       call rootadddouble(weightLL, "weightLL")
       call rootadddouble(weightLR, "weightLR")
@@ -1634,7 +1635,7 @@ function dsigma(x,wgt)
           return
         end if
 
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
 
         if (verbose == 1) print*, "Computing FB event weightings..."
 
@@ -1786,7 +1787,7 @@ function dsigma(x,wgt)
             +sigma_fb(9,it,-1)**2
           end if
         end if
-        if (verbose == 1) print*, "...done."
+        if (verbose == 1) print*, "...complete."
       end if
 
       call rootaddevent(hist)
@@ -2204,11 +2205,12 @@ function dsigma(x,wgt)
             end if
           end if
         end if
-        if (verbose == 1) print*, '...done.'
+        if (verbose == 1) print*, '...complete.'
       end if
 
       ! stats
       npoints = npoints + 1
+      if (verbose == 1 ) print*, "...event", npoints, "complete."
       
       ffxn = ffxn + fffxn
     end do

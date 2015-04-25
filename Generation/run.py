@@ -209,6 +209,6 @@ except IOError:
 
 # Command
 command = './%s < Config/%s.com %s' % (executable,filename,logfile)
-print " ...done."
+print " ...complete."
 print ' Executing ', command, '...'
 subprocess.call(command, shell=True)

@@ -369,6 +369,7 @@ subroutine finalise_distributions
   integer :: ndiv_sig
 
   print*, "Printing histograms..."
+  open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
 
   write(10,*) '-----------------------------------------------------'
   write(10,*)'HISTOGRAMS'
@@ -537,7 +538,9 @@ subroutine finalise_distributions
       end if
     end do
   end if
-  print *, "done."
+  write(10,*) 'CLOSE'
+  close(10)
+  print *, "...complete."
 end subroutine finalise_distributions
 
 end module distributions
