@@ -11,6 +11,7 @@ module configuration
   
   integer :: structure_function
   character(50) :: model_name
+  character(100) :: ntuple_directory
   character(100) :: ntuple_file
   character(50) :: output_file
   integer :: include_qcd
@@ -29,7 +30,7 @@ module configuration
   integer :: print_2d_distributions
   integer :: include_errors
   integer :: phase_space_only
-  integer :: debug_mode
+  integer :: verbose
 
   ! derived parameters
   integer :: n_final
@@ -42,7 +43,7 @@ module configuration
   parameter (n_fb_asymmetries = 9)
   integer :: o_asym(n_asymmetries)
 
-  integer :: ixmax,jxmax
+  integer :: ixmax, jxmax
 
   ! variable switches
   integer :: o_ptb = 1
@@ -114,6 +115,8 @@ module configuration
       ! read config file
       print *, "Reading config file..."
 
+      read(5,*) ntuple_directory
+
       read(5,*) ntuple_file
 
       read(5,*) output_file
@@ -168,7 +171,7 @@ module configuration
 
       read(5,*) include_errors
 
-      read(5,*) debug_mode
+      read(5,*) verbose
 
       print *, "...done."
       

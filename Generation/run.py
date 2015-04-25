@@ -11,7 +11,7 @@
 #   4 = ncall: number of vegas calls (monte carlo/phase space points)
 # ------------------------------------------------------------------------------------------
 
-import os,StringIO,re,optparse,subprocess,time,sys,random
+import os, StringIO, re, optparse, subprocess, time, sys, random
 
 # Usage help
 parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
@@ -46,7 +46,7 @@ parser.add_option("-E", "--include_errors", default=0, const=1, action="store_co
 
 # Debug options
 parser.add_option("-M", "--phase_space_only", default=0, const=1, action="store_const", help="Set |M|^2 = 1")
-parser.add_option("-d", "--debug", default=0, const=1, action="store_const", help="Run in debug mode.")
+parser.add_option("-v", "--verbose", default=0, const=1, action="store_const", help="Run in verbose mode.")
 
 (options, args) = parser.parse_args()
 print "\n Generating config file..."
@@ -130,12 +130,20 @@ if len(all_options) > 0:
 # filename
 filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, all_options, options.tag, options.itmx, ncall)
 
-# logfile      
+# logfile 
+os = sys.platform
+if (os == "darwin"):
+  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
+elif (os == "linux"):
+  ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
+  
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
 output_file = "%s.out" % filename
 ntuple_file = '%s.root' % filename
 
 # print config file
+print >> config, '%s ! ntuple directory' % ntuple_directory
+
 print >> config, '%s ! ntuple file' % ntuple_file
 
 print >> config, '%s ! output file' % output_file
@@ -190,7 +198,7 @@ print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
 
 print >> config, '%s ! include distribution errors' % options.include_errors
 
-print >> config, '%s ! debug mode' % options.debug
+print >> config, '%s ! verbose mode' % options.verbose
 
 try:
       with open('Config/%s.com' % filename,'w') as cfile1:
