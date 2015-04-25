@@ -556,7 +556,7 @@ function dsigma(x,wgt)
           p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
           q(i,3) = q356(i) - p56(i)
         end do
-        do i = 1,3
+        do i = 1, 3
           q478(i) =  - q356(i)
         end do
         q478(4) = sqrt(rq2 + m478*m478)
@@ -572,7 +572,7 @@ function dsigma(x,wgt)
         q78(1) = rq78*ct78
         q78(4) = sqrt(rq782 + m78*m78)
         pq78 = 0.d0
-        do i = 1,3
+        do i = 1, 3
           pq78 = pq78 + q478(i)*q78(i)
         end do
         p78(4) = (q478(4)*q78(4) + pq78)/m478
@@ -993,22 +993,22 @@ function dsigma(x,wgt)
         if (verbose == 1) print*, "...done."
       else if (final_state > 0) then
         if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
-        qqd1 = fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
-        +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1) &
-        +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1) &
-        +fx1( 4)*fx2(10)*(qcdqq1+ewzuu1) &
-        +fx1( 5)*fx2(11)*(qcdbb1+ewzbb1)
-        qqd2 = fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2) &
-        +fx1( 8)*fx2( 2)*(qcdqq2+ewzuu2) &
-        +fx1( 9)*fx2( 3)*(qcdqq2+ewzdd2) &
-        +fx1(10)*fx2( 4)*(qcdqq2+ewzuu2) &
-        +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
+        qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
+             + fx1( 2)*fx2( 8)*(qcdqq1 + ewzuu1) &
+             + fx1( 3)*fx2( 9)*(qcdqq1 + ewzdd1) &
+             + fx1( 4)*fx2(10)*(qcdqq1 + ewzuu1) &
+             + fx1( 5)*fx2(11)*(qcdbb1 + ewzbb1)
+        qqd2 = fx1( 7)*fx2( 1)*(qcdqq2 + ewzdd2) &
+             + fx1( 8)*fx2( 2)*(qcdqq2 + ewzuu2) &
+             + fx1( 9)*fx2( 3)*(qcdqq2 + ewzdd2) &
+             + fx1(10)*fx2( 4)*(qcdqq2 + ewzuu2) &
+             + fx1(11)*fx2( 5)*(qcdbb2 + ewzbb2)
         ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
         ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
         if (ix == 1) then
           pfx1tot = (qqd1+ggd1)/x1
           pfx2tot = (qqd2+ggd2)/x1
-        else if (ix  =  =  2) then
+        else if (ix  ==  2) then
           pfx1tot = (qqd1+ggd1)/x2
           pfx2tot = (qqd2+ggd2)/x2
         end if
