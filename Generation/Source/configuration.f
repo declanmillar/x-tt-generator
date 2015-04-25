@@ -19,6 +19,7 @@ module configuration
   integer :: interference  
   integer :: use_nwa
   integer :: use_branching_ratio ! 0 = no, 1 = dilepton, 2 = semi-had, 3 = full-had
+  integer :: additional_kinematics
   integer :: include_transverse
   integer :: include_asymmetries
   real :: ytmax
@@ -140,6 +141,8 @@ module configuration
       read(5,*) use_branching_ratio
 
       read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
+
+      read(5,*) additional_kinematics
 
       read(5,*) include_transverse
 

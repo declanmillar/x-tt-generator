@@ -29,9 +29,9 @@ parser.add_option("-z", "--include_bsm", default=1, const=0, action="store_const
 parser.add_option("-i", "--interference", default=2, type="int", help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
 parser.add_option("-w", "--use_NWA", default=0, const=1, action="store_const", help="turn on use_NWA")
 parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="store_const", help="multiply 2to2 process by use_branching_ratio")
+parser.add_option("-K", "--additional_kinematics", default=1, const=0, action="store_const", help="Turn off additional kinematics")
 parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
 parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
-parser.add_option("-C", "--cuts", default=1, const=0, action="store_const", help="turn off all cuts")
 parser.add_option("-y", "--ytmax", default=100, type="float", help="rapidity cut")
 parser.add_option("-Y", "--yttmin", default=0, type="float", help="top pair rapidity cut")
 
@@ -167,6 +167,8 @@ print >> config, '%s ! interference' % options.interference
 print >> config, '%s ! use_branching_ratio' % options.use_branching_ratio
 
 print >> config, '%s ! use_NWA' % options.use_NWA
+
+print >> config, '%s ! additional_kinematics' % options.additional_kinematics
 
 print >> config, '%s ! include_transverse' % options.include_transverse
 
