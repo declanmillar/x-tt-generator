@@ -133,18 +133,16 @@ filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, al
 # logfile 
 os = sys.platform
 if (os == "darwin"):
-  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
-elif (os == "linux"):
   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
+elif (os == "linux"):
+  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
   
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
 output_file = "%s.out" % filename
-ntuple_file = '%s.root' % filename
+ntuple_file = ntuple_directory + '%s.root' % filename
 
 # print config file
-print >> config, '%s ! ntuple directory' % ntuple_directory
-
-print >> config, '%s ! ntuple file' % ntuple_file
+print >> config, '%s' % ntuple_file
 
 print >> config, '%s ! output file' % output_file
 

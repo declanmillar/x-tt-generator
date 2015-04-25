@@ -39,9 +39,6 @@ program zprime
   integer :: i, j, k
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
-  character(44) :: ntuple_directory
-  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
-!   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
 
   call cpu_time(start_time)
 
@@ -51,8 +48,8 @@ program zprime
 
   call setup_channels
 
-  print *, "Output Ntuple will be written to "//ntuple_directory//ntuple_file
-  call rootinit(ntuple_directory//ntuple_file)
+  print *, "Output Ntuple will be written to ", ntuple_file
+  call rootinit(ntuple_file)
 
   open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
   close(10)
