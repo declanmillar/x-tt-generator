@@ -644,26 +644,26 @@ function dsigma(x,wgt)
 
       if (verbose == 1) print*, "Assigning particle 4-momenta..."
 
-!       if (final_state == 0) then
-!         ! assign 2to2 madgraph momenta    
-!         do i = 1, 3
-!           p1(i) = q(i,1)
-!           p2(i) = q(i,2)
-!           p3(i) = q(i,3)
-!           p4(i) = q(i,4)
-!           p5(i) = 0.d0
-!           p6(i) = 0.d0
-!           p7(i) = 0.d0
-!           p8(i) = 0.d0
-!         end do
-!         p1(0) = q(4,1)
-!         p2(0) = q(4,2)
-!         p3(0) = q(4,3)
-!         p4(0) = q(4,4)
-!         p5(0) = 0.d0
-!         p6(0) = 0.d0
-!         p7(0) = 0.d0
-!         p8(0) = 0.d0
+      !       if (final_state == 0) then
+      !         ! assign 2to2 madgraph momenta    
+      !         do i = 1, 3
+      !           p1(i) = q(i,1)
+      !           p2(i) = q(i,2)
+      !           p3(i) = q(i,3)
+      !           p4(i) = q(i,4)
+      !           p5(i) = 0.d0
+      !           p6(i) = 0.d0
+      !           p7(i) = 0.d0
+      !           p8(i) = 0.d0
+      !         end do
+      !         p1(0) = q(4,1)
+      !         p2(0) = q(4,2)
+      !         p3(0) = q(4,3)
+      !         p4(0) = q(4,4)
+      !         p5(0) = 0.d0
+      !         p6(0) = 0.d0
+      !         p7(0) = 0.d0
+      !         p8(0) = 0.d0
 
         ! parton CoM 4 -momenta
         do i = 1, 3
@@ -710,79 +710,68 @@ function dsigma(x,wgt)
       if (verbose == 1) then
         if (final_state == 0) then
           print*, "Checking 2to2 kinematics..."
-          print*,  'p1  =',p1
-          print*,  'p2  =',p2
-          print*,  'p3  =',p3
-          print*,  'p4  =',p4
-          delta_e=p1(0)+p2(0)-p3(0)-p4(0)
-          delta_x=p1(1)+p2(1)-p3(1)-p4(1)
-          delta_y=p1(2)+p2(2)-p3(2)-p4(2)
-          delta_z=p1(3)+p2(3)-p3(3)-p4(3)
-          print*,  'delta_e=',delta_e
-          print*,  'delta_x=',delta_x
-          print*,  'delta_y=',delta_y
-          print*,  'delta_z=',delta_z
-          rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-          rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-          rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-          rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-          print*,  'rm_1 =',rmassa1
-          print*,  'rm_2 =',rmassa2
-          print*,  'rm_3 =',rmassa3
-          print*,  'rm_4 =',rmassa4
+          print*, "p1  = ", p1
+          print*, "p2  = ", p2
+          print*, "p3  = ", p3
+          print*, "p4  = ", p4
+          delta_e = p1(0) + p2(0) - p3(0) - p4(0)
+          delta_x = p1(1) + p2(1) - p3(1) - p4(1)
+          delta_y = p1(2) + p2(2) - p3(2) - p4(2)
+          delta_z = p1(3) + p2(3) - p3(3) - p4(3)
+          print*, "delta_E  = ", delta_e
+          print*, "delta_Px = ", delta_x
+          print*, "delta_Py = ", delta_y
+          print*, "delta_Pz = ", delta_z
+          rmassa1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+          rmassa2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+          rmassa3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+          rmassa4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+          print*, "m1 = ", rmassa1
+          print*, "m2 = ", rmassa2
+          print*, "m3 = ", rmassa3
+          print*, "m4 = ", rmassa4
+
         else if (final_state > 0) then
           print*, "Checking 2to6 kinematics..."
-          print*,  'p1  =',p1
-          print*,  'p2  =',p2
-          print*,  'p3  =',p3
-          print*,  'p4  =',p4
-          print*,  'p5  =',p5
-          print*,  'p6  =',p6
-          print*,  'p7  =',p7
-          print*,  'p8  =',p8
+          print*, "p1  = ", p1
+          print*, "p2  = ", p2
+          print*, "p3  = ", p3
+          print*, "p4  = ", p4
+          print*, "p5  = ", p5
+          print*, "p6  = ", p6
+          print*, "p7  = ", p7
+          print*, "p8  = ", p8
           ! check conservation of 4-momentum.
-          delta_e=p1(0)+p2(0)         &
-                   -p3(0)-p4(0)         &  
-                         -p5(0)-p6(0)         &  
-                                -p7(0)-p8(0)
-          delta_x=p1(1)+p2(1)         &   
-                -p3(1)-p4(1)         &   
-                      -p5(1)-p6(1)         &  
-                             -p7(1)-p8(1)
-          delta_y=p1(2)+p2(2)         &   
-                -p3(2)-p4(2) &
-                -p5(2)-p6(2)         &  
-              -p7(2)-p8(2)
-          delta_z=p1(3)+p2(3)         &   
-                -p3(3)-p4(3)         &   
-                      -p5(3)-p6(3)         &   
-                            -p7(3)-p8(3)
-          print*,  'delta_e=',delta_e
-          print*,  'delta_px=',delta_x
-          print*,  'delta_py=',delta_y
-          print*,  'delta_pz=',delta_z
+          delta_e = p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
+          delta_x = p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
+          delta_y = p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
+          delta_z = p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
+          print*, "delta_E  = ", delta_e
+          print*, "delta_Px = ", delta_x
+          print*, "delta_Py = ", delta_y
+          print*, "delta_Pz = ", delta_z
           ! check invarient mass.
-          rmassa1=sqrt(abs(p1(0)**2-p1(1)**2-p1(2)**2-p1(3)**2))
-          rmassa2=sqrt(abs(p2(0)**2-p2(1)**2-p2(2)**2-p2(3)**2))
-          rmassa3=sqrt(abs(p3(0)**2-p3(1)**2-p3(2)**2-p3(3)**2))
-          rmassa4=sqrt(abs(p4(0)**2-p4(1)**2-p4(2)**2-p4(3)**2))
-          rmassa5=sqrt(abs(p5(0)**2-p5(1)**2-p5(2)**2-p5(3)**2))
-          rmassa6=sqrt(abs(p6(0)**2-p6(1)**2-p6(2)**2-p6(3)**2))
-          rmassa7=sqrt(abs(p7(0)**2-p7(1)**2-p7(2)**2-p7(3)**2))
-          rmassa8=sqrt(abs(p8(0)**2-p8(1)**2-p8(2)**2-p8(3)**2))
-          print*,  'rm_1 =',rmassa1
-          print*,  'rm_2 =',rmassa2
-          print*,  'rm_3 =',rmassa3
-          print*,  'rm_4 =',rmassa4
-          print*,  'rm_5 =',rmassa5
-          print*,  'rm_6 =',rmassa6
-          print*,  'rm_7 =',rmassa7
-          print*,  'rm_8 =',rmassa8
-          ! check missing momentum
-          pt682=(qcol(1,6)+qcol(1,8))**2+(qcol(2,6)+qcol(2,8))**2
-          pt68=sqrt(pt682)
-          print*, 'etmiss :',etmiss
-          print*, 'pt(v+v):',pt68    
+          rmassa1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+          rmassa2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+          rmassa3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+          rmassa4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+          rmassa5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
+          rmassa6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
+          rmassa7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
+          rmassa8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
+          print*, "m1 = ",rmassa1
+          print*, "m2 = ",rmassa2
+          print*, "m3 = ",rmassa3
+          print*, "m4 = ",rmassa4
+          print*, "m5 = ",rmassa5
+          print*, "m6 = ",rmassa6
+          print*, "m7 = ",rmassa7
+          print*, "m8 = ",rmassa8
+          ! check missing transverse momentum
+          pt682 = (qcol(1,6) + qcol(1,8))**2 + (qcol(2,6) + qcol(2,8))**2
+          pt68 = sqrt(pt682)
+          print*, "Etmiss :", etmiss
+          print*, "pt(v+v):", pt68    
         end if
         print*, "...done."
       end if
@@ -852,7 +841,7 @@ function dsigma(x,wgt)
       gs = sqrt(gs2)
       if (verbose == 1) print*, "...done."
 
-    ! initilize
+      ! initilise
       qcdqq1 = 0
       qcdbb1 = 0
       qcdgg1 = 0
@@ -885,13 +874,13 @@ function dsigma(x,wgt)
         end do
       end do
 
-      resall=0
+      resall = 0
       if (final_state == 0) then
         if (verbose == 1) print*, "Computing 2to2 square matrix elements..."
         if (include_qcd == 1) then
           if (verbose == 1) print*, "Computing QCD matrix elements..."
-          do lam3=-1,1,2
-            do lam4=-1,1,2
+          do lam3 = -1, 1, 2
+            do lam4 = -1, 1, 2
               qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
               qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
               qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
@@ -960,7 +949,7 @@ function dsigma(x,wgt)
 
       if ((resall) == 0.d0) then
         ! print*, '|m|^2 = 0 for phase space point ',npoints
-        fffxn=0.d0
+        fffxn = 0.d0
         return
       end if
 
@@ -974,54 +963,54 @@ function dsigma(x,wgt)
       pfx2tot = 0.d0
       if (final_state == 0) then
         if (verbose == 1) print*, "Summing over 2to2 |m|^2 with pdfs of all initial partons..." 
-        do lam3=-1,1,2
-          do lam4=-1,1,2
-            pfx1(lam3,lam4)=qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-            +(qcdpolqq1(lam3,lam4)+ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-            +(qcdpolbb1(lam3,lam4)+ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
-            pfx2(lam3,lam4)=qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-            +(qcdpolqq2(lam3,lam4)+ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-            +(qcdpolbb2(lam3,lam4)+ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+        do lam3 = -1, 1, 2
+          do lam4 = -1, 1, 2
+            pfx1(lam3,lam4) = qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+            + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
+            + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
+            + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
+            + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
+            + (qcdpolbb1(lam3,lam4) + ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
+            pfx2(lam3,lam4) = qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+            + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
+            + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
+            + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
+            + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
+            + (qcdpolbb2(lam3,lam4) + ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
             if (ix == 1) then
-              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x1
-              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x1
+              pfx1(lam3,lam4) = pfx1(lam3,lam4)/x1
+              pfx2(lam3,lam4) = pfx2(lam3,lam4)/x1
             else if (ix == 2) then
-              pfx1(lam3,lam4)=pfx1(lam3,lam4)/x2
-              pfx2(lam3,lam4)=pfx2(lam3,lam4)/x2
+              pfx1(lam3,lam4) = pfx1(lam3,lam4)/x2
+              pfx2(lam3,lam4) = pfx2(lam3,lam4)/x2
             end if
-            pfx1tot=pfx1tot &
+            pfx1tot = pfx1tot &
             +pfx1(lam3,lam4)
-            pfx2tot=pfx2tot &
+            pfx2tot = pfx2tot &
             +pfx2(lam3,lam4)
           end do
         end do
         if (verbose == 1) print*, "...done."
       else if (final_state > 0) then
         if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
-        qqd1=fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
+        qqd1 = fx1( 1)*fx2( 7)*(qcdqq1+ewzdd1) &
         +fx1( 2)*fx2( 8)*(qcdqq1+ewzuu1) &
         +fx1( 3)*fx2( 9)*(qcdqq1+ewzdd1) &
         +fx1( 4)*fx2(10)*(qcdqq1+ewzuu1) &
         +fx1( 5)*fx2(11)*(qcdbb1+ewzbb1)
-        qqd2=fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2) &
+        qqd2 = fx1( 7)*fx2( 1)*(qcdqq2+ewzdd2) &
         +fx1( 8)*fx2( 2)*(qcdqq2+ewzuu2) &
         +fx1( 9)*fx2( 3)*(qcdqq2+ewzdd2) &
         +fx1(10)*fx2( 4)*(qcdqq2+ewzuu2) &
         +fx1(11)*fx2( 5)*(qcdbb2+ewzbb2)
-        ggd1=fx1(13)*fx2(13)*qcdgg1/2.d0
-        ggd2=fx1(13)*fx2(13)*qcdgg2/2.d0
+        ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
+        ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
         if (ix == 1) then
-          pfx1tot=(qqd1+ggd1)/x1
-          pfx2tot=(qqd2+ggd2)/x1
-        else if (ix == 2) then
-          pfx1tot=(qqd1+ggd1)/x2
-          pfx2tot=(qqd2+ggd2)/x2
+          pfx1tot = (qqd1+ggd1)/x1
+          pfx2tot = (qqd2+ggd2)/x1
+        else if (ix  =  =  2) then
+          pfx1tot = (qqd1+ggd1)/x2
+          pfx2tot = (qqd2+ggd2)/x2
         end if
         if (verbose == 1) print*, "...done." 
       end if
@@ -1061,75 +1050,75 @@ function dsigma(x,wgt)
 
       if (verbose == 1) print*, "Multiplying by phase space volume..."
       if (final_state == 0) then
-      ! 2-body phase space factor
-        fffxn1=fffxn1*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
-        fffxn2=fffxn2*qcm/(2.d0*pcm)*2.d0**(4-3*(2))
-        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(2))
+        ! 2-body phase space factor
+        fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+        fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+        fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
 
       else if (final_state > 0) then
         ! 6-body flux factor, pi's and phase space integral
-        fffxn1=fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
+        fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6)) &
         /(2.d0*m356) &
         /rmt/gamt &
-        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn1=fffxn1*(xx356max-xx356min) &
+        *((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)
+        fffxn1 = fffxn1*(xx356max - xx356min) &
         /(2.d0*m478) &
         /rmt/gamt &
-        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn1=fffxn1*(xx478max-xx478min) &
+        *((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)
+        fffxn1 = fffxn1*(xx478max - xx478min) &
         /(2.d0*m56) &
         /rm_w/gamma_w &
-        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn1=fffxn1*(xx56max-xx56min) &
+        *((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
+        fffxn1 = fffxn1*(xx56max - xx56min) &
         /(2.d0*m78) &
         /rm_w/gamma_w &
-        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn1=fffxn1*(xx78max-xx78min)
+        *((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
+        fffxn1 = fffxn1*(xx78max - xx78min)
 
         ! nwa
-        fffxn1=fffxn1 &
+        fffxn1 = fffxn1 &
         *gamt/gamma_t &
         *gamt/gamma_t
 
-        ! 6-body flux factor, pi's and phase space integral
-        fffxn1=fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
-        fffxn2=fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4-3*(6)) &
+        ! 6 - body flux factor, pi's and phase space integral
+        fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+        fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6)) &
         /(2.d0*m356) &
         /rmt/gamt &
-        *((m356*m356-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn2=fffxn2*(xx356max-xx356min) &
+        *((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)
+        fffxn2 = fffxn2*(xx356max - xx356min) &
         /(2.d0*m478) &
         /rmt/gamt &
-        *((m478*m478-rmt*rmt)**2+rmt**2*gamt**2)
-        fffxn2=fffxn2*(xx478max-xx478min) &
+        *((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)
+        fffxn2 = fffxn2*(xx478max - xx478min) &
         /(2.d0*m56) &
         /rm_w/gamma_w &
-        *((m56*m56-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn2=fffxn2*(xx56max-xx56min) &
+        *((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
+        fffxn2 = fffxn2*(xx56max - xx56min) &
         /(2.d0*m78) &
         /rm_w/gamma_w &
-        *((m78*m78-rm_w*rm_w)**2+rm_w**2*gamma_w**2)
-        fffxn2=fffxn2*(xx78max-xx78min)
+        *((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
+        fffxn2 = fffxn2*(xx78max - xx78min)
 
         ! nwa
-        fffxn2=fffxn2 &
+        fffxn2 = fffxn2 &
         *gamt/gamma_t &
         *gamt/gamma_t
         ! flux and pi factors.
-        fffxn2=fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
+        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
       end if
 
-      fffxn1=fffxn1/real(ixmax)/real(jxmax)
-      fffxn2=fffxn2/real(ixmax)/real(jxmax)
-      fffxn=fffxn1+fffxn2
+      fffxn1 = fffxn1/real(ixmax)/real(jxmax)
+      fffxn2 = fffxn2/real(ixmax)/real(jxmax)
+      fffxn = fffxn1+fffxn2
       
       if (verbose == 1) print*, "...done."
          
       if (final_state == 0) then
         if (verbose == 1) print*, "Computing polarised event weightings..."
-        do lam3=-1,+1,2
-          do lam4=-1,+1,2
+        do lam3 = -1, +1, 2
+          do lam4 = -1, +1, 2
             sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
             +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
             weight(lam3,lam4,it) = &
@@ -1646,159 +1635,159 @@ function dsigma(x,wgt)
         end if
 
         if (verbose == 1) print*, "...done."
-      end if
 
-      if (verbose == 1) print*, "Computing FB event weightings..."
+        if (verbose == 1) print*, "Computing FB event weightings..."
 
-      if (o_asym(4) == 1) then
-        if (costhetat_cm > 0.d0) then
-          sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(1,it,+1)=error_fb(1,it,+1) &
-          +sigma_fb(1,it,+1)**2
-        else if (costhetat_cm < 0.d0) then
-          sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(1,it,-1)=error_fb(1,it,-1) &
-          +sigma_fb(1,it,-1)**2
+        if (o_asym(4) == 1) then
+          if (costhetat_cm > 0.d0) then
+            sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(1,it,+1)=error_fb(1,it,+1) &
+            +sigma_fb(1,it,+1)**2
+          else if (costhetat_cm < 0.d0) then
+            sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(1,it,-1)=error_fb(1,it,-1) &
+            +sigma_fb(1,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(5) == 1) then
-        if (costhetat_star > 0.d0) then
-          sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(2,it,+1)=error_fb(2,it,+1) &
-          +sigma_fb(2,it,+1)**2
-        else if (costhetat_star < 0.d0) then
-          sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(2,it,-1)=error_fb(2,it,-1) &
-          +sigma_fb(2,it,-1)**2
+        if (o_asym(5) == 1) then
+          if (costhetat_star > 0.d0) then
+            sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(2,it,+1)=error_fb(2,it,+1) &
+            +sigma_fb(2,it,+1)**2
+          else if (costhetat_star < 0.d0) then
+            sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(2,it,-1)=error_fb(2,it,-1) &
+            +sigma_fb(2,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(6) == 1) then
-        if (costhetat_star_reco > 0.d0) then
-          sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(3,it,+1)=error_fb(3,it,+1) &
-          +sigma_fb(3,it,+1)**2
-        else if (costhetat_star_reco < 0.d0) then
-          sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(3,it,-1)=error_fb(3,it,-1) &
-          +sigma_fb(3,it,-1)**2
+        if (o_asym(6) == 1) then
+          if (costhetat_star_reco > 0.d0) then
+            sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(3,it,+1)=error_fb(3,it,+1) &
+            +sigma_fb(3,it,+1)**2
+          else if (costhetat_star_reco < 0.d0) then
+            sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(3,it,-1)=error_fb(3,it,-1) &
+            +sigma_fb(3,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(7) == 1) then
-        if (yt > 0.d0) then
-          sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(4,it,+1)=error_fb(4,it,+1) &
-          +sigma_fb(4,it,+1)**2
-        else if (yt < 0.d0) then
-          sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(4,it,-1)=error_fb(4,it,-1) &
-          +sigma_fb(4,it,-1)**2
+        if (o_asym(7) == 1) then
+          if (yt > 0.d0) then
+            sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(4,it,+1)=error_fb(4,it,+1) &
+            +sigma_fb(4,it,+1)**2
+          else if (yt < 0.d0) then
+            sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(4,it,-1)=error_fb(4,it,-1) &
+            +sigma_fb(4,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(8) == 1) then
-        if (yt >= 0.d0) then
-          sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(5,it,+1)=error_fb(5,it,+1) &
-          +sigma_fb(5,it,+1)**2
+        if (o_asym(8) == 1) then
+          if (yt >= 0.d0) then
+            sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(5,it,+1)=error_fb(5,it,+1) &
+            +sigma_fb(5,it,+1)**2
+          end if
+          if (ytb >= 0.d0) then
+            sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(5,it,-1)=error_fb(5,it,-1) &
+            +sigma_fb(5,it,-1)**2
+          end if
         end if
-        if (ytb >= 0.d0) then
-          sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(5,it,-1)=error_fb(5,it,-1) &
-          +sigma_fb(5,it,-1)**2
-        end if
-      end if
 
-      if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
-        if (delta_absy == 0.d0) then
-          continue
-        else if (delta_absy > 0.d0) then
-          sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(6,it,+1)=error_fb(6,it,+1) &
-          +sigma_fb(6,it,+1)**2
-        else if (delta_absy < 0.d0) then
-          sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(6,it,-1)=error_fb(6,it,-1) &
-          +sigma_fb(6,it,-1)**2
+        if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
+          if (delta_absy == 0.d0) then
+            continue
+          else if (delta_absy > 0.d0) then
+            sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(6,it,+1)=error_fb(6,it,+1) &
+            +sigma_fb(6,it,+1)**2
+          else if (delta_absy < 0.d0) then
+            sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(6,it,-1)=error_fb(6,it,-1) &
+            +sigma_fb(6,it,-1)**2
+          end if
         end if
-      end if
 
-      if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
-        if (delta_absy == 0.d0) then
-          continue
-        else if (delta_absy_reco > 0.d0) then
-          sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(7,it,+1)=error_fb(7,it,+1) &
-          +sigma_fb(7,it,+1)**2
-        else if (delta_absy_reco < 0.d0) then
-          sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(7,it,-1)=error_fb(7,it,-1) &
-          +sigma_fb(7,it,-1)**2
+        if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
+          if (delta_absy == 0.d0) then
+            continue
+          else if (delta_absy_reco > 0.d0) then
+            sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(7,it,+1)=error_fb(7,it,+1) &
+            +sigma_fb(7,it,+1)**2
+          else if (delta_absy_reco < 0.d0) then
+            sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(7,it,-1)=error_fb(7,it,-1) &
+            +sigma_fb(7,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(11) == 1) then
-        if (cosfl > 0.d0) then
-          sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(8,it,+1)=error_fb(8,it,+1) &
-          +sigma_fb(8,it,+1)**2
-        else if (cosfl < 0.d0) then
-          sigma_fb(8,it,-1)=sigma_fb(8,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(8,it,-1)=error_fb(8,it,-1) &
-          +sigma_fb(8,it,-1)**2
+        if (o_asym(11) == 1) then
+          if (cosfl > 0.d0) then
+            sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(8,it,+1)=error_fb(8,it,+1) &
+            +sigma_fb(8,it,+1)**2
+          else if (cosfl < 0.d0) then
+            sigma_fb(8,it,-1)=sigma_fb(8,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(8,it,-1)=error_fb(8,it,-1) &
+            +sigma_fb(8,it,-1)**2
+          end if
         end if
-      end if
 
-      if (o_asym(12) == 1) then
-        if (costheta5_cm > 0.d0) then
-          sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
-          +fffxn &
-          *wgt
-          error_fb(9,it,+1)=error_fb(9,it,+1) &
-          +sigma_fb(9,it,+1)**2
-        else if (costheta5_cm < 0.d0) then
-          sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
-          +fffxn &
-          *wgt
-          error_fb(9,it,-1)=error_fb(9,it,-1) &
-          +sigma_fb(9,it,-1)**2
+        if (o_asym(12) == 1) then
+          if (costheta5_cm > 0.d0) then
+            sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
+            +fffxn &
+            *wgt
+            error_fb(9,it,+1)=error_fb(9,it,+1) &
+            +sigma_fb(9,it,+1)**2
+          else if (costheta5_cm < 0.d0) then
+            sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
+            +fffxn &
+            *wgt
+            error_fb(9,it,-1)=error_fb(9,it,-1) &
+            +sigma_fb(9,it,-1)**2
+          end if
         end if
+        if (verbose == 1) print*, "...done."
       end if
-      if (verbose == 1) print*, "...done."
 
       call rootaddevent(hist)
 
@@ -2222,8 +2211,8 @@ function dsigma(x,wgt)
       npoints = npoints + 1
       
       ffxn = ffxn + fffxn
-    end do ! end loop costheta_t<->-cost
+    end do
     dsigma = dsigma + ffxn  
-  end do ! end loop x1 <-> x2
+  end do
   return
 end function dsigma
