@@ -39,8 +39,8 @@ module modelling
 
 ! Other SM parameters
   real, parameter :: a_EM = 0.0078125, s2w = 0.2320d0
-  real :: rlambdaqcd4
-  integer :: nloops
+  real, public :: rlambdaqcd4
+  integer, public :: nloops
 
 ! Zprime parameters
   real :: rmZp(5),gamZp(5)
