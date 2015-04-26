@@ -223,15 +223,15 @@ subroutine create_distributions
     ,"M^{l}_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
 
   ! sigp
-  o_sigp=include_asymmetries
-  sigpmax=14000
-  sigpmin=0
-  ndiv_sigp=100/5
+  o_sigp = 1
+  sigpmax = 14000
+  sigpmin = 0
+  ndiv_sigp = 100/5
   ! sigm
-  o_sigm=include_asymmetries
-  sigmmax=14000
-  sigmmin=0
-  ndiv_sigm=100/5
+  o_sigm = 1
+  sigmmax = 14000
+  sigmmin = 0
+  ndiv_sigm = 100/5
 
   print *, "done."
 end subroutine create_distributions
@@ -340,12 +340,149 @@ subroutine disable_distributions
 
   print *, "Disabling irrelevent distributions..."
 
-  if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_dphi == 0)) o_mttdphi = 0
-  if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_ct7ct5 == 0)) o_mttct7ct5 = 0
-  if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_cost7 == 0)) o_mttcost7 = 0
-  if ((print_2d_distributions == 0) .or. (o_mtt == 0) .or. (o_cost5 == 0)) o_mttcost5 = 0
+  if (initial_state == 0) then
+    ! disable non-useful variables for pp
+    o_asym(4) = 0
+    o_asym(7) = 0
+    o_asym(8) = 0 
+  end if
 
-  if ((print_2d_distributions == 0) .or. (include_transverse == 0) .or. (o_dphi == 0)) then
+  if (initial_state == 1) then
+    ! disable non-useful variables for ppbar
+    o_asym(5) = 0
+    o_asym(6) = 0
+  end if
+
+  if (final_state == 0) then
+    ! disable 2to6 variables 
+    o_ptb = 0
+    o_ptbb = 0
+    o_ptlp = 0
+    o_ptlm = 0
+    o_ptnu = 0
+    o_ptnub = 0
+    o_etab = 0
+    o_etabb = 0
+    o_etalp = 0
+    o_etalm = 0
+    o_etanu = 0
+    o_etanub = 0
+    o_phib = 0
+    o_phibb = 0
+    o_philp = 0
+    o_philm = 0
+    o_phinu = 0
+    o_phinub = 0
+    o_ycolb = 0
+    o_ycolbb = 0
+    o_ycollp = 0
+    o_ycollm = 0
+    o_ycolnu = 0
+    o_ycolnub = 0
+    o_etmiss = 0
+    o_fl = 0
+    o_dphi = 0
+    o_cosfl = 0
+    o_cost7 = 0
+    o_cost5 = 0
+    o_ct7ct5 = 0
+    o_asym(6) = 0
+    o_asym(10) = 0
+    o_asym(11) = 0
+    o_asym(12) = 0
+    o_mtt_reco = 0
+    o_mt_reco = 0
+    o_mtb = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
+  end if
+
+  if (final_state > 0) then
+    ! disable non 2to6 variables
+    o_asym(1) = 0
+    o_asym(2) = 0
+    o_asym(3) = 0
+  end if
+
+  if (final_state == 1) then 
+    ! disable non-useful variables in dileptonic
+    o_mll = 1
+    o_mtt_reco = 0 
+    o_mt_reco = 0
+    o_mtb = 0
+    do i = 4, 10
+      o_asym(i) = 0
+    end do
+  end if
+
+  if (final_state == 2) then
+    ! disable non-useful variables in semi-leptonic
+    o_cost7 = 0
+    o_ct7ct5 = 0
+    o_dphi = 0
+    o_etmiss = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
+    o_asym(5) = 0
+    o_asym(9) = 0
+  end if
+
+  if (final_state == 3) then
+    ! disable non-useful variables in fully hadronic
+    o_mtt_reco = 0
+    o_cost5 = 0
+    o_cost7 = 0
+    o_ct7ct5 = 0
+    o_dphi = 0
+    o_etmiss = 0
+    o_mt_reco = 0
+    o_mtb = 0
+    o_ht = 0
+    o_mttvis = 0
+    o_mt1 = 0
+    o_mt2 = 0
+    o_mt3 = 0
+    o_mct1 = 0
+    o_mct2 = 0
+    o_mct3 = 0
+    o_mlt = 0
+    o_mlct = 0
+
+    o_asym(6) = 0
+    o_asym(10) = 0
+    o_asym(11) = 0
+    o_asym(12) = 0
+  end if
+
+  ! disable A_PV
+  o_asym(3) = 0
+
+  do iasy = 1, n_asymmetries
+    o_asym(iasy) = 1
+  end do
+
+  if ((o_mtt == 0) .or. (o_dphi == 0)) o_mttdphi = 0
+  if ((o_mtt == 0) .or. (o_ct7ct5 == 0)) o_mttct7ct5 = 0
+  if ((o_mtt == 0) .or. (o_cost7 == 0)) o_mttcost7 = 0
+  if ((o_mtt == 0) .or. (o_cost5 == 0)) o_mttcost5 = 0
+
+  if (o_dphi == 0) then
     o_mvisdphi = 0
     o_htdphi = 0
     o_mt1dphi = 0

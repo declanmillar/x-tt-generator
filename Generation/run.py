@@ -32,15 +32,13 @@ parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="sto
 parser.add_option("-K", "--additional_kinematics", default=1, const=0, action="store_const", help="Turn off additional kinematics")
 parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
 parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
-parser.add_option("-Y", "--yttmin", default=0, type="float", help="top pair rapidity cut")
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default=False, action="store_true", help="used fixed iseed for random number generator")
 parser.add_option("-m", "--itmx", default=1, type="int", help="maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default=0, const=1, action="store_const", help="symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default=0, const=1, action="store_const", help="symmatrise phase space over costheta_t")
-parser.add_option("-D", "--print_all_distributions", default=0, const=1, action="store_const", help="turn on built in histogams")
-parser.add_option("-2", "--print_2d_distributions", default=0, const=1, action="store_const", help="turn on built in 2d-distributions")
+parser.add_option("-D", "--print_distributions", default=0, const=1, action="store_const", help="turn on built in histogams")
 parser.add_option("-E", "--include_errors", default=0, const=1, action="store_const", help="turn on distribution errors")
 
 # Debug options
@@ -169,13 +167,7 @@ print >> config, '%s ! use_NWA' % options.use_NWA
 
 print >> config, '%s ! additional_kinematics' % options.additional_kinematics
 
-print >> config, '%s ! include_transverse' % options.include_transverse
-
-print >> config, '%s ! include_asymmetries' % options.include_asymmetries
-
 print >> config, '%s.d3 ! ecm_col' % collider_energy
-
-print >> config, '%sd0 ! yttmin' % options.yttmin
 
 print >> config, '%s ! iseed' % seed
 
@@ -189,9 +181,7 @@ print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 
 print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
 
-print >> config, '%s ! print_all_distributions' % options.print_all_distributions
-
-print >> config, '%s ! print_2d_distributions' % options.print_2d_distributions
+print >> config, '%s ! print_distributions' % options.print_distributions
 
 print >> config, '%s ! include distribution errors' % options.include_errors
 

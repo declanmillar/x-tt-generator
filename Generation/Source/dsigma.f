@@ -125,6 +125,7 @@ function dsigma(x,wgt)
   ! rapidity
   real :: yt, ytb, ytt, ytt_reco, yt_reco
   real :: delta_absy, delta_absy_reco
+  real :: yttmin = 0.d0
 
   ! square matrix elements
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
@@ -1711,126 +1712,112 @@ function dsigma(x,wgt)
 
         if (verbose == 1) print*, "...complete."
 
-        if (verbose == 1) print*, "Computing FB dsigma..."
+        if (verbose == 1) print*, "Computing FB dsigmas..."
 
-        if (o_asym(4) == 1) then
-          if (costhetat_cm > 0.d0) then
-            sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(1,it,+1)=error_fb(1,it,+1) &
-            +sigma_fb(1,it,+1)**2
-          else if (costhetat_cm < 0.d0) then
-            sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(1,it,-1)=error_fb(1,it,-1) &
-            +sigma_fb(1,it,-1)**2
-          end if
+        if (costhetat_cm > 0.d0) then
+          sigma_fb(1,it,+1)=sigma_fb(1,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(1,it,+1)=error_fb(1,it,+1) &
+          +sigma_fb(1,it,+1)**2
+        else if (costhetat_cm < 0.d0) then
+          sigma_fb(1,it,-1)=sigma_fb(1,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(1,it,-1)=error_fb(1,it,-1) &
+          +sigma_fb(1,it,-1)**2
         end if
 
-        if (o_asym(5) == 1) then
-          if (costhetat_star > 0.d0) then
-            sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(2,it,+1)=error_fb(2,it,+1) &
-            +sigma_fb(2,it,+1)**2
-          else if (costhetat_star < 0.d0) then
-            sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(2,it,-1)=error_fb(2,it,-1) &
-            +sigma_fb(2,it,-1)**2
-          end if
+        if (costhetat_star > 0.d0) then
+          sigma_fb(2,it,+1)=sigma_fb(2,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(2,it,+1)=error_fb(2,it,+1) &
+          +sigma_fb(2,it,+1)**2
+        else if (costhetat_star < 0.d0) then
+          sigma_fb(2,it,-1)=sigma_fb(2,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(2,it,-1)=error_fb(2,it,-1) &
+          +sigma_fb(2,it,-1)**2
         end if
 
-        if (o_asym(6) == 1) then
+        if (yt > 0.d0) then
+          sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(3,it,+1)=error_fb(3,it,+1) &
+          +sigma_fb(3,it,+1)**2
+        else if (yt < 0.d0) then
+          sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(3,it,-1)=error_fb(3,it,-1) &
+          +sigma_fb(3,it,-1)**2
+        end if
+
+        if (yt >= 0.d0) then
+          sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(4,it,+1)=error_fb(4,it,+1) &
+          +sigma_fb(4,it,+1)**2
+        end if
+        if (ytb >= 0.d0) then
+          sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(4,it,-1)=error_fb(4,it,-1) &
+          +sigma_fb(4,it,-1)**2
+        end if
+
+        if (delta_absy > 0.d0) then
+          sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
+          +fffxn &
+          *wgt
+          error_fb(5,it,+1)=error_fb(5,it,+1) &
+          +sigma_fb(5,it,+1)**2
+        else if (delta_absy < 0.d0) then
+          sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
+          +fffxn &
+          *wgt
+          error_fb(5,it,-1)=error_fb(5,it,-1) &
+          +sigma_fb(5,it,-1)**2
+        end if
+
+        if (final_state > 0) then
           if (costhetat_star_reco > 0.d0) then
-            sigma_fb(3,it,+1)=sigma_fb(3,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(3,it,+1)=error_fb(3,it,+1) &
-            +sigma_fb(3,it,+1)**2
-          else if (costhetat_star_reco < 0.d0) then
-            sigma_fb(3,it,-1)=sigma_fb(3,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(3,it,-1)=error_fb(3,it,-1) &
-            +sigma_fb(3,it,-1)**2
-          end if
-        end if
-
-        if (o_asym(7) == 1) then
-          if (yt > 0.d0) then
-            sigma_fb(4,it,+1)=sigma_fb(4,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(4,it,+1)=error_fb(4,it,+1) &
-            +sigma_fb(4,it,+1)**2
-          else if (yt < 0.d0) then
-            sigma_fb(4,it,-1)=sigma_fb(4,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(4,it,-1)=error_fb(4,it,-1) &
-            +sigma_fb(4,it,-1)**2
-          end if
-        end if
-
-        if (o_asym(8) == 1) then
-          if (yt >= 0.d0) then
-            sigma_fb(5,it,+1)=sigma_fb(5,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(5,it,+1)=error_fb(5,it,+1) &
-            +sigma_fb(5,it,+1)**2
-          end if
-          if (ytb >= 0.d0) then
-            sigma_fb(5,it,-1)=sigma_fb(5,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(5,it,-1)=error_fb(5,it,-1) &
-            +sigma_fb(5,it,-1)**2
-          end if
-        end if
-
-        if ((o_asym(9) == 1) .and. (abs(ytt) > yttmin)) then
-          if (delta_absy == 0.d0) then
-            continue
-          else if (delta_absy > 0.d0) then
             sigma_fb(6,it,+1)=sigma_fb(6,it,+1) &
             +fffxn &
             *wgt
             error_fb(6,it,+1)=error_fb(6,it,+1) &
             +sigma_fb(6,it,+1)**2
-          else if (delta_absy < 0.d0) then
+          else if (costhetat_star_reco < 0.d0) then
             sigma_fb(6,it,-1)=sigma_fb(6,it,-1) &
             +fffxn &
             *wgt
             error_fb(6,it,-1)=error_fb(6,it,-1) &
             +sigma_fb(6,it,-1)**2
           end if
-        end if
 
-        if ((o_asym(10) == 1) .and. (abs(ytt_reco) > yttmin)) then
-          if (delta_absy == 0.d0) then
-            continue
-          else if (delta_absy_reco > 0.d0) then
-            sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
-            +fffxn &
-            *wgt
-            error_fb(7,it,+1)=error_fb(7,it,+1) &
-            +sigma_fb(7,it,+1)**2
-          else if (delta_absy_reco < 0.d0) then
-            sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
-            +fffxn &
-            *wgt
-            error_fb(7,it,-1)=error_fb(7,it,-1) &
-            +sigma_fb(7,it,-1)**2
+          if (abs(ytt_reco) > yttmin) then
+            if (delta_absy == 0.d0) then
+              continue
+            else if (delta_absy_reco > 0.d0) then
+              sigma_fb(7,it,+1)=sigma_fb(7,it,+1) &
+              +fffxn &
+              *wgt
+              error_fb(7,it,+1)=error_fb(7,it,+1) &
+              +sigma_fb(7,it,+1)**2
+            else if (delta_absy_reco < 0.d0) then
+              sigma_fb(7,it,-1)=sigma_fb(7,it,-1) &
+              +fffxn &
+              *wgt
+              error_fb(7,it,-1)=error_fb(7,it,-1) &
+              +sigma_fb(7,it,-1)**2
+            end if
           end if
-        end if
 
-        if (o_asym(11) == 1) then
           if (cosfl > 0.d0) then
             sigma_fb(8,it,+1)=sigma_fb(8,it,+1) &
             +fffxn &
@@ -1844,9 +1831,7 @@ function dsigma(x,wgt)
             error_fb(8,it,-1)=error_fb(8,it,-1) &
             +sigma_fb(8,it,-1)**2
           end if
-        end if
 
-        if (o_asym(12) == 1) then
           if (costheta5cm > 0.d0) then
             sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
             +fffxn &
@@ -1861,12 +1846,13 @@ function dsigma(x,wgt)
             +sigma_fb(9,it,-1)**2
           end if
         end if
+
         if (verbose == 1) print*, "...complete."
       end if
 
       call rootaddevent(hist)
 
-      if (print_all_distributions == 1) then
+      if (print_distributions == 1) then
         if (verbose == 1) print*, 'Filling histograms...'
 
         ! print distributions

@@ -46,12 +46,10 @@ program zprime
 
   call modify_config
 
-  call setup_channels
-
   print *, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
 
-  if (print_all_distributions == 1) then
+  if (print_distributions == 1) then
     call disable_distributions
     call create_distributions
     call initialise_distributions
@@ -254,7 +252,7 @@ program zprime
   print*, '-----------------------------------------------------'
   print*, 'parameters'
   print*, '#sqrt{s}              ', collider_energy
-  print*, 'at |y| <              ', abs(ytmax)
+  print*, 'at |y| <              ', 100
   print*, 'loops a_s evaluated at', nloops
   print*, 'a_{s}(m_{z})          ', alfas(rm_z, rlambdaqcd4, nloops)
   print*, '#lambda_{qcd}(4)      ', qcdl4
@@ -362,134 +360,130 @@ program zprime
 
   ! total asymmetries
   ! collect polarised cross sections.
-  if (include_asymmetries == 1) then
-    print *, "Collating polar cross sections..."
-    
-    if (final_state == 0) then
-      do lam3 = -1, +1, 2
-        do lam4 = -1, +1, 2
-          do i = 1, it
-            sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
-                                          *sigma/cnorm(i)
-            error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
-                                           *sd/cnorm(i)
-          end do
-          sigma_pol_tot(lam3, lam4) = 0.d0
-          error_pol_tot(lam3, lam4) = 0.d0
-          do i = 1, it
-            sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
-                                   + sigma_pol(lam3, lam4, i)
-            error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
-                                   + error_pol(lam3, lam4, i)
-          end do
-          error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) &
-          /sigma_pol_tot(lam3, lam4)
-          !        sigma_pol_tot(lam3,lam4)=
-          ! & sqrt(abs(sigma_pol_tot(lam3,lam4)
-          ! &         -sigma_pol_tot(lam3,lam4)**2*dfloat(ncall)))
-          ! & /dfloat(ncall)
+  print *, "Collating polar cross sections..."
+  
+  if (final_state == 0) then
+    do lam3 = -1, +1, 2
+      do lam4 = -1, +1, 2
+        do i = 1, it
+          sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
+                                        *sigma/cnorm(i)
+          error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
+                                         *sd/cnorm(i)
         end do
+        sigma_pol_tot(lam3, lam4) = 0.d0
+        error_pol_tot(lam3, lam4) = 0.d0
+        do i = 1, it
+          sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
+                                 + sigma_pol(lam3, lam4, i)
+          error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
+                                 + error_pol(lam3, lam4, i)
+        end do
+        error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) &
+        /sigma_pol_tot(lam3, lam4)
+        !        sigma_pol_tot(lam3,lam4)=
+        ! & sqrt(abs(sigma_pol_tot(lam3,lam4)
+        ! &         -sigma_pol_tot(lam3,lam4)**2*dfloat(ncall)))
+        ! & /dfloat(ncall)
       end do
-    end if
-    print *, "...complete."
-
-    ! collect unpolarised spatial asymmetry
-    print *, "Collating FB cross sections..."
-    do ifb = 1, n_fb_asymmetries
-      if (o_asym(ifb + 3) == 1) then
-        do iab = -1,+1, 2
-          do i = 1, it
-            sigma_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
-                                     *avgi/cnorm(i)
-            error_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
-                                      *sd/cnorm(i)
-          end do
-          sigma_fb_tot(ifb, iab) = 0.d0
-          error_fb_tot(ifb, iab) = 0.d0
-          do i = 1, it
-            sigma_fb_tot(ifb, iab) = sigma_fb_tot(ifb, iab) &
-                                  + sigma_fb(ifb, i, iab)
-            error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
-                                  + error_fb(ifb, i, iab)
-          end do
-          error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
-                                /sigma_fb_tot(ifb, iab)
-          !         error_fb_tot(iasy)=
-          !    & sqrt(abs(error_fb_tot(iasy)
-          !    &         -sigma_fb_tot(iasy)**2*dfloat(ncall)))
-          !    & /dfloat(ncall)
-        end do
-      end if
     end do
-    print *, "...complete."
-
-    ! define asymmetries
-    print *, "Calculating polar asymmetries..."
-    if (final_state == 0) then
-      ! all
-      atot(1) = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
-                 - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
-                /sigma
-      atoterr(1) = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
-                    +sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
-                   /4.d0*atot(1)
-      ! al
-      atot(2) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
-                 + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) &
-                /sigma
-      atoterr(2) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
-                    +sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) &
-                   /4.d0*atot(2)
-      ! apv
-      atot(3) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) &
-                /sigma/2.d0
-      atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
-                   /2.d0*atot(3)
-    end if
-    print *, "...complete."
-
-    print *, "Calculating FB asymmetries..."
-    do iasy = 4, n_asymmetries
-      ifb = iasy - 3
-      if (o_asym(iasy) > 0) then
-        atot(iasy) = (sigma_fb_tot(ifb, +1) - sigma_fb_tot(ifb, -1))/sigma
-        atoterr(iasy) = sd/avgi*atot(iasy)
-      end if
-    end do
-    print *, "...complete."
-
-
-    ! print asymmetries
-    print *, "Printing total asymmetries..."
-    print*, 'total asymmetries'
-    if (o_asym(1) == 1)  print*, 'ALL:                    uncertainty:'
-    if (o_asym(1) == 1)  print*, atot(1), atoterr(1)
-    if (o_asym(2) == 1)  print*, 'AL:                     uncertainty:'
-    if (o_asym(2) == 1)  print*, atot(2), atoterr(2)
-    if (o_asym(3) == 1)  print*, 'APV:                    uncertainty:'
-    if (o_asym(3) == 1)  print*, atot(3), atoterr(3)
-    if (o_asym(4) == 1)  print*, 'AFB:                    uncertainty:'
-    if (o_asym(4) == 1)  print*, atot(4), atoterr(4)
-    if (o_asym(5) == 1)  print*, 'AFB*:                   uncertainty:'
-    if (o_asym(5) == 1)  print*, atot(5), atoterr(5)
-    if (o_asym(6) == 1)  print*, 'AFB*_reco:              uncertainty:'
-    if (o_asym(6) == 1)  print*, atot(6), atoterr(6)
-    if (o_asym(7) == 1)  print*, 'AtRFB:                  uncertainty:'
-    if (o_asym(7) == 1)  print*, atot(7), atoterr(7)
-    if (o_asym(8) == 1)  print*, "AttbRFB:                uncertainty:"
-    if (o_asym(8) == 1)  print*, atot(8), atoterr(8)
-    if (o_asym(9) == 1)  print*, "ARFB:                   uncertainty:"
-    if (o_asym(9) == 1)  print*, atot(9), atoterr(9)
-    if (o_asym(10) == 1)  print*, "ARFB_reco:              uncertainty:"
-    if (o_asym(10) == 1)  print*, atot(10), atoterr(10)
-    if (o_asym(11) == 1)  print*, 'A_l:                   uncertainty:'
-    if (o_asym(11) == 1)  print*, atot(11), atoterr(11)
-    if (o_asym(12) == 1)  print*, 'AlFB:                  uncertainty:'
-    if (o_asym(12) == 1)  print*, atot(12), atoterr(12)
-    print *, "...complete."
   end if
+  print *, "...complete."
 
-  if (print_all_distributions == 1) call finalise_distributions
+  ! collect unpolarised spatial asymmetry
+  print *, "Collating FB cross sections..."
+  do ifb = 1, nfb
+    do iab = -1,+1, 2
+      do i = 1, it
+        sigma_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
+                                 *avgi/cnorm(i)
+        error_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
+                                  *sd/cnorm(i)
+      end do
+      sigma_fb_tot(ifb, iab) = 0.d0
+      error_fb_tot(ifb, iab) = 0.d0
+      do i = 1, it
+        sigma_fb_tot(ifb, iab) = sigma_fb_tot(ifb, iab) &
+                              + sigma_fb(ifb, i, iab)
+        error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
+                              + error_fb(ifb, i, iab)
+      end do
+      error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
+                            /sigma_fb_tot(ifb, iab)
+      !         error_fb_tot(iasy)=
+      !    & sqrt(abs(error_fb_tot(iasy)
+      !    &         -sigma_fb_tot(iasy)**2*dfloat(ncall)))
+      !    & /dfloat(ncall)
+    end do
+  end do
+  print *, "...complete."
+
+  ! define asymmetries
+  print *, "Calculating polar asymmetries..."
+  if (final_state == 0) then
+    ! all
+    atot(1) = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
+               - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
+              /sigma
+    atoterr(1) = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
+                  +sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
+                 /4.d0*atot(1)
+    ! al
+    atot(2) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
+               + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) &
+              /sigma
+    atoterr(2) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
+                  +sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) &
+                 /4.d0*atot(2)
+    ! apv
+    atot(3) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) &
+              /sigma/2.d0
+    atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
+                 /2.d0*atot(3)
+  end if
+  print *, "...complete."
+
+  print *, "Calculating FB asymmetries..."
+  do ifb = 1, nfb
+    iasy = ifb + 1
+      atot(iasy) = (sigma_fb_tot(ifb, +1) - sigma_fb_tot(ifb, -1))/sigma
+      atoterr(iasy) = sd/avgi*atot(iasy)
+  end do
+  print *, "...complete."
+
+
+  ! print asymmetries
+  print *, "Printing total asymmetries..."
+  print*, 'total asymmetries'
+  print*, 'ALL:                    uncertainty:'
+  print*, atot(1), atoterr(1)
+  print*, 'AL:                     uncertainty:'
+  print*, atot(2), atoterr(2)
+  print*, 'APV:                    uncertainty:'
+  print*, atot(3), atoterr(3)
+  print*, 'AFB:                    uncertainty:'
+  print*, atot(4), atoterr(4)
+  print*, 'AFB*:                   uncertainty:'
+  print*, atot(5), atoterr(5)
+  print*, 'AtRFB:                  uncertainty:'
+  print*, atot(6), atoterr(6)
+  print*, "AttbRFB:                uncertainty:"
+  print*, atot(7), atoterr(7)
+  print*, "ARFB:                   uncertainty:"
+  print*, atot(8), atoterr(8)
+  if (final_state > 0) then
+    print*, 'AFB*_reco:              uncertainty:'
+    print*, atot(11), atoterr(11)
+    print*, "ARFB_reco:              uncertainty:"
+    print*, atot(10), atoterr(10)
+    print*, 'A_l:                   uncertainty:'
+    print*, atot(11), atoterr(11)
+    print*, 'AlFB:                  uncertainty:'
+    print*, atot(12), atoterr(12)
+  end if
+  print *, "...complete."
+
+  if (print_distributions == 1) call finalise_distributions
 
   call rootclose
   call cpu_time(finish_time)

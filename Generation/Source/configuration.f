@@ -20,18 +20,13 @@ module configuration
   integer :: use_nwa
   integer :: use_branching_ratio ! 0 = no, 1 = dilepton, 2 = semi-had, 3 = full-had
   integer :: additional_kinematics
-  integer :: include_transverse
-  integer :: include_asymmetries
-  real :: ytmax
-  real :: yttmin
   integer :: symmetrise_x1x2
   integer :: symmetrise_costheta_t
-  integer :: print_all_distributions
-  integer :: print_2d_distributions
+  integer :: print_distributions
   integer :: include_errors
   integer :: phase_space_only
   integer :: verbose
-  integer :: idir
+  integer :: nfb
 
   ! derived parameters
   integer :: n_final
@@ -144,13 +139,7 @@ module configuration
 
       read(5,*) additional_kinematics
 
-      read(5,*) include_transverse
-
-      read(5,*) include_asymmetries
-
       read(5,*) collider_energy
-
-      read(5,*) yttmin
 
       read(5,*) seed
 
@@ -164,9 +153,7 @@ module configuration
 
       read(5,*) symmetrise_costheta_t
 
-      read(5,*) print_all_distributions
-
-      read(5,*) print_2d_distributions
+      read(5,*) print_distributions
 
       read(5,*) include_errors
 
@@ -179,6 +166,12 @@ module configuration
     subroutine modify_config
 
       print*, "Modifying config file..."
+
+      if(final_state == 0) then
+        nfb = 6
+      else if (final_state > 0) then
+        nfb = 9
+      end if
 
       if(final_state == 0)then
         n_final=4
@@ -220,152 +213,5 @@ module configuration
       
       print*, "...complete."
     end subroutine modify_config
-
-    subroutine setup_channels
-
-      integer i, iasy
-
-      print*, "Switching off irrelevent physics for chosen channel..."
-
-      do iasy = 1, n_asymmetries
-        o_asym(iasy) = include_asymmetries
-      end do
-
-      if (initial_state == 0) then
-        ! disable non-useful variables for pp
-        o_asym(4) = 0
-        o_asym(7) = 0
-        o_asym(8) = 0 
-      end if
-
-      if (initial_state == 1) then
-        ! disable non-useful variables for ppbar
-        o_asym(5) = 0
-        o_asym(6) = 0
-      end if
-
-      if (final_state == 0) then
-        ! disable 2to6 variables 
-        o_ptb = 0
-        o_ptbb = 0
-        o_ptlp = 0
-        o_ptlm = 0
-        o_ptnu = 0
-        o_ptnub = 0
-        o_etab = 0
-        o_etabb = 0
-        o_etalp = 0
-        o_etalm = 0
-        o_etanu = 0
-        o_etanub = 0
-        o_phib = 0
-        o_phibb = 0
-        o_philp = 0
-        o_philm = 0
-        o_phinu = 0
-        o_phinub = 0
-        o_ycolb = 0
-        o_ycolbb = 0
-        o_ycollp = 0
-        o_ycollm = 0
-        o_ycolnu = 0
-        o_ycolnub = 0
-        o_etmiss = 0
-        o_fl = 0
-        o_dphi = 0
-        o_cosfl = 0
-        o_cost7 = 0
-        o_cost5 = 0
-        o_ct7ct5 = 0
-        o_asym(6) = 0
-        o_asym(10) = 0
-        o_asym(11) = 0
-        o_asym(12) = 0
-        o_mtt_reco = 0
-        o_mt_reco = 0
-        o_mtb = 0
-        o_ht = 0
-        o_mttvis = 0
-        o_mt1 = 0
-        o_mt2 = 0
-        o_mt3 = 0
-        o_mct1 = 0
-        o_mct2 = 0
-        o_mct3 = 0
-        o_mlt = 0
-        o_mlct = 0
-      end if
-
-      if (final_state > 0) then
-        ! disable non 2to6 variables
-        o_asym(1) = 0
-        o_asym(2) = 0
-        o_asym(3) = 0
-      end if
-
-      if (final_state == 1) then 
-        ! disable non-useful variables in dileptonic
-        o_mll = 1
-        o_mtt_reco = 0 
-        o_mt_reco = 0
-        o_mtb = 0
-        do i = 4, 10
-          o_asym(i) = 0
-        end do
-      end if
-
-      if (final_state == 2) then
-        ! disable non-useful variables in semi-leptonic
-        o_cost7 = 0
-        o_ct7ct5 = 0
-        o_dphi = 0
-        o_etmiss = 0
-        o_ht = 0
-        o_mttvis = 0
-        o_mt1 = 0
-        o_mt2 = 0
-        o_mt3 = 0
-        o_mct1 = 0
-        o_mct2 = 0
-        o_mct3 = 0
-        o_mlt = 0
-        o_mlct = 0
-        o_asym(5) = 0
-        o_asym(9) = 0
-      end if
-
-      if (final_state == 3) then
-        ! disable non-useful variables in fully hadronic
-        o_mtt_reco = 0
-        o_cost5 = 0
-        o_cost7 = 0
-        o_ct7ct5 = 0
-        o_dphi = 0
-        o_etmiss = 0
-        o_mt_reco = 0
-        o_mtb = 0
-        o_ht = 0
-        o_mttvis = 0
-        o_mt1 = 0
-        o_mt2 = 0
-        o_mt3 = 0
-        o_mct1 = 0
-        o_mct2 = 0
-        o_mct3 = 0
-        o_mlt = 0
-        o_mlct = 0
-
-        o_asym(6) = 0
-        o_asym(10) = 0
-        o_asym(11) = 0
-        o_asym(12) = 0
-      end if
-
-      ! disable A_PV
-      o_asym(3) = 0
-
-      print*, "...complete."
-      
-    end subroutine setup_channels
 
 end module configuration
