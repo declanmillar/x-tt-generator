@@ -1,6 +1,6 @@
 module class_Histogram
   use Configuration, only: include_errors
-  use kinematics, only: sigma
+  use scattering, only: sigma
   use integration, only: it, cnorm
   implicit none
   private

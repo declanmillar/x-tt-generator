@@ -1,16 +1,21 @@
 program zprime
 
-  ! calculates the cross section and generates distributions for
+  ! Calculates the cross section, asymmetries 
+  ! and generates events or distributions for
+
   ! pp -> tt,
-  ! pp -> tt -> bw^+bbarw^- -> bbbare^+nue^-nubarc
-  ! (future:) pp -> bw^+bbarw^- -> b bbar e^+ nu qqbar'
-  ! uses adapted madgraph functions.
-  ! uses cteq6 and mrs99 pdf subroutines.
-  ! authors: declan millar, stefano moretti.
+  ! pp -> tt -> bbWW -> bbllnunu.
+
+  ! Uses adapted MadGraph functions.
+  ! Uses HELAS subroutines.
+  ! Uses CTEQ6 and MRS99 PDF subroutines.
+
+  ! Authors: Declan Millar, Stefano Moretti.
 
   use mathematics, only: pi
   use configuration
   use modelling
+  use scattering
   use kinematics
   use integration
   use distributions  
@@ -19,23 +24,19 @@ program zprime
 
   external dsigma
 
-  real :: sigma_pol_tot(-1:1, -1:1), error_pol_tot(-1:1, -1:1)
-  real :: sigma_fb_tot(n_fb_asymmetries, -1:1), error_fb_tot(n_fb_asymmetries, -1:1)
-
-  real :: avgi, chi2a, error, sd, stantot, alfas, qcdl4
-  integer :: ndimensions, iab, iasy, ifb, icteq
-  integer :: lam3,lam4
-  real :: atot(n_asymmetries), atoterr(n_asymmetries)
-
-  ! branching ratio for t->bev=bmv=btv (with qcd corrections?)
-  real :: brtbln = 0.10779733d0
-
-  ! branching ratio for t->bev=bmv=btv=1/9 (tree level)
-  ! real brtbln/0.11111111d0/
-
-  ! branching ratio for t->beq=bmq=btq=6/9 (tree level)
-  ! real :: brtbeq=0.66666666d0
-
+  real :: sigma_ee, sigma_emu, sigma_eq, sigma_qq
+  real :: error_sigma_ee, error_sigma_emu, error_sigma_eq, error_sigma_qq
+  real :: sigma_pol_tot(-1:1,-1:1), error_pol_tot(-1:1,-1:1)
+  real :: sigma_fb_tot(-1:1,n_fb_asymmetries), error_fb_tot(-1:1,n_fb_asymmetries)
+  real :: all, error_all, al, error_al, apv, error_apv
+  real :: afb(n_fb_asymmetries), error_afb(n_fb_asymmetries)
+  real :: chi2_sigma, error_sigma, stantot
+  real :: alfas, qcdl4
+  ! branching ratio for t->benu=bmuv=btaumu (1/9 with QCD corrections)
+  real, parameter :: brtbln = 0.10779733d0
+  ! branching ratio for t->bqq is leftover after 3 l generations
+  real, parameter :: brtbqq = 1 - brtbln*3
+  integer :: ndimensions, iab, iasy, ifb, icteq, lam3, lam4
   integer :: i, j, k
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
@@ -46,7 +47,7 @@ program zprime
 
   call modify_config
 
-  print *, "Output Ntuple will be written to ", ntuple_file
+  print*, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
 
   if (print_distributions == 1) then
@@ -68,7 +69,7 @@ program zprime
   if (structure_function == 8) qcdl4 = 0.229d0
   if (structure_function == 9) qcdl4 = 0.383d0
 
-  ! qcdl4 is qcd lambda4 (to match pdf fits).
+  ! Match Lambda QCD for PDF fits.
   rlambdaqcd4 = qcdl4
 
   ! initialise cteq grids.
@@ -91,6 +92,20 @@ program zprime
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_standard_model
   call initialise_zprimes
+
+  if (final_state == 0) then
+    ! multiply by branching ratios
+    fac_ee = brtbln*brtbln
+    fac_emu = 2*brtbln*brtbln
+    fac_eq = brtbln*brtbqq
+    fac_qq = brtbqq*brtbqq
+  else if(final_state > 0) then
+    ! scale dilepton to other classifications
+    fac_ee = 1
+    fac_emu = 2
+    fac_eq = 12
+    fac_qq = 36  
+  end if
 
   ! dimensions
   if (final_state == 0) then
@@ -221,24 +236,24 @@ program zprime
   print*, 'notes'
   print*, 'units: gev'
   print*, 'quarks: all massless except t, b.'
-  if (structure_function == 1) print*, 'pdfs: cteq6m.'
-  if (structure_function == 2) print*, 'pdfs: cteq6d.'
-  if (structure_function == 3) print*, 'pdfs: cteq6l.'
-  if (structure_function == 4) print*, 'pdfs: cteq6l1.'
-  if (structure_function == 5) print*, 'pdfs: mrs99 (cor01).'
-  if (structure_function == 6) print*, 'pdfs: mrs99 (cor02).'
-  if (structure_function == 7) print*, 'pdfs: mrs99 (cor03).'
-  if (structure_function == 8) print*, 'pdfs: mrs99 (cor04).'
-  if (structure_function == 9) print*, 'pdfs: mrs99 (cor05).'
+  if (structure_function == 1) print*, 'PDFs: CTEQ6m.'
+  if (structure_function == 2) print*, 'PDFs: CTEQ6d.'
+  if (structure_function == 3) print*, 'PDFs: CTEQ6l.'
+  if (structure_function == 4) print*, 'PDFs: CTEQ6l1.'
+  if (structure_function == 5) print*, 'PDFs: MRS99 (cor01).'
+  if (structure_function == 6) print*, 'PDFs: MRS99 (cor02).'
+  if (structure_function == 7) print*, 'PDFs: MRS99 (cor03).'
+  if (structure_function == 8) print*, 'PDFs: MRS99 (cor04).'
+  if (structure_function == 9) print*, 'PDFs: MRS99 (cor05).'
   if ((final_state >= 1) .and. (use_nwa == 0)) print*, 'tops: off-shell.'
   if ((final_state >= 1) .and. (use_nwa == 1)) print*, 'tops: nwa.'
   print*, 'bsm model_name: ', model_name
-  if (include_qcd == 1) print*, 'qcd: on '
-  if (include_qcd == 0) print*, 'qcd: off'
-  if (include_ew == 1) print*, 'ew:  on '
-  if (include_ew == 0) print*, 'ew:  off'
-  if (include_bsm == 1) print*, 'bsm: on '
-  if (include_bsm == 0) print*, 'bsm: off'
+  if (include_qcd == 1) print*, 'QCD: on '
+  if (include_qcd == 0) print*, 'QCD: off'
+  if (include_ew == 1) print*, 'EW:  on '
+  if (include_ew == 0) print*, 'EW:  off'
+  if (include_bsm == 1) print*, 'BSM: on '
+  if (include_bsm == 0) print*, 'BSM: off'
   if (interference == 0) print*, 'interference: none'
   if (interference == 1) print*, 'interference: sm'
   if (interference == 2) print*, 'interference: full'
@@ -307,181 +322,137 @@ program zprime
   end if
 
   ! integrate 
-  print *, 'Starting integration... '
+  print*, 'Starting integration... '
   it = 0 
-  call vegas(ndimensions, dsigma, avgi, sd, chi2a)
+  call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
-  print *, "...complete."  
+  print*, "...complete."  
 
-  if (final_state == 0 .and. use_branching_ratio == 1) then
-    ! multiply by branching ratios
-    avgi = avgi*brtbln*brtbln
-    sd = sd*brtbln*brtbln
-  end if
+  ! convert results to different tt classifications
+  sigma_ee = sigma*fac_ee
+  error_sigma_ee = error_sigma*fac_ee
+  sigma_emu = sigma*fac_emu
+  error_sigma_emu = error_sigma*fac_emu
+  sigma_eq = sigma*fac_eq
+  error_sigma_eq = error_sigma*fac_eq
+  sigma_qq = sigma*fac_qq
+  error_sigma_qq = error_sigma*fac_qq
 
-  if (final_state == 2) then
-    ! multiply by dilepton to semi-hadronic conversion
-    avgi = avgi*12
-    sd = sd*12
-  end if
-
-  if (final_state == 3) then
-    ! multiply by dilepton to fully hadronic conversion
-    avgi = avgi*36
-    sd = sd*36
-  end if
-
-  ! collect total cross-section
-  sigma = avgi
-  error = sd
-
-  ! print integrated cross section
-  print*, 'integrated cross section'
   if (sigma == 0.d0) then
-    print*, 'sigma = 0  ! check permitted gauge sectors.'
+    print*, "Error: sigma = 0. Are any gauge sectors active?"
     stop
   else
-    print*, 'sigma (pb)', 'error (same units)'
-    print*, sigma, error
-    print*, '(using ', npoints, ' points)'
+    print*, "Using ", npoints, " points:"
+    if (final_state == 0) then
+      print*, "sigma_tt (pb)", "Uncertainty (pb)"
+      print*, sigma, error_sigma
+    end if
+    print*, "sigma_ee (pb)", "Uncertainty (pb)"
+    print*, sigma_ee, error_sigma_ee
+    print*, "sigma_emu (pb)", "Uncertainty (pb)"
+    print*, sigma_emu, error_sigma_emu
+    print*, "sigma_eq (pb)", "Uncertainty (pb)"
+    print*, sigma_eq, error_sigma_eq
+    print*, "sigma_qq (pb)", "Uncertainty (pb)"
+    print*, sigma_qq, error_sigma_qq
   end if
 
-  ! re-weight distributions for different iterations
+  print*, "Calculating factor to re-weight for different iterations."
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
-  end do
-  do i = 1, it
     standdevl(i) = standdevl(i)*standdevl(i)*stantot
-  end do
-  do i = 1, it
     cnorm(i) = resl(i)*standdevl(i)
   end do
+  print*, "...complete."
 
-  ! total asymmetries
-  ! collect polarised cross sections.
-  print *, "Collating polar cross sections..."
-  
+  print*, "Collating polar cross sections..."
   if (final_state == 0) then
     do lam3 = -1, +1, 2
       do lam4 = -1, +1, 2
+        sigma_pol_tot(lam3,lam4) = 0.d0
+        error_pol_tot(lam3,lam4) = 0.d0
         do i = 1, it
-          sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
-                                        *sigma/cnorm(i)
-          error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) &
-                                         *sd/cnorm(i)
+          sigma_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*sigma/cnorm(i)
+          error_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*error_sigma/cnorm(i)
+          sigma_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + sigma_pol(lam3,lam4,i)
+          error_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + error_pol(lam3,lam4,i)
         end do
-        sigma_pol_tot(lam3, lam4) = 0.d0
-        error_pol_tot(lam3, lam4) = 0.d0
-        do i = 1, it
-          sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
-                                 + sigma_pol(lam3, lam4, i)
-          error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) &
-                                 + error_pol(lam3, lam4, i)
-        end do
-        error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) &
-        /sigma_pol_tot(lam3, lam4)
-        !        sigma_pol_tot(lam3,lam4)=
-        ! & sqrt(abs(sigma_pol_tot(lam3,lam4)
-        ! &         -sigma_pol_tot(lam3,lam4)**2*dfloat(ncall)))
-        ! & /dfloat(ncall)
+        error_pol_tot(lam3,lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
       end do
     end do
   end if
-  print *, "...complete."
+  print*, "...complete."
 
-  ! collect unpolarised spatial asymmetry
-  print *, "Collating FB cross sections..."
+  print*, "Collating FB cross sections..."
   do ifb = 1, nfb
     do iab = -1,+1, 2
+      sigma_fb_tot(iab,ifb) = 0.d0
+      error_fb_tot(iab,ifb) = 0.d0
       do i = 1, it
-        sigma_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
-                                 *avgi/cnorm(i)
-        error_fb(ifb, i, iab) = sigma_fb(ifb, i, iab) &
-                                  *sd/cnorm(i)
+        sigma_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*sigma/cnorm(i)
+        error_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*error_sigma/cnorm(i)
+        sigma_fb_tot(iab,ifb) = sigma_fb_tot(iab,ifb) + sigma_fb(iab,ifb,i)
+        error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb) + error_fb(iab,ifb,i)
       end do
-      sigma_fb_tot(ifb, iab) = 0.d0
-      error_fb_tot(ifb, iab) = 0.d0
-      do i = 1, it
-        sigma_fb_tot(ifb, iab) = sigma_fb_tot(ifb, iab) &
-                              + sigma_fb(ifb, i, iab)
-        error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
-                              + error_fb(ifb, i, iab)
-      end do
-      error_fb_tot(ifb, iab) = error_fb_tot(ifb, iab) &
-                            /sigma_fb_tot(ifb, iab)
-      !         error_fb_tot(iasy)=
-      !    & sqrt(abs(error_fb_tot(iasy)
-      !    &         -sigma_fb_tot(iasy)**2*dfloat(ncall)))
-      !    & /dfloat(ncall)
+      error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb)/sigma_fb_tot(iab,ifb)
     end do
   end do
-  print *, "...complete."
+  print*, "...complete."
 
-  ! define asymmetries
-  print *, "Calculating polar asymmetries..."
+  print*, "Calculating polar asymmetries..."
   if (final_state == 0) then
-    ! all
-    atot(1) = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
-               - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
-              /sigma
-    atoterr(1) = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
-                  +sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) &
-                 /4.d0*atot(1)
-    ! al
-    atot(2) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
-               + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) &
-              /sigma
-    atoterr(2) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
-                  +sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) &
-                 /4.d0*atot(2)
-    ! apv
-    atot(3) = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) &
-              /sigma/2.d0
-    atoterr(3) = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) &
-                 /2.d0*atot(3)
-  end if
-  print *, "...complete."
+    all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
+         - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
+    error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
+               + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/4.d0*all
 
-  print *, "Calculating FB asymmetries..."
+    al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
+        + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1))/sigma
+    error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
+              + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1))/4.d0*al
+
+    apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1))/sigma/2.d0
+    error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
+  end if
+  print*, "...complete."
+
+  print*, "Calculating FB asymmetries..."
   do ifb = 1, nfb
-    iasy = ifb + 1
-      atot(iasy) = (sigma_fb_tot(ifb, +1) - sigma_fb_tot(ifb, -1))/sigma
-      atoterr(iasy) = sd/avgi*atot(iasy)
+      afb(ifb) = (sigma_fb_tot(+1,ifb) - sigma_fb_tot(-1,ifb))/sigma
+      error_afb(ifb) = error_sigma/sigma*afb(ifb)
   end do
-  print *, "...complete."
+  print*, "...complete."
 
-
-  ! print asymmetries
-  print *, "Printing total asymmetries..."
-  print*, 'total asymmetries'
-  print*, 'ALL:                    uncertainty:'
-  print*, atot(1), atoterr(1)
-  print*, 'AL:                     uncertainty:'
-  print*, atot(2), atoterr(2)
-  print*, 'APV:                    uncertainty:'
-  print*, atot(3), atoterr(3)
-  print*, 'AFB:                    uncertainty:'
-  print*, atot(4), atoterr(4)
-  print*, 'AFB*:                   uncertainty:'
-  print*, atot(5), atoterr(5)
-  print*, 'AtRFB:                  uncertainty:'
-  print*, atot(6), atoterr(6)
+  print*, "Printing total asymmetries..."
+  print*, "total asymmetries"
+  print*, "ALL:                    uncertainty:"
+  print*, all, error_all
+  print*, "AL:                     uncertainty:"
+  print*, al, error_al
+  print*, "APV:                    uncertainty:"
+  print*, apv, error_apv
+  print*, "AFB:                    uncertainty:"
+  print*, afb(1), error_afb(1)
+  print*, "AFB*:                   uncertainty:"
+  print*, afb(2), error_afb(2)
+  print*, "AtRFB:                  uncertainty:"
+  print*, afb(3), error_afb(3)
   print*, "AttbRFB:                uncertainty:"
-  print*, atot(7), atoterr(7)
+  print*, afb(4), error_afb(4)
   print*, "ARFB:                   uncertainty:"
-  print*, atot(8), atoterr(8)
+  print*, afb(5), error_afb(5)
   if (final_state > 0) then
-    print*, 'AFB*_reco:              uncertainty:'
-    print*, atot(11), atoterr(11)
-    print*, "ARFB_reco:              uncertainty:"
-    print*, atot(10), atoterr(10)
-    print*, 'A_l:                   uncertainty:'
-    print*, atot(11), atoterr(11)
-    print*, 'AlFB:                  uncertainty:'
-    print*, atot(12), atoterr(12)
+    print*, "AFB*_reco:             uncertainty:"
+    print*, afb(6), error_afb(6)
+    print*, "ARFB_reco:             uncertainty:"
+    print*, afb(7), error_afb(7)
+    print*, "A_l:                   uncertainty:"
+    print*, afb(8), error_afb(8)
+    print*, "AlFB:                  uncertainty:"
+    print*, afb(9), error_afb(9)
   end if
-  print *, "...complete."
+  print*, "...complete."
 
   if (print_distributions == 1) call finalise_distributions
 

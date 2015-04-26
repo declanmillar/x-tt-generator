@@ -133,8 +133,6 @@ module configuration
 
       read(5,*) interference
 
-      read(5,*) use_branching_ratio
-
       read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
 
       read(5,*) additional_kinematics
@@ -168,7 +166,7 @@ module configuration
       print*, "Modifying config file..."
 
       if(final_state == 0) then
-        nfb = 6
+        nfb = 5
       else if (final_state > 0) then
         nfb = 9
       end if

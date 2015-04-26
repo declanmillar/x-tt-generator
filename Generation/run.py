@@ -28,7 +28,6 @@ parser.add_option("-e", "--include_ew", default=1, const=0, action="store_const"
 parser.add_option("-z", "--include_bsm", default=1, const=0, action="store_const", help="turn off Z'")
 parser.add_option("-i", "--interference", default=2, type="int", help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
 parser.add_option("-w", "--use_NWA", default=0, const=1, action="store_const", help="turn on use_NWA")
-parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="store_const", help="multiply 2to2 process by use_branching_ratio")
 parser.add_option("-K", "--additional_kinematics", default=1, const=0, action="store_const", help="Turn off additional kinematics")
 parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
 parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
@@ -160,8 +159,6 @@ print >> config, '%s ! include_bsm' % options.include_bsm
 print >> config, '%s ! phase_space_only' % options.phase_space_only
 
 print >> config, '%s ! interference' % options.interference
-
-print >> config, '%s ! use_branching_ratio' % options.use_branching_ratio
 
 print >> config, '%s ! use_NWA' % options.use_NWA
 

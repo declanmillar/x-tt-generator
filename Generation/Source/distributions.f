@@ -2,7 +2,7 @@ module distributions
 
   use configuration
   use mathematics, only: pi
-  use kinematics, only: sigma
+  use scattering, only: sigma
   use integration, only: it, cnorm
   use class_histogram
   use class_histogram2d

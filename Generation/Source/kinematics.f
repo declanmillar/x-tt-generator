@@ -6,11 +6,7 @@ module kinematics
 
   real :: m3, m4, m5, m6, m7, m8
   real :: s
-  real :: sigma
-  real, parameter :: unit_conv = 0.38937966d9 ! GeV^-2 to nb
-  real :: sigma_pol(-1:1, -1:1, 20), error_pol(-1:1, -1:1, 20)
-  real :: sigma_fb(n_fb_asymmetries, 20, -1:1), error_FB(n_fb_asymmetries, 20, -1:1)
-  integer :: npoints
+  real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb
 
 end module kinematics
 
@@ -71,8 +67,7 @@ end function longitudinal_neutrino_momentum
 
 function mass(p)
 
-  ! finds the longitudinal neutrino momentum for semi-hadronic decay
-  ! assuming all particles are massless
+  ! calculates the invarient length of a 4-vector
 
     implicit none
 
