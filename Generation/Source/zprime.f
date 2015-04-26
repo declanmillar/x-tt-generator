@@ -70,8 +70,8 @@ program zprime
   if (structure_function == 9) qcdl4 = 0.383d0
 
   ! Match Lambda QCD for PDF fits.
-  rlambdaqcd4 = qcdl4
-  print*, "rlambdaqcd4",rlambdaqcd4
+  lambdaqcd4 = qcdl4
+  print*, "lambdaqcd4",lambdaqcd4
 
   ! initialise cteq grids.
   if (structure_function <= 4) then
@@ -270,7 +270,7 @@ program zprime
   print*, '#sqrt{s}              ', collider_energy
   print*, 'at |y| <              ', 100
   print*, 'loops a_s evaluated at', nloops
-  print*, 'a_{s}(m_{z})          ', alfas(rm_z, rlambdaqcd4, nloops)
+  print*, 'a_{s}(m_{z})          ', alfas(rm_z, lambdaqcd4, nloops)
   print*, '#lambda_{qcd}(4)      ', qcdl4
   print*, 'm_{b}                 ', fmass(12)
   print*, '#gamma_{b}            ', fwidth(12)
