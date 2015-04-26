@@ -47,6 +47,8 @@ program zprime
 
   call modify_config
 
+  print*,"rm_w"rm_w
+
   print*, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
 
