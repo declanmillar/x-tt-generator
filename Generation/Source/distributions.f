@@ -340,6 +340,10 @@ subroutine disable_distributions
 
   print *, "Disabling irrelevent distributions..."
 
+  do iasy = 1, n_asymmetries
+    o_asym(iasy) = 1
+  end do
+
   if (initial_state == 0) then
     ! disable non-useful variables for pp
     o_asym(4) = 0
@@ -355,26 +359,26 @@ subroutine disable_distributions
 
   if (final_state == 0) then
     ! disable 2to6 variables 
-    o_ptb = 0
-    o_ptbb = 0
+    o_ptt = 0
+    o_pttb = 0
     o_ptlp = 0
     o_ptlm = 0
     o_ptnu = 0
     o_ptnub = 0
-    o_etab = 0
-    o_etabb = 0
+    o_etat = 0
+    o_etatb = 0
     o_etalp = 0
     o_etalm = 0
     o_etanu = 0
     o_etanub = 0
-    o_phib = 0
-    o_phibb = 0
+    o_phit = 0
+    o_phitb = 0
     o_philp = 0
     o_philm = 0
     o_phinu = 0
     o_phinub = 0
-    o_ycolb = 0
-    o_ycolbb = 0
+    o_ycolt = 0
+    o_ycoltb = 0
     o_ycollp = 0
     o_ycollm = 0
     o_ycolnu = 0
@@ -472,10 +476,6 @@ subroutine disable_distributions
 
   ! disable A_PV
   o_asym(3) = 0
-
-  do iasy = 1, n_asymmetries
-    o_asym(iasy) = 1
-  end do
 
   if ((o_mtt == 0) .or. (o_dphi == 0)) o_mttdphi = 0
   if ((o_mtt == 0) .or. (o_ct7ct5 == 0)) o_mttct7ct5 = 0
@@ -586,7 +586,6 @@ subroutine finalise_distributions
   if (o_mct3dphi == 1) call h2_mct3dphi%finalise()
   if (o_mltdphi == 1) call h2_mltdphi%finalise()
   if (o_mlctdphi == 1) call h2_mlctdphi%finalise()
-
 
   ! plot distributions in all asymmetries
   if((o_sigp == 1) .and. (o_sigm == 1))then

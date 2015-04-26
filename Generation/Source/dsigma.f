@@ -146,7 +146,7 @@ function dsigma(x,wgt)
   real :: p356col(0:3), p356_opp(0:3), p478col(0:3), p478_opp(0:3), p356col_reco(0:3)
   real :: p3rest(0:3), p4rest(0:3), p5rest(0:3), p6rest(0:3), p7rest(0:3), p356(0:3), p478(0:3)
   real :: p6col_reco(0:3), p6_boost(0:3), p6_reco(0:3)
-  real :: ptotalcol(0:3), ptotalcol_opp(0:3), ptotalcol_reco(0:3), ptotalcol_reco_opp(0:3)
+  real :: ptotalcol(0:3), ptotalcol_opp(0:3), ptotalcol_reco(0:3), ptotalcol_reco_opp(0:3), ptotal_reco(0:3)
 
   ! check phase space
   real :: delta_e, delta_x, delta_y, delta_z, pt68, pt682
@@ -837,8 +837,6 @@ function dsigma(x,wgt)
         end if
         go to 666
       end if
-
-      print*, lambdaqcd4, nloops
     
       if (verbose == 1) print*, "Calculating QCD coupling..."
       a_s = alfas(qq,lambdaqcd4,nloops)
@@ -1393,7 +1391,7 @@ function dsigma(x,wgt)
         if (final_state > 0) then
 
           dphi = abs(phi(5) - phi(7))
-          call rootadddouble(dphi, "Delta_phi_l")
+          call rootadddouble(dphi, "Delta_phi_l")          
 
           ! calculate visible and missing transverse momentum
           etvis2 = 0d0
@@ -1418,7 +1416,17 @@ function dsigma(x,wgt)
           p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
           call rootadddouble(p6col_reco(3), "Pz6_reco")
           p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
-          call rootadddouble(p6col_reco(0), "E6_reco")
+          call rootadddouble(p6col_reco(0), "E6_reco") 
+
+          ! total reconstructed momentum in collider frame
+          ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
+
+          ! find spatially opposite 4-momentum
+          ptotalcol_reco_opp(0) = ptotalcol_reco(0)
+          do i = 1, 3
+              ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
+          end do
+          call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
 
           yt_reco = 0.5*log((q(4,3)+q(4,5)+p6_reco(0) &
           +q(3,3)+q(3,5)+p6_reco(3)) &
@@ -1429,6 +1437,9 @@ function dsigma(x,wgt)
           delta_absy_reco = abs(yt_reco) - abs(ytb)
           call rootadddouble(delta_absy_reco, "Delta_y_reco")
 
+          ptotal_reco = p1 + p2 + p3 + p4 + p5 + p6_reco + p7 + p8
+          ytt_reco = 0.5*log((ptotal_reco(0) + ptotal_reco(3))/(ptotal_reco(0) - ptotal_reco(3)))          
+
           ! calculate cos(theta_t) reco
           costhetat_reco = &
           ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
@@ -1438,7 +1449,7 @@ function dsigma(x,wgt)
               + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
               + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
           /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
-          call rootadddouble(costhetat_reco, "costhetat_reco")
+          call rootadddouble(costhetat_reco, "costhetat_reco")          
 
           ! truth anti top mass
           call rootadddouble(m478, "m478")
@@ -1447,6 +1458,9 @@ function dsigma(x,wgt)
           p356col_reco = p3col + p5col + p6col_reco
           m356_reco = mass(p356col_reco)
           call rootadddouble(m356_reco, "mt_reco")
+
+          ! calculate ytt reco
+
 
           ! calculate Mtt reco
           mtt_reco2 = (qcol(4,3) + qcol(4,4) &
@@ -1458,7 +1472,7 @@ function dsigma(x,wgt)
                                   +  qcol(i,7) + qcol(i,8))**2
           end do
           mtt_reco = sqrt(mtt_reco2)
-          call rootadddouble(mtt_reco, "Mtt_reco")
+          call rootadddouble(mtt_reco, "Mtt_reco")          
 
           ! "reconstructed" reconstructed costheta_t
           costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
@@ -1481,16 +1495,6 @@ function dsigma(x,wgt)
             p478_opp(i) = -q478(i)
           end do
           call boostx(p7, p478_opp, p7rest)
-
-          ! total reconstructed momentum in collider frame
-          ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
-
-          ! find spatially opposite 4-momentum
-          ptotalcol_reco_opp(0) = ptotalcol_reco(0)
-          do i = 1, 3
-              ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
-          end do
-          call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
 
           ! calculate cos(theta_l+) in top rest frame
           costheta5 = (p5rest(1)*q356(1) &

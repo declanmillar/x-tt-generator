@@ -47,8 +47,6 @@ program zprime
 
   call modify_config
 
-  print*,"rm_w"rm_w
-
   print*, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
 
@@ -73,7 +71,6 @@ program zprime
 
   ! Match Lambda QCD for PDF fits.
   lambdaqcd4 = qcdl4
-  print*, "lambdaqcd4",lambdaqcd4
 
   ! initialise cteq grids.
   if (structure_function <= 4) then
