@@ -5,7 +5,6 @@
 #include <fstream>
 #include <string>
 #include <numeric>
-#include <boost/program_options.hpp>
 
 #include <stdlib.h>
 #include <TVector.h>
@@ -22,8 +21,6 @@
 #include "plot2dDistribution.cpp"
 #include "plotAsymmetry.cpp"
 // #include "AtlasROOTStyle.cpp"
-
-namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
@@ -56,32 +53,6 @@ int main(int argc, char *argv[])
   lastIndex = logFileName.find_last_of("."); 
   fileName = logFileName.substr(0, lastIndex); 
   outputFileName = fileName + ".root";
-
-  po::options_description desc("Options for my program");
-    desc.add_options()
-      ("help,h", "Display this help message and quit.")
-      ("luminosity,L", po::value<double>(& luminosity)->default_value(0),
-      "Multiply the cross section by the luminosity in pb-1 for the number of events.")
-      ("efficiency,e", po::value<double>(& efficiency)->default_value(0),
-      "Multiply the Number of events by the reconstruction efficiency.")
-        // ("logY,l", po::value<bool>(& logY)->default_value(false),
-        //     "If true make y-axis logarithmic scale.")
-
-        // ("normalize,n", po::value<bool>(& normalize)->default_value(false),
-        //     "If true normalize histos")
-
-        // both rangeMin and rangeMax must be set simultaneously for any effect.
-        ;
-
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
-
-  // Help message
-  if (vm.count("help")) {
-    std::cout << desc << "\n";
-    return 1;
-  }
 
   // Triggers
   dist = "DISTRIBUTION";

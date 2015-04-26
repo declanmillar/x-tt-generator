@@ -20,7 +20,7 @@ OUT = Binary
 F = gfortran
 
 # Flags
-FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow -fmax-errors=0
+FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	# add roottuple libraries qmulpc007

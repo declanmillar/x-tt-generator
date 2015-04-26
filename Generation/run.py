@@ -72,13 +72,6 @@ executable="Binary/"+"zprime"
 sfinal = "2to2" if (final_state=="0") else "2to6"
 config=StringIO.StringIO()
 
-if (final_state == "1"):
-  sfinal += "_DL"
-elif (final_state == "2"):
-  sfinal += "_SL"
-elif (final_state == "3"):
-  sfinal += "_FH"
-
 # Gauge sectors
 if   options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 1:
   sector = ""

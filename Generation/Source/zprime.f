@@ -384,22 +384,6 @@ program zprime
   end if
   print*, "...complete."
 
-  print*, "Collating FB cross sections..."
-  do ifb = 1, nfb
-    do iab = -1,+1, 2
-      sigma_fb_tot(iab,ifb) = 0.d0
-      error_fb_tot(iab,ifb) = 0.d0
-      do i = 1, it
-        sigma_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*sigma/cnorm(i)
-        error_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*error_sigma/cnorm(i)
-        sigma_fb_tot(iab,ifb) = sigma_fb_tot(iab,ifb) + sigma_fb(iab,ifb,i)
-        error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb) + error_fb(iab,ifb,i)
-      end do
-      error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb)/sigma_fb_tot(iab,ifb)
-    end do
-  end do
-  print*, "...complete."
-
   print*, "Calculating polar asymmetries..."
   if (final_state == 0) then
     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
@@ -417,40 +401,62 @@ program zprime
   end if
   print*, "...complete."
 
-  print*, "Calculating FB asymmetries..."
-  do ifb = 1, nfb
-      afb(ifb) = (sigma_fb_tot(+1,ifb) - sigma_fb_tot(-1,ifb))/sigma
-      error_afb(ifb) = error_sigma/sigma*afb(ifb)
-  end do
-  print*, "...complete."
+  if (additional_kinematics == 1) then
+    print*, "Collating FB cross sections..."
+    do ifb = 1, nfb
+      do iab = -1,+1, 2
+        sigma_fb_tot(iab,ifb) = 0.d0
+        error_fb_tot(iab,ifb) = 0.d0
+        do i = 1, it
+          sigma_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*sigma/cnorm(i)
+          error_fb(iab,ifb,i) = sigma_fb(iab,ifb,i)*error_sigma/cnorm(i)
+          sigma_fb_tot(iab,ifb) = sigma_fb_tot(iab,ifb) + sigma_fb(iab,ifb,i)
+          error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb) + error_fb(iab,ifb,i)
+        end do
+        error_fb_tot(iab,ifb) = error_fb_tot(iab,ifb)/sigma_fb_tot(iab,ifb)
+      end do
+    end do
+    print*, "...complete."
+
+    print*, "Calculating FB asymmetries..."
+    do ifb = 1, nfb
+        afb(ifb) = (sigma_fb_tot(+1,ifb) - sigma_fb_tot(-1,ifb))/sigma
+        error_afb(ifb) = error_sigma/sigma*afb(ifb)
+    end do
+    print*, "...complete."
+  end if
 
   print*, "Printing total asymmetries..."
   print*, "total asymmetries"
-  print*, "ALL:                    uncertainty:"
-  print*, all, error_all
-  print*, "AL:                     uncertainty:"
-  print*, al, error_al
-  print*, "APV:                    uncertainty:"
-  print*, apv, error_apv
-  print*, "AFB:                    uncertainty:"
-  print*, afb(1), error_afb(1)
-  print*, "AFB*:                   uncertainty:"
-  print*, afb(2), error_afb(2)
-  print*, "AtRFB:                  uncertainty:"
-  print*, afb(3), error_afb(3)
-  print*, "AttbRFB:                uncertainty:"
-  print*, afb(4), error_afb(4)
-  print*, "ARFB:                   uncertainty:"
-  print*, afb(5), error_afb(5)
-  if (final_state > 0) then
-    print*, "AFB*_reco:             uncertainty:"
-    print*, afb(6), error_afb(6)
-    print*, "ARFB_reco:             uncertainty:"
-    print*, afb(7), error_afb(7)
-    print*, "A_l:                   uncertainty:"
-    print*, afb(8), error_afb(8)
-    print*, "AlFB:                  uncertainty:"
-    print*, afb(9), error_afb(9)
+  if (final_state == 0) then
+    print*, "ALL:                    uncertainty:"
+    print*, all, error_all
+    print*, "AL:                     uncertainty:"
+    print*, al, error_al
+    print*, "APV:                    uncertainty:"
+    print*, apv, error_apv
+  end if
+  if (additional_kinematics == 1) then
+    print*, "AFB:                    uncertainty:"
+    print*, afb(1), error_afb(1)
+    print*, "AFB*:                   uncertainty:"
+    print*, afb(2), error_afb(2)
+    print*, "AtRFB:                  uncertainty:"
+    print*, afb(3), error_afb(3)
+    print*, "AttbRFB:                uncertainty:"
+    print*, afb(4), error_afb(4)
+    print*, "ARFB:                   uncertainty:"
+    print*, afb(5), error_afb(5)
+    if (final_state > 0) then
+      print*, "AFB*_reco:             uncertainty:"
+      print*, afb(6), error_afb(6)
+      print*, "ARFB_reco:             uncertainty:"
+      print*, afb(7), error_afb(7)
+      print*, "A_l:                   uncertainty:"
+      print*, afb(8), error_afb(8)
+      print*, "AlFB:                  uncertainty:"
+      print*, afb(9), error_afb(9)
+    end if
   end if
   print*, "...complete."
 
