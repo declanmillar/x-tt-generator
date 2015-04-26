@@ -840,8 +840,11 @@ function dsigma(x,wgt)
     
       if (verbose == 1) print*, "Calculating QCD coupling..."
       a_s = alfas(qq,rlambdaqcd4,nloops)
+      print*, a_s
       gs2 = 4.d0*pi*a_s
+      print*, gs2
       gs = sqrt(gs2)
+      print*, gs
       if (verbose == 1) print*, "...complete."
 
       ! initilise
