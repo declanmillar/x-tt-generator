@@ -203,7 +203,7 @@ function widthZp(rm_Zp)
   ctw=sqrt(1.d0-s2w)
   e=sqrt(4.d0*pi*a_em)
   gweak=e/sqrt(s2w)
-  a_s=alfas(rm_Zp,rlambdaQCD4,nloops)
+  a_s=alfas(rm_Zp,lambdaQCD4,nloops)
   GF=1.16639D-5
   ! renormalise e.
   e=sqrt(s2w*8.d0*rm_Z*rm_Z*ctw*ctw*GF/sqrt(2.d0))
