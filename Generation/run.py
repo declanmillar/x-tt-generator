@@ -130,7 +130,7 @@ filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, al
 os = sys.platform
 if (os == "darwin"):
   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
-elif (os == "linux"):
+elif (os == "linux2"):
   ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
   
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
