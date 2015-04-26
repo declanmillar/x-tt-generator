@@ -71,6 +71,7 @@ program zprime
 
   ! Match Lambda QCD for PDF fits.
   rlambdaqcd4 = qcdl4
+  print*, "rlambdaqcd4",rlambdaqcd4
 
   ! initialise cteq grids.
   if (structure_function <= 4) then
