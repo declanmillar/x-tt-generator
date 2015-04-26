@@ -39,7 +39,7 @@ module modelling
 
 ! Other SM parameters
   real, parameter :: a_EM = 0.0078125, s2w = 0.2320d0
-  real :: rlambdaQCD4
+  real :: rlambdaqcd4
   integer :: nloops
 
 ! Zprime parameters

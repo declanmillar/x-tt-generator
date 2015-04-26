@@ -838,7 +838,7 @@ function dsigma(x,wgt)
         go to 666
       end if
 
-      print*, qq, rlambdaqcd4, nloops
+      print*, rlambdaqcd4, nloops
     
       if (verbose == 1) print*, "Calculating QCD coupling..."
       a_s = alfas(qq,rlambdaqcd4,nloops)
