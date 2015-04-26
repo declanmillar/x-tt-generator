@@ -371,7 +371,6 @@ subroutine finalise_distributions
   print*, "Printing histograms..."
   open(unit = 10, file = 'Output/'//output_file, status = "replace", action = "write")
 
-  write(10,*) '-----------------------------------------------------'
   write(10,*)'HISTOGRAMS'
     
   if (o_ptb == 1) call h_ptb%finalise()

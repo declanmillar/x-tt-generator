@@ -150,8 +150,6 @@ module configuration
 
       read(5,*) collider_energy
 
-      read(5,*) ytmax
-
       read(5,*) yttmin
 
       read(5,*) seed

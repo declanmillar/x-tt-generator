@@ -32,7 +32,6 @@ parser.add_option("-B", "--use_branching_ratio", default=0, const=1, action="sto
 parser.add_option("-K", "--additional_kinematics", default=1, const=0, action="store_const", help="Turn off additional kinematics")
 parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
 parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
-parser.add_option("-y", "--ytmax", default=100, type="float", help="rapidity cut")
 parser.add_option("-Y", "--yttmin", default=0, type="float", help="top pair rapidity cut")
 
 # Monte Carlo options
@@ -175,8 +174,6 @@ print >> config, '%s ! include_transverse' % options.include_transverse
 print >> config, '%s ! include_asymmetries' % options.include_asymmetries
 
 print >> config, '%s.d3 ! ecm_col' % collider_energy
-
-print >> config, '%sd0 ! ytmax' % options.ytmax
 
 print >> config, '%sd0 ! yttmin' % options.yttmin
 

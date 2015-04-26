@@ -462,29 +462,29 @@ program zprime
     ! print asymmetries
     print *, "Printing total asymmetries..."
     print*, 'total asymmetries'
-    if (o_asym(1) == 1)  print*, 'ALL:                    uncertainty (same units):'
+    if (o_asym(1) == 1)  print*, 'ALL:                    uncertainty:'
     if (o_asym(1) == 1)  print*, atot(1), atoterr(1)
-    if (o_asym(2) == 1)  print*, 'AL:                     uncertainty (same units):'
+    if (o_asym(2) == 1)  print*, 'AL:                     uncertainty:'
     if (o_asym(2) == 1)  print*, atot(2), atoterr(2)
-    if (o_asym(3) == 1)  print*, 'APV:                    uncertainty (same units):'
+    if (o_asym(3) == 1)  print*, 'APV:                    uncertainty:'
     if (o_asym(3) == 1)  print*, atot(3), atoterr(3)
-    if (o_asym(4) == 1)  print*, 'AFB:                    uncertainty (same units):'
+    if (o_asym(4) == 1)  print*, 'AFB:                    uncertainty:'
     if (o_asym(4) == 1)  print*, atot(4), atoterr(4)
-    if (o_asym(5) == 1)  print*, 'AFB*:                   uncertainty (same units):'
+    if (o_asym(5) == 1)  print*, 'AFB*:                   uncertainty:'
     if (o_asym(5) == 1)  print*, atot(5), atoterr(5)
-    if (o_asym(6) == 1)  print*, 'AFB*_reco:              uncertainty (same units):'
+    if (o_asym(6) == 1)  print*, 'AFB*_reco:              uncertainty:'
     if (o_asym(6) == 1)  print*, atot(6), atoterr(6)
-    if (o_asym(7) == 1)  print*, 'AtRFB:                  uncertainty (same units):'
+    if (o_asym(7) == 1)  print*, 'AtRFB:                  uncertainty:'
     if (o_asym(7) == 1)  print*, atot(7), atoterr(7)
-    if (o_asym(8) == 1)  print*, "AttbRFB:                uncertainty (same units):"
+    if (o_asym(8) == 1)  print*, "AttbRFB:                uncertainty:"
     if (o_asym(8) == 1)  print*, atot(8), atoterr(8)
-    if (o_asym(9) == 1)  print*, "ARFB:                   uncertainty (same units):"
+    if (o_asym(9) == 1)  print*, "ARFB:                   uncertainty:"
     if (o_asym(9) == 1)  print*, atot(9), atoterr(9)
-    if (o_asym(10) == 1)  print*, "ARFB_reco:              uncertainty (same units):"
+    if (o_asym(10) == 1)  print*, "ARFB_reco:              uncertainty:"
     if (o_asym(10) == 1)  print*, atot(10), atoterr(10)
-    if (o_asym(11) == 1)  print*, 'A_l:                   uncertainty (same units):'
+    if (o_asym(11) == 1)  print*, 'A_l:                   uncertainty:'
     if (o_asym(11) == 1)  print*, atot(11), atoterr(11)
-    if (o_asym(12) == 1)  print*, 'AlFB:                  uncertainty (same units):'
+    if (o_asym(12) == 1)  print*, 'AlFB:                  uncertainty:'
     if (o_asym(12) == 1)  print*, atot(12), atoterr(12)
     print *, "...complete."
   end if

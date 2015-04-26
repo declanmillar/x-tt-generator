@@ -46,7 +46,7 @@ function dsigma(x,wgt)
   real :: cf78
   real :: cosfl
   real :: cost
-  real :: costheta5, costheta7, costheta5_cm, costheta7_cm
+  real :: costheta5, costheta7, costheta5cm, costheta7cm, costheta5col, costheta7col
   real :: costhetat_cm, costhetat_reco, costhetat_star_reco
   real :: costhetat_star
   real :: ct
@@ -54,7 +54,7 @@ function dsigma(x,wgt)
   real :: ct56
   real :: ct7
   real :: ct78
-  real :: ct7ct5
+  real :: ct7ct5, ct7ct5col, ct7ct5cm
   real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, p5xp, p5yp, p5zp
   real :: ffxn, fffxn, fffxn1, fffxn2
   real :: rmt, gamt
@@ -62,12 +62,12 @@ function dsigma(x,wgt)
   real :: ecm, ecm_max, pcm, qcm2
   real :: hist, hist1, hist2
   real :: gs, gs2
-  real :: et, et3, et4, et5, et7, etmiss, etmiss2, etat, etatb, etvis, etvis2
+  real :: et, et3, et4, et5, et7, etmiss, etmiss2, eta356, eta478, etvis, etvis2
   real :: pfx1tot, pfx2tot
   real :: gcol, qcm
-  real :: ptt, pttb, phicolt, phicoltb, ycolt, ycoltb
+  real :: pt356, pt478, phi356, phi478, ycol356, ycol478
   real :: phit
-  real :: pq5, pq52, pq56, pq7, pq78, p5m, p5mp
+  real :: pq5, pq52, pq56, pq7, pq78, p5mag, p5mp
   real :: phi_l
   real :: q2, qq
   real :: qqd1, qqd2
@@ -124,7 +124,7 @@ function dsigma(x,wgt)
 
   ! rapidity
   real :: yt, ytb, ytt, ytt_reco, yt_reco
-  real :: delta_absy = -999, delta_absy_reco = -999
+  real :: delta_absy, delta_absy_reco
 
   ! square matrix elements
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
@@ -787,8 +787,8 @@ function dsigma(x,wgt)
         call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
         call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
         call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
       end if
 
@@ -796,8 +796,8 @@ function dsigma(x,wgt)
         call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
         call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
         call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
       end if
 
@@ -805,8 +805,8 @@ function dsigma(x,wgt)
         call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
         call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
         call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
         call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
       end if
       if(verbose == 1) print*, "...complete."
@@ -1153,12 +1153,28 @@ function dsigma(x,wgt)
           pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
           pt(ip) = sqrt(pt2(ip))
         end do
+        call rootadddouble(pt(3), "pT3")
+        call rootadddouble(pt(4), "pT4")
+        if (final_state > 0) then
+          call rootadddouble(pt(5), "pT5")
+          call rootadddouble(pt(7), "pT7")
+          call rootadddouble(pt(6), "pT6")
+          call rootadddouble(pt(8), "pT8")
+        end if
 
         ! calculate asympotic collider frame rapidity
         do ip = 3, n_final
           ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
           /(qcol(4,ip) - qcol(3,ip)))
         end do
+        call rootadddouble(ycol(3), "ycol3")
+        call rootadddouble(ycol(4), "ycol4")
+        if (final_state > 0) then
+          call rootadddouble(ycol(5), "ycol5")
+          call rootadddouble(ycol(7), "ycol7")
+          call rootadddouble(ycol(6), "ycol6")
+          call rootadddouble(ycol(8), "ycol8")
+        end if
 
         ! calculate asympotic collider frame pseudorapidity
         do ip = 1, n_final
@@ -1170,20 +1186,38 @@ function dsigma(x,wgt)
           if (arg(ip) <= 0.d0) arg(ip) = 1.d-9
           eta(ip) = -log(arg(ip))
         end do
+        call rootadddouble(eta(3), "eta3")
+        call rootadddouble(eta(4), "eta4")
+        if(final_state > 0) then
+          call rootadddouble(eta(5), "eta5")
+          call rootadddouble(eta(7), "eta7")
+          call rootadddouble(eta(6), "eta6")
+          call rootadddouble(eta(8), "eta8")
+        end if
 
         ! calculate asympotic collider frame azimuthal angle
         do ip = 1, n_final
           phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
         end do
-
+        call rootadddouble(phi(3), "phi3")
+        call rootadddouble(phi(4), "phi4")
+        if(final_state > 0) then
+          call rootadddouble(phi(5), "phi5")
+          call rootadddouble(phi(7), "phi7")
+          call rootadddouble(phi(6), "phi6")
+          call rootadddouble(phi(8), "phi8")
+        end if
 
         ! calculate truth level top/antitop pt, eta and phi
         if (final_state > 0) then
-          ptt = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
+          pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
                        + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
+          call rootadddouble(pt356, "pT356")
 
-          pttb = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
+          pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
                        + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
+          call rootadddouble(pt478, "pT478")
+
 
           rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
           /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
@@ -1193,81 +1227,82 @@ function dsigma(x,wgt)
           if (rps356 > +1.d0) rps = +1.d0
           rpl356 = acos(rps356)
           arg356 = tan(rpl356/2d0)
-          if (arg356 <= 0.d0)arg356 = 1.d-9
-          etat = -log(arg356)
+          if (arg356 <= 0.d0) arg356 = 1.d-9
+          eta356 = -log(arg356)
+          call rootadddouble(eta356, "eta356")
 
-          rps478=(q(3,4)+q(3,7)+q(3,8)) &
+          rps478 = (q(3,4)+q(3,7)+q(3,8)) &
           /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
           +(q(2,4)+q(2,7)+q(2,8))**2 &
           +(q(3,4)+q(3,7)+q(3,8))**2)
-          if (rps478 < -1.d0)rps=-1.d0
-          if (rps478 > +1.d0)rps=+1.d0
-          rpl478=acos(rps478)
-          arg478=tan(rpl478/2d0)
-          if (arg478 <= 0.d0)arg478=1.d-9
-          etatb=-log(arg478)
+          if (rps478 < -1.d0)rps = -1.d0
+          if (rps478 > +1.d0)rps = +1.d0
+          rpl478 = acos(rps478)
+          arg478 = tan(rpl478/2d0)
+          if (arg478 <=  0.d0) arg478 = 1.d-9
+          eta478 = -log(arg478)
+          call rootadddouble(eta478, "eta478")
 
-          phicolt=atan2(qcol(2,3)+qcol(2,5)+qcol(2,6) &
-          ,qcol(1,3)+qcol(1,5)+qcol(1,6))
-          phicoltb=atan2(qcol(2,4)+qcol(2,7)+qcol(2,8) &
-          ,qcol(1,4)+qcol(1,7)+qcol(1,8))
+          phi356 = atan2(qcol(2,3) + qcol(2,5) + qcol(2,6) &
+          ,qcol(1,3) + qcol(1,5) + qcol(1,6))
+          call rootadddouble(phi356, "phi356")
 
-          ycolt =0.5*log((qcol(4,3)+qcol(4,5)+qcol(4,6) &
-          +qcol(3,3)+qcol(3,5)+qcol(3,6)) &
-          /(qcol(4,3)+qcol(4,5)+qcol(4,6) &
-          -qcol(3,3)-qcol(3,5)-qcol(3,6)))
-          ycoltb=0.5*log((qcol(4,4)+qcol(4,7)+qcol(4,8) &
-          +qcol(3,4)+qcol(3,7)+qcol(3,8)) &
-          /(qcol(4,4)+qcol(4,7)+qcol(4,8) &
-          -qcol(3,4)-qcol(3,7)-qcol(3,8)))
+          phi478 = atan2(qcol(2,4) + qcol(2,7) + qcol(2,8) &
+          ,qcol(1,4) + qcol(1,7) + qcol(1,8))
+          call rootadddouble(phi478, "phi478")
 
-        else if (final_state == 0) then
-          ! or set to asymmtotics
-          ptt = pt(3)
-          pttb = pt(4)
-          etat = eta(3)
-          etatb = eta(4)
-          phicolt = phi(3)
-          phicoltb = phi(4)
-          ycolt = ycol(3)
-          ycoltb = ycol(4)
+          ycol356 =0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
+           + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
+          /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
+           - qcol(3,3) - qcol(3,5) - qcol(3,6)))
+          call rootadddouble(ycol356, "ycol356")
+
+          ycol478=0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
+           + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
+          /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
+           - qcol(3,4) - qcol(3,7) - qcol(3,8)))
+          call rootadddouble(ycol478, "ycol478")
         end if
 
-
-        if (o_beta == 1) beta = shat/4.d0/rmt**2 - 1.d0
-
-        ! calculate delta phi
-        if (o_dphi == 1) then
-          dphi = abs(phi(5) - phi(7))
+        ! calculate the CoM rapidity of the top
+        if (final_state == 0) then
+          yt = 0.5d0*log((q(4,3) + q(3,3)) &
+          /(q(4,3) - q(3,3)))
+        else if (final_state > 0) then
+          yt  = 0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
+           + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
+           /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
+           - qcol(3,3) - qcol(3,5) - qcol(3,6)))
         end if
+        call rootadddouble(yt, "yt")
 
-        ! calculate visible and missing transverse momentum
-        if (final_state == 1) then
-          etvis2 = 0d0
-          etmiss2 = 0d0
-          do i = 1, 2
-            ptvis(i) = qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7)
-            ptmiss(i) = -ptvis(i)
-            etvis2 = etvis2 + ptvis(i)**2
-            etmiss2 = etmiss2 + ptmiss(i)**2
-          end do
-          etvis = sqrt(etvis2)
-          etmiss = sqrt(etmiss2)
+        ! calculate the CoM rapidity of the antitop
+        if (final_state == 0) then
+          ytb = 0.5d0*log((q(4,4) + q(3,4)) &
+          /(q(4,4) - q(3,4)))
+        else if (final_state > 0) then
+          ytb = 0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
+           + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
+           /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
+           - qcol(3,4) - qcol(3,7) - qcol(3,8)))
         end if
+        call rootadddouble(ytb, "ytbar")
 
-        if (final_state == 2) then
-          ! reconstruct the neutrino momentum in the semi-hadronic channel
-          do i = 1, 2
-            pT6col(i) = p6col(i)
-            p6col_reco(i) = p6col(i)
-          end do
-          p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
-          p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
+        ! difference in absolute rapidity in CoM frame
+        delta_absy = abs(yt) - abs(ytb)
+        call rootadddouble(delta_absy, "Delta_y")
+
+        ! calculate the energy of the top
+        if (final_state == 0) then
+          et = qcol(4,3)
+        else if (final_state > 0) then
+          et = qcol(4,3) + qcol(4,5) + qcol(4,6)
         end if
+        call rootadddouble(et, "Et")
 
         ! calculate collider frame cos(theta_t)
         if (final_state == 0) then
-          cost= &
+          cost = &
           (qcol(1,3)*qcol(1,1) &
           +qcol(2,3)*qcol(2,1) &
           +qcol(3,3)*qcol(3,1)) &
@@ -1278,7 +1313,7 @@ function dsigma(x,wgt)
           +qcol(2,1)*qcol(2,1) &
           +qcol(3,1)*qcol(3,1))
         else if (final_state > 0) then
-          cost= &
+          cost = &
           ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
           +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
           +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1)) &
@@ -1292,10 +1327,11 @@ function dsigma(x,wgt)
           +qcol(2,1)*qcol(2,1) &
           +qcol(3,1)*qcol(3,1))
         end if
+        call rootadddouble(cost, "costhetatcol")
 
         ! calculate parton CoM cos(theta_t)
         if (final_state == 0) then
-          costhetat_cm=(q(1,3)*q(1,1) &
+          costhetat_cm =(q(1,3)*q(1,1) &
           +q(2,3)*q(2,1) &
           +q(3,3)*q(3,1)) &
           /sqrt(q(1,3)*q(1,3) &
@@ -1305,7 +1341,7 @@ function dsigma(x,wgt)
           +q(2,1)*q(2,1) &
           +q(3,1)*q(3,1))
         else if (final_state > 0) then
-          costhetat_cm= &
+          costhetat_cm = &
           ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
           +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
           +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
@@ -1319,31 +1355,20 @@ function dsigma(x,wgt)
           +q(2,1)*q(2,1) &
           +q(3,1)*q(3,1))
         end if
+        call rootadddouble(costhetat_cm, "costhetat")
 
-        ! calculate cos(theta_t) reco
-        if (o_asym(6) == 1) then
-          costhetat_reco = &
-          ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
-          + (q(2,3) + q(2,5) + p6_reco(2))*q(2,1) &
-          + (q(3,3) + q(3,5) + p6_reco(3))*q(3,1)) &
-          /sqrt((q(1,3) + q(1,5) + p6_reco(1))*(q(1,3) + q(1,5) + p6_reco(1)) &
-              + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
-              + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
-          /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
-        end if
-
-        ! calculate the energy of the top
-        if (final_state == 0) then
-          et = qcol(4,3)
-        else if (final_state > 0) then
-          et = qcol(4,3) + qcol(4,5) + qcol(4,6)
-        end if
+        beta = shat/4.d0/rmt**2 - 1.d0
+        call rootadddouble(beta, "beta")
 
         ! calculate rapidity of the tt system
         ytt = 0.5d0*log(x1/x2)
+        call rootadddouble(ytt, "ytt")
+
+        ! reconstructed costheta_t
+        costhetat_star = int(ytt/abs(ytt))*costhetat_cm
+        call rootadddouble(costhetat_star, "costhetastar")
 
         if (final_state == 0) then
-          ! calculate mtt
           mtt2 = (qcol(4,3) + qcol(4,4))**2
           do i = 1, 3
             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
@@ -1359,9 +1384,67 @@ function dsigma(x,wgt)
           end do
         end if
         mtt = sqrt(abs(mtt2))
+        call rootadddouble(mtt, "Mtt")
 
-        if (o_mtt_reco == 1) then
-          ! calculate Mtt_reco
+        if (final_state > 0) then
+
+          dphi = abs(phi(5) - phi(7))
+          call rootadddouble(dphi, "Delta_phi_l")
+
+          ! calculate visible and missing transverse momentum
+          etvis2 = 0d0
+          etmiss2 = 0d0
+          do i = 1, 2
+            ptvis(i) = qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7)
+            ptmiss(i) = -ptvis(i)
+            etvis2 = etvis2 + ptvis(i)**2
+            etmiss2 = etmiss2 + ptmiss(i)**2
+          end do
+          etvis = sqrt(etvis2)
+          etmiss = sqrt(etmiss2)
+          call rootadddouble(ptmiss(1), "Etmissx")
+          call rootadddouble(ptmiss(2), "Etmissy")
+          call rootadddouble(etmiss, "Etmiss")
+
+          ! reconstruct the neutrino momentum for the semi-hadronic channel
+          do i = 1, 2
+            pT6col(i) = p6col(i)
+            p6col_reco(i) = p6col(i)
+          end do
+          p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
+          call rootadddouble(p6col_reco(3), "Pz6_reco")
+          p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
+          call rootadddouble(p6col_reco(0), "E6_reco")
+
+          yt_reco = 0.5*log((q(4,3)+q(4,5)+p6_reco(0) &
+          +q(3,3)+q(3,5)+p6_reco(3)) &
+          /(q(4,3)+q(4,5)+p6_reco(0) &
+          -q(3,3)-q(3,5)-p6_reco(3)))
+          call rootadddouble(yt_reco, "yt_reco")
+
+          delta_absy_reco = abs(yt_reco) - abs(ytb)
+          call rootadddouble(delta_absy_reco, "Delta_y_reco")
+
+          ! calculate cos(theta_t) reco
+          costhetat_reco = &
+          ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
+          + (q(2,3) + q(2,5) + p6_reco(2))*q(2,1) &
+          + (q(3,3) + q(3,5) + p6_reco(3))*q(3,1)) &
+          /sqrt((q(1,3) + q(1,5) + p6_reco(1))*(q(1,3) + q(1,5) + p6_reco(1)) &
+              + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
+              + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
+          /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
+          call rootadddouble(costhetat_reco, "costhetat_reco")
+
+          ! truth anti top mass
+          call rootadddouble(m478, "m478")
+
+          ! calculate mt reco
+          p356col_reco = p3col + p5col + p6col_reco
+          m356_reco = mass(p356col_reco)
+          call rootadddouble(m356_reco, "mt_reco")
+
+          ! calculate Mtt reco
           mtt_reco2 = (qcol(4,3) + qcol(4,4) &
                      + qcol(4,5) + p6col_reco(0) &
                      + qcol(4,7) + qcol(4,8))**2
@@ -1371,118 +1454,12 @@ function dsigma(x,wgt)
                                   +  qcol(i,7) + qcol(i,8))**2
           end do
           mtt_reco = sqrt(mtt_reco2)
+          call rootadddouble(mtt_reco, "Mtt_reco")
 
-          ! calculate mt reco
-          p356col_reco = p3col + p5col + p6col_reco
-          m356_reco = mass(p356col_reco)
-        end if
+          ! "reconstructed" reconstructed costheta_t
+          costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
+          call rootadddouble(costhetat_star_reco, "costhetastar_reco")
 
-        if(o_mll == 1) mll = mass(p5col + p6col)
-
-        if (o_mttvis == 1) then
-          ! calculate invariant mass of visible decay products
-          mttvis2 = (qcol(4,3) + qcol(4,4) &
-          +qcol(4,5) + qcol(4,7))**2
-          do i = 1, 3
-            mttvis2 = mttvis2 - (qcol(i,3) + qcol(i,4) &
-            +qcol(i,5) + qcol(i,7))**2
-          end do
-          mttvis = sqrt(abs(mttvis2))
-        end if
-
-        if (final_state == 1) then
-          ! calculate transverse energy energies of visible particles
-          et3 = sqrt(m3**2 + pt2(3))
-          et4 = sqrt(m4**2 + pt2(4))
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m6**2 + pt2(7))
-        end if
-
-        if (o_ht == 1) then
-          ht = et3 + et4 + et5 + et7 + etmiss
-        end if
-
-        if (o_mt1 == 1) then
-          mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-           + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
-          mt1 = sqrt(abs(mt12))
-        end if
-      
-        if (o_mt2 == 1) then
-          mt22 = (et3 + et4 + et5 + et7 + etmiss)**2
-          do i  = 1, 2
-            mt22 = mt22 - (ptvis(i) + ptmiss(i))**2
-          end do
-          mt2 = sqrt(abs(mt22))
-        end if
-
-        if (o_mt3 == 1) then
-          mt32 = (etvis + etmiss)**2
-          do i = 1, 2
-            mt32 = mt32 - (ptvis(i) + ptmiss(i))**2
-          end do
-          mt3 = sqrt(abs(mt32))
-        end if
-
-        if (o_mlt == 1) then
-          ! calculate lepton transverse mass
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m7**2 + pt2(7))
-          mlt2 = (et5 + et7)**2
-          do i = 1, 2
-            mlt2 = mlt2 - (qcol(i,5) + qcol(i,7))**2
-          end do
-          mlt = sqrt(abs(mlt2))
-        end if
-      
-        if (o_mct1 == 1) then
-          ! calculate *full* contranverse mass 1
-          mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-          + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
-          mct1 = sqrt(abs(mct12))
-        end if
-
-        if (o_mct2 == 1) then
-          ! calculate *full* contranverse mass 2
-          mct22 = (et3 + et4 + et5 + et7 + etmiss)**2
-          do i = 1, 2
-            mct22 = mct22 - (ptvis(i) - ptmiss(i))**2
-          end do
-          mct2 = sqrt(abs(mct22))
-        end if
-
-        if (o_mct3 == 1) then
-           ! calculate *full* contranverse mass 3
-          mct32 = (etvis + etmiss)**2
-          do i = 1, 2
-            mct32 = mct32 - (ptvis(i) - ptmiss(i))**2
-          end do
-          mct3 = sqrt(abs(mct32))
-        end if
-
-        if (o_mlct == 1) then
-          ! calculate lepton contransverse mass
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m7**2 + pt2(7))
-          mlct2 = (et5 + et7)**2
-          do i = 1, 2
-            mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
-          end do
-          mlct = sqrt(abs(mlct2))
-        end if
-
-        if (final_state == 2) then
-          yt_reco = 0.5*log((qcol(4,3)+qcol(4,5)+p6col_reco(0) &
-          +qcol(3,3)+qcol(3,5)+p6col_reco(3)) &
-          /(qcol(4,3)+qcol(4,5)+p6col_reco(0) &
-          -qcol(3,3)-qcol(3,5)-p6col_reco(3)))
-          delta_absy_reco = abs(yt_reco) - abs(ytb)
-        end if
-
-        ! calculate delta_absy (for arfb)
-        delta_absy = abs(ycolt) - abs(ycoltb)
-
-        if (o_cost5 == 1)  then
           ! boost anti lepton to top rest frame
           p356(0) = q356(4)
           p356_opp(0) = q356(4)
@@ -1491,9 +1468,7 @@ function dsigma(x,wgt)
             p356_opp(i) = -q356(i)
           end do 
           call boostx(p5, p356_opp, p5rest)
-        end if
 
-        if (o_cost7 == 1) then
           ! boost lepton to antitop rest frame
           p478(0) = q478(4)
           p478_opp(0) = q478(4)
@@ -1502,23 +1477,18 @@ function dsigma(x,wgt)
             p478_opp(i) = -q478(i)
           end do
           call boostx(p7, p478_opp, p7rest)
-        end if
 
-        if ((o_asym(6) == 1) .or. (o_asym(10) == 1)) then
+          ! total reconstructed momentum in collider frame
           ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
 
+          ! find spatially opposite 4-momentum
           ptotalcol_reco_opp(0) = ptotalcol_reco(0)
           do i = 1, 3
               ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
           end do
           call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
 
-          ! calculate rapidity of the reconstructed tt system
-          ytt_reco = 0.5*log((ptotalcol_reco(0) + ptotalcol_reco(3))/(ptotalcol_reco(0) - ptotalcol_reco(3)))
-        end if
-
-        if (o_cost5 == 1) then
-          ! calculate cos(theta_l+)
+          ! calculate cos(theta_l+) in top rest frame
           costheta5 = (p5rest(1)*q356(1) &
                        +p5rest(2)*q356(2) &
                        +p5rest(3)*q356(3)) &
@@ -1528,10 +1498,9 @@ function dsigma(x,wgt)
                       /sqrt(q356(1)*q356(1) &
                             +q356(2)*q356(2) &
                             +q356(3)*q356(3))
-        end if
+          call rootadddouble(costheta5, "costheta5")
 
-        if (o_cost7 == 1) then
-          ! calculate cos(theta_l-)
+          ! calculate cos(theta_l-) in top rest frame
           costheta7 = (p7rest(1)*q478(1) &
                        +p7rest(2)*q478(2) &
                        +p7rest(3)*q478(3)) &
@@ -1541,15 +1510,43 @@ function dsigma(x,wgt)
                       /sqrt(q478(1)*q478(1) &
                             +q478(2)*q478(2) &
                             +q478(3)*q478(3))
-        end if
+          call rootadddouble(costheta7, "costheta7")
 
-        if (final_state == 1) then
+          ! calculate product of cos(theta_l+) and cos(theta_l-) in top rest frame          
           ct7ct5 = costheta7*costheta5
-        end if
+          call rootadddouble(ct7ct5, "ct7ct5")
 
-        if (o_asym(12) == 1) then
-          ! calculate cos(theta_l+)_cm
-          costheta5_cm = (q(1,5)*q(1,1) &
+          ! calculate cos(theta_l+)col
+          costheta5col = (qcol(1,5)*qcol(1,1) &
+                        + qcol(2,5)*qcol(2,1) &
+                        + qcol(3,5)*qcol(3,1)) &
+                        /sqrt(qcol(1,5)*qcol(1,5) &
+                        + qcol(2,5)*qcol(2,5) &
+                        + qcol(3,5)*qcol(3,5)) &
+                        /sqrt(qcol(1,1)*qcol(1,1) &
+                        + qcol(2,1)*qcol(2,1) &
+                        + qcol(3,1)*qcol(3,1))
+          call rootadddouble(costheta5col, "costheta5col")
+
+
+          ! calculate cos(theta_l-)col
+          costheta7col = (qcol(1,7)*qcol(1,1) &
+                        + qcol(2,7)*qcol(2,1) &
+                        + qcol(3,7)*qcol(3,1)) &
+                        /sqrt(qcol(1,7)*qcol(1,7) &
+                        + qcol(2,7)*qcol(2,7) &
+                        + qcol(3,7)*qcol(3,7)) &
+                        /sqrt(qcol(1,1)*qcol(1,1) &
+                        + qcol(2,1)*qcol(2,1) &
+                        + qcol(3,1)*qcol(3,1))
+          call rootadddouble(costheta7col, "costheta7col")
+
+          ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
+          ct7ct5col = costheta7col*costheta5col
+          call rootadddouble(ct7ct5col, "ct7ct5col")
+
+          ! calculate cos(theta_l+)cm
+          costheta5cm = (q(1,5)*q(1,1) &
                         + q(2,5)*q(2,1) &
                         + q(3,5)*q(3,1)) &
                         /sqrt(q(1,5)*q(1,5) &
@@ -1558,8 +1555,11 @@ function dsigma(x,wgt)
                         /sqrt(q(1,1)*q(1,1) &
                         + q(2,1)*q(2,1) &
                         + q(3,1)*q(3,1))
-          ! calculate cos(theta_l-)_cm
-          costheta7_cm = (q(1,7)*q(1,1) &
+          call rootadddouble(costheta5cm, "costheta5cm")
+
+
+          ! calculate cos(theta_l-)cm
+          costheta7cm = (q(1,7)*q(1,1) &
                         + q(2,7)*q(2,1) &
                         + q(3,7)*q(3,1)) &
                         /sqrt(q(1,7)*q(1,7) &
@@ -1568,21 +1568,14 @@ function dsigma(x,wgt)
                         /sqrt(q(1,1)*q(1,1) &
                         + q(2,1)*q(2,1) &
                         + q(3,1)*q(3,1))
-        end if
+          call rootadddouble(costheta7cm, "costheta7cm")
 
-        if (o_asym(5) == 1) then
-          ! reconstructed costheta_t
-          costhetat_star = int(ytt/abs(ytt))*costhetat_cm
-        end if
+          ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
+          ct7ct5cm = costheta7cm*costheta5cm
+          call rootadddouble(ct7ct5cm, "ct7ct5cm")
 
-        if (o_asym(6) == 1) then
-          ! reconstructed reconstructed costheta_t
-          costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
-        end if
-
-        if (final_state > 0) then
           ! calculate cos(phi_l) (lepton azimuthal angle)
-          p5m = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
+          p5mag = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
 
           ! p(1)^ is z^
           do i = 1, 3
@@ -1615,29 +1608,110 @@ function dsigma(x,wgt)
 
           p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
 
-          if (abs(p5m - p5mp) >= 1e-11) print*, 'Error: coordinate transform mismatch.'
+          if (abs(p5mag - p5mp) >= 1e-11) print*, 'Error: coordinate transform mismatch.'
 
           phi_l = atan2(p5yp,p5xp)
 
           if (phi_l < 0)phi_l = phi_l + 2*pi
+          call rootadddouble(phi_l, "fl")
 
           cosfl = cos(phi_l)
-        end if
+          call rootadddouble(cosfl, "cosphil")
 
-        ! cut on top rapidity
-        if (final_state == 0) then
-          if (abs(eta(3)) > ytmax) then
+          mll = mass(p5col + p6col)
+          call rootadddouble(mll, "Mll")
+
+          ! calculate invariant mass of visible decay products
+          mttvis2 = (qcol(4,3) + qcol(4,4) &
+          +qcol(4,5) + qcol(4,7))**2
+          do i = 1, 3
+            mttvis2 = mttvis2 - (qcol(i,3) + qcol(i,4) &
+            +qcol(i,5) + qcol(i,7))**2
+          end do
+          mttvis = sqrt(abs(mttvis2))
+          call rootadddouble(mttvis, "Mttvis")
+
+          ! calculate transverse energy energies of visible particles
+          et3 = sqrt(m3**2 + pt2(3))
+          et4 = sqrt(m4**2 + pt2(4))
+          et5 = sqrt(m5**2 + pt2(5))
+          et7 = sqrt(m6**2 + pt2(7))
+
+          ht = et3 + et4 + et5 + et7 + etmiss
+          call rootadddouble(ht, "HT")
+
+          mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+           + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
+          mt1 = sqrt(abs(mt12))
+          call rootadddouble(mt1, "MT1")
+
+          mt22 = (et3 + et4 + et5 + et7 + etmiss)**2
+          do i  = 1, 2
+            mt22 = mt22 - (ptvis(i) + ptmiss(i))**2
+          end do
+          mt2 = sqrt(abs(mt22))
+          call rootadddouble(mt2, "MT2")
+
+          mt32 = (etvis + etmiss)**2
+          do i = 1, 2
+            mt32 = mt32 - (ptvis(i) + ptmiss(i))**2
+          end do
+          mt3 = sqrt(abs(mt32))
+          call rootadddouble(mt3, "MT3")
+
+          et5 = sqrt(m5**2 + pt2(5))
+          et7 = sqrt(m7**2 + pt2(7))
+          mlt2 = (et5 + et7)**2
+          do i = 1, 2
+            mlt2 = mlt2 - (qcol(i,5) + qcol(i,7))**2
+          end do
+          mlt = sqrt(abs(mlt2))
+          call rootadddouble(mlt, "MlT")
+
+          mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+          + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
+          mct1 = sqrt(abs(mct12))
+          call rootadddouble(mct1, "MCT1")
+
+          mct22 = (et3 + et4 + et5 + et7 + etmiss)**2
+          do i = 1, 2
+            mct22 = mct22 - (ptvis(i) - ptmiss(i))**2
+          end do
+          mct2 = sqrt(abs(mct22))
+          call rootadddouble(mct2, "MCT2")
+
+          mct32 = (etvis + etmiss)**2
+          do i = 1, 2
+            mct32 = mct32 - (ptvis(i) - ptmiss(i))**2
+          end do
+          mct3 = sqrt(abs(mct32))
+          call rootadddouble(mct3, "MCT3")
+
+          et5 = sqrt(m5**2 + pt2(5))
+          et7 = sqrt(m7**2 + pt2(7))
+          mlct2 = (et5 + et7)**2
+          do i = 1, 2
+            mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
+          end do
+          mlct = sqrt(abs(mlct2))
+          call rootadddouble(mlct, "MlCT")
+
+          ! minimal cut on top rapidity
+          if (final_state == 0) then
+            if (abs(eta(3)) > 100) then
+              fffxn = 0.d0
+              return
+            end if
+          else if (abs(eta356) > 100) then
             fffxn = 0.d0
             return
           end if
-        else if (abs(etat) > ytmax) then
-          fffxn = 0.d0
-          return
+
         end if
 
         if (verbose == 1) print*, "...complete."
 
-        if (verbose == 1) print*, "Computing FB event weightings..."
+        if (verbose == 1) print*, "Computing FB dsigma..."
 
         if (o_asym(4) == 1) then
           if (costhetat_cm > 0.d0) then
@@ -1773,13 +1847,13 @@ function dsigma(x,wgt)
         end if
 
         if (o_asym(12) == 1) then
-          if (costheta5_cm > 0.d0) then
+          if (costheta5cm > 0.d0) then
             sigma_fb(9,it,+1)=sigma_fb(9,it,+1) &
             +fffxn &
             *wgt
             error_fb(9,it,+1)=error_fb(9,it,+1) &
             +sigma_fb(9,it,+1)**2
-          else if (costheta5_cm < 0.d0) then
+          else if (costheta5cm < 0.d0) then
             sigma_fb(9,it,-1)=sigma_fb(9,it,-1) &
             +fffxn &
             *wgt
@@ -1802,8 +1876,8 @@ function dsigma(x,wgt)
         if (o_ptlm == 1) call h_ptlm%fill(pt(7), hist)
         if (o_ptnu == 1) call h_ptnu%fill(pt(6), hist)
         if (o_ptnub == 1) call h_ptnub%fill(pt(8), hist)
-        if (o_ptt == 1) call h_ptt%fill(ptt, hist)
-        if (o_pttb == 1) call h_pttb%fill(pttb, hist)
+        if (o_ptt == 1) call h_ptt%fill(pt356, hist)
+        if (o_pttb == 1) call h_pttb%fill(pt478, hist)
 
         if (o_etab == 1) call h_etab%fill(eta(3), hist)
         if (o_etabb == 1) call h_etabb%fill(eta(4), hist)
@@ -1811,8 +1885,8 @@ function dsigma(x,wgt)
         if (o_etalm == 1) call h_etalm%fill(eta(7), hist)
         if (o_etanu == 1) call h_etanu%fill(eta(6), hist)
         if (o_etanub == 1) call h_etanub%fill(eta(8), hist)
-        if (o_etat == 1) call h_etat%fill(etat, hist)
-        if (o_etatb == 1) call h_etatb%fill(etatb, hist)
+        if (o_etat == 1) call h_etat%fill(eta356, hist)
+        if (o_etatb == 1) call h_etatb%fill(eta478, hist)
 
         if (o_phib == 1) call h_phib%fill(phi(3), hist)
         if (o_phibb == 1) call h_phibb%fill(phi(4), hist)
@@ -1820,8 +1894,8 @@ function dsigma(x,wgt)
         if (o_philm == 1) call h_philm%fill(phi(7), hist)
         if (o_phinu == 1) call h_phinu%fill(phi(6), hist)
         if (o_phinub == 1) call h_phinub%fill(phi(8), hist)
-        if (o_phit == 1) call h_phit%fill(phicolt, hist)
-        if (o_phitb == 1) call h_phitb%fill(phicoltb, hist)
+        if (o_phit == 1) call h_phit%fill(phi356, hist)
+        if (o_phitb == 1) call h_phitb%fill(phi478, hist)
 
         if (o_ycolb == 1) call h_ycolb%fill(ycol(3), hist)
         if (o_ycolbb == 1) call h_ycolbb%fill(ycol(4), hist)
@@ -1829,8 +1903,8 @@ function dsigma(x,wgt)
         if (o_ycollm == 1) call h_ycollm%fill(ycol(7), hist)
         if (o_ycolnu == 1) call h_ycolnu%fill(ycol(6), hist)
         if (o_ycolnub == 1) call h_ycolnub%fill(ycol(8), hist)
-        if (o_ycolt == 1) call h_ycolt%fill(ycolt, hist)
-        if (o_ycoltb == 1) call h_ycoltb%fill(ycoltb, hist) 
+        if (o_ycolt == 1) call h_ycolt%fill(ycol356, hist)
+        if (o_ycoltb == 1) call h_ycoltb%fill(ycol478, hist) 
 
         if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
         if (o_mtt == 1) call h_mtt%fill(mtt, hist)
@@ -2180,7 +2254,7 @@ function dsigma(x,wgt)
         end if
       
         if (o_asym(12) == 1) then
-          if ((o_sigp == 1) .and. (costheta5_cm > 0.d0)) then
+          if ((o_sigp == 1) .and. (costheta5cm > 0.d0)) then
             ! generate distribution in sigp for alFB.
             sigp=ecm
             nbin=int((sigp-sigpmin)/sigpw)+1
@@ -2192,7 +2266,7 @@ function dsigma(x,wgt)
               fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
             end if
           end if
-          if ((o_sigm == 1) .and. (costheta5_cm < 0.d0)) then
+          if ((o_sigm == 1) .and. (costheta5cm < 0.d0)) then
             ! generate distribution in sigm for alFB.
             sigm=ecm
             nbin=int((sigm-sigmmin)/sigmw)+1
