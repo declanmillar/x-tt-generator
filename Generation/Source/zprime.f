@@ -99,13 +99,14 @@ program zprime
     fac_emu = 2*brtbln*brtbln
     fac_eq = brtbln*brtbqq
     fac_qq = brtbqq*brtbqq
-  else if(final_state > 0) then
+  else if (final_state > 0) then
     ! scale dilepton to other classifications
     fac_ee = 1
     fac_emu = 2
     fac_eq = 12
     fac_qq = 36  
   end if
+
 
   ! dimensions
   if (final_state == 0) then
@@ -188,6 +189,7 @@ program zprime
       xu(i) = 2.d0*pi
     end do
   end if
+
 
   ! output information before integration
   print*, '====================================================='
@@ -293,7 +295,6 @@ program zprime
       print*, 'g_{a}^{u}             ', ga_u(i)
       print*, 'g_{v}^{d}             ', gv_d(i)
       print*, 'g_{a}^{d}             ', ga_d(i)
-      print*,
     end if
   end do
 
@@ -314,8 +315,8 @@ program zprime
       end do
       do ifb = 1, n_fb_asymmetries
         do iab = -1, +1, 2
-          sigma_fb(ifb, i, iab) = 0.d0
-          error_fb(ifb, i, iab) = 0.d0
+          sigma_fb(ifb, iab, i) = 0.d0
+          error_fb(ifb, iab, i) = 0.d0
         end do
       end do
     end do
@@ -327,6 +328,7 @@ program zprime
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
   print*, "...complete."  
+
 
   ! convert results to different tt classifications
   sigma_ee = sigma*fac_ee

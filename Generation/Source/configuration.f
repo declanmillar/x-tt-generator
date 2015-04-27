@@ -35,10 +35,7 @@ module configuration
   integer :: tops_decay
 
   ! distributions in asymmetries
-  integer n_asymmetries
-  parameter (n_asymmetries = 12)
-  integer n_fb_asymmetries
-  parameter (n_fb_asymmetries = 9)
+  integer, parameter :: n_asymmetries = 12
   integer :: o_asym(n_asymmetries)
 
   integer :: ixmax, jxmax

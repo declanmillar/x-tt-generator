@@ -1,7 +1,5 @@
 module kinematics
 
-  use configuration, only: n_fb_asymmetries
-
   implicit none
 
   real :: m3, m4, m5, m6, m7, m8

@@ -1,6 +1,8 @@
 # Fortran makefile
 # Declan Millar <d.millar@soton.ac.uk>
 
+UNAME_S := $(shell uname -s)
+
 # executable
 BIN = zprime
 
@@ -17,17 +19,25 @@ LIB = Library
 OUT = Binary
 
 # Compiler
+# ifeq ($(UNAME_S),Linux)
+# 	F = ifort
+# endif
+# ifeq ($(UNAME_S),Darwin)
+# 	F = gfortran
+# endif
+
 F = gfortran
 
 # Flags
-FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	# add roottuple libraries qmulpc007
+	# FFLAGS = -g -real_size 64 -double_size 64 -free -module $(LIB) 
+	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
 	LFLAGS = -L/usr/local/lib -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
 endif
 ifeq ($(UNAME_S),Darwin)
 	# add roottuple libraries os x
+	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
 	LFLAGS = -L/usr/lib -lRootTuple -L/usr/local/Cellar/root/5.34.26/lib/root -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer -Wl,-stack_size,0x40000000
 endif
 
@@ -41,4 +51,4 @@ $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
 
 # Clean up
 clean:
-	rm -f $(LIB)/*.o $(OUT)/$(BIN) 
+	rm -f $(LIB)/*.o $(LIB)/*.mod $(OUT)/$(BIN) 
