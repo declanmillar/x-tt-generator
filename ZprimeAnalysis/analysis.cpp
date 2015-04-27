@@ -257,7 +257,7 @@ void AnalysisZprime::SetupInputFiles()
   // TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
   TString base("/Users/declan/Data/Ntuples_Zprime/");
   
-  m_inputFiles->push_back(base + "SM_13_2to2_1x500000.root");
+  m_inputFiles->push_back(base + "SM_13_2to2_1x5000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()

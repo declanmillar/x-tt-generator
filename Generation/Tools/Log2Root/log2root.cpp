@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
   std::string mainString; // Information strings preceding distributions
   int nHistos; // number of histograms read from text file
   int lastIndex; // location of . in string
-  double luminosity,efficiency;
+  double luminosity = 0, efficiency = 0;
 
   // assume argv[1] is a filename to open.
   logFileName = argv[1];
