@@ -1,4 +1,4 @@
-function alfas(mu,lam,nloops)
+function alfas(mu,lam,nloop)
 
 ! EWNG version from EERAD
 
@@ -6,8 +6,10 @@ function alfas(mu,lam,nloops)
 ! alfas in terms of lambda of four flavors for one or two loops.
 ! matching achieved using renorm group eqn. approximately
 ! above mu=mb,mu=mt
+
 implicit none
-integer :: nloops
+
+integer :: nloop
 real :: mu,lam,mc,mb,mt
 real :: b4,b4p,b5,b5p,b6,b6p,one,two
 real :: alfas,atinv,abinv,atinv1,abinv1,asinv,xqc,xqb,xqt,xb,xt
@@ -43,7 +45,7 @@ else
     alfas=one/asinv
 endif
        
-if (nloops == 1) return
+if (nloop == 1) return
 
 abinv1=abinv/(one-b4p*log(two*xb)/abinv)
 if (mu < mb) then

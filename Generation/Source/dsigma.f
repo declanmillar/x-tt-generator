@@ -226,7 +226,7 @@ function dsigma(x,wgt)
 
     ! loop over costheta_cm
     do jx = 1, jxmax
-      if (verbose == 1) print*, "Generating event ", npoints + 1, "..."
+      if (verbose == 1) print*, "Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx
 
       ! initialisation
       fffxn = 0.d0

@@ -1,8 +1,8 @@
 module modelling
 
-  use configuration, only: use_nwa, model_name
+  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4
 
-  implicit none 
+  implicit none
 
   ! SM couplings
   real :: gw, gwwa, gwwZ
@@ -39,8 +39,6 @@ module modelling
 
 ! Other SM parameters
   real, parameter :: a_em = 0.0078125, s2w = 0.2320d0
-  real, public :: lambdaqcd4
-  integer, public :: nloops
 
 ! Zprime parameters
   real :: rmZp(5),gamZp(5)
@@ -50,12 +48,17 @@ module modelling
 
   public :: initialise_standard_model
   public :: initialise_zprimes
+  public :: widthZp
+  public :: coupZpx
+
 
 contains
 
 subroutine initialise_standard_model
 
   integer i
+
+	print*, "Initialising standard model..."
 
   fmass(1)  = emass
   fmass(2)  = nuemass
@@ -102,11 +105,17 @@ subroutine initialise_standard_model
   gg(1)=-g
   gg(2)=-g
 
+  print*, lambdaqcd4, nloops
+
+  print*, "...done"
+
 end subroutine initialise_standard_model
 
 subroutine initialise_zprimes 
 
   integer o_width(5), imodel_name, i
+
+  print*, "Initialising standard model..."
 
   ! Extract model_name filename (Remove white space.)
   imodel_name = len(model_name)
@@ -149,6 +158,8 @@ subroutine initialise_zprimes
   ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
   ! call printconstants
   return
+
+  print*, "...done."
 end subroutine initialise_zprimes
 
 subroutine coupZpx
@@ -158,12 +169,16 @@ subroutine coupZpx
 
   integer i
 
+	print*, "Converting Zprime couplings from AV to LR..."
+
   do i=1,5
       gZpd(1,i) = gp(i)*(gV_d(i)+gA_d(i))/2.d0
       gZpd(2,i) = gp(i)*(gV_d(i)-gA_d(i))/2.d0
       gZpu(1,i) = gp(i)*(gV_u(i)+gA_u(i))/2.d0
       gZpu(2,i) = gp(i)*(gV_u(i)-gA_u(i))/2.d0
   enddo
+
+  print*, "...done."
    
   return
 end subroutine coupZpx
@@ -195,6 +210,8 @@ function widthZp(rm_Zp)
   real :: alfas
   real :: a_s
 
+  print*, "Calculating Zprime widths..."
+
   rmt=fmass(11)
   gamt=fwidth(11)
   
@@ -203,7 +220,7 @@ function widthZp(rm_Zp)
   ctw=sqrt(1.d0-s2w)
   e=sqrt(4.d0*pi*a_em)
   gweak=e/sqrt(s2w)
-  a_s=alfas(rm_Zp,lambdaQCD4,nloops)
+  a_s=alfas(rm_Zp,lambdaqcd4,nloops)
   GF=1.16639D-5
   ! renormalise e.
   e=sqrt(s2w*8.d0*rm_Z*rm_Z*ctw*ctw*GF/sqrt(2.d0))
@@ -303,7 +320,7 @@ function widthZp(rm_Zp)
   !       print *,'(so that due to leptons are:',temp,' [GeV])'
   !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
   !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
-
+  print*, "...done."
   return
 end function widthZp
 

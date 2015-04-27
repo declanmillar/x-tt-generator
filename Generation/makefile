@@ -5,7 +5,7 @@
 BIN = zprime
 
 # object files
-OBJ = vegas.o cteq61pdf.o mathematics.o configuration.o modelling.o scattering.o kinematics.o class_histogram.o class_histogram2d.o distributions.o  alpha_EWNG.o helas.o ggbbffff_qcd.o ggff_qcd.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o dsigma.o zprime.o
+OBJ = vegas.o cteq61pdf.o mathematics.o configuration.o modelling.o scattering.o kinematics.o class_histogram.o class_histogram2d.o distributions.o  alpha_EWNG.o helas.o ggbbffff_qcd.o ggff_qcd.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o rangen.o zprime.o dsigma.o
 
 # Source directory
 SRC = Source

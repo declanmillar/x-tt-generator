@@ -27,6 +27,8 @@ module configuration
   integer :: phase_space_only
   integer :: verbose
   integer :: nfb
+  real :: lambdaqcd4
+  integer :: nloops
 
   ! derived parameters
   integer :: n_final
