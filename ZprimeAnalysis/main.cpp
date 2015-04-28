@@ -9,12 +9,12 @@ int main(int argc, char* argv[])
   // make root app
   // TApplication* RootApp = new TApplication("RootApp",&argc,argv);
   
-  // Select Channel : el = electron, mu = muon
+  // Select Channel : 2to2 = pp->tt, 2to6 = pp->tt->bbffff
   
-  // TString channel("el"); 
+  TString channel("2to6"); 
   TString outputFileName("histos.root");
   
-  AnalysisZprime analysis(outputFileName);
+  AnalysisZprime analysis(channel, outputFileName);
 
   // run root app
   // RootApp->Run( kTRUE );

@@ -1,8 +1,9 @@
 #include "analysis.h"
 
-AnalysisZprime::AnalysisZprime(const TString& outputFileName) :
+AnalysisZprime::AnalysisZprime(const TString channel, const TString& outputFileName) :
   m_pi(3.14159265),
   m_GeV(1000.0),
+  m_channel(channel),
   m_outputFileName(outputFileName),
   m_inputFiles(NULL),
   m_ntup(NULL),
@@ -17,31 +18,35 @@ AnalysisZprime::AnalysisZprime(const TString& outputFileName) :
 
 void AnalysisZprime::EachEvent()
 {
-  if( this->PassCuts() )
-  {
-    // cout << "Event = " << m_ntup->eventNumber()<<endl;
-    
-    double eventWeight = m_ntup->weight();
-    
+  if (this->PassCuts())
+  {    
+    double weight = m_ntup->weight();
+    double weight_ee = m_ntup->weight_ee();
+    double weight_eq = m_ntup->weight_eq();
+
     // Fill Histograms (assumes fixed bin width!)
-    // if(m_ntup->barcode()->at(2) == -11)  h_positron_pz->Fill(m_ntup->Pz()->at(2), m_ntup->weight());
 
-    h_mtt->Fill(m_ntup->mtt(), eventWeight/h_mtt->GetXaxis()->GetBinWidth(1));
+    h_Mtt->Fill(m_ntup->Mtt(), weight/h_Mtt->GetXaxis()->GetBinWidth(1));
 
-    h_mttLL->Fill(m_ntup->mtt(), m_ntup->weightLL()/h_mttLL->GetXaxis()->GetBinWidth(1));
-    h_mttLR->Fill(m_ntup->mtt(), m_ntup->weightLR()/h_mttLR->GetXaxis()->GetBinWidth(1));
-    h_mttRL->Fill(m_ntup->mtt(), m_ntup->weightRL()/h_mttRL->GetXaxis()->GetBinWidth(1));
-    h_mttRR->Fill(m_ntup->mtt(), m_ntup->weightRR()/h_mttRR->GetXaxis()->GetBinWidth(1));
+    if (m_channel == "2to6") {
+      if (m_ntup->barcode()->at(2) == -11)  h_pz5->Fill(m_ntup->Pz()->at(2), m_ntup->weight());
+      // if (m_ntup->Pz()->size() > 0) {
+      //   for(unsigned int i = 0; i < m_ntup->Pz()->size(); ++i) {
+      //     h_pz5->Fill(m_ntup->Pz()->at(i) / m_GeV, eventWeight);
+      //   }
+      // }
+      h_costheta5_eq->Fill(m_ntup->costheta5(), weight_eq);
+      h_costheta5_ee->Fill(m_ntup->costheta5(), weight_ee);
+      h_ct7ct5->Fill(m_ntup->ct7ct5(), weight_ee);
+    }
 
-    printf("%e %e\n", m_ntup->weightLL() + m_ntup->weightLR() + m_ntup->weightRL() + m_ntup->weightRR(), eventWeight);
-
-    // if(m_ntup->Pz()->size() > 0)
-    // {
-    //   for(unsigned int i = 0; i < m_ntup->Pz()->size(); ++i)
-    //   {
-    //     h_positron_pz->Fill( m_ntup->Pz()->at(i) / m_GeV, EventWeight );
-    //   }
-    // }
+    if (m_channel == "2to2") {
+      h_MttLL->Fill(m_ntup->Mtt(), m_ntup->weightLL()/h_MttLL->GetXaxis()->GetBinWidth(1));
+      h_MttLR->Fill(m_ntup->Mtt(), m_ntup->weightLR()/h_MttLR->GetXaxis()->GetBinWidth(1));
+      h_MttRL->Fill(m_ntup->Mtt(), m_ntup->weightRL()/h_MttRL->GetXaxis()->GetBinWidth(1));
+      h_MttRR->Fill(m_ntup->Mtt(), m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
+      // printf("%e %e\n", m_ntup->weightLL() + m_ntup->weightLR() + m_ntup->weightRL() + m_ntup->weightRR(), eventWeight);
+    }    
   }
 }
 
@@ -52,177 +57,212 @@ void AnalysisZprime::PreLoop()
   // Define output file 
   m_outputFile = new TFile(m_outputFileName,"RECREATE");
   
-  // Define Histograms  
+  // Define Histograms    
+  h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 14000.0);
 
-  h_positron_pz = new TH1D( "pz", "pz" ,50 ,0.0 , 10000.0);
-  h_mtt = new TH1D( "mtt", "mtt", 100, 0.0, 14000.0);
-  h_mttLL = new TH1D( "mttLL", "mttLL", 100, 0.0, 14000.0);
-  h_mttLR = new TH1D( "mttLR", "mttLR", 100, 0.0, 14000.0);
-  h_mttRL = new TH1D( "mttRL", "mttRL", 100, 0.0, 14000.0);
-  h_mttRR = new TH1D( "mttRR", "mttRR", 100, 0.0, 14000.0);
-  h_mttALLnum = new TH1D( "mttALLnum", "mttALLnum", 100, 0.0, 14000.0);
-  h_mttALLden = new TH1D( "mttALLden", "mttALLden", 100, 0.0, 14000.0);
-  h_mttALL = new TH1D( "mttALL", "mttALL", 100, 0.0, 14000.0);
-  // h_positron_pz->Sumw2();
-  // h_mtt->Sumw2();
-  // h_mttLL->Sumw2();
-  // h_mttLR->Sumw2();
-  // h_mttRL->Sumw2();
-  // h_mttRR->Sumw2();
-  // h_mttALLnum->Sumw2();
-  // h_mttALLden->Sumw2();
-  // h_mttALL->Sumw2();
+  if (m_channel == "2to6") {  
+    h_pz5 = new TH1D("pz5", "p_{z}^{5}", 50,0.0, 10000.0);
+    // h_pz5->Sumw2();
 
+    h_costheta5_eq = new TH1D("costheta5_eq", "cos#theta_{l^{+}} (eq)", 50, -1.0, 1.0);
+    // h_costheta5_eq->Sumw2();
+
+    h_costheta5_ee = new TH1D("costheta5_ee", "cos#theta_{l^{+}} (ee)", 50, -1.0, 1.0);
+    // h_costheta5_ee->Sumw2();
+
+    h_ct7ct5 = new TH1D("ct7ct5", "cos#theta_{l^{+}}cos#theta_{l^{-}}", 50, -1.0, 1.0);
+    // h_ct7ct5->Sumw2();
+  }
+
+  if (m_channel == "2to2") {
+    h_MttLL = new TH1D("MttLL", "MttLL", 100, 0.0, 14000.0);
+    h_MttLR = new TH1D("MttLR", "MttLR", 100, 0.0, 14000.0);
+    h_MttRL = new TH1D("MttRL", "MttRL", 100, 0.0, 14000.0);
+    h_MttRR = new TH1D("MttRR", "MttRR", 100, 0.0, 14000.0);
+    h_MttALLnum = new TH1D("MttALLnum", "MttALLnum", 100, 0.0, 14000.0);
+    h_MttALLden = new TH1D("MttALLden", "MttALLden", 100, 0.0, 14000.0);
+    h_MttALL = new TH1D("MttALL", "MttALL", 100, 0.0, 14000.0);
+    h_Mtt->Sumw2();
+    h_MttLL->Sumw2();
+    h_MttLR->Sumw2();
+    h_MttRL->Sumw2();
+    h_MttRR->Sumw2();
+    h_MttALLnum->Sumw2();
+    h_MttALLden->Sumw2();
+    h_MttALL->Sumw2();
+  }
 }
 
 void AnalysisZprime::PostLoop()
 {
-
-
-  h_mttALL->Add(h_mttRR, 1);
-  h_mttALL->Add(h_mttLL, 1);
-  h_mttALL->Add(h_mttRL,-1);
-  h_mttALL->Add(h_mttLR,-1);
-
-  h_mttALLden->Add(h_mttRR, 1);
-  h_mttALLden->Add(h_mttLL, 1);
-  h_mttALLden->Add(h_mttRL, 1);
-  h_mttALLden->Add(h_mttLR, 1);
-
-  h_mttALL->Divide(h_mttALLden);
-
-  double sigma = h_mtt->Integral("width");
-
-  double sigmaLL = h_mttLL->Integral("width");
-  double sigmaLR = h_mttLR->Integral("width");
-  double sigmaRL = h_mttRL->Integral("width");
-  double sigmaRR = h_mttRR->Integral("width");
-
-  double ALL = (sigmaLL + sigmaRR - sigmaRL - sigmaLR)/
-               (sigmaLL + sigmaRR + sigmaRL + sigmaLR);
-
-  printf("sigma = %f\n", sigma);
-  printf("ALL = %f\n", ALL);
+  if (m_channel == "2to2") this->TotalAsymmetries();
 
   this->MakeGraphs();
+
+  this->ALL2to6();
   
   m_outputFile->cd();
   m_outputFile->cd("/");
 
   // Save histograms
-  h_positron_pz->Write(); 
-  h_mtt->Write();
-  h_mttLL->Write();
-  h_mttLR->Write();
-  h_mttRL->Write();
-  h_mttRR->Write();
-  h_mttALL->Write();
+  h_Mtt->Write();
+
+  if (m_channel == "2to2") {
+    h_MttLL->Write();
+    h_MttLR->Write();
+    h_MttRL->Write();
+    h_MttRR->Write();
+    h_MttALL->Write();
+  }
+
+  if (m_channel == "2to6") {
+    h_pz5->Write();
+    h_costheta5_eq->Write();
+    h_costheta5_ee->Write();
+    h_ct7ct5->Write();
+  }
 
   m_outputFile->Close();
   
+}
+
+void AnalysisZprime::TotalAsymmetries()
+{
+  h_MttALL->Add(h_MttRR, 1);
+  h_MttALL->Add(h_MttLL, 1);
+  h_MttALL->Add(h_MttRL,-1);
+  h_MttALL->Add(h_MttLR,-1);
+
+  h_MttALLden->Add(h_MttRR, 1);
+  h_MttALLden->Add(h_MttLL, 1);
+  h_MttALLden->Add(h_MttRL, 1);
+  h_MttALLden->Add(h_MttLR, 1);
+
+  h_MttALL->Divide(h_MttALLden);
+
+  double sigma = h_Mtt->Integral("width");
+  double sigmaLL = h_MttLL->Integral("width");
+  double sigmaLR = h_MttLR->Integral("width");
+  double sigmaRL = h_MttRL->Integral("width");
+  double sigmaRR = h_MttRR->Integral("width");
+
+  double ALL = (sigmaLL + sigmaRR - sigmaRL - sigmaLR)/
+               (sigmaLL + sigmaRR + sigmaRL + sigmaLR);
+
+  printf("sigma = %f\n", sigma);
+  printf("ALL = %f\n", ALL);  
+}
+
+void AnalysisZprime::ALL2to6() {
+  double mean = h_ct7ct5->GetMean();
+
+  double ALL = -9*mean;
+
+  printf("ALL = %f\n", ALL);
 }
 
 void AnalysisZprime::MakeGraphs()
 {
   printf("Making Graphs...\n");
 
-  TCanvas *c_positron_pz   = new TCanvas( "positron_pz " ,"positron_pz "  );
-  c_positron_pz->cd(); 
-  h_positron_pz->Draw(); 
-  h_positron_pz->GetYaxis()->SetTitle( "Events" );
+  TString numBase = "d#sigma / d"; 
+  TString units = "";
 
-  TCanvas *c_mtt   = new TCanvas( "mtt " ,"mtt "  );
-  c_mtt->cd(); 
-  h_mtt->Draw(); 
-  h_mtt->GetYaxis()->SetTitle( "Events" );
+  TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
+  c_Mtt->cd(); 
+  h_Mtt->Draw("hist"); 
+  h_Mtt->GetYaxis()->SetTitle("");
 
-  TCanvas *c_mttLL   = new TCanvas( "mttLL " ,"mttLL "  );
-  c_mttLL->cd(); 
-  h_mttLL->Draw(); 
-  h_mttLL->GetYaxis()->SetTitle( "Events" );
+  if (m_channel == "2to6") {
+    TCanvas *c_pz5 = new TCanvas(h_pz5->GetName(), h_pz5->GetTitle());
+    c_pz5->cd();
+    h_pz5->Draw("hist"); 
+    h_pz5->GetYaxis()->SetTitle(numBase + h_pz5->GetTitle() + " [" + units +"/GeV]");
 
-  TCanvas *c_mttLR   = new TCanvas( "mttLR " ,"mttLR "  );
-  c_mttLR->cd(); 
-  h_mttLR->Draw(); 
-  h_mttLR->GetYaxis()->SetTitle( "Events" );
+    TCanvas *c_costheta5_eq = new TCanvas(h_costheta5_eq->GetName(), h_costheta5_eq->GetTitle());
+    c_costheta5_eq->cd(); 
+    h_costheta5_eq->Draw("hist"); 
+    h_costheta5_eq->GetYaxis()->SetTitle(numBase + h_costheta5_eq->GetTitle() + " [" + units +"]");
 
-  TCanvas *c_mttRL   = new TCanvas( "mttRL " ,"mttRL "  );
-  c_mttRL->cd(); 
-  h_mttRL->Draw(); 
-  h_mttRL->GetYaxis()->SetTitle( "Events" );
+    TCanvas *c_costheta5_ee = new TCanvas(h_costheta5_ee->GetName(), h_costheta5_ee->GetTitle());
+    c_costheta5_ee->cd(); 
+    h_costheta5_ee->Draw("hist"); 
+    h_costheta5_ee->GetYaxis()->SetTitle(numBase + h_costheta5_ee->GetTitle() + " [" + units +"]");
 
-  TCanvas *c_mttRR   = new TCanvas( "mttRR " ,"mttRR "  );
-  c_mttRR->cd(); 
-  h_mttRR->Draw(); 
-  h_mttRR->GetYaxis()->SetTitle( "Events" );
+    TCanvas *c_ct7ct5 = new TCanvas(h_ct7ct5->GetName(), h_ct7ct5->GetTitle());
+    c_ct7ct5->cd(); 
+    h_ct7ct5->Draw("hist"); 
+    h_ct7ct5->GetYaxis()->SetTitle(numBase + h_ct7ct5->GetTitle() + " [" + units +"]");
+  }
 
-  TCanvas *c_mttALL   = new TCanvas( "mttALL " ,"mttALL "  );
-  c_mttALL->cd(); 
-  h_mttALL->Draw(); 
-  h_mttALL->GetYaxis()->SetTitle( "Events" );
+  if (m_channel == "2to2") {
+    TCanvas *c_MttLL   = new TCanvas("MttLL " ,"MttLL " );
+    c_MttLL->cd(); 
+    h_MttLL->Draw("hist"); 
+    h_MttLL->GetYaxis()->SetTitle("Events");
 
+    TCanvas *c_MttLR   = new TCanvas("MttLR " ,"MttLR " );
+    c_MttLR->cd(); 
+    h_MttLR->Draw("hist"); 
+    h_MttLR->GetYaxis()->SetTitle("Events");
+
+    TCanvas *c_MttRL   = new TCanvas("MttRL " ,"MttRL " );
+    c_MttRL->cd(); 
+    h_MttRL->Draw("hist"); 
+    h_MttRL->GetYaxis()->SetTitle("Events");
+
+    TCanvas *c_MttRR   = new TCanvas("MttRR " ,"MttRR " );
+    c_MttRR->cd(); 
+    h_MttRR->Draw("hist"); 
+    h_MttRR->GetYaxis()->SetTitle("Events");
+
+    TCanvas *c_MttALL   = new TCanvas("MttALL " ,"MttALL " );
+    c_MttALL->cd(); 
+    h_MttALL->Draw("hist"); 
+    h_MttALL->GetYaxis()->SetTitle("Events");
+  }
+  printf("...complete.\n");
 }
 
 bool AnalysisZprime::PassCuts() const
 {
-  // if( this->PassCuts_NJets() )
-  // {
-  //   if( this->PassCuts_MET() )
-  //   {
-  //     if( this->PassCuts_MWT() )
-  //     {
-        return true;
-  //     }
-  //   }
-  // }
-  // return false;
+    if (this->PassCuts_Mtt())
+    {
+      if (this->PassCuts_MET())
+        {
+          return true;
+        }
+    }
+  return false;
 }
 
-// bool AnalysisZprime::PassCuts_NJets() const
-// {
-//   // if( m_ntup->jet_n() >= 4 )
-//   // {
-//     return true;
-//   // }
-//   // return false;
-// }
+bool AnalysisZprime::PassCuts_MET() const
+{
+  if (m_channel == "2to2")
+  {
+    return true;
+  }
+  if (m_channel == "2to6")
+  {
+    if (m_ntup->Etmiss() > 0.0 * m_GeV)
+    {
+      return true;
+    }
+  }  
+  return false;
+}
 
-// bool AnalysisZprime::PassCuts_MET() const
-// {
-//   if( m_channel == "el" )
-//   {
-//     if( m_ntup->met_met() > 30.0 * m_GeV )
-//     {
-//       return true;
-//     }
-//   }
-//   if( m_channel == "mu" )
-//   {
-//     if( m_ntup->met_met() > 20.0 * m_GeV )
-//     {
-//       return true;
-//     }
-//   }  
-//   return false;
-// }
-
-// bool AnalysisZprime::PassCuts_MWT() const
-// {
-//   if( m_channel == "el" )
-//   {
-//     if( m_ntup->met_met() > 30.0 * m_GeV ) // changed from MWT!!!!!!!!!!!!!
-//     {
-//       return true;
-//     }
-//   }
-//   if( m_channel == "mu" ){
-//     if( ( m_ntup->met_met() + m_ntup->met_met() ) > 60.0 * m_GeV ) // changed from MWT!!!!!!!!!
-//     {             ///met_mwt          mwt
-//       return true;
-//     }
-//   }  
-//   return false;  
-// }
+bool AnalysisZprime::PassCuts_Mtt() const
+{
+  if (m_ntup->Mtt() > 1200.0)
+    {
+      if (m_ntup->Mtt() < 2200.0)
+        {
+          return true;
+        }
+    }
+  return false;
+}
 
 void AnalysisZprime::Loop()
 {
@@ -231,12 +271,13 @@ void AnalysisZprime::Loop()
   {
     cout<<"  Processing File = "<<(*i)<<endl;
     
-    this->SetupTreesForNewFile( (*i) );
+    this->SetupTreesForNewFile((*i));
  
     // The Event Loop
     Long64_t nEvents = this->TotalEvents();
     for(Long64_t jentry=0; jentry<nEvents;++jentry) 
     {
+      printf("Processing entry %lli\n", jentry);
       Long64_t ientry = this->IncrementEvent(jentry);
       if (ientry < 0) break;
       this->EachEvent();
@@ -254,23 +295,23 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupInputFiles()
 {   
   m_inputFiles = new vector<TString>;
-  // TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  TString base("/Users/declan/Data/Ntuples_Zprime/");
+  TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  // TString base("/Users/declan/Data/Ntuples_Zprime/");
   
-  m_inputFiles->push_back(base + "SM_13_2to2_1x5000.root");
+  m_inputFiles->push_back(base + "SM_13_2to6_xc_1x1000000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()
 {
   // Internal for Event Looping
-  if(m_ntup != 0){return m_ntup->totalEvents();}
+  if (m_ntup != 0){return m_ntup->totalEvents();}
   return -9999;  
 }
 
 Long64_t AnalysisZprime::IncrementEvent(Long64_t i)
 {
   Long64_t ev(-1);
-  if(m_ntup != 0){ev = m_ntup->LoadTree(i);}
+  if (m_ntup != 0){ev = m_ntup->LoadTree(i);}
   return ev;  
 }
 

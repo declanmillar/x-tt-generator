@@ -11,7 +11,7 @@
 
 class AnalysisZprime{
 public:
-  AnalysisZprime(const TString& outputFileName);
+  AnalysisZprime(const TString channel, const TString& outputFileName);
   virtual ~AnalysisZprime();
   
 protected:
@@ -28,11 +28,12 @@ protected:
   void EachEvent();
   void PostLoop();
   void MakeGraphs();
+  void TotalAsymmetries();
+  void ALL2to6();
   
   bool PassCuts() const;
-  // bool PassCuts_NJets() const;
-  // bool PassCuts_MET() const;
-  // bool PassCuts_MWT() const;
+  bool PassCuts_MET() const;
+  bool PassCuts_Mtt() const;
     
   // Delta R
   // float deltaR(const float& eta1,const float& eta2,const float& phi1,const float& phi2) const;
@@ -46,7 +47,7 @@ private:
   
   float m_pi;
   float m_GeV;
-  // TString m_channel;  
+  TString m_channel;  
   TString m_outputFileName;
 
   // Input Data
@@ -58,15 +59,18 @@ private:
   TFile* m_outputFile;
   
   // Define Histograms
-  TH1D* h_positron_pz;
-  TH1D* h_mtt;
-  TH1D* h_mttLL;
-  TH1D* h_mttLR;
-  TH1D* h_mttRL;
-  TH1D* h_mttRR;
-  TH1D* h_mttALLnum;
-  TH1D* h_mttALLden;
-  TH1D* h_mttALL;
+  TH1D* h_pz5;
+  TH1D* h_costheta5_eq;
+  TH1D* h_costheta5_ee;
+  TH1D* h_ct7ct5;
+  TH1D* h_Mtt;
+  TH1D* h_MttLL;
+  TH1D* h_MttLR;
+  TH1D* h_MttRL;
+  TH1D* h_MttRR;
+  TH1D* h_MttALLnum;
+  TH1D* h_MttALLden;
+  TH1D* h_MttALL;
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif
