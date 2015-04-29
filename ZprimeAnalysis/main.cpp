@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
   // Select Channel : 2to2 = pp->tt, 2to6 = pp->tt->bbffff
   
   TString channel("2to6"); 
-  TString outputFileName("histos.root");
+  TString outputFileName("2to6_SM_histos.root");
   
   AnalysisZprime analysis(channel, outputFileName);
 

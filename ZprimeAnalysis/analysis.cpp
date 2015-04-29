@@ -28,6 +28,14 @@ void AnalysisZprime::EachEvent()
 
     h_Mtt->Fill(m_ntup->Mtt(), weight/h_Mtt->GetXaxis()->GetBinWidth(1));
 
+    if (m_ntup->costhetastar() > 0) {
+      h_AFstar->Fill(m_ntup->Mtt(),weight/h_AFstar->GetXaxis()->GetBinWidth(1));
+    }
+
+    if (m_ntup->costhetastar() < 0) {
+      h_ABstar->Fill(m_ntup->Mtt(),weight/h_ABstar->GetXaxis()->GetBinWidth(1));
+    }
+
     if (m_channel == "2to6") {
       if (m_ntup->barcode()->at(2) == -11)  h_pz5->Fill(m_ntup->Pz()->at(2), m_ntup->weight());
       // if (m_ntup->Pz()->size() > 0) {
@@ -59,6 +67,8 @@ void AnalysisZprime::PreLoop()
   
   // Define Histograms    
   h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 14000.0);
+  h_AFstar = new TH1D("AFstar", "AFstar", 100, 0.0, 14000.0);
+  h_ABstar = new TH1D("ABstar", "ABstar", 100, 0.0, 14000.0);
 
   if (m_channel == "2to6") {  
     h_pz5 = new TH1D("pz5", "p_{z}^{5}", 50,0.0, 10000.0);
@@ -97,6 +107,8 @@ void AnalysisZprime::PostLoop()
 {
   if (m_channel == "2to2") this->TotalAsymmetries();
 
+  h_AFBstar = this->Asymmetry(h_AFstar, h_ABstar);
+
   this->MakeGraphs();
 
   this->ALL2to6();
@@ -106,6 +118,7 @@ void AnalysisZprime::PostLoop()
 
   // Save histograms
   h_Mtt->Write();
+  h_AFBstar->Write();
 
   if (m_channel == "2to2") {
     h_MttLL->Write();
@@ -172,6 +185,11 @@ void AnalysisZprime::MakeGraphs()
   c_Mtt->cd(); 
   h_Mtt->Draw("hist"); 
   h_Mtt->GetYaxis()->SetTitle("");
+
+  TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
+  c_AFBstar->cd(); 
+  h_AFBstar->Draw("hist"); 
+  h_AFBstar->GetYaxis()->SetTitle("");
 
   if (m_channel == "2to6") {
     TCanvas *c_pz5 = new TCanvas(h_pz5->GetName(), h_pz5->GetTitle());
@@ -254,14 +272,14 @@ bool AnalysisZprime::PassCuts_MET() const
 
 bool AnalysisZprime::PassCuts_Mtt() const
 {
-  if (m_ntup->Mtt() > 1200.0)
-    {
-      if (m_ntup->Mtt() < 2200.0)
-        {
+  // if (m_ntup->Mtt() > 1200.0)
+  //   {
+  //     if (m_ntup->Mtt() < 2200.0)
+  //       {
           return true;
-        }
-    }
-  return false;
+  //       }
+  //   }
+  // return false;
 }
 
 void AnalysisZprime::Loop()
@@ -285,7 +303,17 @@ void AnalysisZprime::Loop()
     
     this->CleanUp();
   }
-}  
+}
+
+TH1D* AnalysisZprime::Asymmetry(TH1D* h_A, TH1D* h_B){
+  TH1D* h_numerator = (TH1D*) h_A->Clone();
+  TH1D* h_denominator = (TH1D*) h_A->Clone();
+  h_numerator->Add(h_B, -1);
+  h_denominator->Add(h_B, 1);
+  // h_numerator->Divide(h_denominator);
+  delete h_denominator;
+  return h_numerator;
+}
 
 AnalysisZprime::~AnalysisZprime()
 {       
@@ -298,7 +326,7 @@ void AnalysisZprime::SetupInputFiles()
   TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
   // TString base("/Users/declan/Data/Ntuples_Zprime/");
   
-  m_inputFiles->push_back(base + "SM_13_2to6_xc_1x1000000.root");
+  m_inputFiles->push_back(base + "SM_13_2to6_1x5000000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()

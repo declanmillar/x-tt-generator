@@ -29,6 +29,7 @@ protected:
   void PostLoop();
   void MakeGraphs();
   void TotalAsymmetries();
+  TH1D* Asymmetry(TH1D* h_A, TH1D* h_B);
   void ALL2to6();
   
   bool PassCuts() const;
@@ -63,6 +64,9 @@ private:
   TH1D* h_costheta5_eq;
   TH1D* h_costheta5_ee;
   TH1D* h_ct7ct5;
+  TH1D* h_AFstar;
+  TH1D* h_ABstar;
+  TH1D* h_AFBstar;
   TH1D* h_Mtt;
   TH1D* h_MttLL;
   TH1D* h_MttLR;
