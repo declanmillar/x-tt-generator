@@ -416,6 +416,7 @@ function dsigma(x,wgt)
 
       if (final_state == 0) then
         if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame..."
+        ! give vegas assigned values
         phit = 2.d0*pi*ran(jseed)
         if (jx == 1) then
           ct = x(1)
@@ -424,7 +425,9 @@ function dsigma(x,wgt)
         else
           print*, "Error: invalid jx."
         end if
-        st=sqrt(1.d0 - ct*ct)
+        st = sqrt(1.d0 - ct*ct)
+
+        ! magnitude of 3 momentum for products in general two body decay
         qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
         if (qcm2 < 0.d0) then
           fffxn = 0.d0
@@ -432,6 +435,7 @@ function dsigma(x,wgt)
         else
           qcm = sqrt(qcm2)
         endif
+
         q(4,3) = sqrt(qcm2 + m3*m3)
         q(3,3) = qcm*ct
         q(2,3) = qcm*st*cos(phit)
@@ -440,6 +444,7 @@ function dsigma(x,wgt)
         q(3,4) = -qcm*ct
         q(2,4) = -qcm*st*cos(phit)
         q(1,4) = -qcm*st*sin(phit)
+        ! initialise unrequired array elements
         do i = 1, 4
           q(i,5) = 0.d0
           q(i,6) = 0.d0
@@ -447,9 +452,12 @@ function dsigma(x,wgt)
           q(i,8) = 0.d0
         end do
         if (verbose == 1) print*, "...complete."
+
       else if (final_state > 0) then
         if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame..."
         phit = 2.d0*pi*ran(jseed)
+
+        ! flatten the integrand around the top propagator
         m356min = m3 + m5 + m6
         m356max = ecm - m4 - m7 - m8
         xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
@@ -463,6 +471,8 @@ function dsigma(x,wgt)
         else
           m356 = sqrt(m356_2)
         endif
+
+        ! flatten the integrand around the anti-top propagator
         m478min = m4 + m7 + m8
         m478max = ecm - m356
         xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
@@ -476,6 +486,8 @@ function dsigma(x,wgt)
         else
           m478 = sqrt(m478_2)
         endif
+
+        ! flatten the integrand around the W+ propagator
         m56min = m5 + m6
         m56max = m356 - m3
         xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
@@ -489,6 +501,8 @@ function dsigma(x,wgt)
         else
           m56 = sqrt(m56_2)
         endif
+
+        ! flatten the integrand around the W- propagator
         m78min = m7 + m8
         m78max = m478 - m4
         xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
@@ -502,6 +516,7 @@ function dsigma(x,wgt)
         else
           m78 = sqrt(m78_2)
         endif
+
         if (jx == 1) then
           ct = x(9)
         else if (jx == 2) then
@@ -509,6 +524,8 @@ function dsigma(x,wgt)
         else
           print*, "Error: invalid jx."
         end if
+
+        ! assign angles
         st = sqrt(abs(1.d0 - ct*ct))
         ct56 = x(8)
         st56 = sqrt(1.d0 - ct56*ct56)
@@ -526,18 +543,27 @@ function dsigma(x,wgt)
         sf5 = sin(x(2))
         cf7 = cos(x(1))
         sf7 = sin(x(1))
-        rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 &
-         - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
+
+        ! two body decay of s-channel mediating boson
+        rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
         if (rq2 < 0.d0) then
           fffxn = 0.d0
           return
         else
           rq = sqrt(rq2)
         endif
+
         q356(3) = rq*ct
         q356(2) = rq*st*cos(phit)
         q356(1) = rq*st*sin(phit)
         q356(4) = sqrt(rq2 + m356*m356)
+
+        do i = 1, 3
+          q478(i) =  - q356(i)
+        end do
+        q478(4) = sqrt(rq2 + m478*m478)
+
+        ! two body decay of the top
         rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
         if (rq562 < 0.d0) then
           fffxn = 0.d0
@@ -559,10 +585,8 @@ function dsigma(x,wgt)
           p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
           q(i,3) = q356(i) - p56(i)
         end do
-        do i = 1, 3
-          q478(i) =  - q356(i)
-        end do
-        q478(4) = sqrt(rq2 + m478*m478)
+
+        ! two body decay of the anti-top
         rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
         if (rq782 < 0.d0) then
           fffxn = 0.d0
@@ -580,10 +604,12 @@ function dsigma(x,wgt)
         end do
         p78(4) = (q478(4)*q78(4) + pq78)/m478
         q(4,4) = q478(4) - p78(4)
-        do i = 1,3
+        do i = 1, 3
           p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
           q(i,4) = q478(i) - p78(i)
         end do
+
+        ! two body decay of the W+
         rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
         if (rq52 < 0.d0) then
           fffxn = 0.d0
@@ -596,7 +622,7 @@ function dsigma(x,wgt)
         q5(1) = rq5*ct5
         q5(4) = sqrt(rq52 + m5*m5)
         pq5 = 0.d0
-        do i = 1,3
+        do i = 1, 3
           pq5 = pq5 + p56(i)*q5(i)
         end do
         q(4,5) = (p56(4)*q5(4) + pq5)/m56
@@ -605,6 +631,8 @@ function dsigma(x,wgt)
           q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
           q(i,6) = p56(i) - q(i,5)
         end do
+
+        ! two body decay of the W-
         rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
         if (rq72 < 0.d0) then
           fffxn = 0.d0
@@ -617,12 +645,12 @@ function dsigma(x,wgt)
         q7(1) = rq7*ct7
         q7(4) = sqrt(rq72 + m7*m7)
         pq7 = 0.d0
-        do i = 1,3
+        do i = 1, 3
           pq7 = pq7 + p78(i)*q7(i)
         end do
         q(4,7) = (p78(4)*q7(4) + pq7)/m78
         q(4,8) = p78(4) - q(4,7)
-        do i = 1,3
+        do i = 1, 3
           q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
           q(i,8) = p78(i) - q(i,7)
         end do

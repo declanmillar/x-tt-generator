@@ -117,7 +117,7 @@ if len(all_options) > 0:
   all_options = "_" + all_options
 
 # filename
-filename = '%s%s_%s_%s%s%s_%sx%s' % (smodel, sector, collider_energy, sfinal, all_options, options.tag, options.itmx, ncall)
+filename = '%s_%s%s_%s%s%s_%sx%s' % (sfinal, smodel, sector, collider_energy, all_options, options.tag, options.itmx, ncall)
 
 # logfile 
 os = sys.platform

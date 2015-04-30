@@ -89,36 +89,29 @@ void AnalysisZprime::PreLoop()
     h_MttLR = new TH1D("MttLR", "MttLR", 100, 0.0, 14000.0);
     h_MttRL = new TH1D("MttRL", "MttRL", 100, 0.0, 14000.0);
     h_MttRR = new TH1D("MttRR", "MttRR", 100, 0.0, 14000.0);
-    h_MttALLnum = new TH1D("MttALLnum", "MttALLnum", 100, 0.0, 14000.0);
-    h_MttALLden = new TH1D("MttALLden", "MttALLden", 100, 0.0, 14000.0);
-    h_MttALL = new TH1D("MttALL", "MttALL", 100, 0.0, 14000.0);
-    h_Mtt->Sumw2();
-    h_MttLL->Sumw2();
-    h_MttLR->Sumw2();
-    h_MttRL->Sumw2();
-    h_MttRR->Sumw2();
-    h_MttALLnum->Sumw2();
-    h_MttALLden->Sumw2();
-    h_MttALL->Sumw2();
   }
 }
 
 void AnalysisZprime::PostLoop()
 {
-  if (m_channel == "2to2") this->TotalAsymmetries();
+  if (m_channel == "2to2") {
+    h_MttALL = this->MttALL();
+    h_MttAL = this->MttAL();
+    this->TotalSpinAsymmetries();
+  }
 
   h_AFBstar = this->Asymmetry(h_AFstar, h_ABstar);
 
   this->MakeGraphs();
 
-  this->ALL2to6();
+  if (m_channel == "2to6") this->ALL2to6();
   
   m_outputFile->cd();
   m_outputFile->cd("/");
 
   // Save histograms
   h_Mtt->Write();
-  h_AFBstar->Write();
+  // h_AFBstar->Write();
 
   if (m_channel == "2to2") {
     h_MttLL->Write();
@@ -126,6 +119,7 @@ void AnalysisZprime::PostLoop()
     h_MttRL->Write();
     h_MttRR->Write();
     h_MttALL->Write();
+    h_MttAL->Write();
   }
 
   if (m_channel == "2to6") {
@@ -139,20 +133,40 @@ void AnalysisZprime::PostLoop()
   
 }
 
-void AnalysisZprime::TotalAsymmetries()
+TH1D* AnalysisZprime::MttALL()
 {
-  h_MttALL->Add(h_MttRR, 1);
-  h_MttALL->Add(h_MttLL, 1);
-  h_MttALL->Add(h_MttRL,-1);
-  h_MttALL->Add(h_MttLR,-1);
+  TH1D* h_A = (TH1D*) h_MttLL->Clone();
+  TH1D* h_B = (TH1D*) h_MttLR->Clone();
 
-  h_MttALLden->Add(h_MttRR, 1);
-  h_MttALLden->Add(h_MttLL, 1);
-  h_MttALLden->Add(h_MttRL, 1);
-  h_MttALLden->Add(h_MttLR, 1);
+  h_A->Add(h_MttRR);
+  h_B->Add(h_MttRL);
 
-  h_MttALL->Divide(h_MttALLden);
+  TH1D* h_ALL = this->Asymmetry(h_A, h_B);
+  h_ALL->SetName("ALL");
+  h_ALL->SetTitle("ALL");
+  delete h_A;
+  delete h_B;
+  return h_ALL;
+}
 
+TH1D* AnalysisZprime::MttAL()
+{
+  TH1D* h_A = (TH1D*) h_MttRR->Clone();
+  TH1D* h_B = (TH1D*) h_MttRL->Clone();
+
+  h_A->Add(h_MttRL);
+  h_B->Add(h_MttLL);
+
+  TH1D* h_AL = this->Asymmetry(h_A, h_B);
+  h_AL->SetName("AL");
+  h_AL->SetTitle("AL");
+  delete h_A;
+  delete h_B;
+  return h_AL;
+}
+
+void AnalysisZprime::TotalSpinAsymmetries()
+{
   double sigma = h_Mtt->Integral("width");
   double sigmaLL = h_MttLL->Integral("width");
   double sigmaLR = h_MttLR->Integral("width");
@@ -162,8 +176,12 @@ void AnalysisZprime::TotalAsymmetries()
   double ALL = (sigmaLL + sigmaRR - sigmaRL - sigmaLR)/
                (sigmaLL + sigmaRR + sigmaRL + sigmaLR);
 
+  double AL = (sigmaRR + sigmaRL - sigmaLR - sigmaLL)/
+              (sigmaLL + sigmaRR + sigmaRL + sigmaLR);
+
   printf("sigma = %f\n", sigma);
-  printf("ALL = %f\n", ALL);  
+  printf("ALL = %f\n", ALL);
+  printf("AL = %f\n", AL);  
 }
 
 void AnalysisZprime::ALL2to6() {
@@ -179,7 +197,7 @@ void AnalysisZprime::MakeGraphs()
   printf("Making Graphs...\n");
 
   TString numBase = "d#sigma / d"; 
-  TString units = "";
+  TString units = "pb";
 
   TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
   c_Mtt->cd(); 
@@ -323,10 +341,11 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupInputFiles()
 {   
   m_inputFiles = new vector<TString>;
-  TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  // TString base("/Users/declan/Data/Ntuples_Zprime/");
+  // TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  TString base("/Users/declan/Data/Ntuples_Zprime/");
+  base += m_channel;
   
-  m_inputFiles->push_back(base + "SM_13_2to6_1x5000000.root");
+  m_inputFiles->push_back(base + "_SM_13_1x5000000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()

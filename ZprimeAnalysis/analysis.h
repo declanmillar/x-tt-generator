@@ -28,9 +28,11 @@ protected:
   void EachEvent();
   void PostLoop();
   void MakeGraphs();
-  void TotalAsymmetries();
+  void TotalSpinAsymmetries();
   TH1D* Asymmetry(TH1D* h_A, TH1D* h_B);
   void ALL2to6();
+  TH1D* MttALL();
+  TH1D* MttAL();
   
   bool PassCuts() const;
   bool PassCuts_MET() const;
@@ -72,9 +74,8 @@ private:
   TH1D* h_MttLR;
   TH1D* h_MttRL;
   TH1D* h_MttRR;
-  TH1D* h_MttALLnum;
-  TH1D* h_MttALLden;
   TH1D* h_MttALL;
+  TH1D* h_MttAL;
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif
