@@ -460,62 +460,78 @@ function dsigma(x,wgt)
         ! flatten the integrand around the top propagator
         m356min = m3 + m5 + m6
         m356max = ecm - m4 - m7 - m8
-        xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
-        xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
-        xx = x(13)*(xx356max - xx356min) + xx356min
-        rl356 = tan(xx)*rmt*gamt
-        m356_2 = (rmt**2 + rl356)
-        if (m356_2 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          m356 = sqrt(m356_2)
-        endif
+        if (flatten_phase_space == 0) then
+          m356 = x(13)*(m356max - m356min) + m356min
+        else 
+          xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
+          xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
+          xx = x(13)*(xx356max - xx356min) + xx356min
+          rl356 = tan(xx)*rmt*gamt
+          m356_2 = (rmt**2 + rl356)
+          if (m356_2 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            m356 = sqrt(m356_2)
+          endif
+        end if
 
         ! flatten the integrand around the anti-top propagator
         m478min = m4 + m7 + m8
         m478max = ecm - m356
-        xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
-        xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
-        xx = x(12)*(xx478max - xx478min) + xx478min
-        rl478 = tan(xx)*rmt*gamt
-        m478_2 = (rmt**2 + rl478)
-        if (m478_2 < 0.d0) then
-          fffxn = 0.d0
-          return
+        if (flatten_phase_space == 0) then
+          m478 = x(12)*(m478max - m478min) + m478min
         else
-          m478 = sqrt(m478_2)
-        endif
+          xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
+          xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
+          xx = x(12)*(xx478max - xx478min) + xx478min
+          rl478 = tan(xx)*rmt*gamt
+          m478_2 = (rmt**2 + rl478)
+          if (m478_2 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            m478 = sqrt(m478_2)
+          endif
+        end if
 
         ! flatten the integrand around the W+ propagator
         m56min = m5 + m6
         m56max = m356 - m3
-        xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
-        xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
-        xx = x(11)*(xx56max - xx56min) + xx56min
-        rl56 = tan(xx)*rm_w*gamma_w
-        m56_2 = (rm_w**2 + rl56)
-        if (m56_2 < 0.d0) then
-          fffxn = 0.d0
-          return
+        if (flatten_phase_space == 0) then
+          m56 = x(11)*(m56max - m56min) + m56min
         else
-          m56 = sqrt(m56_2)
-        endif
+          xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
+          xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
+          xx = x(11)*(xx56max - xx56min) + xx56min
+          rl56 = tan(xx)*rm_w*gamma_w
+          m56_2 = (rm_w**2 + rl56)
+          if (m56_2 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            m56 = sqrt(m56_2)
+          endif
+        end if
 
         ! flatten the integrand around the W- propagator
         m78min = m7 + m8
         m78max = m478 - m4
-        xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
-        xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
-        xx = x(10)*(xx78max - xx78min) + xx78min
-        rl78 = tan(xx)*rm_w*gamma_w
-        m78_2 = (rm_w**2 + rl78)
-        if (m78_2 < 0.d0) then
-          fffxn = 0.d0
-          return
+        if (flatten_phase_space == 0) then
+          m78 = x(10)*(m78max - m78min) + m78min
         else
-          m78 = sqrt(m78_2)
-        endif
+          xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
+          xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
+          xx = x(10)*(xx78max - xx78min) + xx78min
+          rl78 = tan(xx)*rm_w*gamma_w
+          m78_2 = (rm_w**2 + rl78)
+          if (m78_2 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            m78 = sqrt(m78_2)
+          endif
+        end if
 
         if (jx == 1) then
           ct = x(9)
@@ -674,27 +690,6 @@ function dsigma(x,wgt)
       if (verbose == 1) print*, "...complete."
 
       if (verbose == 1) print*, "Assigning particle 4-momenta..."
-
-      !       if (final_state == 0) then
-      !         ! assign 2to2 madgraph momenta    
-      !         do i = 1, 3
-      !           p1(i) = q(i,1)
-      !           p2(i) = q(i,2)
-      !           p3(i) = q(i,3)
-      !           p4(i) = q(i,4)
-      !           p5(i) = 0.d0
-      !           p6(i) = 0.d0
-      !           p7(i) = 0.d0
-      !           p8(i) = 0.d0
-      !         end do
-      !         p1(0) = q(4,1)
-      !         p2(0) = q(4,2)
-      !         p3(0) = q(4,3)
-      !         p4(0) = q(4,4)
-      !         p5(0) = 0.d0
-      !         p6(0) = 0.d0
-      !         p7(0) = 0.d0
-      !         p8(0) = 0.d0
 
         ! parton CoM 4 -momenta
         do i = 1, 3
@@ -873,32 +868,32 @@ function dsigma(x,wgt)
       if (verbose == 1) print*, "...complete."
 
       ! initilise
-      qcdqq1 = 0
-      qcdbb1 = 0
-      qcdgg1 = 0
-      ewzuu1 = 0
-      ewzdd1 = 0
-      ewzbb1 = 0
-      qcdqq2 = 0
-      qcdbb2 = 0
-      qcdgg2 = 0
-      ewzuu2 = 0
-      ewzdd2 = 0
-      ewzbb2 = 0
+      qcdqq1 = 0.d0
+      qcdbb1 = 0.d0
+      qcdgg1 = 0.d0
+      ewzuu1 = 0.d0
+      ewzdd1 = 0.d0
+      ewzbb1 = 0.d0
+      qcdqq2 = 0.d0
+      qcdbb2 = 0.d0
+      qcdgg2 = 0.d0
+      ewzuu2 = 0.d0
+      ewzdd2 = 0.d0
+      ewzbb2 = 0.d0
       do ii = -1, 1
         do jj = -1, 1
-          qcdpolqq1(ii,jj) = 0
-          qcdpolbb1(ii,jj) = 0
-          qcdpolgg1(ii,jj) = 0
-          ewzpoluu1(ii,jj) = 0
-          ewzpoldd1(ii,jj) = 0
-          ewzpolbb1(ii,jj) = 0
-          qcdpolqq2(ii,jj) = 0
-          qcdpolbb2(ii,jj) = 0
-          qcdpolgg2(ii,jj) = 0
-          ewzpoluu2(ii,jj) = 0
-          ewzpoldd2(ii,jj) = 0
-          ewzpolbb2(ii,jj) = 0
+          qcdpolqq1(ii,jj) = 0.d0
+          qcdpolbb1(ii,jj) = 0.d0
+          qcdpolgg1(ii,jj) = 0.d0
+          ewzpoluu1(ii,jj) = 0.d0
+          ewzpoldd1(ii,jj) = 0.d0
+          ewzpolbb1(ii,jj) = 0.d0
+          qcdpolqq2(ii,jj) = 0.d0
+          qcdpolbb2(ii,jj) = 0.d0
+          qcdpolgg2(ii,jj) = 0.d0
+          ewzpoluu2(ii,jj) = 0.d0
+          ewzpoldd2(ii,jj) = 0.d0
+          ewzpolbb2(ii,jj) = 0.d0
           do kk = 1, 20
             weight(kk,ii,jj) = 0.d0
           end do
@@ -919,12 +914,9 @@ function dsigma(x,wgt)
               qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
               qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
               resall = resall &
-              +qcdpolgg1(lam3,lam4) &
-              +qcdpolgg2(lam3,lam4) &
-              +qcdpolqq1(lam3,lam4) &
-              +qcdpolqq2(lam3,lam4) &
-              +qcdpolbb1(lam3,lam4) &
-              +qcdpolbb2(lam3,lam4)
+              + qcdpolgg1(lam3,lam4) + qcdpolgg2(lam3,lam4) &
+              + qcdpolqq1(lam3,lam4) + qcdpolqq2(lam3,lam4) &
+              + qcdpolbb1(lam3,lam4) + qcdpolbb2(lam3,lam4)
             end do
           end do
           if (verbose == 1) print*, "...complete."
@@ -940,12 +932,9 @@ function dsigma(x,wgt)
               ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
               ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
               resall = resall &
-             +ewzpoluu1(lam3,lam4) &
-             +ewzpoluu2(lam3,lam4) &
-             +ewzpoldd1(lam3,lam4) &
-             +ewzpoldd2(lam3,lam4) &
-             +ewzpolbb1(lam3,lam4) &
-             +ewzpolbb2(lam3,lam4)
+             + ewzpoluu1(lam3,lam4) + ewzpoluu2(lam3,lam4) &
+             + ewzpoldd1(lam3,lam4) + ewzpoldd2(lam3,lam4) &
+             + ewzpolbb1(lam3,lam4) + ewzpolbb2(lam3,lam4)
             end do
           end do
           if (verbose == 1) print*, "...complete."
@@ -975,7 +964,7 @@ function dsigma(x,wgt)
           if (verbose == 1) print*, "...complete."
         end if
         resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
-         + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
+               + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
       end if
 
       if ((resall) == 0.d0) then
@@ -1015,10 +1004,8 @@ function dsigma(x,wgt)
               pfx1(lam3,lam4) = pfx1(lam3,lam4)/x2
               pfx2(lam3,lam4) = pfx2(lam3,lam4)/x2
             end if
-            pfx1tot = pfx1tot &
-            +pfx1(lam3,lam4)
-            pfx2tot = pfx2tot &
-            +pfx2(lam3,lam4)
+            pfx1tot = pfx1tot + pfx1(lam3,lam4)
+            pfx2tot = pfx2tot + pfx2(lam3,lam4)
           end do
         end do
         if (verbose == 1) print*, "...complete."
@@ -1037,11 +1024,11 @@ function dsigma(x,wgt)
         ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
         ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
         if (ix == 1) then
-          pfx1tot = (qqd1+ggd1)/x1
-          pfx2tot = (qqd2+ggd2)/x1
+          pfx1tot = (qqd1 + ggd1)/x1
+          pfx2tot = (qqd2 + ggd2)/x1
         else if (ix  ==  2) then
-          pfx1tot = (qqd1+ggd1)/x2
-          pfx2tot = (qqd2+ggd2)/x2
+          pfx1tot = (qqd1 + ggd1)/x2
+          pfx2tot = (qqd2 + ggd2)/x2
         end if
         if (verbose == 1) print*, "...complete." 
       end if
@@ -1079,65 +1066,54 @@ function dsigma(x,wgt)
       fffxn2 = fffxn2*2.d0*pi*unit_conv
       if (verbose == 1) print*, "...complete."
 
-      if (verbose == 1) print*, "Multiplying by phase space volume..."
+      if (verbose == 1) print*, "Multiplying by phase space volume and flux factor..."
       if (final_state == 0) then
+
         ! 2-body phase space factor
         fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+        ! flux factor
         fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+        ! ---
+        ! 2-body phase space factor
         fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+        ! flux factor
         fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
 
       else if (final_state > 0) then
-        ! 6-body flux factor, pi's and phase space integral
-        fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6)) &
-        /(2.d0*m356) &
-        /rmt/gamt &
-        *((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)
-        fffxn1 = fffxn1*(xx356max - xx356min) &
-        /(2.d0*m478) &
-        /rmt/gamt &
-        *((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)
-        fffxn1 = fffxn1*(xx478max - xx478min) &
-        /(2.d0*m56) &
-        /rm_w/gamma_w &
-        *((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
-        fffxn1 = fffxn1*(xx56max - xx56min) &
-        /(2.d0*m78) &
-        /rm_w/gamma_w &
-        *((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
-        fffxn1 = fffxn1*(xx78max - xx78min)
 
-        ! nwa
-        fffxn1 = fffxn1 &
-        *gamt/gamma_t &
-        *gamt/gamma_t
+        ! phase space factor
+        fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
 
-        ! 6 - body flux factor, pi's and phase space integral
+        if (flatten_phase_space == 1) then
+          fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+          fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+          fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+          fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+        end if
+
+        ! flux factor
         fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-        fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6)) &
-        /(2.d0*m356) &
-        /rmt/gamt &
-        *((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)
-        fffxn2 = fffxn2*(xx356max - xx356min) &
-        /(2.d0*m478) &
-        /rmt/gamt &
-        *((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)
-        fffxn2 = fffxn2*(xx478max - xx478min) &
-        /(2.d0*m56) &
-        /rm_w/gamma_w &
-        *((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
-        fffxn2 = fffxn2*(xx56max - xx56min) &
-        /(2.d0*m78) &
-        /rm_w/gamma_w &
-        *((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)
-        fffxn2 = fffxn2*(xx78max - xx78min)
 
         ! nwa
-        fffxn2 = fffxn2 &
-        *gamt/gamma_t &
-        *gamt/gamma_t
-        ! flux and pi factors.
-        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4-3*(6))
+        fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
+
+        ! ---
+      
+        ! phase space factor
+        fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
+
+        if (flatten_phase_space == 1) then
+          fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+          fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+          fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+          fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+        end if
+
+        ! flux factor
+        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+
+        ! nwa
+        fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
       end if
 
       fffxn1 = fffxn1/real(ixmax)/real(jxmax)

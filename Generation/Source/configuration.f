@@ -25,6 +25,7 @@ module configuration
   integer :: print_distributions
   integer :: include_errors
   integer :: phase_space_only
+  integer :: flatten_phase_space
   integer :: verbose
   integer :: nfb
   real :: lambdaqcd4
@@ -145,6 +146,8 @@ module configuration
       read(5,*) ncall
 
       read(5,*) acc
+
+      read(5,*) flatten_phase_space
 
       read(5,*) symmetrise_x1x2
 

@@ -21,36 +21,37 @@ parser.add_option("-l", "--output", default=False, action="store_true" , help="o
 parser.add_option("-t", "--tag", default="",  type="string", help="add a name tag to logfile")
 
 # Physics options
-parser.add_option("-p", "--initial_state", default=0, const=1, action="store_const", help="switch to p-pbar collisions")
-parser.add_option("-P", "--structure_function", default=4, type="int", help="structure_functions set: 1=CTEQ6M; 2=CTEQ6D; 3=CTEQ6L; 4=CTEQ6L1; ...")
-parser.add_option("-q", "--include_qcd", default=1, const=0, action="store_const", help="turn off QCD")
-parser.add_option("-e", "--include_ew", default=1, const=0, action="store_const", help="turn off EW")
-parser.add_option("-z", "--include_bsm", default=1, const=0, action="store_const", help="turn off Z'")
-parser.add_option("-i", "--interference", default=2, type="int", help="specify interference: 0=none, 1=SM, 2=full, 3=full-SM")
-parser.add_option("-w", "--use_NWA", default=0, const=1, action="store_const", help="turn on use_NWA")
-parser.add_option("-K", "--additional_kinematics", default=1, const=0, action="store_const", help="Turn off additional kinematics")
-parser.add_option("-T", "--include_transverse", default=1, const=0, action="store_const", help="switch off include transverse mass variables")
-parser.add_option("-A", "--include_asymmetries", default=1, const=0, action="store_const", help="switch off asymmetry variables")
+parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
+parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
+parser.add_option("-q", "--include_qcd", default = 1, const = 0, action = "store_const", help = "turn off QCD")
+parser.add_option("-e", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
+parser.add_option("-z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
+parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
+parser.add_option("-w", "--use_NWA", default = 0, const = 1, action = "store_const", help = "turn on use_NWA")
+parser.add_option("-K", "--additional_kinematics", default = 1, const = 0, action = "store_const", help = "Turn off additional kinematics")
+parser.add_option("-T", "--include_transverse", default = 1, const = 0, action = "store_const", help = "switch off include transverse mass variables")
+parser.add_option("-A", "--include_asymmetries", default = 1, const = 0, action = "store_const", help = "switch off asymmetry variables")
 
 # Monte Carlo options
-parser.add_option("-s", "--iseed", default=False, action="store_true", help="used fixed iseed for random number generator")
-parser.add_option("-m", "--itmx", default=1, type="int", help="maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise_x1x2", default=0, const=1, action="store_const", help="symmatrise phase space over x1 and x2")
-parser.add_option("-c", "--symmetrise_costheta_t", default=0, const=1, action="store_const", help="symmatrise phase space over costheta_t")
-parser.add_option("-D", "--print_distributions", default=0, const=1, action="store_const", help="turn on built in histogams")
-parser.add_option("-E", "--include_errors", default=0, const=1, action="store_const", help="turn on distribution errors")
+parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
+parser.add_option("-m", "--itmx", default = 1, type = "int", help = "maximum number of VEGAS iterations")
+parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over x1 and x2")
+parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
+parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
+parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
+parser.add_option("-F", "--flatten_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand.")
 
 # Debug options
-parser.add_option("-M", "--phase_space_only", default=0, const=1, action="store_const", help="Set |M|^2 = 1")
-parser.add_option("-v", "--verbose", default=0, const=1, action="store_const", help="Run in verbose mode.")
+parser.add_option("-M", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
+parser.add_option("-v", "--verbose", default = 0, const = 1, action = "store_const", help = "Run in verbose mode.")
 
 (options, args) = parser.parse_args()
 print "\n Generating config file..."
 
-if options.phase_space_only==1:
-  options.include_qcd=0
-  options.include_ew=0
-  options.include_bsm=0
+if options.phase_space_only == 1:
+  options.include_qcd = 0
+  options.include_ew = 0
+  options.include_bsm = 0
   
 # Collect arguments
 model_name = args[0]
@@ -166,6 +167,8 @@ print >> config, '%s ! itmx' % options.itmx
 print >> config, '%s ! ncall' % ncall
 
 print >> config, '-1.d0 ! acc'
+
+print >> config, '%s ! flatten phase space' % options.flatten_phase_space
 
 print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 
