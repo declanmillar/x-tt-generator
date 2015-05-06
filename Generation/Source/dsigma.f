@@ -23,7 +23,7 @@ function dsigma(x,wgt)
 
   real :: x(100), wgt
 
-  ! functions
+  ! external functions
   real :: dsigma
   real :: alfas
   real :: sqqff_qcd
@@ -61,7 +61,7 @@ function dsigma(x,wgt)
   real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, &
           chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, dsea1, usea1, usea2, dsea2
 
-  ! 
+  ! shift direction
   real :: p5xp, p5yp, p5zp
 
   ! temporary dsigmas
@@ -69,6 +69,9 @@ function dsigma(x,wgt)
 
   ! temporary top mass and width
   real :: rmt, gamt
+
+  ! rambo
+  real :: xmass(100), prambo(4,100), wgtr
 
   real :: dphi
   real :: ecm, ecm_max, pcm, qcm2
@@ -118,21 +121,10 @@ function dsigma(x,wgt)
   real :: vcol
 
   ! parton momentum fraction
-  real :: x1
-  real :: x2
-  real :: xx
-  real :: xx1
-  real :: xx2
+  real :: x1, x2, xx, xx1, xx2
 
-  ! 
-  real :: xx356max
-  real :: xx356min
-  real :: xx478max
-  real :: xx478min
-  real :: xx56max
-  real :: xx56min
-  real :: xx78max
-  real :: xx78min
+  ! arctan
+  real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
 
   ! rapidity
   real :: yt, ytb, ytt, ytt_reco, yt_reco
@@ -143,7 +135,7 @@ function dsigma(x,wgt)
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
 
   ! iterators
-  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4
+  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, jps
 
   ! phase space vectors.
   real :: q356(4), q478(4)
@@ -169,14 +161,9 @@ function dsigma(x,wgt)
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m356_reco
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
-!   real :: mbbll, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
-!   real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2
-!   real :: mll
 
   ! Transverse momentum vectors   
-  real :: pT6col(1:2)
-  real :: ptbbll(2), pt35(2), pt47(2)
-  real :: ptmiss(2)
+  real :: pT6col(1:2), ptmiss(2)
 
   ! kinematic scalar arrays
   real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
@@ -242,6 +229,12 @@ function dsigma(x,wgt)
 
       ! initialisation
       fffxn = 0.d0
+      do i = 1, 100
+        xmass(i) = 0.d0 
+        do j = 1, 4
+          prambo(j,i) = 0.d0
+        end do 
+      end do
       do i = 1, 4
         do j = 1, 8
           q(i,j) = 0.d0
@@ -430,35 +423,48 @@ function dsigma(x,wgt)
       if(verbose == 1) print*, "...complete."
 
       if (final_state == 0) then
-        if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame..."
-        ! give vegas assigned values
-        phit = 2.d0*pi*ran(jseed)
-        if (jx == 1) then
-          ct = x(1)
-        else if (jx == 2) then
-          ct = -x(1)
-        else
-          print*, "Error: invalid jx."
+        if (use_rambo == 0) then
+          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame manually..."
+          ! give vegas assigned values
+          phit = 2.d0*pi*ran(jseed)
+          if (jx == 1) then
+            ct = x(1)
+          else if (jx == 2) then
+            ct = -x(1)
+          else
+            print*, "Error: invalid jx."
+          end if
+          st = sqrt(1.d0 - ct*ct)
+
+          ! magnitude of 3 momentum for products in general two body decay
+          qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
+          if (qcm2 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            qcm = sqrt(qcm2)
+          endif
+
+          q(4,3) = sqrt(qcm2 + m3*m3)
+          q(3,3) = qcm*ct
+          q(2,3) = qcm*st*cos(phit)
+          q(1,3) = qcm*st*sin(phit)
+          q(4,4) = sqrt(qcm2 + m4*m4)
+          q(3,4) = -qcm*ct
+          q(2,4) = -qcm*st*cos(phit)
+          q(1,4) = -qcm*st*sin(phit)
+        else if (use_rambo == 1) then
+          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
+          xmass(1) = m3
+          xmass(2) = m4
+          jps = 2
+          call rambo(seed,jps,ecm,xmass,prambo,wgtR)
+          do i = 3, jps + 2
+            do j = 1, 4
+              q(j,i) = prambo(j, i-2)
+            end do
+          end do
         end if
-        st = sqrt(1.d0 - ct*ct)
-
-        ! magnitude of 3 momentum for products in general two body decay
-        qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
-        if (qcm2 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          qcm = sqrt(qcm2)
-        endif
-
-        q(4,3) = sqrt(qcm2 + m3*m3)
-        q(3,3) = qcm*ct
-        q(2,3) = qcm*st*cos(phit)
-        q(1,3) = qcm*st*sin(phit)
-        q(4,4) = sqrt(qcm2 + m4*m4)
-        q(3,4) = -qcm*ct
-        q(2,4) = -qcm*st*cos(phit)
-        q(1,4) = -qcm*st*sin(phit)
         ! initialise unrequired array elements
         do i = 1, 4
           q(i,5) = 0.d0
@@ -469,222 +475,240 @@ function dsigma(x,wgt)
         if (verbose == 1) print*, "...complete."
 
       else if (final_state > 0) then
-        if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame..."
-        phit = 2.d0*pi*ran(jseed)
+        if (use_rambo == 0) then
+          if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame manually..."
+          phit = 2.d0*pi*ran(jseed)
 
-        ! flatten the integrand around the top propagator
-        m356min = m3 + m5 + m6
-        m356max = ecm - m4 - m7 - m8
-        if (map_phase_space == 0) then
-          m356 = x(13)*(m356max - m356min) + m356min
-        else 
-          xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
-          xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
-          xx = x(13)*(xx356max - xx356min) + xx356min
-          rl356 = tan(xx)*rmt*gamt
-          m356_2 = (rmt**2 + rl356)
-          if (m356_2 < 0.d0) then
+          m356min = m3 + m5 + m6
+          m356max = ecm - m4 - m7 - m8
+          if (map_phase_space == 0) then
+            m356 = x(13)*(m356max - m356min) + m356min
+          else
+            ! flatten the integrand around the top propagator
+            xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
+            xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
+            xx = x(13)*(xx356max - xx356min) + xx356min
+            rl356 = tan(xx)*rmt*gamt
+            m356_2 = (rmt**2 + rl356)
+            if (m356_2 < 0.d0) then
+              fffxn = 0.d0
+              return
+            else
+              m356 = sqrt(m356_2)
+            endif
+          end if
+
+          m478min = m4 + m7 + m8
+          m478max = ecm - m356
+          if (map_phase_space == 0) then
+            m478 = x(12)*(m478max - m478min) + m478min
+          else
+            ! flatten the integrand around the anti-top propagator
+            xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
+            xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
+            xx = x(12)*(xx478max - xx478min) + xx478min
+            rl478 = tan(xx)*rmt*gamt
+            m478_2 = (rmt**2 + rl478)
+            if (m478_2 < 0.d0) then
+              fffxn = 0.d0
+              return
+            else
+              m478 = sqrt(m478_2)
+            endif
+          end if
+
+          m56min = m5 + m6
+          m56max = m356 - m3
+          if (map_phase_space == 0) then
+            m56 = x(11)*(m56max - m56min) + m56min
+          else
+            ! flatten the integrand around the W+ propagator
+            xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
+            xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
+            xx = x(11)*(xx56max - xx56min) + xx56min
+            rl56 = tan(xx)*rm_w*gamma_w
+            m56_2 = (rm_w**2 + rl56)
+            if (m56_2 < 0.d0) then
+              fffxn = 0.d0
+              return
+            else
+              m56 = sqrt(m56_2)
+            endif
+          end if
+
+          m78min = m7 + m8
+          m78max = m478 - m4
+          if (map_phase_space == 0) then
+            m78 = x(10)*(m78max - m78min) + m78min
+          else
+            ! flatten the integrand around the W- propagator
+            xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
+            xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
+            xx = x(10)*(xx78max - xx78min) + xx78min
+            rl78 = tan(xx)*rm_w*gamma_w
+            m78_2 = (rm_w**2 + rl78)
+            if (m78_2 < 0.d0) then
+              fffxn = 0.d0
+              return
+            else
+              m78 = sqrt(m78_2)
+            endif
+          end if
+
+          if (jx == 1) then
+            ct = x(9)
+          else if (jx == 2) then
+            ct =  - x(9)
+          else
+            print*, "Error: invalid jx."
+          end if
+
+          ! assign angles
+          st = sqrt(abs(1.d0 - ct*ct))
+          ct56 = x(8)
+          st56 = sqrt(1.d0 - ct56*ct56)
+          ct78 = x(7)
+          st78 = sqrt(1.d0 - ct78*ct78)
+          ct5 = x(6)
+          st5 = sqrt(1.d0 - ct5*ct5)
+          ct7 = x(5)
+          st7 = sqrt(1.d0 - ct7*ct7)
+          cf56 = cos(x(4))
+          sf56 = sin(x(4))
+          cf78 = cos(x(3))
+          sf78 = sin(x(3))
+          cf5 = cos(x(2))
+          sf5 = sin(x(2))
+          cf7 = cos(x(1))
+          sf7 = sin(x(1))
+
+          ! two body decay of s-channel mediating boson
+          rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
+          if (rq2 < 0.d0) then
             fffxn = 0.d0
             return
           else
-            m356 = sqrt(m356_2)
+            rq = sqrt(rq2)
           endif
-        end if
 
-        ! flatten the integrand around the anti-top propagator
-        m478min = m4 + m7 + m8
-        m478max = ecm - m356
-        if (map_phase_space == 0) then
-          m478 = x(12)*(m478max - m478min) + m478min
-        else
-          xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
-          xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
-          xx = x(12)*(xx478max - xx478min) + xx478min
-          rl478 = tan(xx)*rmt*gamt
-          m478_2 = (rmt**2 + rl478)
-          if (m478_2 < 0.d0) then
+          q356(3) = rq*ct
+          q356(2) = rq*st*cos(phit)
+          q356(1) = rq*st*sin(phit)
+          q356(4) = sqrt(rq2 + m356*m356)
+
+          do i = 1, 3
+            q478(i) =  - q356(i)
+          end do
+          q478(4) = sqrt(rq2 + m478*m478)
+
+          ! two body decay of the top
+          rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
+          if (rq562 < 0.d0) then
             fffxn = 0.d0
             return
           else
-            m478 = sqrt(m478_2)
+            rq56 = sqrt(rq562)
           endif
-        end if
+          q56(3) = rq56*st56*cf56
+          q56(2) = rq56*st56*sf56
+          q56(1) = rq56*ct56
+          q56(4) = sqrt(rq562 + m56*m56)
+          pq56 = 0.d0
+          do i = 1,3
+            pq56 = pq56 + q356(i)*q56(i)
+          end do
+          p56(4) = (q356(4)*q56(4) + pq56)/m356
+          q(4,3) = q356(4) - p56(4)
+          do i = 1,3
+            p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
+            q(i,3) = q356(i) - p56(i)
+          end do
 
-        ! flatten the integrand around the W+ propagator
-        m56min = m5 + m6
-        m56max = m356 - m3
-        if (map_phase_space == 0) then
-          m56 = x(11)*(m56max - m56min) + m56min
-        else
-          xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
-          xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
-          xx = x(11)*(xx56max - xx56min) + xx56min
-          rl56 = tan(xx)*rm_w*gamma_w
-          m56_2 = (rm_w**2 + rl56)
-          if (m56_2 < 0.d0) then
+          ! two body decay of the anti-top
+          rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
+          if (rq782 < 0.d0) then
             fffxn = 0.d0
             return
           else
-            m56 = sqrt(m56_2)
+            rq78 = sqrt(rq782)
           endif
-        end if
+          q78(3) = rq78*st78*cf78
+          q78(2) = rq78*st78*sf78
+          q78(1) = rq78*ct78
+          q78(4) = sqrt(rq782 + m78*m78)
+          pq78 = 0.d0
+          do i = 1, 3
+            pq78 = pq78 + q478(i)*q78(i)
+          end do
+          p78(4) = (q478(4)*q78(4) + pq78)/m478
+          q(4,4) = q478(4) - p78(4)
+          do i = 1, 3
+            p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
+            q(i,4) = q478(i) - p78(i)
+          end do
 
-        ! flatten the integrand around the W- propagator
-        m78min = m7 + m8
-        m78max = m478 - m4
-        if (map_phase_space == 0) then
-          m78 = x(10)*(m78max - m78min) + m78min
-        else
-          xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
-          xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
-          xx = x(10)*(xx78max - xx78min) + xx78min
-          rl78 = tan(xx)*rm_w*gamma_w
-          m78_2 = (rm_w**2 + rl78)
-          if (m78_2 < 0.d0) then
+          ! two body decay of the W+
+          rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
+          if (rq52 < 0.d0) then
             fffxn = 0.d0
             return
           else
-            m78 = sqrt(m78_2)
+            rq5 = sqrt(rq52)
           endif
+          q5(3) = rq5*st5*cf5
+          q5(2) = rq5*st5*sf5
+          q5(1) = rq5*ct5
+          q5(4) = sqrt(rq52 + m5*m5)
+          pq5 = 0.d0
+          do i = 1, 3
+            pq5 = pq5 + p56(i)*q5(i)
+          end do
+          q(4,5) = (p56(4)*q5(4) + pq5)/m56
+          q(4,6) = p56(4) - q(4,5)
+          do i = 1,3
+            q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
+            q(i,6) = p56(i) - q(i,5)
+          end do
+
+          ! two body decay of the W-
+          rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
+          if (rq72 < 0.d0) then
+            fffxn = 0.d0
+            return
+          else
+            rq7 = sqrt(rq72)
+          endif
+          q7(3) = rq7*st7*cf7
+          q7(2) = rq7*st7*sf7
+          q7(1) = rq7*ct7
+          q7(4) = sqrt(rq72 + m7*m7)
+          pq7 = 0.d0
+          do i = 1, 3
+            pq7 = pq7 + p78(i)*q7(i)
+          end do
+          q(4,7) = (p78(4)*q7(4) + pq7)/m78
+          q(4,8) = p78(4) - q(4,7)
+          do i = 1, 3
+            q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
+            q(i,8) = p78(i) - q(i,7)
+          end do
+        else if (use_rambo == 1) then
+          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
+          xmass(1) = m3
+          xmass(2) = m4
+          xmass(3) = m5 
+          xmass(4) = m6
+          xmass(5) = m7
+          xmass(6) = m8
+          jps = 6
+          call rambo(seed,jps,ecm,xmass,prambo,wgtr)
+          do i = 3, jps + 2
+            do j = 1, 4
+              q(j,i) = prambo(j,i-2)
+            end do
+          end do
         end if
 
-        if (jx == 1) then
-          ct = x(9)
-        else if (jx == 2) then
-          ct =  - x(9)
-        else
-          print*, "Error: invalid jx."
-        end if
-
-        ! assign angles
-        st = sqrt(abs(1.d0 - ct*ct))
-        ct56 = x(8)
-        st56 = sqrt(1.d0 - ct56*ct56)
-        ct78 = x(7)
-        st78 = sqrt(1.d0 - ct78*ct78)
-        ct5 = x(6)
-        st5 = sqrt(1.d0 - ct5*ct5)
-        ct7 = x(5)
-        st7 = sqrt(1.d0 - ct7*ct7)
-        cf56 = cos(x(4))
-        sf56 = sin(x(4))
-        cf78 = cos(x(3))
-        sf78 = sin(x(3))
-        cf5 = cos(x(2))
-        sf5 = sin(x(2))
-        cf7 = cos(x(1))
-        sf7 = sin(x(1))
-
-        ! two body decay of s-channel mediating boson
-        rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
-        if (rq2 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          rq = sqrt(rq2)
-        endif
-
-        q356(3) = rq*ct
-        q356(2) = rq*st*cos(phit)
-        q356(1) = rq*st*sin(phit)
-        q356(4) = sqrt(rq2 + m356*m356)
-
-        do i = 1, 3
-          q478(i) =  - q356(i)
-        end do
-        q478(4) = sqrt(rq2 + m478*m478)
-
-        ! two body decay of the top
-        rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
-        if (rq562 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          rq56 = sqrt(rq562)
-        endif
-        q56(3) = rq56*st56*cf56
-        q56(2) = rq56*st56*sf56
-        q56(1) = rq56*ct56
-        q56(4) = sqrt(rq562 + m56*m56)
-        pq56 = 0.d0
-        do i = 1,3
-          pq56 = pq56 + q356(i)*q56(i)
-        end do
-        p56(4) = (q356(4)*q56(4) + pq56)/m356
-        q(4,3) = q356(4) - p56(4)
-        do i = 1,3
-          p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
-          q(i,3) = q356(i) - p56(i)
-        end do
-
-        ! two body decay of the anti-top
-        rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
-        if (rq782 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          rq78 = sqrt(rq782)
-        endif
-        q78(3) = rq78*st78*cf78
-        q78(2) = rq78*st78*sf78
-        q78(1) = rq78*ct78
-        q78(4) = sqrt(rq782 + m78*m78)
-        pq78 = 0.d0
-        do i = 1, 3
-          pq78 = pq78 + q478(i)*q78(i)
-        end do
-        p78(4) = (q478(4)*q78(4) + pq78)/m478
-        q(4,4) = q478(4) - p78(4)
-        do i = 1, 3
-          p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
-          q(i,4) = q478(i) - p78(i)
-        end do
-
-        ! two body decay of the W+
-        rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
-        if (rq52 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          rq5 = sqrt(rq52)
-        endif
-        q5(3) = rq5*st5*cf5
-        q5(2) = rq5*st5*sf5
-        q5(1) = rq5*ct5
-        q5(4) = sqrt(rq52 + m5*m5)
-        pq5 = 0.d0
-        do i = 1, 3
-          pq5 = pq5 + p56(i)*q5(i)
-        end do
-        q(4,5) = (p56(4)*q5(4) + pq5)/m56
-        q(4,6) = p56(4) - q(4,5)
-        do i = 1,3
-          q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
-          q(i,6) = p56(i) - q(i,5)
-        end do
-
-        ! two body decay of the W-
-        rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
-        if (rq72 < 0.d0) then
-          fffxn = 0.d0
-          return
-        else
-          rq7 = sqrt(rq72)
-        endif
-        q7(3) = rq7*st7*cf7
-        q7(2) = rq7*st7*sf7
-        q7(1) = rq7*ct7
-        q7(4) = sqrt(rq72 + m7*m7)
-        pq7 = 0.d0
-        do i = 1, 3
-          pq7 = pq7 + p78(i)*q7(i)
-        end do
-        q(4,7) = (p78(4)*q7(4) + pq7)/m78
-        q(4,8) = p78(4) - q(4,7)
-        do i = 1, 3
-          q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
-          q(i,8) = p78(i) - q(i,7)
-        end do
         if (verbose == 1) print*, "...complete."
       end if
 
@@ -1049,58 +1073,56 @@ function dsigma(x,wgt)
 
       if (verbose == 1) print*, "Multiplying by phase space volume and flux factor..."
       if (final_state == 0) then
+        if (use_rambo == 0) then
+          ! 2-body phase space factor
+          fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+          fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+        else if (use_rambo == 1) then
+          fffxn1 = fffxn1*wgtr/(2.d0*pi)
+          fffxn2 = fffxn2*wgtr/(2.d0*pi)
+        end if
 
-        ! 2-body phase space factor
-        fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
         ! flux factor
         fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
-        ! ---
-        ! 2-body phase space factor
-        fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
-        ! flux factor
         fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
 
       else if (final_state > 0) then
+        if (use_rambo == 0) then
 
-        ! phase space factor
-        fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
+          ! phase space factor
+          fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
+          fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
 
-        if (map_phase_space == 1) then
-          fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-          fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-          fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-          fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
-        else
-          fffxn1 = fffxn1*(m356max - m356min)   
-          fffxn1 = fffxn1*(m478max - m478min)
-          fffxn1 = fffxn1*(m56max - m56min)
-          fffxn1 = fffxn1*(m78max - m78min)
+          if (map_phase_space == 1) then
+            fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+            fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+            fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+            fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+            fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+            fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+            fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+            fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+            ! nwa
+            fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
+            fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
+          else
+            fffxn1 = fffxn1*(m356max - m356min)   
+            fffxn1 = fffxn1*(m478max - m478min)
+            fffxn1 = fffxn1*(m56max - m56min)
+            fffxn1 = fffxn1*(m78max - m78min)
+            fffxn2 = fffxn2*(m356max - m356min)   
+            fffxn2 = fffxn2*(m478max - m478min)
+            fffxn2 = fffxn2*(m56max - m56min)
+            fffxn2 = fffxn2*(m78max - m78min)
+          end if
+        else if (use_rambo == 1) then
+          fffxn1 = fffxn1*wgtr/(2.d0*pi)
+          fffxn2 = fffxn2*wgtr/(2.d0*pi)
         end if
-
-
+      
         ! flux factor
         fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-
-        ! nwa
-        fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
-
-        ! ---
-      
-        ! phase space factor
-        fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
-
-        if (map_phase_space == 1) then
-          fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-          fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-          fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-          fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
-        end if
-
-        ! flux factor
         fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-
-        ! nwa
-        fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
       end if
 
       fffxn1 = fffxn1/real(ixmax)/real(jxmax)
@@ -1644,95 +1666,6 @@ function dsigma(x,wgt)
 
           cosfl = cos(phi_l)
           call rootadddouble(cosfl, "cosphil")
-
-          ! TRANSVERSE VARIABLES
-
-!           mll = mass(p5col + p6col)
-!           call rootadddouble(mll, "Mll")
-
-!           ! calculate invariant mass of visible decay products
-!           mbbll = mass(p3col + p4col + p5col + p7col)
-!           call rootadddouble(mbbll, "Mbbll")
-
-!           ! calculate individual transverse energy energies of visible particles
-!           et3 = sqrt(m3**2 + pt2(3))
-!           et4 = sqrt(m4**2 + pt2(4))
-!           et5 = sqrt(m5**2 + pt2(5))
-!           et7 = sqrt(m6**2 + pt2(7))
-
-!           ! calculate total scalar sum of transverse energy
-!           ht = et3 + et4 + et5 + et7 + etmiss
-!           call rootadddouble(ht, "HT")
-
-!           ! calculate MT with individual ET sums plus a scalar sum of pT + ETmiss (not lorentz invarient)
-!           mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-!            + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
-!           mt1 = sqrt(abs(mt12))
-!           call rootadddouble(mt1, "MT1")
-
-!           ! calculate MT with individual ET sums plus a scalar sum of pT - ETmiss (not lorentz invarient)
-!           mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-!           + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
-!           mct1 = sqrt(abs(mct12))
-!           call rootadddouble(mct1, "MCT1")
-
-!           print*, pt(3) + pt(4) + pt(5) + pt(7) - etmiss
-
-!           ! ET of visible decay products
-!           etbbll2 = mbbll*mbbll
-!           do i = 1, 2
-!             ptbbll(i) = p3col(i) + p4col(i) + p5col(i) + p7col(i)
-!             etbbll2 = etbbll2 + ptbbll(i)*ptbbll(i)
-!           end do
-!           etbbll = sqrt(etbbll2)
-
-!           ! scalar sum of visible decay products and MET
-!           ktbbll = etbbll + etmiss
-!           call rootadddouble(ktbbll, "ETbbllmiss")
-
-!           et5 = sqrt(m5**2 + pt2(5))
-!           et7 = sqrt(m7**2 + pt2(7))
-
-!           mtll2 = (et5 + et7)**2
-!           do i = 1, 2
-!             mtll2 = mtll2 - (qcol(i,5) + qcol(i,7))**2
-!           end do
-!           mtll = sqrt(abs(mlt2))
-!           call rootadddouble(mlt, "MTll")
-
-!           mctll2 = (et5 + et7)**2
-!           do i = 1, 2
-!             mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
-!           end do
-!           mctll = sqrt(abs(mctll2))
-!           call rootadddouble(mctll, "MCTll")
-
-!           m35 = mass(p3col + p5col)
-!           m47 = mass(p4col + p7col)
-!           et35 = m35*m35
-!           et47 = m47*m47
-!           do i = 1, 2
-!             pt35(i) = p3col(i) + p5col(i)
-!             et352 = et352 + pt35(i)*pt35(i)
-!             pt47(i) = p4col(i) + p7col(i)
-!             et472 = et472 + pt47(i)*pt47(i)
-!           end do
-!           et35 = sqrt(et352)
-!           et47 = sqrt(et472)
-
-!           mtblbl2 = (et35 + et47)**2
-!           do i = 1, 2
-!             mtblbl2 = mtblbl2 - (p3col(i) + p5col(i) + p4col(i)+ p7col(i) )**2
-!           end do
-!           mtblbl = sqrt(abs(mtblbl2))
-!           call rootadddouble(mtblbl, "MTblbl")
-
-!           mctblbl2 = (et35 + et47)**2
-!           do i = 1, 2
-!             mctblbl2 = mctblbl2 - (p3col(i) + p5col(i) - p4col(i) - p7col(i) )**2
-!           end do
-!           mctblbl = sqrt(abs(mctblbl2))
-!           call rootadddouble(mctblbl, "MCTblbl")
 
           ! minimal cut on top rapidity
           if (final_state == 0) then

@@ -108,100 +108,101 @@ program zprime
   end if
 
 
-  ! dimensions
-  if (final_state == 0) then
-    ndimensions = 3
-  else if (final_state > 0) then
-    ndimensions = 15
+  ! VEGAS parameters
+  if (use_rambo == 0) then
+    if (final_state == 0) then
+      ! integrates on:
+      ! x(3) = (x1 - tau)/(1 - tau),
+      ! x(2) = (ecm - m3 - m4)/(ecm_max - m3 - m4),
+      ! x(1) = cos(theta3_cm)
+      ndimensions = 3
+      m3 = tmass
+      m4 = tmass
+      m5 = 0.d0
+      m6 = 0.d0
+      m7 = 0.d0
+      m8 = 0.d0
+
+      ! limits:
+      do i = 3, 2, -1
+        xl(i) = 0.d0
+        xu(i) = 1.d0
+      end do
+      do i = 1, 1
+        xl(i) = -1.d0
+        xu(i) = 1.d0
+      end do
+
+    else if (final_state > 0) then
+      ! integrates on:         
+      ! x(15) = (x1 - tau)/(1 - tau),
+      ! x(14) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)
+      !        /(ecm_max - m3 - m4 - m5 - m6 - m7 - m8),
+      ! x(13) = (xx356 - xx356min)/(xx356max - xx356min),
+      ! where xx356 = arctg((m356**2 - m3**2)/m3/gamt),
+      ! or x(13) = (m356 - m356min)/(m356max - m356min),
+      ! where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
+      ! x(12) = (xx478 - xx478min)/(xx478max - xx478min),
+      ! where xx478 = arctg((m478**2 - m3**2)/m3/gamt),
+      ! or x(12) = (m478 - m478min)/(m478max - m478min),
+      ! where m478min = m4 + m7 + m8, m478max = ecm_max - m356
+      ! x(11) = (xx56 - xx56min)/(xx56max - xx56min),
+      ! where xx56 = arctg((m56**2 - rm_w**2)/rm_w/gamw),
+      ! or x(11) = (m56 - m56min)/(m56max - m56min),
+      ! where m56min = m5 + m6, m56max = m356 - m3
+      ! x(10) = (xx78 - xx78min)/(xx78max - xx78min),
+      ! where xx78 = arctg((m78**2 - rm_w**2)/rm_w/gamw),
+      ! or x(10) = (m78 - m78min)/(m78max - m78min),
+      ! where m78min = m7 + m8, m78max = m478 - m4
+      ! x(9) = cos(theta_356) = -cos(theta_478)
+      ! x(8) = cos(theta56_356),
+      ! x(7) = cos(theta78_478),
+      ! x(6) = cos(theta5_56),
+      ! x(5) = cos(theta7_78),
+      ! x(4) = fi56_cm_356,
+      ! x(3) = fi78_cm_478,
+      ! x(2) = fi5_cm_56,
+      ! x(1) = fi8_cm_78;
+      ndimensions = 15
+      m3 = bmass
+      m4 = bmass
+      m5 = emass
+      m6 = nuemass
+      m7 = emass
+      m8 = nuemass
+
+      ! set integration limits:
+      do i = 15, 14, -1
+        xl(i) = 0.d0
+        xu(i) = 1.d0
+      end do
+      do i = 13, 10, -1
+        xl(i) = 0.d0
+        xu(i) = 1.d0
+      end do
+      do i = 9, 5, -1
+        xl(i) = -1.d0
+        xu(i) = 1.d0
+      end do
+      do i = 4, 1, -1
+        xl(i) = 0.d0
+        xu(i) = 2.d0*pi
+      end do
+    end if
+  else if (use_rambo == 1) then
+      ! integrates on:
+      ! x(2) = (x1 - tau)/(1 - tau),
+      ! x(1) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)/
+      !        (ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+      ndimensions = 2
+      do i = 2, 1, -1
+        xl(i) = 0.d0
+        xu(i) = 1.d0
+      end do
   end if
 
   ! if nprn<0 no print-out
-  nprn = 0
-
-  if (final_state == 0) then
-    m3 = tmass
-    m4 = tmass
-    m5 = 0.d0
-    m6 = 0.d0
-    m7 = 0.d0
-    m8 = 0.d0
-
-    ! if (manual)
-    ! integrates on:
-    ! x(3) = (x1 - tau)/(1 - tau),
-    ! x(2) = (ecm - m3 - m4)/(ecm_max - m3 - m4),
-    ! x(1) = cos(theta3_cm)
-    ! if (RAMBO)
-    ! x(2) = (x1 - tau)/(1 - tau),
-    ! x(1) = (ecm - m3 - m4)/(ecm_max - m3 - m4),
-
-    ! limits:
-    do i = 3, 2, -1
-      xl(i) = 0.d0
-      xu(i) = 1.d0
-    end do
-    do i = 1, 1
-      xl(i) = -1.d0
-      xu(i) = 1.d0
-    end do
-
-  else if (final_state >= 1) then
-    m3 = bmass
-    m4 = bmass
-    m5 = emass
-    m6 = nuemass
-    m7 = emass
-    m8 = nuemass
-
-    ! integrates on:         
-    ! x(15) = (x1 - tau)/(1 - tau),
-    ! x(14) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)
-    !        /(ecm_max - m3 - m4 - m5 - m6 - m7 - m8),
-    ! x(13) = (xx356 - xx356min)/(xx356max - xx356min),
-    ! where xx356 = arctg((m356**2 - m3**2)/m3/gamt),
-    ! or x(13) = (m356 - m356min)/(m356max - m356min),
-    ! where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
-    ! x(12) = (xx478 - xx478min)/(xx478max - xx478min),
-    ! where xx478 = arctg((m478**2 - m3**2)/m3/gamt),
-    ! or x(12) = (m478 - m478min)/(m478max - m478min),
-    ! where m478min = m4 + m7 + m8, m478max = ecm_max - m356
-    ! x(11) = (xx56 - xx56min)/(xx56max - xx56min),
-    ! where xx56 = arctg((m56**2 - rm_w**2)/rm_w/gamw),
-    ! or x(11) = (m56 - m56min)/(m56max - m56min),
-    ! where m56min = m5 + m6, m56max = m356 - m3
-    ! x(10) = (xx78 - xx78min)/(xx78max - xx78min),
-    ! where xx78 = arctg((m78**2 - rm_w**2)/rm_w/gamw),
-    ! or x(10) = (m78 - m78min)/(m78max - m78min),
-    ! where m78min = m7 + m8, m78max = m478 - m4
-    ! x(9) = cos(theta_356) = -cos(theta_478)
-    ! x(8) = cos(theta56_356),
-    ! x(7) = cos(theta78_478),
-    ! x(6) = cos(theta5_56),
-    ! x(5) = cos(theta7_78),
-    ! x(4) = fi56_cm_356,
-    ! x(3) = fi78_cm_478,
-    ! x(2) = fi5_cm_56,
-    ! x(1) = fi8_cm_78;
-
-    ! set integration limits:
-    do i = 15, 14, -1
-      xl(i) = 0.d0
-      xu(i) = 1.d0
-    end do
-    do i = 13, 10, -1
-      xl(i) = 0.d0
-      xu(i) = 1.d0
-    end do
-    do i = 9, 5, -1
-      xl(i) = -1.d0
-      xu(i) = 1.d0
-    end do
-    do i = 4, 1, -1
-      xl(i) = 0.d0
-      xu(i) = 2.d0*pi
-    end do
-  end if
-
+  nprn = 0   
 
   ! output information before integration
   print*, '====================================================='
@@ -277,6 +278,8 @@ program zprime
   if (symmetrise_costheta_t == 1) print*, 'symmetrical integration over cost'
   if (include_errors == 1) print*, 'Distribution errors included.'
   if (include_errors == 0) print*, 'Distribution errors excluded.'
+  if(use_rambo.eq.0) print*, 'PS is MANUAL'
+  if(use_rambo.eq.1) print*, 'PS is RAMBO'
   print*, 'seed: ', seed
   print*, '-----------------------------------------------------'
   print*, 'parameters'

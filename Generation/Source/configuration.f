@@ -25,6 +25,7 @@ module configuration
   integer :: print_distributions
   integer :: include_errors
   integer :: phase_space_only
+  integer :: use_rambo
   integer :: map_phase_space
   integer :: verbose
   integer :: nfb
@@ -147,6 +148,8 @@ module configuration
 
       read(5,*) acc
 
+      read(5,*) use_rambo
+
       read(5,*) map_phase_space
 
       read(5,*) symmetrise_x1x2
@@ -174,9 +177,13 @@ module configuration
       end if
 
       if(final_state == 0)then
-        n_final=4
+        n_final = 4
       else
-        n_final=8
+        n_final = 8
+      end if
+
+      if (use_rambo == 1) then
+        map_phase_space = 0
       end if
 
       if(final_state == 0) use_nwa = 0

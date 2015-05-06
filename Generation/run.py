@@ -39,7 +39,8 @@ parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "s
 parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
 parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
-parser.add_option("-F", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand.")
+parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
+parser.add_option("-F", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
 
 # Debug options
 parser.add_option("-M", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
