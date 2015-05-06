@@ -13,7 +13,7 @@
 
 class AnalysisZprime{
 public:
-  AnalysisZprime(const TString channel, const TString& outputFileName);
+  AnalysisZprime(const TString channel, const TString model, const TString& outputFileName);
   virtual ~AnalysisZprime();
   
 protected:
@@ -53,6 +53,7 @@ private:
   float m_pi;
   float m_GeV;
   TString m_channel;  
+  TString m_model;
   TString m_outputFileName;
 
   // Input Data

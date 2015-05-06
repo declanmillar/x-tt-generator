@@ -190,15 +190,15 @@ program zprime
       end do
     end if
   else if (use_rambo == 1) then
-      ! integrates on:
-      ! x(2) = (x1 - tau)/(1 - tau),
-      ! x(1) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)/
-      !        (ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-      ndimensions = 2
-      do i = 2, 1, -1
-        xl(i) = 0.d0
-        xu(i) = 1.d0
-      end do
+    ! integrates on:
+    ! x(2) = (x1 - tau)/(1 - tau),
+    ! x(1) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)/
+    !        (ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+    ndimensions = 2
+    do i = 2, 1, -1
+      xl(i) = 0.d0
+      xu(i) = 1.d0
+    end do
   end if
 
   ! if nprn<0 no print-out

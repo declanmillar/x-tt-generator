@@ -27,10 +27,8 @@ parser.add_option("-q", "--include_qcd", default = 1, const = 0, action = "store
 parser.add_option("-e", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
 parser.add_option("-z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
-parser.add_option("-w", "--use_NWA", default = 0, const = 1, action = "store_const", help = "turn on use_NWA")
+parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
 parser.add_option("-K", "--additional_kinematics", default = 1, const = 0, action = "store_const", help = "Turn off additional kinematics")
-parser.add_option("-T", "--include_transverse", default = 1, const = 0, action = "store_const", help = "switch off include transverse mass variables")
-parser.add_option("-A", "--include_asymmetries", default = 1, const = 0, action = "store_const", help = "switch off asymmetry variables")
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
@@ -40,10 +38,10 @@ parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, actio
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
 parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
 parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
-parser.add_option("-F", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
+parser.add_option("-M", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
 
 # Debug options
-parser.add_option("-M", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
+parser.add_option("-P", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
 parser.add_option("-v", "--verbose", default = 0, const = 1, action = "store_const", help = "Run in verbose mode.")
 
 (options, args) = parser.parse_args()
@@ -115,6 +113,11 @@ if options.symmetrise_x1x2 == 1:
 if options.symmetrise_costheta_t == 1:
   all_options += "c"
 
+if options.use_rambo == 1:
+  all_options += "R"
+if options.map_phase_space == 0:
+  all_options += "M"
+
 if len(all_options) > 0:
   all_options = "_" + all_options
 
@@ -155,7 +158,7 @@ print >> config, '%s ! phase_space_only' % options.phase_space_only
 
 print >> config, '%s ! interference' % options.interference
 
-print >> config, '%s ! use_NWA' % options.use_NWA
+print >> config, '%s ! use_nwa' % options.use_nwa
 
 print >> config, '%s ! additional_kinematics' % options.additional_kinematics
 
@@ -169,7 +172,9 @@ print >> config, '%s ! ncall' % ncall
 
 print >> config, '-1.d0 ! acc'
 
-print >> config, '%s ! flatten phase space' % options.map_phase_space
+print >> config, '%s ! use rambo' % options.use_rambo
+
+print >> config, '%s ! map phase space' % options.map_phase_space
 
 print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 

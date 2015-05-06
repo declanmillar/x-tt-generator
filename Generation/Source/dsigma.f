@@ -57,6 +57,8 @@ function dsigma(x,wgt)
   real :: ct78
   real :: ct7ct5, ct7ct5col, ct7ct5cm
 
+  ! parton momentum fraction
+  real :: x1, x2, xx, xx1, xx2
   ! structure functions
   real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, &
           chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, dsea1, usea1, usea2, dsea2
@@ -120,8 +122,7 @@ function dsigma(x,wgt)
   real :: tau
   real :: vcol
 
-  ! parton momentum fraction
-  real :: x1, x2, xx, xx1, xx2
+
 
   ! arctan
   real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
@@ -157,7 +158,7 @@ function dsigma(x,wgt)
   ! invarient masses
   real :: mtt, mtt_reco
   real :: mtt2, mtt_reco2
-  real :: rmassa1, rmassa2, rmassa3, rmassa4, rmassa5, rmassa6, rmassa7, rmassa8
+  real :: mass1, mass2, mass3, mass4, mass5, mass6, mass7, mass8
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m356_reco
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
@@ -203,13 +204,14 @@ function dsigma(x,wgt)
 
   ! centre of mass energy
   ecm_max = collider_energy
-  ecm = x(2 + 12*tops_decay)*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8) &
+  ecm = x((2 + 12*tops_decay)*(1 - use_rambo) + use_rambo) &
+        *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8) &
         + m3 + m4 + m5 + m6 + m7 + m8
   shat = ecm*ecm
   tau = shat/s
 
   ! x1 and x2 of the partons
-  xx1 = x(3+12*tops_decay) * (1.d0-tau) + tau
+  xx1 = x((3 + 12*tops_decay)*(1 - use_rambo) + 2*use_rambo) * (1.d0 - tau) + tau
   xx2 = tau/xx1
   x1x2(1, 1) = xx1
   x1x2(1, 2) = xx2
@@ -329,7 +331,7 @@ function dsigma(x,wgt)
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 8) then
-        imode=4
+        imode = 4
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
           return
@@ -345,17 +347,17 @@ function dsigma(x,wgt)
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 9) then
-        imode=5
+        imode = 5
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
+          fffxn = 0.d0
           return
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
+          fffxn = 0.d0
           return
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn=0.d0
+          fffxn = 0.d0
           return
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -558,7 +560,7 @@ function dsigma(x,wgt)
           if (jx == 1) then
             ct = x(9)
           else if (jx == 2) then
-            ct =  - x(9)
+            ct = -x(9)
           else
             print*, "Error: invalid jx."
           end if
@@ -787,14 +789,14 @@ function dsigma(x,wgt)
           print*, "delta_Px = ", delta_x
           print*, "delta_Py = ", delta_y
           print*, "delta_Pz = ", delta_z
-          rmassa1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-          rmassa2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-          rmassa3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-          rmassa4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-          print*, "m1 = ", rmassa1
-          print*, "m2 = ", rmassa2
-          print*, "m3 = ", rmassa3
-          print*, "m4 = ", rmassa4
+          mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+          mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+          mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+          mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+          print*, "m1 = ", mass1
+          print*, "m2 = ", mass2
+          print*, "m3 = ", mass3
+          print*, "m4 = ", mass4
 
         else if (final_state > 0) then
           print*, "Checking 2to6 kinematics..."
@@ -816,27 +818,22 @@ function dsigma(x,wgt)
           print*, "delta_Py = ", delta_y
           print*, "delta_Pz = ", delta_z
           ! check invarient mass.
-          rmassa1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-          rmassa2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-          rmassa3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-          rmassa4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-          rmassa5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
-          rmassa6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
-          rmassa7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
-          rmassa8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
-          print*, "m1 = ",rmassa1
-          print*, "m2 = ",rmassa2
-          print*, "m3 = ",rmassa3
-          print*, "m4 = ",rmassa4
-          print*, "m5 = ",rmassa5
-          print*, "m6 = ",rmassa6
-          print*, "m7 = ",rmassa7
-          print*, "m8 = ",rmassa8
-          ! check missing transverse momentum
-          pt682 = (qcol(1,6) + qcol(1,8))**2 + (qcol(2,6) + qcol(2,8))**2
-          pt68 = sqrt(pt682)
-          print*, "Etmiss :", etmiss
-          print*, "pt(v+v):", pt68    
+          mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+          mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+          mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+          mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+          mass5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
+          mass6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
+          mass7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
+          mass8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
+          print*, "m1 = ", mass1
+          print*, "m2 = ", mass2
+          print*, "m3 = ", mass3
+          print*, "m4 = ", mass4
+          print*, "m5 = ", mass5
+          print*, "m6 = ", mass6
+          print*, "m7 = ", mass7
+          print*, "m8 = ", mass8   
         end if
         print*, "...complete."
       end if
@@ -1198,65 +1195,65 @@ function dsigma(x,wgt)
 
         if (verbose == 1) print*, "Computing additional kinematic variables..."
 
-        ! calculate asympotic collider frame transverse momenta
-        do ip = 1, n_final
-          pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
-          pt(ip) = sqrt(pt2(ip))
-        end do
-        call rootadddouble(pt(3), "pT3")
-        call rootadddouble(pt(4), "pT4")
-        if (final_state > 0) then
-          call rootadddouble(pt(5), "pT5")
-          call rootadddouble(pt(7), "pT7")
-          call rootadddouble(pt(6), "pT6")
-          call rootadddouble(pt(8), "pT8")
-        end if
+!         ! calculate asympotic collider frame transverse momenta
+!         do ip = 1, n_final
+!           pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
+!           pt(ip) = sqrt(pt2(ip))
+!         end do
+!         call rootadddouble(pt(3), "pT3")
+!         call rootadddouble(pt(4), "pT4")
+!         if (final_state > 0) then
+!           call rootadddouble(pt(5), "pT5")
+!           call rootadddouble(pt(7), "pT7")
+!           call rootadddouble(pt(6), "pT6")
+!           call rootadddouble(pt(8), "pT8")
+!         end if
 
         ! calculate asympotic collider frame rapidity
-        do ip = 3, n_final
-          ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
-          /(qcol(4,ip) - qcol(3,ip)))
-        end do
-        call rootadddouble(ycol(3), "ycol3")
-        call rootadddouble(ycol(4), "ycol4")
-        if (final_state > 0) then
-          call rootadddouble(ycol(5), "ycol5")
-          call rootadddouble(ycol(7), "ycol7")
-          call rootadddouble(ycol(6), "ycol6")
-          call rootadddouble(ycol(8), "ycol8")
-        end if
+!         do ip = 3, n_final
+!           ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
+!           /(qcol(4,ip) - qcol(3,ip)))
+!         end do
+!         call rootadddouble(ycol(3), "ycol3")
+!         call rootadddouble(ycol(4), "ycol4")
+!         if (final_state > 0) then
+!           call rootadddouble(ycol(5), "ycol5")
+!           call rootadddouble(ycol(7), "ycol7")
+!           call rootadddouble(ycol(6), "ycol6")
+!           call rootadddouble(ycol(8), "ycol8")
+!         end if
 
-        ! calculate asympotic collider frame pseudorapidity
-        do ip = 1, n_final
-          rps(ip) = (qcol(3, ip))/sqrt(qcol(1, ip)**2 + qcol(2, ip)**2 + qcol(3, ip)**2)
-          if (rps(ip) < -1.d0) rps = -1.d0
-          if (rps(ip) > +1.d0) rps = +1.d0
-          rpl(ip) = acos(rps(ip))
-          arg(ip) = tan(rpl(ip)/2d0)
-          if (arg(ip) <= 0.d0) arg(ip) = 1.d-9
-          eta(ip) = -log(arg(ip))
-        end do
-        call rootadddouble(eta(3), "eta3")
-        call rootadddouble(eta(4), "eta4")
-        if(final_state > 0) then
-          call rootadddouble(eta(5), "eta5")
-          call rootadddouble(eta(7), "eta7")
-          call rootadddouble(eta(6), "eta6")
-          call rootadddouble(eta(8), "eta8")
-        end if
+!         ! calculate asympotic collider frame pseudorapidity
+!         do ip = 1, n_final
+!           rps(ip) = (qcol(3, ip))/sqrt(qcol(1, ip)**2 + qcol(2, ip)**2 + qcol(3, ip)**2)
+!           if (rps(ip) < -1.d0) rps = -1.d0
+!           if (rps(ip) > +1.d0) rps = +1.d0
+!           rpl(ip) = acos(rps(ip))
+!           arg(ip) = tan(rpl(ip)/2d0)
+!           if (arg(ip) <= 0.d0) arg(ip) = 1.d-9
+!           eta(ip) = -log(arg(ip))
+!         end do
+!         call rootadddouble(eta(3), "eta3")
+!         call rootadddouble(eta(4), "eta4")
+!         if(final_state > 0) then
+!           call rootadddouble(eta(5), "eta5")
+!           call rootadddouble(eta(7), "eta7")
+!           call rootadddouble(eta(6), "eta6")
+!           call rootadddouble(eta(8), "eta8")
+!         end if
 
-        ! calculate asympotic collider frame azimuthal angle
-        do ip = 1, n_final
-          phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
-        end do
-        call rootadddouble(phi(3), "phi3")
-        call rootadddouble(phi(4), "phi4")
-        if(final_state > 0) then
-          call rootadddouble(phi(5), "phi5")
-          call rootadddouble(phi(7), "phi7")
-          call rootadddouble(phi(6), "phi6")
-          call rootadddouble(phi(8), "phi8")
-        end if
+!         ! calculate asympotic collider frame azimuthal angle
+!         do ip = 1, n_final
+!           phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
+!         end do
+!         call rootadddouble(phi(3), "phi3")
+!         call rootadddouble(phi(4), "phi4")
+!         if(final_state > 0) then
+!           call rootadddouble(phi(5), "phi5")
+!           call rootadddouble(phi(7), "phi7")
+!           call rootadddouble(phi(6), "phi6")
+!           call rootadddouble(phi(8), "phi8")
+!         end if
 
         ! calculate truth level top/antitop pt, eta and phi
         if (final_state > 0) then
@@ -1417,23 +1414,23 @@ function dsigma(x,wgt)
         costhetat_star = int(ytt/abs(ytt))*costhetat_cm
         call rootadddouble(costhetat_star, "costhetastar")
 
-        if (final_state == 0) then
-          mtt2 = (qcol(4,3) + qcol(4,4))**2
-          do i = 1, 3
-            mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
-          end do
-        else if (final_state > 0) then
-          mtt2 = (qcol(4,3) + qcol(4,4) &
-                + qcol(4,5) + qcol(4,6) &
-                + qcol(4,7) + qcol(4,8))**2
-          do i = 1, 3
-            mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
-                         + qcol(i,5) + qcol(i,6) &
-                         + qcol(i,7) + qcol(i,8))**2
-          end do
-        end if
-        mtt = sqrt(abs(mtt2))
-        call rootadddouble(mtt, "Mtt")
+!         if (final_state == 0) then
+!           mtt2 = (qcol(4,3) + qcol(4,4))**2
+!           do i = 1, 3
+!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
+!           end do
+!         else if (final_state > 0) then
+!           mtt2 = (qcol(4,3) + qcol(4,4) &
+!                 + qcol(4,5) + qcol(4,6) &
+!                 + qcol(4,7) + qcol(4,8))**2
+!           do i = 1, 3
+!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
+!                          + qcol(i,5) + qcol(i,6) &
+!                          + qcol(i,7) + qcol(i,8))**2
+!           end do
+!         end if
+!         mtt = sqrt(abs(mtt2))
+!         call rootadddouble(mtt, "Mtt")
 
         if (final_state > 0) then
 

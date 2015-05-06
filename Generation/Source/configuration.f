@@ -176,14 +176,16 @@ module configuration
         nfb = 9
       end if
 
-      if(final_state == 0)then
+      if(final_state == 0) then
         n_final = 4
       else
         n_final = 8
       end if
 
       if (use_rambo == 1) then
+        print*, "Setting additional_kinematics to zero."
         map_phase_space = 0
+        additional_kinematics = 0
       end if
 
       if(final_state == 0) use_nwa = 0
