@@ -169,9 +169,9 @@ function dsigma(x,wgt)
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m356_reco
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
-  real :: mbbll, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
-  real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2
-  real :: mll
+!   real :: mbbll, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
+!   real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2
+!   real :: mll
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2)
@@ -817,40 +817,6 @@ function dsigma(x,wgt)
         print*, "...complete."
       end if
 
-      if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
-      if (final_state == 0) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-      end if
-
-      if (final_state == 1) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 2) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-
-      if (final_state == 3) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-      if(verbose == 1) print*, "...complete."
-
       if (phase_space_only == 1) then
         if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
         if (ix == 1) then
@@ -1142,6 +1108,40 @@ function dsigma(x,wgt)
       fffxn = fffxn1 + fffxn2
       
       if (verbose == 1) print*, "...complete."
+
+      if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
+      if (final_state == 0) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+      end if
+
+      if (final_state == 1) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+
+      if (final_state == 2) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+
+      if (final_state == 3) then
+        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
+        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
+        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+      end if
+      if(verbose == 1) print*, "...complete."
          
       if (final_state == 0) then
         if (verbose == 1) print*, "Computing polarised event weightings..."
@@ -1161,6 +1161,7 @@ function dsigma(x,wgt)
         weightRR = weight(it, 1, 1)
         if (verbose == 1) print*, "...complete."
       end if
+
       call rootadddouble(weightLL, "weightLL")
       call rootadddouble(weightLR, "weightLR")
       call rootadddouble(weightRL, "weightRL")
