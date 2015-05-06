@@ -78,6 +78,16 @@ private:
   TH1D* h_MttRR;
   TH1D* h_MttALL;
   TH1D* h_MttAL;
+  TH1D* h_MET;
+  TH1D* h_HT;
+  TH1D* h_Mbbll;
+  TH1D* h_mll;
+  TH1D* h_ETbbll;
+  TH1D* h_KTbbll;
+  TH1D* h_MTll;
+  TH1D* h_MCTll;
+  TH1D* h_MTblbl;
+  TH1D* h_MCTblbl;
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif

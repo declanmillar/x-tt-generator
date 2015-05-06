@@ -8,7 +8,7 @@
 //  *   Author: John Morris (john.morris@cern.ch)                             * 
 //  *           Queen Mary University of London                               * 
 //  *   Editor: Declan Millar (declan.millar@cern.ch)                         * 
-//  *   File Generated on Tue Apr 28 11:35:59 2015                            * 
+//  *   File Generated on Wed May  6 13:50:24 2015                            * 
 //  *                                                                         * 
 //  ***************************************************************************/ 
 
@@ -46,22 +46,9 @@ class RootTuple{
     inline vector<double>*  E() const {b_E->GetEntry(m_currentEvent);return m_E;} 
     inline Double_t  E6_reco() const {b_E6_reco->GetEntry(m_currentEvent);return m_E6_reco;} 
     inline Double_t  Et() const {b_Et->GetEntry(m_currentEvent);return m_Et;} 
-    inline Double_t  Etmiss() const {b_Etmiss->GetEntry(m_currentEvent);return m_Etmiss;} 
-    inline Double_t  Etmissx() const {b_Etmissx->GetEntry(m_currentEvent);return m_Etmissx;} 
-    inline Double_t  Etmissy() const {b_Etmissy->GetEntry(m_currentEvent);return m_Etmissy;} 
-    inline Double_t  HT() const {b_HT->GetEntry(m_currentEvent);return m_HT;} 
-    inline Double_t  MCT1() const {b_MCT1->GetEntry(m_currentEvent);return m_MCT1;} 
-    inline Double_t  MCT2() const {b_MCT2->GetEntry(m_currentEvent);return m_MCT2;} 
-    inline Double_t  MCT3() const {b_MCT3->GetEntry(m_currentEvent);return m_MCT3;} 
-    inline Double_t  MT1() const {b_MT1->GetEntry(m_currentEvent);return m_MT1;} 
-    inline Double_t  MT2() const {b_MT2->GetEntry(m_currentEvent);return m_MT2;} 
-    inline Double_t  MT3() const {b_MT3->GetEntry(m_currentEvent);return m_MT3;} 
-    inline Double_t  MlCT() const {b_MlCT->GetEntry(m_currentEvent);return m_MlCT;} 
-    inline Double_t  MlT() const {b_MlT->GetEntry(m_currentEvent);return m_MlT;} 
-    inline Double_t  Mll() const {b_Mll->GetEntry(m_currentEvent);return m_Mll;} 
+    inline Double_t  MET() const {b_MET->GetEntry(m_currentEvent);return m_MET;} 
     inline Double_t  Mtt() const {b_Mtt->GetEntry(m_currentEvent);return m_Mtt;} 
     inline Double_t  Mtt_reco() const {b_Mtt_reco->GetEntry(m_currentEvent);return m_Mtt_reco;} 
-    inline Double_t  Mttvis() const {b_Mttvis->GetEntry(m_currentEvent);return m_Mttvis;} 
     inline vector<double>*  Px() const {b_Px->GetEntry(m_currentEvent);return m_Px;} 
     inline vector<double>*  Py() const {b_Py->GetEntry(m_currentEvent);return m_Py;} 
     inline vector<double>*  Pz() const {b_Pz->GetEntry(m_currentEvent);return m_Pz;} 
@@ -119,6 +106,8 @@ class RootTuple{
     inline Double_t  weight_emu() const {b_weight_emu->GetEntry(m_currentEvent);return m_weight_emu;} 
     inline Double_t  weight_eq() const {b_weight_eq->GetEntry(m_currentEvent);return m_weight_eq;} 
     inline Double_t  weight_qq() const {b_weight_qq->GetEntry(m_currentEvent);return m_weight_qq;} 
+    inline Double_t  xMET() const {b_xMET->GetEntry(m_currentEvent);return m_xMET;} 
+    inline Double_t  yMET() const {b_yMET->GetEntry(m_currentEvent);return m_yMET;} 
     inline Double_t  ycol3() const {b_ycol3->GetEntry(m_currentEvent);return m_ycol3;} 
     inline Double_t  ycol356() const {b_ycol356->GetEntry(m_currentEvent);return m_ycol356;} 
     inline Double_t  ycol4() const {b_ycol4->GetEntry(m_currentEvent);return m_ycol4;} 
@@ -157,22 +146,9 @@ class RootTuple{
     vector<double>*  m_E; 
     Double_t  m_E6_reco; 
     Double_t  m_Et; 
-    Double_t  m_Etmiss; 
-    Double_t  m_Etmissx; 
-    Double_t  m_Etmissy; 
-    Double_t  m_HT; 
-    Double_t  m_MCT1; 
-    Double_t  m_MCT2; 
-    Double_t  m_MCT3; 
-    Double_t  m_MT1; 
-    Double_t  m_MT2; 
-    Double_t  m_MT3; 
-    Double_t  m_MlCT; 
-    Double_t  m_MlT; 
-    Double_t  m_Mll; 
+    Double_t  m_MET; 
     Double_t  m_Mtt; 
     Double_t  m_Mtt_reco; 
-    Double_t  m_Mttvis; 
     vector<double>*  m_Px; 
     vector<double>*  m_Py; 
     vector<double>*  m_Pz; 
@@ -230,6 +206,8 @@ class RootTuple{
     Double_t  m_weight_emu; 
     Double_t  m_weight_eq; 
     Double_t  m_weight_qq; 
+    Double_t  m_xMET; 
+    Double_t  m_yMET; 
     Double_t  m_ycol3; 
     Double_t  m_ycol356; 
     Double_t  m_ycol4; 
@@ -249,22 +227,9 @@ class RootTuple{
     TBranch*  b_E; 
     TBranch*  b_E6_reco; 
     TBranch*  b_Et; 
-    TBranch*  b_Etmiss; 
-    TBranch*  b_Etmissx; 
-    TBranch*  b_Etmissy; 
-    TBranch*  b_HT; 
-    TBranch*  b_MCT1; 
-    TBranch*  b_MCT2; 
-    TBranch*  b_MCT3; 
-    TBranch*  b_MT1; 
-    TBranch*  b_MT2; 
-    TBranch*  b_MT3; 
-    TBranch*  b_MlCT; 
-    TBranch*  b_MlT; 
-    TBranch*  b_Mll; 
+    TBranch*  b_MET; 
     TBranch*  b_Mtt; 
     TBranch*  b_Mtt_reco; 
-    TBranch*  b_Mttvis; 
     TBranch*  b_Px; 
     TBranch*  b_Py; 
     TBranch*  b_Pz; 
@@ -322,6 +287,8 @@ class RootTuple{
     TBranch*  b_weight_emu; 
     TBranch*  b_weight_eq; 
     TBranch*  b_weight_qq; 
+    TBranch*  b_xMET; 
+    TBranch*  b_yMET; 
     TBranch*  b_ycol3; 
     TBranch*  b_ycol356; 
     TBranch*  b_ycol4; 

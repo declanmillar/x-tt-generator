@@ -8,7 +8,7 @@
 //  *   Author: John Morris (john.morris@cern.ch)                             * 
 //  *           Queen Mary University of London                               * 
 //  *   Editor: Declan Millar (declan.millar@cern.ch)                         * 
-//  *   File Generated on Tue Apr 28 11:35:59 2015                            * 
+//  *   File Generated on Wed May  6 13:50:24 2015                            * 
 //  *                                                                         * 
 //  ***************************************************************************/ 
 
@@ -71,22 +71,9 @@ void RootTuple::Init(TTree* tree){
   m_E = 0; 
   m_E6_reco = 0; 
   m_Et = 0; 
-  m_Etmiss = 0; 
-  m_Etmissx = 0; 
-  m_Etmissy = 0; 
-  m_HT = 0; 
-  m_MCT1 = 0; 
-  m_MCT2 = 0; 
-  m_MCT3 = 0; 
-  m_MT1 = 0; 
-  m_MT2 = 0; 
-  m_MT3 = 0; 
-  m_MlCT = 0; 
-  m_MlT = 0; 
-  m_Mll = 0; 
+  m_MET = 0; 
   m_Mtt = 0; 
   m_Mtt_reco = 0; 
-  m_Mttvis = 0; 
   m_Px = 0; 
   m_Py = 0; 
   m_Pz = 0; 
@@ -144,6 +131,8 @@ void RootTuple::Init(TTree* tree){
   m_weight_emu = 0; 
   m_weight_eq = 0; 
   m_weight_qq = 0; 
+  m_xMET = 0; 
+  m_yMET = 0; 
   m_ycol3 = 0; 
   m_ycol356 = 0; 
   m_ycol4 = 0; 
@@ -168,22 +157,9 @@ void RootTuple::Init(TTree* tree){
   fChain->SetBranchAddress("E", &m_E, &b_E); 
   fChain->SetBranchAddress("E6_reco", &m_E6_reco, &b_E6_reco); 
   fChain->SetBranchAddress("Et", &m_Et, &b_Et); 
-  fChain->SetBranchAddress("Etmiss", &m_Etmiss, &b_Etmiss); 
-  fChain->SetBranchAddress("Etmissx", &m_Etmissx, &b_Etmissx); 
-  fChain->SetBranchAddress("Etmissy", &m_Etmissy, &b_Etmissy); 
-  fChain->SetBranchAddress("HT", &m_HT, &b_HT); 
-  fChain->SetBranchAddress("MCT1", &m_MCT1, &b_MCT1); 
-  fChain->SetBranchAddress("MCT2", &m_MCT2, &b_MCT2); 
-  fChain->SetBranchAddress("MCT3", &m_MCT3, &b_MCT3); 
-  fChain->SetBranchAddress("MT1", &m_MT1, &b_MT1); 
-  fChain->SetBranchAddress("MT2", &m_MT2, &b_MT2); 
-  fChain->SetBranchAddress("MT3", &m_MT3, &b_MT3); 
-  fChain->SetBranchAddress("MlCT", &m_MlCT, &b_MlCT); 
-  fChain->SetBranchAddress("MlT", &m_MlT, &b_MlT); 
-  fChain->SetBranchAddress("Mll", &m_Mll, &b_Mll); 
+  fChain->SetBranchAddress("MET", &m_MET, &b_MET); 
   fChain->SetBranchAddress("Mtt", &m_Mtt, &b_Mtt); 
   fChain->SetBranchAddress("Mtt_reco", &m_Mtt_reco, &b_Mtt_reco); 
-  fChain->SetBranchAddress("Mttvis", &m_Mttvis, &b_Mttvis); 
   fChain->SetBranchAddress("Px", &m_Px, &b_Px); 
   fChain->SetBranchAddress("Py", &m_Py, &b_Py); 
   fChain->SetBranchAddress("Pz", &m_Pz, &b_Pz); 
@@ -241,6 +217,8 @@ void RootTuple::Init(TTree* tree){
   fChain->SetBranchAddress("weight_emu", &m_weight_emu, &b_weight_emu); 
   fChain->SetBranchAddress("weight_eq", &m_weight_eq, &b_weight_eq); 
   fChain->SetBranchAddress("weight_qq", &m_weight_qq, &b_weight_qq); 
+  fChain->SetBranchAddress("xMET", &m_xMET, &b_xMET); 
+  fChain->SetBranchAddress("yMET", &m_yMET, &b_yMET); 
   fChain->SetBranchAddress("ycol3", &m_ycol3, &b_ycol3); 
   fChain->SetBranchAddress("ycol356", &m_ycol356, &b_ycol356); 
   fChain->SetBranchAddress("ycol4", &m_ycol4, &b_ycol4); 

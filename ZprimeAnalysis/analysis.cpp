@@ -27,7 +27,7 @@ void AnalysisZprime::EachEvent()
 
   // final particle variables
   TVector2 pTtotal;
-  for (int i = 0; i < m_ntup->E()->size(); i++) {
+  for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
     pcol[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
     pTcol[i].Set(m_ntup->Px()->at(i), m_ntup->Py()->at(i));
     // pTtotal += pTcol[i];
@@ -37,83 +37,68 @@ void AnalysisZprime::EachEvent()
   }
   // pTtotal.Print();
 
+  double MET = 0.0;
+  double mll = 0.0;
+	double Mbbll = 0.0;
+	double HT = 0.0;
+	// double MT1 = 0.0;
+	// double MCT1 = 0.0;
+	double ETbbll = 0.0;
+	double KTbbll = 0.0;
+	double ET5 = 0.0;
+	double ET7 = 0.0;
+	double MTll = 0.0;
+	double MCTll = 0.0;
+	double m35 = 0.0;
+	double m47 = 0.0;
+	double ET35 = 0.0;
+	double ET47 = 0.0;
+	double MTblbl = 0.0;
+	double MCTblbl = 0.0;
+
   if (m_channel == "2to6") {
     // TRANSVERSE VARIABLES
 
 
     TVector2 ETmiss = -1*pTcol[0] - pTcol[1] - pTcol[2] - pTcol[4];
-    double MET = ETmiss.Mod();
+    MET = ETmiss.Mod();
 
-    double mll = (pcol[2] + pcol[4]).M();
-    printf("mll: %f\n", mll);
+    mll = (pcol[2] + pcol[4]).M();
 
     // calculate invariant mass of visible decay products
-    double mbbll = (pcol[0] + pcol[1] + pcol[2] + pcol[4]).M();
+    Mbbll = (pcol[0] + pcol[1] + pcol[2] + pcol[4]).M();
 
     //  calculate total scalar sum of transverse energy
-    double HT = ETcol[0] + ETcol[1] + ETcol[2] + ETcol[4] + MET;
+    HT = ETcol[0] + ETcol[1] + ETcol[2] + ETcol[4] + MET;
 
-    //   calculate MT with individual ET sums plus a scalar sum of pT + ETmiss (not lorentz invarient)
-    double MT1 = sqrt(HT*HT + (pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4] + MET)**2)
+    // //   calculate MT with individual ET sums plus a scalar sum of pT + ETmiss (not lorentz invarient)
+    // MT1 = sqrt(HT*HT + (pTcol[0].Mod() + pTcol[1].Mod() + pTcol[2].Mod() + pTcol[4].Mod() + MET)**2);
 
-    //   calculate MT with individual ET sums plus a scalar sum of pT - ETmiss (not lorentz invarient)
-    double MCT1 = sqrt(HT*HT + (pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4] - MET)**2)
+    // //   calculate MT with individual ET sums plus a scalar sum of pT - ETmiss (not lorentz invarient)
+    // MCT1 = sqrt(HT*HT + (pTcol[0].Mod() + pTcol[1].Mod() + pTcol[2].Mod() + pTcol[4].Mod() - MET)**2);
 
     //   ET of visible decay products
-    double etbbll2 = mbbll*mbbll
-    TVector
-    do i = 1, 2
-     ptbbll(i) = p3col(i) + p4col(i) + p5col(i) + p7col(i)
-     etbbll2 = etbbll2 + ptbbll(i)*ptbbll(i)
-    end do
-    etbbll = sqrt(etbbll2)
+    TVector2 pTbbll = pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4];
+    ETbbll = sqrt(Mbbll*Mbbll + pTbbll.Mod2());
 
     //   scalar sum of visible decay products and MET
-  //   ktbbll = etbbll + etmiss
+    KTbbll = ETbbll + MET;
 
-  //   et5 = sqrt(m5**2 + pt2(5))
-  //   et7 = sqrt(m7**2 + pt2(7))
+    ET5 = sqrt(mass[2]*mass[2] + pTcol[2].Mod2());
+    ET7 = sqrt(mass[4]*mass[4] + pTcol[4].Mod2());
 
-  //   mtll2 = (et5 + et7)**2
-  //   do i = 1, 2
-  //     mtll2 = mtll2 - (qcol(i,5) + qcol(i,7))**2
-  //   end do
-  //   mtll = sqrt(abs(mlt2))
-  //   (mlt, "MTll")
+    MTll = sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] + pTcol[4]).Mod2());
+    MCTll = sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] - pTcol[4]).Mod2());
 
-  //   mctll2 = (et5 + et7)**2
-  //   do i = 1, 2
-  //     mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
-  //   end do
-  //   mctll = sqrt(abs(mctll2))
-  //   (mctll, "MCTll")
+    m35 = (pcol[0] + pcol[2]).M();
+    m47 = (pcol[1] + pcol[3]).M();
+    TVector2 pT35 = pTcol[0] + pTcol[2];
+    TVector2 pT47 = pTcol[1] + pTcol[4];
+    ET35 = sqrt(m35*m35 - (pTcol[0] + pTcol[2]).Mod2());
+    ET47 = sqrt(m47*m47 - (pTcol[1] + pTcol[4]).Mod2());
 
-  //   m35 = mass(p3col + p5col)
-  //   m47 = mass(p4col + p7col)
-  //   et35 = m35*m35
-  //   et47 = m47*m47
-  //   do i = 1, 2
-  //     pt35(i) = p3col(i) + p5col(i)
-  //     et352 = et352 + pt35(i)*pt35(i)
-  //     pt47(i) = p4col(i) + p7col(i)
-  //     et472 = et472 + pt47(i)*pt47(i)
-  //   end do
-  //   et35 = sqrt(et352)
-  //   et47 = sqrt(et472)
-
-  //   mtblbl2 = (et35 + et47)**2
-  //   do i = 1, 2
-  //     mtblbl2 = mtblbl2 - (p3col(i) + p5col(i) + p4col(i)+ p7col(i) )**2
-  //   end do
-  //   mtblbl = sqrt(abs(mtblbl2))
-  //   (mtblbl, "MTblbl")
-
-  //   mctblbl2 = (et35 + et47)**2
-  //   do i = 1, 2
-  //     mctblbl2 = mctblbl2 - (p3col(i) + p5col(i) - p4col(i) - p7col(i) )**2
-  //   end do
-  //   mctblbl = sqrt(abs(mctblbl2))
-  //   (mctblbl, "MCTblbl")
+    MTblbl = sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] + pTcol[1] + pTcol[4]).Mod2());
+    MCTblbl = sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] - pTcol[1] - pTcol[4]).Mod2());
   }
 
 
@@ -146,6 +131,17 @@ void AnalysisZprime::EachEvent()
       h_costheta5_eq->Fill(m_ntup->costheta5(), weight_eq);
       h_costheta5_ee->Fill(m_ntup->costheta5(), weight_ee);
       h_ct7ct5->Fill(m_ntup->ct7ct5(), weight_ee);
+
+      h_MET->Fill(MET, weight_ee);
+			h_HT->Fill(HT, weight_ee);
+			h_Mbbll->Fill(Mbbll, weight_ee);
+			h_mll->Fill(mll, weight_ee);
+			h_ETbbll->Fill(ETbbll, weight_ee);
+			h_KTbbll->Fill(KTbbll, weight_ee);
+			h_MTll->Fill(MTll, weight_ee);
+			h_MCTll->Fill(MCTll, weight_ee);
+			h_MTblbl->Fill(MTblbl, weight_ee);
+			h_MCTblbl->Fill(MCTblbl, weight_ee);
     }
 
     if (m_channel == "2to2") {
@@ -182,6 +178,17 @@ void AnalysisZprime::PreLoop()
 
     h_ct7ct5 = new TH1D("ct7ct5", "cos#theta_{l^{+}}cos#theta_{l^{-}}", 50, -1.0, 1.0);
     // h_ct7ct5->Sumw2();
+
+		h_MET = new TH1D("MET", "MET", 20, 0, 4000);
+	  h_HT = new TH1D("HT", "HT", 20, 0, 4000);
+	  h_Mbbll = new TH1D("Mbbll", "Mbbll", 20, 0, 4000);
+	  h_mll = new TH1D("mll", "mll", 20, 0, 4000);
+	  h_ETbbll = new TH1D("ETbbll", "ETbbll", 20, 0, 4000);
+	  h_KTbbll = new TH1D("KTbbll", "KTbbll", 20, 0, 4000);
+	  h_MTll = new TH1D("MTll", "MTll", 20, 0, 4000);
+	  h_MCTll = new TH1D("MCTll", "MCTll", 20, 0, 4000);
+	  h_MTblbl = new TH1D("MTblbl", "MTblbl", 20, 0, 4000);
+	  h_MCTblbl = new TH1D("MCTblbl", "MCTblbl", 20, 0, 4000);
   }
 
   if (m_channel == "2to2") {
@@ -227,6 +234,16 @@ void AnalysisZprime::PostLoop()
     h_costheta5_eq->Write();
     h_costheta5_ee->Write();
     h_ct7ct5->Write();
+    h_MET->Write();
+		h_HT->Write();
+		h_Mbbll->Write();
+		h_mll->Write();
+		h_ETbbll->Write();
+		h_KTbbll->Write();
+		h_MTll->Write();
+		h_MCTll->Write();
+		h_MTblbl->Write();
+		h_MCTblbl->Write();
   }
 
   m_outputFile->Close();
@@ -380,10 +397,10 @@ bool AnalysisZprime::PassCuts_MET() const
   }
   if (m_channel == "2to6")
   {
-    if (m_ntup->Etmiss() > 0.0 * m_GeV)
-    {
+    // if (m_ntup->Etmiss() > 0.0 * m_GeV)
+    // {
       return true;
-    }
+    // }
   }  
   return false;
 }
@@ -441,11 +458,11 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupInputFiles()
 {   
   m_inputFiles = new vector<TString>;
-  // TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  TString base("/Users/declan/Data/Ntuples_Zprime/");
+  TString base("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  // TString base("/Users/declan/Data/Ntuples_Zprime/");
   base += m_channel;
   
-  m_inputFiles->push_back(base + "_SM_13_new_1x5000.root");
+  m_inputFiles->push_back(base + "_SM_13_1x5000000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()
