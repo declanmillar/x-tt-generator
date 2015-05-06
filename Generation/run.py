@@ -22,7 +22,7 @@ parser.add_option("-t", "--tag", default="",  type="string", help="add a name ta
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
-parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
+parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
 parser.add_option("-q", "--include_qcd", default = 1, const = 0, action = "store_const", help = "turn off QCD")
 parser.add_option("-e", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
 parser.add_option("-z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
@@ -39,7 +39,7 @@ parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "s
 parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
 parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
-parser.add_option("-F", "--flatten_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand.")
+parser.add_option("-F", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand.")
 
 # Debug options
 parser.add_option("-M", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
@@ -168,7 +168,7 @@ print >> config, '%s ! ncall' % ncall
 
 print >> config, '-1.d0 ! acc'
 
-print >> config, '%s ! flatten phase space' % options.flatten_phase_space
+print >> config, '%s ! flatten phase space' % options.map_phase_space
 
 print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 

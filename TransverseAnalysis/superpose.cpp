@@ -7,7 +7,6 @@ TCanvas* superpose(int ndimensions,
 
   TFile *f1, *f2, *f3;
   TH1D *h1, *h2, *h3;
-  TH2D *h1, *h2, *h3;
   std::string name1, name2, name3;
   std::string epsFileName;
 

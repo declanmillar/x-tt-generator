@@ -18,6 +18,105 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString& outputFileN
 
 void AnalysisZprime::EachEvent()
 {
+  // 0 = b, 1 = bbar, 2 = l+, 3 = nu, 4 = l-, 5 = nubar
+
+  vector<TLorentzVector> pcol(6);
+  vector<double> mass(6);
+  vector<double> ETcol(6);
+  vector<TVector2> pTcol(6);
+
+  // final particle variables
+  TVector2 pTtotal;
+  for (int i = 0; i < m_ntup->E()->size(); i++) {
+    pcol[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
+    pTcol[i].Set(m_ntup->Px()->at(i), m_ntup->Py()->at(i));
+    // pTtotal += pTcol[i];
+    mass[i] = pcol[i].M();
+    ETcol[i] = sqrt(mass[i]*mass[i] + pTcol[i].Mod2());
+    // printf("m%i = %f\n", i, mass[i]);
+  }
+  // pTtotal.Print();
+
+  if (m_channel == "2to6") {
+    // TRANSVERSE VARIABLES
+
+
+    TVector2 ETmiss = -1*pTcol[0] - pTcol[1] - pTcol[2] - pTcol[4];
+    double MET = ETmiss.Mod();
+
+    double mll = (pcol[2] + pcol[4]).M();
+    printf("mll: %f\n", mll);
+
+    // calculate invariant mass of visible decay products
+    double mbbll = (pcol[0] + pcol[1] + pcol[2] + pcol[4]).M();
+
+    //  calculate total scalar sum of transverse energy
+    double HT = ETcol[0] + ETcol[1] + ETcol[2] + ETcol[4] + MET;
+
+    //   calculate MT with individual ET sums plus a scalar sum of pT + ETmiss (not lorentz invarient)
+    double MT1 = sqrt(HT*HT + (pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4] + MET)**2)
+
+    //   calculate MT with individual ET sums plus a scalar sum of pT - ETmiss (not lorentz invarient)
+    double MCT1 = sqrt(HT*HT + (pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4] - MET)**2)
+
+    //   ET of visible decay products
+    double etbbll2 = mbbll*mbbll
+    TVector
+    do i = 1, 2
+     ptbbll(i) = p3col(i) + p4col(i) + p5col(i) + p7col(i)
+     etbbll2 = etbbll2 + ptbbll(i)*ptbbll(i)
+    end do
+    etbbll = sqrt(etbbll2)
+
+    //   scalar sum of visible decay products and MET
+  //   ktbbll = etbbll + etmiss
+
+  //   et5 = sqrt(m5**2 + pt2(5))
+  //   et7 = sqrt(m7**2 + pt2(7))
+
+  //   mtll2 = (et5 + et7)**2
+  //   do i = 1, 2
+  //     mtll2 = mtll2 - (qcol(i,5) + qcol(i,7))**2
+  //   end do
+  //   mtll = sqrt(abs(mlt2))
+  //   (mlt, "MTll")
+
+  //   mctll2 = (et5 + et7)**2
+  //   do i = 1, 2
+  //     mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
+  //   end do
+  //   mctll = sqrt(abs(mctll2))
+  //   (mctll, "MCTll")
+
+  //   m35 = mass(p3col + p5col)
+  //   m47 = mass(p4col + p7col)
+  //   et35 = m35*m35
+  //   et47 = m47*m47
+  //   do i = 1, 2
+  //     pt35(i) = p3col(i) + p5col(i)
+  //     et352 = et352 + pt35(i)*pt35(i)
+  //     pt47(i) = p4col(i) + p7col(i)
+  //     et472 = et472 + pt47(i)*pt47(i)
+  //   end do
+  //   et35 = sqrt(et352)
+  //   et47 = sqrt(et472)
+
+  //   mtblbl2 = (et35 + et47)**2
+  //   do i = 1, 2
+  //     mtblbl2 = mtblbl2 - (p3col(i) + p5col(i) + p4col(i)+ p7col(i) )**2
+  //   end do
+  //   mtblbl = sqrt(abs(mtblbl2))
+  //   (mtblbl, "MTblbl")
+
+  //   mctblbl2 = (et35 + et47)**2
+  //   do i = 1, 2
+  //     mctblbl2 = mctblbl2 - (p3col(i) + p5col(i) - p4col(i) - p7col(i) )**2
+  //   end do
+  //   mctblbl = sqrt(abs(mctblbl2))
+  //   (mctblbl, "MCTblbl")
+  }
+
+
   if (this->PassCuts())
   {    
     double weight = m_ntup->weight();
@@ -25,6 +124,7 @@ void AnalysisZprime::EachEvent()
     double weight_eq = m_ntup->weight_eq();
 
     // Fill Histograms (assumes fixed bin width!)
+
 
     h_Mtt->Fill(m_ntup->Mtt(), weight/h_Mtt->GetXaxis()->GetBinWidth(1));
 
@@ -345,7 +445,7 @@ void AnalysisZprime::SetupInputFiles()
   TString base("/Users/declan/Data/Ntuples_Zprime/");
   base += m_channel;
   
-  m_inputFiles->push_back(base + "_SM_13_1x5000000.root");
+  m_inputFiles->push_back(base + "_SM_13_new_1x5000.root");
 }
 
 Long64_t AnalysisZprime::TotalEvents()

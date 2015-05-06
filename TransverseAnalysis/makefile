@@ -1,7 +1,7 @@
-CXX             = g++  
+CXX             = clang++ 
 # CXXFLAGS        = -O -Wall -fPIC -ggdb -Weffc++
 CXXFLAGS        = -O -Wall -fPIC -ggdb
-LD              = g++  
+LD              = clang++ 
 # ROOTCFLAGS      = -I$(ROOTSYS)/include  
 ROOTCFLAGS      = $(shell root-config --cflags)
 # ROOTLIBS        = -L$(ROOTSYS)/lib  $(shell $(ROOTSYS)/bin/root-config --libs) 

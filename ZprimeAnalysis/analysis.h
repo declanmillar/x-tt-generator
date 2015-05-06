@@ -8,6 +8,8 @@
 #include <cmath> 
 #include <TString.h>
 #include <TH2.h>
+#include "TLorentzVector.h"
+#include "TVector2.h"
 
 class AnalysisZprime{
 public:

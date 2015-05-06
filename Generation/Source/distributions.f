@@ -11,21 +11,6 @@ module distributions
 
   public
 
-  integer :: o_mttdphi = 1
-  integer :: o_mttct7ct5 = 1
-  integer :: o_mttcost7 = 1
-  integer :: o_mttcost5 = 1
-  integer :: o_mvisdphi = 1
-  integer :: o_htdphi = 1
-  integer :: o_mt1dphi = 1
-  integer :: o_mt2dphi = 1
-  integer :: o_mt3dphi = 1
-  integer :: o_mct1dphi = 1
-  integer :: o_mct2dphi = 1
-  integer :: o_mct3dphi = 1
-  integer :: o_mltdphi = 1
-  integer :: o_mlctdphi = 1
-
 ! 1d distributions
   type(histogram) :: h_ptb
   type(histogram) :: h_ptbb
@@ -74,33 +59,6 @@ module distributions
   type(histogram) :: h_cost5
   type(histogram) :: h_cost7
   type(histogram) :: h_ct7ct5
-  type(histogram) :: h_mll
-  type(histogram) :: h_ht
-  type(histogram) :: h_mttvis
-  type(histogram) :: h_mt1
-  type(histogram) :: h_mt2
-  type(histogram) :: h_mt3
-  type(histogram) :: h_mct1
-  type(histogram) :: h_mct2
-  type(histogram) :: h_mct3
-  type(histogram) :: h_mlt
-  type(histogram) :: h_mlct
-
-! 2d distributions
-  type(histogram2d) :: h2_mttdphi
-  type(histogram2d) :: h2_mttct7ct5
-  type(histogram2d) :: h2_mttcost7
-  type(histogram2d) :: h2_mttcost5
-  type(histogram2d) :: h2_mvisdphi
-  type(histogram2d) :: h2_htdphi
-  type(histogram2d) :: h2_mt1dphi
-  type(histogram2d) :: h2_mt2dphi
-  type(histogram2d) :: h2_mt3dphi
-  type(histogram2d) :: h2_mct1dphi
-  type(histogram2d) :: h2_mct2dphi
-  type(histogram2d) :: h2_mct3dphi
-  type(histogram2d) :: h2_mltdphi
-  type(histogram2d) :: h2_mlctdphi
 
   ! distribution in sigp
   real :: sigpmax,sigpmin,sigpw
@@ -180,47 +138,6 @@ subroutine create_distributions
   if (o_cost7 == 1) h_cost7 = histogram("cost7", "d#sigma-/dcos#theta_{l^{-}}--[pb]", "cos#theta_{l^{-}}", 100, -1.d0, 1.d0)
   if (o_ct7ct5 == 1) h_ct7ct5 = histogram("ct7ct5","d#sigma-/dcos#theta_{l^{+}}cos#theta_{l^{-}}--[pb]", &
      "cos#theta_{l^+}cos#theta_{l^-}", 100,-1.d0,1.d0)
-  if (o_mll == 1) h_mll = histogram("mll", "d#sigma-/dm_{ll}--[pb/GeV]", "m_{ll}--[GeV]", 100, 0.d0, 100.d0)
-  if (o_ht == 1) h_ht = histogram("HT", "d#sigma-/dH_{T}--[pb/GeV]", "H_{T}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mttvis == 1) h_mttvis = histogram("mttvis", "d#sigma-/dM_{tt}^{vis}--[pb/GeV]", "M_{tt}^{vis}_{T}--[GeV]",40,0.d0, 4000.d0)
-  if (o_mt1 == 1) h_mt1 = histogram("MT1", "d#sigma-/dM_{T1}--[pb/GeV]", "M_{T1}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mt2 == 1) h_mt2 = histogram("MT2", "d#sigma-/dM_{T2}--[pb/GeV]", "M_{T2}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mt3 == 1) h_mt3 = histogram("MT3", "d#sigma-/dM_{T3}--[pb/GeV]", "M_{T3}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mct1 == 1) h_mct1 = histogram("MCT1", "d#sigma-/dM_{CT1}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mct2 == 1) h_mct2 = histogram("MCT2", "d#sigma-/dM_{CT2}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mct3 == 1) h_mct3 = histogram("MCT3", "d#sigma-/dM_{CT3}--[pb/GeV]", "M_{CT}--[GeV]", 40, 0.d0, 4000.d0)
-  if (o_mlt == 1) h_mlt = histogram("MlT", "d#sigma-/dM^{l}_{T}--[pb/GeV]", "M^{l}_{T}}--[GeV]", 50, 0.d0, 100.d0)
-  if (o_mlct == 1) h_mlct = histogram("MlCT", "d#sigma-/dM^{l}_{CT}--[pb/GeV]", "M^{l}_{CT}}--[GeV]", 50, 0.d0, 100.d0)
-
-  if (o_mttdphi == 1) h2_mttdphi = histogram2d("Mttdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{tt}--[GeV]",0.d0,14000.d0,10,"Ddelta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mttct7ct5 == 1) h2_mttct7ct5 = histogram2d("mttct7ct5", "d#sigma-/dcos#theta_{l^+}cos#theta_{l^-}--[pb/GeV]" &
-    ,"M_{tt}--[GeV]",0.d0,14000.d0,10,"cos#theta_{l^+}cos#theta_{l^-}", -1d0, 1.d0, 10)
-  if (o_mttcost7 == 1) h2_mttcost7 = histogram2d("mttcost7-1d0", "d#sigma-/dcos#theta_{l^-}--[pb/GeV]" &
-    ,"M_{tt}--[GeV]",0.d0,14000.d0,10,"cos#theta_{l^-}", -1d0, 1.d0, 10)
-  if (o_mttcost5 == 1) h2_mttcost5 = histogram2d("mttcost5", "d#sigma-/dM_{tt}cos#theta_{l^+}--[pb/GeV]" &
-    ,"M_{tt}--[GeV]",0.d0,14000.d0,10,"cos#theta_{l^+}", -1d0, 1.d0, 10)
-
-  if (o_mvisdphi == 1) h2_mvisdphi = histogram2d("mvisdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"H_{T}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_htdphi == 1) h2_htdphi = histogram2d("htdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{tt}^{vis}_{T}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mt1dphi == 1) h2_mt1dphi = histogram2d("mt1dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{T1}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mt2dphi == 1) h2_mt2dphi = histogram2d("mt2dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{T2}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mt3dphi == 1) h2_mt3dphi = histogram2d("mt3dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{T3}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mct1dphi == 1) h2_mct1dphi = histogram2d("mct1dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mct2dphi == 1) h2_mct2dphi = histogram2d("mct2dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mct3dphi == 1) h2_mct3dphi = histogram2d("mct3dphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mltdphi == 1) h2_mltdphi = histogram2d("mltdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M^{l}_{T}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
-  if (o_mlctdphi == 1) h2_mlctdphi = histogram2d("mlctdphi", "d#sigma-/dM_{tt}#Delta-#phi_{l}--[pb/GeV]" &
-    ,"M^{l}_{CT}--[GeV]",0.d0,4000.d0,10,"#Delta-#phi_{l}", 0.d0, 2*pi, 10)
 
   ! sigp
   o_sigp = 1
@@ -290,33 +207,6 @@ subroutine initialise_distributions
   if (o_cost5 == 1) call h_cost5%initialise()
   if (o_cost7 == 1) call h_cost7%initialise()
   if (o_ct7ct5 == 1) call h_ct7ct5%initialise()
-
-  if (o_mll == 1) call h_mll%initialise()
-  if (o_ht == 1) call h_ht%initialise()
-  if (o_mttvis == 1) call h_mttvis%initialise()
-  if (o_mt1 == 1) call h_mt1%initialise()
-  if (o_mt2 == 1) call h_mt2%initialise()
-  if (o_mt3 == 1) call h_mt3%initialise()
-  if (o_mct1 == 1) call h_mct1%initialise()
-  if (o_mct2 == 1) call h_mct2%initialise()
-  if (o_mct3 == 1) call h_mct3%initialise()
-  if (o_mlt == 1) call h_mlt%initialise()
-  if (o_mlct == 1) call h_mlct%initialise()
-
-  if (o_mttdphi == 1) call h2_mttdphi%initialise()
-  if (o_mttct7ct5 == 1) call h2_mttct7ct5%initialise()
-  if (o_mttcost7 == 1) call h2_mttcost7%initialise()
-  if (o_mttcost5 == 1) call h2_mttcost5%initialise()
-  if (o_mvisdphi == 1) call h2_mvisdphi%initialise()
-  if (o_htdphi == 1) call h2_htdphi%initialise()
-  if (o_mt1dphi == 1) call h2_mt1dphi%initialise()
-  if (o_mt2dphi == 1) call h2_mt2dphi%initialise()
-  if (o_mt3dphi == 1) call h2_mt3dphi%initialise()
-  if (o_mct1dphi == 1) call h2_mct1dphi%initialise()
-  if (o_mct2dphi == 1) call h2_mct2dphi%initialise()
-  if (o_mct3dphi == 1) call h2_mct3dphi%initialise()
-  if (o_mltdphi == 1) call h2_mltdphi%initialise()
-  if (o_mlctdphi == 1) call h2_mlctdphi%initialise()
 
   if(o_sigp == 1)then
     sigpw=(sigpmax-sigpmin)/ndiv_sigp
@@ -397,16 +287,6 @@ subroutine disable_distributions
     o_mtt_reco = 0
     o_mt_reco = 0
     o_mtb = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
   end if
 
   if (final_state > 0) then
@@ -433,16 +313,6 @@ subroutine disable_distributions
     o_ct7ct5 = 0
     o_dphi = 0
     o_etmiss = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
     o_asym(5) = 0
     o_asym(9) = 0
   end if
@@ -457,16 +327,6 @@ subroutine disable_distributions
     o_etmiss = 0
     o_mt_reco = 0
     o_mtb = 0
-    o_ht = 0
-    o_mttvis = 0
-    o_mt1 = 0
-    o_mt2 = 0
-    o_mt3 = 0
-    o_mct1 = 0
-    o_mct2 = 0
-    o_mct3 = 0
-    o_mlt = 0
-    o_mlct = 0
 
     o_asym(6) = 0
     o_asym(10) = 0
@@ -476,24 +336,6 @@ subroutine disable_distributions
 
   ! disable A_PV
   o_asym(3) = 0
-
-  if ((o_mtt == 0) .or. (o_dphi == 0)) o_mttdphi = 0
-  if ((o_mtt == 0) .or. (o_ct7ct5 == 0)) o_mttct7ct5 = 0
-  if ((o_mtt == 0) .or. (o_cost7 == 0)) o_mttcost7 = 0
-  if ((o_mtt == 0) .or. (o_cost5 == 0)) o_mttcost5 = 0
-
-  if (o_dphi == 0) then
-    o_mvisdphi = 0
-    o_htdphi = 0
-    o_mt1dphi = 0
-    o_mt2dphi = 0
-    o_mt3dphi = 0
-    o_mct1dphi = 0
-    o_mct2dphi = 0
-    o_mct3dphi = 0
-    o_mltdphi = 0
-    o_mlctdphi = 0
-  end if
 
   print *, "done."
 
@@ -558,34 +400,6 @@ subroutine finalise_distributions
   if (o_cost5 == 1) call h_cost5%finalise()
   if (o_cost7 == 1) call h_cost7%finalise()
   if (o_ct7ct5 == 1) call h_ct7ct5%finalise()
-
-  if (o_mll == 1) call h_mll%finalise()
-  if (o_ht == 1) call h_ht%finalise()
-  if (o_mttvis == 1) call h_mttvis%finalise()
-  if (o_mt1 == 1) call h_mt1%finalise()
-  if (o_mt2 == 1) call h_mt2%finalise()
-  if (o_mt3 == 1) call h_mt3%finalise()
-  if (o_mct1 == 1) call h_mct1%finalise()
-  if (o_mct2 == 1) call h_mct2%finalise()
-  if (o_mct3 == 1) call h_mct3%finalise()
-  if (o_mlt == 1) call h_mlt%finalise()
-  if (o_mlct == 1) call h_mlct%finalise()
-
-  if (o_mttdphi == 1) call h2_mttdphi%finalise()
-  if (o_mttdphi == 1) call h2_mttdphi%finalise()
-  if (o_mttct7ct5 == 1) call h2_mttct7ct5%finalise()
-  if (o_mttcost7 == 1) call h2_mttcost7%finalise()
-  if (o_mttcost5 == 1) call h2_mttcost5%finalise()
-  if (o_mvisdphi == 1) call h2_mvisdphi%finalise()
-  if (o_htdphi == 1) call h2_htdphi%finalise()
-  if (o_mt1dphi == 1) call h2_mt1dphi%finalise()
-  if (o_mt2dphi == 1) call h2_mt2dphi%finalise()
-  if (o_mt3dphi == 1) call h2_mt3dphi%finalise()
-  if (o_mct1dphi == 1) call h2_mct1dphi%finalise()
-  if (o_mct2dphi == 1) call h2_mct2dphi%finalise()
-  if (o_mct3dphi == 1) call h2_mct3dphi%finalise()
-  if (o_mltdphi == 1) call h2_mltdphi%finalise()
-  if (o_mlctdphi == 1) call h2_mlctdphi%finalise()
 
   ! plot distributions in all asymmetries
   if((o_sigp == 1) .and. (o_sigm == 1))then

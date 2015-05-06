@@ -56,14 +56,25 @@ function dsigma(x,wgt)
   real :: ct7
   real :: ct78
   real :: ct7ct5, ct7ct5col, ct7ct5cm
-  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, p5xp, p5yp, p5zp
+
+  ! structure functions
+  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, &
+          chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, dsea1, usea1, usea2, dsea2
+
+  ! 
+  real :: p5xp, p5yp, p5zp
+
+  ! temporary dsigmas
   real :: ffxn, fffxn, fffxn1, fffxn2
+
+  ! temporary top mass and width
   real :: rmt, gamt
+
   real :: dphi
   real :: ecm, ecm_max, pcm, qcm2
   real :: hist, hist1, hist2
   real :: gs, gs2
-  real :: et, et3, et4, et5, et7, etmiss, etmiss2, eta356, eta478, etvis, etvis2
+  real :: et, et3, et4, et5, et7, etmiss, etmiss2, eta356, eta478
   real :: pfx1tot, pfx2tot
   real :: gcol, qcm
   real :: pt356, pt478, phi356, phi478, ycol356, ycol478
@@ -158,13 +169,14 @@ function dsigma(x,wgt)
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m356_reco
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
-  real :: mttvis, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
-  real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2, mttvis2
+  real :: mbbll, ht, mt1, mt2, mt3, mct1, mct2, mct3, mlct, mlt
+  real :: mt12, mt22, mt32, mct12, mct22, mct32, mlct2, mlt2
   real :: mll
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2)
-  real :: ptvis(2), ptmiss(2)
+  real :: ptbbll(2), pt35(2), pt47(2)
+  real :: ptmiss(2)
 
   ! kinematic scalar arrays
   real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
@@ -256,10 +268,7 @@ function dsigma(x,wgt)
           return
         end if
 
-        ! note that for cteq pdfs we multiply by x1 below and then divide by
-        ! it later. this is for compatibility with mrs, which return xf(x).)
-        ! recent changes may screw up compatabilty with mrs. sea->bar in names
-        ! below reflecting change in cteq61pdf iparton variable.
+        ! cteq pdfs are multiplied by x for compatibility with mrs, which return xf(x).
 
         u1 = x1*ctq6pdf(1, x1, qq)
         d1 = x1*ctq6pdf(2, x1, qq)
@@ -278,7 +287,6 @@ function dsigma(x,wgt)
         btm2 = x2*ctq6pdf(5, x2, qq)
         glu2 = x2*ctq6pdf(0, x2, qq)
 
-
       else if (structure_function == 5) then
         imode=1
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
@@ -293,8 +301,8 @@ function dsigma(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 6) then
         imode=2
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
@@ -309,8 +317,8 @@ function dsigma(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 7) then
         imode=3
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
@@ -325,8 +333,8 @@ function dsigma(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 8) then
         imode=4
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
@@ -341,8 +349,8 @@ function dsigma(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
+        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       else if (structure_function == 9) then
         imode=5
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
@@ -357,16 +365,23 @@ function dsigma(x,wgt)
           fffxn=0.d0
           return
         end if
-        call mrs99(x1, qq, imode, u1, d1, ubar1, dbar1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, ubar2, dbar2, str2, chm2, btm2, glu2)
-
-      ! note that mrs return valence and sea contributions automatically.)
-      ! note that cteq do too now!)
-      ! parton distribution functions (pdfs)
+        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
       end if
       if (verbose == 1) print*, "...complete."
+      if (structure_function > 4) then
+        u1 = u1 + usea1
+        d1 = d1 + dsea1
+        u2 = u2 + usea2
+        d2 = d2 + dsea2
+        ubar1 = usea1
+        dbar1 = dsea1
+        ubar2 = usea2
+        dbar2 = dsea2
+      end if
 
       if (verbose == 1) print*, "Constructing PDFs..."
+
       ! initialise pdfs
       fx1(1) = d1
       fx1(2) = u1
@@ -460,7 +475,7 @@ function dsigma(x,wgt)
         ! flatten the integrand around the top propagator
         m356min = m3 + m5 + m6
         m356max = ecm - m4 - m7 - m8
-        if (flatten_phase_space == 0) then
+        if (map_phase_space == 0) then
           m356 = x(13)*(m356max - m356min) + m356min
         else 
           xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
@@ -479,7 +494,7 @@ function dsigma(x,wgt)
         ! flatten the integrand around the anti-top propagator
         m478min = m4 + m7 + m8
         m478max = ecm - m356
-        if (flatten_phase_space == 0) then
+        if (map_phase_space == 0) then
           m478 = x(12)*(m478max - m478min) + m478min
         else
           xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
@@ -498,7 +513,7 @@ function dsigma(x,wgt)
         ! flatten the integrand around the W+ propagator
         m56min = m5 + m6
         m56max = m356 - m3
-        if (flatten_phase_space == 0) then
+        if (map_phase_space == 0) then
           m56 = x(11)*(m56max - m56min) + m56min
         else
           xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
@@ -517,7 +532,7 @@ function dsigma(x,wgt)
         ! flatten the integrand around the W- propagator
         m78min = m7 + m8
         m78max = m478 - m4
-        if (flatten_phase_space == 0) then
+        if (map_phase_space == 0) then
           m78 = x(10)*(m78max - m78min) + m78min
         else
           xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
@@ -1084,12 +1099,18 @@ function dsigma(x,wgt)
         ! phase space factor
         fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
 
-        if (flatten_phase_space == 1) then
+        if (map_phase_space == 1) then
           fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
           fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
           fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
           fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+        else
+          fffxn1 = fffxn1*(m356max - m356min)   
+          fffxn1 = fffxn1*(m478max - m478min)
+          fffxn1 = fffxn1*(m56max - m56min)
+          fffxn1 = fffxn1*(m78max - m78min)
         end if
+
 
         ! flux factor
         fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
@@ -1102,7 +1123,7 @@ function dsigma(x,wgt)
         ! phase space factor
         fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
 
-        if (flatten_phase_space == 1) then
+        if (map_phase_space == 1) then
           fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
           fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
           fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
@@ -1284,8 +1305,7 @@ function dsigma(x,wgt)
 
         ! calculate the CoM rapidity of the antitop
         if (final_state == 0) then
-          ytb = 0.5d0*log((q(4,4) + q(3,4)) &
-          /(q(4,4) - q(3,4)))
+          ytb = 0.5d0*log((q(4,4) + q(3,4))/(q(4,4) - q(3,4)))
         else if (final_state > 0) then
           ytb = 0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
            + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
@@ -1397,20 +1417,16 @@ function dsigma(x,wgt)
           dphi = abs(phi(5) - phi(7))
           call rootadddouble(dphi, "Delta_phi_l")          
 
-          ! calculate visible and missing transverse momentum
-          etvis2 = 0d0
-          etmiss2 = 0d0
+          ! calculate missing transverse momentum (dileptonic)
+          etmiss2 = 0.d0
           do i = 1, 2
-            ptvis(i) = qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7)
-            ptmiss(i) = -ptvis(i)
-            etvis2 = etvis2 + ptvis(i)**2
+            ptmiss(i) = -(qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7))
             etmiss2 = etmiss2 + ptmiss(i)**2
           end do
-          etvis = sqrt(etvis2)
           etmiss = sqrt(etmiss2)
-          call rootadddouble(ptmiss(1), "Etmissx")
-          call rootadddouble(ptmiss(2), "Etmissy")
-          call rootadddouble(etmiss, "Etmiss")
+          call rootadddouble(ptmiss(1), "xMET")
+          call rootadddouble(ptmiss(2), "yMET")
+          call rootadddouble(etmiss, "MET")
 
           ! reconstruct the neutrino momentum for the semi-hadronic channel
           do i = 1, 2
@@ -1441,6 +1457,7 @@ function dsigma(x,wgt)
           delta_absy_reco = abs(yt_reco) - abs(ytb)
           call rootadddouble(delta_absy_reco, "Delta_y_reco")
 
+          ! calculate ytt reco
           ptotal_reco = p1 + p2 + p3 + p4 + p5 + p6_reco + p7 + p8
           ytt_reco = 0.5*log((ptotal_reco(0) + ptotal_reco(3))/(ptotal_reco(0) - ptotal_reco(3)))          
 
@@ -1462,9 +1479,6 @@ function dsigma(x,wgt)
           p356col_reco = p3col + p5col + p6col_reco
           m356_reco = mass(p356col_reco)
           call rootadddouble(m356_reco, "mt_reco")
-
-          ! calculate ytt reco
-
 
           ! calculate Mtt reco
           mtt_reco2 = (qcol(4,3) + qcol(4,4) &
@@ -1630,83 +1644,94 @@ function dsigma(x,wgt)
           cosfl = cos(phi_l)
           call rootadddouble(cosfl, "cosphil")
 
-          mll = mass(p5col + p6col)
-          call rootadddouble(mll, "Mll")
+          ! TRANSVERSE VARIABLES
 
-          ! calculate invariant mass of visible decay products
-          mttvis2 = (qcol(4,3) + qcol(4,4) &
-          +qcol(4,5) + qcol(4,7))**2
-          do i = 1, 3
-            mttvis2 = mttvis2 - (qcol(i,3) + qcol(i,4) &
-            +qcol(i,5) + qcol(i,7))**2
-          end do
-          mttvis = sqrt(abs(mttvis2))
-          call rootadddouble(mttvis, "Mttvis")
+!           mll = mass(p5col + p6col)
+!           call rootadddouble(mll, "Mll")
 
-          ! calculate transverse energy energies of visible particles
-          et3 = sqrt(m3**2 + pt2(3))
-          et4 = sqrt(m4**2 + pt2(4))
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m6**2 + pt2(7))
+!           ! calculate invariant mass of visible decay products
+!           mbbll = mass(p3col + p4col + p5col + p7col)
+!           call rootadddouble(mbbll, "Mbbll")
 
-          ht = et3 + et4 + et5 + et7 + etmiss
-          call rootadddouble(ht, "HT")
+!           ! calculate individual transverse energy energies of visible particles
+!           et3 = sqrt(m3**2 + pt2(3))
+!           et4 = sqrt(m4**2 + pt2(4))
+!           et5 = sqrt(m5**2 + pt2(5))
+!           et7 = sqrt(m6**2 + pt2(7))
 
-          mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-           + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
-          mt1 = sqrt(abs(mt12))
-          call rootadddouble(mt1, "MT1")
+!           ! calculate total scalar sum of transverse energy
+!           ht = et3 + et4 + et5 + et7 + etmiss
+!           call rootadddouble(ht, "HT")
 
-          mt22 = (et3 + et4 + et5 + et7 + etmiss)**2
-          do i  = 1, 2
-            mt22 = mt22 - (ptvis(i) + ptmiss(i))**2
-          end do
-          mt2 = sqrt(abs(mt22))
-          call rootadddouble(mt2, "MT2")
+!           ! calculate MT with individual ET sums plus a scalar sum of pT + ETmiss (not lorentz invarient)
+!           mt12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+!            + (pt(3) + pt(4) + pt(5) + pt(7) + etmiss)**2
+!           mt1 = sqrt(abs(mt12))
+!           call rootadddouble(mt1, "MT1")
 
-          mt32 = (etvis + etmiss)**2
-          do i = 1, 2
-            mt32 = mt32 - (ptvis(i) + ptmiss(i))**2
-          end do
-          mt3 = sqrt(abs(mt32))
-          call rootadddouble(mt3, "MT3")
+!           ! calculate MT with individual ET sums plus a scalar sum of pT - ETmiss (not lorentz invarient)
+!           mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
+!           + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
+!           mct1 = sqrt(abs(mct12))
+!           call rootadddouble(mct1, "MCT1")
 
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m7**2 + pt2(7))
-          mlt2 = (et5 + et7)**2
-          do i = 1, 2
-            mlt2 = mlt2 - (qcol(i,5) + qcol(i,7))**2
-          end do
-          mlt = sqrt(abs(mlt2))
-          call rootadddouble(mlt, "MlT")
+!           print*, pt(3) + pt(4) + pt(5) + pt(7) - etmiss
 
-          mct12 = (et3 + et4 + et5 + et7 + etmiss)**2 &
-          + (pt(3) + pt(4) + pt(5) + pt(7) - etmiss)**2
-          mct1 = sqrt(abs(mct12))
-          call rootadddouble(mct1, "MCT1")
+!           ! ET of visible decay products
+!           etbbll2 = mbbll*mbbll
+!           do i = 1, 2
+!             ptbbll(i) = p3col(i) + p4col(i) + p5col(i) + p7col(i)
+!             etbbll2 = etbbll2 + ptbbll(i)*ptbbll(i)
+!           end do
+!           etbbll = sqrt(etbbll2)
 
-          mct22 = (et3 + et4 + et5 + et7 + etmiss)**2
-          do i = 1, 2
-            mct22 = mct22 - (ptvis(i) - ptmiss(i))**2
-          end do
-          mct2 = sqrt(abs(mct22))
-          call rootadddouble(mct2, "MCT2")
+!           ! scalar sum of visible decay products and MET
+!           ktbbll = etbbll + etmiss
+!           call rootadddouble(ktbbll, "ETbbllmiss")
 
-          mct32 = (etvis + etmiss)**2
-          do i = 1, 2
-            mct32 = mct32 - (ptvis(i) - ptmiss(i))**2
-          end do
-          mct3 = sqrt(abs(mct32))
-          call rootadddouble(mct3, "MCT3")
+!           et5 = sqrt(m5**2 + pt2(5))
+!           et7 = sqrt(m7**2 + pt2(7))
 
-          et5 = sqrt(m5**2 + pt2(5))
-          et7 = sqrt(m7**2 + pt2(7))
-          mlct2 = (et5 + et7)**2
-          do i = 1, 2
-            mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
-          end do
-          mlct = sqrt(abs(mlct2))
-          call rootadddouble(mlct, "MlCT")
+!           mtll2 = (et5 + et7)**2
+!           do i = 1, 2
+!             mtll2 = mtll2 - (qcol(i,5) + qcol(i,7))**2
+!           end do
+!           mtll = sqrt(abs(mlt2))
+!           call rootadddouble(mlt, "MTll")
+
+!           mctll2 = (et5 + et7)**2
+!           do i = 1, 2
+!             mlct2 = mlct2 - (qcol(i,5) - qcol(i,7))**2
+!           end do
+!           mctll = sqrt(abs(mctll2))
+!           call rootadddouble(mctll, "MCTll")
+
+!           m35 = mass(p3col + p5col)
+!           m47 = mass(p4col + p7col)
+!           et35 = m35*m35
+!           et47 = m47*m47
+!           do i = 1, 2
+!             pt35(i) = p3col(i) + p5col(i)
+!             et352 = et352 + pt35(i)*pt35(i)
+!             pt47(i) = p4col(i) + p7col(i)
+!             et472 = et472 + pt47(i)*pt47(i)
+!           end do
+!           et35 = sqrt(et352)
+!           et47 = sqrt(et472)
+
+!           mtblbl2 = (et35 + et47)**2
+!           do i = 1, 2
+!             mtblbl2 = mtblbl2 - (p3col(i) + p5col(i) + p4col(i)+ p7col(i) )**2
+!           end do
+!           mtblbl = sqrt(abs(mtblbl2))
+!           call rootadddouble(mtblbl, "MTblbl")
+
+!           mctblbl2 = (et35 + et47)**2
+!           do i = 1, 2
+!             mctblbl2 = mctblbl2 - (p3col(i) + p5col(i) - p4col(i) - p7col(i) )**2
+!           end do
+!           mctblbl = sqrt(abs(mctblbl2))
+!           call rootadddouble(mctblbl, "MCTblbl")
 
           ! minimal cut on top rapidity
           if (final_state == 0) then
@@ -1870,33 +1895,6 @@ function dsigma(x,wgt)
         if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
         if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
         if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
-
-        if (o_mll == 1) call h_mll%fill(mll, hist)
-        if (o_ht == 1) call h_ht%fill(ht, hist)
-        if (o_mttvis == 1) call h_mttvis%fill(mttvis, hist)
-        if (o_mt1 == 1) call h_mt1%fill(mt1, hist)
-        if (o_mt2 == 1) call h_mt2%fill(mt2, hist)
-        if (o_mt3 == 1) call h_mt3%fill(mt3, hist)
-        if (o_mct1 == 1) call h_mct1%fill(mct1, hist)
-        if (o_mct2 == 1) call h_mct2%fill(mct2, hist)
-        if (o_mct3 == 1) call h_mct3%fill(mct3, hist)
-        if (o_mlt == 1) call h_mlt%fill(mlt, hist)
-        if (o_mlct == 1) call h_mlct%fill(mlct, hist)
-
-        if (o_mttdphi == 1) call h2_mttdphi%fill(mtt, dphi, hist)
-        if (o_mttct7ct5 == 1) call h2_mttct7ct5%fill(mtt, ct7ct5, hist)
-        if (o_mttcost7 == 1) call h2_mttcost7%fill(mtt, costheta7, hist)
-        if (o_mttcost5 == 1) call h2_mttcost5%fill(mtt, costheta5, hist)
-        if (o_mvisdphi == 1) call h2_mvisdphi%fill(mtt, dphi, hist)
-        if (o_htdphi == 1) call h2_htdphi%fill(ht, dphi, hist)
-        if (o_mt1dphi == 1) call h2_mt1dphi%fill(mt1, dphi, hist)
-        if (o_mt2dphi == 1) call h2_mt2dphi%fill(mt2, dphi, hist)
-        if (o_mt3dphi == 1) call h2_mt3dphi%fill(mt3, dphi, hist)
-        if (o_mct1dphi == 1) call h2_mct1dphi%fill(mct1, dphi, hist)
-        if (o_mct2dphi == 1) call h2_mct2dphi%fill(mct2, dphi, hist)
-        if (o_mct3dphi == 1) call h2_mct3dphi%fill(mct3, dphi, hist)
-        if (o_mltdphi == 1) call h2_mltdphi%fill(mlt, dphi, hist)
-        if (o_mlctdphi == 1) call h2_mlctdphi%fill(mlct, dphi, hist)
 
         if (o_asym(1) == 1) then
           if (o_sigp == 1) then
