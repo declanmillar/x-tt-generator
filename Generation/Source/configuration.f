@@ -197,27 +197,27 @@ module configuration
       end if
 
       if(symmetrise_x1x2 == 1)then
-        ixmax=2
+        ixmax = 2
       else
-        ixmax=1
+        ixmax = 1
       end if
 
       if(symmetrise_costheta_t == 1)then
-        jxmax=2
+        jxmax = 2
       else
-        jxmax=1
+        jxmax = 1
       end if
 
       if(final_state == 0)then
-        tops_decay=0
+        tops_decay = 0
       else
-        tops_decay=1
+        tops_decay = 1
       end if
 
       if(phase_space_only == 1)then
-        include_qcd=0
-        include_ew=0
-        include_bsm=0
+        include_qcd = 0
+        include_ew = 0
+        include_bsm = 0
       end if
       
       print*, "...complete."

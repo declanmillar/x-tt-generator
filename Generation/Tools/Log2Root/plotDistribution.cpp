@@ -83,7 +83,7 @@ TH1D* plotDistribution(double luminosity, double efficiency, ifstream *logStream
   hist->GetXaxis()->CenterTitle();
 
   // fill Histogram.
-  for (int i = 1; i < nBins+1; i++) {
+  for (int i = 0; i < nBins+1; i++) {
     hist->Fill(xV[i], yV[i]);
     // if (distName == "cost5") hist->SetBinError(i, sqrt(sumw2V[i-1]));
   }

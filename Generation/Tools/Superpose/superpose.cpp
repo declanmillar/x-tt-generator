@@ -121,16 +121,16 @@ int main(int argc, char *argv[])
   }
 
   // normalize histograms
-  normalize = true;
-  if (normalize == true) { 
-    std::string yTitle;
-    yTitle = h1->GetYaxis()->GetTitle();
-    yTitle = "1/#sigma #times " + yTitle;
-    h1->GetYaxis()->SetTitle(yTitle.c_str());
-    h1->Scale(1.0/h1->Integral());
-    if (nFiles > 1) h2->Scale(1.0/h2->Integral());
-    if (nFiles > 2) h3->Scale(1.0/h3->Integral());
-  }
+  // normalize = true;
+  // if (normalize == true) { 
+  //   std::string yTitle;
+  //   yTitle = h1->GetYaxis()->GetTitle();
+  //   yTitle = "1/#sigma #times " + yTitle;
+  //   h1->GetYaxis()->SetTitle(yTitle.c_str());
+  //   h1->Scale(1.0/h1->Integral());
+  //   if (nFiles > 1) h2->Scale(1.0/h2->Integral());
+  //   if (nFiles > 2) h3->Scale(1.0/h3->Integral());
+  // }
 
   // set range user
   // if(rangeMax == rangeMax && rangeMax == rangeMax) {

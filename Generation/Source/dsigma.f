@@ -95,7 +95,7 @@ function dsigma(x,wgt)
   real :: rl78
   real :: rpl356
   real :: rpl478
-  real :: rps356
+  real :: rps356, rps
   real :: rps478
   real :: rq
   real :: rq2
@@ -136,7 +136,7 @@ function dsigma(x,wgt)
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
 
   ! iterators
-  integer :: i, j, k, ii, jj, kk, jx, ix, nbin,  ibin, jbin, imode, ip, iphel, jphel, lam3, lam4, jps
+  integer :: i, j, k, jx, ix, nbin, ibin, jbin, imode, lam3, lam4, jps
 
   ! phase space vectors.
   real :: q356(4), q478(4)
@@ -165,9 +165,6 @@ function dsigma(x,wgt)
 
   ! Transverse momentum vectors   
   real :: pT6col(1:2), ptmiss(2)
-
-  ! kinematic scalar arrays
-  real :: pt2(8), pt(8), rps(8), rpl(8), arg(8), eta(8), phi(8), ycol(8)
   
   ! lepton azimuthal angle coordinate system
   real :: xp(3), yp(3), zp(3)
@@ -187,7 +184,7 @@ function dsigma(x,wgt)
   real :: pfx2(-1:1, -1:1)
 
   ! weight per polarisation
-  real :: weight(20, -1:1, -1:1)
+  real :: weight(-1:1, -1:1, 20)
   real :: weightLL = -999, weightLR = -999, weightRL = -999, weightRR = -999
 
   ! pdfs
@@ -882,22 +879,22 @@ function dsigma(x,wgt)
       ewzuu2 = 0.d0
       ewzdd2 = 0.d0
       ewzbb2 = 0.d0
-      do ii = -1, 1
-        do jj = -1, 1
-          qcdpolqq1(ii,jj) = 0.d0
-          qcdpolbb1(ii,jj) = 0.d0
-          qcdpolgg1(ii,jj) = 0.d0
-          ewzpoluu1(ii,jj) = 0.d0
-          ewzpoldd1(ii,jj) = 0.d0
-          ewzpolbb1(ii,jj) = 0.d0
-          qcdpolqq2(ii,jj) = 0.d0
-          qcdpolbb2(ii,jj) = 0.d0
-          qcdpolgg2(ii,jj) = 0.d0
-          ewzpoluu2(ii,jj) = 0.d0
-          ewzpoldd2(ii,jj) = 0.d0
-          ewzpolbb2(ii,jj) = 0.d0
-          do kk = 1, 20
-            weight(kk,ii,jj) = 0.d0
+      do lam3 = -1, 1
+        do lam4 = -1, 1
+          qcdpolqq1(lam3,lam4) = 0.d0
+          qcdpolbb1(lam3,lam4) = 0.d0
+          qcdpolgg1(lam3,lam4) = 0.d0
+          ewzpoluu1(lam3,lam4) = 0.d0
+          ewzpoldd1(lam3,lam4) = 0.d0
+          ewzpolbb1(lam3,lam4) = 0.d0
+          qcdpolqq2(lam3,lam4) = 0.d0
+          qcdpolbb2(lam3,lam4) = 0.d0
+          qcdpolgg2(lam3,lam4) = 0.d0
+          ewzpoluu2(lam3,lam4) = 0.d0
+          ewzpoldd2(lam3,lam4) = 0.d0
+          ewzpolbb2(lam3,lam4) = 0.d0
+          do i = 1, 20
+            weight(lam3,lam4,i) = 0.d0
           end do
         end do
       end do
@@ -1174,10 +1171,10 @@ function dsigma(x,wgt)
             +sigma_pol(lam3,lam4,it)**2
           end do
         end do
-        weightLL = weight(it,-1,-1)
-        weightLR = weight(it,-1, 1)
-        weightRL = weight(it, 1,-1)
-        weightRR = weight(it, 1, 1)
+        weightLL = weight(-1,-1,it)
+        weightLR = weight(-1, 1,it)
+        weightRL = weight( 1,-1,it)
+        weightRR = weight( 1, 1,it)
         if (verbose == 1) print*, "...complete."
       end if
 
@@ -1195,224 +1192,164 @@ function dsigma(x,wgt)
 
         if (verbose == 1) print*, "Computing additional kinematic variables..."
 
-!         ! calculate asympotic collider frame transverse momenta
-!         do ip = 1, n_final
-!           pt2(ip) = qcol(1,ip)**2 + qcol(2,ip)**2
-!           pt(ip) = sqrt(pt2(ip))
-!         end do
-!         call rootadddouble(pt(3), "pT3")
-!         call rootadddouble(pt(4), "pT4")
+!         ! calculate truth level top/antitop pt, eta and phi
 !         if (final_state > 0) then
-!           call rootadddouble(pt(5), "pT5")
-!           call rootadddouble(pt(7), "pT7")
-!           call rootadddouble(pt(6), "pT6")
-!           call rootadddouble(pt(8), "pT8")
+!           pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
+!                        + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
+!           call rootadddouble(pt356, "pT356")
+
+!           pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
+!                        + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
+!           call rootadddouble(pt478, "pT478")
+
+
+!           rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
+!           /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
+!                 +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
+!                 +(q(3, 3) + q(3, 5) + q(3, 6))**2)
+!           if (rps356 < -1.d0) rps = -1.d0
+!           if (rps356 > +1.d0) rps = +1.d0
+!           rpl356 = acos(rps356)
+!           arg356 = tan(rpl356/2d0)
+!           if (arg356 <= 0.d0) arg356 = 1.d-9
+!           eta356 = -log(arg356)
+!           call rootadddouble(eta356, "eta356")
+
+!           rps478 = (q(3,4)+q(3,7)+q(3,8)) &
+!           /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
+!           +(q(2,4)+q(2,7)+q(2,8))**2 &
+!           +(q(3,4)+q(3,7)+q(3,8))**2)
+!           if (rps478 < -1.d0)rps = -1.d0
+!           if (rps478 > +1.d0)rps = +1.d0
+!           rpl478 = acos(rps478)
+!           arg478 = tan(rpl478/2d0)
+!           if (arg478 <=  0.d0) arg478 = 1.d-9
+!           eta478 = -log(arg478)
+!           call rootadddouble(eta478, "eta478")
+
+!           phi356 = atan2(qcol(2,3) + qcol(2,5) + qcol(2,6) &
+!           ,qcol(1,3) + qcol(1,5) + qcol(1,6))
+!           call rootadddouble(phi356, "phi356")
+
+!           phi478 = atan2(qcol(2,4) + qcol(2,7) + qcol(2,8) &
+!           ,qcol(1,4) + qcol(1,7) + qcol(1,8))
+!           call rootadddouble(phi478, "phi478")
+
+!           ycol356 =0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
+!            + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
+!           /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
+!            - qcol(3,3) - qcol(3,5) - qcol(3,6)))
+!           call rootadddouble(ycol356, "ycol356")
+
+!           ycol478=0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
+!            + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
+!           /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
+!            - qcol(3,4) - qcol(3,7) - qcol(3,8)))
+!           call rootadddouble(ycol478, "ycol478")
 !         end if
-
-        ! calculate asympotic collider frame rapidity
-!         do ip = 3, n_final
-!           ycol(ip) = 0.5d0*log((qcol(4,ip) + qcol(3,ip)) &
-!           /(qcol(4,ip) - qcol(3,ip)))
-!         end do
-!         call rootadddouble(ycol(3), "ycol3")
-!         call rootadddouble(ycol(4), "ycol4")
-!         if (final_state > 0) then
-!           call rootadddouble(ycol(5), "ycol5")
-!           call rootadddouble(ycol(7), "ycol7")
-!           call rootadddouble(ycol(6), "ycol6")
-!           call rootadddouble(ycol(8), "ycol8")
-!         end if
-
-!         ! calculate asympotic collider frame pseudorapidity
-!         do ip = 1, n_final
-!           rps(ip) = (qcol(3, ip))/sqrt(qcol(1, ip)**2 + qcol(2, ip)**2 + qcol(3, ip)**2)
-!           if (rps(ip) < -1.d0) rps = -1.d0
-!           if (rps(ip) > +1.d0) rps = +1.d0
-!           rpl(ip) = acos(rps(ip))
-!           arg(ip) = tan(rpl(ip)/2d0)
-!           if (arg(ip) <= 0.d0) arg(ip) = 1.d-9
-!           eta(ip) = -log(arg(ip))
-!         end do
-!         call rootadddouble(eta(3), "eta3")
-!         call rootadddouble(eta(4), "eta4")
-!         if(final_state > 0) then
-!           call rootadddouble(eta(5), "eta5")
-!           call rootadddouble(eta(7), "eta7")
-!           call rootadddouble(eta(6), "eta6")
-!           call rootadddouble(eta(8), "eta8")
-!         end if
-
-!         ! calculate asympotic collider frame azimuthal angle
-!         do ip = 1, n_final
-!           phi(ip) = atan2(qcol(2, ip), qcol(1, ip))
-!         end do
-!         call rootadddouble(phi(3), "phi3")
-!         call rootadddouble(phi(4), "phi4")
-!         if(final_state > 0) then
-!           call rootadddouble(phi(5), "phi5")
-!           call rootadddouble(phi(7), "phi7")
-!           call rootadddouble(phi(6), "phi6")
-!           call rootadddouble(phi(8), "phi8")
-!         end if
-
-        ! calculate truth level top/antitop pt, eta and phi
-        if (final_state > 0) then
-          pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
-                       + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
-          call rootadddouble(pt356, "pT356")
-
-          pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
-                       + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
-          call rootadddouble(pt478, "pT478")
-
-
-          rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
-          /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
-                +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
-                +(q(3, 3) + q(3, 5) + q(3, 6))**2)
-          if (rps356 < -1.d0) rps = -1.d0
-          if (rps356 > +1.d0) rps = +1.d0
-          rpl356 = acos(rps356)
-          arg356 = tan(rpl356/2d0)
-          if (arg356 <= 0.d0) arg356 = 1.d-9
-          eta356 = -log(arg356)
-          call rootadddouble(eta356, "eta356")
-
-          rps478 = (q(3,4)+q(3,7)+q(3,8)) &
-          /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
-          +(q(2,4)+q(2,7)+q(2,8))**2 &
-          +(q(3,4)+q(3,7)+q(3,8))**2)
-          if (rps478 < -1.d0)rps = -1.d0
-          if (rps478 > +1.d0)rps = +1.d0
-          rpl478 = acos(rps478)
-          arg478 = tan(rpl478/2d0)
-          if (arg478 <=  0.d0) arg478 = 1.d-9
-          eta478 = -log(arg478)
-          call rootadddouble(eta478, "eta478")
-
-          phi356 = atan2(qcol(2,3) + qcol(2,5) + qcol(2,6) &
-          ,qcol(1,3) + qcol(1,5) + qcol(1,6))
-          call rootadddouble(phi356, "phi356")
-
-          phi478 = atan2(qcol(2,4) + qcol(2,7) + qcol(2,8) &
-          ,qcol(1,4) + qcol(1,7) + qcol(1,8))
-          call rootadddouble(phi478, "phi478")
-
-          ycol356 =0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
-          /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           - qcol(3,3) - qcol(3,5) - qcol(3,6)))
-          call rootadddouble(ycol356, "ycol356")
-
-          ycol478=0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
-          /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           - qcol(3,4) - qcol(3,7) - qcol(3,8)))
-          call rootadddouble(ycol478, "ycol478")
-        end if
 
         ! calculate the CoM rapidity of the top
-        if (final_state == 0) then
-          yt = 0.5d0*log((q(4,3) + q(3,3)) &
-          /(q(4,3) - q(3,3)))
-        else if (final_state > 0) then
-          yt  = 0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
-           /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           - qcol(3,3) - qcol(3,5) - qcol(3,6)))
-        end if
-        call rootadddouble(yt, "yt")
+!         if (final_state == 0) then
+!           yt = 0.5d0*log((q(4,3) + q(3,3)) &
+!           /(q(4,3) - q(3,3)))
+!         else if (final_state > 0) then
+!           yt  = 0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
+!            + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
+!            /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
+!            - qcol(3,3) - qcol(3,5) - qcol(3,6)))
+!         end if
+!         call rootadddouble(yt, "yt")
 
         ! calculate the CoM rapidity of the antitop
-        if (final_state == 0) then
-          ytb = 0.5d0*log((q(4,4) + q(3,4))/(q(4,4) - q(3,4)))
-        else if (final_state > 0) then
-          ytb = 0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
-           /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           - qcol(3,4) - qcol(3,7) - qcol(3,8)))
-        end if
-        call rootadddouble(ytb, "ytbar")
+!         if (final_state == 0) then
+!           ytb = 0.5d0*log((q(4,4) + q(3,4))/(q(4,4) - q(3,4)))
+!         else if (final_state > 0) then
+!           ytb = 0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
+!            + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
+!            /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
+!            - qcol(3,4) - qcol(3,7) - qcol(3,8)))
+!         end if
+!         call rootadddouble(ytb, "ytbar")
 
         ! difference in absolute rapidity in CoM frame
-        delta_absy = abs(yt) - abs(ytb)
-        call rootadddouble(delta_absy, "Delta_y")
+!         delta_absy = abs(yt) - abs(ytb)
+!         call rootadddouble(delta_absy, "Delta_y")
 
         ! calculate the energy of the top
-        if (final_state == 0) then
-          et = qcol(4,3)
-        else if (final_state > 0) then
-          et = qcol(4,3) + qcol(4,5) + qcol(4,6)
-        end if
-        call rootadddouble(et, "Et")
+!         if (final_state == 0) then
+!           et = qcol(4,3)
+!         else if (final_state > 0) then
+!           et = qcol(4,3) + qcol(4,5) + qcol(4,6)
+!         end if
+!         call rootadddouble(et, "Et")
 
         ! calculate collider frame cos(theta_t)
-        if (final_state == 0) then
-          cost = &
-          (qcol(1,3)*qcol(1,1) &
-          +qcol(2,3)*qcol(2,1) &
-          +qcol(3,3)*qcol(3,1)) &
-          /sqrt(qcol(1,3)*qcol(1,3) &
-          +qcol(2,3)*qcol(2,3) &
-          +qcol(3,3)*qcol(3,3)) &
-          /sqrt(qcol(1,1)*qcol(1,1) &
-          +qcol(2,1)*qcol(2,1) &
-          +qcol(3,1)*qcol(3,1))
-        else if (final_state > 0) then
-          cost = &
-          ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
-          +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
-          +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1)) &
-          /sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6)) &
-          *(qcol(1,3)+qcol(1,5)+qcol(1,6)) &
-          +(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
-          *(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
-          +(qcol(3,3)+qcol(3,5)+qcol(3,6)) &
-          *(qcol(3,3)+qcol(3,5)+qcol(3,6))) &
-          /sqrt(qcol(1,1)*qcol(1,1) &
-          +qcol(2,1)*qcol(2,1) &
-          +qcol(3,1)*qcol(3,1))
-        end if
-        call rootadddouble(cost, "costhetatcol")
+!         if (final_state == 0) then
+!           cost = &
+!           (qcol(1,3)*qcol(1,1) &
+!           +qcol(2,3)*qcol(2,1) &
+!           +qcol(3,3)*qcol(3,1)) &
+!           /sqrt(qcol(1,3)*qcol(1,3) &
+!           +qcol(2,3)*qcol(2,3) &
+!           +qcol(3,3)*qcol(3,3)) &
+!           /sqrt(qcol(1,1)*qcol(1,1) &
+!           +qcol(2,1)*qcol(2,1) &
+!           +qcol(3,1)*qcol(3,1))
+!         else if (final_state > 0) then
+!           cost = &
+!           ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
+!           +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
+!           +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1)) &
+!           /sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6)) &
+!           *(qcol(1,3)+qcol(1,5)+qcol(1,6)) &
+!           +(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
+!           *(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
+!           +(qcol(3,3)+qcol(3,5)+qcol(3,6)) &
+!           *(qcol(3,3)+qcol(3,5)+qcol(3,6))) &
+!           /sqrt(qcol(1,1)*qcol(1,1) &
+!           +qcol(2,1)*qcol(2,1) &
+!           +qcol(3,1)*qcol(3,1))
+!         end if
+!         call rootadddouble(cost, "costhetatcol")
 
         ! calculate parton CoM cos(theta_t)
-        if (final_state == 0) then
-          costhetat_cm =(q(1,3)*q(1,1) &
-          +q(2,3)*q(2,1) &
-          +q(3,3)*q(3,1)) &
-          /sqrt(q(1,3)*q(1,3) &
-          +q(2,3)*q(2,3) &
-          +q(3,3)*q(3,3)) &
-          /sqrt(q(1,1)*q(1,1) &
-          +q(2,1)*q(2,1) &
-          +q(3,1)*q(3,1))
-        else if (final_state > 0) then
-          costhetat_cm = &
-          ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
-          +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
-          +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
-          /sqrt((q(1,3)+q(1,5)+q(1,6)) &
-          *(q(1,3)+q(1,5)+q(1,6)) &
-          +(q(2,3)+q(2,5)+q(2,6)) &
-          *(q(2,3)+q(2,5)+q(2,6)) &
-          +(q(3,3)+q(3,5)+q(3,6)) &
-          *(q(3,3)+q(3,5)+q(3,6))) &
-          /sqrt(q(1,1)*q(1,1) &
-          +q(2,1)*q(2,1) &
-          +q(3,1)*q(3,1))
-        end if
-        call rootadddouble(costhetat_cm, "costhetat")
+!         if (final_state == 0) then
+!           costhetat_cm =(q(1,3)*q(1,1) &
+!           +q(2,3)*q(2,1) &
+!           +q(3,3)*q(3,1)) &
+!           /sqrt(q(1,3)*q(1,3) &
+!           +q(2,3)*q(2,3) &
+!           +q(3,3)*q(3,3)) &
+!           /sqrt(q(1,1)*q(1,1) &
+!           +q(2,1)*q(2,1) &
+!           +q(3,1)*q(3,1))
+!         else if (final_state > 0) then
+!           costhetat_cm = &
+!           ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
+!           +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
+!           +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
+!           /sqrt((q(1,3)+q(1,5)+q(1,6)) &
+!           *(q(1,3)+q(1,5)+q(1,6)) &
+!           +(q(2,3)+q(2,5)+q(2,6)) &
+!           *(q(2,3)+q(2,5)+q(2,6)) &
+!           +(q(3,3)+q(3,5)+q(3,6)) &
+!           *(q(3,3)+q(3,5)+q(3,6))) &
+!           /sqrt(q(1,1)*q(1,1) &
+!           +q(2,1)*q(2,1) &
+!           +q(3,1)*q(3,1))
+!         end if
+!         call rootadddouble(costhetat_cm, "costhetat")
 
-        beta = shat/4.d0/rmt**2 - 1.d0
-        call rootadddouble(beta, "beta")
+!         beta = shat/4.d0/rmt**2 - 1.d0
+!         call rootadddouble(beta, "beta")
 
         ! calculate rapidity of the tt system
-        ytt = 0.5d0*log(x1/x2)
-        call rootadddouble(ytt, "ytt")
+!         ytt = 0.5d0*log(x1/x2)
+!         call rootadddouble(ytt, "ytt")
 
         ! reconstructed costheta_t
-        costhetat_star = int(ytt/abs(ytt))*costhetat_cm
-        call rootadddouble(costhetat_star, "costhetastar")
+!         costhetat_star = int(ytt/abs(ytt))*costhetat_cm
+!         call rootadddouble(costhetat_star, "costhetastar")
 
 !         if (final_state == 0) then
 !           mtt2 = (qcol(4,3) + qcol(4,4))**2
@@ -1430,23 +1367,24 @@ function dsigma(x,wgt)
 !           end do
 !         end if
 !         mtt = sqrt(abs(mtt2))
+!         print*, "mtt", mtt
 !         call rootadddouble(mtt, "Mtt")
 
         if (final_state > 0) then
 
-          dphi = abs(phi(5) - phi(7))
-          call rootadddouble(dphi, "Delta_phi_l")          
+!           dphi = abs(phi(5) - phi(7))
+!           call rootadddouble(dphi, "Delta_phi_l")          
 
           ! calculate missing transverse momentum (dileptonic)
-          etmiss2 = 0.d0
-          do i = 1, 2
-            ptmiss(i) = -(qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7))
-            etmiss2 = etmiss2 + ptmiss(i)**2
-          end do
-          etmiss = sqrt(etmiss2)
-          call rootadddouble(ptmiss(1), "xMET")
-          call rootadddouble(ptmiss(2), "yMET")
-          call rootadddouble(etmiss, "MET")
+!           etmiss2 = 0.d0
+!           do i = 1, 2
+!             ptmiss(i) = -(qcol(i, 3) + qcol(i, 4) + qcol(i, 5) + qcol(i, 7))
+!             etmiss2 = etmiss2 + ptmiss(i)**2
+!           end do
+!           etmiss = sqrt(etmiss2)
+!           call rootadddouble(ptmiss(1), "xMET")
+!           call rootadddouble(ptmiss(2), "yMET")
+!           call rootadddouble(etmiss, "MET")
 
           ! reconstruct the neutrino momentum for the semi-hadronic channel
           do i = 1, 2
@@ -1493,7 +1431,7 @@ function dsigma(x,wgt)
           call rootadddouble(costhetat_reco, "costhetat_reco")          
 
           ! truth anti top mass
-          call rootadddouble(m478, "m478")
+!           call rootadddouble(m478, "m478")
 
           ! calculate mt reco
           p356col_reco = p3col + p5col + p6col_reco
@@ -1517,108 +1455,108 @@ function dsigma(x,wgt)
           call rootadddouble(costhetat_star_reco, "costhetastar_reco")
 
           ! boost anti lepton to top rest frame
-          p356(0) = q356(4)
-          p356_opp(0) = q356(4)
-          do i = 1, 3
-            p356(i) = q356(i)
-            p356_opp(i) = -q356(i)
-          end do 
-          call boostx(p5, p356_opp, p5rest)
+!           p356(0) = q356(4)
+!           p356_opp(0) = q356(4)
+!           do i = 1, 3
+!             p356(i) = q356(i)
+!             p356_opp(i) = -q356(i)
+!           end do 
+!           call boostx(p5, p356_opp, p5rest)
 
           ! boost lepton to antitop rest frame
-          p478(0) = q478(4)
-          p478_opp(0) = q478(4)
-          do i = 1, 3
-            p478(i) = q478(i)
-            p478_opp(i) = -q478(i)
-          end do
-          call boostx(p7, p478_opp, p7rest)
+!           p478(0) = q478(4)
+!           p478_opp(0) = q478(4)
+!           do i = 1, 3
+!             p478(i) = q478(i)
+!             p478_opp(i) = -q478(i)
+!           end do
+!           call boostx(p7, p478_opp, p7rest)
 
           ! calculate cos(theta_l+) in top rest frame
-          costheta5 = (p5rest(1)*q356(1) &
-                       +p5rest(2)*q356(2) &
-                       +p5rest(3)*q356(3)) &
-                      /sqrt(p5rest(1)*p5rest(1) &
-                            +p5rest(2)*p5rest(2) &
-                            +p5rest(3)*p5rest(3)) &
-                      /sqrt(q356(1)*q356(1) &
-                            +q356(2)*q356(2) &
-                            +q356(3)*q356(3))
-          call rootadddouble(costheta5, "costheta5")
+!           costheta5 = (p5rest(1)*q356(1) &
+!                        +p5rest(2)*q356(2) &
+!                        +p5rest(3)*q356(3)) &
+!                       /sqrt(p5rest(1)*p5rest(1) &
+!                             +p5rest(2)*p5rest(2) &
+!                             +p5rest(3)*p5rest(3)) &
+!                       /sqrt(q356(1)*q356(1) &
+!                             +q356(2)*q356(2) &
+!                             +q356(3)*q356(3))
+!           call rootadddouble(costheta5, "costheta5")
 
           ! calculate cos(theta_l-) in top rest frame
-          costheta7 = (p7rest(1)*q478(1) &
-                       +p7rest(2)*q478(2) &
-                       +p7rest(3)*q478(3)) &
-                      /sqrt(p7rest(1)*p7rest(1) &
-                            +p7rest(2)*p7rest(2) &
-                            +p7rest(3)*p7rest(3)) &
-                      /sqrt(q478(1)*q478(1) &
-                            +q478(2)*q478(2) &
-                            +q478(3)*q478(3))
-          call rootadddouble(costheta7, "costheta7")
+!           costheta7 = (p7rest(1)*q478(1) &
+!                        +p7rest(2)*q478(2) &
+!                        +p7rest(3)*q478(3)) &
+!                       /sqrt(p7rest(1)*p7rest(1) &
+!                             +p7rest(2)*p7rest(2) &
+!                             +p7rest(3)*p7rest(3)) &
+!                       /sqrt(q478(1)*q478(1) &
+!                             +q478(2)*q478(2) &
+!                             +q478(3)*q478(3))
+!           call rootadddouble(costheta7, "costheta7")
 
           ! calculate product of cos(theta_l+) and cos(theta_l-) in top rest frame          
-          ct7ct5 = costheta7*costheta5
-          call rootadddouble(ct7ct5, "ct7ct5")
+!           ct7ct5 = costheta7*costheta5
+!           call rootadddouble(ct7ct5, "ct7ct5")
 
           ! calculate cos(theta_l+)col
-          costheta5col = (qcol(1,5)*qcol(1,1) &
-                        + qcol(2,5)*qcol(2,1) &
-                        + qcol(3,5)*qcol(3,1)) &
-                        /sqrt(qcol(1,5)*qcol(1,5) &
-                        + qcol(2,5)*qcol(2,5) &
-                        + qcol(3,5)*qcol(3,5)) &
-                        /sqrt(qcol(1,1)*qcol(1,1) &
-                        + qcol(2,1)*qcol(2,1) &
-                        + qcol(3,1)*qcol(3,1))
-          call rootadddouble(costheta5col, "costheta5col")
+!           costheta5col = (qcol(1,5)*qcol(1,1) &
+!                         + qcol(2,5)*qcol(2,1) &
+!                         + qcol(3,5)*qcol(3,1)) &
+!                         /sqrt(qcol(1,5)*qcol(1,5) &
+!                         + qcol(2,5)*qcol(2,5) &
+!                         + qcol(3,5)*qcol(3,5)) &
+!                         /sqrt(qcol(1,1)*qcol(1,1) &
+!                         + qcol(2,1)*qcol(2,1) &
+!                         + qcol(3,1)*qcol(3,1))
+!           call rootadddouble(costheta5col, "costheta5col")
 
 
           ! calculate cos(theta_l-)col
-          costheta7col = (qcol(1,7)*qcol(1,1) &
-                        + qcol(2,7)*qcol(2,1) &
-                        + qcol(3,7)*qcol(3,1)) &
-                        /sqrt(qcol(1,7)*qcol(1,7) &
-                        + qcol(2,7)*qcol(2,7) &
-                        + qcol(3,7)*qcol(3,7)) &
-                        /sqrt(qcol(1,1)*qcol(1,1) &
-                        + qcol(2,1)*qcol(2,1) &
-                        + qcol(3,1)*qcol(3,1))
-          call rootadddouble(costheta7col, "costheta7col")
+!           costheta7col = (qcol(1,7)*qcol(1,1) &
+!                         + qcol(2,7)*qcol(2,1) &
+!                         + qcol(3,7)*qcol(3,1)) &
+!                         /sqrt(qcol(1,7)*qcol(1,7) &
+!                         + qcol(2,7)*qcol(2,7) &
+!                         + qcol(3,7)*qcol(3,7)) &
+!                         /sqrt(qcol(1,1)*qcol(1,1) &
+!                         + qcol(2,1)*qcol(2,1) &
+!                         + qcol(3,1)*qcol(3,1))
+!           call rootadddouble(costheta7col, "costheta7col")
 
           ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
-          ct7ct5col = costheta7col*costheta5col
-          call rootadddouble(ct7ct5col, "ct7ct5col")
+!           ct7ct5col = costheta7col*costheta5col
+!           call rootadddouble(ct7ct5col, "ct7ct5col")
 
           ! calculate cos(theta_l+)cm
-          costheta5cm = (q(1,5)*q(1,1) &
-                        + q(2,5)*q(2,1) &
-                        + q(3,5)*q(3,1)) &
-                        /sqrt(q(1,5)*q(1,5) &
-                        + q(2,5)*q(2,5) &
-                        + q(3,5)*q(3,5)) &
-                        /sqrt(q(1,1)*q(1,1) &
-                        + q(2,1)*q(2,1) &
-                        + q(3,1)*q(3,1))
-          call rootadddouble(costheta5cm, "costheta5cm")
+!           costheta5cm = (q(1,5)*q(1,1) &
+!                         + q(2,5)*q(2,1) &
+!                         + q(3,5)*q(3,1)) &
+!                         /sqrt(q(1,5)*q(1,5) &
+!                         + q(2,5)*q(2,5) &
+!                         + q(3,5)*q(3,5)) &
+!                         /sqrt(q(1,1)*q(1,1) &
+!                         + q(2,1)*q(2,1) &
+!                         + q(3,1)*q(3,1))
+!           call rootadddouble(costheta5cm, "costheta5cm")
 
 
           ! calculate cos(theta_l-)cm
-          costheta7cm = (q(1,7)*q(1,1) &
-                        + q(2,7)*q(2,1) &
-                        + q(3,7)*q(3,1)) &
-                        /sqrt(q(1,7)*q(1,7) &
-                        + q(2,7)*q(2,7) &
-                        + q(3,7)*q(3,7)) &
-                        /sqrt(q(1,1)*q(1,1) &
-                        + q(2,1)*q(2,1) &
-                        + q(3,1)*q(3,1))
-          call rootadddouble(costheta7cm, "costheta7cm")
+!           costheta7cm = (q(1,7)*q(1,1) &
+!                         + q(2,7)*q(2,1) &
+!                         + q(3,7)*q(3,1)) &
+!                         /sqrt(q(1,7)*q(1,7) &
+!                         + q(2,7)*q(2,7) &
+!                         + q(3,7)*q(3,7)) &
+!                         /sqrt(q(1,1)*q(1,1) &
+!                         + q(2,1)*q(2,1) &
+!                         + q(3,1)*q(3,1))
+!           call rootadddouble(costheta7cm, "costheta7cm")
 
           ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
-          ct7ct5cm = costheta7cm*costheta5cm
-          call rootadddouble(ct7ct5cm, "ct7ct5cm")
+!           ct7ct5cm = costheta7cm*costheta5cm
+!           call rootadddouble(ct7ct5cm, "ct7ct5cm")
 
           ! calculate cos(phi_l) (lepton azimuthal angle)
           p5mag = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
@@ -1665,15 +1603,15 @@ function dsigma(x,wgt)
           call rootadddouble(cosfl, "cosphil")
 
           ! minimal cut on top rapidity
-          if (final_state == 0) then
-            if (abs(eta(3)) > 100) then
-              fffxn = 0.d0
-              return
-            end if
-          else if (abs(eta356) > 100) then
-            fffxn = 0.d0
-            return
-          end if
+!           if (final_state == 0) then
+!             if (abs(eta(3)) > 100) then
+!               fffxn = 0.d0
+!               return
+!             end if
+!           else if (abs(eta356) > 100) then
+!             fffxn = 0.d0
+!             return
+!           end if
 
         end if
 
@@ -1773,389 +1711,350 @@ function dsigma(x,wgt)
       if (print_distributions == 1) then
         if (verbose == 1) print*, 'Filling histograms...'
 
-        ! print distributions
-        if (o_ptb == 1) call h_ptb%fill(pt(3), hist)
-        if (o_ptbb == 1) call h_ptbb%fill(pt(4), hist)
-        if (o_ptlp == 1) call h_ptlp%fill(pt(5), hist)
-        if (o_ptlm == 1) call h_ptlm%fill(pt(7), hist)
-        if (o_ptnu == 1) call h_ptnu%fill(pt(6), hist)
-        if (o_ptnub == 1) call h_ptnub%fill(pt(8), hist)
-        if (o_ptt == 1) call h_ptt%fill(pt356, hist)
-        if (o_pttb == 1) call h_pttb%fill(pt478, hist)
-
-        if (o_etab == 1) call h_etab%fill(eta(3), hist)
-        if (o_etabb == 1) call h_etabb%fill(eta(4), hist)
-        if (o_etalp == 1) call h_etalp%fill(eta(5), hist)
-        if (o_etalm == 1) call h_etalm%fill(eta(7), hist)
-        if (o_etanu == 1) call h_etanu%fill(eta(6), hist)
-        if (o_etanub == 1) call h_etanub%fill(eta(8), hist)
-        if (o_etat == 1) call h_etat%fill(eta356, hist)
-        if (o_etatb == 1) call h_etatb%fill(eta478, hist)
-
-        if (o_phib == 1) call h_phib%fill(phi(3), hist)
-        if (o_phibb == 1) call h_phibb%fill(phi(4), hist)
-        if (o_philp == 1) call h_philp%fill(phi(5), hist)
-        if (o_philm == 1) call h_philm%fill(phi(7), hist)
-        if (o_phinu == 1) call h_phinu%fill(phi(6), hist)
-        if (o_phinub == 1) call h_phinub%fill(phi(8), hist)
-        if (o_phit == 1) call h_phit%fill(phi356, hist)
-        if (o_phitb == 1) call h_phitb%fill(phi478, hist)
-
-        if (o_ycolb == 1) call h_ycolb%fill(ycol(3), hist)
-        if (o_ycolbb == 1) call h_ycolbb%fill(ycol(4), hist)
-        if (o_ycollp == 1) call h_ycollp%fill(ycol(5), hist)
-        if (o_ycollm == 1) call h_ycollm%fill(ycol(7), hist)
-        if (o_ycolnu == 1) call h_ycolnu%fill(ycol(6), hist)
-        if (o_ycolnub == 1) call h_ycolnub%fill(ycol(8), hist)
-        if (o_ycolt == 1) call h_ycolt%fill(ycol356, hist)
-        if (o_ycoltb == 1) call h_ycoltb%fill(ycol478, hist) 
-
-        if (o_etmiss == 1) call h_etmiss%fill(etmiss, hist)
         if (o_mtt == 1) call h_mtt%fill(mtt, hist)
-        if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
-        if (o_mtb == 1) call h_mtb%fill(m478, hist)
-        if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
-        if (o_beta == 1) call h_beta%fill(beta, hist)
-        if (o_cost == 1) call h_cost%fill(cost, hist)
-        if (o_et == 1) call h_et%fill(et, hist)
+!         if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
+!         if (o_mtb == 1) call h_mtb%fill(m478, hist)
+!         if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
+!         if (o_beta == 1) call h_beta%fill(beta, hist)
+!         if (o_cost == 1) call h_cost%fill(cost, hist)
 
-        if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
-        if (o_fl == 1) call h_fl%fill(phi_l, hist)
-        if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
-        if (o_dphi == 1) call h_dphi%fill(dphi, hist)
-        if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
-        if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
-        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+!         if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
+!         if (o_fl == 1) call h_fl%fill(phi_l, hist)
+!         if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
+!         if (o_dphi == 1) call h_dphi%fill(dphi, hist)
+!         if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
+!         if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
+!         if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
 
-        if (o_asym(1) == 1) then
-          if (o_sigp == 1) then
-            ! generate distribution in sigp for all.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
-              (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
-            end if
-          end if
-          if (o_sigm == 1) then
-            ! generate distribution in sigm for all.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
-              (weight(it,+1,-1)+weight(it,-1,+1))
-            end if
-          end if
-        end if
+!         if (o_asym(1) == 1) then
+!           if (o_sigp == 1) then
+!             ! generate distribution in sigp for all.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
+!               (weight(it,+1,+1)+weight(it,-1,-1))   !ction happens
+!             end if
+!           end if
+!           if (o_sigm == 1) then
+!             ! generate distribution in sigm for all.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
+!               (weight(it,+1,-1)+weight(it,-1,+1))
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(2) == 1) then
-          if (o_sigp == 1) then
-          ! generate distribution in sigp for al.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
-              (weight(it,-1,-1)+weight(it,-1,+1))
-            end if
-          end if
-          if (o_sigm == 1) then
-          ! generate distribution in sigm for al.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
-              (weight(it,+1,-1)+weight(it,+1,+1))
-            end if
-          end if
-        end if
+!         if (o_asym(2) == 1) then
+!           if (o_sigp == 1) then
+!           ! generate distribution in sigp for al.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
+!               (weight(it,-1,-1)+weight(it,-1,+1))
+!             end if
+!           end if
+!           if (o_sigm == 1) then
+!           ! generate distribution in sigm for al.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
+!               (weight(it,+1,-1)+weight(it,+1,+1))
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(3) == 1) then
-          if (o_sigp == 1) then
-          ! generate distribution in sigp for apv.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
-              (weight(it,-1,-1))
-            end if
-          end if
-          if (o_sigm == 1) then
-          ! generate distribution in sigm for apv.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
-              (weight(it,+1,+1))
-            end if
-          end if
-        end if
+!         if (o_asym(3) == 1) then
+!           if (o_sigp == 1) then
+!           ! generate distribution in sigp for apv.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
+!               (weight(it,-1,-1))
+!             end if
+!           end if
+!           if (o_sigm == 1) then
+!           ! generate distribution in sigm for apv.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
+!               (weight(it,+1,+1))
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(4) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
-          ! generate distribution in sigp for afbcm.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
-          ! generate distribution in sigm for afbcm.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(4) == 1) then
+!           if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
+!           ! generate distribution in sigp for afbcm.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
+!           ! generate distribution in sigm for afbcm.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(5) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
-          ! generate distribution in sigp for afbstar.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
-          ! generate distribution in sigm for afbstar.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(5) == 1) then
+!           if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+!           ! generate distribution in sigp for afbstar.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+!           ! generate distribution in sigm for afbstar.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(6) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
-          ! generate distribution in sigp for afbstar reco.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
-          ! generate distribution in sigm for afbstar.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(6) == 1) then
+!           if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
+!           ! generate distribution in sigp for afbstar reco.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
+!           ! generate distribution in sigm for afbstar.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(7) == 1) then
-          if ((o_sigp == 1) .and. (yt > 0.d0)) then
-          ! generate distribution in sigp for atfb.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (yt < 0.d0)) then
-          ! generate distribution in sigm for atfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(7) == 1) then
+!           if ((o_sigp == 1) .and. (yt > 0.d0)) then
+!           ! generate distribution in sigp for atfb.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (yt < 0.d0)) then
+!           ! generate distribution in sigm for atfb.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(8) == 1) then
-          if ((o_sigp == 1) .and. (yt >= 0.d0)) then
-          ! generate distribution in sigp for a.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
-          ! generate distribution in sigm for a.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(8) == 1) then
+!           if ((o_sigp == 1) .and. (yt >= 0.d0)) then
+!           ! generate distribution in sigp for a.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
+!           ! generate distribution in sigm for a.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(9) == 1) then
-          if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
-          ! generate distribution in sigp for arfb.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
-          ! generate distribution in sigm for arfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(9) == 1) then
+!           if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+!           ! generate distribution in sigp for arfb.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+!           ! generate distribution in sigm for arfb.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(10) == 1) then
-          if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
-          ! generate distribution in sigp for arfb reco.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
-          ! generate distribution in sigm for arfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(10) == 1) then
+!           if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
+!           ! generate distribution in sigp for arfb reco.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
+!           ! generate distribution in sigm for arfb.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+!             end if
+!           end if
+!         end if
 
-        if (o_asym(11) == 1) then
-          if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
-            ! generate distribution in sigp for a_l.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
-            ! generate distribution in sigm for a_l.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(11) == 1) then
+!           if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
+!             ! generate distribution in sigp for a_l.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
+!             ! generate distribution in sigm for a_l.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
+!             end if
+!           end if
+!         end if
       
-        if (o_asym(12) == 1) then
-          if ((o_sigp == 1) .and. (costheta5cm > 0.d0)) then
-            ! generate distribution in sigp for alFB.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costheta5cm < 0.d0)) then
-            ! generate distribution in sigm for alFB.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
-            end if
-          end if
-        end if
+!         if (o_asym(12) == 1) then
+!           if ((o_sigp == 1) .and. (costheta5cm > 0.d0)) then
+!             ! generate distribution in sigp for alFB.
+!             sigp=ecm
+!             nbin=int((sigp-sigpmin)/sigpw)+1
+!             if (nbin >= (ndiv_sigp+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
+!             end if
+!           end if
+!           if ((o_sigm == 1) .and. (costheta5cm < 0.d0)) then
+!             ! generate distribution in sigm for alFB.
+!             sigm=ecm
+!             nbin=int((sigm-sigmmin)/sigmw)+1
+!             if (nbin >= (ndiv_sigm+1)) then
+!               continue
+!             else if (nbin < 1) then
+!               continue
+!             else
+!               fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
+!             end if
+!           end if
+!         end if
         if (verbose == 1) print*, '...complete.'
       end if
 

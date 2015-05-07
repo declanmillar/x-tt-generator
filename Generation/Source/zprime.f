@@ -51,7 +51,6 @@ program zprime
   call rootinit(ntuple_file)
 
   if (print_distributions == 1) then
-    call disable_distributions
     call create_distributions
     call initialise_distributions
   end if
@@ -278,8 +277,10 @@ program zprime
   if (symmetrise_costheta_t == 1) print*, 'symmetrical integration over cost'
   if (include_errors == 1) print*, 'Distribution errors included.'
   if (include_errors == 0) print*, 'Distribution errors excluded.'
-  if(use_rambo.eq.0) print*, 'PS is MANUAL'
-  if(use_rambo.eq.1) print*, 'PS is RAMBO'
+  if (use_rambo == 0) print*, 'PS is MANUAL'
+  if (use_rambo == 1) print*, 'PS is RAMBO'
+  if (map_phase_space == 0) print*, "Phase space is unmapped."
+  if (map_phase_space == 1) print*, "Phase space is mapped."
   print*, 'seed: ', seed
   print*, '-----------------------------------------------------'
   print*, 'parameters'
@@ -380,6 +381,7 @@ program zprime
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
     standdevl(i) = standdevl(i)*standdevl(i)*stantot
     cnorm(i) = resl(i)*standdevl(i)
+    call rootadddouble(cnorm(i), "cnorm")
   end do
   print*, "...complete."
 
