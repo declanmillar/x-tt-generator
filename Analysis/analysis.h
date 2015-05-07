@@ -33,6 +33,7 @@ protected:
   void CreateHistograms();
   void MakeGraphs();
   void WriteHistograms();
+  double TotalAsymmetry(TH1D* h_A, TH1D* h_B);
   void TotalSpinAsymmetries();
   TH1D* Asymmetry(TString name, TH1D* h_A, TH1D* h_B);
   void ALL2to6();

@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
   TString model("SM");
   TString options("_");
   TString energy("13");
-  TString points("1x500000");
+  TString points("1x5000");
 
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(base + ".root");

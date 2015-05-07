@@ -102,10 +102,11 @@ void AnalysisZprime::EachEvent()
   double phitb = ptb.Phi();
   double pTt = pt.Pt();
   double PTtb = ptb.Pt();
-  double deltay = abs(ytcol) - abs(ytbcol);
+  double deltay = std::abs(ytcol) - std::abs(ytbcol);
+  printf("deltay = %f\n", deltay);
   double costhetatcol = ptcol.CosTheta();
   double costhetat = pt.CosTheta();
-  double costhetastar = int(ytt/abs(ytt))*costhetat;
+  double costhetastar = int(ytt/std::abs(ytt))*costhetat;
 
   // negative velocity of t/tb in collider frame
   TVector3 vtcol = -1*ptcol.BoostVector();
@@ -206,8 +207,6 @@ void AnalysisZprime::EachEvent()
       h_ABstar->Fill(Mtt, weight/h_ABstar->GetXaxis()->GetBinWidth(1));
     }
 
-
-
     if (deltay > 0) {
       h_RF->Fill(Mtt, weight/h_RF->GetXaxis()->GetBinWidth(1));
     }
@@ -254,6 +253,11 @@ void AnalysisZprime::PostLoop()
   h_AFBstar = this->Asymmetry("AFBstar", h_AFstar, h_ABstar);
   h_ARFB = this->Asymmetry("ARFB", h_RF, h_RB);
 
+  double AFBstar = this->TotalAsymmetry(h_AFstar,h_ABstar);
+  double ARFB = this->TotalAsymmetry(h_RF,h_RB);
+  printf("AFBstar = %f\n", AFBstar);
+  printf("ARFB = %f\n", ARFB);
+
   this->MakeGraphs();
 
   if (m_channel == "2to6") this->ALL2to6();
@@ -276,6 +280,9 @@ TH1D* AnalysisZprime::MttALL()
   h_A->Add(h_MttRR);
   h_B->Add(h_MttRL);
 
+  double ALL = this->TotalAsymmetry(h_A,h_B);
+  printf("ALL' = %f\n", ALL);
+
   TH1D* h_ALL = this->Asymmetry("ALL", h_A, h_B);
   delete h_A;
   delete h_B;
@@ -284,11 +291,11 @@ TH1D* AnalysisZprime::MttALL()
 
 TH1D* AnalysisZprime::MttAL()
 {
-  TH1D* h_A = (TH1D*) h_MttRR->Clone();
-  TH1D* h_B = (TH1D*) h_MttRL->Clone();
+  TH1D* h_A = (TH1D*) h_MttLL->Clone();
+  TH1D* h_B = (TH1D*) h_MttRR->Clone();
 
-  h_A->Add(h_MttRL);
-  h_B->Add(h_MttLL);
+  h_A->Add(h_MttLR);
+  h_B->Add(h_MttRL);
 
   TH1D* h_AL = this->Asymmetry("AL", h_A, h_B);
   delete h_A;
@@ -315,6 +322,14 @@ void AnalysisZprime::TotalSpinAsymmetries()
   printf("AL = %f\n", AL);  
 }
 
+double AnalysisZprime::TotalAsymmetry(TH1D* h_A, TH1D* h_B)
+{
+  double A = h_A->Integral("width");
+  double B = h_B->Integral("width");
+  double Atot = (A - B)/(A + B);
+  return Atot;
+}
+
 void AnalysisZprime::ALL2to6() 
 {
   double mean = h_ct7ct5->GetMean();
@@ -338,11 +353,11 @@ TH1D* AnalysisZprime::Asymmetry(TString name,TH1D* h_A, TH1D* h_B)
 void AnalysisZprime::CreateHistograms() 
 {
 
-  h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 13000.0);
-  h_AFstar = new TH1D("AFstar", "AFstar", 100, 0.0, 13000.0);
-  h_ABstar = new TH1D("ABstar", "ABstar", 100, 0.0, 13000.0);
-  h_RF = new TH1D("RF", "RF", 100, 0.0, 13000.0);
-  h_RB = new TH1D("RB", "RB", 100, 0.0, 13000.0);
+  h_Mtt = new TH1D("Mtt", "M_{tt}", 10, 0.0, 13000.0);
+  h_AFstar = new TH1D("AFstar", "AFstar", 20, 0.0, 13000.0);
+  h_ABstar = new TH1D("ABstar", "ABstar", 20, 0.0, 13000.0);
+  h_RF = new TH1D("RF", "RF", 20, 0.0, 13000.0);
+  h_RB = new TH1D("RB", "RB", 20, 0.0, 13000.0);
 
 
   if (m_channel == "2to6") {  
@@ -364,10 +379,10 @@ void AnalysisZprime::CreateHistograms()
   }
 
   if (m_channel == "2to2") {
-    h_MttLL = new TH1D("MttLL", "MttLL", 100, 0.0, 13000.0);
-    h_MttLR = new TH1D("MttLR", "MttLR", 100, 0.0, 13000.0);
-    h_MttRL = new TH1D("MttRL", "MttRL", 100, 0.0, 13000.0);
-    h_MttRR = new TH1D("MttRR", "MttRR", 100, 0.0, 13000.0);
+    h_MttLL = new TH1D("MttLL", "MttLL", 20, 0.0, 13000.0);
+    h_MttLR = new TH1D("MttLR", "MttLR", 20, 0.0, 13000.0);
+    h_MttRL = new TH1D("MttRL", "MttRL", 20, 0.0, 13000.0);
+    h_MttRR = new TH1D("MttRR", "MttRR", 20, 0.0, 13000.0);
   }
 }
 
