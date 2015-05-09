@@ -14,8 +14,8 @@
 #include <TH1.h>
 #include <TFile.h>
 
-TCanvas* superpose(std::string histName1, std::string fileName1, 
-                   std::string histName2 = "NULL", std::string fileName2 = "NULL", 
-                   std::string histName3 = "NULL", std::string fileName3 = "NULL");
+TCanvas* superpose(TString histName1, TString fileName1, 
+                   TString histName2 = "NULL", TString fileName2 = "NULL", 
+                   TString histName3 = "NULL", TString fileName3 = "NULL");
 
 #endif

@@ -1277,7 +1277,6 @@ function dsigma(x,wgt)
 
         ! difference in absolute rapidity in lab frame
         delta_absy = abs(ytcol) - abs(ytbcol)
-        print*, "deltay", delta_absy
         call rootadddouble(delta_absy, "Delta_y")
 
         ! calculate collider frame cos(theta_t)

@@ -103,7 +103,6 @@ void AnalysisZprime::EachEvent()
   double pTt = pt.Pt();
   double PTtb = ptb.Pt();
   double deltay = std::abs(ytcol) - std::abs(ytbcol);
-  printf("deltay = %f\n", deltay);
   double costhetatcol = ptcol.CosTheta();
   double costhetat = pt.CosTheta();
   double costhetastar = int(ytt/std::abs(ytt))*costhetat;
@@ -231,6 +230,15 @@ void AnalysisZprime::EachEvent()
 			h_MCTll->Fill(MCTll, weight);
 			h_MTblbl->Fill(MTblbl, weight);
 			h_MCTblbl->Fill(MCTblbl, weight);
+      h_dphi_HT->Fill(dphi, HT, weight);
+      h_dphi_Mbbll->Fill(dphi, Mbbll, weight);
+      h_dphi_mll->Fill(dphi, mll, weight);
+      h_dphi_ETbbll->Fill(dphi, ETbbll, weight);
+      h_dphi_KTbbll->Fill(dphi, KTbbll, weight);
+      h_dphi_MTll->Fill(dphi, MTll, weight);
+      h_dphi_MCTll->Fill(dphi, MCTll, weight);
+      h_dphi_MTblbl->Fill(dphi, MTblbl, weight);
+      h_dphi_MCTblbl->Fill(dphi, MCTblbl, weight);
     }
 
     if (m_channel == "2to2") {
@@ -371,11 +379,20 @@ void AnalysisZprime::CreateHistograms()
     h_Mbbll = new TH1D("Mbbll", "Mbbll", 20, 0, 4000);
     h_mll = new TH1D("mll", "mll", 20, 0, 4000);
     h_ETbbll = new TH1D("ETbbll", "ETbbll", 20, 0, 4000);
-    h_KTbbll = new TH1D("KTbbll", "KTbbll", 20, 0, 4000);
+    h_KTbbll = new TH1D("KTbbll", "K_{T}^{bbll}", 20, 0, 4000);
     h_MTll = new TH1D("MTll", "MTll", 20, 0, 4000);
     h_MCTll = new TH1D("MCTll", "MCTll", 20, 0, 4000);
     h_MTblbl = new TH1D("MTblbl", "MTblbl", 20, 0, 4000);
     h_MCTblbl = new TH1D("MCTblbl", "MCTblbl", 20, 0, 4000);
+    h_dphi_HT = new TH2D("dphi_HT", "dphi_HT", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_Mbbll = new TH2D("dphi_Mbbll", "dphi_Mbbll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_mll = new TH2D("dphi_mll", "dphi_mll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_ETbbll = new TH2D("dphi_ETbbll", "dphi_ETbbll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_KTbbll = new TH2D("dphi_KTbbll", "dphi_KTbbll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_MTll = new TH2D("dphi_MTll", "dphi_MTll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_MCTll = new TH2D("dphi_MCTll", "dphi_MCTll", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_MTblbl = new TH2D("dphi_MTblbl", "dphi_MTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_dphi_MCTblbl = new TH2D("dphi_MCTblbl", "dphi_MCTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
   }
 
   if (m_channel == "2to2") {
@@ -390,67 +407,72 @@ void AnalysisZprime::MakeGraphs()
 {
   printf("Making Graphs...\n");
 
-  TString numBase = "d#sigma / d"; 
-  TString units = "pb";
+  // TString numBase = "d#sigma / d"; 
+  // TString units = "pb";
 
-  TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
-  c_Mtt->cd(); 
-  h_Mtt->Draw("hist"); 
-  h_Mtt->GetYaxis()->SetTitle("");
+  // TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
+  // c_Mtt->cd(); 
+  // h_Mtt->Draw("hist"); 
+  // h_Mtt->GetYaxis()->SetTitle("");
 
-  TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
-  c_AFBstar->cd(); 
-  h_AFBstar->Draw("hist"); 
-  h_AFBstar->GetYaxis()->SetTitle("");
+  // TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
+  // c_AFBstar->cd(); 
+  // h_AFBstar->Draw("hist"); 
+  // h_AFBstar->GetYaxis()->SetTitle("");
 
-  if (m_channel == "2to6") {
-    TCanvas *c_pz5 = new TCanvas(h_pz5->GetName(), h_pz5->GetTitle());
-    c_pz5->cd();
-    h_pz5->Draw("hist"); 
-    h_pz5->GetYaxis()->SetTitle(numBase + h_pz5->GetTitle() + " [" + units +"/GeV]");
+  // if (m_channel == "2to6") {
+  //   TCanvas *c_pz5 = new TCanvas(h_pz5->GetName(), h_pz5->GetTitle());
+  //   c_pz5->cd();
+  //   h_pz5->Draw("hist"); 
+  //   h_pz5->GetYaxis()->SetTitle(numBase + h_pz5->GetTitle() + " [" + units +"/GeV]");
 
-    TCanvas *c_costheta5_eq = new TCanvas(h_costheta5_eq->GetName(), h_costheta5_eq->GetTitle());
-    c_costheta5_eq->cd(); 
-    h_costheta5_eq->Draw("hist"); 
-    h_costheta5_eq->GetYaxis()->SetTitle(numBase + h_costheta5_eq->GetTitle() + " [" + units +"]");
+  //   TCanvas *c_costheta5_eq = new TCanvas(h_costheta5_eq->GetName(), h_costheta5_eq->GetTitle());
+  //   c_costheta5_eq->cd(); 
+  //   h_costheta5_eq->Draw("hist"); 
+  //   h_costheta5_eq->GetYaxis()->SetTitle(numBase + h_costheta5_eq->GetTitle() + " [" + units +"]");
 
-    TCanvas *c_costheta5_ee = new TCanvas(h_costheta5_ee->GetName(), h_costheta5_ee->GetTitle());
-    c_costheta5_ee->cd(); 
-    h_costheta5_ee->Draw("hist"); 
-    h_costheta5_ee->GetYaxis()->SetTitle(numBase + h_costheta5_ee->GetTitle() + " [" + units +"]");
+  //   TCanvas *c_costheta5_ee = new TCanvas(h_costheta5_ee->GetName(), h_costheta5_ee->GetTitle());
+  //   c_costheta5_ee->cd(); 
+  //   h_costheta5_ee->Draw("hist"); 
+  //   h_costheta5_ee->GetYaxis()->SetTitle(numBase + h_costheta5_ee->GetTitle() + " [" + units +"]");
 
-    TCanvas *c_ct7ct5 = new TCanvas(h_ct7ct5->GetName(), h_ct7ct5->GetTitle());
-    c_ct7ct5->cd(); 
-    h_ct7ct5->Draw("hist"); 
-    h_ct7ct5->GetYaxis()->SetTitle(numBase + h_ct7ct5->GetTitle() + " [" + units +"]");
-  }
+  //   TCanvas *c_ct7ct5 = new TCanvas(h_ct7ct5->GetName(), h_ct7ct5->GetTitle());
+  //   c_ct7ct5->cd(); 
+  //   h_ct7ct5->Draw("hist"); 
+  //   h_ct7ct5->GetYaxis()->SetTitle(numBase + h_ct7ct5->GetTitle() + " [" + units +"]");
 
-  if (m_channel == "2to2") {
-    TCanvas *c_MttLL   = new TCanvas("MttLL " ,"MttLL " );
-    c_MttLL->cd(); 
-    h_MttLL->Draw("hist"); 
-    h_MttLL->GetYaxis()->SetTitle("Events");
+  //   TCanvas *c_KTbbll = new TCanvas(h_KTbbll->GetName(), h_KTbbll->GetTitle());
+  //   c_KTbbll->cd(); 
+  //   h_KTbbll->Draw("hist"); 
+  //   h_KTbbll->GetYaxis()->SetTitle(numBase + h_KTbbll->GetTitle() + " [" + units +"/GeV]");
+  // }
 
-    TCanvas *c_MttLR   = new TCanvas("MttLR " ,"MttLR " );
-    c_MttLR->cd(); 
-    h_MttLR->Draw("hist"); 
-    h_MttLR->GetYaxis()->SetTitle("Events");
+  // if (m_channel == "2to2") {
+  //   TCanvas *c_MttLL   = new TCanvas("MttLL " ,"MttLL " );
+  //   c_MttLL->cd(); 
+  //   h_MttLL->Draw("hist"); 
+  //   h_MttLL->GetYaxis()->SetTitle("Events");
 
-    TCanvas *c_MttRL   = new TCanvas("MttRL " ,"MttRL " );
-    c_MttRL->cd(); 
-    h_MttRL->Draw("hist"); 
-    h_MttRL->GetYaxis()->SetTitle("Events");
+  //   TCanvas *c_MttLR   = new TCanvas("MttLR " ,"MttLR " );
+  //   c_MttLR->cd(); 
+  //   h_MttLR->Draw("hist"); 
+  //   h_MttLR->GetYaxis()->SetTitle("Events");
 
-    TCanvas *c_MttRR   = new TCanvas("MttRR " ,"MttRR " );
-    c_MttRR->cd(); 
-    h_MttRR->Draw("hist"); 
-    h_MttRR->GetYaxis()->SetTitle("Events");
+  //   TCanvas *c_MttRL   = new TCanvas("MttRL " ,"MttRL " );
+  //   c_MttRL->cd(); 
+  //   h_MttRL->Draw("hist"); 
+  //   h_MttRL->GetYaxis()->SetTitle("Events");
 
-    TCanvas *c_MttALL   = new TCanvas("MttALL " ,"MttALL " );
-    c_MttALL->cd(); 
-    h_MttALL->Draw("hist"); 
-    h_MttALL->GetYaxis()->SetTitle("Events");
-  }
+  //   TCanvas *c_MttRR   = new TCanvas("MttRR " ,"MttRR " );
+  //   c_MttRR->cd(); 
+  //   h_MttRR->Draw("hist"); 
+  //   h_MttRR->GetYaxis()->SetTitle("Events");
+
+  //   TCanvas *c_MttALL   = new TCanvas("MttALL " ,"MttALL " );
+  //   c_MttALL->cd(); 
+  //   h_MttALL->Draw("hist"); 
+  //   h_MttALL->GetYaxis()->SetTitle("Events");
+  // }
   printf("...complete.\n");
 }
 
@@ -459,7 +481,9 @@ void AnalysisZprime::WriteHistograms()
   m_outputFile->cd();
   m_outputFile->cd("/");
 
-  // Save histograms
+  printf("Writing histograms...\n");
+
+  // // Save histograms
   h_Mtt->Write();
   h_AFBstar->Write();
   h_ARFB->Write();
@@ -489,9 +513,20 @@ void AnalysisZprime::WriteHistograms()
     h_MCTll->Write();
     h_MTblbl->Write();
     h_MCTblbl->Write();
+    h_dphi_HT->Write();
+    h_dphi_Mbbll->Write();
+    h_dphi_mll->Write();
+    h_dphi_ETbbll->Write();
+    h_dphi_KTbbll->Write();
+    h_dphi_MTll->Write();
+    h_dphi_MCTll->Write();
+    h_dphi_MTblbl->Write();
+    h_dphi_MCTblbl->Write();
   }
 
+  printf("...complete\n");
   m_outputFile->Close();
+  delete m_outputFile;
 }
 
 bool AnalysisZprime::PassCuts() const
@@ -614,5 +649,5 @@ void AnalysisZprime::SetupTreesForNewFile(const TString& s)
 void AnalysisZprime::CleanUp()
 {
   delete m_chainNtup;
-  delete m_ntup;  
+  delete m_ntup;
 }

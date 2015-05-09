@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
   h1->Draw();//("E1x0P");
   h1->SetMarkerColor(kBlack);
   h1->SetLineColor(kBlack);
-  h1->GetYaxis()->SetTitleOffset(1.3);
-  h1->GetXaxis()->SetTitleOffset(1.2);
+  // h1->GetYaxis()->SetTitleOffset(1.3);
+  // h1->GetXaxis()->SetTitleOffset(1.2);
 
   if (nFiles > 1) {
     histName2 = argsv[3];
@@ -121,16 +121,16 @@ int main(int argc, char *argv[])
   }
 
   // normalize histograms
-  // normalize = true;
-  // if (normalize == true) { 
-  //   std::string yTitle;
-  //   yTitle = h1->GetYaxis()->GetTitle();
-  //   yTitle = "1/#sigma #times " + yTitle;
-  //   h1->GetYaxis()->SetTitle(yTitle.c_str());
-  //   h1->Scale(1.0/h1->Integral());
-  //   if (nFiles > 1) h2->Scale(1.0/h2->Integral());
-  //   if (nFiles > 2) h3->Scale(1.0/h3->Integral());
-  // }
+  normalize = true;
+  if (normalize == true) { 
+    std::string yTitle;
+    yTitle = h1->GetYaxis()->GetTitle();
+    yTitle = "1/#sigma #times " + yTitle;
+    h1->GetYaxis()->SetTitle(yTitle.c_str());
+    h1->Scale(1.0/h1->Integral());
+    if (nFiles > 1) h2->Scale(1.0/h2->Integral());
+    if (nFiles > 2) h3->Scale(1.0/h3->Integral());
+  }
 
   // set range user
   // if(rangeMax == rangeMax && rangeMax == rangeMax) {
