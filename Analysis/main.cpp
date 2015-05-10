@@ -6,8 +6,8 @@ int main(int argc, char* argv[])
   AtlasROOTStyle atlasStyle;
   atlasStyle.SetStyle();
 
-  TString channel("2to6"); 
-  TString model("SM");
+  TString channel("2to2"); 
+  TString model("PS");
   TString options("_");
   TString energy("13");
   TString points("1x10000000");
@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
   
   AnalysisZprime* analysis = new AnalysisZprime(channel, model, inputFileName, outputFileName);
 
-  TString channel2("2to6"); 
-  TString model2("SSM-m2500-w500_Zp");
-  TString options2("_");
+  TString channel2("2to2"); 
+  TString model2("PS");
+  TString options2("_R_");
   TString points2("1x10000000");
 
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
@@ -31,11 +31,8 @@ int main(int argc, char* argv[])
 
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 
-  TCanvas* c_HT2 = superpose("HT", outputFileName, "HT", outputFileName2);
-  c_HT2->Draw();
+  TCanvas* c_HT = superpose("Mtt", outputFileName, "Mtt", outputFileName2);
   RootApp->Run(kTRUE);
-  TCanvas* c_KTbbll2 = superpose("KTbbll", outputFileName, "KTbbll", outputFileName2);
-  c_KTbbll2->Draw();
 
   RootApp->Run(kTRUE);
     

@@ -57,16 +57,16 @@ TCanvas* superpose(//int ndimensions,
   }
 
   // normalize histograms
-  bool normalize = true;
-  if (normalize == true) { 
-    TString yTitle;
-    yTitle = h1->GetYaxis()->GetTitle();
-    yTitle = "1/#sigma #times " + yTitle;
-    h1->GetYaxis()->SetTitle(yTitle);
-    h1->Scale(1.0/h1->Integral("width"));
-    if (histName2 != "NULL") h2->Scale(1.0/h2->Integral("width"));
-    if (histName3 != "NULL") h3->Scale(1.0/h3->Integral("width"));
-  }
+  // bool normalize = true;
+  // if (normalize == true) { 
+  //   TString yTitle;
+  //   yTitle = h1->GetYaxis()->GetTitle();
+  //   yTitle = "1/#sigma #times " + yTitle;
+  //   h1->GetYaxis()->SetTitle(yTitle);
+  //   h1->Scale(1.0/h1->Integral("width"));
+  //   if (histName2 != "NULL") h2->Scale(1.0/h2->Integral("width"));
+  //   if (histName3 != "NULL") h3->Scale(1.0/h3->Integral("width"));
+  // }
 
   // set range user
   // if(rangeMax == rangeMax && rangeMax == rangeMax) {

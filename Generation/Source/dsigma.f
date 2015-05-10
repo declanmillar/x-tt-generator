@@ -248,15 +248,15 @@ function dsigma(x,wgt)
         q2 = qq*qq
         if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
 
         ! cteq pdfs are multiplied by x for compatibility with mrs, which return xf(x).
@@ -282,15 +282,15 @@ function dsigma(x,wgt)
         imode=1
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
@@ -298,15 +298,15 @@ function dsigma(x,wgt)
         imode=2
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
@@ -314,15 +314,15 @@ function dsigma(x,wgt)
         imode=3
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
@@ -330,15 +330,15 @@ function dsigma(x,wgt)
         imode = 4
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn=0.d0
-          return
+          go to 999
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
@@ -346,15 +346,15 @@ function dsigma(x,wgt)
         imode = 5
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
           fffxn = 0.d0
-          return
+          go to 999
         end if
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
           fffxn = 0.d0
-          return
+          go to 999
         end if
         if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
           fffxn = 0.d0
-          return
+          go to 999
         end if
         call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
         call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
@@ -438,7 +438,7 @@ function dsigma(x,wgt)
           qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
           if (qcm2 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             qcm = sqrt(qcm2)
           endif
@@ -490,7 +490,7 @@ function dsigma(x,wgt)
             m356_2 = (rmt**2 + rl356)
             if (m356_2 < 0.d0) then
               fffxn = 0.d0
-              return
+              go to 999
             else
               m356 = sqrt(m356_2)
             endif
@@ -509,7 +509,7 @@ function dsigma(x,wgt)
             m478_2 = (rmt**2 + rl478)
             if (m478_2 < 0.d0) then
               fffxn = 0.d0
-              return
+              go to 999
             else
               m478 = sqrt(m478_2)
             endif
@@ -528,7 +528,7 @@ function dsigma(x,wgt)
             m56_2 = (rm_w**2 + rl56)
             if (m56_2 < 0.d0) then
               fffxn = 0.d0
-              return
+              go to 999
             else
               m56 = sqrt(m56_2)
             endif
@@ -547,7 +547,7 @@ function dsigma(x,wgt)
             m78_2 = (rm_w**2 + rl78)
             if (m78_2 < 0.d0) then
               fffxn = 0.d0
-              return
+              go to 999
             else
               m78 = sqrt(m78_2)
             endif
@@ -584,7 +584,7 @@ function dsigma(x,wgt)
           rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
           if (rq2 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             rq = sqrt(rq2)
           endif
@@ -603,7 +603,7 @@ function dsigma(x,wgt)
           rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
           if (rq562 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             rq56 = sqrt(rq562)
           endif
@@ -626,7 +626,7 @@ function dsigma(x,wgt)
           rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
           if (rq782 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             rq78 = sqrt(rq782)
           endif
@@ -649,7 +649,7 @@ function dsigma(x,wgt)
           rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
           if (rq52 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             rq5 = sqrt(rq52)
           endif
@@ -672,7 +672,7 @@ function dsigma(x,wgt)
           rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
           if (rq72 < 0.d0) then
             fffxn = 0.d0
-            return
+            go to 999
           else
             rq7 = sqrt(rq72)
           endif
@@ -691,7 +691,7 @@ function dsigma(x,wgt)
             q(i,8) = p78(i) - q(i,7)
           end do
         else if (use_rambo == 1) then
-          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
+          if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame using RAMBO..."
           xmass(1) = m3
           xmass(2) = m4
           xmass(3) = m5 
@@ -968,7 +968,7 @@ function dsigma(x,wgt)
       if ((resall) == 0.d0) then
         ! print*, '|m|^2 = 0 for phase space point ',npoints
         fffxn = 0.d0
-        return
+        go to 999
       end if
 
       ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
@@ -1033,7 +1033,7 @@ function dsigma(x,wgt)
 
       if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
           fffxn = 0.d0
-        return
+        go to 999
       end if
 
       if (final_state == 0) then
@@ -1059,20 +1059,20 @@ function dsigma(x,wgt)
       fffxn1 = pfx1tot
       fffxn2 = pfx2tot
 
-      if (verbose == 1) print*, "Applying unit converstion and trivial azimuthal angle integration..."
-      fffxn1 = fffxn1*2.d0*pi*unit_conv
-      fffxn2 = fffxn2*2.d0*pi*unit_conv
+      if (verbose == 1) print*, "Applying unit converstion"
+      fffxn1 = fffxn1*unit_conv
+      fffxn2 = fffxn2*unit_conv
       if (verbose == 1) print*, "...complete."
 
-      if (verbose == 1) print*, "Multiplying by phase space volume and flux factor..."
+      if (verbose == 1) print*, "Multiplying by phase space volume and flux factor and azimuthal integration..."
       if (final_state == 0) then
         if (use_rambo == 0) then
-          ! 2-body phase space factor
-          fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
-          fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))
+          ! 2-body phase space factor + azimuthal integration
+          fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
+          fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
         else if (use_rambo == 1) then
-          fffxn1 = fffxn1*wgtr/(2.d0*pi)
-          fffxn2 = fffxn2*wgtr/(2.d0*pi)
+          fffxn1 = fffxn1*wgtr
+          fffxn2 = fffxn2*wgtr
         end if
 
         ! flux factor
@@ -1083,8 +1083,8 @@ function dsigma(x,wgt)
         if (use_rambo == 0) then
 
           ! phase space factor
-          fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
-          fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))
+          fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+          fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
 
           if (map_phase_space == 1) then
             fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
@@ -1109,8 +1109,8 @@ function dsigma(x,wgt)
             fffxn2 = fffxn2*(m78max - m78min)
           end if
         else if (use_rambo == 1) then
-          fffxn1 = fffxn1*wgtr/(2.d0*pi)
-          fffxn2 = fffxn2*wgtr/(2.d0*pi)
+          fffxn1 = fffxn1*wgtr
+          fffxn2 = fffxn2*wgtr
         end if
       
         ! flux factor
@@ -1186,6 +1186,24 @@ function dsigma(x,wgt)
       hist1 = fffxn1*wgt
       hist2 = fffxn2*wgt
       hist = hist1 + hist2
+
+!       if (final_state == 0) then
+!           mtt2 = (qcol(4,3) + qcol(4,4))**2
+!           do i = 1, 3
+!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
+!           end do
+!         else if (final_state > 0) then
+!           mtt2 = (qcol(4,3) + qcol(4,4) &
+!                 + qcol(4,5) + qcol(4,6) &
+!                 + qcol(4,7) + qcol(4,8))**2
+!           do i = 1, 3
+!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
+!                          + qcol(i,5) + qcol(i,6) &
+!                          + qcol(i,7) + qcol(i,8))**2
+!           end do
+!         end if
+!         mtt = sqrt(abs(mtt2))
+!         call rootadddouble(mtt, "Mtt")
 
       if(additional_kinematics == 1) then
 
@@ -2030,7 +2048,7 @@ function dsigma(x,wgt)
       ! stats
       npoints = npoints + 1
       if (verbose == 1 ) print*, "...event", npoints, "complete."
-      
+      999 continue
       ffxn = ffxn + fffxn
     end do
     dsigma = dsigma + ffxn  

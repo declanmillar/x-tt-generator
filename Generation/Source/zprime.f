@@ -106,6 +106,21 @@ program zprime
     fac_qq = 36  
   end if
 
+  if (final_state == 0) then
+    m3 = tmass
+    m4 = tmass
+    m5 = 0.d0
+    m6 = 0.d0
+    m7 = 0.d0
+    m8 = 0.d0
+  else if (final_state > 0) then
+    m3 = bmass
+    m4 = bmass
+    m5 = emass
+    m6 = nuemass
+    m7 = emass
+    m8 = nuemass
+  end if
 
   ! VEGAS parameters
   if (use_rambo == 0) then
@@ -115,12 +130,6 @@ program zprime
       ! x(2) = (ecm - m3 - m4)/(ecm_max - m3 - m4),
       ! x(1) = cos(theta3_cm)
       ndimensions = 3
-      m3 = tmass
-      m4 = tmass
-      m5 = 0.d0
-      m6 = 0.d0
-      m7 = 0.d0
-      m8 = 0.d0
 
       ! limits:
       do i = 3, 2, -1
@@ -163,12 +172,6 @@ program zprime
       ! x(2) = fi5_cm_56,
       ! x(1) = fi8_cm_78;
       ndimensions = 15
-      m3 = bmass
-      m4 = bmass
-      m5 = emass
-      m6 = nuemass
-      m7 = emass
-      m8 = nuemass
 
       ! set integration limits:
       do i = 15, 14, -1
