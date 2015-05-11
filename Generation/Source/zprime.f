@@ -382,11 +382,18 @@ program zprime
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
+  end do
+  do i = 1, it
     standdevl(i) = standdevl(i)*standdevl(i)*stantot
+  end do
+  do i = 1, it
     cnorm(i) = resl(i)*standdevl(i)
-    call rootadddouble(cnorm(i), "cnorm")
   end do
   print*, "...complete."
+
+  print*, "sigma", sigma
+  print*, "cnorm(1) = ", cnorm(1)
+  print*, "cnorm(2) = ", cnorm(2)
 
   print*, "Collating polar cross sections..."
   if (final_state == 0) then
