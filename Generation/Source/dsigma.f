@@ -1693,10 +1693,11 @@ function dsigma(x,wgt)
       call rootadddouble(hist*fac_emu,"weight_emu")
       call rootadddouble(hist*fac_eq,"weight_eq")
       call rootadddouble(hist*fac_qq,"weight_qq")
+      call rootaddint(it,"iteration")
       call rootaddevent(hist)
 
       if (print_distributions == 1) then
-        if (verbose == 1) print*, 'Filling histograms...'
+        if (verbose == 1) print*, 'Filling distributions...'
 
         if (o_mtt == 1) call h_mtt%fill(mtt, hist)
         if (o_cost == 1) call h_cost%fill(cost, hist)
@@ -1712,6 +1713,8 @@ function dsigma(x,wgt)
 	        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
      		end if
 
+        if (verbose == 1) print*, '...complete.'
+        if (verbose == 1) print*, 'Filling asymmetry histograms...'
 
         if (o_asym(1) == 1) then
           if (o_sigp == 1) then

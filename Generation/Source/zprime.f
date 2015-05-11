@@ -391,9 +391,17 @@ program zprime
   end do
   print*, "...complete."
 
-  print*, "sigma", sigma
-  print*, "cnorm(1) = ", cnorm(1)
-  print*, "cnorm(2) = ", cnorm(2)
+  ! write sigma and cnorms to a txt file
+  i = len(ntuple_file)
+  do while(ntuple_file(i:i) == '')
+    i = i-1
+  end do
+  open(unit = 11, file = ntuple_file(1:i)//".txt", status = "replace", action = "write")
+  write(11,*) sigma
+  do i = 1, it
+  	write(11,*) cnorm(i)
+  end do
+  close(11)
 
   print*, "Collating polar cross sections..."
   if (final_state == 0) then

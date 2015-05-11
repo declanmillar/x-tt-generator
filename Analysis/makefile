@@ -12,11 +12,26 @@ CXXFLAGS        += $(ROOTCFLAGS)
 LIBS            = $(ROOTLIBS) $(TREEPLAYER)
 OBJS            =  main.o atlas_style.o superpose.o RootTuple.o analysis.o 
 
-PROGRAM         = go
+BIN = go
+LIB = Library
+SRC = Source
+OUT = .
+
+# Compile all files ending in .f in SRC
+$(LIB)/%.o: $(SRC)/%.cpp 
+	$(CXX) $(CXXFLAGS) -c -o  $@ $<
+
+# Link mainfile and all processes
+$(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJS))
+	$(LD) $(ROOTLIBS) -o $@ $^
+
+# Clean up
+clean:
+	rm -f $(LIB)/*.o $(OUT)/$(BIN)
   
-all:            $(PROGRAM)  
+# all:            $(PROGRAM)  
   
-$(PROGRAM):     $(OBJS)   
-	                $(CXX) -g3 -pg -p -o $(PROGRAM) $(OBJS) $(LIBS) $(ROOTLIBS) $(CXXFLAGS) 
+# $(PROGRAM):     $(LIB)/$(OBJS)   
+# 	                $(SRC)/$(CXX) -g3 -pg -p -o $(PROGRAM) $(LIB)/$(OBJS) $(LIBS) $(ROOTLIBS) $(CXXFLAGS) 
   
-clean:;         @rm -f $(OBJS) core *.o *.out   
+# clean:;         @rm -f $(OBJS) core *.o *.out   
