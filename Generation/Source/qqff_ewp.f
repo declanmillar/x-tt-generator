@@ -88,7 +88,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   ! Local variables
   integer :: i,j
   ! parameter ( jf=11 )   ! final state tops
-  complex*16 amp_tmp
+  complex*16 amp_tmp, amp_tmp2
   complex*16 amp( ngraphs )
   complex*16 w1(6) ,w2(6) ,w3(6) ,w4(6)   ! external
   complex*16 w5(6) ,w6(6) ,w7(6)  ! interal
@@ -190,11 +190,13 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
 
   ! total M*M for given helicity combination
   qqff_EWp = 0.d0
-  amp_tmp = (0.d0,0.d0)
+  amp_tmp = (0.d0, 0.d0)
+  amp_tmp2 = (0.d0, 0.d0)
   if (interference == 0)then   ! no interference
     do i=1,ngraphs
       qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
     end do
+
   else if (interference == 1)then  ! SM interference
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
@@ -203,19 +205,21 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     do i=3,ngraphs
       qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
     end do
+
   else if (interference == 2)then  ! full interference
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
     qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
-  else if (interference == 3)then  ! interference only
+
+  else if (interference == 3)then  ! Z' and interference only
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
-    do i=3,ngraphs
-      qqff_EWp = qqff_EWp-amp(i)*conjg(amp(i))
+    do i = 1, 2 
+      amp_tmp2 = amp_tmp2 + amp(i)
     end do
+    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
   else
     write(*,*)'Error: interference flag not set.'
     stop

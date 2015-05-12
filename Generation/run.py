@@ -32,7 +32,7 @@ parser.add_option("-K", "--additional_kinematics", default = 1, const = 0, actio
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
-parser.add_option("-m", "--itmx", default = 1, type = "int", help = "maximum number of VEGAS iterations")
+parser.add_option("-m", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
