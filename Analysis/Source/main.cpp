@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   TString inputFileName(inDir + base + ".root");
   TString outputFileName(base + "_histos.root");
   
-  AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
+  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
 
   TString channel2("2to6"); 
   TString model2("SSM-m2500-w500_Zp");
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   TString inputFileName2(inDir + base2 + ".root");
   TString outputFileName2(base2 + "_histos.root");
 
-  AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
+  // AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
 
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 
@@ -55,17 +55,17 @@ int main(int argc, char* argv[])
 
     // RootApp->Run(kTRUE);
 
-    // TCanvas* c_dphi_HT = superpose2d("dphi_HT", "|M_{SM}|^{2}", outputFileName, 
-    //                           "dphi_HT", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFileName2);
-    // c_dphi_HT->Draw();
-
-    // RootApp->Run(kTRUE);
-
-    TCanvas* c_dphi_KTbbll = superpose2d("dphi_KTbbll", "|M_{SM}|^{2}", outputFileName, 
-                              "dphi_KTbbll", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFileName2);
-    c_dphi_KTbbll->Draw();
+    TCanvas* c_dphi_HT = superpose2d("dphi_HT", "|M_{SM}|^{2}", outputFileName, 
+                              "dphi_HT", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFileName2);
+    c_dphi_HT->Draw();
 
     RootApp->Run(kTRUE);
+
+    // TCanvas* c_dphi_KTbbll = superpose2d("dphi_KTbbll", "|M_{SM}|^{2}", outputFileName, 
+    //                           "dphi_KTbbll", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFileName2);
+    // c_dphi_KTbbll->Draw();
+
+    // RootApp->Run(kTRUE);
   }
 
   return 0;  

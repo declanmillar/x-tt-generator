@@ -67,7 +67,7 @@ TCanvas* superpose2d(//int ndimensions,
     if (histName3 != "NULL") h3->Scale(1.0/h3->Integral("width"));
   }
 
-  // find overlapping area (histograms must be have the same user ranges and same number of bins)
+  // find overlapping volume (histograms must be have the same user ranges and same number of bins)
   double sigPerOverlap = 0;
   if (histName2 != "NULL") {
     double overlap = 0;
@@ -81,9 +81,9 @@ TCanvas* superpose2d(//int ndimensions,
         else if (one > two) overlap += two;
       }
     }
-    printf("Overlapping area = %f\n", overlap);
+    printf("Overlapping volume = %f\n", overlap);
     sigPerOverlap = overlap/h2->Integral()*100;
-    printf("Signal in overlapping area: %f\%\n", sigPerOverlap);
+    printf("Signal in overlapping volume: %f\%\n", sigPerOverlap);
   }
 
   // set range user
@@ -105,7 +105,7 @@ TCanvas* superpose2d(//int ndimensions,
   strs << sigPerOverlap;
   std::string str = strs.str();
   TString tstr(str);
-  TString SigOverlap = "Signal in overlapping area = " + tstr + "\%";
+  TString SigOverlap = "Signal in overlapping volume = " + tstr + "\%";
   TLatex* texBox = new TLatex(0.5,0.5, SigOverlap);
   texBox->Draw();
 
