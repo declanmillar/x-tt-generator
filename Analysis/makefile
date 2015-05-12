@@ -10,7 +10,7 @@ ROOTLIBS        = $(shell root-config --libs)
 
 CXXFLAGS        += $(ROOTCFLAGS)   
 LIBS            = $(ROOTLIBS) $(TREEPLAYER)
-OBJS            =  main.o atlas_style.o superpose.o RootTuple.o analysis.o 
+OBJS            =  main.o atlas_style.o superpose.o superpose2d.o RootTuple.o analysis.o 
 
 BIN = go
 LIB = Library

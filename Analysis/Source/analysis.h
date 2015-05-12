@@ -12,6 +12,7 @@
 #include "TVector2.h"
 #include "TBrowser.h"
 #include <fstream>
+#include "TLegend.h"
 
 class AnalysisZprime{
 public:
