@@ -188,31 +188,32 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     continue
   end if
 
-  ! total M*M for given helicity combination
+    ! total M*M for given helicity combination
   qqff_EWp = 0.d0
   amp_tmp = (0.d0, 0.d0)
   amp_tmp2 = (0.d0, 0.d0)
-  if (interference == 0)then   ! no interference
-    do i=1,ngraphs
+
+  if (interference == 0) then   ! no interference
+    do i = 1, ngraphs
       qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
     end do
 
-  else if (interference == 1)then  ! SM interference
+  else if (interference == 1) then  ! SM interference
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
-    do i=3,ngraphs
-      qqff_EWp = qqff_EWp+amp(i)*conjg(amp(i))
+    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp)
+    do i = 3, ngraphs
+      qqff_EWp = qqff_EWp + amp(i)*conjg(amp(i))
     end do
 
-  else if (interference == 2)then  ! full interference
+  else if (interference == 2) then  ! full interference
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqff_EWp =qqff_EWp+amp_tmp*conjg(amp_tmp)
+    qqff_EWp =qqff_EWp + amp_tmp*conjg(amp_tmp)
 
-  else if (interference == 3)then  ! Z' and interference only
+  else if (interference == 3) then  ! Z' and Z',SM interference only
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -220,6 +221,18 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
     qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
+
+  else if (interference == 4) then  ! Z',SM interference only
+    do i = 1, ngraphs
+      amp_tmp = amp_tmp + amp(i)
+    end do
+    do i = 1, 2 
+      amp_tmp2 = amp_tmp2 + amp(i)
+    end do
+    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
+    do i = 3, ngraphs
+      qqff_EWp = qqff_EWp - amp(i)
+    end do
   else
     write(*,*)'Error: interference flag not set.'
     stop
