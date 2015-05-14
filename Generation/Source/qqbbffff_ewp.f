@@ -436,10 +436,13 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   else
     continue
   end if
-  ! check amplitudes
-  ! do i=1,ngraphs,1
-  !   write(*,*)'M=',i,'=',amp(i)
-  ! enddo
+
+  ! print all individual amplitudes
+!       if (npoints.lt.10) then
+!         do i=1,ngraphs
+!           write(*,*)"M_EW/Z': " ,i ," = " amp(i)
+!         enddo
+!       end if
 
 ! total M*M for given helicity combination
   qqbbffff_EWp = 0.d0
@@ -488,18 +491,11 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     end do
     qqbbffff_EWp = qqbbffff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
     do i = 3, ngraphs
-    	qqbbffff_EWp = qqbbffff_EWp - amp(i)
+    	qqbbffff_EWp = qqbbffff_EWp - amp(i)*conjg(amp(i))
     end do
   else
     write(*,*)'Error: interference flag not set.'
     stop
   end if
-       
-! print individual amplitudes
-!       if (npoints.lt.10) then
-!         do i=1,ngraphs
-!           write(*,*)'M: ' ,i ,amp(i)
-!         enddo
-!       end if
 
 end function qqbbffff_EWp

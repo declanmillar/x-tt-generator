@@ -231,7 +231,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     end do
     qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
     do i = 3, ngraphs
-      qqff_EWp = qqff_EWp - amp(i)
+      qqff_EWp = qqff_EWp - amp(i)*conjg(amp(i))
     end do
   else
     write(*,*)'Error: interference flag not set.'
