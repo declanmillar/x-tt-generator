@@ -1,6 +1,6 @@
 #include "superpose.h"
 
-TCanvas* superpose(//int ndimensions,
+TCanvas* superpose(const bool normalise,
                    TString histName1, TString histTitle1, TString fileName1, 
                    TString histName2, TString histTitle2, TString fileName2, 
                    TString histName3, TString histTitle3, TString fileName3) {
@@ -61,15 +61,14 @@ TCanvas* superpose(//int ndimensions,
   }
 
   // normalize histograms
-  bool normalize = true;
-  if (normalize == true) { 
+  if (normalise == true) { 
     TString yTitle;
     yTitle = h1->GetYaxis()->GetTitle();
     yTitle = "1/#sigma #times " + yTitle;
     h1->GetYaxis()->SetTitle(yTitle);
-    h1->Scale(1.0/h1->Integral());
-    if (histName2 != "NULL") h2->Scale(1.0/h2->Integral());
-    if (histName3 != "NULL") h3->Scale(1.0/h3->Integral());
+    h1->Scale(1.0/std::abs(h1->Integral()));
+    if (histName2 != "NULL") h2->Scale(std::abs(1.0/h2->Integral()));
+    if (histName3 != "NULL") h3->Scale(std::abs(1.0/h3->Integral()));
   }
 
   // find overlapping area (histograms must be have the same user ranges and same number of bins)
