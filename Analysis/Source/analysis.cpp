@@ -276,8 +276,8 @@ void AnalysisZprime::PostLoop()
     this->TotalSpinAsymmetries();
   }
 
-  h_AFBstar = this->Asymmetry("AFBstar", h_AFstar, h_ABstar);
-  h_ARFB = this->Asymmetry("ARFB", h_RF, h_RB);
+  h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFstar, h_ABstar);
+  h_ARFB = this->Asymmetry("ARB", "A_{RFB}", h_RF, h_RB);
 
   double AFBstar = this->TotalAsymmetry(h_AFstar,h_ABstar);
   double ARFB = this->TotalAsymmetry(h_RF,h_RB);
@@ -309,7 +309,7 @@ TH1D* AnalysisZprime::MttALL()
   double ALL = this->TotalAsymmetry(h_A,h_B);
   printf("ALL' = %f\n", ALL);
 
-  TH1D* h_ALL = this->Asymmetry("ALL", h_A, h_B);
+  TH1D* h_ALL = this->Asymmetry("ALL", "A_{LL}", h_A, h_B);
   delete h_A;
   delete h_B;
   return h_ALL;
@@ -323,7 +323,7 @@ TH1D* AnalysisZprime::MttAL()
   h_A->Add(h_MttLR);
   h_B->Add(h_MttRL);
 
-  TH1D* h_AL = this->Asymmetry("AL", h_A, h_B);
+  TH1D* h_AL = this->Asymmetry("AL", "A_{L}", h_A, h_B);
   delete h_A;
   delete h_B;
   return h_AL;
@@ -365,10 +365,11 @@ void AnalysisZprime::ALL2to6()
   printf("ALL = %f\n", ALL);
 }
 
-TH1D* AnalysisZprime::Asymmetry(TString name,TH1D* h_A, TH1D* h_B)
+TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B)
 {
   TH1D* h_numerator = (TH1D*) h_A->Clone(name);
   TH1D* h_denominator = (TH1D*) h_A->Clone();
+  h_numerator->SetTitle(title);
   h_numerator->Add(h_B, -1);
   h_denominator->Add(h_B, 1);
   h_numerator->Divide(h_denominator);
@@ -380,10 +381,10 @@ void AnalysisZprime::CreateHistograms()
 {
 
   h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 13000.0);
-  h_AFstar = new TH1D("AFstar", "AFstar", 20, 0.0, 13000.0);
-  h_ABstar = new TH1D("ABstar", "ABstar", 20, 0.0, 13000.0);
-  h_RF = new TH1D("RF", "RF", 20, 0.0, 13000.0);
-  h_RB = new TH1D("RB", "RB", 20, 0.0, 13000.0);
+  h_AFstar = new TH1D("AFstar", "AFstar", 130, 0.0, 13000.0);
+  h_ABstar = new TH1D("ABstar", "ABstar", 130, 0.0, 13000.0);
+  h_RF = new TH1D("RF", "RF", 130, 0.0, 13000.0);
+  h_RB = new TH1D("RB", "RB", 130, 0.0, 13000.0);
 
 
   if (m_channel == "2to6") {  
@@ -414,10 +415,10 @@ void AnalysisZprime::CreateHistograms()
   }
 
   if (m_channel == "2to2") {
-    h_MttLL = new TH1D("MttLL", "MttLL", 20, 0.0, 13000.0);
-    h_MttLR = new TH1D("MttLR", "MttLR", 20, 0.0, 13000.0);
-    h_MttRL = new TH1D("MttRL", "MttRL", 20, 0.0, 13000.0);
-    h_MttRR = new TH1D("MttRR", "MttRR", 20, 0.0, 13000.0);
+    h_MttLL = new TH1D("MttLL", "MttLL", 130, 0.0, 13000.0);
+    h_MttLR = new TH1D("MttLR", "MttLR", 130, 0.0, 13000.0);
+    h_MttRL = new TH1D("MttRL", "MttRL", 130, 0.0, 13000.0);
+    h_MttRR = new TH1D("MttRR", "MttRR", 130, 0.0, 13000.0);
   }
 }
 
@@ -478,32 +479,22 @@ void AnalysisZprime::MakeGraphs()
 
   }
 
-  // if (m_channel == "2to2") {
-  //   TCanvas *c_MttLL   = new TCanvas("MttLL " ,"MttLL " );
-  //   c_MttLL->cd(); 
-  //   h_MttLL->Draw("hist"); 
-  //   h_MttLL->GetYaxis()->SetTitle("Events");
-
-  //   TCanvas *c_MttLR   = new TCanvas("MttLR " ,"MttLR " );
-  //   c_MttLR->cd(); 
-  //   h_MttLR->Draw("hist"); 
-  //   h_MttLR->GetYaxis()->SetTitle("Events");
-
-  //   TCanvas *c_MttRL   = new TCanvas("MttRL " ,"MttRL " );
-  //   c_MttRL->cd(); 
-  //   h_MttRL->Draw("hist"); 
-  //   h_MttRL->GetYaxis()->SetTitle("Events");
-
-  //   TCanvas *c_MttRR   = new TCanvas("MttRR " ,"MttRR " );
-  //   c_MttRR->cd(); 
-  //   h_MttRR->Draw("hist"); 
-  //   h_MttRR->GetYaxis()->SetTitle("Events");
-
-  //   TCanvas *c_MttALL   = new TCanvas("MttALL " ,"MttALL " );
-  //   c_MttALL->cd(); 
-  //   h_MttALL->Draw("hist"); 
-  //   h_MttALL->GetYaxis()->SetTitle("Events");
-  // }
+  if (m_channel == "2to2") {
+    h_MttLL->GetYaxis()->SetTitle(numBase + h_MttLL->GetTitle() + " [" + units +"/GeV]");
+    h_MttLR->GetYaxis()->SetTitle(numBase + h_MttLR->GetTitle() + " [" + units +"/GeV]");
+    h_MttRL->GetYaxis()->SetTitle(numBase + h_MttRL->GetTitle() + " [" + units +"/GeV]");
+    h_MttRR->GetYaxis()->SetTitle(numBase + h_MttRR->GetTitle() + " [" + units +"/GeV]");
+    h_MttALL->GetYaxis()->SetTitle(h_MttALL->GetTitle());
+    h_MttAL->GetYaxis()->SetTitle(h_MttAL->GetTitle());
+    h_AFBstar->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
+    h_MttLL->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_MttLR->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_MttRL->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_MttRR->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_MttALL->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_MttAL->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_AFBstar->GetXaxis()->SetTitle("M_{tt} [GeV]");
+  }
   printf("...complete.\n");
 }
 

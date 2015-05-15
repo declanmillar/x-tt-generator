@@ -15,44 +15,69 @@ int main(int argc, char* argv[])
   TString options("_xc_");
   TString energy("13");
   TString points("5x500000");
-
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(inDir + base + ".root");
-  TString outputFileName(base + "_histos.root");
-  
-  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
+  TString outputFileName(base + "_histos.root");  
 
   TString channel2("2to2"); 
   TString model2("GSM-SM");
   TString options2("_xc_");
   TString points2("5x500000");
-
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
   TString inputFileName2(inDir + base2 + ".root");
   TString outputFileName2(base2 + "_histos.root");
 
+  TString channel3("2to2"); 
+  TString model3("GSM-Q");
+  TString options3("_xc_");
+  TString points3("5x500000");
+  TString base3(channel3 + "_" + model3 + "_" + energy + options3 + points3);
+  TString inputFileName3(inDir + base3 + ".root");
+  TString outputFileName3(base3 + "_histos.root");
+
+  TString channel4("2to2"); 
+  TString model4("GSM-T3L");
+  TString options4("_xc_");
+  TString points4("5x500000");
+  TString base4(channel4 + "_" + model4 + "_" + energy + options4 + points4);
+  TString inputFileName4(inDir + base4 + ".root");
+  TString outputFileName4(base4 + "_histos.root");
+
+  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
   // AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
+  // AnalysisZprime analysis3(channel3, model3, inputFileName3, outputFileName3);
+  // AnalysisZprime analysis4(channel4, model4, inputFileName4, outputFileName4);
 
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 
-  TCanvas* c_Mtt = superpose(false, "Mtt", "|M|^{2}=|M_{Z'}|^{2}+2R(M_{#gamma}^{*}M_{Z'})+2R(M^{*}_{Z}M_{Z'})", outputFileName, 
-                            "Mtt", "|M|^{2} = |M_{SM}|^{2}", outputFileName2);
-  c_Mtt->Draw();
-  RootApp->Run(kTRUE);
 
   if (channel == "2to2") {
-    TCanvas* c_ALL = superpose(false,"ALL", "SM", outputFileName, 
-                               "ALL", "GSM-SM", outputFileName2);
+    TCanvas* c_Mtt = superpose(false, "Mtt", model, outputFileName, 
+                                      "Mtt", model2, outputFileName2,
+                                      "Mtt", model3, outputFileName3,
+                                      "Mtt", model4, outputFileName4);
+    c_Mtt->Draw();
+    RootApp->Run(kTRUE);
+
+
+    TCanvas* c_ALL = superpose(false,"ALL", model, outputFileName, 
+                                     "ALL", model2, outputFileName2,
+                                     "ALL", model3, outputFileName3,
+                                     "ALL", model4, outputFileName4);
     c_ALL->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_AL = superpose(false,"AL", "SM", outputFileName, 
-                               "AL", "GSM-SM", outputFileName2);
+    TCanvas* c_AL = superpose(false,"AL", model, outputFileName, 
+                                    "AL", model2, outputFileName2,
+                                    "AL", model3, outputFileName3,
+                                    "AL", model4, outputFileName4);
     c_AL->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_AFBstar = superpose(false,"AFBstar", "SM", outputFileName, 
-                               "AFBstar", "GSM-SM", outputFileName2);
+    TCanvas* c_AFBstar = superpose(false,"AFBstar", model, outputFileName, 
+                                         "AFBstar", model2, outputFileName2,
+                                         "AFBstar", model3, outputFileName3,
+                                         "AFBstar", model4, outputFileName4);
     c_AFBstar->Draw();
     RootApp->Run(kTRUE);
 
