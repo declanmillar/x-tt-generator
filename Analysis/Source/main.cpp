@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   TString outputFileName(base + "_histos.root");  
 
   TString channel2("2to2"); 
-  TString model2("GSM-SM");
+  TString model2("GLR-LR");
   TString options2("_xc_");
   TString points2("5x500000");
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
   TString outputFileName2(base2 + "_histos.root");
 
   TString channel3("2to2"); 
-  TString model3("GSM-Q");
+  TString model3("GLR-R");
   TString options3("_xc_");
   TString points3("5x500000");
   TString base3(channel3 + "_" + model3 + "_" + energy + options3 + points3);
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   TString outputFileName3(base3 + "_histos.root");
 
   TString channel4("2to2"); 
-  TString model4("GSM-T3L");
+  TString model4("GLR-Y");
   TString options4("_xc_");
   TString points4("5x500000");
   TString base4(channel4 + "_" + model4 + "_" + energy + options4 + points4);

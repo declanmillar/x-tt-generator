@@ -1,4 +1,4 @@
-1500.d0 ,0.d0,0.d0,0.d0,0.d0 ! rmZp    ! Z prime mass
+2500.d0 ,0.d0,0.d0,0.d0,0.d0 ! rmZp    ! Z prime mass
 0.d0    ,0.d0,0.d0,0.d0,0.d0 ! gamZp   ! Z prime width 
 0.595d0 ,0.d0,0.d0,0.d0,0.d0 ! gp      ! gauge coupling g'
 -0.402d0,0.d0,0.d0,0.d0,0.d0 ! paramZp ! (0) angle parametrising the mixing between Zprimes
