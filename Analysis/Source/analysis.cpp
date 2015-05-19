@@ -3,6 +3,7 @@
 AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& outputFileName) :
   m_pi(3.14159265),
   m_GeV(1000.0),
+  m_Wmass(80.23),
   m_channel(channel),
   m_model(model),
   m_inputFileName(inputFileName),
@@ -58,6 +59,10 @@ void AnalysisZprime::EachEvent()
   // negative velocity of full system in collider frame
   TVector3 vcoltot = -1*pcoltot.BoostVector();
   double ytt = pcoltot.Rapidity();
+  double pz_nu;
+  if (m_channel > 0) pz_nu = resolveNeutrinoPz(pcol[2], pT[3]);
+
+  printf("pz_nu = %f\n", pz_nu);
 
    // final particle parton CoM variables
   TVector2 pTtot;
@@ -689,4 +694,76 @@ void AnalysisZprime::CleanUp()
 {
   delete m_chainNtup;
   delete m_ntup;
+}
+
+double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
+
+  // finds the longitudinal neutrino momentum for semi-hadronic decay
+  // assuming all particles are massless
+
+  double pz_nu;
+  double p_l0;
+  std:vector<std::complex<double> > root;
+  double a, b, c, k;
+  int i;
+
+//   // recalculate lepton energy in zero mass approximation
+//   p_l0 = sqrt(p_l(1)*p_l(1) + p_l(2)*p_l(2) + p_l(3)*p_l(3))
+
+//   // check this matches the 4-vector energy
+//   if ( abs(p_l0 - p_l(0)) > 1.d-12) print *, "p_l0 doesn't match"
+
+  k = m_Wmass*m_Wmass/2 + p_l.Px()*pT_nu.Px() + p_l.Py()*pT_nu.Py();
+
+  a = p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py();
+
+  b = -2*k*p_l.Pz();
+
+  c = (pT_nu.Px()*pT_nu.Px() + pT_nu.Py()*pT_nu.Py())*p_l.E()*p_l.E() - k*k;
+
+  root = this->solveQuadratic(a, b, c);
+
+  // select single solution
+  if (root[1].imag() == 0 and root[1].imag() == 0) {
+    // two real solutions - pick smallest one
+    if (std::abs(root[1].real()) < std::abs(root[2].real())) {
+      // solution 1 < than solution 2
+      pz_nu = root[1].real();
+    }
+    else if (std::abs(root[1].real()) > std::abs(root[2].real())) { 
+      // solution 1 > than solution 2
+      pz_nu = root[2].real();
+    }
+    else {
+      // solutions are equal pick 2
+      pz_nu = root[2].real();
+    }
+  }
+  else {
+    // no real solutions - take the real part of 1
+    pz_nu = root[1].real();
+  }
+
+  return pz_nu;
+
+}
+
+std::vector<std::complex<double> > AnalysisZprime::solveQuadratic(double a, double b, double c) {
+    // solves quadratic for both roots 
+    // returns both as complex values in a complex vector x(2)
+
+    std::vector<std::complex<double> > roots;
+    std::complex<double> term1;
+    std::complex<double> term2;
+    std::complex<double> discriminator;
+
+    term1 = -b/(2*a);
+    discriminator = b*b - 4*a*c;
+    term2 = sqrt(discriminator)/(2*a);
+
+    roots.push_back(term1 + term2);
+    roots.push_back(term1 - term2);
+    
+    return roots;
+    
 }

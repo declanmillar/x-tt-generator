@@ -13,6 +13,7 @@
 #include "TBrowser.h"
 #include <fstream>
 #include "TLegend.h"
+#include <complex>
 
 class AnalysisZprime{
 public:
@@ -43,6 +44,8 @@ protected:
   TH1D* MttALL();
   TH1D* MttAL();
   double deltaPhi(const double& phi1,const double& phi2) const;
+  vector<std::complex<double> > solveQuadratic(double a, double b, double c);
+  double resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu);
   
   bool PassCuts() const;
   bool PassCuts_MET() const;
@@ -55,12 +58,14 @@ private:
   
   float m_pi;
   float m_GeV;
+  double m_Wmass;
   TString m_channel;  
   TString m_model;
   TString m_inputFileName;
   TString m_outputFileName;
   double m_sigma;
   vector<double> m_cnorm;
+
 
   // Input Data
   vector<TString>* m_inputFiles;

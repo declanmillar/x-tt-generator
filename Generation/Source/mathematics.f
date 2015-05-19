@@ -17,7 +17,7 @@ contains
     real :: a, b, c
     complex :: term1
     complex :: term2
-    complex:: discriminator
+    complex :: discriminator
 
     term1 = -b/(2*a)
 !     print *, term1

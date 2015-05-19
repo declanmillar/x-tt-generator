@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
   TString points("5x500000");
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(inDir + base + ".root");
-  TString outputFileName(outDir + base + "_histos.root");  
+  TString outputFileName(outDir + base + "_histos_test.root");  
 
   TString channel2("2to2"); 
   TString model2("GSM-SM");
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
   TString inputFileName4(inDir + base4 + ".root");
   TString outputFileName4(outDir + base4 + "_histos.root");
 
-  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
+  AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
   // AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
   // AnalysisZprime analysis3(channel3, model3, inputFileName3, outputFileName3);
   // AnalysisZprime analysis4(channel4, model4, inputFileName4, outputFileName4);

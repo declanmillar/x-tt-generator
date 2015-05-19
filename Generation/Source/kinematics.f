@@ -21,7 +21,6 @@ function longitudinal_neutrino_momentum(p_l, pT_nu)
   real :: longitudinal_neutrino_momentum
   real :: p_l(0:3), pT_nu(1:2), p_l0
   complex, dimension(2) :: pz_nu
-  real, dimension(2) :: pz_nu_mag
   real :: a, b, c, k
   integer :: i
 
