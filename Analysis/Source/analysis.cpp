@@ -102,10 +102,20 @@ void AnalysisZprime::EachEvent()
   double phitb = ptb.Phi();
   double pTt = pt.Pt();
   double PTtb = ptb.Pt();
-  double deltay = std::abs(ytcol) - std::abs(ytbcol);
+  double deltaabsycol = std::abs(ytcol) - std::abs(ytbcol);
   double costhetatcol = ptcol.CosTheta();
   double costhetat = pt.CosTheta();
   double costhetastar = int(ytt/std::abs(ytt))*costhetat;
+  // printf("costhetastar = %f\n", costhetastar);
+  // printf("\nytt             = %f\n", ytt);
+  // printf("yt              = %f\n", yt);
+  // printf("costhetat       = %f\n", costhetat);
+  // printf("ytb              = %f\n", ytb);
+  // printf("ytcol-ytt       = %f\n", ytcol-ytt);
+  // printf("deltaabsycol    = %f\n", deltaabsycol);
+  // printf("ytcol           = %f\n", ytcol);
+  // printf("ytbcol           = %f\n", ytbcol);
+  // printf("2yt             = %f\n", 2*yt);
 
   // negative velocity of t/tb in collider frame
   TVector3 vtcol = -1*ptcol.BoostVector();
@@ -216,11 +226,11 @@ void AnalysisZprime::EachEvent()
       h_ABstar->Fill(Mtt, weight/h_ABstar->GetXaxis()->GetBinWidth(1));
     }
 
-    if (deltay > 0) {
+    if (deltaabsycol > 0) {
       h_RF->Fill(Mtt, weight/h_RF->GetXaxis()->GetBinWidth(1));
     }
 
-    if (deltay < 0) {
+    if (deltaabsycol < 0) {
       h_RB->Fill(Mtt, weight/h_RB->GetXaxis()->GetBinWidth(1));
     }
 
@@ -277,7 +287,7 @@ void AnalysisZprime::PostLoop()
   }
 
   h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFstar, h_ABstar);
-  h_ARFB = this->Asymmetry("ARB", "A_{RFB}", h_RF, h_RB);
+  h_ARFB = this->Asymmetry("ARFB", "A_{RFB}", h_RF, h_RB);
 
   double AFBstar = this->TotalAsymmetry(h_AFstar,h_ABstar);
   double ARFB = this->TotalAsymmetry(h_RF,h_RB);
@@ -487,6 +497,7 @@ void AnalysisZprime::MakeGraphs()
     h_MttALL->GetYaxis()->SetTitle(h_MttALL->GetTitle());
     h_MttAL->GetYaxis()->SetTitle(h_MttAL->GetTitle());
     h_AFBstar->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
+    h_ARFB->GetYaxis()->SetTitle(h_ARFB->GetTitle());
     h_MttLL->GetXaxis()->SetTitle("M_{tt} [GeV]");
     h_MttLR->GetXaxis()->SetTitle("M_{tt} [GeV]");
     h_MttRL->GetXaxis()->SetTitle("M_{tt} [GeV]");
@@ -494,6 +505,7 @@ void AnalysisZprime::MakeGraphs()
     h_MttALL->GetXaxis()->SetTitle("M_{tt} [GeV]");
     h_MttAL->GetXaxis()->SetTitle("M_{tt} [GeV]");
     h_AFBstar->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_ARFB->GetXaxis()->SetTitle("M_{tt} [GeV]");
   }
   printf("...complete.\n");
 }
