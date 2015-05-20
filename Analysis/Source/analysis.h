@@ -87,7 +87,10 @@ private:
   TH1D* h_RF;
   TH1D* h_RB;
   TH1D* h_ARFB;
+  TH1D* h_PzNu;
+  TH1D* h_PzNuReco;
   TH1D* h_Mtt;
+  TH1D* h_MttPzNuReco;
   TH1D* h_MttLL;
   TH1D* h_MttLR;
   TH1D* h_MttRL;

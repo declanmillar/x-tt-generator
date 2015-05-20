@@ -59,10 +59,17 @@ void AnalysisZprime::EachEvent()
   // negative velocity of full system in collider frame
   TVector3 vcoltot = -1*pcoltot.BoostVector();
   double ytt = pcoltot.Rapidity();
-  double pz_nu;
-  if (m_channel > 0) pz_nu = resolveNeutrinoPz(pcol[2], pT[3]);
+  double PzNuReco = -9999;
+  if (m_channel > 0) PzNuReco = resolveNeutrinoPz(pcol[2], pT[3]);
 
-  printf("pz_nu = %f\n", pz_nu);
+  printf("PzNu = %f\n", pcol[3].Pz());
+  printf("PzNuReco = %f\n", PzNuReco);
+
+
+  TLorentzVector pNuReco;
+  pNuReco.SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuReco, sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Px()+PzNuReco*PzNuReco));
+  TLorentzVector pcoltotPzNuReco = pcoltot - pcol[3] + pNuReco;
+  double MttPzNuReco = pcoltotPzNuReco.M();
 
    // final particle parton CoM variables
   TVector2 pTtot;
@@ -84,7 +91,7 @@ void AnalysisZprime::EachEvent()
     pt = p[0];
     ptb = p[1];
   }
-  else if (m_channel = "2to6") {
+  else if (m_channel == "2to6") {
     ptcol = pcol[0] + pcol[2] + pcol[3];
     ptbcol = pcol[1] + pcol[4] + pcol[5];
     pt = p[0] + p[2] + p[3];
@@ -215,6 +222,7 @@ void AnalysisZprime::EachEvent()
   {    
     double weight = m_ntup->weight();
     double weight_ee = m_ntup->weight_ee();
+    double weight_eq = m_ntup->weight_eq();
 
     // re-weight for different iterations
     weight = weight*m_sigma/m_cnorm[it-1];
@@ -246,6 +254,9 @@ void AnalysisZprime::EachEvent()
       h_ct7ct5->Fill(clpclmtop, weight);
       h_dphi->Fill(dphi, weight/h_dphi->GetXaxis()->GetBinWidth(1));
 
+      h_PzNu->Fill(pcol[3].Pz(), weight_eq);
+      h_PzNuReco->Fill(PzNuReco, weight_eq);
+      h_MttPzNuReco->Fill(MttPzNuReco, weight_eq);
       h_MET->Fill(MET, weight_ee);
 			h_HT->Fill(HT, weight_ee);
 			h_Mbbll->Fill(Mbbll, weight_ee);
@@ -279,7 +290,7 @@ void AnalysisZprime::EachEvent()
 void AnalysisZprime::PostLoop()
 {
   double sigma = h_Mtt->Integral("width");
-  if (!sigma == m_sigma) {
+  if (sigma != m_sigma) {
     printf("Cross section from generation and analysis stage do not match!\n");
     printf("sigma_generation = %f\n", m_sigma);
     printf("sigma_analysis   = %f\n", sigma);
@@ -402,7 +413,10 @@ void AnalysisZprime::CreateHistograms()
   h_RB = new TH1D("RB", "RB", 130, 0.0, 13000.0);
 
 
-  if (m_channel == "2to6") {  
+  if (m_channel == "2to6") {
+    h_Mtt = new TH1D("PzNu", "p_{z}^{#nu} (truth)", 100, 0.0, 1000.0);
+    h_Mtt = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, 0.0, 1000.0);
+    h_Mtt = new TH1D("MttPzNuReco", "M_{tt} (p_{z}^{#nu} reconstructed)", 100, 0.0, 13000.0);
     h_pz5 = new TH1D("pz5", "p_{z}^{5}", 50,0.0, 10000.0);
     h_costheta5_eq = new TH1D("costheta5_eq", "cos#theta_{l^{+}} (eq)", 50, -1.0, 1.0);
     h_costheta5_ee = new TH1D("costheta5_ee", "cos#theta_{l^{+}} (ee)", 50, -1.0, 1.0);
@@ -491,6 +505,15 @@ void AnalysisZprime::MakeGraphs()
 
     h_dphi_HT->GetYaxis()->SetTitle("H_{T}");
     h_dphi_HT->GetXaxis()->SetTitle("#Delta#phi");
+
+    h_PzNu->GetYaxis()->SetTitle(numBase + h_PzNu->GetTitle() + " [" + units +"/GeV]");
+    h_PzNu->GetXaxis()->SetTitle(h_PzNu->GetTitle());
+
+    h_PzNuReco->GetYaxis()->SetTitle(numBase + h_PzNuReco->GetTitle() + " [" + units +"/GeV]");
+    h_PzNuReco->GetXaxis()->SetTitle(h_PzNuReco->GetTitle());
+
+    h_MttPzNuReco->GetYaxis()->SetTitle(numBase + h_MttPzNuReco->GetTitle() + " [" + units +"/GeV]");
+    h_MttPzNuReco->GetXaxis()->SetTitle(h_MttPzNuReco->GetTitle());
 
   }
 
@@ -701,11 +724,9 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
   // finds the longitudinal neutrino momentum for semi-hadronic decay
   // assuming all particles are massless
 
-  double pz_nu;
-  double p_l0;
-  std:vector<std::complex<double> > root;
+  double PzNu;
+  std::vector<std::complex<double> > root;
   double a, b, c, k;
-  int i;
 
 //   // recalculate lepton energy in zero mass approximation
 //   p_l0 = sqrt(p_l(1)*p_l(1) + p_l(2)*p_l(2) + p_l(3)*p_l(3))
@@ -728,23 +749,23 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
     // two real solutions - pick smallest one
     if (std::abs(root[1].real()) < std::abs(root[2].real())) {
       // solution 1 < than solution 2
-      pz_nu = root[1].real();
+      PzNu = root[1].real();
     }
     else if (std::abs(root[1].real()) > std::abs(root[2].real())) { 
       // solution 1 > than solution 2
-      pz_nu = root[2].real();
+      PzNu = root[2].real();
     }
     else {
       // solutions are equal pick 2
-      pz_nu = root[2].real();
+      PzNu = root[2].real();
     }
   }
   else {
     // no real solutions - take the real part of 1
-    pz_nu = root[1].real();
+    PzNu = root[1].real();
   }
 
-  return pz_nu;
+  return PzNu;
 
 }
 
