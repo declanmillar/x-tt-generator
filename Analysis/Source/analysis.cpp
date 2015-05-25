@@ -60,16 +60,19 @@ void AnalysisZprime::EachEvent()
   TVector3 vcoltot = -1*pcoltot.BoostVector();
   double ytt = pcoltot.Rapidity();
   double PzNuReco = -9999;
-  if (m_channel > 0) PzNuReco = resolveNeutrinoPz(pcol[2], pT[3]);
+  double MttPzNuReco =-9999;
+  if (m_channel =="2to6") {
+    PzNuReco = resolveNeutrinoPz(pcol[2], pT[3]);
 
-  printf("PzNu = %f\n", pcol[3].Pz());
-  printf("PzNuReco = %f\n", PzNuReco);
+    printf("PzNu = %f\n", pcol[3].Pz());
+    printf("PzNuReco = %f\n", PzNuReco);
 
 
-  TLorentzVector pNuReco;
-  pNuReco.SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuReco, sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Px()+PzNuReco*PzNuReco));
-  TLorentzVector pcoltotPzNuReco = pcoltot - pcol[3] + pNuReco;
-  double MttPzNuReco = pcoltotPzNuReco.M();
+    TLorentzVector pNuReco;
+    pNuReco.SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuReco, sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Px()+PzNuReco*PzNuReco));
+    TLorentzVector pcoltotPzNuReco = pcoltot - pcol[3] + pNuReco;
+    MttPzNuReco = pcoltotPzNuReco.M();
+  }
 
    // final particle parton CoM variables
   TVector2 pTtot;

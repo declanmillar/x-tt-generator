@@ -33,7 +33,7 @@ ifeq ($(UNAME_S),Linux)
 	# add roottuple libraries qmulpc007
 	# FFLAGS = -g -real_size 64 -double_size 64 -free -module $(LIB) 
 	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-	LFLAGS = -L/usr/local/lib -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
+	LFLAGS = -L/afs/cern.ch/user/d/demillar/.RootTuple -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
 endif
 ifeq ($(UNAME_S),Darwin)
 	# add roottuple libraries os x
