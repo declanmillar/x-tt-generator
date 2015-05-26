@@ -250,7 +250,6 @@ void AnalysisZprime::EachEvent()
       h_RB->Fill(Mtt, weight/h_RB->GetXaxis()->GetBinWidth(1));
     }
 
-
     if (m_channel == "2to6") {
       h_costheta5_eq->Fill(costhetalptop, weight);
       h_costheta5_ee->Fill(costhetalptop, weight);
@@ -279,6 +278,14 @@ void AnalysisZprime::EachEvent()
       h_dphi_MCTll->Fill(dphi, MCTll, weight_ee);
       h_dphi_MTblbl->Fill(dphi, MTblbl, weight_ee);
       h_dphi_MCTblbl->Fill(dphi, MCTblbl, weight_ee);
+
+      if (costhetalptop > 0) {
+        h_AlLF->Fill(Mtt, weight/h_AlLF->GetXaxis()->GetBinWidth(1));
+      }
+
+    if (costhetalptop < 0) {
+        h_AlLB->Fill(Mtt, weight/h_AlLB->GetXaxis()->GetBinWidth(1));
+      }
     }
 
     if (m_channel == "2to2") {
