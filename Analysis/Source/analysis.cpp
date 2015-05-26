@@ -64,8 +64,8 @@ void AnalysisZprime::EachEvent()
   if (m_channel =="2to6") {
     PzNuReco = resolveNeutrinoPz(pcol[2], pT[3]);
 
-    printf("PzNu = %f\n", pcol[3].Pz());
-    printf("PzNuReco = %f\n", PzNuReco);
+    // printf("PzNu = %f\n", pcol[3].Pz());
+    // printf("PzNuReco = %f\n", PzNuReco);
 
 
     TLorentzVector pNuReco;
@@ -230,6 +230,7 @@ void AnalysisZprime::EachEvent()
     // re-weight for different iterations
     weight = weight*m_sigma/m_cnorm[it-1];
     weight_ee = weight_ee*m_sigma/m_cnorm[it-1];
+    weight_eq = weight_eq*m_sigma/m_cnorm[it-1];
 
     // Fill Histograms (assumes fixed bin width!)
     h_Mtt->Fill(Mtt, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
@@ -255,7 +256,6 @@ void AnalysisZprime::EachEvent()
       h_costheta5_ee->Fill(costhetalptop, weight);
       h_ct7ct5->Fill(clpclmtop, weight);
       h_dphi->Fill(dphi, weight/h_dphi->GetXaxis()->GetBinWidth(1));
-
       h_PzNu->Fill(pcol[3].Pz(), weight_eq);
       h_PzNuReco->Fill(PzNuReco, weight_eq);
       h_MttPzNuReco->Fill(MttPzNuReco, weight_eq);
@@ -283,7 +283,7 @@ void AnalysisZprime::EachEvent()
         h_AlLF->Fill(Mtt, weight/h_AlLF->GetXaxis()->GetBinWidth(1));
       }
 
-    if (costhetalptop < 0) {
+      if (costhetalptop < 0) {
         h_AlLB->Fill(Mtt, weight/h_AlLB->GetXaxis()->GetBinWidth(1));
       }
     }
@@ -322,7 +322,10 @@ void AnalysisZprime::PostLoop()
 
   this->MakeGraphs();
 
-  if (m_channel == "2to6") this->ALL2to6();
+  if (m_channel == "2to6") {
+    this->ALL2to6();
+    h_AL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
+  }
   
   this->WriteHistograms();
 }
@@ -417,17 +420,16 @@ void AnalysisZprime::CreateHistograms()
 {
 
   h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 13000.0);
-  h_AFstar = new TH1D("AFstar", "AFstar", 130, 0.0, 13000.0);
-  h_ABstar = new TH1D("ABstar", "ABstar", 130, 0.0, 13000.0);
-  h_RF = new TH1D("RF", "RF", 130, 0.0, 13000.0);
-  h_RB = new TH1D("RB", "RB", 130, 0.0, 13000.0);
+  h_AFstar = new TH1D("AFstar", "AFstar", 50, 0.0, 13000.0);
+  h_ABstar = new TH1D("ABstar", "ABstar", 50, 0.0, 13000.0);
+  h_RF = new TH1D("RF", "RF", 50, 0.0, 13000.0);
+  h_RB = new TH1D("RB", "RB", 50, 0.0, 13000.0);
 
 
   if (m_channel == "2to6") {
-    h_Mtt = new TH1D("PzNu", "p_{z}^{#nu} (truth)", 100, 0.0, 1000.0);
-    h_Mtt = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, 0.0, 1000.0);
-    h_Mtt = new TH1D("MttPzNuReco", "M_{tt} (p_{z}^{#nu} reconstructed)", 100, 0.0, 13000.0);
-    h_pz5 = new TH1D("pz5", "p_{z}^{5}", 50,0.0, 10000.0);
+    h_PzNuReco = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, -1000.0, 1000.0);
+    h_MttPzNuReco = new TH1D("MttPzNuReco", "M_{tt} (p_{z}^{#nu} reconstructed)", 100, 0.0, 13000.0);
+    h_PzNu = new TH1D("PzNu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
     h_costheta5_eq = new TH1D("costheta5_eq", "cos#theta_{l^{+}} (eq)", 50, -1.0, 1.0);
     h_costheta5_ee = new TH1D("costheta5_ee", "cos#theta_{l^{+}} (ee)", 50, -1.0, 1.0);
     h_ct7ct5 = new TH1D("ct7ct5", "cos#theta_{l^{+}}cos#theta_{l^{-}}", 50, -1.0, 1.0);
@@ -451,6 +453,8 @@ void AnalysisZprime::CreateHistograms()
     h_dphi_MCTll = new TH2D("dphi_MCTll", "dphi_MCTll", 20, 0, 2*m_pi, 20, 0, 4000);
     h_dphi_MTblbl = new TH2D("dphi_MTblbl", "dphi_MTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
     h_dphi_MCTblbl = new TH2D("dphi_MCTblbl", "dphi_MCTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
+    h_AlLF = new TH1D("AlLF", "AlLF", 50, 0.0, 13000.0);
+    h_AlLB = new TH1D("AlLB", "AlLB", 50, 0.0, 13000.0);
   }
 
   if (m_channel == "2to2") {
@@ -571,7 +575,10 @@ void AnalysisZprime::WriteHistograms()
 
   if (m_channel == "2to6") {
     h_dphi->Write();
-    h_pz5->Write();
+    h_AL->Write();
+    h_PzNu->Write();
+    h_PzNuReco->Write();
+    h_MttPzNuReco->Write();
     h_costheta5_eq->Write();
     h_costheta5_ee->Write();
     h_ct7ct5->Write();
@@ -736,43 +743,52 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
 
   double PzNu;
   std::vector<std::complex<double> > root;
-  double a, b, c, k;
+  double a = -9999, b = -9999, c = -9999, k = -9999;
 
-//   // recalculate lepton energy in zero mass approximation
-//   p_l0 = sqrt(p_l(1)*p_l(1) + p_l(2)*p_l(2) + p_l(3)*p_l(3))
+  // recalculate lepton energy in zero mass approximation
+  double p_l0 = sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
 
-//   // check this matches the 4-vector energy
-//   if ( abs(p_l0 - p_l(0)) > 1.d-12) print *, "p_l0 doesn't match"
+  // check this matches the 4-vector energy
+  // printf("p_l.E() = %f\n", p_l.E());
+  // printf("p_l0 = %f\n", p_l0);
+  if ( std::abs(p_l0 - p_l.E() > 1.e-12)) printf("p_l0 doesn't match\n");
 
   k = m_Wmass*m_Wmass/2 + p_l.Px()*pT_nu.Px() + p_l.Py()*pT_nu.Py();
 
   a = p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py();
 
-  b = -2*k*p_l.Pz();
+  b = -2*k*(p_l.Pz());
 
   c = (pT_nu.Px()*pT_nu.Px() + pT_nu.Py()*pT_nu.Py())*p_l.E()*p_l.E() - k*k;
 
+  // printf("k = %f\n", k);
+  // printf("a = %f\n", a);
+  // printf("b = %f\n", b);
+  // printf("c = %f\n", c);
+
   root = this->solveQuadratic(a, b, c);
 
+  // for (int i = 0; i < 2; i++) cout << "root " << root[i] << endl;
+
   // select single solution
-  if (root[1].imag() == 0 and root[1].imag() == 0) {
+  if (root[0].imag() == 0 and root[1].imag() == 0) {
     // two real solutions - pick smallest one
-    if (std::abs(root[1].real()) < std::abs(root[2].real())) {
+    if (std::abs(root[0].real()) < std::abs(root[1].real())) {
       // solution 1 < than solution 2
+      PzNu = root[0].real();
+    }
+    else if (std::abs(root[0].real()) > std::abs(root[1].real())) { 
+      // solution 1 > than solution 2
       PzNu = root[1].real();
     }
-    else if (std::abs(root[1].real()) > std::abs(root[2].real())) { 
-      // solution 1 > than solution 2
-      PzNu = root[2].real();
-    }
     else {
-      // solutions are equal pick 2
-      PzNu = root[2].real();
+      // solutions are equal pick 1
+      PzNu = root[0].real();
     }
   }
   else {
     // no real solutions - take the real part of 1
-    PzNu = root[1].real();
+    PzNu = root[0].real();
   }
 
   return PzNu;

@@ -76,7 +76,6 @@ private:
   TFile* m_outputFile;
   
   // Define Histograms
-  TH1D* h_pz5;
   TH1D* h_dphi;
   TH1D* h_costheta5_eq;
   TH1D* h_costheta5_ee;
@@ -87,6 +86,9 @@ private:
   TH1D* h_RF;
   TH1D* h_RB;
   TH1D* h_ARFB;
+  TH1D* h_AL;
+  TH1D* h_AlLF;
+  TH1D* h_AlLB;
   TH1D* h_PzNu;
   TH1D* h_PzNuReco;
   TH1D* h_Mtt;
