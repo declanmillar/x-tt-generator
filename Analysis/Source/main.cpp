@@ -57,10 +57,19 @@ int main(int argc, char* argv[])
     c_AL->Draw();
     RootApp->Run(kTRUE);
 
+    TCanvas* c_ALL = superpose(false,  "ALL", model, outputFileName, 
+                                     "ALL", model2, outputFileName2);
+                                     // "ALL", model3, outputFileName3,
+                                     // "ALL", model4, outputFileName4);
+    c_ALL->Draw();
+    RootApp->Run(kTRUE);
+
     TCanvas* c_AFBstar = superpose(false, "AFBstar", model, outputFileName, 
                                           "AFBstar", model2, outputFileName2);
                                           // "AFBstar", model3, outputFileName3,
                                           // "AFBstar", model4, outputFileName4);
+
+
     c_AFBstar->Draw();
     RootApp->Run(kTRUE);
 

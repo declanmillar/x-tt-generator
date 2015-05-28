@@ -286,6 +286,14 @@ void AnalysisZprime::EachEvent()
       if (costhetalptop < 0) {
         h_AlLB->Fill(Mtt, weight/h_AlLB->GetXaxis()->GetBinWidth(1));
       }
+
+      if (clpclmtop > 0) {
+        h_ALLF->Fill(Mtt, weight/h_ALLF->GetXaxis()->GetBinWidth(1));
+      }
+
+      if (clpclmtop < 0) {
+        h_ALLB->Fill(Mtt, weight/h_ALLB->GetXaxis()->GetBinWidth(1));
+      }
     }
 
     if (m_channel == "2to2") {
@@ -317,14 +325,19 @@ void AnalysisZprime::PostLoop()
 
   double AFBstar = this->TotalAsymmetry(h_AFstar,h_ABstar);
   double ARFB = this->TotalAsymmetry(h_RF,h_RB);
+  double ALL = this->TotalAsymmetry(h_ALLF,h_ALLB);
+  double AL = this->TotalAsymmetry(h_AlLF,h_AlLF);
   printf("AFBstar = %f\n", AFBstar);
   printf("ARFB = %f\n", ARFB);
+  printf("ALL = %f\n", ALL);
+  printf("AL = %f\n", AL);
 
   this->MakeGraphs();
 
   if (m_channel == "2to6") {
     this->ALL2to6();
     h_AL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
+    h_ALL = this->Asymmetry("ALL", "A_{LL}", h_ALLF, h_ALLB);
   }
   
   this->WriteHistograms();
@@ -455,6 +468,8 @@ void AnalysisZprime::CreateHistograms()
     h_dphi_MCTblbl = new TH2D("dphi_MCTblbl", "dphi_MCTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
     h_AlLF = new TH1D("AlLF", "AlLF", 50, 0.0, 13000.0);
     h_AlLB = new TH1D("AlLB", "AlLB", 50, 0.0, 13000.0);
+    h_ALLF = new TH1D("ALLF", "ALLF", 50, 0.0, 13000.0);
+    h_ALLB = new TH1D("ALLB", "ALLB", 50, 0.0, 13000.0);
   }
 
   if (m_channel == "2to2") {
@@ -576,6 +591,7 @@ void AnalysisZprime::WriteHistograms()
   if (m_channel == "2to6") {
     h_dphi->Write();
     h_AL->Write();
+    h_ALL->Write();
     h_PzNu->Write();
     h_PzNuReco->Write();
     h_MttPzNuReco->Write();
@@ -742,8 +758,9 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
   // assuming all particles are massless
 
   double PzNu;
-  std::vector<std::complex<double> > root;
+  std::vector<std::complex<double> > root, root2;
   double a = -9999, b = -9999, c = -9999, k = -9999;
+  // double a2 = -9999, b2 = -9999, c2 = -9999;
 
   // recalculate lepton energy in zero mass approximation
   double p_l0 = sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
@@ -751,7 +768,29 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
   // check this matches the 4-vector energy
   // printf("p_l.E() = %f\n", p_l.E());
   // printf("p_l0 = %f\n", p_l0);
-  if ( std::abs(p_l0 - p_l.E() > 1.e-12)) printf("p_l0 doesn't match\n");
+  if ( std::abs(p_l0 - p_l.E() > 0.00001)) printf("p_l0 doesn't match\n");
+
+  // // Alternative calculation from Ruth
+  // double lx = p_l.Px();
+  // double ly = p_l.Py();
+  // double lz = p_l.Pz();
+  // double nx = pT_nu.Px();
+  // double ny = pT_nu.Py();
+  // double nz = 0.;
+
+  // a2 = (4.*lx*lx
+  //    +4.*ly*ly );
+  // b2 = (-4.*m_Wmass*m_Wmass*lz
+  //     -8.*lx*nx*lz
+  //     -8.*ly*ny*lz );
+  // c2  = ( 4.*ly*ly*nx*nx
+  //      + 4.*lz*lz*nx*nx
+  //      + 4.*lx*lx*ny*ny
+  //      + 4.*lz*lz*ny*ny
+  //      - 8.*lx*nx*ly*ny
+  //      - 4.*lx*nx*m_Wmass*m_Wmass
+  //      - 4.*ly*ny*m_Wmass*m_Wmass
+  //      - m_Wmass*m_Wmass*m_Wmass*m_Wmass );
 
   k = m_Wmass*m_Wmass/2 + p_l.Px()*pT_nu.Px() + p_l.Py()*pT_nu.Py();
 
@@ -761,14 +800,14 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) {
 
   c = (pT_nu.Px()*pT_nu.Px() + pT_nu.Py()*pT_nu.Py())*p_l.E()*p_l.E() - k*k;
 
-  // printf("k = %f\n", k);
-  // printf("a = %f\n", a);
-  // printf("b = %f\n", b);
-  // printf("c = %f\n", c);
+  // printf("a = %f, %f\n", a, a2);
+  // printf("b = %f, %f\n", b, b2);
+  // printf("c = %f, %f\n", c, c2);
 
   root = this->solveQuadratic(a, b, c);
+  // root2 = this->solveQuadratic(a2, b2, c2);
 
-  // for (int i = 0; i < 2; i++) cout << "root " << root[i] << endl;
+  // for (int i = 0; i < 2; i++) cout << "root " << root[i] << ", " << root2[i] << endl;
 
   // select single solution
   if (root[0].imag() == 0 and root[1].imag() == 0) {
