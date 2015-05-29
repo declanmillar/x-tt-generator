@@ -422,12 +422,12 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 ! Z' diagrams
   if (include_BSM == 1)then
     do i =1,5
-      if (rmZp(i) > 0) then
+      if (mass_zp(i) > 0) then
         do j=1,2
           gZpq_tmp(j)=gZpq(j,i)
           gZpf_tmp(j)=gZpf(j,i)
         end do
-        call jioxxx( w1 ,w2 ,gZpq_tmp ,rmZp(i) ,gamZp(i) ,w15 )
+        call jioxxx( w1 ,w2 ,gZpq_tmp ,mass_zp(i) ,gamZp(i) ,w15 )
         call iovxxx( w13 ,w12 ,w15   ,gZpf_tmp ,amp(2+i) )
       else
         continue

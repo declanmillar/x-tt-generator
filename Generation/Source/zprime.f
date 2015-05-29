@@ -305,9 +305,9 @@ program zprime
   print*, '-----------------------------------------------------'
   print*, 'zprime parameters'
   do i = 1, 5
-    if (rmzp(i) > 0) then
+    if (mass_zp(i) > 0) then
       print*, 'z#prime               ', i
-      print*, 'm_{z#prime}           ', rmzp(i)
+      print*, 'm_{z#prime}           ', mass_zp(i)
       print*, '#gamma_{z#prime}      ', gamzp(i)
       print*, 'g_{p}                 ', gp(i)
       print*, 'g_{v}^{u}             ', gv_u(i)

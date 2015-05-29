@@ -1,8 +1,12 @@
-1700.d0  ,0.d0,0.d0,0.d0,0.d0 ! rmZp    ! Z prime mass
-0.d0     ,0.d0,0.d0,0.d0,0.d0 ! gamZp   ! Z prime width 
-0.760d0  ,0.d0,0.d0,0.d0,0.d0 ! gp      ! gauge coupling g'
--0.226d0 ,0.d0,0.d0,0.d0,0.d0 ! paramZp ! (-0.072*pi) angle parametrising the mixing between Zprimes
-0.193d0  ,0.d0,0.d0,0.d0,0.d0 ! gV_u    ! vector coupling of up type quark
-0.5d0    ,0.d0,0.d0,0.d0,0.d0 ! gA_u    ! axial coupling of up type quark
--0.347d0 ,0.d0,0.d0,0.d0,0.d0 ! gV_d    ! vector coupling of down type quark
--0.5d0   ,0.d0,0.d0,0.d0,0.d0 ! gA_d    ! axial coupling of down type quark 
+3000.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! Z prime mass
+-1.d0, -1.d0, -1.d0, -1.d0, -1.d0 ! Z prime width
+0.760d0, 0.d0, 0.d0, 0.d0, 0.d0 ! gauge coupling g'
+-0.226d0, 0.d0, 0.d0, 0.d0, 0.d0 ! (-0.072*pi) angle parametrising the mixing between Zprimes
+0.193d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of up type quark
+0.5d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of up type quark
+-0.347d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of down type quark
+-0.5d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of down type quark 
+-0.0387d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of electron
+-0.5d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of electron  
+0.5d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of neutrino
+0.5d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of neutrino          
