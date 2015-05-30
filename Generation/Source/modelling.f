@@ -120,7 +120,7 @@ subroutine initialise_standard_model
   gg(1) = -g
   gg(2) = -g
 
-  print*, lambdaqcd4, nloops
+!   print*, lambdaqcd4, nloops
 
   print*, "...done"
 
@@ -130,7 +130,7 @@ subroutine initialise_zprimes
 
   integer manual_width(5), imodel_name, i
 
-  print*, "Initialising standard model..."
+  print*, "Initialising zprimes..."
 
   ! Extract model_name filename (Remove white space.)
   imodel_name = len(model_name)
@@ -152,8 +152,9 @@ subroutine initialise_zprimes
   read(42,*) gA_l
   read(42,*) gV_nu
   read(42,*) gA_nu
-
   close(42)
+  print*, "Reading of model file complete."
+
 
   ! Check whether width has been specified
   ! (If gamZp is negative, the function widthZp is used instead.)
@@ -166,15 +167,15 @@ subroutine initialise_zprimes
   enddo
 
   ! Calculate sequential Zp widths
-  !   do i = 1, 5
-  !     if (manual_width(i) == 0) gamZp(i) = widthZpSSM(mass_zp(i))
-  !   end do
-
-  ! Calculate benchmark widths
-  call width_zprime_benchmark
+    do i = 1, 5
+      if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
+    end do
 
   ! convert from VA to LR couplings
   call convert_zprime_couplings
+
+  ! Calculate benchmark widths
+  call width_zprime_benchmark
 
   ! igw=0 ! don't include w width effects
   ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
@@ -286,9 +287,9 @@ subroutine width_zprime_benchmark
       gamZp(n) = widthqq + widthll
 
       print*, 'ZPRIME WIDTHS'
-      print*, 'Gamma(Zp(', n, ')->ff)=', gamZp(n),' GeV'
-      print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' GeV'
-      print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' GeV'
+      print*, 'Gamma(Zp(', n, ')->ff)=', gamZp(n),' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
     end if
   end do
   return
@@ -427,7 +428,7 @@ function width_zprime_ssm(rm_Zp)
 
   end do
 
-  !       print *,'Z'' width due to quarks+leptons:',width_zprime_ssm,' [GeV]'
+        print *,'Z'' width due to quarks+leptons:',width_zprime_ssm,' [GeV]'
   !       print *,'(so that due to leptons are:',temp,' [GeV])'
   !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
   !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
