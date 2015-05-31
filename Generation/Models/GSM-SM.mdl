@@ -1,5 +1,5 @@
-3000.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! Z prime mass
--1.d0, -1.d0, -1.d0, -1.d0, -1.d0 ! Z prime width
+3000.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! Z prime mass [GeV]
+-1.d0, -1.d0, -1.d0, -1.d0, -1.d0 ! Z prime width [GeV]
 0.760d0, 0.d0, 0.d0, 0.d0, 0.d0 ! gauge coupling g'
 -0.226d0, 0.d0, 0.d0, 0.d0, 0.d0 ! (-0.072*pi) angle parametrising the mixing between Zprimes
 0.193d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of up type quark

@@ -45,6 +45,7 @@ module modelling
   real :: paramZp(5)
   real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
   real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5)
+  integer :: manual_width(5)
 
   public :: initialise_standard_model
   public :: initialise_zprimes
@@ -128,7 +129,7 @@ end subroutine initialise_standard_model
 
 subroutine initialise_zprimes 
 
-  integer manual_width(5), imodel_name, i
+  integer imodel_name, i
 
   print*, "Initialising zprimes..."
 
@@ -167,9 +168,9 @@ subroutine initialise_zprimes
   enddo
 
   ! Calculate sequential Zp widths
-    do i = 1, 5
-      if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
-    end do
+!     do i = 1, 5
+!       if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
+!     end do
 
   ! convert from VA to LR couplings
   call convert_zprime_couplings
@@ -222,7 +223,7 @@ subroutine width_zprime_benchmark
   integer :: i, n
   real :: mq, ml, mzp
   real :: gv, ga
-  real :: widthqq, widthll, widthqq_tmp, widthll_tmp
+  real :: width, widthqq, widthll, widthqq_tmp, widthll_tmp
   real :: pi
   real :: a_s, alfas
 
@@ -230,66 +231,69 @@ subroutine width_zprime_benchmark
   pi = dacos(-1.d0)
 
   do n = 1, 5
-    widthqq = 0.d0
+    width = 0.d0
     mzp = mass_zp(n)
-    if (mzp > 0.d0) then
+    if (manual_width(n) == 0) then
       a_s = alfas(mzp, lambdaQCD4, nloops)
       ! quarks
+      widthqq = 0.d0
       do i = 1, 6
         widthqq_tmp = 0.d0
         mq = qmass(i)
-        if (mass_zp(n) <= 2.d0*mq) goto 123
+        if (mass_zp(n) > 2.d0*mq) then
 
-        if (i == 1 .or. i == 3 .or. i == 5) then
-          gv = gzpu(1,n) + gzpu(2,n)
-          ga = gzpu(1,n) - gzpu(2,n)
-        else if (i == 2 .or. i == 4 .or. i == 6) then
-          gv = gzpd(1,n) + gzpd(2,n)
-          ga = gzpd(1,n) - gzpd(2,n)
-        end if        
+          if (i == 1 .or. i == 3 .or. i == 5) then
+            gv = gzpu(1,n) + gzpu(2,n)
+            ga = gzpu(1,n) - gzpu(2,n)
+          else if (i == 2 .or. i == 4 .or. i == 6) then
+            gv = gzpd(1,n) + gzpd(2,n)
+            ga = gzpd(1,n) - gzpd(2,n)
+          end if        
 
-        ! with QCD kfactor
-        widthqq_tmp = 3.d0/48.d0/pi*mzp &
-                    *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
-                    *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
-                    + ga**2*(1.d0 - 4.d0*mq**2/mzp**2)) &
-                    *(1.d0 + 1.045d0*a_s/pi)
+          ! with QCD kfactor
+          widthqq_tmp = 3.d0/48.d0/pi*mzp &
+                      *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
+                      *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
+                      + ga**2*(1.d0 - 4.d0*mq**2/mzp**2)) &
+                      *(1.d0 + 1.045d0*a_s/pi)
 
-        widthqq = widthqq + widthqq_tmp
+          widthqq = widthqq + widthqq_tmp
               
-        123 continue
+        end if
       end do
 
       ! leptons
+      widthll = 0.d0
       do i = 1, 6
         widthll_tmp = 0.d0
         ml = lmass(i)
 
-        if (mzp <= 2.d0*ml) goto 456
+        if (mzp > 2.d0*ml) then
 
-        if (i == 1 .or. i == 3 .or. i == 5) then
-          gv = gzpl(1,n) + gzpl(2,n)
-          ga = gzpl(1,n) - gzpl(2,n)
-        else if (i == 2 .or. i == 4 .or. i == 6) then
-          gv = gzpn(1,n) + gzpn(2,n)
-          ga = gzpn(1,n) - gzpn(2,n)
-        end if        
-          
-        widthll_tmp = 1.d0/48.d0/pi*mzp &
-                      *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
-                      *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
-                      +ga**2*(1.d0 - 4.d0*mq**2/mzp**2))
+          if (i == 1 .or. i == 3 .or. i == 5) then
+            gv = gzpl(1,n) + gzpl(2,n)
+            ga = gzpl(1,n) - gzpl(2,n)
+          else if (i == 2 .or. i == 4 .or. i == 6) then
+            gv = gzpn(1,n) + gzpn(2,n)
+            ga = gzpn(1,n) - gzpn(2,n)
+          end if        
+            
+          widthll_tmp = 1.d0/48.d0/pi*mzp &
+                        *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
+                        *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
+                        +ga**2*(1.d0 - 4.d0*mq**2/mzp**2))
 
-        widthll = widthll + widthll_tmp
-        456 continue
+          widthll = widthll + widthll_tmp
+        end if
       end do
 
-      gamZp(n) = widthqq + widthll
+      width = widthqq + widthll
 
       print*, 'ZPRIME WIDTHS'
-      print*, 'Gamma(Zp(', n, ')->ff)=', gamZp(n),' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
       print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+      gamZp(n) = width
     end if
   end do
   return
