@@ -227,6 +227,8 @@ subroutine width_zprime_benchmark
   real :: pi
   real :: a_s, alfas
 
+  print*, "Calculating zprime widths..."
+
   ! couplings.
   pi = dacos(-1.d0)
 
@@ -289,13 +291,14 @@ subroutine width_zprime_benchmark
 
       width = widthqq + widthll
 
-      print*, 'ZPRIME WIDTHS'
       print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
       print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+      
       gamZp(n) = width
     end if
   end do
+  print*, "...done."
   return
 end subroutine width_zprime_benchmark
 
