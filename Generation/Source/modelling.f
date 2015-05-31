@@ -1,5 +1,4 @@
 module modelling
-
   use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4
 
   implicit none
@@ -37,22 +36,22 @@ module modelling
 
   real :: Gamma_t = twidth
 
-! Other SM parameters
+  ! Other SM parameters
   real, parameter :: a_em = 0.0078125, s2w = 0.2320d0
 
-! zprime parameters
+  ! zprime parameters
   real :: mass_zp(5),gamZp(5)
   real :: paramZp(5)
   real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
   real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5)
   integer :: manual_width(5)
 
+  ! methods
   public :: initialise_standard_model
   public :: initialise_zprimes
   public :: width_zprime_ssm
   public :: convert_zprime_couplings
   public :: width_zprime_benchmark
-
 
 contains
 
@@ -121,10 +120,7 @@ subroutine initialise_standard_model
   gg(1) = -g
   gg(2) = -g
 
-!   print*, lambdaqcd4, nloops
-
   print*, "...done"
-
 end subroutine initialise_standard_model
 
 subroutine initialise_zprimes 
@@ -167,10 +163,10 @@ subroutine initialise_zprimes
     end if
   enddo
 
-  ! Calculate sequential Zp widths
-!     do i = 1, 5
-!       if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
-!     end do
+  ! ! Calculate sequential Zp widths
+  !  do i = 1, 5
+  !    if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
+  !  end do
 
   ! convert from VA to LR couplings
   call convert_zprime_couplings
@@ -213,10 +209,7 @@ end subroutine convert_zprime_couplings
 
 subroutine width_zprime_benchmark
 
-  ! NOTE 23 Jan 2014 found a factor two wrong in the convention for gv and ga
-  ! in the E6 models coming from the factor 2 in the feynman rule for Elenas paper
-  ! All widths have been rescaled by 1/4
-  ! calculates Zp width contributions from light fermions
+  ! calculates Z' width contributions from decay to fermions
 
   implicit none
 
@@ -227,7 +220,7 @@ subroutine width_zprime_benchmark
   real :: pi
   real :: a_s, alfas
 
-  print*, "Calculating zprime widths..."
+  print*, "Calculating Z' widths..."
 
   ! couplings.
   pi = dacos(-1.d0)
@@ -250,7 +243,7 @@ subroutine width_zprime_benchmark
           else if (i == 2 .or. i == 4 .or. i == 6) then
             gv = gzpd(1,n) + gzpd(2,n)
             ga = gzpd(1,n) - gzpd(2,n)
-          end if        
+          end if    
 
           ! with QCD kfactor
           widthqq_tmp = 3.d0/48.d0/pi*mzp &
@@ -278,7 +271,7 @@ subroutine width_zprime_benchmark
           else if (i == 2 .or. i == 4 .or. i == 6) then
             gv = gzpn(1,n) + gzpn(2,n)
             ga = gzpn(1,n) - gzpn(2,n)
-          end if        
+          end if
             
           widthll_tmp = 1.d0/48.d0/pi*mzp &
                         *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
@@ -304,8 +297,7 @@ end subroutine width_zprime_benchmark
 
 function width_zprime_ssm(rm_Zp)
 
-  ! Calculates the width of the Zp in the SSM.
-  ! Authors: stefano moretti and declan millar <d.millar@soton.ac.uk>
+  ! Calculates the width of a Z' in the SSM.
 
   implicit none
 
@@ -320,14 +312,10 @@ function width_zprime_ssm(rm_Zp)
   real :: gf
   integer :: i
   real :: pi
-  real :: mq
-  real :: rmt
+  real :: mq, rmt
   real :: t3q
-  real :: temp
-  real :: temp1
-  real :: temp2
-  real :: alfas
-  real :: a_s
+  real :: temp, temp1, temp2
+  real :: alfas, a_s
 
   print*, "Calculating zprime widths..."
 
