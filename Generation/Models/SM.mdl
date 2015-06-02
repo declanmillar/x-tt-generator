@@ -1,5 +1,5 @@
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! Z prime mass [GeV]
--1.d0, -1.d0, -1.d0, -1.d0 ! Z prime width [GeV]
+-1.d0, -1.d0, -1.d0, -1.d0 -1.d0 ! Z prime width [GeV]
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! gauge coupling g'
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! angle parametrising the mixing between generators in E6, GLR, GSM
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of up type quark

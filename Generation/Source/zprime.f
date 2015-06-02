@@ -162,11 +162,11 @@ program zprime
       ! where xx78 = arctg((m78**2 - rm_w**2)/rm_w/gamw),
       ! or x(10) = (m78 - m78min)/(m78max - m78min),
       ! where m78min = m7 + m8, m78max = m478 - m4
-      ! x(9) = cos(theta_356) = -cos(theta_478)
-      ! x(8) = cos(theta56_356),
-      ! x(7) = cos(theta78_478),
-      ! x(6) = cos(theta5_56),
-      ! x(5) = cos(theta7_78),
+      ! x(9) = cos(theta_cm_356) = -cos(theta_cm_478),
+      ! x(8) = cos(theta56_cm_356),
+      ! x(7) = cos(theta78_cm_478),
+      ! x(6) = cos(theta5_cm_56),
+      ! x(5) = cos(theta7_cm_78),
       ! x(4) = fi56_cm_356,
       ! x(3) = fi78_cm_478,
       ! x(2) = fi5_cm_56,

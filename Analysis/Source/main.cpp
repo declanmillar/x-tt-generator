@@ -7,22 +7,22 @@ int main(int argc, char* argv[])
   AtlasROOTStyle atlasStyle;
   atlasStyle.SetStyle();
 
-  TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  // TString inDir("/Users/declan/Data/Ntuples_Zprime/");
+  // TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  TString inDir("/Users/declan/Data/Ntuples_Zprime/");
   TString outDir("Histos/");
   TString channel("2to6"); 
   TString model("SM");
-  TString options("_xc_");
+  TString options("_57_");
   TString energy("13");
-  TString points("3x1000000");
+  TString points("1x5000");
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(inDir + base + ".root");
   TString outputFileName(outDir + base + "_histos.root");  
 
   TString channel2("2to6"); 
   TString model2("GSM-SM");
-  TString options2("_xc_");
-  TString points2("3x1000000");
+  TString options2("_57_");
+  TString points2("1x5000");
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
   TString inputFileName2(inDir + base2 + ".root");
   TString outputFileName2(outDir + base2 + "_histos.root");

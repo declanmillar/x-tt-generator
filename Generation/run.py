@@ -28,13 +28,15 @@ parser.add_option("-e", "--include_ew", default = 1, const = 0, action = "store_
 parser.add_option("-z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
-parser.add_option("-K", "--additional_kinematics", default = 1, const = 0, action = "store_const", help = "Turn off additional kinematics")
+parser.add_option("-K", "--additional_kinematics", default = 0, const = 1, action = "store_const", help = "Turn off additional kinematics")
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
 parser.add_option("-m", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
+parser.add_option("-5", "--symmetrise_costheta_5", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_5")
+parser.add_option("-7", "--symmetrise_costheta_7", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_7")
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
 parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
 parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
@@ -112,6 +114,10 @@ if options.symmetrise_x1x2 == 1:
   all_options += "x"
 if options.symmetrise_costheta_t == 1:
   all_options += "c"
+if options.symmetrise_costheta_5 == 1:
+  all_options += "5"
+if options.symmetrise_costheta_7 == 1:
+  all_options += "7"
 
 if options.use_rambo == 1:
   all_options += "R"
@@ -179,6 +185,10 @@ print >> config, '%s ! map phase space' % options.map_phase_space
 print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
 
 print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
+
+print >> config, '%s ! symmetrise_costheta_5' % options.symmetrise_costheta_5
+
+print >> config, '%s ! symmetrise_costheta_7' % options.symmetrise_costheta_7
 
 print >> config, '%s ! print_distributions' % options.print_distributions
 

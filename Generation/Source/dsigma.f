@@ -67,7 +67,7 @@ function dsigma(x,wgt)
   real :: p5xp, p5yp, p5zp
 
   ! temporary dsigmas
-  real :: ffxn, fffxn, fffxn1, fffxn2
+  real :: ffxn, fffxn, fffxn1, fffxn2, ffffxn, fffffxn
 
   ! temporary top mass and width
   real :: rmt, gamt
@@ -135,7 +135,7 @@ function dsigma(x,wgt)
   real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1,qcdqq2,qcdgg1,qcdgg2,qcdbb1,qcdbb2
 
   ! iterators
-  integer :: i, j, k, jx, ix, nbin, ibin, jbin, imode, lam3, lam4, jps
+  integer :: i, j, k, jx, ix, nbin, ibin, jbin, imode, lam3, lam4, jps, i5, i7
 
   ! phase space vectors.
   real :: q356(4), q478(4)
@@ -221,1838 +221,1824 @@ function dsigma(x,wgt)
     x1 = x1x2(ix, 1)
     x2 = x1x2(ix, 2)
 
-    ! loop over costheta_cm
-    do jx = 1, jxmax
-      if (verbose == 1) print*, "Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx
+    do jx = 1, jxmax ! loop over costheta_cm
+      ffffxn = 0 
+      do i5 = 1, i5max ! loop over costheta5
+        fffffxn = 0
+        do i7 = 1, i7max ! loop over costheta7
+          if (verbose == 1) print*, "Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx, ", i5: ", i5, ",  i7: ", i7
 
-      ! initialisation
-      fffxn = 0.d0
-      do i = 1, 100
-        xmass(i) = 0.d0 
-        do j = 1, 4
-          prambo(j,i) = 0.d0
-        end do 
-      end do
-      do i = 1, 4
-        do j = 1, 8
-          q(i,j) = 0.d0
-          qcol(i,j) = 0.d0
-        end do
-      end do
-
-      ! scale for the pdfs
-      qq = 2.d0*rmt
-
-      if (verbose == 1) print*, "Constructing hadronic structure functions..."
-      if (structure_function <= 4) then
-        q2 = qq*qq
-        if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
-          fffxn=0.d0
-          go to 999
-        end if
-
-        ! cteq pdfs are multiplied by x for compatibility with mrs, which return xf(x).
-
-        u1 = x1*ctq6pdf(1, x1, qq)
-        d1 = x1*ctq6pdf(2, x1, qq)
-        ubar1 = x1*ctq6pdf(-1, x1, qq)
-        dbar1 = x1*ctq6pdf(-2, x1, qq)
-        str1 = x1*ctq6pdf(3, x1, qq)
-        chm1 = x1*ctq6pdf(4, x1, qq)
-        btm1 = x1*ctq6pdf(5, x1, qq)
-        glu1 = x1*ctq6pdf(0, x1, qq)
-        u2 = x2*ctq6pdf(1, x2, qq)
-        d2 = x2*ctq6pdf(2, x2, qq)
-        ubar2 = x2*ctq6pdf(-1, x2, qq)
-        dbar2 = x2*ctq6pdf(-2, x2, qq)
-        str2 = x2*ctq6pdf(3, x2, qq)
-        chm2 = x2*ctq6pdf(4, x2, qq)
-        btm2 = x2*ctq6pdf(5, x2, qq)
-        glu2 = x2*ctq6pdf(0, x2, qq)
-
-      else if (structure_function == 5) then
-        imode=1
-        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
-      else if (structure_function == 6) then
-        imode=2
-        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
-      else if (structure_function == 7) then
-        imode=3
-        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
-      else if (structure_function == 8) then
-        imode = 4
-        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn=0.d0
-          go to 999
-        end if
-        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
-      else if (structure_function == 9) then
-        imode = 5
-        if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
+          ! initialisation
           fffxn = 0.d0
-          go to 999
-        end if
-        if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-          fffxn = 0.d0
-          go to 999
-        end if
-        if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-          fffxn = 0.d0
-          go to 999
-        end if
-        call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
-      end if
-      if (verbose == 1) print*, "...complete."
-      if (structure_function > 4) then
-        u1 = u1 + usea1
-        d1 = d1 + dsea1
-        u2 = u2 + usea2
-        d2 = d2 + dsea2
-        ubar1 = usea1
-        dbar1 = dsea1
-        ubar2 = usea2
-        dbar2 = dsea2
-      end if
-
-      if (verbose == 1) print*, "Constructing PDFs..."
-
-      ! initialise pdfs
-      fx1(1) = d1
-      fx1(2) = u1
-      fx1(3) = str1
-      fx1(4) = chm1
-      fx1(5) = btm1
-      fx1(6) = 0.d0
-      fx1(7) = dbar1
-      fx1(8) = ubar1
-      fx1(9) = fx1(3)
-      fx1(10) = fx1(4)
-      fx1(11) = fx1(5)
-      fx1(12) = fx1(6)
-      fx1(13) = glu1
-      do i = 1, 13
-        fx1(i) = fx1(i)/x1
-      end do
-      fx2(1) = d2*(1 - initial_state) + dbar2*initial_state
-      fx2(2) = u2*(1 - initial_state) + ubar2*initial_state
-      fx2(3) = str2
-      fx2(4) = chm2
-      fx2(5) = btm2
-      fx2(6) = 0.d0
-      fx2(7) = d2*initial_state + dbar2*(1 - initial_state)
-      fx2(8) = u2*initial_state + ubar2*(1 - initial_state)
-      fx2(9) = fx2(3)
-      fx2(10) = fx2(4)
-      fx2(11) = fx2(5)
-      fx2(12) = fx2(6)
-      fx2(13) = glu2
-      do i = 1, 13
-        fx2(i) = fx2(i)/x2
-      end do
-      if (verbose == 1) print*, "...complete."
-
-      if (verbose == 1) print*, "Creating initial (massless) parton momenta."
-      pcm = ecm/2.d0
-      q(4,1) = pcm
-      q(3,1) = pcm
-      q(2,1) = 0.d0
-      q(1,1) = 0.d0
-      q(4,2) = pcm
-      q(3,2) = -pcm
-      q(2,2) = 0.d0
-      q(1,2) = 0.d0
-      if(verbose == 1) print*, "...complete."
-
-      if (final_state == 0) then
-        if (use_rambo == 0) then
-          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame manually..."
-          ! give vegas assigned values
-          phit = 2.d0*pi*ran(jseed)
-          if (jx == 1) then
-            ct = x(1)
-          else if (jx == 2) then
-            ct = -x(1)
-          else
-            print*, "Error: invalid jx."
-          end if
-          st = sqrt(1.d0 - ct*ct)
-
-          ! magnitude of 3 momentum for products in general two body decay
-          qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
-          if (qcm2 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            qcm = sqrt(qcm2)
-          endif
-
-          q(4,3) = sqrt(qcm2 + m3*m3)
-          q(3,3) = qcm*ct
-          q(2,3) = qcm*st*cos(phit)
-          q(1,3) = qcm*st*sin(phit)
-          q(4,4) = sqrt(qcm2 + m4*m4)
-          q(3,4) = -qcm*ct
-          q(2,4) = -qcm*st*cos(phit)
-          q(1,4) = -qcm*st*sin(phit)
-        else if (use_rambo == 1) then
-          if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
-          xmass(1) = m3
-          xmass(2) = m4
-          jps = 2
-          call rambo(seed,jps,ecm,xmass,prambo,wgtR)
-          do i = 3, jps + 2
+          do i = 1, 100
+            xmass(i) = 0.d0 
             do j = 1, 4
-              q(j,i) = prambo(j, i-2)
+              prambo(j,i) = 0.d0
+            end do 
+          end do
+          do i = 1, 4
+            do j = 1, 8
+              q(i,j) = 0.d0
+              qcol(i,j) = 0.d0
             end do
           end do
-        end if
-        ! initialise unrequired array elements
-        do i = 1, 4
-          q(i,5) = 0.d0
-          q(i,6) = 0.d0
-          q(i,7) = 0.d0
-          q(i,8) = 0.d0
-        end do
-        if (verbose == 1) print*, "...complete."
 
-      else if (final_state > 0) then
-        if (use_rambo == 0) then
-          if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame manually..."
-          phit = 2.d0*pi*ran(jseed)
+          ! scale for the pdfs
+          qq = 2.d0*rmt
 
-          m356min = m3 + m5 + m6
-          m356max = ecm - m4 - m7 - m8
-          if (map_phase_space == 0) then
-            m356 = x(13)*(m356max - m356min) + m356min
-          else
-            ! flatten the integrand around the top propagator
-            xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
-            xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
-            xx = x(13)*(xx356max - xx356min) + xx356min
-            rl356 = tan(xx)*rmt*gamt
-            m356_2 = (rmt**2 + rl356)
-            if (m356_2 < 0.d0) then
+          if (verbose == 1) print*, "Constructing hadronic structure functions..."
+          if (structure_function <= 4) then
+            q2 = qq*qq
+            if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
+              fffxn=0.d0
+              go to 999
+            end if
+
+            ! cteq pdfs are multiplied by x for compatibility with mrs, which return xf(x).
+
+            u1 = x1*ctq6pdf(1, x1, qq)
+            d1 = x1*ctq6pdf(2, x1, qq)
+            ubar1 = x1*ctq6pdf(-1, x1, qq)
+            dbar1 = x1*ctq6pdf(-2, x1, qq)
+            str1 = x1*ctq6pdf(3, x1, qq)
+            chm1 = x1*ctq6pdf(4, x1, qq)
+            btm1 = x1*ctq6pdf(5, x1, qq)
+            glu1 = x1*ctq6pdf(0, x1, qq)
+            u2 = x2*ctq6pdf(1, x2, qq)
+            d2 = x2*ctq6pdf(2, x2, qq)
+            ubar2 = x2*ctq6pdf(-1, x2, qq)
+            dbar2 = x2*ctq6pdf(-2, x2, qq)
+            str2 = x2*ctq6pdf(3, x2, qq)
+            chm2 = x2*ctq6pdf(4, x2, qq)
+            btm2 = x2*ctq6pdf(5, x2, qq)
+            glu2 = x2*ctq6pdf(0, x2, qq)
+
+          else if (structure_function == 5) then
+            imode=1
+            if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+            call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+          else if (structure_function == 6) then
+            imode=2
+            if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+            call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+          else if (structure_function == 7) then
+            imode=3
+            if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+            call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+          else if (structure_function == 8) then
+            imode = 4
+            if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
+              fffxn=0.d0
+              go to 999
+            end if
+            call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+            call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+          else if (structure_function == 9) then
+            imode = 5
+            if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
               go to 999
-            else
-              m356 = sqrt(m356_2)
-            endif
-          end if
-
-          m478min = m4 + m7 + m8
-          m478max = ecm - m356
-          if (map_phase_space == 0) then
-            m478 = x(12)*(m478max - m478min) + m478min
-          else
-            ! flatten the integrand around the anti-top propagator
-            xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
-            xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
-            xx = x(12)*(xx478max - xx478min) + xx478min
-            rl478 = tan(xx)*rmt*gamt
-            m478_2 = (rmt**2 + rl478)
-            if (m478_2 < 0.d0) then
+            end if
+            if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
               go to 999
-            else
-              m478 = sqrt(m478_2)
-            endif
-          end if
-
-          m56min = m5 + m6
-          m56max = m356 - m3
-          if (map_phase_space == 0) then
-            m56 = x(11)*(m56max - m56min) + m56min
-          else
-            ! flatten the integrand around the W+ propagator
-            xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
-            xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
-            xx = x(11)*(xx56max - xx56min) + xx56min
-            rl56 = tan(xx)*rm_w*gamma_w
-            m56_2 = (rm_w**2 + rl56)
-            if (m56_2 < 0.d0) then
+            end if
+            if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
               go to 999
-            else
-              m56 = sqrt(m56_2)
-            endif
+            end if
+            call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+            call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+          end if
+          if (verbose == 1) print*, "...complete."
+          if (structure_function > 4) then
+            u1 = u1 + usea1
+            d1 = d1 + dsea1
+            u2 = u2 + usea2
+            d2 = d2 + dsea2
+            ubar1 = usea1
+            dbar1 = dsea1
+            ubar2 = usea2
+            dbar2 = dsea2
           end if
 
-          m78min = m7 + m8
-          m78max = m478 - m4
-          if (map_phase_space == 0) then
-            m78 = x(10)*(m78max - m78min) + m78min
-          else
-            ! flatten the integrand around the W- propagator
-            xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
-            xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
-            xx = x(10)*(xx78max - xx78min) + xx78min
-            rl78 = tan(xx)*rm_w*gamma_w
-            m78_2 = (rm_w**2 + rl78)
-            if (m78_2 < 0.d0) then
-              fffxn = 0.d0
-              go to 999
-            else
-              m78 = sqrt(m78_2)
-            endif
-          end if
+          if (verbose == 1) print*, "Constructing PDFs..."
 
-          if (jx == 1) then
-            ct = x(9)
-          else if (jx == 2) then
-            ct = -x(9)
-          else
-            print*, "Error: invalid jx."
-          end if
-
-          ! assign angles
-          st = sqrt(abs(1.d0 - ct*ct))
-          ct56 = x(8)
-          st56 = sqrt(1.d0 - ct56*ct56)
-          ct78 = x(7)
-          st78 = sqrt(1.d0 - ct78*ct78)
-          ct5 = x(6)
-          st5 = sqrt(1.d0 - ct5*ct5)
-          ct7 = x(5)
-          st7 = sqrt(1.d0 - ct7*ct7)
-          cf56 = cos(x(4))
-          sf56 = sin(x(4))
-          cf78 = cos(x(3))
-          sf78 = sin(x(3))
-          cf5 = cos(x(2))
-          sf5 = sin(x(2))
-          cf7 = cos(x(1))
-          sf7 = sin(x(1))
-
-          ! two body decay of s-channel mediating boson
-          rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
-          if (rq2 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            rq = sqrt(rq2)
-          endif
-
-          q356(3) = rq*ct
-          q356(2) = rq*st*cos(phit)
-          q356(1) = rq*st*sin(phit)
-          q356(4) = sqrt(rq2 + m356*m356)
-
-          do i = 1, 3
-            q478(i) =  - q356(i)
+          ! initialise pdfs
+          fx1(1) = d1
+          fx1(2) = u1
+          fx1(3) = str1
+          fx1(4) = chm1
+          fx1(5) = btm1
+          fx1(6) = 0.d0
+          fx1(7) = dbar1
+          fx1(8) = ubar1
+          fx1(9) = fx1(3)
+          fx1(10) = fx1(4)
+          fx1(11) = fx1(5)
+          fx1(12) = fx1(6)
+          fx1(13) = glu1
+          do i = 1, 13
+            fx1(i) = fx1(i)/x1
           end do
-          q478(4) = sqrt(rq2 + m478*m478)
-
-          ! two body decay of the top
-          rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
-          if (rq562 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            rq56 = sqrt(rq562)
-          endif
-          q56(3) = rq56*st56*cf56
-          q56(2) = rq56*st56*sf56
-          q56(1) = rq56*ct56
-          q56(4) = sqrt(rq562 + m56*m56)
-          pq56 = 0.d0
-          do i = 1,3
-            pq56 = pq56 + q356(i)*q56(i)
+          fx2(1) = d2*(1 - initial_state) + dbar2*initial_state
+          fx2(2) = u2*(1 - initial_state) + ubar2*initial_state
+          fx2(3) = str2
+          fx2(4) = chm2
+          fx2(5) = btm2
+          fx2(6) = 0.d0
+          fx2(7) = d2*initial_state + dbar2*(1 - initial_state)
+          fx2(8) = u2*initial_state + ubar2*(1 - initial_state)
+          fx2(9) = fx2(3)
+          fx2(10) = fx2(4)
+          fx2(11) = fx2(5)
+          fx2(12) = fx2(6)
+          fx2(13) = glu2
+          do i = 1, 13
+            fx2(i) = fx2(i)/x2
           end do
-          p56(4) = (q356(4)*q56(4) + pq56)/m356
-          q(4,3) = q356(4) - p56(4)
-          do i = 1,3
-            p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
-            q(i,3) = q356(i) - p56(i)
-          end do
+          if (verbose == 1) print*, "...complete."
 
-          ! two body decay of the anti-top
-          rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
-          if (rq782 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            rq78 = sqrt(rq782)
-          endif
-          q78(3) = rq78*st78*cf78
-          q78(2) = rq78*st78*sf78
-          q78(1) = rq78*ct78
-          q78(4) = sqrt(rq782 + m78*m78)
-          pq78 = 0.d0
-          do i = 1, 3
-            pq78 = pq78 + q478(i)*q78(i)
-          end do
-          p78(4) = (q478(4)*q78(4) + pq78)/m478
-          q(4,4) = q478(4) - p78(4)
-          do i = 1, 3
-            p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
-            q(i,4) = q478(i) - p78(i)
-          end do
+          if (verbose == 1) print*, "Creating initial (massless) parton momenta."
+          pcm = ecm/2.d0
+          q(4,1) = pcm
+          q(3,1) = pcm
+          q(2,1) = 0.d0
+          q(1,1) = 0.d0
+          q(4,2) = pcm
+          q(3,2) = -pcm
+          q(2,2) = 0.d0
+          q(1,2) = 0.d0
+          if(verbose == 1) print*, "...complete."
 
-          ! two body decay of the W+
-          rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
-          if (rq52 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            rq5 = sqrt(rq52)
-          endif
-          q5(3) = rq5*st5*cf5
-          q5(2) = rq5*st5*sf5
-          q5(1) = rq5*ct5
-          q5(4) = sqrt(rq52 + m5*m5)
-          pq5 = 0.d0
-          do i = 1, 3
-            pq5 = pq5 + p56(i)*q5(i)
-          end do
-          q(4,5) = (p56(4)*q5(4) + pq5)/m56
-          q(4,6) = p56(4) - q(4,5)
-          do i = 1,3
-            q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
-            q(i,6) = p56(i) - q(i,5)
-          end do
-
-          ! two body decay of the W-
-          rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
-          if (rq72 < 0.d0) then
-            fffxn = 0.d0
-            go to 999
-          else
-            rq7 = sqrt(rq72)
-          endif
-          q7(3) = rq7*st7*cf7
-          q7(2) = rq7*st7*sf7
-          q7(1) = rq7*ct7
-          q7(4) = sqrt(rq72 + m7*m7)
-          pq7 = 0.d0
-          do i = 1, 3
-            pq7 = pq7 + p78(i)*q7(i)
-          end do
-          q(4,7) = (p78(4)*q7(4) + pq7)/m78
-          q(4,8) = p78(4) - q(4,7)
-          do i = 1, 3
-            q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
-            q(i,8) = p78(i) - q(i,7)
-          end do
-        else if (use_rambo == 1) then
-          if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame using RAMBO..."
-          xmass(1) = m3
-          xmass(2) = m4
-          xmass(3) = m5 
-          xmass(4) = m6
-          xmass(5) = m7
-          xmass(6) = m8
-          jps = 6
-          call rambo(seed,jps,ecm,xmass,prambo,wgtr)
-          do i = 3, jps + 2
-            do j = 1, 4
-              q(j,i) = prambo(j,i-2)
-            end do
-          end do
-        end if
-
-        if (verbose == 1) print*, "...complete."
-      end if
-
-      if (verbose == 1) print*, "Boosting parton CoM momenta to collider frame..."
-      ! velocity of ttbar system in collider frame
-      vcol = (x1 - x2)/(x1 + x2)
-
-      ! gamma factor
-      gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
-
-      ! boost initial and final state momenta to the collider frame
-      do i = 1, n_final
-        qcol(4, i) = gcol*(q(4, i) + vcol*q(3, i))
-        qcol(3, i) = gcol*(q(3, i) + vcol*q(4, i))
-        qcol(2, i) = q(2, i)
-        qcol(1, i) = q(1, i)
-      end do
-      if (verbose == 1) print*, "...complete."
-
-      if (verbose == 1) print*, "Assigning particle 4-momenta..."
-
-        ! parton CoM 4 -momenta
-        do i = 1, 3
-          p1(i) = q(i,1)
-          p2(i) = q(i,2)
-          p3(i) = q(i,3)
-          p4(i) = q(i,4)
-          p5(i) = q(i,5)
-          p6(i) = q(i,6)
-          p7(i) = q(i,7)
-          p8(i) = q(i,8)
-        end do
-        p1(0) = q(4,1)
-        p2(0) = q(4,2)
-        p3(0) = q(4,3)
-        p4(0) = q(4,4)
-        p5(0) = q(4,5)
-        p6(0) = q(4,6)
-        p7(0) = q(4,7)
-        p8(0) = q(4,8)
-
-        ! collider 4-momentum 
-        do i = 1, 3
-          p1col(i) = qcol(i,1)
-          p2col(i) = qcol(i,2)
-          p3col(i) = qcol(i,3)
-          p4col(i) = qcol(i,4)
-          p5col(i) = qcol(i,5)
-          p6col(i) = qcol(i,6)
-          p7col(i) = qcol(i,7)
-          p8col(i) = qcol(i,8)
-        end do
-        p1col(0) = qcol(4,1)
-        p2col(0) = qcol(4,2)
-        p3col(0) = qcol(4,3)
-        p4col(0) = qcol(4,4)
-        p5col(0) = qcol(4,5)
-        p6col(0) = qcol(4,6)
-        p7col(0) = qcol(4,7)
-        p8col(0) = qcol(4,8)
-
-      if (verbose == 1) print*, "..done."
-
-      if (verbose == 1) then
-        if (final_state == 0) then
-          print*, "Checking 2to2 kinematics..."
-          print*, "p1  = ", p1
-          print*, "p2  = ", p2
-          print*, "p3  = ", p3
-          print*, "p4  = ", p4
-          delta_e = p1(0) + p2(0) - p3(0) - p4(0)
-          delta_x = p1(1) + p2(1) - p3(1) - p4(1)
-          delta_y = p1(2) + p2(2) - p3(2) - p4(2)
-          delta_z = p1(3) + p2(3) - p3(3) - p4(3)
-          print*, "delta_E  = ", delta_e
-          print*, "delta_Px = ", delta_x
-          print*, "delta_Py = ", delta_y
-          print*, "delta_Pz = ", delta_z
-          mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-          mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-          mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-          mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-          print*, "m1 = ", mass1
-          print*, "m2 = ", mass2
-          print*, "m3 = ", mass3
-          print*, "m4 = ", mass4
-
-        else if (final_state > 0) then
-          print*, "Checking 2to6 kinematics..."
-          print*, "p1  = ", p1
-          print*, "p2  = ", p2
-          print*, "p3  = ", p3
-          print*, "p4  = ", p4
-          print*, "p5  = ", p5
-          print*, "p6  = ", p6
-          print*, "p7  = ", p7
-          print*, "p8  = ", p8
-          ! check conservation of 4-momentum.
-          delta_e = p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
-          delta_x = p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
-          delta_y = p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
-          delta_z = p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
-          print*, "delta_E  = ", delta_e
-          print*, "delta_Px = ", delta_x
-          print*, "delta_Py = ", delta_y
-          print*, "delta_Pz = ", delta_z
-          ! check invarient mass.
-          mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-          mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-          mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-          mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-          mass5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
-          mass6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
-          mass7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
-          mass8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
-          print*, "m1 = ", mass1
-          print*, "m2 = ", mass2
-          print*, "m3 = ", mass3
-          print*, "m4 = ", mass4
-          print*, "m5 = ", mass5
-          print*, "m6 = ", mass6
-          print*, "m7 = ", mass7
-          print*, "m8 = ", mass8   
-        end if
-        print*, "...complete."
-      end if
-
-      if (phase_space_only == 1) then
-        if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
-        if (ix == 1) then
-          pfx1tot = 0.5/x1
-          pfx2tot = 0.5/x1
-        else if (ix == 2) then
-          pfx1tot = 0.5/x2
-          pfx2tot = 0.5/x2
-        end if
-        if (final_state == 0) then
-          do lam3 = -1,1,2
-            do lam4 = -1,1,2
-              if (ix == 1) then
-                pfx1(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
-                pfx2(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
-              else if (ix == 2) then
-                pfx1(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
-                pfx2(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+          if (final_state == 0) then
+            if (use_rambo == 0) then
+              if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame manually..."
+              ! give vegas assigned values
+              phit = 2.d0*pi*ran(jseed)
+              if (jx == 1) then
+                ct = x(1)
+              else if (jx == 2) then
+                ct = -x(1)
+              else
+                print*, "Error: invalid jx."
               end if
+              st = sqrt(1.d0 - ct*ct)
+
+              ! magnitude of 3 momentum for products in general two body decay
+              qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
+              if (qcm2 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                qcm = sqrt(qcm2)
+              endif
+
+              q(4,3) = sqrt(qcm2 + m3*m3)
+              q(3,3) = qcm*ct
+              q(2,3) = qcm*st*cos(phit)
+              q(1,3) = qcm*st*sin(phit)
+              q(4,4) = sqrt(qcm2 + m4*m4)
+              q(3,4) = -qcm*ct
+              q(2,4) = -qcm*st*cos(phit)
+              q(1,4) = -qcm*st*sin(phit)
+            else if (use_rambo == 1) then
+              if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
+              xmass(1) = m3
+              xmass(2) = m4
+              jps = 2
+              call rambo(seed,jps,ecm,xmass,prambo,wgtR)
+              do i = 3, jps + 2
+                do j = 1, 4
+                  q(j,i) = prambo(j, i-2)
+                end do
+              end do
+            end if
+            ! initialise unrequired array elements
+            do i = 1, 4
+              q(i,5) = 0.d0
+              q(i,6) = 0.d0
+              q(i,7) = 0.d0
+              q(i,8) = 0.d0
             end do
-          end do
-        end if
-        go to 666
-      end if
-    
-      if (verbose == 1) print*, "Calculating QCD coupling..."
-      a_s = alfas(qq,lambdaqcd4,nloops)
-      gs2 = 4.d0*pi*a_s
-      gs = sqrt(gs2)
-      if (verbose == 1) print*, "...complete."
+            if (verbose == 1) print*, "...complete."
 
-      ! initilise
-      qcdqq1 = 0.d0
-      qcdbb1 = 0.d0
-      qcdgg1 = 0.d0
-      ewzuu1 = 0.d0
-      ewzdd1 = 0.d0
-      ewzbb1 = 0.d0
-      qcdqq2 = 0.d0
-      qcdbb2 = 0.d0
-      qcdgg2 = 0.d0
-      ewzuu2 = 0.d0
-      ewzdd2 = 0.d0
-      ewzbb2 = 0.d0
-      do lam3 = -1, 1
-        do lam4 = -1, 1
-          qcdpolqq1(lam3,lam4) = 0.d0
-          qcdpolbb1(lam3,lam4) = 0.d0
-          qcdpolgg1(lam3,lam4) = 0.d0
-          ewzpoluu1(lam3,lam4) = 0.d0
-          ewzpoldd1(lam3,lam4) = 0.d0
-          ewzpolbb1(lam3,lam4) = 0.d0
-          qcdpolqq2(lam3,lam4) = 0.d0
-          qcdpolbb2(lam3,lam4) = 0.d0
-          qcdpolgg2(lam3,lam4) = 0.d0
-          ewzpoluu2(lam3,lam4) = 0.d0
-          ewzpoldd2(lam3,lam4) = 0.d0
-          ewzpolbb2(lam3,lam4) = 0.d0
-          do i = 1, 20
-            weight(lam3,lam4,i) = 0.d0
-          end do
-        end do
-      end do
+          else if (final_state > 0) then
+            if (use_rambo == 0) then
+              if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame manually..."
+              phit = 2.d0*pi*ran(jseed)
 
-      resall = 0
-      if (final_state == 0) then
-        if (verbose == 1) print*, "Computing 2to2 square matrix elements..."
-        if (include_qcd == 1) then
-          if (verbose == 1) print*, "Computing QCD matrix elements..."
-          do lam3 = -1, 1, 2
-            do lam4 = -1, 1, 2
-              qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
-              qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-              qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-              qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
-              resall = resall &
-              + qcdpolgg1(lam3,lam4) + qcdpolgg2(lam3,lam4) &
-              + qcdpolqq1(lam3,lam4) + qcdpolqq2(lam3,lam4) &
-              + qcdpolbb1(lam3,lam4) + qcdpolbb2(lam3,lam4)
+              m356min = m3 + m5 + m6
+              m356max = ecm - m4 - m7 - m8
+              if (map_phase_space == 0) then
+                m356 = x(13)*(m356max - m356min) + m356min
+              else
+                ! flatten the integrand around the top propagator
+                xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
+                xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
+                xx = x(13)*(xx356max - xx356min) + xx356min
+                rl356 = tan(xx)*rmt*gamt
+                m356_2 = (rmt**2 + rl356)
+                if (m356_2 < 0.d0) then
+                  fffxn = 0.d0
+                  go to 999
+                else
+                  m356 = sqrt(m356_2)
+                endif
+              end if
+
+              m478min = m4 + m7 + m8
+              m478max = ecm - m356
+              if (map_phase_space == 0) then
+                m478 = x(12)*(m478max - m478min) + m478min
+              else
+                ! flatten the integrand around the anti-top propagator
+                xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
+                xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
+                xx = x(12)*(xx478max - xx478min) + xx478min
+                rl478 = tan(xx)*rmt*gamt
+                m478_2 = (rmt**2 + rl478)
+                if (m478_2 < 0.d0) then
+                  fffxn = 0.d0
+                  go to 999
+                else
+                  m478 = sqrt(m478_2)
+                endif
+              end if
+
+              m56min = m5 + m6
+              m56max = m356 - m3
+              if (map_phase_space == 0) then
+                m56 = x(11)*(m56max - m56min) + m56min
+              else
+                ! flatten the integrand around the W+ propagator
+                xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
+                xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
+                xx = x(11)*(xx56max - xx56min) + xx56min
+                rl56 = tan(xx)*rm_w*gamma_w
+                m56_2 = (rm_w**2 + rl56)
+                if (m56_2 < 0.d0) then
+                  fffxn = 0.d0
+                  go to 999
+                else
+                  m56 = sqrt(m56_2)
+                endif
+              end if
+
+              m78min = m7 + m8
+              m78max = m478 - m4
+              if (map_phase_space == 0) then
+                m78 = x(10)*(m78max - m78min) + m78min
+              else
+                ! flatten the integrand around the W- propagator
+                xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
+                xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
+                xx = x(10)*(xx78max - xx78min) + xx78min
+                rl78 = tan(xx)*rm_w*gamma_w
+                m78_2 = (rm_w**2 + rl78)
+                if (m78_2 < 0.d0) then
+                  fffxn = 0.d0
+                  go to 999
+                else
+                  m78 = sqrt(m78_2)
+                endif
+              end if
+
+              if (jx == 1) ct = x(9)
+              if (jx == 2) ct = -x(9)
+
+              ! assign angles
+              st = sqrt(abs(1.d0 - ct*ct))
+              ct56 = x(8)
+              st56 = sqrt(1.d0 - ct56*ct56)
+              ct78 = x(7)
+              st78 = sqrt(1.d0 - ct78*ct78)
+              if (i5 == 1) ct5 = x(6)
+              if (i5 == 2) ct5 = -x(6)
+              st5 = sqrt(1.d0 - ct5*ct5)
+              if (i7 == 1) ct7 = x(5)
+              if (i7 == 2) ct7 = -x(5)
+              st7 = sqrt(1.d0 - ct7*ct7)
+              cf56 = cos(x(4))
+              sf56 = sin(x(4))
+              cf78 = cos(x(3))
+              sf78 = sin(x(3))
+              cf5 = cos(x(2))
+              sf5 = sin(x(2))
+              cf7 = cos(x(1))
+              sf7 = sin(x(1))
+
+              ! two body decay of s-channel mediating boson
+              rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
+              if (rq2 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                rq = sqrt(rq2)
+              endif
+
+              q356(3) = rq*ct
+              q356(2) = rq*st*cos(phit)
+              q356(1) = rq*st*sin(phit)
+              q356(4) = sqrt(rq2 + m356*m356)
+
+              do i = 1, 3
+                q478(i) =  - q356(i)
+              end do
+              q478(4) = sqrt(rq2 + m478*m478)
+
+              ! two body decay of the top
+              rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
+              if (rq562 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                rq56 = sqrt(rq562)
+              endif
+              q56(3) = rq56*st56*cf56
+              q56(2) = rq56*st56*sf56
+              q56(1) = rq56*ct56
+              q56(4) = sqrt(rq562 + m56*m56)
+              pq56 = 0.d0
+              do i = 1,3
+                pq56 = pq56 + q356(i)*q56(i)
+              end do
+              p56(4) = (q356(4)*q56(4) + pq56)/m356
+              q(4,3) = q356(4) - p56(4)
+              do i = 1,3
+                p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
+                q(i,3) = q356(i) - p56(i)
+              end do
+
+              ! two body decay of the anti-top
+              rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
+              if (rq782 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                rq78 = sqrt(rq782)
+              endif
+              q78(3) = rq78*st78*cf78
+              q78(2) = rq78*st78*sf78
+              q78(1) = rq78*ct78
+              q78(4) = sqrt(rq782 + m78*m78)
+              pq78 = 0.d0
+              do i = 1, 3
+                pq78 = pq78 + q478(i)*q78(i)
+              end do
+              p78(4) = (q478(4)*q78(4) + pq78)/m478
+              q(4,4) = q478(4) - p78(4)
+              do i = 1, 3
+                p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
+                q(i,4) = q478(i) - p78(i)
+              end do
+
+              ! two body decay of the W+
+              rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
+              if (rq52 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                rq5 = sqrt(rq52)
+              endif
+              q5(3) = rq5*st5*cf5
+              q5(2) = rq5*st5*sf5
+              q5(1) = rq5*ct5
+              q5(4) = sqrt(rq52 + m5*m5)
+              pq5 = 0.d0
+              do i = 1, 3
+                pq5 = pq5 + p56(i)*q5(i)
+              end do
+              q(4,5) = (p56(4)*q5(4) + pq5)/m56
+              q(4,6) = p56(4) - q(4,5)
+              do i = 1,3
+                q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
+                q(i,6) = p56(i) - q(i,5)
+              end do
+
+              ! two body decay of the W-
+              rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
+              if (rq72 < 0.d0) then
+                fffxn = 0.d0
+                go to 999
+              else
+                rq7 = sqrt(rq72)
+              endif
+              q7(3) = rq7*st7*cf7
+              q7(2) = rq7*st7*sf7
+              q7(1) = rq7*ct7
+              q7(4) = sqrt(rq72 + m7*m7)
+              pq7 = 0.d0
+              do i = 1, 3
+                pq7 = pq7 + p78(i)*q7(i)
+              end do
+              q(4,7) = (p78(4)*q7(4) + pq7)/m78
+              q(4,8) = p78(4) - q(4,7)
+              do i = 1, 3
+                q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
+                q(i,8) = p78(i) - q(i,7)
+              end do
+            else if (use_rambo == 1) then
+              if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame using RAMBO..."
+              xmass(1) = m3
+              xmass(2) = m4
+              xmass(3) = m5 
+              xmass(4) = m6
+              xmass(5) = m7
+              xmass(6) = m8
+              jps = 6
+              call rambo(seed,jps,ecm,xmass,prambo,wgtr)
+              do i = 3, jps + 2
+                do j = 1, 4
+                  q(j,i) = prambo(j,i-2)
+                end do
+              end do
+            end if
+
+              if (verbose == 1) print*, "...complete."
+            end if
+
+            if (verbose == 1) print*, "Boosting parton CoM momenta to collider frame..."
+            ! velocity of ttbar system in collider frame
+            vcol = (x1 - x2)/(x1 + x2)
+
+            ! gamma factor
+            gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
+
+            ! boost initial and final state momenta to the collider frame
+            do i = 1, n_final
+              qcol(4, i) = gcol*(q(4, i) + vcol*q(3, i))
+              qcol(3, i) = gcol*(q(3, i) + vcol*q(4, i))
+              qcol(2, i) = q(2, i)
+              qcol(1, i) = q(1, i)
             end do
-          end do
-          if (verbose == 1) print*, "...complete."
-        end if
-        if ((include_ew == 1) .or. (include_bsm == 1)) then
-          if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
-          do lam3 = -1,1,2
-            do lam4 = -1,1,2
-              ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
-              ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
-              ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
-              ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
-              resall = resall &
-             + ewzpoluu1(lam3,lam4) + ewzpoluu2(lam3,lam4) &
-             + ewzpoldd1(lam3,lam4) + ewzpoldd2(lam3,lam4) &
-             + ewzpolbb1(lam3,lam4) + ewzpolbb2(lam3,lam4)
+            if (verbose == 1) print*, "...complete."
+
+            if (verbose == 1) print*, "Assigning particle 4-momenta..."
+
+            ! parton CoM 4 -momenta
+            do i = 1, 3
+              p1(i) = q(i,1)
+              p2(i) = q(i,2)
+              p3(i) = q(i,3)
+              p4(i) = q(i,4)
+              p5(i) = q(i,5)
+              p6(i) = q(i,6)
+              p7(i) = q(i,7)
+              p8(i) = q(i,8)
             end do
-          end do
-          if (verbose == 1) print*, "...complete."
-        end if
+            p1(0) = q(4,1)
+            p2(0) = q(4,2)
+            p3(0) = q(4,3)
+            p4(0) = q(4,4)
+            p5(0) = q(4,5)
+            p6(0) = q(4,6)
+            p7(0) = q(4,7)
+            p8(0) = q(4,8)
 
-      else if (final_state > 0) then
-        if (verbose == 1) print*, "Computing 2to6 square matrix elements..."
-        ! (Do not change the deliberate order of p6 and p7.)
-        if (include_qcd == 1) then
-          if (verbose == 1) print*, "Computing QCD matrix elements..."
-          qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
-          qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
-          qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
-          qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
-          qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
-          qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
-          if (verbose == 1) print*, "...complete."
-        end if
-        if ((include_ew == 1) .or. (include_bsm == 1)) then
-          if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
-          ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
-          ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
-          if (verbose == 1) print*, "...complete."
-        end if
-        resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
-               + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
-      end if
+            ! collider 4-momentum 
+            do i = 1, 3
+              p1col(i) = qcol(i,1)
+              p2col(i) = qcol(i,2)
+              p3col(i) = qcol(i,3)
+              p4col(i) = qcol(i,4)
+              p5col(i) = qcol(i,5)
+              p6col(i) = qcol(i,6)
+              p7col(i) = qcol(i,7)
+              p8col(i) = qcol(i,8)
+            end do
+            p1col(0) = qcol(4,1)
+            p2col(0) = qcol(4,2)
+            p3col(0) = qcol(4,3)
+            p4col(0) = qcol(4,4)
+            p5col(0) = qcol(4,5)
+            p6col(0) = qcol(4,6)
+            p7col(0) = qcol(4,7)
+            p8col(0) = qcol(4,8)
 
-      if ((resall) == 0.d0) then
-        ! print*, '|m|^2 = 0 for phase space point ',npoints
-        fffxn = 0.d0
-        go to 999
-      end if
+          if (verbose == 1) print*, "..done."
 
-      ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
-      qcdqq1 = qcdqq1*gs**4
-      qcdgg1 = qcdgg1*gs**4
-      qcdqq2 = qcdqq2*gs**4
-      qcdgg2 = qcdgg2*gs**4
-  
-      pfx1tot = 0.d0
-      pfx2tot = 0.d0
-      if (final_state == 0) then
-        if (verbose == 1) print*, "Summing over 2to2 |m|^2 with pdfs of all initial partons..." 
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            pfx1(lam3,lam4) = qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-            + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-            + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-            + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-            + (qcdpolbb1(lam3,lam4) + ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
-            pfx2(lam3,lam4) = qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-            + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-            + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-            + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-            + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-            + (qcdpolbb2(lam3,lam4) + ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+          if (verbose == 1) then
+            if (final_state == 0) then
+              print*, "Checking 2to2 kinematics..."
+              print*, "p1  = ", p1
+              print*, "p2  = ", p2
+              print*, "p3  = ", p3
+              print*, "p4  = ", p4
+              delta_e = p1(0) + p2(0) - p3(0) - p4(0)
+              delta_x = p1(1) + p2(1) - p3(1) - p4(1)
+              delta_y = p1(2) + p2(2) - p3(2) - p4(2)
+              delta_z = p1(3) + p2(3) - p3(3) - p4(3)
+              print*, "delta_E  = ", delta_e
+              print*, "delta_Px = ", delta_x
+              print*, "delta_Py = ", delta_y
+              print*, "delta_Pz = ", delta_z
+              mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+              mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+              mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+              mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+              print*, "m1 = ", mass1
+              print*, "m2 = ", mass2
+              print*, "m3 = ", mass3
+              print*, "m4 = ", mass4
+
+            else if (final_state > 0) then
+              print*, "Checking 2to6 kinematics..."
+              print*, "p1  = ", p1
+              print*, "p2  = ", p2
+              print*, "p3  = ", p3
+              print*, "p4  = ", p4
+              print*, "p5  = ", p5
+              print*, "p6  = ", p6
+              print*, "p7  = ", p7
+              print*, "p8  = ", p8
+              ! check conservation of 4-momentum.
+              delta_e = p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
+              delta_x = p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
+              delta_y = p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
+              delta_z = p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
+              print*, "delta_E  = ", delta_e
+              print*, "delta_Px = ", delta_x
+              print*, "delta_Py = ", delta_y
+              print*, "delta_Pz = ", delta_z
+              ! check invarient mass.
+              mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
+              mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
+              mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
+              mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
+              mass5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
+              mass6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
+              mass7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
+              mass8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
+              print*, "m1 = ", mass1
+              print*, "m2 = ", mass2
+              print*, "m3 = ", mass3
+              print*, "m4 = ", mass4
+              print*, "m5 = ", mass5
+              print*, "m6 = ", mass6
+              print*, "m7 = ", mass7
+              print*, "m8 = ", mass8   
+            end if
+            print*, "...complete."
+          end if
+
+          if (phase_space_only == 1) then
+            if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
             if (ix == 1) then
-              pfx1(lam3,lam4) = pfx1(lam3,lam4)/x1
-              pfx2(lam3,lam4) = pfx2(lam3,lam4)/x1
+              pfx1tot = 0.5/x1
+              pfx2tot = 0.5/x1
             else if (ix == 2) then
-              pfx1(lam3,lam4) = pfx1(lam3,lam4)/x2
-              pfx2(lam3,lam4) = pfx2(lam3,lam4)/x2
+              pfx1tot = 0.5/x2
+              pfx2tot = 0.5/x2
             end if
-            pfx1tot = pfx1tot + pfx1(lam3,lam4)
-            pfx2tot = pfx2tot + pfx2(lam3,lam4)
-          end do
-        end do
-        if (verbose == 1) print*, "...complete."
-      else if (final_state > 0) then
-        if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
-        qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
-             + fx1( 2)*fx2( 8)*(qcdqq1 + ewzuu1) &
-             + fx1( 3)*fx2( 9)*(qcdqq1 + ewzdd1) &
-             + fx1( 4)*fx2(10)*(qcdqq1 + ewzuu1) &
-             + fx1( 5)*fx2(11)*(qcdbb1 + ewzbb1)
-        qqd2 = fx1( 7)*fx2( 1)*(qcdqq2 + ewzdd2) &
-             + fx1( 8)*fx2( 2)*(qcdqq2 + ewzuu2) &
-             + fx1( 9)*fx2( 3)*(qcdqq2 + ewzdd2) &
-             + fx1(10)*fx2( 4)*(qcdqq2 + ewzuu2) &
-             + fx1(11)*fx2( 5)*(qcdbb2 + ewzbb2)
-        ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
-        ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
-        if (ix == 1) then
-          pfx1tot = (qqd1 + ggd1)/x1
-          pfx2tot = (qqd2 + ggd2)/x1
-        else if (ix  ==  2) then
-          pfx1tot = (qqd1 + ggd1)/x2
-          pfx2tot = (qqd2 + ggd2)/x2
-        end if
-        if (verbose == 1) print*, "...complete." 
-      end if
-
-      if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
-          fffxn = 0.d0
-        go to 999
-      end if
-
-      if (final_state == 0) then
-        ! weight for distributions
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
-            pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
-          end do
-        end do
-      end if
-
-      666 continue
-      if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...complete."
-
-      if (verbose == 1) print*, "Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)..."
-      pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
-      *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-      pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
-      *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-      if (verbose == 1) print*, "...complete."
-
-      fffxn1 = pfx1tot
-      fffxn2 = pfx2tot
-
-      if (verbose == 1) print*, "Applying unit converstion"
-      fffxn1 = fffxn1*unit_conv
-      fffxn2 = fffxn2*unit_conv
-      if (verbose == 1) print*, "...complete."
-
-      if (verbose == 1) print*, "Multiplying by phase space volume and flux factor and azimuthal integration..."
-      if (final_state == 0) then
-        if (use_rambo == 0) then
-          ! 2-body phase space factor + azimuthal integration
-          fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
-          fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
-        else if (use_rambo == 1) then
-          fffxn1 = fffxn1*wgtr
-          fffxn2 = fffxn2*wgtr
-        end if
-
-        ! flux factor
-        fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
-        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
-
-      else if (final_state > 0) then
-        if (use_rambo == 0) then
-
-          ! phase space factor
-          fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
-          fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
-
-          if (map_phase_space == 1) then
-            fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-            fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-            fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-            fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
-            fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-            fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-            fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-            fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
-            ! nwa
-            fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
-            fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
-          else
-            fffxn1 = fffxn1*(m356max - m356min)   
-            fffxn1 = fffxn1*(m478max - m478min)
-            fffxn1 = fffxn1*(m56max - m56min)
-            fffxn1 = fffxn1*(m78max - m78min)
-            fffxn2 = fffxn2*(m356max - m356min)   
-            fffxn2 = fffxn2*(m478max - m478min)
-            fffxn2 = fffxn2*(m56max - m56min)
-            fffxn2 = fffxn2*(m78max - m78min)
+            if (final_state == 0) then
+              do lam3 = -1,1,2
+                do lam4 = -1,1,2
+                  if (ix == 1) then
+                    pfx1(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
+                    pfx2(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
+                  else if (ix == 2) then
+                    pfx1(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+                    pfx2(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+                  end if
+                end do
+              end do
+            end if
+            go to 666
           end if
-        else if (use_rambo == 1) then
-          fffxn1 = fffxn1*wgtr
-          fffxn2 = fffxn2*wgtr
-        end if
+        
+          if (verbose == 1) print*, "Calculating QCD coupling..."
+          a_s = alfas(qq,lambdaqcd4,nloops)
+          gs2 = 4.d0*pi*a_s
+          gs = sqrt(gs2)
+          if (verbose == 1) print*, "...complete."
+
+          ! initilise
+          qcdqq1 = 0.d0
+          qcdbb1 = 0.d0
+          qcdgg1 = 0.d0
+          ewzuu1 = 0.d0
+          ewzdd1 = 0.d0
+          ewzbb1 = 0.d0
+          qcdqq2 = 0.d0
+          qcdbb2 = 0.d0
+          qcdgg2 = 0.d0
+          ewzuu2 = 0.d0
+          ewzdd2 = 0.d0
+          ewzbb2 = 0.d0
+          do lam3 = -1, 1
+            do lam4 = -1, 1
+              qcdpolqq1(lam3,lam4) = 0.d0
+              qcdpolbb1(lam3,lam4) = 0.d0
+              qcdpolgg1(lam3,lam4) = 0.d0
+              ewzpoluu1(lam3,lam4) = 0.d0
+              ewzpoldd1(lam3,lam4) = 0.d0
+              ewzpolbb1(lam3,lam4) = 0.d0
+              qcdpolqq2(lam3,lam4) = 0.d0
+              qcdpolbb2(lam3,lam4) = 0.d0
+              qcdpolgg2(lam3,lam4) = 0.d0
+              ewzpoluu2(lam3,lam4) = 0.d0
+              ewzpoldd2(lam3,lam4) = 0.d0
+              ewzpolbb2(lam3,lam4) = 0.d0
+              do i = 1, 20
+                weight(lam3,lam4,i) = 0.d0
+              end do
+            end do
+          end do
+
+          resall = 0
+          if (final_state == 0) then
+            if (verbose == 1) print*, "Computing 2to2 square matrix elements..."
+            if (include_qcd == 1) then
+              if (verbose == 1) print*, "Computing QCD matrix elements..."
+              do lam3 = -1, 1, 2
+                do lam4 = -1, 1, 2
+                  qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
+                  qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
+                  qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+                  qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
+                  qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+                  qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+                  resall = resall &
+                  + qcdpolgg1(lam3,lam4) + qcdpolgg2(lam3,lam4) &
+                  + qcdpolqq1(lam3,lam4) + qcdpolqq2(lam3,lam4) &
+                  + qcdpolbb1(lam3,lam4) + qcdpolbb2(lam3,lam4)
+                end do
+              end do
+              if (verbose == 1) print*, "...complete."
+            end if
+            if ((include_ew == 1) .or. (include_bsm == 1)) then
+              if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+              do lam3 = -1,1,2
+                do lam4 = -1,1,2
+                  ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
+                  ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
+                  ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
+                  ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
+                  ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
+                  ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
+                  resall = resall &
+                 + ewzpoluu1(lam3,lam4) + ewzpoluu2(lam3,lam4) &
+                 + ewzpoldd1(lam3,lam4) + ewzpoldd2(lam3,lam4) &
+                 + ewzpolbb1(lam3,lam4) + ewzpolbb2(lam3,lam4)
+                end do
+              end do
+              if (verbose == 1) print*, "...complete."
+            end if
+
+          else if (final_state > 0) then
+            if (verbose == 1) print*, "Computing 2to6 square matrix elements..."
+            ! (Do not change the deliberate order of p6 and p7.)
+            if (include_qcd == 1) then
+              if (verbose == 1) print*, "Computing QCD matrix elements..."
+              qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
+              qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
+              qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
+              qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
+              qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
+              qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
+              if (verbose == 1) print*, "...complete."
+            end if
+            if ((include_ew == 1) .or. (include_bsm == 1)) then
+              if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+              ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+              ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+              ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+              ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+              ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
+              ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
+              if (verbose == 1) print*, "...complete."
+            end if
+            resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
+                   + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
+          end if
+
+          if ((resall) == 0.d0) then
+            ! print*, '|m|^2 = 0 for phase space point ',npoints
+            fffxn = 0.d0
+            go to 999
+          end if
+
+          ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
+          qcdqq1 = qcdqq1*gs**4
+          qcdgg1 = qcdgg1*gs**4
+          qcdqq2 = qcdqq2*gs**4
+          qcdgg2 = qcdgg2*gs**4
       
-        ! flux factor
-        fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-        fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-      end if
+          pfx1tot = 0.d0
+          pfx2tot = 0.d0
+          if (final_state == 0) then
+            if (verbose == 1) print*, "Summing over 2to2 |m|^2 with pdfs of all initial partons..." 
+            do lam3 = -1, 1, 2
+              do lam4 = -1, 1, 2
+                pfx1(lam3,lam4) = qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+                + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
+                + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
+                + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
+                + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
+                + (qcdpolbb1(lam3,lam4) + ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
+                pfx2(lam3,lam4) = qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
+                + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
+                + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
+                + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
+                + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
+                + (qcdpolbb2(lam3,lam4) + ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+                if (ix == 1) then
+                  pfx1(lam3,lam4) = pfx1(lam3,lam4)/x1
+                  pfx2(lam3,lam4) = pfx2(lam3,lam4)/x1
+                else if (ix == 2) then
+                  pfx1(lam3,lam4) = pfx1(lam3,lam4)/x2
+                  pfx2(lam3,lam4) = pfx2(lam3,lam4)/x2
+                end if
+                pfx1tot = pfx1tot + pfx1(lam3,lam4)
+                pfx2tot = pfx2tot + pfx2(lam3,lam4)
+              end do
+            end do
+            if (verbose == 1) print*, "...complete."
+          else if (final_state > 0) then
+            if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
+            qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
+                 + fx1( 2)*fx2( 8)*(qcdqq1 + ewzuu1) &
+                 + fx1( 3)*fx2( 9)*(qcdqq1 + ewzdd1) &
+                 + fx1( 4)*fx2(10)*(qcdqq1 + ewzuu1) &
+                 + fx1( 5)*fx2(11)*(qcdbb1 + ewzbb1)
+            qqd2 = fx1( 7)*fx2( 1)*(qcdqq2 + ewzdd2) &
+                 + fx1( 8)*fx2( 2)*(qcdqq2 + ewzuu2) &
+                 + fx1( 9)*fx2( 3)*(qcdqq2 + ewzdd2) &
+                 + fx1(10)*fx2( 4)*(qcdqq2 + ewzuu2) &
+                 + fx1(11)*fx2( 5)*(qcdbb2 + ewzbb2)
+            ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
+            ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
+            if (ix == 1) then
+              pfx1tot = (qqd1 + ggd1)/x1
+              pfx2tot = (qqd2 + ggd2)/x1
+            else if (ix  ==  2) then
+              pfx1tot = (qqd1 + ggd1)/x2
+              pfx2tot = (qqd2 + ggd2)/x2
+            end if
+            if (verbose == 1) print*, "...complete." 
+          end if
 
-      fffxn1 = fffxn1/real(ixmax)/real(jxmax)
-      fffxn2 = fffxn2/real(ixmax)/real(jxmax)
-      fffxn = fffxn1 + fffxn2
-      
-      if (verbose == 1) print*, "...complete."
+          if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
+              fffxn = 0.d0
+            go to 999
+          end if
 
-      if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
-      if (final_state == 0) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-      end if
+          if (final_state == 0) then
+            ! weight for distributions
+            do lam3 = -1, 1, 2
+              do lam4 = -1, 1, 2
+                pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
+                pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
+              end do
+            end do
+          end if
 
-      if (final_state == 1) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
+          666 continue
+          if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...complete."
 
-      if (final_state == 2) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
+          if (verbose == 1) print*, "Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)..."
+          pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
+          *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+          pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
+          *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+          if (verbose == 1) print*, "...complete."
 
-      if (final_state == 3) then
-        call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
-        call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
-        call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
-        call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
-        call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
-        call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
-      end if
-      if(verbose == 1) print*, "...complete."
-         
-      if (final_state == 0) then
-        if (verbose == 1) print*, "Computing polarised event weightings..."
-        do lam3 = -1, +1, 2
-          do lam4 = -1, +1, 2
-            sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
-            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-            weight(lam3,lam4,it) = &
-            +fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-            error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
-            +sigma_pol(lam3,lam4,it)**2
-          end do
+          fffxn1 = pfx1tot
+          fffxn2 = pfx2tot
+
+          if (verbose == 1) print*, "Applying unit converstion"
+          fffxn1 = fffxn1*unit_conv
+          fffxn2 = fffxn2*unit_conv
+          if (verbose == 1) print*, "...complete."
+
+          if (verbose == 1) print*, "Multiplying by phase space volume and flux factor and azimuthal integration..."
+          if (final_state == 0) then
+            if (use_rambo == 0) then
+              ! 2-body phase space factor + azimuthal integration
+              fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
+              fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
+            else if (use_rambo == 1) then
+              fffxn1 = fffxn1*wgtr
+              fffxn2 = fffxn2*wgtr
+            end if
+
+            ! flux factor
+            fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+            fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+
+          else if (final_state > 0) then
+            if (use_rambo == 0) then
+
+              ! phase space factor
+              fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+              fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+
+              if (map_phase_space == 1) then
+                fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+                fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+                fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+                fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+                fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+                fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+                fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+                fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+                ! nwa
+                fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
+                fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
+              else
+                fffxn1 = fffxn1*(m356max - m356min)   
+                fffxn1 = fffxn1*(m478max - m478min)
+                fffxn1 = fffxn1*(m56max - m56min)
+                fffxn1 = fffxn1*(m78max - m78min)
+                fffxn2 = fffxn2*(m356max - m356min)   
+                fffxn2 = fffxn2*(m478max - m478min)
+                fffxn2 = fffxn2*(m56max - m56min)
+                fffxn2 = fffxn2*(m78max - m78min)
+              end if
+            else if (use_rambo == 1) then
+              fffxn1 = fffxn1*wgtr
+              fffxn2 = fffxn2*wgtr
+            end if
+          
+            ! flux factor
+            fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+            fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+          end if
+
+          fffxn1 = fffxn1/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
+          fffxn2 = fffxn2/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
+          fffxn = fffxn1 + fffxn2
+          
+          if (verbose == 1) print*, "...complete."
+
+          if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
+          if (final_state == 0) then
+            call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+            call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+          end if
+
+          if (final_state == 1) then
+            call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+            call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+            call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+            call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+            call rootaddparticle(11,p7col(1),p7col(2),p7col(3),p7col(0))
+            call rootaddparticle(-12,p8col(1),p8col(2),p8col(3),p8col(0))
+          end if
+
+          if (final_state == 2) then
+            call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+            call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+            call rootaddparticle(-11,p5col(1),p5col(2),p5col(3),p5col(0))
+            call rootaddparticle(12,p6col(1),p6col(2),p6col(3),p6col(0))
+            call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+            call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+          end if
+
+          if (final_state == 3) then
+            call rootaddparticle(5,p3col(1),p3col(2),p3col(3),p3col(0))
+            call rootaddparticle(-5,p4col(1),p4col(2),p4col(3),p4col(0))
+            call rootaddparticle(-1,p5col(1),p5col(2),p5col(3),p5col(0))
+            call rootaddparticle(2,p6col(1),p6col(2),p6col(3),p6col(0))
+            call rootaddparticle(1,p7col(1),p7col(2),p7col(3),p7col(0))
+            call rootaddparticle(-2,p8col(1),p8col(2),p8col(3),p8col(0))
+          end if
+          if(verbose == 1) print*, "...complete."
+             
+          if (final_state == 0) then
+            if (verbose == 1) print*, "Computing polarised event weightings..."
+            do lam3 = -1, +1, 2
+              do lam4 = -1, +1, 2
+                sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
+                + fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+                weight(lam3,lam4,it) = &
+                + fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
+                error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
+                +sigma_pol(lam3,lam4,it)**2
+              end do
+            end do
+            weightLL = weight(-1,-1,it)
+            weightLR = weight(-1, 1,it)
+            weightRL = weight( 1,-1,it)
+            weightRR = weight( 1, 1,it)
+            if (verbose == 1) print*, "...complete."
+          end if
+
+          call rootadddouble(weightLL, "weightLL")
+          call rootadddouble(weightLR, "weightLR")
+          call rootadddouble(weightRL, "weightRL")
+          call rootadddouble(weightRR, "weightRR")
+
+          ! binning
+          hist1 = fffxn1*wgt
+          hist2 = fffxn2*wgt
+          hist = hist1 + hist2
+
+          if(additional_kinematics == 1) then
+
+            if (verbose == 1) print*, "Computing additional kinematic variables..."
+
+            ! calculate truth level top/antitop pt, eta and phi
+            if (final_state > 0) then
+              pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
+                           + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
+              call rootadddouble(pt356, "pT356")
+
+              pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
+                           + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
+              call rootadddouble(pt478, "pT478")
+
+
+              rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
+              /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
+                    +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
+                    +(q(3, 3) + q(3, 5) + q(3, 6))**2)
+              if (rps356 < -1.d0) rps = -1.d0
+              if (rps356 > +1.d0) rps = +1.d0
+              rpl356 = acos(rps356)
+              arg356 = tan(rpl356/2d0)
+              if (arg356 <= 0.d0) arg356 = 1.d-9
+              eta356 = -log(arg356)
+              call rootadddouble(eta356, "eta356")
+
+              rps478 = (q(3,4)+q(3,7)+q(3,8)) &
+              /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
+              +(q(2,4)+q(2,7)+q(2,8))**2 &
+              +(q(3,4)+q(3,7)+q(3,8))**2)
+              if (rps478 < -1.d0)rps = -1.d0
+              if (rps478 > +1.d0)rps = +1.d0
+              rpl478 = acos(rps478)
+              arg478 = tan(rpl478/2d0)
+              if (arg478 <=  0.d0) arg478 = 1.d-9
+              eta478 = -log(arg478)
+              call rootadddouble(eta478, "eta478")
+
+              phi356 = atan2(qcol(2,3) + qcol(2,5) + qcol(2,6) &
+              ,qcol(1,3) + qcol(1,5) + qcol(1,6))
+              call rootadddouble(phi356, "phi356")
+
+              phi478 = atan2(qcol(2,4) + qcol(2,7) + qcol(2,8) &
+              ,qcol(1,4) + qcol(1,7) + qcol(1,8))
+              call rootadddouble(phi478, "phi478")
+
+              ycol356 =0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
+               + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
+              /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
+               - qcol(3,3) - qcol(3,5) - qcol(3,6)))
+              call rootadddouble(ycol356, "ycol356")
+
+              ycol478=0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
+               + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
+              /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
+               - qcol(3,4) - qcol(3,7) - qcol(3,8)))
+              call rootadddouble(ycol478, "ycol478")
+            end if
+
+            ! calculate the CoM rapidity of the top
+            if (final_state == 0) then
+              yt = 0.5d0*log((q(4,3) + q(3,3)) &
+              /(q(4,3) - q(3,3)))
+              ytcol = 0.5d0*log((qcol(4,3) + qcol(3,3)) &
+              /(qcol(4,3) - qcol(3,3)))
+            else if (final_state > 0) then
+              yt  = 0.5*log((q(4,3) + q(4,5) + q(4,6) &
+               + q(3,3) + q(3,5) + q(3,6)) &
+               /(q(4,3) + q(4,5) + q(4,6) &
+               - q(3,3) - q(3,5) - q(3,6)))
+              ytcol = ycol356
+            end if
+            call rootadddouble(yt, "yt")
+
+            ! calculate the CoM rapidity of the antitop
+            if (final_state == 0) then
+              ytb = 0.5d0*log((q(4,4) + q(3,4))/(q(4,4) - q(3,4)))
+              ytbcol = 0.5d0*log((qcol(4,4) + qcol(3,4))/(qcol(4,4) - qcol(3,4)))
+            else if (final_state > 0) then
+              ytb = 0.5*log((q(4,4) + q(4,7) + q(4,8) &
+               + q(3,4) + q(3,7) + q(3,8)) &
+               /(q(4,4) + q(4,7) + q(4,8) &
+               - q(3,4) - q(3,7) - q(3,8)))
+              ytbcol = ycol478
+            end if
+            call rootadddouble(ytb, "ytbar")
+
+            ! difference in absolute rapidity in lab frame
+            delta_absy = abs(ytcol) - abs(ytbcol)
+            call rootadddouble(delta_absy, "Delta_y")
+
+            ! calculate collider frame cos(theta_t)
+            if (final_state == 0) then
+              cost = &
+              (qcol(1,3)*qcol(1,1) &
+              +qcol(2,3)*qcol(2,1) &
+              +qcol(3,3)*qcol(3,1)) &
+              /sqrt(qcol(1,3)*qcol(1,3) &
+              +qcol(2,3)*qcol(2,3) &
+              +qcol(3,3)*qcol(3,3)) &
+              /sqrt(qcol(1,1)*qcol(1,1) &
+              +qcol(2,1)*qcol(2,1) &
+              +qcol(3,1)*qcol(3,1))
+            else if (final_state > 0) then
+              cost = &
+              ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
+              +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
+              +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1)) &
+              /sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6)) &
+              *(qcol(1,3)+qcol(1,5)+qcol(1,6)) &
+              +(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
+              *(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
+              +(qcol(3,3)+qcol(3,5)+qcol(3,6)) &
+              *(qcol(3,3)+qcol(3,5)+qcol(3,6))) &
+              /sqrt(qcol(1,1)*qcol(1,1) &
+              +qcol(2,1)*qcol(2,1) &
+              +qcol(3,1)*qcol(3,1))
+            end if
+            call rootadddouble(cost, "costhetatcol")
+
+            ! calculate parton CoM cos(theta_t)
+            if (final_state == 0) then
+              costhetat_cm =(q(1,3)*q(1,1) &
+              +q(2,3)*q(2,1) &
+              +q(3,3)*q(3,1)) &
+              /sqrt(q(1,3)*q(1,3) &
+              +q(2,3)*q(2,3) &
+              +q(3,3)*q(3,3)) &
+              /sqrt(q(1,1)*q(1,1) &
+              +q(2,1)*q(2,1) &
+              +q(3,1)*q(3,1))
+            else if (final_state > 0) then
+              costhetat_cm = &
+              ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
+              +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
+              +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
+              /sqrt((q(1,3)+q(1,5)+q(1,6)) &
+              *(q(1,3)+q(1,5)+q(1,6)) &
+              +(q(2,3)+q(2,5)+q(2,6)) &
+              *(q(2,3)+q(2,5)+q(2,6)) &
+              +(q(3,3)+q(3,5)+q(3,6)) &
+              *(q(3,3)+q(3,5)+q(3,6))) &
+              /sqrt(q(1,1)*q(1,1) &
+              +q(2,1)*q(2,1) &
+              +q(3,1)*q(3,1))
+            end if
+            call rootadddouble(costhetat_cm, "costhetat")
+
+            beta = shat/4.d0/rmt**2 - 1.d0
+            call rootadddouble(beta, "beta")
+
+            ! calculate rapidity of the tt system
+            ytt = 0.5d0*log(x1/x2)
+            call rootadddouble(ytt, "ytt")
+
+            ! reconstructed costheta_t
+            costhetat_star = int(ytt/abs(ytt))*costhetat_cm
+            call rootadddouble(costhetat_star, "costhetastar")
+
+            if (final_state == 0) then
+              mtt2 = (qcol(4,3) + qcol(4,4))**2
+              do i = 1, 3
+                mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
+              end do
+            else if (final_state > 0) then
+              mtt2 = (qcol(4,3) + qcol(4,4) &
+                    + qcol(4,5) + qcol(4,6) &
+                    + qcol(4,7) + qcol(4,8))**2
+              do i = 1, 3
+                mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
+                             + qcol(i,5) + qcol(i,6) &
+                             + qcol(i,7) + qcol(i,8))**2
+              end do
+            end if
+            mtt = sqrt(abs(mtt2))
+            call rootadddouble(mtt, "Mtt")
+
+            if (final_state > 0) then         
+
+              ! reconstruct the neutrino momentum for the semi-hadronic channel
+              do i = 1, 2
+                pT6col(i) = p6col(i)
+                p6col_reco(i) = p6col(i)
+              end do
+              p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
+              call rootadddouble(p6col_reco(3), "Pz6_reco")
+              p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
+              call rootadddouble(p6col_reco(0), "E6_reco") 
+
+              ! total reconstructed momentum in collider frame
+              ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
+
+              ! find spatially opposite 4-momentum
+              ptotalcol_reco_opp(0) = ptotalcol_reco(0)
+              do i = 1, 3
+                  ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
+              end do
+              call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
+
+              yt_reco = 0.5*log((q(4,3)+q(4,5)+p6_reco(0) &
+              +q(3,3)+q(3,5)+p6_reco(3)) &
+              /(q(4,3)+q(4,5)+p6_reco(0) &
+              -q(3,3)-q(3,5)-p6_reco(3)))
+              call rootadddouble(yt_reco, "yt_reco")
+
+              delta_absy_reco = abs(yt_reco) - abs(ytb)
+              call rootadddouble(delta_absy_reco, "Delta_y_reco")
+
+              ! calculate ytt reco
+              ptotal_reco = p1 + p2 + p3 + p4 + p5 + p6_reco + p7 + p8
+              ytt_reco = 0.5*log((ptotal_reco(0) + ptotal_reco(3))/(ptotal_reco(0) - ptotal_reco(3)))          
+
+              ! calculate cos(theta_t) reco
+              costhetat_reco = &
+              ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
+              + (q(2,3) + q(2,5) + p6_reco(2))*q(2,1) &
+              + (q(3,3) + q(3,5) + p6_reco(3))*q(3,1)) &
+              /sqrt((q(1,3) + q(1,5) + p6_reco(1))*(q(1,3) + q(1,5) + p6_reco(1)) &
+                  + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
+                  + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
+              /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
+              call rootadddouble(costhetat_reco, "costhetat_reco")          
+
+              ! truth anti top mass
+              call rootadddouble(m478, "m478")
+
+              ! calculate mt reco
+              p356col_reco = p3col + p5col + p6col_reco
+              m356_reco = mass(p356col_reco)
+              call rootadddouble(m356_reco, "mt_reco")
+
+              ! calculate Mtt reco
+              mtt_reco2 = (qcol(4,3) + qcol(4,4) &
+                         + qcol(4,5) + p6col_reco(0) &
+                         + qcol(4,7) + qcol(4,8))**2
+              do i = 1, 3
+                mtt_reco2 = mtt_reco2 - (qcol(i,3) + qcol(i,4) &
+                                      +  qcol(i,5) + p6col_reco(i) &
+                                      +  qcol(i,7) + qcol(i,8))**2
+              end do
+              mtt_reco = sqrt(mtt_reco2)
+              call rootadddouble(mtt_reco, "Mtt_reco")          
+
+              ! "reconstructed" reconstructed costheta_t
+              costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
+              call rootadddouble(costhetat_star_reco, "costhetastar_reco")
+
+              ! boost anti lepton to top rest frame
+              p356(0) = q356(4)
+              p356_opp(0) = q356(4)
+              do i = 1, 3
+                p356(i) = q356(i)
+                p356_opp(i) = -q356(i)
+              end do 
+              call boostx(p5, p356_opp, p5rest)
+
+              ! boost lepton to antitop rest frame
+              p478(0) = q478(4)
+              p478_opp(0) = q478(4)
+              do i = 1, 3
+                p478(i) = q478(i)
+                p478_opp(i) = -q478(i)
+              end do
+              call boostx(p7, p478_opp, p7rest)
+
+              ! calculate cos(theta_l+) in top rest frame
+              costheta5 = (p5rest(1)*q356(1) &
+                           +p5rest(2)*q356(2) &
+                           +p5rest(3)*q356(3)) &
+                          /sqrt(p5rest(1)*p5rest(1) &
+                                +p5rest(2)*p5rest(2) &
+                                +p5rest(3)*p5rest(3)) &
+                          /sqrt(q356(1)*q356(1) &
+                                +q356(2)*q356(2) &
+                                +q356(3)*q356(3))
+              call rootadddouble(costheta5, "costheta5")
+
+              ! calculate cos(theta_l-) in top rest frame
+              costheta7 = (p7rest(1)*q478(1) &
+                           +p7rest(2)*q478(2) &
+                           +p7rest(3)*q478(3)) &
+                          /sqrt(p7rest(1)*p7rest(1) &
+                                +p7rest(2)*p7rest(2) &
+                                +p7rest(3)*p7rest(3)) &
+                          /sqrt(q478(1)*q478(1) &
+                                +q478(2)*q478(2) &
+                                +q478(3)*q478(3))
+              call rootadddouble(costheta7, "costheta7")
+
+              ! calculate product of cos(theta_l+) and cos(theta_l-) in top rest frame          
+              ct7ct5 = costheta7*costheta5
+              call rootadddouble(ct7ct5, "ct7ct5")
+
+              ! calculate cos(theta_l+)col
+              costheta5col = (qcol(1,5)*qcol(1,1) &
+                            + qcol(2,5)*qcol(2,1) &
+                            + qcol(3,5)*qcol(3,1)) &
+                            /sqrt(qcol(1,5)*qcol(1,5) &
+                            + qcol(2,5)*qcol(2,5) &
+                            + qcol(3,5)*qcol(3,5)) &
+                            /sqrt(qcol(1,1)*qcol(1,1) &
+                            + qcol(2,1)*qcol(2,1) &
+                            + qcol(3,1)*qcol(3,1))
+              call rootadddouble(costheta5col, "costheta5col")
+
+
+              ! calculate cos(theta_l-)col
+              costheta7col = (qcol(1,7)*qcol(1,1) &
+                            + qcol(2,7)*qcol(2,1) &
+                            + qcol(3,7)*qcol(3,1)) &
+                            /sqrt(qcol(1,7)*qcol(1,7) &
+                            + qcol(2,7)*qcol(2,7) &
+                            + qcol(3,7)*qcol(3,7)) &
+                            /sqrt(qcol(1,1)*qcol(1,1) &
+                            + qcol(2,1)*qcol(2,1) &
+                            + qcol(3,1)*qcol(3,1))
+              call rootadddouble(costheta7col, "costheta7col")
+
+              ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
+              ct7ct5col = costheta7col*costheta5col
+              call rootadddouble(ct7ct5col, "ct7ct5col")
+
+              ! calculate cos(theta_l+)cm
+              costheta5cm = (q(1,5)*q(1,1) &
+                            + q(2,5)*q(2,1) &
+                            + q(3,5)*q(3,1)) &
+                            /sqrt(q(1,5)*q(1,5) &
+                            + q(2,5)*q(2,5) &
+                            + q(3,5)*q(3,5)) &
+                            /sqrt(q(1,1)*q(1,1) &
+                            + q(2,1)*q(2,1) &
+                            + q(3,1)*q(3,1))
+              call rootadddouble(costheta5cm, "costheta5cm")
+
+
+              ! calculate cos(theta_l-)cm
+              costheta7cm = (q(1,7)*q(1,1) &
+                            + q(2,7)*q(2,1) &
+                            + q(3,7)*q(3,1)) &
+                            /sqrt(q(1,7)*q(1,7) &
+                            + q(2,7)*q(2,7) &
+                            + q(3,7)*q(3,7)) &
+                            /sqrt(q(1,1)*q(1,1) &
+                            + q(2,1)*q(2,1) &
+                            + q(3,1)*q(3,1))
+              call rootadddouble(costheta7cm, "costheta7cm")
+
+              ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
+              ct7ct5cm = costheta7cm*costheta5cm
+              call rootadddouble(ct7ct5cm, "ct7ct5cm")
+
+              ! calculate cos(phi_l) (lepton azimuthal angle)
+              p5mag = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
+
+              ! p(1)^ is z^
+              do i = 1, 3
+                zp(i) = q(i,1)/sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
+              end do
+
+              ! p(5)_t^ is x^
+              do i = 1, 2
+                xp(i) = q356(i)/sqrt(q356(1)*q356(1) + q356(2)*q356(2))
+              end do
+              xp(3) = 0
+
+              ! y^ obtained using cross product
+              yp(1) = zp(2)*xp(3) - zp(3)*xp(2)
+              yp(2) = zp(3)*xp(1) - zp(1)*xp(3)
+              yp(3) = zp(1)*xp(2) - zp(2)*xp(1)
+
+              p5xp = 0
+              do i = 1, 3
+                p5xp = p5xp + q(i,5)*xp(i)
+              end do
+              p5yp = 0
+              do i = 1, 3
+                p5yp = p5yp + q(i,5)*yp(i)
+              end do
+              p5zp = 0
+              do i = 1, 3
+                p5zp = p5zp + q(i,5)*zp(i)
+              end do
+
+              p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
+
+              if (abs(p5mag - p5mp) >= 1e-11) print*, 'Error: coordinate transform mismatch.'
+
+              phi_l = atan2(p5yp,p5xp)
+
+              if (phi_l < 0)phi_l = phi_l + 2*pi
+              call rootadddouble(phi_l, "fl")
+
+              cosfl = cos(phi_l)
+              call rootadddouble(cosfl, "cosphil")
+            end if
+
+            if (verbose == 1) print*, "...complete."
+
+            if (verbose == 1) print*, "Computing FB dsigmas..."
+
+            if (costhetat_cm > 0.d0) then
+              sigma_fb(+1,1,it) = sigma_fb(+1,1,it) + hist
+              error_fb(+1,1,it) = error_fb(+1,1,it) + sigma_fb(+1,1,it)**2
+            else if (costhetat_cm < 0.d0) then
+              sigma_fb(-1,1,it) = sigma_fb(-1,1,it) + hist
+              error_fb(-1,1,it) = error_fb(-1,1,it) + sigma_fb(-1,1,it)**2
+            end if
+
+            if (costhetat_star > 0.d0) then
+              sigma_fb(+1,2,it) = sigma_fb(+1,2,it) + hist
+              error_fb(+1,2,it) = error_fb(+1,2,it) + sigma_fb(+1,2,it)**2
+            else if (costhetat_star < 0.d0) then
+              sigma_fb(-1,2,it) = sigma_fb(-1,2,it) + hist
+              error_fb(-1,2,it) = error_fb(-1,2,it) + sigma_fb(-1,2,it)**2
+            end if
+
+            if (yt > 0.d0) then
+              sigma_fb(+1,3,it) = sigma_fb(+1,3,it) + hist
+              error_fb(+1,3,it) = error_fb(+1,3,it) + sigma_fb(+1,3,it)**2
+            else if (yt < 0.d0) then
+              sigma_fb(-1,3,it) = sigma_fb(-1,3,it) + hist
+              error_fb(-1,3,it) = error_fb(-1,3,it) + sigma_fb(-1,3,it)**2
+            end if
+
+            if (yt >= 0.d0) then
+              sigma_fb(+1,4,it) = sigma_fb(+1,4,it) + hist
+              error_fb(+1,4,it) = error_fb(+1,4,it) + sigma_fb(+1,4,it)**2
+            end if
+            if (ytb >= 0.d0) then
+              sigma_fb(-1,4,it) = sigma_fb(-1,4,it) + hist
+              error_fb(-1,4,it) = error_fb(-1,4,it) + sigma_fb(-1,4,it)**2
+            end if
+
+            if (delta_absy > 0.d0) then
+              sigma_fb(+1,5,it) = sigma_fb(+1,5,it) + hist
+              error_fb(+1,5,it) = error_fb(+1,5,it) + sigma_fb(+1,5,it)**2
+            else if (delta_absy < 0.d0) then
+              sigma_fb(-1,5,it) = sigma_fb(-1,5,it) + hist
+              error_fb(-1,5,it) = error_fb(-1,5,it) + sigma_fb(-1,5,it)**2
+            end if
+
+            if (final_state > 0) then
+              if (costhetat_star_reco > 0.d0) then
+                sigma_fb(+1,6,it) = sigma_fb(+1,6,it) + hist
+                error_fb(+1,6,it) = error_fb(+1,6,it) + sigma_fb(+1,6,it)**2
+              else if (costhetat_star_reco < 0.d0) then
+                sigma_fb(-1,6,it) = sigma_fb(-1,6,it) + hist
+                error_fb(-1,6,it) = error_fb(-1,6,it) + sigma_fb(-1,6,it)**2
+              end if
+
+              if (abs(ytt_reco) > yttmin) then
+                if (delta_absy == 0.d0) then
+                  continue
+                else if (delta_absy_reco > 0.d0) then
+                  sigma_fb(+1,7,it) = sigma_fb(+1,7,it) + hist
+                  error_fb(+1,7,it) = error_fb(+1,7,it) + sigma_fb(+1,7,it)**2
+                else if (delta_absy_reco < 0.d0) then
+                  sigma_fb(-1,7,it) = sigma_fb(-1,7,it) + hist
+                  error_fb(-1,7,it) = error_fb(-1,7,it) + sigma_fb(-1,7,it)**2
+                end if
+              end if
+
+              if (cosfl > 0.d0) then
+                sigma_fb(+1,8,it) = sigma_fb(+1,8,it) + hist
+                error_fb(+1,8,it) = error_fb(+1,8,it) + sigma_fb(+1,8,it)**2
+              else if (cosfl < 0.d0) then
+                sigma_fb(-1,8,it) = sigma_fb(-1,8,it) + hist
+                error_fb(-1,8,it) = error_fb(-1,8,it) + sigma_fb(-1,8,it)**2
+              end if
+
+              if (costheta5cm > 0.d0) then
+                sigma_fb(+1,9,it) = sigma_fb(+1,9,it) + hist
+                error_fb(+1,9,it) = error_fb(+1,9,it) + sigma_fb(+1,9,it)**2
+              else if (costheta5cm < 0.d0) then
+                sigma_fb(-1,9,it) = sigma_fb(-1,9,it) + hist
+                error_fb(-1,9,it) = error_fb(-1,9,it) + sigma_fb(-1,9,it)**2
+              end if
+            end if
+
+            if (verbose == 1) print*, "...complete."
+          end if
+
+          ! convert results to different tt classifications
+          call rootadddouble(hist*fac_ee,"weight_ee")
+          call rootadddouble(hist*fac_emu,"weight_emu")
+          call rootadddouble(hist*fac_eq,"weight_eq")
+          call rootadddouble(hist*fac_qq,"weight_qq")
+          call rootaddint(it,"iteration")
+          call rootaddevent(hist)
+
+          if (print_distributions == 1) then
+            if (verbose == 1) print*, 'Filling distributions...'
+
+            if (o_mtt == 1) call h_mtt%fill(mtt, hist)
+            if (o_cost == 1) call h_cost%fill(cost, hist)
+            if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
+
+            if (final_state > 0) then
+              if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
+              if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
+    	        if (o_fl == 1) call h_fl%fill(phi_l, hist)
+    	        if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
+    	        if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
+    	        if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
+    	        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
+         		end if
+
+            if (verbose == 1) print*, '...complete.'
+            if (verbose == 1) print*, 'Filling asymmetry histograms...'
+
+            if (o_asym(1) == 1) then
+              if (o_sigp == 1) then
+                ! generate distribution in sigp for all.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
+                  (weight(+1,+1,it)+weight(-1,-1,it))   !ction happens
+                end if
+              end if
+              if (o_sigm == 1) then
+                ! generate distribution in sigm for all.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
+                  (weight(+1,-1,it)+weight(-1,+1,it))
+                end if
+              end if
+            end if
+
+            if (o_asym(2) == 1) then
+              if (o_sigp == 1) then
+              ! generate distribution in sigp for al.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
+                  (weight(-1,-1,it)+weight(-1,+1,it))
+                end if
+              end if
+              if (o_sigm == 1) then
+              ! generate distribution in sigm for al.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
+                  (weight(+1,-1,it)+weight(+1,+1,it))
+                end if
+              end if
+            end if
+
+            if (o_asym(3) == 1) then
+              if (o_sigp == 1) then
+              ! generate distribution in sigp for apv.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
+                  (weight(-1,-1,it))
+                end if
+              end if
+              if (o_sigm == 1) then
+              ! generate distribution in sigm for apv.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
+                  (weight(+1,+1,it))
+                end if
+              end if
+            end if
+
+            if (o_asym(4) == 1) then
+              if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
+              ! generate distribution in sigp for afbcm.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
+              ! generate distribution in sigm for afbcm.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(5) == 1) then
+              if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
+              ! generate distribution in sigp for afbstar.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
+              ! generate distribution in sigm for afbstar.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(6) == 1) then
+              if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
+              ! generate distribution in sigp for afbstar reco.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
+              ! generate distribution in sigm for afbstar.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(7) == 1) then
+              if ((o_sigp == 1) .and. (yt > 0.d0)) then
+              ! generate distribution in sigp for atfb.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (yt < 0.d0)) then
+              ! generate distribution in sigm for atfb.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(8) == 1) then
+              if ((o_sigp == 1) .and. (yt >= 0.d0)) then
+              ! generate distribution in sigp for a.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
+              ! generate distribution in sigm for a.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(9) == 1) then
+              if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
+              ! generate distribution in sigp for arfb.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
+              ! generate distribution in sigm for arfb.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(10) == 1) then
+              if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
+              ! generate distribution in sigp for arfb reco.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
+              ! generate distribution in sigm for arfb.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
+                end if
+              end if
+            end if
+
+            if (o_asym(11) == 1) then
+              if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
+                ! generate distribution in sigp for a_l.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
+                ! generate distribution in sigm for a_l.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
+                end if
+              end if
+            end if
+          
+            if (o_asym(12) == 1) then
+              if ((o_sigp == 1) .and. (costheta5cm > 0.d0)) then
+                ! generate distribution in sigp for alFB.
+                sigp=ecm
+                nbin=int((sigp-sigpmin)/sigpw)+1
+                if (nbin >= (ndiv_sigp+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
+                end if
+              end if
+              if ((o_sigm == 1) .and. (costheta5cm < 0.d0)) then
+                ! generate distribution in sigm for alFB.
+                sigm=ecm
+                nbin=int((sigm-sigmmin)/sigmw)+1
+                if (nbin >= (ndiv_sigm+1)) then
+                  continue
+                else if (nbin < 1) then
+                  continue
+                else
+                  fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
+                end if
+              end if
+            end if
+            if (verbose == 1) print*, '...complete.'
+          end if
+
+          ! stats
+          npoints = npoints + 1
+          if (verbose == 1 ) print*, "...event", npoints, "complete."
+          999 continue
+          fffffxn = fffffxn + fffxn
         end do
-        weightLL = weight(-1,-1,it)
-        weightLR = weight(-1, 1,it)
-        weightRL = weight( 1,-1,it)
-        weightRR = weight( 1, 1,it)
-        if (verbose == 1) print*, "...complete."
-      end if
-
-      call rootadddouble(weightLL, "weightLL")
-      call rootadddouble(weightLR, "weightLR")
-      call rootadddouble(weightRL, "weightRL")
-      call rootadddouble(weightRR, "weightRR")
-
-      ! binning
-      hist1 = fffxn1*wgt
-      hist2 = fffxn2*wgt
-      hist = hist1 + hist2
-
-!       if (final_state == 0) then
-!           mtt2 = (qcol(4,3) + qcol(4,4))**2
-!           do i = 1, 3
-!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
-!           end do
-!         else if (final_state > 0) then
-!           mtt2 = (qcol(4,3) + qcol(4,4) &
-!                 + qcol(4,5) + qcol(4,6) &
-!                 + qcol(4,7) + qcol(4,8))**2
-!           do i = 1, 3
-!             mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
-!                          + qcol(i,5) + qcol(i,6) &
-!                          + qcol(i,7) + qcol(i,8))**2
-!           end do
-!         end if
-!         mtt = sqrt(abs(mtt2))
-!         call rootadddouble(mtt, "Mtt")
-
-      if(additional_kinematics == 1) then
-
-        if (verbose == 1) print*, "Computing additional kinematic variables..."
-
-        ! calculate truth level top/antitop pt, eta and phi
-        if (final_state > 0) then
-          pt356 = sqrt((qcol(1,3) + qcol(1,5) + qcol(1,6))**2 &
-                       + (qcol(2,3) + qcol(2,5) + qcol(2,6))**2)
-          call rootadddouble(pt356, "pT356")
-
-          pt478 = sqrt((qcol(1,4) + qcol(1,7) + qcol(1,8))**2 &
-                       + (qcol(2,4) + qcol(2,7) + qcol(2,8))**2)
-          call rootadddouble(pt478, "pT478")
-
-
-          rps356 = (q(3, 3) + q(3, 5) + q(3, 6)) &
-          /sqrt((q(1, 3) + q(1, 5) + q(1, 6))**2 &
-                +(q(2, 3) + q(2, 5) + q(2, 6))**2 &
-                +(q(3, 3) + q(3, 5) + q(3, 6))**2)
-          if (rps356 < -1.d0) rps = -1.d0
-          if (rps356 > +1.d0) rps = +1.d0
-          rpl356 = acos(rps356)
-          arg356 = tan(rpl356/2d0)
-          if (arg356 <= 0.d0) arg356 = 1.d-9
-          eta356 = -log(arg356)
-          call rootadddouble(eta356, "eta356")
-
-          rps478 = (q(3,4)+q(3,7)+q(3,8)) &
-          /sqrt((q(1,4)+q(1,7)+q(1,8))**2 &
-          +(q(2,4)+q(2,7)+q(2,8))**2 &
-          +(q(3,4)+q(3,7)+q(3,8))**2)
-          if (rps478 < -1.d0)rps = -1.d0
-          if (rps478 > +1.d0)rps = +1.d0
-          rpl478 = acos(rps478)
-          arg478 = tan(rpl478/2d0)
-          if (arg478 <=  0.d0) arg478 = 1.d-9
-          eta478 = -log(arg478)
-          call rootadddouble(eta478, "eta478")
-
-          phi356 = atan2(qcol(2,3) + qcol(2,5) + qcol(2,6) &
-          ,qcol(1,3) + qcol(1,5) + qcol(1,6))
-          call rootadddouble(phi356, "phi356")
-
-          phi478 = atan2(qcol(2,4) + qcol(2,7) + qcol(2,8) &
-          ,qcol(1,4) + qcol(1,7) + qcol(1,8))
-          call rootadddouble(phi478, "phi478")
-
-          ycol356 =0.5*log((qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           + qcol(3,3) + qcol(3,5) + qcol(3,6)) &
-          /(qcol(4,3) + qcol(4,5) + qcol(4,6) &
-           - qcol(3,3) - qcol(3,5) - qcol(3,6)))
-          call rootadddouble(ycol356, "ycol356")
-
-          ycol478=0.5*log((qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           + qcol(3,4) + qcol(3,7) + qcol(3,8)) &
-          /(qcol(4,4) + qcol(4,7) + qcol(4,8) &
-           - qcol(3,4) - qcol(3,7) - qcol(3,8)))
-          call rootadddouble(ycol478, "ycol478")
-        end if
-
-        ! calculate the CoM rapidity of the top
-        if (final_state == 0) then
-          yt = 0.5d0*log((q(4,3) + q(3,3)) &
-          /(q(4,3) - q(3,3)))
-          ytcol = 0.5d0*log((qcol(4,3) + qcol(3,3)) &
-          /(qcol(4,3) - qcol(3,3)))
-        else if (final_state > 0) then
-          yt  = 0.5*log((q(4,3) + q(4,5) + q(4,6) &
-           + q(3,3) + q(3,5) + q(3,6)) &
-           /(q(4,3) + q(4,5) + q(4,6) &
-           - q(3,3) - q(3,5) - q(3,6)))
-          ytcol = ycol356
-        end if
-        call rootadddouble(yt, "yt")
-
-        ! calculate the CoM rapidity of the antitop
-        if (final_state == 0) then
-          ytb = 0.5d0*log((q(4,4) + q(3,4))/(q(4,4) - q(3,4)))
-          ytbcol = 0.5d0*log((qcol(4,4) + qcol(3,4))/(qcol(4,4) - qcol(3,4)))
-        else if (final_state > 0) then
-          ytb = 0.5*log((q(4,4) + q(4,7) + q(4,8) &
-           + q(3,4) + q(3,7) + q(3,8)) &
-           /(q(4,4) + q(4,7) + q(4,8) &
-           - q(3,4) - q(3,7) - q(3,8)))
-          ytbcol = ycol478
-        end if
-        call rootadddouble(ytb, "ytbar")
-
-        ! difference in absolute rapidity in lab frame
-        delta_absy = abs(ytcol) - abs(ytbcol)
-        call rootadddouble(delta_absy, "Delta_y")
-
-        ! calculate collider frame cos(theta_t)
-        if (final_state == 0) then
-          cost = &
-          (qcol(1,3)*qcol(1,1) &
-          +qcol(2,3)*qcol(2,1) &
-          +qcol(3,3)*qcol(3,1)) &
-          /sqrt(qcol(1,3)*qcol(1,3) &
-          +qcol(2,3)*qcol(2,3) &
-          +qcol(3,3)*qcol(3,3)) &
-          /sqrt(qcol(1,1)*qcol(1,1) &
-          +qcol(2,1)*qcol(2,1) &
-          +qcol(3,1)*qcol(3,1))
-        else if (final_state > 0) then
-          cost = &
-          ((qcol(1,3)+qcol(1,5)+qcol(1,6))*qcol(1,1) &
-          +(qcol(2,3)+qcol(2,5)+qcol(2,6))*qcol(2,1) &
-          +(qcol(3,3)+qcol(3,5)+qcol(3,6))*qcol(3,1)) &
-          /sqrt((qcol(1,3)+qcol(1,5)+qcol(1,6)) &
-          *(qcol(1,3)+qcol(1,5)+qcol(1,6)) &
-          +(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
-          *(qcol(2,3)+qcol(2,5)+qcol(2,6)) &
-          +(qcol(3,3)+qcol(3,5)+qcol(3,6)) &
-          *(qcol(3,3)+qcol(3,5)+qcol(3,6))) &
-          /sqrt(qcol(1,1)*qcol(1,1) &
-          +qcol(2,1)*qcol(2,1) &
-          +qcol(3,1)*qcol(3,1))
-        end if
-        call rootadddouble(cost, "costhetatcol")
-
-        ! calculate parton CoM cos(theta_t)
-        if (final_state == 0) then
-          costhetat_cm =(q(1,3)*q(1,1) &
-          +q(2,3)*q(2,1) &
-          +q(3,3)*q(3,1)) &
-          /sqrt(q(1,3)*q(1,3) &
-          +q(2,3)*q(2,3) &
-          +q(3,3)*q(3,3)) &
-          /sqrt(q(1,1)*q(1,1) &
-          +q(2,1)*q(2,1) &
-          +q(3,1)*q(3,1))
-        else if (final_state > 0) then
-          costhetat_cm = &
-          ((q(1,3)+q(1,5)+q(1,6))*q(1,1) &
-          +(q(2,3)+q(2,5)+q(2,6))*q(2,1) &
-          +(q(3,3)+q(3,5)+q(3,6))*q(3,1)) &
-          /sqrt((q(1,3)+q(1,5)+q(1,6)) &
-          *(q(1,3)+q(1,5)+q(1,6)) &
-          +(q(2,3)+q(2,5)+q(2,6)) &
-          *(q(2,3)+q(2,5)+q(2,6)) &
-          +(q(3,3)+q(3,5)+q(3,6)) &
-          *(q(3,3)+q(3,5)+q(3,6))) &
-          /sqrt(q(1,1)*q(1,1) &
-          +q(2,1)*q(2,1) &
-          +q(3,1)*q(3,1))
-        end if
-        call rootadddouble(costhetat_cm, "costhetat")
-
-        beta = shat/4.d0/rmt**2 - 1.d0
-        call rootadddouble(beta, "beta")
-
-        ! calculate rapidity of the tt system
-        ytt = 0.5d0*log(x1/x2)
-        call rootadddouble(ytt, "ytt")
-
-        ! reconstructed costheta_t
-        costhetat_star = int(ytt/abs(ytt))*costhetat_cm
-        call rootadddouble(costhetat_star, "costhetastar")
-
-        if (final_state == 0) then
-          mtt2 = (qcol(4,3) + qcol(4,4))**2
-          do i = 1, 3
-            mtt2 = mtt2 - (qcol(i,3) + qcol(i,4))**2
-          end do
-        else if (final_state > 0) then
-          mtt2 = (qcol(4,3) + qcol(4,4) &
-                + qcol(4,5) + qcol(4,6) &
-                + qcol(4,7) + qcol(4,8))**2
-          do i = 1, 3
-            mtt2 = mtt2 - (qcol(i,3) + qcol(i,4) &
-                         + qcol(i,5) + qcol(i,6) &
-                         + qcol(i,7) + qcol(i,8))**2
-          end do
-        end if
-        mtt = sqrt(abs(mtt2))
-        call rootadddouble(mtt, "Mtt")
-
-        if (final_state > 0) then         
-
-          ! reconstruct the neutrino momentum for the semi-hadronic channel
-          do i = 1, 2
-            pT6col(i) = p6col(i)
-            p6col_reco(i) = p6col(i)
-          end do
-          p6col_reco(3) = longitudinal_neutrino_momentum(p5col, pT6col)
-          call rootadddouble(p6col_reco(3), "Pz6_reco")
-          p6col_reco(0) = sqrt(p6col_reco(1)*p6col_reco(1) + p6col_reco(2)*p6col_reco(2) + p6col_reco(3)*p6col_reco(3))
-          call rootadddouble(p6col_reco(0), "E6_reco") 
-
-          ! total reconstructed momentum in collider frame
-          ptotalcol_reco = p1col + p2col + p3col + p4col + p5col + p6col_reco + p7col + p8col
-
-          ! find spatially opposite 4-momentum
-          ptotalcol_reco_opp(0) = ptotalcol_reco(0)
-          do i = 1, 3
-              ptotalcol_reco_opp(i) = -ptotalcol_reco(i)
-          end do
-          call boostx(p6col_reco, ptotalcol_reco_opp, p6_reco)
-
-          yt_reco = 0.5*log((q(4,3)+q(4,5)+p6_reco(0) &
-          +q(3,3)+q(3,5)+p6_reco(3)) &
-          /(q(4,3)+q(4,5)+p6_reco(0) &
-          -q(3,3)-q(3,5)-p6_reco(3)))
-          call rootadddouble(yt_reco, "yt_reco")
-
-          delta_absy_reco = abs(yt_reco) - abs(ytb)
-          call rootadddouble(delta_absy_reco, "Delta_y_reco")
-
-          ! calculate ytt reco
-          ptotal_reco = p1 + p2 + p3 + p4 + p5 + p6_reco + p7 + p8
-          ytt_reco = 0.5*log((ptotal_reco(0) + ptotal_reco(3))/(ptotal_reco(0) - ptotal_reco(3)))          
-
-          ! calculate cos(theta_t) reco
-          costhetat_reco = &
-          ((q(1,3) + q(1,5) + p6_reco(1))*q(1,1) &
-          + (q(2,3) + q(2,5) + p6_reco(2))*q(2,1) &
-          + (q(3,3) + q(3,5) + p6_reco(3))*q(3,1)) &
-          /sqrt((q(1,3) + q(1,5) + p6_reco(1))*(q(1,3) + q(1,5) + p6_reco(1)) &
-              + (q(2,3) + q(2,5) + p6_reco(2))*(q(2,3) + q(2,5) + p6_reco(2)) &
-              + (q(3,3) + q(3,5) + p6_reco(3))*(q(3,3) + q(3,5) + p6_reco(3))) &
-          /sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
-          call rootadddouble(costhetat_reco, "costhetat_reco")          
-
-          ! truth anti top mass
-          call rootadddouble(m478, "m478")
-
-          ! calculate mt reco
-          p356col_reco = p3col + p5col + p6col_reco
-          m356_reco = mass(p356col_reco)
-          call rootadddouble(m356_reco, "mt_reco")
-
-          ! calculate Mtt reco
-          mtt_reco2 = (qcol(4,3) + qcol(4,4) &
-                     + qcol(4,5) + p6col_reco(0) &
-                     + qcol(4,7) + qcol(4,8))**2
-          do i = 1, 3
-            mtt_reco2 = mtt_reco2 - (qcol(i,3) + qcol(i,4) &
-                                  +  qcol(i,5) + p6col_reco(i) &
-                                  +  qcol(i,7) + qcol(i,8))**2
-          end do
-          mtt_reco = sqrt(mtt_reco2)
-          call rootadddouble(mtt_reco, "Mtt_reco")          
-
-          ! "reconstructed" reconstructed costheta_t
-          costhetat_star_reco = int(ytt_reco/abs(ytt_reco))*costhetat_reco
-          call rootadddouble(costhetat_star_reco, "costhetastar_reco")
-
-          ! boost anti lepton to top rest frame
-          p356(0) = q356(4)
-          p356_opp(0) = q356(4)
-          do i = 1, 3
-            p356(i) = q356(i)
-            p356_opp(i) = -q356(i)
-          end do 
-          call boostx(p5, p356_opp, p5rest)
-
-          ! boost lepton to antitop rest frame
-          p478(0) = q478(4)
-          p478_opp(0) = q478(4)
-          do i = 1, 3
-            p478(i) = q478(i)
-            p478_opp(i) = -q478(i)
-          end do
-          call boostx(p7, p478_opp, p7rest)
-
-          ! calculate cos(theta_l+) in top rest frame
-          costheta5 = (p5rest(1)*q356(1) &
-                       +p5rest(2)*q356(2) &
-                       +p5rest(3)*q356(3)) &
-                      /sqrt(p5rest(1)*p5rest(1) &
-                            +p5rest(2)*p5rest(2) &
-                            +p5rest(3)*p5rest(3)) &
-                      /sqrt(q356(1)*q356(1) &
-                            +q356(2)*q356(2) &
-                            +q356(3)*q356(3))
-          call rootadddouble(costheta5, "costheta5")
-
-          ! calculate cos(theta_l-) in top rest frame
-          costheta7 = (p7rest(1)*q478(1) &
-                       +p7rest(2)*q478(2) &
-                       +p7rest(3)*q478(3)) &
-                      /sqrt(p7rest(1)*p7rest(1) &
-                            +p7rest(2)*p7rest(2) &
-                            +p7rest(3)*p7rest(3)) &
-                      /sqrt(q478(1)*q478(1) &
-                            +q478(2)*q478(2) &
-                            +q478(3)*q478(3))
-          call rootadddouble(costheta7, "costheta7")
-
-          ! calculate product of cos(theta_l+) and cos(theta_l-) in top rest frame          
-          ct7ct5 = costheta7*costheta5
-          call rootadddouble(ct7ct5, "ct7ct5")
-
-          ! calculate cos(theta_l+)col
-          costheta5col = (qcol(1,5)*qcol(1,1) &
-                        + qcol(2,5)*qcol(2,1) &
-                        + qcol(3,5)*qcol(3,1)) &
-                        /sqrt(qcol(1,5)*qcol(1,5) &
-                        + qcol(2,5)*qcol(2,5) &
-                        + qcol(3,5)*qcol(3,5)) &
-                        /sqrt(qcol(1,1)*qcol(1,1) &
-                        + qcol(2,1)*qcol(2,1) &
-                        + qcol(3,1)*qcol(3,1))
-          call rootadddouble(costheta5col, "costheta5col")
-
-
-          ! calculate cos(theta_l-)col
-          costheta7col = (qcol(1,7)*qcol(1,1) &
-                        + qcol(2,7)*qcol(2,1) &
-                        + qcol(3,7)*qcol(3,1)) &
-                        /sqrt(qcol(1,7)*qcol(1,7) &
-                        + qcol(2,7)*qcol(2,7) &
-                        + qcol(3,7)*qcol(3,7)) &
-                        /sqrt(qcol(1,1)*qcol(1,1) &
-                        + qcol(2,1)*qcol(2,1) &
-                        + qcol(3,1)*qcol(3,1))
-          call rootadddouble(costheta7col, "costheta7col")
-
-          ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
-          ct7ct5col = costheta7col*costheta5col
-          call rootadddouble(ct7ct5col, "ct7ct5col")
-
-          ! calculate cos(theta_l+)cm
-          costheta5cm = (q(1,5)*q(1,1) &
-                        + q(2,5)*q(2,1) &
-                        + q(3,5)*q(3,1)) &
-                        /sqrt(q(1,5)*q(1,5) &
-                        + q(2,5)*q(2,5) &
-                        + q(3,5)*q(3,5)) &
-                        /sqrt(q(1,1)*q(1,1) &
-                        + q(2,1)*q(2,1) &
-                        + q(3,1)*q(3,1))
-          call rootadddouble(costheta5cm, "costheta5cm")
-
-
-          ! calculate cos(theta_l-)cm
-          costheta7cm = (q(1,7)*q(1,1) &
-                        + q(2,7)*q(2,1) &
-                        + q(3,7)*q(3,1)) &
-                        /sqrt(q(1,7)*q(1,7) &
-                        + q(2,7)*q(2,7) &
-                        + q(3,7)*q(3,7)) &
-                        /sqrt(q(1,1)*q(1,1) &
-                        + q(2,1)*q(2,1) &
-                        + q(3,1)*q(3,1))
-          call rootadddouble(costheta7cm, "costheta7cm")
-
-          ! calculate product of cos(theta_l+) and cos(theta_l-) in collider frame
-          ct7ct5cm = costheta7cm*costheta5cm
-          call rootadddouble(ct7ct5cm, "ct7ct5cm")
-
-          ! calculate cos(phi_l) (lepton azimuthal angle)
-          p5mag = sqrt(q(1,5)*q(1,5) + q(2,5)*q(2,5) + q(3,5)*q(3,5))
-
-          ! p(1)^ is z^
-          do i = 1, 3
-            zp(i) = q(i,1)/sqrt(q(1,1)*q(1,1) + q(2,1)*q(2,1) + q(3,1)*q(3,1))
-          end do
-
-          ! p(5)_t^ is x^
-          do i = 1, 2
-            xp(i) = q356(i)/sqrt(q356(1)*q356(1) + q356(2)*q356(2))
-          end do
-          xp(3) = 0
-
-          ! y^ obtained using cross product
-          yp(1) = zp(2)*xp(3) - zp(3)*xp(2)
-          yp(2) = zp(3)*xp(1) - zp(1)*xp(3)
-          yp(3) = zp(1)*xp(2) - zp(2)*xp(1)
-
-          p5xp = 0
-          do i = 1, 3
-            p5xp = p5xp + q(i,5)*xp(i)
-          end do
-          p5yp = 0
-          do i = 1, 3
-            p5yp = p5yp + q(i,5)*yp(i)
-          end do
-          p5zp = 0
-          do i = 1, 3
-            p5zp = p5zp + q(i,5)*zp(i)
-          end do
-
-          p5mp = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp)
-
-          if (abs(p5mag - p5mp) >= 1e-11) print*, 'Error: coordinate transform mismatch.'
-
-          phi_l = atan2(p5yp,p5xp)
-
-          if (phi_l < 0)phi_l = phi_l + 2*pi
-          call rootadddouble(phi_l, "fl")
-
-          cosfl = cos(phi_l)
-          call rootadddouble(cosfl, "cosphil")
-        end if
-
-        if (verbose == 1) print*, "...complete."
-
-        if (verbose == 1) print*, "Computing FB dsigmas..."
-
-        if (costhetat_cm > 0.d0) then
-          sigma_fb(+1,1,it) = sigma_fb(+1,1,it) + hist
-          error_fb(+1,1,it) = error_fb(+1,1,it) + sigma_fb(+1,1,it)**2
-        else if (costhetat_cm < 0.d0) then
-          sigma_fb(-1,1,it) = sigma_fb(-1,1,it) + hist
-          error_fb(-1,1,it) = error_fb(-1,1,it) + sigma_fb(-1,1,it)**2
-        end if
-
-        if (costhetat_star > 0.d0) then
-          sigma_fb(+1,2,it) = sigma_fb(+1,2,it) + hist
-          error_fb(+1,2,it) = error_fb(+1,2,it) + sigma_fb(+1,2,it)**2
-        else if (costhetat_star < 0.d0) then
-          sigma_fb(-1,2,it) = sigma_fb(-1,2,it) + hist
-          error_fb(-1,2,it) = error_fb(-1,2,it) + sigma_fb(-1,2,it)**2
-        end if
-
-        if (yt > 0.d0) then
-          sigma_fb(+1,3,it) = sigma_fb(+1,3,it) + hist
-          error_fb(+1,3,it) = error_fb(+1,3,it) + sigma_fb(+1,3,it)**2
-        else if (yt < 0.d0) then
-          sigma_fb(-1,3,it) = sigma_fb(-1,3,it) + hist
-          error_fb(-1,3,it) = error_fb(-1,3,it) + sigma_fb(-1,3,it)**2
-        end if
-
-        if (yt >= 0.d0) then
-          sigma_fb(+1,4,it) = sigma_fb(+1,4,it) + hist
-          error_fb(+1,4,it) = error_fb(+1,4,it) + sigma_fb(+1,4,it)**2
-        end if
-        if (ytb >= 0.d0) then
-          sigma_fb(-1,4,it) = sigma_fb(-1,4,it) + hist
-          error_fb(-1,4,it) = error_fb(-1,4,it) + sigma_fb(-1,4,it)**2
-        end if
-
-        if (delta_absy > 0.d0) then
-          sigma_fb(+1,5,it) = sigma_fb(+1,5,it) + hist
-          error_fb(+1,5,it) = error_fb(+1,5,it) + sigma_fb(+1,5,it)**2
-        else if (delta_absy < 0.d0) then
-          sigma_fb(-1,5,it) = sigma_fb(-1,5,it) + hist
-          error_fb(-1,5,it) = error_fb(-1,5,it) + sigma_fb(-1,5,it)**2
-        end if
-
-        if (final_state > 0) then
-          if (costhetat_star_reco > 0.d0) then
-            sigma_fb(+1,6,it) = sigma_fb(+1,6,it) + hist
-            error_fb(+1,6,it) = error_fb(+1,6,it) + sigma_fb(+1,6,it)**2
-          else if (costhetat_star_reco < 0.d0) then
-            sigma_fb(-1,6,it) = sigma_fb(-1,6,it) + hist
-            error_fb(-1,6,it) = error_fb(-1,6,it) + sigma_fb(-1,6,it)**2
-          end if
-
-          if (abs(ytt_reco) > yttmin) then
-            if (delta_absy == 0.d0) then
-              continue
-            else if (delta_absy_reco > 0.d0) then
-              sigma_fb(+1,7,it) = sigma_fb(+1,7,it) + hist
-              error_fb(+1,7,it) = error_fb(+1,7,it) + sigma_fb(+1,7,it)**2
-            else if (delta_absy_reco < 0.d0) then
-              sigma_fb(-1,7,it) = sigma_fb(-1,7,it) + hist
-              error_fb(-1,7,it) = error_fb(-1,7,it) + sigma_fb(-1,7,it)**2
-            end if
-          end if
-
-          if (cosfl > 0.d0) then
-            sigma_fb(+1,8,it) = sigma_fb(+1,8,it) + hist
-            error_fb(+1,8,it) = error_fb(+1,8,it) + sigma_fb(+1,8,it)**2
-          else if (cosfl < 0.d0) then
-            sigma_fb(-1,8,it) = sigma_fb(-1,8,it) + hist
-            error_fb(-1,8,it) = error_fb(-1,8,it) + sigma_fb(-1,8,it)**2
-          end if
-
-          if (costheta5cm > 0.d0) then
-            sigma_fb(+1,9,it) = sigma_fb(+1,9,it) + hist
-            error_fb(+1,9,it) = error_fb(+1,9,it) + sigma_fb(+1,9,it)**2
-          else if (costheta5cm < 0.d0) then
-            sigma_fb(-1,9,it) = sigma_fb(-1,9,it) + hist
-            error_fb(-1,9,it) = error_fb(-1,9,it) + sigma_fb(-1,9,it)**2
-          end if
-        end if
-
-        if (verbose == 1) print*, "...complete."
-      end if
-
-      ! convert results to different tt classifications
-      call rootadddouble(hist*fac_ee,"weight_ee")
-      call rootadddouble(hist*fac_emu,"weight_emu")
-      call rootadddouble(hist*fac_eq,"weight_eq")
-      call rootadddouble(hist*fac_qq,"weight_qq")
-      call rootaddint(it,"iteration")
-      call rootaddevent(hist)
-
-      if (print_distributions == 1) then
-        if (verbose == 1) print*, 'Filling distributions...'
-
-        if (o_mtt == 1) call h_mtt%fill(mtt, hist)
-        if (o_cost == 1) call h_cost%fill(cost, hist)
-        if (o_delta_y == 1) call h_delta_y%fill(delta_absy, hist)
-
-        if (final_state > 0) then
-          if (o_mtt_reco == 1) call h_mtt_reco%fill(mtt_reco, hist)
-          if (o_mt_reco == 1) call h_mt_reco%fill(m356_reco, hist)
-	        if (o_fl == 1) call h_fl%fill(phi_l, hist)
-	        if (o_cosfl == 1) call h_cosfl%fill(cosfl, hist)
-	        if (o_cost5 == 1) call h_cost5%fill(costheta5, hist)
-	        if (o_cost7 == 1) call h_cost7%fill(costheta7, hist)
-	        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
-     		end if
-
-        if (verbose == 1) print*, '...complete.'
-        if (verbose == 1) print*, 'Filling asymmetry histograms...'
-
-        if (o_asym(1) == 1) then
-          if (o_sigp == 1) then
-            ! generate distribution in sigp for all.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(1,nbin,it)=fxsigp(1,nbin,it)+ &
-              (weight(+1,+1,it)+weight(-1,-1,it))   !ction happens
-            end if
-          end if
-          if (o_sigm == 1) then
-            ! generate distribution in sigm for all.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(1,nbin,it)=fxsigm(1,nbin,it)+ &
-              (weight(+1,-1,it)+weight(-1,+1,it))
-            end if
-          end if
-        end if
-
-        if (o_asym(2) == 1) then
-          if (o_sigp == 1) then
-          ! generate distribution in sigp for al.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(2,nbin,it)=fxsigp(2,nbin,it)+ &
-              (weight(-1,-1,it)+weight(-1,+1,it))
-            end if
-          end if
-          if (o_sigm == 1) then
-          ! generate distribution in sigm for al.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(2,nbin,it)=fxsigm(2,nbin,it)+ &
-              (weight(+1,-1,it)+weight(+1,+1,it))
-            end if
-          end if
-        end if
-
-        if (o_asym(3) == 1) then
-          if (o_sigp == 1) then
-          ! generate distribution in sigp for apv.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(3,nbin,it)=fxsigp(3,nbin,it)+ &
-              (weight(-1,-1,it))
-            end if
-          end if
-          if (o_sigm == 1) then
-          ! generate distribution in sigm for apv.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(3,nbin,it)=fxsigm(3,nbin,it)+ &
-              (weight(+1,+1,it))
-            end if
-          end if
-        end if
-
-        if (o_asym(4) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_cm > 0.d0)) then
-          ! generate distribution in sigp for afbcm.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(4,nbin,it)=fxsigp(4,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_cm < 0.d0)) then
-          ! generate distribution in sigm for afbcm.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(4,nbin,it)=fxsigm(4,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(5) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_star > 0.d0)) then
-          ! generate distribution in sigp for afbstar.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(5,nbin,it)=fxsigp(5,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_star < 0.d0)) then
-          ! generate distribution in sigm for afbstar.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(5,nbin,it)=fxsigm(5,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(6) == 1) then
-          if ((o_sigp == 1) .and. (costhetat_star_reco > 0.d0)) then
-          ! generate distribution in sigp for afbstar reco.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(6,nbin,it)=fxsigp(6,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costhetat_star_reco < 0.d0)) then
-          ! generate distribution in sigm for afbstar.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(6,nbin,it)=fxsigm(6,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(7) == 1) then
-          if ((o_sigp == 1) .and. (yt > 0.d0)) then
-          ! generate distribution in sigp for atfb.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(7,nbin,it)=fxsigp(7,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (yt < 0.d0)) then
-          ! generate distribution in sigm for atfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(7,nbin,it)=fxsigm(7,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(8) == 1) then
-          if ((o_sigp == 1) .and. (yt >= 0.d0)) then
-          ! generate distribution in sigp for a.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(8,nbin,it)=fxsigp(8,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (ytb >= 0.d0)) then
-          ! generate distribution in sigm for a.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(8,nbin,it)=fxsigm(8,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(9) == 1) then
-          if ((o_sigp == 1) .and. (delta_absy > 0.d0)) then
-          ! generate distribution in sigp for arfb.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt) > yttmin)fxsigp(9,nbin,it)=fxsigp(9,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (delta_absy < 0.d0)) then
-          ! generate distribution in sigm for arfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt) > yttmin)fxsigm(9,nbin,it)=fxsigm(9,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(10) == 1) then
-          if ((o_sigp == 1) .and. (delta_absy_reco > 0.d0)) then
-          ! generate distribution in sigp for arfb reco.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt_reco) > yttmin)fxsigp(10,nbin,it)=fxsigp(10,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (delta_absy_reco < 0.d0)) then
-          ! generate distribution in sigm for arfb.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              if (abs(ytt_reco) > yttmin)fxsigm(10,nbin,it)=fxsigm(10,nbin,it)+hist
-            end if
-          end if
-        end if
-
-        if (o_asym(11) == 1) then
-          if ((o_sigp == 1) .and. (cosfl > 0.d0)) then
-            ! generate distribution in sigp for a_l.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(11,nbin,it)=fxsigp(11,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (cosfl < 0.d0)) then
-            ! generate distribution in sigm for a_l.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(11,nbin,it)=fxsigm(11,nbin,it)+hist
-            end if
-          end if
-        end if
-      
-        if (o_asym(12) == 1) then
-          if ((o_sigp == 1) .and. (costheta5cm > 0.d0)) then
-            ! generate distribution in sigp for alFB.
-            sigp=ecm
-            nbin=int((sigp-sigpmin)/sigpw)+1
-            if (nbin >= (ndiv_sigp+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigp(12,nbin,it)=fxsigp(12,nbin,it)+hist
-            end if
-          end if
-          if ((o_sigm == 1) .and. (costheta5cm < 0.d0)) then
-            ! generate distribution in sigm for alFB.
-            sigm=ecm
-            nbin=int((sigm-sigmmin)/sigmw)+1
-            if (nbin >= (ndiv_sigm+1)) then
-              continue
-            else if (nbin < 1) then
-              continue
-            else
-              fxsigm(12,nbin,it)=fxsigm(12,nbin,it)+hist
-            end if
-          end if
-        end if
-        if (verbose == 1) print*, '...complete.'
-      end if
-
-      ! stats
-      npoints = npoints + 1
-      if (verbose == 1 ) print*, "...event", npoints, "complete."
-      999 continue
-      ffxn = ffxn + fffxn
+        ffffxn = ffffxn + fffffxn
+      end do
+      ffxn = ffxn + ffffxn
     end do
     dsigma = dsigma + ffxn  
   end do

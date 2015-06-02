@@ -22,6 +22,8 @@ module configuration
   integer :: additional_kinematics
   integer :: symmetrise_x1x2
   integer :: symmetrise_costheta_t
+  integer :: symmetrise_costheta_5
+  integer :: symmetrise_costheta_7
   integer :: print_distributions
   integer :: include_errors
   integer :: phase_space_only
@@ -40,7 +42,7 @@ module configuration
   integer, parameter :: n_asymmetries = 12
   integer :: o_asym(n_asymmetries)
 
-  integer :: ixmax, jxmax
+  integer :: ixmax, jxmax, i5max, i7max
 
   ! variable switches
   integer :: o_ptb = 1
@@ -156,6 +158,10 @@ module configuration
 
       read(5,*) symmetrise_costheta_t
 
+      read(5,*) symmetrise_costheta_5
+
+      read(5,*) symmetrise_costheta_7
+
       read(5,*) print_distributions
 
       read(5,*) include_errors
@@ -170,13 +176,19 @@ module configuration
 
       print*, "Modifying config file..."
 
-      if(final_state == 0) then
+      if (final_state == 0) then
+        symmetrise_costheta_5 = 0
+        symmetrise_costheta_7 = 0
+      end if
+
+
+      if (final_state == 0) then
         nfb = 5
       else if (final_state > 0) then
         nfb = 9
       end if
 
-      if(final_state == 0) then
+      if (final_state == 0) then
         n_final = 4
       else
         n_final = 8
@@ -188,33 +200,45 @@ module configuration
         additional_kinematics = 0
       end if
 
-      if(final_state == 0) use_nwa = 0
-      if(final_state > 0) use_branching_ratio = 0
+      if (final_state == 0) use_nwa = 0
+      if (final_state > 0) use_branching_ratio = 0
 
       if (itmx > 20 )then
         write(*,*) 'itmx does not have to exceed 20!'
         stop
       end if
 
-      if(symmetrise_x1x2 == 1)then
+      if (symmetrise_x1x2 == 1)then
         ixmax = 2
       else
         ixmax = 1
       end if
 
-      if(symmetrise_costheta_t == 1)then
+      if (symmetrise_costheta_t == 1)then
         jxmax = 2
       else
         jxmax = 1
       end if
 
-      if(final_state == 0)then
+      if (symmetrise_costheta_5 == 1)then
+        i5max = 2
+      else
+        i5max = 1
+      end if
+
+      if (symmetrise_costheta_7 == 1)then
+        i7max = 2
+      else
+        i7max = 1
+      end if
+
+      if (final_state == 0)then
         tops_decay = 0
       else
         tops_decay = 1
       end if
 
-      if(phase_space_only == 1)then
+      if (phase_space_only == 1)then
         include_qcd = 0
         include_ew = 0
         include_bsm = 0
