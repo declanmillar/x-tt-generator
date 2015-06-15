@@ -40,6 +40,7 @@ protected:
   double TotalAsymmetry(TH1D* h_A, TH1D* h_B);
   void TotalSpinAsymmetries();
   TH1D* Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B);
+  void AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B);
   void ALL2to6();
   TH1D* MttALL();
   TH1D* MttAL();
@@ -58,6 +59,7 @@ private:
   
   float m_pi;
   float m_GeV;
+  double m_intLumi;
   double m_Wmass;
   TString m_channel;  
   TString m_model;
@@ -75,33 +77,49 @@ private:
   // OutputFile
   TFile* m_outputFile;
   
-  // Define Histograms
+  // Angular histograms
   TH1D* h_dphi;
-  TH1D* h_costheta5_eq;
-  TH1D* h_costheta5_ee;
+  TH1D* h_costheta5;
   TH1D* h_ct7ct5; 
-  TH1D* h_AFstar;
-  TH1D* h_ABstar;
+
+  // asymmetry histograms
   TH1D* h_AFBstar;
-  TH1D* h_RF;
-  TH1D* h_RB;
-  TH1D* h_ARFB;
+  TH1D* h_AFBstar1;
+  TH1D* h_AFBstar2;
+
+  TH1D* h_AFBstarNuReco;
+  TH1D* h_AFBstarNuReco1;
+  TH1D* h_AFBstarNuReco2;
+
+  TH1D* h_AttC;
+  TH1D* h_AttC1;
+  TH1D* h_AttC2;
+
+  TH1D* h_AllC;  
+  TH1D* h_AllCF;
+  TH1D* h_AllCB;
+
   TH1D* h_AL;
   TH1D* h_AlLF;
   TH1D* h_AlLB;
+
   TH1D* h_ALL;
   TH1D* h_ALLF;
   TH1D* h_ALLB;
+
+  // neutrino resolution
   TH1D* h_PzNu;
   TH1D* h_PzNuReco;
   TH1D* h_Mtt;
-  TH1D* h_MttPzNuReco;
+  TH1D* h_MttNuReco;
+
+  // polarisation weighted
   TH1D* h_MttLL;
   TH1D* h_MttLR;
   TH1D* h_MttRL;
   TH1D* h_MttRR;
-  TH1D* h_MttALL;
-  TH1D* h_MttAL;
+
+  // transverse variables 
   TH1D* h_MET;
   TH1D* h_HT;
   TH1D* h_Mbbll;
@@ -112,6 +130,8 @@ private:
   TH1D* h_MCTll;
   TH1D* h_MTblbl;
   TH1D* h_MCTblbl;
+
+  // 2d Histograms
   TH2D* h_dphi_HT;
   TH2D* h_dphi_Mbbll;
   TH2D* h_dphi_mll;
@@ -121,6 +141,7 @@ private:
   TH2D* h_dphi_MCTll;
   TH2D* h_dphi_MTblbl;
   TH2D* h_dphi_MCTblbl;
+
   typedef vector<TString>::const_iterator Itr_s;
 };
 #endif

@@ -22,7 +22,7 @@ TCanvas* superpose(const bool normalise,
   if (histTitle1 == "NULL") h1->SetTitle(name1);
   else h1->SetTitle(histTitle1);
   h1->SetMarkerStyle(20);
-  h1->Draw();//("E1x0P");
+  h1->Draw("HIST");//("E1x0P");
   h1->SetMarkerColor(kBlack);
   h1->SetLineColor(kBlack);
   h1->GetYaxis()->SetTitleOffset(1.3);
@@ -37,7 +37,7 @@ TCanvas* superpose(const bool normalise,
     if (histTitle2 == "NULL") h2->SetTitle(name2);
     else h2->SetTitle(histTitle2);
     h2->SetMarkerStyle(20);
-    h2->Draw("SAME");//("E1x0PSAME");
+    h2->Draw("HIST SAME");//("E1x0PSAME");
     h2->SetLineColor(kRed);
     h2->SetMarkerColor(kRed);
   }
@@ -50,7 +50,7 @@ TCanvas* superpose(const bool normalise,
     if (histTitle3 == "NULL") h3->SetTitle(name3);
     else h3->SetTitle(histTitle3);
     h3->SetMarkerStyle(20);
-    h3->Draw("SAME");//("E1x0PSAME");
+    h3->Draw("HIST SAME");//("E1x0PSAME");
     h3->SetLineColor(kGreen+2);
     h3->SetMarkerColor(kGreen+2);
   }
@@ -63,7 +63,7 @@ TCanvas* superpose(const bool normalise,
     if (histTitle4 == "NULL") h4->SetTitle(name4);
     else h4->SetTitle(histTitle4);
     h4->SetMarkerStyle(20);
-    h4->Draw("SAME");//("E1x0PSAME");
+    h4->Draw("HIST SAME");//("E1x0PSAME");
     h4->SetLineColor(kBlue);
     h4->SetMarkerColor(kBlue);
   }

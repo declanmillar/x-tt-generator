@@ -8,7 +8,7 @@
 //  *   Author: John Morris (john.morris@cern.ch)                             * 
 //  *           Queen Mary University of London                               * 
 //  *   Editor: Declan Millar (declan.millar@cern.ch)                         * 
-//  *   File Generated on Mon May 11 12:24:29 2015                            * 
+//  *   File Generated on Wed Jun  3 10:31:34 2015                            * 
 //  *                                                                         * 
 //  ***************************************************************************/ 
 
@@ -65,17 +65,11 @@ Long64_t RootTuple::LoadTree(Long64_t entry){
 } 
 
 void RootTuple::Init(TTree* tree){ 
-  m_Delta_y = 0; 
   m_E = 0; 
-  m_Mtt = 0; 
   m_Px = 0; 
   m_Py = 0; 
   m_Pz = 0; 
   m_barcode = 0; 
-  m_beta = 0; 
-  m_costhetastar = 0; 
-  m_costhetat = 0; 
-  m_costhetatcol = 0; 
   m_iteration = 0; 
   m_weight = 0; 
   m_weightLL = 0; 
@@ -86,26 +80,17 @@ void RootTuple::Init(TTree* tree){
   m_weight_emu = 0; 
   m_weight_eq = 0; 
   m_weight_qq = 0; 
-  m_yt = 0; 
-  m_ytbar = 0; 
-  m_ytt = 0; 
 
   if (!tree) return; 
   fChain = tree; 
   fCurrent = -1; 
   fChain->SetMakeClass(1); 
 
-  fChain->SetBranchAddress("Delta_y", &m_Delta_y, &b_Delta_y); 
   fChain->SetBranchAddress("E", &m_E, &b_E); 
-  fChain->SetBranchAddress("Mtt", &m_Mtt, &b_Mtt); 
   fChain->SetBranchAddress("Px", &m_Px, &b_Px); 
   fChain->SetBranchAddress("Py", &m_Py, &b_Py); 
   fChain->SetBranchAddress("Pz", &m_Pz, &b_Pz); 
   fChain->SetBranchAddress("barcode", &m_barcode, &b_barcode); 
-  fChain->SetBranchAddress("beta", &m_beta, &b_beta); 
-  fChain->SetBranchAddress("costhetastar", &m_costhetastar, &b_costhetastar); 
-  fChain->SetBranchAddress("costhetat", &m_costhetat, &b_costhetat); 
-  fChain->SetBranchAddress("costhetatcol", &m_costhetatcol, &b_costhetatcol); 
   fChain->SetBranchAddress("iteration", &m_iteration, &b_iteration); 
   fChain->SetBranchAddress("weight", &m_weight, &b_weight); 
   fChain->SetBranchAddress("weightLL", &m_weightLL, &b_weightLL); 
@@ -116,8 +101,5 @@ void RootTuple::Init(TTree* tree){
   fChain->SetBranchAddress("weight_emu", &m_weight_emu, &b_weight_emu); 
   fChain->SetBranchAddress("weight_eq", &m_weight_eq, &b_weight_eq); 
   fChain->SetBranchAddress("weight_qq", &m_weight_qq, &b_weight_qq); 
-  fChain->SetBranchAddress("yt", &m_yt, &b_yt); 
-  fChain->SetBranchAddress("ytbar", &m_ytbar, &b_ytbar); 
-  fChain->SetBranchAddress("ytt", &m_ytt, &b_ytt); 
 } 
 
