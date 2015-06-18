@@ -45,66 +45,6 @@ module configuration
   integer :: o_asym(n_asymmetries)
 
   integer :: ixmax, jxmax, i5max, i7max
-
-  ! variable switches
-  integer :: o_ptb = 1
-  integer :: o_ptbb = 1
-  integer :: o_ptlp = 1
-  integer :: o_ptlm = 1
-  integer :: o_ptnu = 1
-  integer :: o_ptnub = 1
-  integer :: o_ptt = 1
-  integer :: o_pttb = 1
-  integer :: o_etab = 1
-  integer :: o_etabb = 1
-  integer :: o_etalp = 1
-  integer :: o_etalm = 1
-  integer :: o_etanu = 1
-  integer :: o_etanub = 1
-  integer :: o_etat = 1
-  integer :: o_etatb = 1
-  integer :: o_phib = 1
-  integer :: o_phibb = 1
-  integer :: o_philp = 1
-  integer :: o_philm = 1
-  integer :: o_phinu = 1
-  integer :: o_phinub = 1
-  integer :: o_phit = 1
-  integer :: o_phitb = 1
-  integer :: o_ycolb = 1
-  integer :: o_ycolbb = 1
-  integer :: o_ycollp = 1
-  integer :: o_ycollm = 1
-  integer :: o_ycolnu = 1
-  integer :: o_ycolnub = 1
-  integer :: o_ycolt   = 1
-  integer :: o_ycoltb = 1
-  integer :: o_mtt = 1
-  integer :: o_mtt_reco = 1
-  integer :: o_mtb = 1
-  integer :: o_mt_reco = 1
-  integer :: o_etmiss = 1
-  integer :: o_beta = 1
-  integer :: o_cost = 1
-  integer :: o_et = 1
-  integer :: o_delta_y = 1
-  integer :: o_fl = 1
-  integer :: o_cosfl = 1
-  integer :: o_dphi = 1
-  integer :: o_cost5 = 1
-  integer :: o_cost7 = 1
-  integer :: o_ct7ct5 = 1
-  integer :: o_mll = 0
-  integer :: o_ht = 1
-  integer :: o_mttvis = 1
-  integer :: o_mt1 = 1
-  integer :: o_mt2 = 1
-  integer :: o_mt3 = 1
-  integer :: o_mct1 = 1
-  integer :: o_mct2 = 1
-  integer :: o_mct3 = 1
-  integer :: o_mlt = 1
-  integer :: o_mlct = 1
   
   public :: read_config
   public :: modify_config

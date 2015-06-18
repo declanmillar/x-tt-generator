@@ -18,7 +18,6 @@ program zprime
   use scattering
   use kinematics
   use integration
-  use distributions  
 
   implicit none
 
@@ -49,11 +48,6 @@ program zprime
 
   print*, "Output Ntuple will be written to ", ntuple_file
   call rootinit(ntuple_file)
-
-  if (print_distributions == 1) then
-    call create_distributions
-    call initialise_distributions
-  end if
 
   s = collider_energy*collider_energy
 
@@ -500,8 +494,6 @@ program zprime
     end if
   end if
   print*, "...complete."
-
-  if (print_distributions == 1) call finalise_distributions
 
   call rootclose
   call cpu_time(finish_time)

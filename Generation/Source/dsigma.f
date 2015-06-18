@@ -13,7 +13,6 @@ function dsigma(x,wgt)
   use scattering
   use kinematics
   use integration
-  use distributions
   
   implicit none
 
@@ -801,6 +800,7 @@ function dsigma(x,wgt)
                   if (include_gg == 1) then 
                     qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
                     qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
+                    print*, qcdpolgg1(lam3,lam4), qcdpolgg2(lam3,lam4)
                   end if
                   if (include_qq == 1) then
                     qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
