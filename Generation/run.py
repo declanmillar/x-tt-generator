@@ -128,6 +128,11 @@ if options.use_rambo == 1:
 if options.map_phase_space == 0:
   all_options += "M"
 
+if options.include_gg == 0:
+  all_options += "g"
+if options.include_qq == 0:
+  all_options += "q"
+
 if len(all_options) > 0:
   all_options = "_" + all_options
 
