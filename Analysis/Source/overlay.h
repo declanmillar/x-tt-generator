@@ -16,7 +16,7 @@
 #include "TLegend.h"
 #include "TLatex.h"
 
-TCanvas* superpose(const bool normalise,
+TCanvas* overlay(const bool normalise,
 									 TString histName1,          TString histTitle1,          TString fileName1, 
                    TString histName2 = "NULL", TString histTitle2 = "NULL", TString fileName2 = "NULL", 
                    TString histName3 = "NULL", TString histTitle3 = "NULL", TString fileName3 = "NULL",

@@ -3,10 +3,10 @@
 AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& outputFileName) :
   m_pi(3.14159265),
   m_GeV(1000.0),
+  m_intLumi(0),//(300000.0),
   m_Wmass(80.23),
   m_channel(channel),
   m_model(model),
-  m_intLumi(0),//(300000.0),
   m_inputFileName(inputFileName),
   m_outputFileName(outputFileName),
   m_inputFiles(NULL),
@@ -242,36 +242,37 @@ void AnalysisZprime::EachEvent()
     MCTblbl = sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] - pTcol[1] - pTcol[4]).Mod2());
 
     // magnitiude of l+ in collider frame
-    double plepmag = sqrt(pcol[2].Px()*pcol[2].Px() + pcol[2].Py()*pcol[2].Py() + pcol[2].Pz()*pcol[2].Pz())
+    // double plepmag = sqrt(pcol[2].Px()*pcol[2].Px() + pcol[2].Py()*pcol[2].Py() + pcol[2].Pz()*pcol[2].Pz());
 
-    // Create basis vectors for the GRRS based on the top direction
-    Tvector3 x2, y2, z2;
-    TLorentzVector plepGRRS = pcol[2];
-    z2[1] = 0;
-    z2[2] = 0;
-    z2[3] = 1;
+    // // Create basis vectors for the GRRS based on the top direction
+    // TVector3 x2, y2, z2;
+    // TLorentzVector plepGRRS = pcol[2];
+    // z2[1] = 0;
+    // z2[2] = 0;
+    // z2[3] = 1;
+    // double p5xp, p5yp, p5zp;
 
-    // top direction is x'
-    for (int i = 1; i < 3; i++) {
-      x2[i] = ptcol[i]/sqrt[p]col[1]*ptcol[1] + ptcol[2]*ptcol[2]);
-    }
-    x2[3] = 0;
+    // // top direction is x'
+    // for (int i = 1; i < 3; i++) {
+    //   x2[i] = ptcol[i]/sqrt(ptcol[1]*ptcol[1] + ptcol[2]*ptcol[2]);
+    // }
+    // x2[3] = 0;
 
-    // y' obtained using cross product
-    y2[1] = z2[2]*x2[3] - z2[3]*x2[2];
-    y2[2] = z2[3]*x2[1] - z2[1]*x2[3];
-    y2[3] = z2[1]*x2[2] - z2[2]*x2[1];
+    // // y' obtained using cross product
+    // y2[1] = z2[2]*x2[3] - z2[3]*x2[2];
+    // y2[2] = z2[3]*x2[1] - z2[1]*x2[3];
+    // y2[3] = z2[1]*x2[2] - z2[2]*x2[1];
 
-    double plepGRRSx, plepGRRSy, plepGRRSz;
-    for (int i = 1; i < 4; i++) {
-      p5xp = p5xp + pcol[3][i]*xp[i];
-      p5yp = p5yp + pcol[3][i]*yp[i];
-      p5zp = p5zp + pcol[3][i]*zp[i];
-    }
+    // double plepGRRSx, plepGRRSy, plepGRRSz;
+    // for (int i = 1; i < 4; i++) {
+    //   p5xp = p5xp + pcol[3][i]*x2[i];
+    //   p5yp = p5yp + pcol[3][i]*y2[i];
+    //   p5zp = p5zp + pcol[3][i]*z2[i];
+    // }
 
-    double plepmagGRRS = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp);
+    // double plepmagGRRS = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp);
 
-    if (std::abs(plepmag - plepmagGRRS) >= 1e-11) printf("Error: coordinate transform mismatch.\n");
+    // if (std::abs(plepmag - plepmagGRRS) >= 1e-11) printf("Error: coordinate transform mismatch.\n");
 
     // phi_l = atan2(p5yp,p5xp)
 
@@ -493,6 +494,7 @@ void AnalysisZprime::ALL2to6()
 
 TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B)
 {
+  // note that root has a GetAsymmetry method also!
   TH1D* h_numerator = (TH1D*) h_A->Clone(name);
   TH1D* h_denominator = (TH1D*) h_A->Clone();
   h_numerator->SetTitle(title);
