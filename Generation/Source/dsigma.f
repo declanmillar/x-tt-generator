@@ -38,23 +38,15 @@ function dsigma(x,wgt)
 
   ! implict to explicit variable dump
   real :: a_s
-  real :: arg356
-  real :: arg478
+  real :: arg356, arg478
   real :: beta
-  real :: cf5
-  real :: cf56
-  real :: cf7
-  real :: cf78
+  real :: cf5, cf56, cf7, cf78
   real :: cosfl
   real :: cost
   real :: costheta5, costheta7, costheta5cm, costheta7cm, costheta5col, costheta7col
   real :: costhetat_cm, costhetat_reco, costhetat_star_reco
   real :: costhetat_star
-  real :: ct
-  real :: ct5
-  real :: ct56
-  real :: ct7
-  real :: ct78
+  real :: ct, ct5, ct56, ct7, ct78
   real :: ct7ct5, ct7ct5col, ct7ct5cm
 
   ! parton momentum fraction
@@ -88,28 +80,10 @@ function dsigma(x,wgt)
   real :: q2, qq
   real :: qqd1, qqd2
   real :: resall
-  real :: rl356
-  real :: rl478
-  real :: rl56
-  real :: rl78
-  real :: rpl356
-  real :: rpl478
-  real :: rps356, rps
-  real :: rps478
-  real :: rq
-  real :: rq2
-  real :: rq5
-  real :: rq52
-  real :: rq56
-  real :: rq562
-  real :: rq7
-  real :: rq72
-  real :: rq78
-  real :: rq782
-  real :: sf5
-  real :: sf56
-  real :: sf7
-  real :: sf78
+  real :: rl356, rl478, rl56, rl78, rpl356, rpl478
+  real :: rps356, rps, rps478
+  real :: rq, rq2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
+  real :: sf5, sf56, sf7, sf78
   real :: shat
   real :: sigm
   real :: sigp
@@ -120,8 +94,6 @@ function dsigma(x,wgt)
   real :: st78
   real :: tau
   real :: vcol
-
-
 
   ! arctan
   real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
@@ -226,7 +198,7 @@ function dsigma(x,wgt)
       do i5 = 1, i5max ! loop over costheta5
         fffffxn = 0
         do i7 = 1, i7max ! loop over costheta7
-          if (verbose == 1) print*, "Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx, ", i5: ", i5, ",  i7: ", i7
+!           call debug("Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx, ", i5: ", i5, ",  i7: ", i7)
 
           ! initialisation
           fffxn = 0.d0
@@ -246,7 +218,7 @@ function dsigma(x,wgt)
           ! scale for the pdfs
           qq = 2.d0*rmt
 
-          if (verbose == 1) print*, "Constructing hadronic structure functions..."
+          call debug("Constructing hadronic structure functions...")
           if (structure_function <= 4) then
             q2 = qq*qq
             if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
@@ -362,7 +334,7 @@ function dsigma(x,wgt)
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
             call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
           end if
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
           if (structure_function > 4) then
             u1 = u1 + usea1
             d1 = d1 + dsea1
@@ -374,7 +346,7 @@ function dsigma(x,wgt)
             dbar2 = dsea2
           end if
 
-          if (verbose == 1) print*, "Constructing PDFs..."
+          call debug("Constructing PDFs...")
 
           ! initialise pdfs
           fx1(1) = d1
@@ -409,9 +381,9 @@ function dsigma(x,wgt)
           do i = 1, 13
             fx2(i) = fx2(i)/x2
           end do
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
 
-          if (verbose == 1) print*, "Creating initial (massless) parton momenta."
+          call debug("Creating initial (massless) parton momenta.")
           pcm = ecm/2.d0
           q(4,1) = pcm
           q(3,1) = pcm
@@ -425,7 +397,7 @@ function dsigma(x,wgt)
 
           if (final_state == 0) then
             if (use_rambo == 0) then
-              if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame manually..."
+              call debug("Calculating 2to2 final state momenta in the parton CoM frame manually...")
               ! give vegas assigned values
               phit = 2.d0*pi*ran(jseed)
               if (jx == 1) then
@@ -455,7 +427,7 @@ function dsigma(x,wgt)
               q(2,4) = -qcm*st*cos(phit)
               q(1,4) = -qcm*st*sin(phit)
             else if (use_rambo == 1) then
-              if (verbose == 1) print*, "Calculating 2to2 final state momenta in the parton CoM frame using RAMBO..."
+              call debug("Calculating 2to2 final state momenta in the parton CoM frame using RAMBO...")
               xmass(1) = m3
               xmass(2) = m4
               jps = 2
@@ -473,11 +445,11 @@ function dsigma(x,wgt)
               q(i,7) = 0.d0
               q(i,8) = 0.d0
             end do
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
 
           else if (final_state > 0) then
             if (use_rambo == 0) then
-              if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame manually..."
+              call debug("Calculating 2to6 final state momenta in the parton CoM frame manually...")
               phit = 2.d0*pi*ran(jseed)
 
               m356min = m3 + m5 + m6
@@ -691,7 +663,7 @@ function dsigma(x,wgt)
                 q(i,8) = p78(i) - q(i,7)
               end do
             else if (use_rambo == 1) then
-              if (verbose == 1) print*, "Calculating 2to6 final state momenta in the parton CoM frame using RAMBO..."
+              call debug("Calculating 2to6 final state momenta in the parton CoM frame using RAMBO...")
               xmass(1) = m3
               xmass(2) = m4
               xmass(3) = m5 
@@ -707,10 +679,10 @@ function dsigma(x,wgt)
               end do
             end if
 
-              if (verbose == 1) print*, "...complete."
+              call debug("...complete.")
             end if
 
-            if (verbose == 1) print*, "Boosting parton CoM momenta to collider frame..."
+            call debug("Boosting parton CoM momenta to collider frame...")
             ! velocity of ttbar system in collider frame
             vcol = (x1 - x2)/(x1 + x2)
 
@@ -724,9 +696,9 @@ function dsigma(x,wgt)
               qcol(2, i) = q(2, i)
               qcol(1, i) = q(1, i)
             end do
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
 
-            if (verbose == 1) print*, "Assigning particle 4-momenta..."
+            call debug("Assigning particle 4-momenta...")
 
             ! parton CoM 4 -momenta
             do i = 1, 3
@@ -768,7 +740,7 @@ function dsigma(x,wgt)
             p7col(0) = qcol(4,7)
             p8col(0) = qcol(4,8)
 
-          if (verbose == 1) print*, "..done."
+          call debug("..done.")
 
           if (verbose == 1) then
             if (final_state == 0) then
@@ -835,7 +807,7 @@ function dsigma(x,wgt)
           end if
 
           if (phase_space_only == 1) then
-            if (verbose == 1) print*, "Setting |M|=1 and skipping matrix element calculation..."
+            call debug("Setting |M|=1 and skipping matrix element calculation...")
             if (ix == 1) then
               pfx1tot = 0.5/x1
               pfx2tot = 0.5/x1
@@ -859,11 +831,11 @@ function dsigma(x,wgt)
             go to 666
           end if
         
-          if (verbose == 1) print*, "Calculating QCD coupling..."
+          call debug("Calculating QCD coupling...")
           a_s = alfas(qq,lambdaqcd4,nloops)
           gs2 = 4.d0*pi*a_s
           gs = sqrt(gs2)
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
 
           ! initilise
           qcdqq1 = 0.d0
@@ -900,9 +872,9 @@ function dsigma(x,wgt)
 
           resall = 0
           if (final_state == 0) then
-            if (verbose == 1) print*, "Computing 2to2 square matrix elements..."
+            call debug("Computing 2to2 square matrix elements...")
             if (include_qcd == 1) then
-              if (verbose == 1) print*, "Computing QCD matrix elements..."
+              call debug("Computing QCD matrix elements...")
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
                   if (include_gg == 1) then 
@@ -921,10 +893,10 @@ function dsigma(x,wgt)
                   + qcdpolbb1(lam3,lam4) + qcdpolbb2(lam3,lam4)
                 end do
               end do
-              if (verbose == 1) print*, "...complete."
+              call debug("...complete.")
             end if
             if ((include_ew == 1) .or. (include_bsm == 1)) then
-              if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+              call debug("Computing EW+Z' matrix elements...")
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
                   if (include_qq == 1) then
@@ -941,14 +913,14 @@ function dsigma(x,wgt)
                  + ewzpolbb1(lam3,lam4) + ewzpolbb2(lam3,lam4)
                 end do
               end do
-              if (verbose == 1) print*, "...complete."
+              call debug("...complete.")
             end if
 
           else if (final_state > 0) then
-            if (verbose == 1) print*, "Computing 2to6 square matrix elements..."
+            call debug("Computing 2to6 square matrix elements...")
             ! (Do not change the deliberate order of p6 and p7.)
             if (include_qcd == 1) then
-              if (verbose == 1) print*, "Computing QCD matrix elements..."
+              call debug("Computing QCD matrix elements...")
               if (include_gg == 1) then 
                 qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
                 qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
@@ -959,10 +931,10 @@ function dsigma(x,wgt)
                 qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
                 qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
               end if              
-              if (verbose == 1) print*, "...complete."
+              call debug("...complete.")
             end if
             if ((include_ew == 1) .or. (include_bsm == 1)) then
-              if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
+              call debug("Computing EW+Z' matrix elements...")
               if (include_qq == 1) then 
                 ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
                 ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
@@ -971,7 +943,7 @@ function dsigma(x,wgt)
                 ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
                 ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
               end if
-              if (verbose == 1) print*, "...complete."
+              call debug("...complete.")
             end if
             resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
                    + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
@@ -992,7 +964,7 @@ function dsigma(x,wgt)
           pfx1tot = 0.d0
           pfx2tot = 0.d0
           if (final_state == 0) then
-            if (verbose == 1) print*, "Summing over 2to2 |m|^2 with pdfs of all initial partons..." 
+            call debug("Summing over 2to2 |m|^2 with pdfs of all initial partons..." )
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
                 pfx1(lam3,lam4) = qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
@@ -1018,9 +990,9 @@ function dsigma(x,wgt)
                 pfx2tot = pfx2tot + pfx2(lam3,lam4)
               end do
             end do
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
           else if (final_state > 0) then
-            if (verbose == 1) print*, "Summing over 2to6 |m|^2 with PDFs of all initial partons..." 
+            call debug("Summing over 2to6 |m|^2 with PDFs of all initial partons..." )
             qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
                  + fx1( 2)*fx2( 8)*(qcdqq1 + ewzuu1) &
                  + fx1( 3)*fx2( 9)*(qcdqq1 + ewzdd1) &
@@ -1040,7 +1012,7 @@ function dsigma(x,wgt)
               pfx1tot = (qqd1 + ggd1)/x2
               pfx2tot = (qqd2 + ggd2)/x2
             end if
-            if (verbose == 1) print*, "...complete." 
+            call debug("...complete." )
           end if
 
           if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
@@ -1061,22 +1033,22 @@ function dsigma(x,wgt)
           666 continue
           if ((phase_space_only == 1) .and. (verbose == 1)) print*, "...complete."
 
-          if (verbose == 1) print*, "Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)..."
+          call debug("Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)...")
           pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
           *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
           pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
           *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
 
           fffxn1 = pfx1tot
           fffxn2 = pfx2tot
 
-          if (verbose == 1) print*, "Applying unit converstion"
+          call debug("Applying unit converstion")
           fffxn1 = fffxn1*unit_conv
           fffxn2 = fffxn2*unit_conv
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
 
-          if (verbose == 1) print*, "Multiplying by phase space volume and flux factor and azimuthal integration..."
+          call debug("Multiplying by phase space volume and flux factor and azimuthal integration...")
           if (final_state == 0) then
             if (use_rambo == 0) then
               ! 2-body phase space factor + azimuthal integration
@@ -1134,7 +1106,7 @@ function dsigma(x,wgt)
           fffxn2 = fffxn2/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
           fffxn = fffxn1 + fffxn2
           
-          if (verbose == 1) print*, "...complete."
+          call debug("...complete.")
 
           if(verbose == 1) print*, "Writing final particle collider frame momenta to Ntuple..."
           if (final_state == 0) then
@@ -1171,7 +1143,7 @@ function dsigma(x,wgt)
           if(verbose == 1) print*, "...complete."
              
           if (final_state == 0) then
-            if (verbose == 1) print*, "Computing polarised event weightings..."
+            call debug("Computing polarised event weightings...")
             do lam3 = -1, +1, 2
               do lam4 = -1, +1, 2
                 sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
@@ -1186,7 +1158,7 @@ function dsigma(x,wgt)
             weightLR = weight(-1, 1,it)
             weightRL = weight( 1,-1,it)
             weightRR = weight( 1, 1,it)
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
           end if
 
           call rootadddouble(weightLL, "weightLL")
@@ -1201,7 +1173,7 @@ function dsigma(x,wgt)
 
           if(additional_kinematics == 1) then
 
-            if (verbose == 1) print*, "Computing additional kinematic variables..."
+            call debug("Computing additional kinematic variables...")
 
             ! calculate truth level top/antitop pt, eta and phi
             if (final_state > 0) then
@@ -1596,9 +1568,9 @@ function dsigma(x,wgt)
               call rootadddouble(cosfl, "cosphil")
             end if
 
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
 
-            if (verbose == 1) print*, "Computing FB dsigmas..."
+            call debug("Computing FB dsigmas...")
 
             if (costhetat_cm > 0.d0) then
               sigma_fb(+1,1,it) = sigma_fb(+1,1,it) + hist
@@ -1679,7 +1651,7 @@ function dsigma(x,wgt)
               end if
             end if
 
-            if (verbose == 1) print*, "...complete."
+            call debug("...complete.")
           end if
 
           ! convert results to different tt classifications
@@ -1691,7 +1663,7 @@ function dsigma(x,wgt)
           call rootaddevent(hist)
 
           if (print_distributions == 1) then
-            if (verbose == 1) print*, 'Filling distributions...'
+            call debug('Filling distributions...')
 
             if (o_mtt == 1) call h_mtt%fill(mtt, hist)
             if (o_cost == 1) call h_cost%fill(cost, hist)
@@ -1707,8 +1679,8 @@ function dsigma(x,wgt)
     	        if (o_ct7ct5 == 1) call h_ct7ct5%fill(ct7ct5, hist)
          		end if
 
-            if (verbose == 1) print*, '...complete.'
-            if (verbose == 1) print*, 'Filling asymmetry histograms...'
+            call debug('...complete.')
+            call debug('Filling asymmetry histograms...')
 
             if (o_asym(1) == 1) then
               if (o_sigp == 1) then
@@ -2039,7 +2011,7 @@ function dsigma(x,wgt)
                 end if
               end if
             end if
-            if (verbose == 1) print*, '...complete.'
+            call debug('...complete.')
           end if
 
           ! stats

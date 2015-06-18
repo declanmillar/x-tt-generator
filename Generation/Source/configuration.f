@@ -253,4 +253,9 @@ module configuration
       print*, "...complete."
     end subroutine modify_config
 
+    subroutine debug(message)
+      character(*) :: message
+      if (verbose == 1) print*, message
+    end subroutine debug
+
 end module configuration
