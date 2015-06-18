@@ -949,22 +949,28 @@ function dsigma(x,wgt)
             ! (Do not change the deliberate order of p6 and p7.)
             if (include_qcd == 1) then
               if (verbose == 1) print*, "Computing QCD matrix elements..."
-              qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
-              qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
-              qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
-              qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
-              qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
-              qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
+              if (include_gg == 1) then 
+                qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
+              end if
+              if (include_qq == 1) then 
+                qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
+                qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
+              end if              
               if (verbose == 1) print*, "...complete."
             end if
             if ((include_ew == 1) .or. (include_bsm == 1)) then
               if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
-              ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
-              ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
-              ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
-              ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
-              ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
-              ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
+              if (include_qq == 1) then 
+                ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
+              end if
               if (verbose == 1) print*, "...complete."
             end if
             resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
