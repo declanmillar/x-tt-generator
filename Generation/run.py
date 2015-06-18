@@ -24,9 +24,11 @@ parser.add_option("-b", "--batch", default=False, action="store_true", help = "r
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
-parser.add_option("-q", "--include_qcd", default = 1, const = 0, action = "store_const", help = "turn off QCD")
-parser.add_option("-e", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
-parser.add_option("-z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
+parser.add_option("-C", "--include_qcd", default = 1, const = 0, action = "store_const", help = "turn off QCD")
+parser.add_option("-F", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
+parser.add_option("-Z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
+parser.add_option("-g", "--include_gg", default = 1, const = 0, action = "store_const", help = "turn off gg")
+parser.add_option("-q", "--include_qq", default = 1, const = 0, action = "store_const", help = "turn off qq")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
 parser.add_option("-K", "--additional_kinematics", default = 0, const = 1, action = "store_const", help = "Turn off additional kinematics")
@@ -39,7 +41,7 @@ parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, actio
 parser.add_option("-5", "--symmetrise_costheta_5", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_5")
 parser.add_option("-7", "--symmetrise_costheta_7", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_7")
 parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
-parser.add_option("-E", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
+parser.add_option("-U", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
 parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
 parser.add_option("-M", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
 
@@ -164,6 +166,10 @@ print >> config, '%s ! include_qcd' % options.include_qcd
 print >> config, '%s ! include_ew' % options.include_ew
 
 print >> config, '%s ! include_bsm' % options.include_bsm
+
+print >> config, '%s ! include_gg' % options.include_gg
+
+print >> config, '%s ! include_qq' % options.include_qq
 
 print >> config, '%s ! phase_space_only' % options.phase_space_only
 

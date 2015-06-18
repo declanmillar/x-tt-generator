@@ -905,12 +905,16 @@ function dsigma(x,wgt)
               if (verbose == 1) print*, "Computing QCD matrix elements..."
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
-                  qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
-                  qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
-                  qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
-                  qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-                  qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-                  qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+                  if (include_gg == 1) then 
+                    qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
+                    qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
+                  end if
+                  if (include_qq == 1) then
+                    qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+                    qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
+                    qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
+                    qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+                  end if
                   resall = resall &
                   + qcdpolgg1(lam3,lam4) + qcdpolgg2(lam3,lam4) &
                   + qcdpolqq1(lam3,lam4) + qcdpolqq2(lam3,lam4) &
@@ -923,12 +927,14 @@ function dsigma(x,wgt)
               if (verbose == 1) print*, "Computing EW+Z' matrix elements..."
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
-                  ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
-                  ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
-                  ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
-                  ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
-                  ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
-                  ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
+                  if (include_qq == 1) then
+                    ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
+                    ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
+                    ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
+                    ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
+                    ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
+                    ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
+                  end if
                   resall = resall &
                  + ewzpoluu1(lam3,lam4) + ewzpoluu2(lam3,lam4) &
                  + ewzpoldd1(lam3,lam4) + ewzpoldd2(lam3,lam4) &

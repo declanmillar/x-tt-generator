@@ -16,6 +16,8 @@ module configuration
   integer :: include_qcd
   integer :: include_ew
   integer :: include_bsm
+  integer :: include_gg
+  integer :: include_qq
   integer :: interference  
   integer :: use_nwa
   integer :: use_branching_ratio ! 0 = no, 1 = dilepton, 2 = semi-had, 3 = full-had
@@ -131,6 +133,10 @@ module configuration
       read(5,*) include_ew
 
       read(5,*) include_bsm
+
+      read(5,*) include_gg
+
+      read(5,*) include_qq
 
       read(5,*) phase_space_only
 
