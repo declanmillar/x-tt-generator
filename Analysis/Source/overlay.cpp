@@ -25,11 +25,11 @@ TH1D* Significance(TH1D* h1, TH1D* h2){
   return h;
 }
 
-TCanvas* overlay(const bool normalise,
-                   TString histName1, TString histTitle1, TString fileName1, 
-                   TString histName2, TString histTitle2, TString fileName2, 
-                   TString histName3, TString histTitle3, TString fileName3,
-                   TString histName4, TString histTitle4, TString fileName4) {
+TCanvas* overlay(const bool normalise, const bool findSignificance,
+                 TString histName1, TString histTitle1, TString fileName1, 
+                 TString histName2, TString histTitle2, TString fileName2, 
+                 TString histName3, TString histTitle3, TString fileName3,
+                 TString histName4, TString histTitle4, TString fileName4) {
 
   TFile *f1, *f2, *f3, *f4;
   TH1D *h1, *h2, *h3, *h4;
@@ -60,7 +60,7 @@ TCanvas* overlay(const bool normalise,
   lowerPad->SetRightMargin(rightmargin);
   lowerPad->SetLeftMargin(leftmargin);
 
-  upperPad->cd();
+  if (findSignificance == true) upperPad->cd();
 
   f1 = new TFile(fileName1, "READ");
   if (!f1->IsOpen()) printf("Failed to open %s\n", fileName1.Data());
@@ -115,7 +115,6 @@ TCanvas* overlay(const bool normalise,
     h4->SetMarkerColor(kGreen+2);
   }
 
-  bool findSignificance = true;
   if (findSignificance == true) {
     if (histName2 != "NULL") h2sig = Significance(h2, h1);
     if (histName3 != "NULL") h3sig = Significance(h3, h1);
@@ -158,14 +157,27 @@ TCanvas* overlay(const bool normalise,
     }
   }
 
-  double rangeMin = -999;
-  double rangeMax = -999;
-  if(rangeMin != -999 && rangeMax != -999) {
-    h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
-    if (histName2 != "NULL") h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-    if (histName3 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-    if (histName4 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-  }
+  // double rangeMin = -999;
+  // double rangeMax = -999;
+  // rangeMin = 2000;
+  // rangeMax = 4000;
+  // if(rangeMin != -999 && rangeMax != -999) {
+  //   h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
+  //   if (histName2 != "NULL") h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (histName3 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (histName4 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  // }
+
+  // double yRangeMin = -999;
+  // double yRangeMax = -999;
+  // yRangeMin = -1;
+  // yRangeMax = 1;
+  // if(yRangeMin != -999 && yRangeMax != -999) {
+  //   h1->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax); 
+  //   if (histName2 != "NULL") h2->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  //   if (histName3 != "NULL") h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  //   if (histName4 != "NULL") h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  // }
 
 
   TLegend* legend = new TLegend(0.50, 0.60, 0.88, 0.88, "");
@@ -185,10 +197,12 @@ TCanvas* overlay(const bool normalise,
     texBox->Draw();
   }
 
-  canvas->cd();
-  lowerPad->cd();
-  h2sig->Draw();
-
+  if (findSignificance == true) {
+    lowerPad->cd();
+    if (histName2 != "NULL") h2sig->Draw();
+    if (histName3 != "NULL") h3sig->Draw();
+    if (histName4 != "NULL") h4sig->Draw();
+  }
 
   return canvas;
 }
