@@ -16,9 +16,10 @@ import os, StringIO, re, optparse, subprocess, time, sys, random
 # Usage help
 parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
 
-# Local options
+# Execution options
 parser.add_option("-l", "--output", default=False, action="store_true" , help="output to logfile")
-parser.add_option("-t", "--tag", default="",  type="string", help="add a name tag to logfile")
+parser.add_option("-t", "--tag", default="", type="string", help="add a name tag to logfile")
+parser.add_option("-b", "--batch", default=False, action="store_true", help = "run in batch mode")
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
@@ -70,9 +71,10 @@ ncall = args[3]
 seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
-executable="Binary/"+"zprime"
+executable="zprime"
 sfinal = "2to2" if (final_state=="0") else "2to6"
-config=StringIO.StringIO()
+config = StringIO.StringIO()
+handler = StringIO.StringIO()
 
 # Gauge sectors
 if   options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 1:
@@ -135,6 +137,9 @@ os = sys.platform
 if (os == "darwin"):
   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
 elif (os == "linux2"):
+  if options.batch == False:
+    subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell=True)
+    subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell=True)
   ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
   
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
@@ -197,14 +202,32 @@ print >> config, '%s ! include distribution errors' % options.include_errors
 print >> config, '%s ! verbose mode' % options.verbose
 
 try:
-      with open('Config/%s.com' % filename,'w') as cfile1:
-            cfile1.write(config.getvalue())
+  with open('Config/%s.com' % filename,'w') as cfile1:
+    cfile1.write(config.getvalue())
 except IOError:
-      print "Not in right directory?"
-      sys.exit()
+  print "Not in right directory?"
+  sys.exit()
+
+if options.batch == True:
+  print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
+  print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
+  print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
+  print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s.com %s' % (executable,filename,logfile)
+
+  try:
+    with open('%s.sh' % filename,'w') as hfile:
+      hfile.write(handler.getvalue())
+  except IOError:
+    print "Not in right directory?"
+    sys.exit()
 
 # Command
-command = './%s < Config/%s.com %s' % (executable,filename,logfile)
+if options.batch == True:
+ permission = "chmod a+x %s.sh" % filename
+ subprocess.call(permission, shell=True)
+ command = 'bsub /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename
+else:
+ command = './Binary/%s < Config/%s.com %s' % (executable,filename,logfile)
 print " ...complete."
 print ' Executing ', command, '...'
 subprocess.call(command, shell=True)

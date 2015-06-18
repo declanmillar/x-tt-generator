@@ -1,4 +1,4 @@
-#include "analysis.h"
+// #include "analysis.h"
 #include "superpose.h"
 #include "superpose2d.h"
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
   TString inputFileName4(inDir + "/" + channel + "/" + base4 + ".root");
   TString outputFileName4(outDir + base4 + "_histos.root");
 
-  AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
+  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
   // AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
   // AnalysisZprime analysis3(channel3, model3, inputFileName3, outputFileName3);
   // AnalysisZprime analysis4(channel4, model4, inputFileName4, outputFileName4);
