@@ -24,7 +24,6 @@ function dsigma(x,wgt)
   real :: ecm, ecm_max, pcm, qcm2
   real :: hist, hist1, hist2
   real :: gs, gs2
-  real :: pfx1tot, pfx2tot
   real :: gcol, qcm
   real :: pt356, pt478, phi356, phi478, ycol356, ycol478
   real :: phit
@@ -51,10 +50,10 @@ function dsigma(x,wgt)
 
   ! structure functions
   real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, &
-          chm1, chm2, btm1, btm2, glu1, glu2, ggd1, ggd2, dsea1, usea1, usea2, dsea2
+          chm1, chm2, btm1, btm2, glu1, glu2, ggd, dsea1, usea1, usea2, dsea2
 
   ! temporary dsigmas
-  real :: ffxn, fffxn, fffxn1, fffxn2, ffffxn, fffffxn
+  real :: ffxn, fffxn, ffffxn, fffffxn
 
   ! temporary top mass and width
   real :: rmt, gamt
@@ -64,9 +63,6 @@ function dsigma(x,wgt)
 
   ! arctan
   real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
-
-  ! square matrix elements
-  real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq1, qcdqq2, qcdgg1, qcdgg2, qcdbb1, qcdbb2
 
   ! iterators
   integer :: i, j, k, jx, ix, nbin, ibin, jbin, imode, lam3, lam4, jps, i5, i7
@@ -86,13 +82,16 @@ function dsigma(x,wgt)
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min  
 
   ! polarised square matrix elements q-qbar
-  real :: qcdpolqq1(-1:1, -1:1), qcdpolbb1(-1:1, -1:1), qcdpolgg1(-1:1, -1:1)
+  real :: qcdpolqq(-1:1, -1:1), qcdpolbb(-1:1, -1:1), qcdpolgg(-1:1, -1:1)
   real :: ewzpoluu1(-1:1, -1:1), ewzpoldd1(-1:1, -1:1), ewzpolbb1(-1:1, -1:1)
-  real :: pfx1(-1:1, -1:1)
+  real :: pfx(-1:1, -1:1)
+  real :: pfxtot
+
   ! polarised square matrix elements qbar-q
-  real :: qcdpolqq2(-1:1, -1:1), qcdpolbb2(-1:1, -1:1), qcdpolgg2(-1:1, -1:1)
   real :: ewzpoluu2(-1:1, -1:1), ewzpoldd2(-1:1, -1:1), ewzpolbb2(-1:1, -1:1)
-  real :: pfx2(-1:1, -1:1)
+
+  ! square matrix elements
+  real :: ewzuu1 ,ewzuu2, ewzdd1, ewzdd2, ewzbb1, ewzbb2, qcdqq, qcdgg, qcdbb
 
   ! weight per polarisation
   real :: weight(-1:1, -1:1, 20)
@@ -729,21 +728,17 @@ function dsigma(x,wgt)
           if (phase_space_only == 1) then
             call debug("Setting |M|=1 and skipping matrix element calculation...")
             if (ix == 1) then
-              pfx1tot = 0.5/x1
-              pfx2tot = 0.5/x1
+              pfxtot = 0.5/x1
             else if (ix == 2) then
-              pfx1tot = 0.5/x2
-              pfx2tot = 0.5/x2
+              pfxtot = 0.5/x2
             end if
             if (final_state == 0) then
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
                   if (ix == 1) then
-                    pfx1(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
-                    pfx2(lam3,lam4) = 0.5/x1/(pfx1tot + pfx2tot)
+                    pfx(lam3,lam4) = 0.5/x1/(pfxtot + pfxtot)
                   else if (ix == 2) then
-                    pfx1(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
-                    pfx2(lam3,lam4) = 0.5/x2/(pfx1tot + pfx2tot)
+                    pfx(lam3,lam4) = 0.5/x2/(pfxtot + pfxtot)
                   end if
                 end do
               end do
@@ -758,29 +753,23 @@ function dsigma(x,wgt)
           call debug("...complete.")
 
           ! initilise
-          qcdqq1 = 0.d0
-          qcdbb1 = 0.d0
-          qcdgg1 = 0.d0
+          qcdqq = 0.d0
+          qcdbb = 0.d0
+          qcdgg = 0.d0
           ewzuu1 = 0.d0
           ewzdd1 = 0.d0
           ewzbb1 = 0.d0
-          qcdqq2 = 0.d0
-          qcdbb2 = 0.d0
-          qcdgg2 = 0.d0
           ewzuu2 = 0.d0
           ewzdd2 = 0.d0
           ewzbb2 = 0.d0
           do lam3 = -1, 1
             do lam4 = -1, 1
-              qcdpolqq1(lam3,lam4) = 0.d0
-              qcdpolbb1(lam3,lam4) = 0.d0
-              qcdpolgg1(lam3,lam4) = 0.d0
+              qcdpolqq(lam3,lam4) = 0.d0
+              qcdpolbb(lam3,lam4) = 0.d0
+              qcdpolgg(lam3,lam4) = 0.d0
               ewzpoluu1(lam3,lam4) = 0.d0
               ewzpoldd1(lam3,lam4) = 0.d0
               ewzpolbb1(lam3,lam4) = 0.d0
-              qcdpolqq2(lam3,lam4) = 0.d0
-              qcdpolbb2(lam3,lam4) = 0.d0
-              qcdpolgg2(lam3,lam4) = 0.d0
               ewzpoluu2(lam3,lam4) = 0.d0
               ewzpoldd2(lam3,lam4) = 0.d0
               ewzpolbb2(lam3,lam4) = 0.d0
@@ -798,20 +787,13 @@ function dsigma(x,wgt)
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
                   if (include_gg == 1) then 
-                    qcdpolgg1(lam3,lam4) = sggff_qcd(   p1,p2,p3,p4,lam3,lam4)*gs**4
-                    qcdpolgg2(lam3,lam4) = sggff_qcd(   p2,p1,p3,p4,lam3,lam4)*gs**4
-                    print*, qcdpolgg1(lam3,lam4), qcdpolgg2(lam3,lam4)
+                    qcdpolgg(lam3,lam4) = sggff_qcd(p1,p2,p3,p4,lam3,lam4)*gs**4
                   end if
                   if (include_qq == 1) then
-                    qcdpolqq1(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
-                    qcdpolqq2(lam3,lam4) = sqqff_qcd(3 ,p2,p1,p3,p4,lam3,lam4)*gs**4
-                    qcdpolbb1(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
-                    qcdpolbb2(lam3,lam4) = sqqff_qcd(12,p2,p1,p3,p4,lam3,lam4)*gs**4
+                    qcdpolqq(lam3,lam4) = sqqff_qcd(3 ,p1,p2,p3,p4,lam3,lam4)*gs**4
+                    qcdpolbb(lam3,lam4) = sqqff_qcd(12,p1,p2,p3,p4,lam3,lam4)*gs**4
                   end if
-                  resall = resall &
-                  + qcdpolgg1(lam3,lam4) + qcdpolgg2(lam3,lam4) &
-                  + qcdpolqq1(lam3,lam4) + qcdpolqq2(lam3,lam4) &
-                  + qcdpolbb1(lam3,lam4) + qcdpolbb2(lam3,lam4)
+                  resall = resall + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) + qcdpolbb(lam3,lam4)
                 end do
               end do
               call debug("...complete.")
@@ -843,14 +825,11 @@ function dsigma(x,wgt)
             if (include_qcd == 1) then
               call debug("Computing QCD matrix elements...")
               if (include_gg == 1) then 
-                qcdgg1 = sggbbffff_qcd(    p1, p2, p3, p4, p5, p7, p6, p8)
-                qcdgg2 = sggbbffff_qcd(    p2, p1, p3, p4, p5, p7, p6, p8)
+                qcdgg = sggbbffff_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               if (include_qq == 1) then 
-                qcdqq1 = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
-                qcdqq2 = sqqbbffff_qcd(3 , p2, p1, p3, p4, p5, p7, p6, p8)
-                qcdbb1 = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
-                qcdbb2 = sqqbbffff_qcd(12, p2, p1, p3, p4, p5, p7, p6, p8)
+                qcdqq = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdbb = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
               end if              
               call debug("...complete.")
             end if
@@ -866,8 +845,8 @@ function dsigma(x,wgt)
               end if
               call debug("...complete.")
             end if
-            resall = qcdqq1 + qcdgg1 + qcdbb1 + ewzuu1 + ewzdd1 + ewzbb1 &
-                   + qcdqq2 + qcdgg2 + qcdbb2 + ewzuu2 + ewzdd2 + ewzbb2
+            resall = qcdqq + qcdgg + qcdbb + ewzuu1 + ewzdd1 + ewzbb1 &
+                   + ewzuu2 + ewzdd2 + ewzbb2
           end if
 
           if ((resall) == 0.d0) then
@@ -877,66 +856,56 @@ function dsigma(x,wgt)
           end if
 
           ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
-          qcdqq1 = qcdqq1*gs**4
-          qcdgg1 = qcdgg1*gs**4
-          qcdqq2 = qcdqq2*gs**4
-          qcdgg2 = qcdgg2*gs**4
+          qcdqq = qcdqq*gs**4
+          qcdgg = qcdgg*gs**4
       
-          pfx1tot = 0.d0
-          pfx2tot = 0.d0
+          pfxtot = 0.d0
           if (final_state == 0) then
             call debug("Summing over 2to2 |m|^2 with pdfs of all initial partons..." )
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
-                pfx1(lam3,lam4) = qcdpolgg1(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-                + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-                + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-                + (qcdpolqq1(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-                + (qcdpolqq1(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-                + (qcdpolbb1(lam3,lam4) + ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11)
-                pfx2(lam3,lam4) = qcdpolgg2(lam3,lam4) *fx1(13)*fx2(13)/2.d0 &
-                + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-                + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-                + (qcdpolqq2(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-                + (qcdpolqq2(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-                + (qcdpolbb2(lam3,lam4) + ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
+                pfx(lam3,lam4) = qcdpolgg(lam3,lam4)*fx1(13)*fx2(13) &
+                + (qcdpolqq(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
+                + (qcdpolqq(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
+                + (qcdpolqq(lam3,lam4) + ewzpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
+                + (qcdpolqq(lam3,lam4) + ewzpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
+                + (qcdpolbb(lam3,lam4) + ewzpolbb1(lam3,lam4))*fx1( 5)*fx2(11) &
+                + (qcdpolqq(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
+                + (qcdpolqq(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
+                + (qcdpolqq(lam3,lam4) + ewzpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
+                + (qcdpolqq(lam3,lam4) + ewzpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
+                + (qcdpolbb(lam3,lam4) + ewzpolbb2(lam3,lam4))*fx1(11)*fx2( 5)
                 if (ix == 1) then
-                  pfx1(lam3,lam4) = pfx1(lam3,lam4)/x1
-                  pfx2(lam3,lam4) = pfx2(lam3,lam4)/x1
+                  pfx(lam3,lam4) = pfx(lam3,lam4)/x1
                 else if (ix == 2) then
-                  pfx1(lam3,lam4) = pfx1(lam3,lam4)/x2
-                  pfx2(lam3,lam4) = pfx2(lam3,lam4)/x2
+                  pfx(lam3,lam4) = pfx(lam3,lam4)/x2
                 end if
-                pfx1tot = pfx1tot + pfx1(lam3,lam4)
-                pfx2tot = pfx2tot + pfx2(lam3,lam4)
+                pfxtot = pfxtot + pfx(lam3,lam4)
               end do
             end do
             call debug("...complete.")
           else if (final_state > 0) then
             call debug("Summing over 2to6 |m|^2 with PDFs of all initial partons..." )
-            qqd1 = fx1( 1)*fx2( 7)*(qcdqq1 + ewzdd1) &
-                 + fx1( 2)*fx2( 8)*(qcdqq1 + ewzuu1) &
-                 + fx1( 3)*fx2( 9)*(qcdqq1 + ewzdd1) &
-                 + fx1( 4)*fx2(10)*(qcdqq1 + ewzuu1) &
-                 + fx1( 5)*fx2(11)*(qcdbb1 + ewzbb1)
-            qqd2 = fx1( 7)*fx2( 1)*(qcdqq2 + ewzdd2) &
-                 + fx1( 8)*fx2( 2)*(qcdqq2 + ewzuu2) &
-                 + fx1( 9)*fx2( 3)*(qcdqq2 + ewzdd2) &
-                 + fx1(10)*fx2( 4)*(qcdqq2 + ewzuu2) &
-                 + fx1(11)*fx2( 5)*(qcdbb2 + ewzbb2)
-            ggd1 = fx1(13)*fx2(13)*qcdgg1/2.d0
-            ggd2 = fx1(13)*fx2(13)*qcdgg2/2.d0
+            pfxtot = fx1( 1)*fx2( 7)*(qcdqq + ewzdd1) &
+                   + fx1( 2)*fx2( 8)*(qcdqq + ewzuu1) &
+                   + fx1( 3)*fx2( 9)*(qcdqq + ewzdd1) &
+                   + fx1( 4)*fx2(10)*(qcdqq + ewzuu1) &
+                   + fx1( 5)*fx2(11)*(qcdbb + ewzbb1) &
+                   + fx1( 7)*fx2( 1)*(qcdqq + ewzdd2) &
+                   + fx1( 8)*fx2( 2)*(qcdqq + ewzuu2) &
+                   + fx1( 9)*fx2( 3)*(qcdqq + ewzdd2) &
+                   + fx1(10)*fx2( 4)*(qcdqq + ewzuu2) &
+                   + fx1(11)*fx2( 5)*(qcdbb + ewzbb2) &
+                   + fx1(13)*fx2(13)*qcdgg
             if (ix == 1) then
-              pfx1tot = (qqd1 + ggd1)/x1
-              pfx2tot = (qqd2 + ggd2)/x1
+              pfxtot = (pfxtot)/x1
             else if (ix  ==  2) then
-              pfx1tot = (qqd1 + ggd1)/x2
-              pfx2tot = (qqd2 + ggd2)/x2
+              pfxtot = (pfxtot)/x2
             end if
             call debug("...complete." )
           end if
 
-          if (pfx1tot == 0.d0 .and. pfx2tot == 0.d0) then
+          if (pfxtot == 0.d0) then
               fffxn = 0.d0
             go to 999
           end if
@@ -945,8 +914,7 @@ function dsigma(x,wgt)
             ! weight for distributions
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
-                pfx1(lam3,lam4) = pfx1(lam3,lam4)/(pfx1tot + pfx2tot)
-                pfx2(lam3,lam4) = pfx2(lam3,lam4)/(pfx1tot + pfx2tot)
+                pfx(lam3,lam4) = pfx(lam3,lam4)/(pfxtot)
               end do
             end do
           end if
@@ -955,77 +923,56 @@ function dsigma(x,wgt)
           if (phase_space_only == 1) call debug("...complete.")
 
           call debug("Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)...")
-          pfx1tot = pfx1tot*(1.d0 - tau)*2.d0*ecm/s &
-          *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-          pfx2tot = pfx2tot*(1.d0 - tau)*2.d0*ecm/s &
+          pfxtot = pfxtot*(1.d0 - tau)*2.d0*ecm/s &
           *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
           call debug("...complete.")
 
-          fffxn1 = pfx1tot
-          fffxn2 = pfx2tot
+          fffxn = pfxtot
 
           call debug("Applying unit converstion")
-          fffxn1 = fffxn1*unit_conv
-          fffxn2 = fffxn2*unit_conv
+          fffxn = fffxn*unit_conv
           call debug("...complete.")
 
           call debug("Multiplying by phase space volume and flux factor and azimuthal integration...")
           if (final_state == 0) then
             if (use_rambo == 0) then
               ! 2-body phase space factor + azimuthal integration
-              fffxn1 = fffxn1*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
-              fffxn2 = fffxn2*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
+              fffxn = fffxn*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
             else if (use_rambo == 1) then
-              fffxn1 = fffxn1*wgtr
-              fffxn2 = fffxn2*wgtr
+              fffxn = fffxn*wgtr
             end if
 
             ! flux factor
-            fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
-            fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+            fffxn = fffxn/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
 
           else if (final_state > 0) then
             if (use_rambo == 0) then
 
               ! phase space factor
-              fffxn1 = fffxn1*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
-              fffxn2 = fffxn2*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+              fffxn = fffxn*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
 
               if (map_phase_space == 1) then
-                fffxn1 = fffxn1*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-                fffxn1 = fffxn1*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-                fffxn1 = fffxn1*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-                fffxn1 = fffxn1*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
-                fffxn2 = fffxn2*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
-                fffxn2 = fffxn2*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-                fffxn2 = fffxn2*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-                fffxn2 = fffxn2*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+                fffxn = fffxn*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt        
+                fffxn = fffxn*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+                fffxn = fffxn*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
+                fffxn = fffxn*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
                 ! nwa
-                fffxn1 = fffxn1*gamt/gamma_t*gamt/gamma_t
-                fffxn2 = fffxn2*gamt/gamma_t*gamt/gamma_t
+                fffxn = fffxn*gamt/gamma_t*gamt/gamma_t
               else
-                fffxn1 = fffxn1*(m356max - m356min)   
-                fffxn1 = fffxn1*(m478max - m478min)
-                fffxn1 = fffxn1*(m56max - m56min)
-                fffxn1 = fffxn1*(m78max - m78min)
-                fffxn2 = fffxn2*(m356max - m356min)   
-                fffxn2 = fffxn2*(m478max - m478min)
-                fffxn2 = fffxn2*(m56max - m56min)
-                fffxn2 = fffxn2*(m78max - m78min)
+                fffxn = fffxn*(m356max - m356min)   
+                fffxn = fffxn*(m478max - m478min)
+                fffxn = fffxn*(m56max - m56min)
+                fffxn = fffxn*(m78max - m78min)
               end if
             else if (use_rambo == 1) then
-              fffxn1 = fffxn1*wgtr
-              fffxn2 = fffxn2*wgtr
+              fffxn = fffxn*wgtr
             end if
           
             ! flux factor
-            fffxn1 = fffxn1/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
-            fffxn2 = fffxn2/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+            fffxn = fffxn/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
           end if
 
-          fffxn1 = fffxn1/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
-          fffxn2 = fffxn2/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
-          fffxn = fffxn1 + fffxn2
+          fffxn = fffxn/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
           
           call debug("...complete.")
 
@@ -1067,12 +1014,9 @@ function dsigma(x,wgt)
             call debug("Computing polarised event weightings...")
             do lam3 = -1, +1, 2
               do lam4 = -1, +1, 2
-                sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) &
-                + fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-                weight(lam3,lam4,it) = &
-                + fffxn*wgt*(pfx1(lam3,lam4) + pfx2(lam3,lam4))
-                error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) &
-                +sigma_pol(lam3,lam4,it)**2
+                sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + fffxn*wgt*pfx(lam3,lam4)
+                weight(lam3,lam4,it) = fffxn*wgt*pfx(lam3,lam4)
+                error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) + sigma_pol(lam3,lam4,it)**2
               end do
             end do
             weightLL = weight(-1,-1,it)
@@ -1088,9 +1032,7 @@ function dsigma(x,wgt)
           call rootadddouble(weightRR, "weightRR")
 
           ! binning
-          hist1 = fffxn1*wgt
-          hist2 = fffxn2*wgt
-          hist = hist1 + hist2
+          hist = fffxn*wgt
           call rootaddevent(hist)
 
           ! stats
