@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 
   // TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
   TString inDir("/Users/declan/Data/Ntuples_Zprime/");
-  TString outDir("Histos/");
+  TString outDir("/Users/declan/Data/Histos_Zprime/");
 
   TString channel("2to6"); 
   TString model("SM");
@@ -119,21 +119,36 @@ int main(int argc, char* argv[])
       RootApp->Run(kTRUE);
     }
 
-    TCanvas* c_AFBstarNuReco =overlay(false, false, "AFBstarNuReco", model, outputFileName, 
-                                                "AFBstarNuReco", model2, outputFileName2,
-                                                "AFBstarNuReco", model3, outputFileName3,
-                                                "AFBstarNuReco", model4, outputFileName4);
+    TCanvas* c_AFBstarNuReco =overlay(false, true, "AFBstarNuReco", model, outputFileName, 
+                                                // "AFBstarNuReco", model2, outputFileName2,
+                                                "AFBstarNuReco", model3, outputFileName3);
+                                                // "AFBstarNuReco", model4, outputFileName4);
     c_AFBstarNuReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_PzNu =overlay(false, false, "PzNu", model, outputFileName, 
-                          "PzNuReco", model, outputFileName);
+    TCanvas* c_PzNu =overlay(false, false, "PzNu", "truth", outputFileName, 
+                          "PzNuReco", "reconstructed", outputFileName);
     c_PzNu->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_MttPzNuReco =overlay(false, false, "Mtt", "SM", outputFileName, 
-                              "MttNuReco", "SM", outputFileName);
-    c_MttPzNuReco->Draw();
+    TCanvas* c_MttReco =overlay(false, false, "Mtt", "truth", outputFileName, 
+                              "MttReco", "reconstructed", outputFileName);
+    c_MttReco->Draw();
+    RootApp->Run(kTRUE);
+
+    TCanvas* c_yttReco =overlay(false, false, "ytt", "truth", outputFileName, 
+                              "yttReco", "reconstructed", outputFileName);
+    c_yttReco->Draw();
+    RootApp->Run(kTRUE);
+
+    TCanvas* c_CosThetaReco =overlay(false, false, "CosTheta", "truth", outputFileName, 
+                              "CosThetaReco", "reconstructed", outputFileName);
+    c_CosThetaReco->Draw();
+    RootApp->Run(kTRUE);
+
+    TCanvas* c_CosThetaStarReco =overlay(false, false, "CosThetaStar", "truth", outputFileName, 
+                              "CosThetaStarReco", "reconstructed", outputFileName);
+    c_CosThetaStarReco->Draw();
     RootApp->Run(kTRUE);
   }
 

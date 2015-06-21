@@ -25,8 +25,8 @@ void AnalysisZprime::EachEvent()
 
   vector<TLorentzVector> pcol(6);
   vector<TLorentzVector> p(6);
-  vector<TLorentzVector> pNuRecoCol(6);
-  vector<TLorentzVector> pNuReco(6);
+  vector<TLorentzVector> pcolReco(6);
+  vector<TLorentzVector> pReco(6);
   TLorentzVector pcoltot, ptot;
   vector<double> mass(6);
   vector<double> ETcol(6);
@@ -39,7 +39,7 @@ void AnalysisZprime::EachEvent()
   vector<double> y(6);
   vector<double> eta(6);
   vector<double> phi(6);
-  vector<TVector2> pTNuReco(6);
+  vector<TVector2> pTReco(6);
   vector<double> yNuReco(6);
   vector<double> etaNuReco(6);
   vector<double> phiNuReco(6);
@@ -50,24 +50,22 @@ void AnalysisZprime::EachEvent()
   TLorentzVector ptbcol;
   TLorentzVector pt;
   TLorentzVector ptb;
-  TLorentzVector ptcolNuReco;
-  TLorentzVector ptbcolNuReco;
-  TLorentzVector ptNuReco;
-  TLorentzVector ptbNuReco;
+  TLorentzVector ptcolReco;
+  TLorentzVector ptReco;
 
   // final particle collider variables
   TVector2 pTcoltot;
   for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
     pcol[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
     p[i] = pcol[i];
-    pNuReco[i] = pcol[i];
-    pNuRecoCol[i] = pcol[i];
+    pReco[i] = pcol[i];
+    pcolReco[i] = pcol[i];
     pTcol[i].Set(pcol[i].Px(), pcol[i].Py());
     ycol[i] = pcol[i].Rapidity();
     etacol[i] = pcol[i].PseudoRapidity();
     phicol[i] = pcol[i].Phi();   
     mass[i] = pcol[i].M();
-    ETcol[i] = sqrt(mass[i]*mass[i] + pTcol[i].Mod2());
+    ETcol[i] = std::sqrt(mass[i]*mass[i] + pTcol[i].Mod2());
     pcoltot += pcol[i];
     pTcoltot += pTcol[i];
   }
@@ -83,33 +81,33 @@ void AnalysisZprime::EachEvent()
     y[i] = p[i].Rapidity();
     eta[i] = p[i].PseudoRapidity();
     phi[i] = p[i].Phi();   
-    ET[i] = sqrt(mass[i]*mass[i] + pT[i].Mod2());
+    ET[i] = std::sqrt(mass[i]*mass[i] + pT[i].Mod2());
     ptot += p[i];
     pTtot += pT[i];
   }  
 
-  double PzNuRecoCol = -9999;
-  double MttNuReco =-9999;
-  double yttNuReco =-9999;
+  double PzNuRecoCol = -999;
+  double MttReco =-999;
+  double yttReco =-999;
   if (m_channel =="2to6") {
     // resolve longitudinal neutrino momentum in the semihadronic case
     PzNuRecoCol = resolveNeutrinoPz(pcol[2], pTcol[3]);
-    pNuRecoCol[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Px()+PzNuRecoCol*PzNuRecoCol));
-    pNuReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Px()+PzNuRecoCol*PzNuRecoCol));
-    TLorentzVector pcoltotPzNuReco = pcoltot - pcol[3] + pNuRecoCol[3];
-    MttNuReco = pcoltotPzNuReco.M();
-    yttNuReco = pcoltotPzNuReco.Rapidity();
+    pcolReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, std::sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Py()+PzNuRecoCol*PzNuRecoCol));
+    pReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, std::sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Py()+PzNuRecoCol*PzNuRecoCol));
+    TLorentzVector pcoltotReco = pcoltot - pcol[3] + pcolReco[3];
+    MttReco = pcoltotReco.M();
+    yttReco = pcoltotReco.Rapidity();
     // reconstructed final particle parton CoM variables
-    TVector3 vcoltotPzNuReco = -1*pcoltotPzNuReco.BoostVector();
+    TVector3 vcoltotReco = -1*pcoltotReco.BoostVector();
     for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
-      pNuReco[i].Boost(vcoltotPzNuReco);
-      // pNuReco[i].Print();
-      pTNuReco[i].Set(pNuReco[i].Px(), pNuReco[i].Py());
-      yNuReco[i] = pNuReco[i].Rapidity();
-      // etaNuReco[i] = pNuReco[i].PseudoRapidity();
-      phiNuReco[i] = pNuReco[i].Phi();   
-      ETNuReco[i] = sqrt(mass[i]*mass[i] + pTNuReco[i].Mod2());
-      pTtotNuReco += pTNuReco[i];
+      pReco[i].Boost(vcoltotReco);
+      // pReco[i].Print();
+      pTReco[i].Set(pReco[i].Px(), pReco[i].Py());
+      yNuReco[i] = pReco[i].Rapidity();
+      // etaNuReco[i] = pReco[i].PseudoRapidity();
+      phiNuReco[i] = pReco[i].Phi();   
+      ETNuReco[i] = std::sqrt(mass[i]*mass[i] + pTReco[i].Mod2());
+      pTtotNuReco += pTReco[i];
     }  
   }
 
@@ -125,34 +123,32 @@ void AnalysisZprime::EachEvent()
     ptbcol = pcol[1] + pcol[4] + pcol[5];
     pt = p[0] + p[2] + p[3];
     ptb = p[1] + p[4] + p[5];
-    ptcolNuReco = pcol[0] + pcol[2] + pcol[3];
-    ptcolNuReco = pcol[0] + pcol[2] + pcol[3];
-    ptNuReco = p[0] + p[2] + p[3];
-    ptNuReco = p[0] + p[2] + p[3];
+    ptcolReco = pcolReco[0] + pcolReco[2] + pcolReco[3];
+    ptReco = pReco[0] + pReco[2] + pReco[3];
   }
 
   double ytcol = ptcol.Rapidity();
   double ytbcol = ptbcol.Rapidity();
-  double etatcol = ptcol.PseudoRapidity();
-  double etatbcol = ptbcol.PseudoRapidity();
-  double phitcol = ptcol.Phi();
-  double phitbcol = ptbcol.Phi();
-  double pTtcol = ptcol.Pt();
-  double PTtbcol = ptbcol.Pt();
-  double yt = pt.Rapidity();
-  double ytb = ptb.Rapidity();
-  double etat = pt.PseudoRapidity();
-  double etatb = ptb.PseudoRapidity();
-  double phit = pt.Phi();
-  double phitb = ptb.Phi();
-  double pTt = pt.Pt();
-  double PTtb = ptb.Pt();
+  // double etatcol = ptcol.PseudoRapidity();
+  // double etatbcol = ptbcol.PseudoRapidity();
+  // double phitcol = ptcol.Phi();
+  // double phitbcol = ptbcol.Phi();
+  // double pTtcol = ptcol.Pt();
+  // double PTtbcol = ptbcol.Pt();
+  // double yt = pt.Rapidity();
+  // double ytb = ptb.Rapidity();
+  // double etat = pt.PseudoRapidity();
+  // double etatb = ptb.PseudoRapidity();
+  // double phit = pt.Phi();
+  // double phitb = ptb.Phi();
+  // double pTt = pt.Pt();
+  // double PTtb = ptb.Pt();
   double deltaYcol = std::abs(ytcol) - std::abs(ytbcol);
-  double costhetatcol = ptcol.CosTheta();
-  double costhetat = pt.CosTheta();
-  double CosThetatNuReco = ptNuReco.CosTheta();
-  double costhetastar = int(ytt/std::abs(ytt))*costhetat;
-  double CosThetaStarNuReco = int(yttNuReco/std::abs(yttNuReco))*CosThetatNuReco;
+  // double CosThetaCol = ptcol.CosTheta();
+  double CosTheta = pt.CosTheta();
+  double CosThetaReco = ptReco.CosTheta();
+  double CosThetaStar = int(ytt/std::abs(ytt))*CosTheta;
+  double CosThetaStarReco = int(yttReco/std::abs(yttReco))*CosThetaReco;
 
   // negative velocity of t/tb in collider frame
   TVector3 vtcol = -1*ptcol.BoostVector();
@@ -163,30 +159,30 @@ void AnalysisZprime::EachEvent()
 
   int it = m_ntup->iteration();
   double Mtt = std::abs(pcoltot.M());
-  double costhetalpcol = -9999;
-  double costhetalmcol = -9999;
-  double costhetalptop = -9999;
-  double costhetalmtop = -9999;
-  double clpclmcol = -9999;
-  double clpclmtop = -9999;
-  double dphi = -9999;
-  double MET = -9999;
-  double mll = -9999;
-	double Mbbll = -9999;
-	double HT = -9999;
-	double ETbbll = -9999;
-	double KTbbll = -9999;
-	double ET5 = -9999;
-	double ET7 = -9999;
-	double MTll = -9999;
-	double MCTll = -9999;
-	double m35 = -9999;
-	double m47 = -9999;
-	double ET35 = -9999;
-	double ET47 = -9999;
-	double MTblbl = -9999;
-	double MCTblbl = -9999;
-  double deltaEtal = -9999;
+  double costhetalpcol = -999;
+  double costhetalmcol = -999;
+  double costhetalptop = -999;
+  double costhetalmtop = -999;
+  double clpclmcol = -999;
+  double clpclmtop = -999;
+  double dphi = -999;
+ //  double MET = -999;
+ //  double mll = -999;
+	// double Mbbll = -999;
+	// double HT = -999;
+	// double ETbbll = -999;
+	// double KTbbll = -999;
+	// double ET5 = -999;
+	// double ET7 = -999;
+	// double MTll = -999;
+	// double MCTll = -999;
+	// double m35 = -999;
+	// double m47 = -999;
+	// double ET35 = -999;
+	// double ET47 = -999;
+	// double MTblbl = -999;
+	// double MCTblbl = -999;
+  double deltaEtal = -999;
 
   if (m_channel == "2to6") {
     TLorentzVector plepptop = pcol[2];
@@ -207,42 +203,42 @@ void AnalysisZprime::EachEvent()
 
     // TRANSVERSE VARIABLES
 
-    TVector2 ETmiss = -1*pTcol[0] - pTcol[1] - pTcol[2] - pTcol[4];
-    MET = ETmiss.Mod();
+    // TVector2 ETmiss = -1*pTcol[0] - pTcol[1] - pTcol[2] - pTcol[4];
+    // MET = ETmiss.Mod();
 
-    mll = (pcol[2] + pcol[4]).M();
+    // mll = (pcol[2] + pcol[4]).M();
 
-    // calculate invariant mass of visible decay products
-    Mbbll = (pcol[0] + pcol[1] + pcol[2] + pcol[4]).M();
+    // // calculate invariant mass of visible decay products
+    // Mbbll = (pcol[0] + pcol[1] + pcol[2] + pcol[4]).M();
 
-    // calculate total scalar sum of transverse energy
-    HT = ETcol[0] + ETcol[1] + ETcol[2] + ETcol[4] + MET;
+    // // calculate total scalar sum of transverse energy
+    // HT = ETcol[0] + ETcol[1] + ETcol[2] + ETcol[4] + MET;
 
-    // ET of visible decay products
-    TVector2 pTbbll = pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4];
-    ETbbll = sqrt(Mbbll*Mbbll + pTbbll.Mod2());
+    // // ET of visible decay products
+    // TVector2 pTbbll = pTcol[0] + pTcol[1] + pTcol[2] + pTcol[4];
+    // ETbbll = std::sqrt(Mbbll*Mbbll + pTbbll.Mod2());
 
-    // scalar sum of visible decay products and MET
-    KTbbll = ETbbll + MET;
+    // // scalar sum of visible decay products and MET
+    // KTbbll = ETbbll + MET;
 
-    ET5 = sqrt(mass[2]*mass[2] + pTcol[2].Mod2());
-    ET7 = sqrt(mass[4]*mass[4] + pTcol[4].Mod2());
+    // ET5 = std::sqrt(mass[2]*mass[2] + pTcol[2].Mod2());
+    // ET7 = std::sqrt(mass[4]*mass[4] + pTcol[4].Mod2());
 
-    MTll = sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] + pTcol[4]).Mod2());
-    MCTll = sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] - pTcol[4]).Mod2());
+    // MTll = std::sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] + pTcol[4]).Mod2());
+    // MCTll = std::sqrt((ET5 + ET7)*(ET5 + ET7) - (pTcol[2] - pTcol[4]).Mod2());
 
-    m35 = (pcol[0] + pcol[2]).M();
-    m47 = (pcol[1] + pcol[3]).M();
-    TVector2 pT35 = pTcol[0] + pTcol[2];
-    TVector2 pT47 = pTcol[1] + pTcol[4];
-    ET35 = sqrt(m35*m35 - (pTcol[0] + pTcol[2]).Mod2());
-    ET47 = sqrt(m47*m47 - (pTcol[1] + pTcol[4]).Mod2());
+    // m35 = (pcol[0] + pcol[2]).M();
+    // m47 = (pcol[1] + pcol[3]).M();
+    // TVector2 pT35 = pTcol[0] + pTcol[2];
+    // TVector2 pT47 = pTcol[1] + pTcol[4];
+    // ET35 = std::sqrt(m35*m35 - (pTcol[0] + pTcol[2]).Mod2());
+    // ET47 = std::sqrt(m47*m47 - (pTcol[1] + pTcol[4]).Mod2());
 
-    MTblbl = sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] + pTcol[1] + pTcol[4]).Mod2());
-    MCTblbl = sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] - pTcol[1] - pTcol[4]).Mod2());
+    // MTblbl = std::sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] + pTcol[1] + pTcol[4]).Mod2());
+    // MCTblbl = std::sqrt((ET35 + ET47)*(ET35 + ET47) - (pTcol[0] + pTcol[2] - pTcol[1] - pTcol[4]).Mod2());
 
     // magnitiude of l+ in collider frame
-    // double plepmag = sqrt(pcol[2].Px()*pcol[2].Px() + pcol[2].Py()*pcol[2].Py() + pcol[2].Pz()*pcol[2].Pz());
+    // double plepmag = std::sqrt(pcol[2].Px()*pcol[2].Px() + pcol[2].Py()*pcol[2].Py() + pcol[2].Pz()*pcol[2].Pz());
 
     // // Create basis vectors for the GRRS based on the top direction
     // TVector3 x2, y2, z2;
@@ -270,7 +266,7 @@ void AnalysisZprime::EachEvent()
     //   p5zp = p5zp + pcol[3][i]*z2[i];
     // }
 
-    // double plepmagGRRS = sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp);
+    // double plepmagGRRS = std::sqrt(p5xp*p5xp + p5yp*p5yp + p5zp*p5zp);
 
     // if (std::abs(plepmag - plepmagGRRS) >= 1e-11) printf("Error: coordinate transform mismatch.\n");
 
@@ -293,13 +289,16 @@ void AnalysisZprime::EachEvent()
 
     // Fill Histograms (assumes fixed bin width!)
     h_Mtt->Fill(Mtt, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
+    h_ytt->Fill(ytt, weight/h_ytt->GetXaxis()->GetBinWidth(1));
+    h_CosTheta->Fill(CosTheta, weight/h_CosTheta->GetXaxis()->GetBinWidth(1));
+    h_CosThetaStar->Fill(CosThetaStar, weight/h_CosThetaStar->GetXaxis()->GetBinWidth(1));
 
     // asymmetries
-    if (costhetastar > 0) {
+    if (CosThetaStar > 0) {
       h_AFBstar1->Fill(Mtt, weight/h_AFBstar1->GetXaxis()->GetBinWidth(1));
     }
 
-    if (costhetastar < 0) {
+    if (CosThetaStar < 0) {
       h_AFBstar2->Fill(Mtt, weight/h_AFBstar2->GetXaxis()->GetBinWidth(1));
     }
 
@@ -318,22 +317,24 @@ void AnalysisZprime::EachEvent()
       h_MttRR->Fill(Mtt, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "2to6") {
-      h_costheta5->Fill(costhetalptop, weight/h_costheta5->GetXaxis()->GetBinWidth(1));
+      h_yttReco->Fill(yttReco, weight/h_yttReco->GetXaxis()->GetBinWidth(1));
+      h_CosThetaReco->Fill(CosThetaReco, weight/h_CosThetaReco->GetXaxis()->GetBinWidth(1));
+      h_CosThetaStarReco->Fill(CosThetaStarReco, weight/h_CosThetaStarReco->GetXaxis()->GetBinWidth(1));
       h_ct7ct5->Fill(clpclmtop, weight/h_ct7ct5->GetXaxis()->GetBinWidth(1));
       h_dphi->Fill(dphi, weight/h_dphi->GetXaxis()->GetBinWidth(1)/h_dphi->GetXaxis()->GetBinWidth(1));
       h_PzNu->Fill(pcol[3].Pz(), weight/h_PzNu->GetXaxis()->GetBinWidth(1));
       h_PzNuReco->Fill(PzNuRecoCol, weight/h_PzNuReco->GetXaxis()->GetBinWidth(1));
-      h_MttNuReco->Fill(MttNuReco, weight/h_MttNuReco->GetXaxis()->GetBinWidth(1));
-      h_MET->Fill(MET, weight/h_MET->GetXaxis()->GetBinWidth(1));
-			h_HT->Fill(HT, weight/h_HT->GetXaxis()->GetBinWidth(1));
-			h_Mbbll->Fill(Mbbll, weight/h_Mbbll->GetXaxis()->GetBinWidth(1));
-			h_mll->Fill(mll, weight/h_mll->GetXaxis()->GetBinWidth(1));
-			h_ETbbll->Fill(ETbbll, weight/h_ETbbll->GetXaxis()->GetBinWidth(1));
-			h_KTbbll->Fill(KTbbll, weight/h_KTbbll->GetXaxis()->GetBinWidth(1));
-			h_MTll->Fill(MTll, weight/h_MTll->GetXaxis()->GetBinWidth(1));
-			h_MCTll->Fill(MCTll, weight/h_MCTll->GetXaxis()->GetBinWidth(1));
-			h_MTblbl->Fill(MTblbl, weight/h_MTblbl->GetXaxis()->GetBinWidth(1));
-			h_MCTblbl->Fill(MCTblbl, weight/h_MCTblbl->GetXaxis()->GetBinWidth(1));
+      h_MttReco->Fill(MttReco, weight/h_MttReco->GetXaxis()->GetBinWidth(1));
+   //    h_MET->Fill(MET, weight/h_MET->GetXaxis()->GetBinWidth(1));
+			// h_HT->Fill(HT, weight/h_HT->GetXaxis()->GetBinWidth(1));
+			// h_Mbbll->Fill(Mbbll, weight/h_Mbbll->GetXaxis()->GetBinWidth(1));
+			// h_mll->Fill(mll, weight/h_mll->GetXaxis()->GetBinWidth(1));
+			// h_ETbbll->Fill(ETbbll, weight/h_ETbbll->GetXaxis()->GetBinWidth(1));
+			// h_KTbbll->Fill(KTbbll, weight/h_KTbbll->GetXaxis()->GetBinWidth(1));
+			// h_MTll->Fill(MTll, weight/h_MTll->GetXaxis()->GetBinWidth(1));
+			// h_MCTll->Fill(MCTll, weight/h_MCTll->GetXaxis()->GetBinWidth(1));
+			// h_MTblbl->Fill(MTblbl, weight/h_MTblbl->GetXaxis()->GetBinWidth(1));
+			// h_MCTblbl->Fill(MCTblbl, weight/h_MCTblbl->GetXaxis()->GetBinWidth(1));
       // h_dphi_HT->Fill(dphi, HT, weight/h_dphi_HT->GetXaxis()->GetBinWidth(1));
       // h_dphi_Mbbll->Fill(dphi, Mbbll, weight/h_dphi_Mbbll->GetXaxis()->GetBinWidth(1));
       // h_dphi_mll->Fill(dphi, mll, weight/h_dphi_mll->GetXaxis()->GetBinWidth(1));
@@ -343,6 +344,7 @@ void AnalysisZprime::EachEvent()
       // h_dphi_MCTll->Fill(dphi, MCTll, weight/h_dphi_MCTll->GetXaxis()->GetBinWidth(1));
       // h_dphi_MTblbl->Fill(dphi, MTblbl, weight/h_dphi_MTblbl->GetXaxis()->GetBinWidth(1));
       // h_dphi_MCTblbl->Fill(dphi, MCTblbl, weight/h_dphi_MCTblbl->GetXaxis()->GetBinWidth(1));
+
 
       // asymmetries
       if (costhetalptop > 0) {
@@ -369,12 +371,12 @@ void AnalysisZprime::EachEvent()
         h_AllCB->Fill(Mtt, weight/h_AllCB->GetXaxis()->GetBinWidth(1));
       }
 
-      if (CosThetaStarNuReco > 0) {
-        h_AFBstarNuReco1->Fill(MttNuReco, weight/h_AFBstarNuReco1->GetXaxis()->GetBinWidth(1));
+      if (CosThetaStarReco > 0) {
+        h_AFBstarReco1->Fill(MttReco, weight/h_AFBstarReco1->GetXaxis()->GetBinWidth(1));
       }
 
-      if (CosThetaStarNuReco < 0) {
-        h_AFBstarNuReco2->Fill(MttNuReco, weight/h_AFBstarNuReco2->GetXaxis()->GetBinWidth(1));
+      if (CosThetaStarReco < 0) {
+        h_AFBstarReco2->Fill(MttReco, weight/h_AFBstarReco2->GetXaxis()->GetBinWidth(1));
       }
     }
   }
@@ -412,7 +414,7 @@ void AnalysisZprime::PostLoop()
     h_AL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
     h_ALL = this->Asymmetry("ALL", "A_{LL}", h_ALLF, h_ALLB);
     h_AllC = this->Asymmetry("AllC", "A^{ll}_{C}", h_AllCF, h_AllCB);
-    h_AFBstarNuReco = this->Asymmetry("AFBstarNuReco", "A_{FB}^* (#nu reconstructed)", h_AFBstarNuReco1, h_AFBstarNuReco2);
+    h_AFBstarReco = this->Asymmetry("AFBstarNuReco", "A_{FB}^* (#nu reconstructed)", h_AFBstarReco1, h_AFBstarReco2);
   }
   this->MakeGraphs();
   this->WriteHistograms();
@@ -521,7 +523,7 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
     sigmaB = h_B->GetBinContent(i);
     sigma = (sigmaA + sigmaB)*(h_Asymmetry->GetBinWidth(i));
     N = m_intLumi*efficiency*sigma;
-    if (N > 0) deltaA = sqrt((1.0 - A*A)/N);
+    if (N > 0) deltaA = std::sqrt((1.0 - A*A)/N);
     else deltaA = 0;
     printf("A = %f, dA= %f, N= %f\n", A, deltaA, N);
     h_Asymmetry->SetBinError(i, deltaA);
@@ -536,13 +538,26 @@ void AnalysisZprime::CreateHistograms()
   h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13000.0);
   h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13000.0);
   h_AttC2 = new TH1D("AttC2", "AttC2", 130, 0.0, 13000.0);
+  h_ytt = new TH1D("ytt", "ytt", 50, -2.5, 2.5);
+  h_CosTheta = new TH1D("CosTheta", "cos#theta", 50, -1.0, 1.0);
+  h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^*", 50, -1.0, 1.0);
 
+
+  if (m_channel == "2to2") {
+    h_MttLL = new TH1D("MttLL", "MttLL", 130, 0.0, 13000.0);
+    h_MttLR = new TH1D("MttLR", "MttLR", 130, 0.0, 13000.0);
+    h_MttRL = new TH1D("MttRL", "MttRL", 130, 0.0, 13000.0);
+    h_MttRR = new TH1D("MttRR", "MttRR", 130, 0.0, 13000.0);
+  }
 
   if (m_channel == "2to6") {
+    h_yttReco = new TH1D("yttReco", "yttReco", 100, -2.5, 2.5);
     h_PzNuReco = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, -1000.0, 1000.0);
-    h_MttNuReco = new TH1D("MttNuReco", "M_{tt} (p_{z}^{#nu} reconstructed)", 100, 0.0, 13000.0);
+    h_MttReco = new TH1D("MttReco", "M^{reco}_{tt}", 100, 0.0, 13000.0);
     h_PzNu = new TH1D("PzNu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
     h_costheta5 = new TH1D("costheta5", "cos#theta_{l^{+}} (eq)", 50, -1.0, 1.0);
+    h_CosThetaReco = new TH1D("CosThetaReco", "cos#theta_{t}^{reco}", 50, -1.0, 1.0);
+    h_CosThetaStarReco = new TH1D("CosThetaStarReco", "cos#theta_{t}^{*reco}", 50, -1.0, 1.0);
     h_ct7ct5 = new TH1D("ct7ct5", "cos#theta_{l^{+}}cos#theta_{l^{-}}", 50, -1.0, 1.0);
     h_dphi = new TH1D("dphi", "dphi", 100, 0, 2*m_pi);
     h_MET = new TH1D("MET", "MET", 20, 0, 4000);
@@ -570,15 +585,8 @@ void AnalysisZprime::CreateHistograms()
     h_ALLB = new TH1D("ALLB", "ALLB", 50, 0.0, 13000.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13000.0);
     h_AllCB = new TH1D("AllCB", "AllCB", 50, 0.0, 13000.0);
-    h_AFBstarNuReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 50, 0.0, 13000.0);
-    h_AFBstarNuReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 50, 0.0, 13000.0);
-  }
-
-  if (m_channel == "2to2") {
-    h_MttLL = new TH1D("MttLL", "MttLL", 130, 0.0, 13000.0);
-    h_MttLR = new TH1D("MttLR", "MttLR", 130, 0.0, 13000.0);
-    h_MttRL = new TH1D("MttRL", "MttRL", 130, 0.0, 13000.0);
-    h_MttRR = new TH1D("MttRR", "MttRR", 130, 0.0, 13000.0);
+    h_AFBstarReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 130, 0.0, 13000.0);
+    h_AFBstarReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 130, 0.0, 13000.0);
   }
 }
 
@@ -638,8 +646,8 @@ void AnalysisZprime::MakeGraphs()
     h_PzNuReco->GetYaxis()->SetTitle(numBase + h_PzNuReco->GetTitle() + " [" + units +"/GeV]");
     h_PzNuReco->GetXaxis()->SetTitle(h_PzNuReco->GetTitle());
 
-    h_MttNuReco->GetYaxis()->SetTitle(numBase + h_MttNuReco->GetTitle() + " [" + units +"/GeV]");
-    h_MttNuReco->GetXaxis()->SetTitle(h_MttNuReco->GetTitle());
+    h_MttReco->GetYaxis()->SetTitle(numBase + h_MttReco->GetTitle() + " [" + units +"/GeV]");
+    h_MttReco->GetXaxis()->SetTitle(h_MttReco->GetTitle());
 
     h_AllC->GetYaxis()->SetTitle(h_AllC->GetTitle());
     h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
@@ -679,6 +687,9 @@ void AnalysisZprime::WriteHistograms()
     h_Mtt->Write();
     h_AFBstar->Write();
     h_AttC->Write();
+    h_ytt->Write();
+    h_CosTheta->Write();
+    h_CosThetaStar->Write();
   }
   
   if (m_channel == "2to2") {
@@ -695,22 +706,25 @@ void AnalysisZprime::WriteHistograms()
     h_AL->Write();
     h_ALL->Write();
     h_AllC->Write();
-    h_AFBstarNuReco->Write();
+    h_AFBstarReco->Write();
     h_PzNu->Write();
     h_PzNuReco->Write();
-    h_MttNuReco->Write();
+    h_MttReco->Write();
     h_costheta5->Write();
     h_ct7ct5->Write();
-    h_MET->Write();
-    h_HT->Write();
-    h_Mbbll->Write();
-    h_mll->Write();
-    h_ETbbll->Write();
-    h_KTbbll->Write();
-    h_MTll->Write();
-    h_MCTll->Write();
-    h_MTblbl->Write();
-    h_MCTblbl->Write();
+    h_yttReco->Write();
+    h_CosThetaReco->Write();
+    h_CosThetaStarReco->Write();
+    // h_MET->Write();
+    // h_HT->Write();
+    // h_Mbbll->Write();
+    // h_mll->Write();
+    // h_ETbbll->Write();
+    // h_KTbbll->Write();
+    // h_MTll->Write();
+    // h_MCTll->Write();
+    // h_MTblbl->Write();
+    // h_MCTblbl->Write();
     // h_dphi_HT->Write();
     // h_dphi_Mbbll->Write();
     // h_dphi_mll->Write();
@@ -829,7 +843,7 @@ Long64_t AnalysisZprime::TotalEvents()
 {
   // Internal for Event Looping
   if (m_ntup != 0){return m_ntup->totalEvents();}
-  return -9999;  
+  return -999;  
 }
 
 Long64_t AnalysisZprime::IncrementEvent(Long64_t i)
@@ -863,11 +877,11 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu)
 
   double PzNu;
   std::vector<std::complex<double> > root, root2;
-  double a = -9999, b = -9999, c = -9999, k = -9999;
-  // double a2 = -9999, b2 = -9999, c2 = -9999;
+  double a = -999, b = -999, c = -999, k = -999;
+  // double a2 = -999, b2 = -999, c2 = -999;
 
   // recalculate lepton energy in zero mass approximation
-  double p_l0 = sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
+  double p_l0 = std::sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
 
   // check this matches the 4-vector energy
   // printf("p_l.E() = %f\n", p_l.E());
@@ -949,7 +963,7 @@ std::vector<std::complex<double> > AnalysisZprime::solveQuadratic(double a, doub
 
     term1 = -b/(2*a);
     discriminator = b*b - 4*a*c;
-    term2 = sqrt(discriminator)/(2*a);
+    term2 = std::sqrt(discriminator)/(2*a);
 
     roots.push_back(term1 + term2);
     roots.push_back(term1 - term2);

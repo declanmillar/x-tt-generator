@@ -81,15 +81,23 @@ private:
   TH1D* h_dphi;
   TH1D* h_costheta5;
   TH1D* h_ct7ct5; 
+  TH1D* h_CosTheta;
+  TH1D* h_CosThetaReco;
+  TH1D* h_CosThetaStar;
+
+
+  // Rapidity
+  TH1D* h_ytt;
+  TH1D* h_yttReco;
 
   // asymmetry histograms
   TH1D* h_AFBstar;
   TH1D* h_AFBstar1;
   TH1D* h_AFBstar2;
 
-  TH1D* h_AFBstarNuReco;
-  TH1D* h_AFBstarNuReco1;
-  TH1D* h_AFBstarNuReco2;
+  TH1D* h_AFBstarReco;
+  TH1D* h_AFBstarReco1;
+  TH1D* h_AFBstarReco2;
 
   TH1D* h_AttC;
   TH1D* h_AttC1;
@@ -111,7 +119,8 @@ private:
   TH1D* h_PzNu;
   TH1D* h_PzNuReco;
   TH1D* h_Mtt;
-  TH1D* h_MttNuReco;
+  TH1D* h_MttReco;
+  TH1D* h_CosThetaStarReco;
 
   // polarisation weighted
   TH1D* h_MttLL;
