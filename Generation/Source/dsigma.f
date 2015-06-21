@@ -1033,6 +1033,13 @@ function dsigma(x,wgt)
 
           ! binning
           hist = fffxn*wgt
+          
+          ! convert results to different tt classifications
+          call rootadddouble(hist*fac_ee,"weight_ee")
+          call rootadddouble(hist*fac_emu,"weight_emu")
+          call rootadddouble(hist*fac_eq,"weight_eq")
+          call rootadddouble(hist*fac_qq,"weight_qq")
+          call rootaddint(it,"iteration")
           call rootaddevent(hist)
 
           ! stats
