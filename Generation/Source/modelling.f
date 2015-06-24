@@ -37,13 +37,13 @@ module modelling
   real :: Gamma_t = twidth
 
   ! Other SM parameters
-  real, parameter :: a_em = 0.0078125, s2w = 0.2320d0
+  real, parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
 
   ! zprime parameters
   real :: mass_zp(5),gamZp(5)
   real :: paramZp(5)
   real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
-  real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5)
+  real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5),gZpb(2,5), gZpt(2,5), gZpl3(2,5), gZpn3(2,5)
   integer :: manual_width(5)
 
   ! methods
@@ -123,9 +123,40 @@ subroutine initialise_standard_model
   print*, "...done"
 end subroutine initialise_standard_model
 
-subroutine initialise_zprimes 
+subroutine reset_zprimes
+  integer :: i, j
+
+  do i = 1, 5
+    mass_zp(i) = 0
+    gamZp(i) = 0
+    gV_u(i) = 0
+    gV_d(i) = 0
+    gV_l(i) = 0
+    gV_nu(i) = 0
+    gA_u(i) = 0
+    gA_d(i) = 0
+    gA_l(i) = 0
+    gA_nu(i) = 0
+    do j = 1, 2
+      gZpd(j,i) = 0
+      gZpu(j,i) = 0
+      gZpl(j,i) = 0
+      gZpn(j,i) = 0
+      gZpb(j,i) = 0
+      gZpt(j,i) = 0
+      gZpl3(j,i) = 0
+      gZpn3(j,i) = 0
+    end do
+  end do
+
+end subroutine reset_zprimes
+
+subroutine initialise_zprimes
+
 
   integer imodel_name, i
+
+  call reset_zprimes
 
   print*, "Initialising zprimes..."
 
@@ -182,6 +213,55 @@ subroutine initialise_zprimes
   print*, "...done."
 end subroutine initialise_zprimes
 
+subroutine initialise_non_universal 
+
+  use mathematics, only: pi
+
+  integer :: i, j 
+  real :: x, sin2phi, e, st, ct, sp, cp, m0
+
+  call reset_zprimes
+
+  x = 600
+  sin2phi = 0.85
+
+  e = sqrt(4.d0*pi*a_em)
+  st = sqrt(s2w)
+  ct = sqrt(1 - s2w)
+  sp = sqrt(sin2phi)
+  cp = sqrt(1 - sin2phi)
+  m0 = e*vev/2/st
+  mass_zp(1) = m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp) 
+
+  ! leptons
+  gZpl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
+  gZpn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
+  gZpl3(1,1) = gZpl(1,1) - e/2/st/sp/cp
+  gZpn3(1,1) = gZpn(1,1) + e/2/st/sp/cp
+
+  ! quarks
+  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - (4/3)*st*st))
+  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - (2/3)*st*st))
+  gZpt(1,1) = gZpu(1,1) + e/2/st/sp/cp
+  gZpb(1,1) = gZpd(1,1) - e/2/st/sp/cp
+
+  ! right handed couplings
+  gZpl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
+  gZpn(2,1) = 0
+  gZpl3(2,1) = gZpl(2,1)
+  gZpn3(2,1) = gZpn(2,1)
+
+  gZpu(2,1) = gZpl(2,1)*2/3
+  gZpd(2,1) = gZpl(2,1)*1/3
+  gZpt(2,1) = gzpu(2,1)
+  gZpb(2,1) = gZpd(2,1)
+
+  call width_zprime_benchmark
+
+  return
+
+end subroutine initialise_non_universal
+
 subroutine convert_zprime_couplings
 
   ! input: vector and axial Zp couplings to up and down quarks
@@ -200,6 +280,14 @@ subroutine convert_zprime_couplings
       gZpl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
       gZpn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
       gZpn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
+      gZpb(1,i) = gZpd(1,i)
+      gZpb(2,i) = gZpd(2,i)
+      gZpt(1,i) = gZpu(1,i)
+      gZpt(2,i) = gZpu(2,i)
+      gZpl3(1,i) = gZpl(1,i)
+      gZpl3(2,i) = gZpl(2,i)
+      gZpn3(1,i) = gZpn(1,i)
+      gZpn3(2,i) = gZpn(2,i)
   enddo
 
   print*, "...done."
@@ -237,12 +325,18 @@ subroutine width_zprime_benchmark
         mq = qmass(i)
         if (mass_zp(n) > 2.d0*mq) then
 
-          if (i == 1 .or. i == 3 .or. i == 5) then
+          if (i == 1 .or. i == 3) then
             gv = gzpu(1,n) + gzpu(2,n)
             ga = gzpu(1,n) - gzpu(2,n)
-          else if (i == 2 .or. i == 4 .or. i == 6) then
+          else if (i == 2 .or. i == 4) then
             gv = gzpd(1,n) + gzpd(2,n)
             ga = gzpd(1,n) - gzpd(2,n)
+          else if (i == 5) then
+            gv = gzpt(1,n) + gzpt(2,n)
+            ga = gzpt(1,n) - gzpt(2,n)
+          else if (i == 6) then
+            gv = gzpb(1,n) + gzpb(2,n)
+            ga = gzpb(1,n) - gzpb(2,n)
           end if    
 
           ! with QCD kfactor
@@ -271,6 +365,12 @@ subroutine width_zprime_benchmark
           else if (i == 2 .or. i == 4 .or. i == 6) then
             gv = gzpn(1,n) + gzpn(2,n)
             ga = gzpn(1,n) - gzpn(2,n)
+          else if (i == 5) then
+            gv = gzpl3(1,n) + gzpl3(2,n)
+            ga = gzpl3(1,n) - gzpl3(2,n)
+          else if (i == 6) then
+            gv = gzpn3(1,n) + gzpn3(2,n)
+            ga = gzpn3(1,n) - gzpn3(2,n)
           end if
             
           widthll_tmp = 1.d0/48.d0/pi*mzp &

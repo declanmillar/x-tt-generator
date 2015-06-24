@@ -306,12 +306,25 @@ program zprime
     if (mass_zp(i) > 0) then
       print*, 'z#prime               ', i
       print*, 'm_{z#prime}           ', mass_zp(i)
-      print*, '#gamma_{z#prime}      ', gamzp(i)
+      print*, '#Gamma_{z#prime}      ', gamzp(i)
+      print*, 'm/Gamma               ', mass_zp(i)/gamzp(i)              
       print*, 'g_{p}                 ', gp(i)
-      print*, 'g_{v}^{u}             ', gv_u(i)
-      print*, 'g_{a}^{u}             ', ga_u(i)
-      print*, 'g_{v}^{d}             ', gv_d(i)
-      print*, 'g_{a}^{d}             ', ga_d(i)
+      print*, 'g_{L}^{u}             ', gZpu(1,i)
+      print*, 'g_{R}^{u}             ', gZpu(2,i)
+      print*, 'g_{L}^{d}             ', gZpd(1,i)
+      print*, 'g_{R}^{d}             ', gZpd(2,i)
+      print*, 'g_{L}^{l}             ', gZpl(1,i)
+      print*, 'g_{R}^{l}             ', gZpl(2,i)
+      print*, 'g_{L}^{n}             ', gZpn(1,i)
+      print*, 'g_{R}^{n}             ', gZpn(2,i)
+      print*, 'g_{L}^{t}             ', gZpt(1,i)
+      print*, 'g_{R}^{t}             ', gZpt(2,i)
+      print*, 'g_{L}^{b}             ', gZpb(1,i)
+      print*, 'g_{R}^{b}             ', gZpb(2,i)
+      print*, 'g_{L}^{l3}            ', gZpl3(1,i)
+      print*, 'g_{R}^{l3}            ', gZpl3(2,i)
+      print*, 'g_{L}^{n3}            ', gZpn3(1,i)
+      print*, 'g_{R}^{n3}            ', gZpn3(2,i)
     end if
   end do
 

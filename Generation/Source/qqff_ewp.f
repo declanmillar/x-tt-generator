@@ -99,54 +99,113 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
 
 
   ! select only final state spins from shell script
-  if((nhel(3) == lam3) .AND. (nhel(4) == lam4))then
+  if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then
     continue
   else
     qqff_EWp = 0.d0
     return
   end if
 
-  ! up/down type couplings
-  if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
-    do i=1,2
-      gAq(i)=gAu(i)
-      gZq(i)=gZu(i)
-      do j=1,5
-        gZpq(i,j)=gZpu(i,j)
+  if ((iq == 3) .or. (iq == 7)) then
+    do i = 1,2
+      gAq(i) = gAu(i)
+      gZq(i) = gZu(i)
+      do j = 1,5
+        gZpq(i,j) = gZpu(i,j)
       end do
     enddo
-  else if((iq == 4) .OR. (iq == 8) .OR. (iq == 12))then
-    do i=1,2
-      gAq(i)=gAd(i)
-      gZq(i)=gZd(i)
-      do j=1,5
-        gZpq(i,j)=gZpd(i,j)
+  else if ((iq == 4) .or. (iq == 8)) then
+    do i = 1,2
+      gAq(i) = gAd(i)
+      gZq(i) = gZd(i)
+      do j = 1,5
+        gZpq(i,j) = gZpd(i,j)
       end do
     enddo
-  else
-    write(*,*)'Incorrect quark ID number.'
+  else if (iq == 11) then
+    do i = 1,2
+      gAq(i) = gAu(i)
+      gZq(i) = gZu(i)
+      do j = 1,5
+        gZpq(i,j) = gZpt(i,j)
+      end do
+    enddo
+  else if (iq == 12) then
+    do i = 1,2
+      gAq(i) = gAd(i)
+      gZq(i) = gZd(i)
+      do j = 1,5
+        gZpq(i,j) = gZpb(i,j)
+      end do
+    enddo
   end if
 
-  if((jf == 1) .OR. (jf == 3) .OR. (jf == 5) .OR. &
-  (jf == 7) .OR. (jf == 9) .OR. (jf == 11))then
-    do i=1,2
-      gAf(i)=gAu(i)
-      gZf(i)=gZu(i)
-      do j=1,5
-        gZpf(i,j)=gZpu(i,j)
+  if ((jf == 3) .or. (jf == 7)) then
+    do i = 1,2
+      gAf(i) = gAu(i)
+      gZf(i) = gZu(i)
+      do j = 1,5
+        gZpf(i,j) = gZpu(i,j)
       end do
     enddo
-  else if((jf == 2) .OR. (jf == 4) .OR. (jf == 6) .OR. &
-    (jf == 8) .OR. (jf == 10) .OR. (jf == 12))then
-    do i=1,2
-      gAf(i)=gAd(i)
-      gZf(i)=gZd(i)
-      do j=1,5
-        gZpf(i,j)=gZpd(i,j)
+  else if ((jf == 4) .or. (jf == 8)) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpd(i,j)
       end do
     enddo
-  else
-    write(*,*)'Incorrect fermion ID number.'
+  else if (jf == 11) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpt(i,j)
+      end do
+    enddo
+  else if (jf == 12) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpb(i,j)
+      end do
+    enddo
+  end if
+
+  if ((jf == 1) .or. (jf == 5)) then
+    do i = 1,2
+      gAf(i) = gAl(i)
+      gZf(i) = gZl(i)
+      do j = 1,5
+        gZpf(i,j) = gZpl(i,j)
+      end do
+    enddo
+  else if ((jf == 2) .or. (jf == 6)) then
+    do i = 1,2
+      gAf(i) = 0
+      gZf(i) = gZn(i)
+      do j = 1,5
+        gZpf(i,j) = gZpn(i,j)
+      end do
+    enddo
+  else if (jf == 9) then
+    do i = 1,2
+      gAf(i) = gAl(i)
+      gZf(i) = gZl(i)
+      do j = 1,5
+        gZpf(i,j) = gZpl3(i,j)
+      end do
+    enddo
+  else if (jf == 10) then
+    do i = 1,2
+      gAf(i) = 0
+      gZf(i) = gZn(i)
+      do j = 1,5
+        gZpf(i,j) = gZpn3(i,j)
+      end do
+    enddo
   end if
 
   ! initialise amplitudes
@@ -160,7 +219,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   call oxxxxx( p3 ,fmass(jf) ,nhel(3) , 1   ,w3 )
   call ixxxxx( p4 ,fmass(jf) ,nhel(4) ,-1   ,w4 )
 
-  if (include_EW == 1)then
+  if (include_EW == 1) then
     ! A diagram
     call jioxxx( w1  ,w2  ,gAq ,rm_a ,gamma_A ,w5 )
     call iovxxx( w4  ,w3  ,w5  ,gAf   ,amp(1) )
@@ -171,7 +230,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     continue
   end if
   ! Z' diagrams
-  if (include_BSM == 1)then
+  if (include_BSM == 1) then
     do i =1,5
       if (mass_zp(i) > 0) then
         do j=1,2
@@ -239,7 +298,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   end if
 
   ! print individual amplitudes
-  !       if (npoints.lt.10)then
+  !       if (npoints.lt.10) then
   !         do i=1,ngraphs
   !           write(*,*)'M: ' ,i ,amp(i)
   !         enddo

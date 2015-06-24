@@ -340,47 +340,106 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   real :: gZpq(2,5),gZpf(2,5) ! coupling of z to q, t
   real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
        
-! up/down type couplings
-  if((iq == 3) .OR. (iq == 7) .OR. (iq == 11))then
-    do i=1,2
-      gAq(i)=gAu(i)
-      gZq(i)=gZu(i)
-      do j=1,5
-        gZpq(i,j)=gZpu(i,j)
+  if ((iq == 3) .or. (iq == 7)) then
+    do i = 1,2
+      gAq(i) = gAu(i)
+      gZq(i) = gZu(i)
+      do j = 1,5
+        gZpq(i,j) = gZpu(i,j)
       end do
     enddo
-  else if((iq == 4) .OR. (iq == 8) .OR. (iq == 12))then
-    do i=1,2
-      gAq(i)=gAd(i)
-      gZq(i)=gZd(i)
-      do j=1,5
-        gZpq(i,j)=gZpd(i,j)
+  else if ((iq == 4) .or. (iq == 8)) then
+    do i = 1,2
+      gAq(i) = gAd(i)
+      gZq(i) = gZd(i)
+      do j = 1,5
+        gZpq(i,j) = gZpd(i,j)
       end do
     enddo
-  else
-    write(*,*)'Incorrect quark ID number.'
+  else if (iq == 11) then
+    do i = 1,2
+      gAq(i) = gAu(i)
+      gZq(i) = gZu(i)
+      do j = 1,5
+        gZpq(i,j) = gZpt(i,j)
+      end do
+    enddo
+  else if (iq == 12) then
+    do i = 1,2
+      gAq(i) = gAd(i)
+      gZq(i) = gZd(i)
+      do j = 1,5
+        gZpq(i,j) = gZpb(i,j)
+      end do
+    enddo
   end if
 
-  if((jf == 1) .OR. (jf == 3) .OR. (jf == 5) .OR. &
-  (jf == 7) .OR. (jf == 9) .OR. (jf == 11))then
-    do i=1,2
-      gAf(i)=gAu(i)
-      gZf(i)=gZu(i)
-      do j=1,5
-        gZpf(i,j)=gZpu(i,j)
+  if ((jf == 3) .or. (jf == 7)) then
+    do i = 1,2
+      gAf(i) = gAu(i)
+      gZf(i) = gZu(i)
+      do j = 1,5
+        gZpf(i,j) = gZpu(i,j)
       end do
     enddo
-  else if((jf == 2) .OR. (jf == 4) .OR. (jf == 6) .OR. &
-    (jf == 8) .OR. (jf == 10) .OR. (jf == 12))then
-    do i=1,2
-      gAf(i)=gAd(i)
-      gZf(i)=gZd(i)
-      do j=1,5
-        gZpf(i,j)=gZpd(i,j)
+  else if ((jf == 4) .or. (jf == 8)) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpd(i,j)
       end do
     enddo
-  else
-    write(*,*)'Incorrect fermion ID number.'
+  else if (jf == 11) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpt(i,j)
+      end do
+    enddo
+  else if (jf == 12) then
+    do i = 1,2
+      gAf(i) = gAd(i)
+      gZf(i) = gZd(i)
+      do j = 1,5
+        gZpf(i,j) = gZpb(i,j)
+      end do
+    enddo
+  end if
+
+  if ((jf == 1) .or. (jf == 5)) then
+    do i = 1,2
+      gAf(i) = gAl(i)
+      gZf(i) = gZl(i)
+      do j = 1,5
+        gZpf(i,j) = gZpl(i,j)
+      end do
+    enddo
+  else if ((jf == 2) .or. (jf == 6)) then
+    do i = 1,2
+      gAf(i) = 0
+      gZf(i) = gZn(i)
+      do j = 1,5
+        gZpf(i,j) = gZpn(i,j)
+      end do
+    enddo
+  else if (jf == 9) then
+    do i = 1,2
+      gAf(i) = gAl(i)
+      gZf(i) = gZl(i)
+      do j = 1,5
+        gZpf(i,j) = gZpl3(i,j)
+      end do
+    enddo
+  else if (jf == 10) then
+    do i = 1,2
+      gAf(i) = 0
+      gZf(i) = gZn(i)
+      do j = 1,5
+        gZpf(i,j) = gZpn3(i,j)
+      end do
+    enddo
   end if
 
 ! initialise all the square matrix elements to zero
