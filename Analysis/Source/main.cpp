@@ -7,15 +7,16 @@ int main(int argc, char* argv[])
   AtlasROOTStyle atlasStyle;
   atlasStyle.SetStyle();
 
-  // TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  TString inDir("/Users/declan/Data/Ntuples_Zprime/");
-  TString outDir("/Users/declan/Data/Histos_Zprime/");
+  TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  TString outDir("/afs/cern.ch/work/d/demillar/Histos_Zprime/");
+  // TString inDir("/Users/declan/Data/Ntuples_Zprime/");
+  // TString outDir("/Users/declan/Data/Histos_Zprime/");
 
   TString channel("2to6"); 
   TString model("SM");
   TString options("_xc_");
   TString energy("13");
-  TString points("5x1000000");
+  TString points("5x2000000");
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(inDir + "/" + channel + "/" + base + ".root");
   TString outputFileName(outDir + base + "_histos.root");  
@@ -23,7 +24,7 @@ int main(int argc, char* argv[])
   TString channel2("2to6"); 
   TString model2("GSM-SM");
   TString options2("_xc_");
-  TString points2("5x1000000");
+  TString points2("5x2000000");
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
   TString inputFileName2(inDir + "/" + channel + "/" + base2 + ".root");
   TString outputFileName2(outDir + base2 + "_histos.root");
@@ -39,13 +40,13 @@ int main(int argc, char* argv[])
   TString channel4("2to6"); 
   TString model4("E6-eta");
   TString options4("_xc_");
-  TString points4("5x1000000");
+  TString points4("5x5000000");
   TString base4(channel4 + "_" + model4 + "_" + energy + options4 + points4);
   TString inputFileName4(inDir + "/" + channel + "/" + base4 + ".root");
   TString outputFileName4(outDir + base4 + "_histos.root");
 
-  // AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
-  // AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
+  AnalysisZprime analysis(channel, model, inputFileName, outputFileName);
+  AnalysisZprime analysis2(channel2, model2, inputFileName2, outputFileName2);
   // AnalysisZprime analysis3(channel3, model3, inputFileName3, outputFileName3);
   // AnalysisZprime analysis4(channel4, model4, inputFileName4, outputFileName4);
 
@@ -60,9 +61,9 @@ int main(int argc, char* argv[])
     // c_AttC->Draw();
     // RootApp->Run(kTRUE);
 
-    TCanvas* c_AFBstar =overlay(false, true, "AFBstar", model, outputFileName, 
-                                          // "AFBstar", model2, outputFileName2,)
-                                          "AFBstar", model3, outputFileName3);
+    TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFileName, 
+                                              "AFBstar", model2, outputFileName2);
+                                          // "AFBstar", model3, outputFileName3);
                                           // "AFBstar", model4, outputFileName4);
     c_AFBstar->Draw();
     RootApp->Run(kTRUE);
@@ -119,9 +120,9 @@ int main(int argc, char* argv[])
       RootApp->Run(kTRUE);
     }
 
-    TCanvas* c_AFBstarNuReco =overlay(false, true, "AFBstarNuReco", model, outputFileName, 
-                                                // "AFBstarNuReco", model2, outputFileName2,
-                                                "AFBstarNuReco", model3, outputFileName3);
+    TCanvas* c_AFBstarNuReco =overlay(false, false, "AFBstarNuReco", model, outputFileName, 
+                                                "AFBstarNuReco", model2, outputFileName2);
+                                                // "AFBstarNuReco", model3, outputFileName3);
                                                 // "AFBstarNuReco", model4, outputFileName4);
     c_AFBstarNuReco->Draw();
     RootApp->Run(kTRUE);
