@@ -221,12 +221,15 @@ if options.batch == True:
   except IOError:
     print "Not in right directory?"
     sys.exit()
+else:
+  subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell=True)
+  subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell=True)
 
 # Command
 if options.batch == True:
  permission = "chmod a+x %s.sh" % filename
  subprocess.call(permission, shell=True)
- command = 'bsub /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename
+ command = 'bsub -q 1nw /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename
 else:
  command = './Binary/%s < Config/%s.com %s' % (executable,filename,logfile)
 print " ...complete."

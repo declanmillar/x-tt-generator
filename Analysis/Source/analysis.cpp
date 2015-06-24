@@ -585,8 +585,8 @@ void AnalysisZprime::CreateHistograms()
     h_ALLB = new TH1D("ALLB", "ALLB", 50, 0.0, 13000.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13000.0);
     h_AllCB = new TH1D("AllCB", "AllCB", 50, 0.0, 13000.0);
-    h_AFBstarReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 130, 0.0, 13000.0);
-    h_AFBstarReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 130, 0.0, 13000.0);
+    h_AFBstarReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 65, 0.0, 13000.0);
+    h_AFBstarReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 65, 0.0, 13000.0);
   }
 }
 
