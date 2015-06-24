@@ -31,7 +31,6 @@ parser.add_option("-g", "--include_gg", default = 1, const = 0, action = "store_
 parser.add_option("-q", "--include_qq", default = 1, const = 0, action = "store_const", help = "turn off qq")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
-parser.add_option("-K", "--additional_kinematics", default = 0, const = 1, action = "store_const", help = "Turn off additional kinematics")
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
@@ -40,8 +39,6 @@ parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "s
 parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
 parser.add_option("-5", "--symmetrise_costheta_5", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_5")
 parser.add_option("-7", "--symmetrise_costheta_7", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_7")
-parser.add_option("-D", "--print_distributions", default = 0, const = 1, action = "store_const", help = "turn on built in histogams")
-parser.add_option("-U", "--include_errors", default = 0, const = 1, action = "store_const", help = "turn on distribution errors")
 parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
 parser.add_option("-M", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
 
@@ -51,30 +48,29 @@ parser.add_option("-v", "--verbose", default = 0, const = 1, action = "store_con
 
 (options, args) = parser.parse_args()
 print "\n Generating config file..."
+  
+# Collect arguments
+model_name = args[0]
+collider_energy = args[1]
+final_state = args[2]
+ncall = args[3]
 
 if options.phase_space_only == 1:
   options.include_qcd = 0
   options.include_ew = 0
   options.include_bsm = 0
-  
-# Collect arguments
-model_name = args[0]
 
-if   options.include_bsm == 1:
+if options.include_bsm == 1:
   smodel = args[0]
 elif options.include_bsm == 0:
   smodel = ""
-
-collider_energy = args[1]
-final_state = args[2]
-ncall = args[3]
 
 # Default iseed
 seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="zprime"
-sfinal = "2to2" if (final_state=="0") else "2to6"
+sfinal = "2to2" if (final_state == "0") else "2to6"
 config = StringIO.StringIO()
 handler = StringIO.StringIO()
 
@@ -182,8 +178,6 @@ print >> config, '%s ! interference' % options.interference
 
 print >> config, '%s ! use_nwa' % options.use_nwa
 
-print >> config, '%s ! additional_kinematics' % options.additional_kinematics
-
 print >> config, '%s.d3 ! ecm_col' % collider_energy
 
 print >> config, '%s ! iseed' % seed
@@ -205,10 +199,6 @@ print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
 print >> config, '%s ! symmetrise_costheta_5' % options.symmetrise_costheta_5
 
 print >> config, '%s ! symmetrise_costheta_7' % options.symmetrise_costheta_7
-
-print >> config, '%s ! print_distributions' % options.print_distributions
-
-print >> config, '%s ! include distribution errors' % options.include_errors
 
 print >> config, '%s ! verbose mode' % options.verbose
 

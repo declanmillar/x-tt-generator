@@ -84,8 +84,6 @@ module configuration
 
       read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
 
-      read(5,*) additional_kinematics
-
       read(5,*) collider_energy
 
       read(5,*) seed
@@ -107,10 +105,6 @@ module configuration
       read(5,*) symmetrise_costheta_5
 
       read(5,*) symmetrise_costheta_7
-
-      read(5,*) print_distributions
-
-      read(5,*) include_errors
 
       read(5,*) verbose
 
