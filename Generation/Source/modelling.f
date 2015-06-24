@@ -153,8 +153,11 @@ end subroutine reset_zprimes
 
 subroutine initialise_zprimes
 
-
   integer imodel_name, i
+
+  call initialise_non_universal
+
+  return
 
   call reset_zprimes
 
@@ -227,9 +230,9 @@ subroutine initialise_non_universal
 
   e = sqrt(4.d0*pi*a_em)
   st = sqrt(s2w)
-  ct = sqrt(1 - s2w)
+  ct = sqrt(1.d0 - s2w)
   sp = sqrt(sin2phi)
-  cp = sqrt(1 - sin2phi)
+  cp = sqrt(1.d0 - sin2phi)
   m0 = e*vev/2/st
   mass_zp(1) = m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp) 
 
@@ -240,8 +243,8 @@ subroutine initialise_non_universal
   gZpn3(1,1) = gZpn(1,1) + e/2/st/sp/cp
 
   ! quarks
-  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - (4/3)*st*st))
-  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - (2/3)*st*st))
+  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
+  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
   gZpt(1,1) = gZpu(1,1) + e/2/st/sp/cp
   gZpb(1,1) = gZpd(1,1) - e/2/st/sp/cp
 
@@ -255,6 +258,11 @@ subroutine initialise_non_universal
   gZpd(2,1) = gZpl(2,1)*1/3
   gZpt(2,1) = gzpu(2,1)
   gZpb(2,1) = gZpd(2,1)
+
+  manual_width(1) = 0
+  do i = 2, 5
+    manual_width(i) = 1
+  enddo
 
   call width_zprime_benchmark
 

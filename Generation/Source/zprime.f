@@ -307,8 +307,7 @@ program zprime
       print*, 'z#prime               ', i
       print*, 'm_{z#prime}           ', mass_zp(i)
       print*, '#Gamma_{z#prime}      ', gamzp(i)
-      print*, 'm/Gamma               ', mass_zp(i)/gamzp(i)              
-      print*, 'g_{p}                 ', gp(i)
+      print*, 'Gamma/m               ', gamzp(i)/mass_zp(i)             
       print*, 'g_{L}^{u}             ', gZpu(1,i)
       print*, 'g_{R}^{u}             ', gZpu(2,i)
       print*, 'g_{L}^{d}             ', gZpd(1,i)
