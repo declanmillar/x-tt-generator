@@ -35,10 +35,12 @@ module configuration
   integer :: nfb
   real :: lambdaqcd4
   integer :: nloops
+  real :: ecm_low, ecm_up
 
   ! derived parameters
   integer :: n_final
   integer :: tops_decay
+  integer :: ffinal
 
   ! distributions in asymmetries
   integer, parameter :: n_asymmetries = 12
@@ -108,6 +110,10 @@ module configuration
 
       read(5,*) verbose
 
+      read(5,*) ecm_low
+
+      read(5,*) ecm_up
+
       print*, "...complete."
       
     end subroutine read_config
@@ -116,22 +122,22 @@ module configuration
 
       print*, "Modifying config file..."
 
-      if (final_state == 0) then
+      if (final_state <= 0) then
         symmetrise_costheta_5 = 0
         symmetrise_costheta_7 = 0
       end if
 
-
-      if (final_state == 0) then
-        nfb = 5
-      else if (final_state > 0) then
-        nfb = 9
-      end if
-
-      if (final_state == 0) then
+      if (final_state <= 0) then
         n_final = 4
       else
         n_final = 8
+      end if
+
+      if (final_state == -1) then
+        ffinal = 1
+        include_qcd = 0
+      else
+        ffinal = 11
       end if
 
       if (use_rambo == 1) then
@@ -140,7 +146,7 @@ module configuration
         additional_kinematics = 0
       end if
 
-      if (final_state == 0) use_nwa = 0
+      if (final_state <= 0) use_nwa = 0
       if (final_state > 0) use_branching_ratio = 0
 
       if (itmx > 20 )then
@@ -172,7 +178,7 @@ module configuration
         i7max = 1
       end if
 
-      if (final_state == 0)then
+      if (final_state <= 0)then
         tops_decay = 0
       else
         tops_decay = 1

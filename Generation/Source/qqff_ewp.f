@@ -209,8 +209,8 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   end if
 
   ! initialise amplitudes
-  do i=1,ngraphs
-    amp(i)=0d0
+  do i = 1, ngraphs
+    amp(i) = 0d0
   enddo
 
   ! wavefunctions

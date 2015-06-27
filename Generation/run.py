@@ -7,7 +7,7 @@
 # Arguments:
 #   0 = mdl:   name of model_name file in Models directory
 #   2 = ecm:   centre of mass energy (input:TeV, output: GeV)
-#   3 = final_state: final_state state (0: no decay, 1: dilepton)
+#   3 = final_state: final_state state (-1: drell-yan, 0: tops no decay, 1: tops dilepton decay)
 #   4 = ncall: number of vegas calls (monte carlo/phase space points)
 # ------------------------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ import os, StringIO, re, optparse, subprocess, time, sys, random
 parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
 
 # Execution options
-parser.add_option("-l", "--output", default=False, action="store_true" , help="output to logfile")
+parser.add_option("-L", "--output", default=False, action="store_true" , help="output to logfile")
 parser.add_option("-t", "--tag", default="", type="string", help="add a name tag to logfile")
 parser.add_option("-b", "--batch", default=False, action="store_true", help = "run in batch mode")
 
@@ -31,6 +31,8 @@ parser.add_option("-g", "--include_gg", default = 1, const = 0, action = "store_
 parser.add_option("-q", "--include_qq", default = 1, const = 0, action = "store_const", help = "turn off qq")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
+parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
+parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper limit")
 
 # Monte Carlo options
 parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
@@ -55,42 +57,41 @@ collider_energy = args[1]
 final_state = args[2]
 ncall = args[3]
 
+if (final_state == "l"):
+  final_state = "-1"
+
+if final_state == "-1":
+  options.include_qcd = 0
+
 if options.phase_space_only == 1:
   options.include_qcd = 0
   options.include_ew = 0
   options.include_bsm = 0
 
 if options.include_bsm == 1:
-  smodel = args[0]
+  smodel = model_name
 elif options.include_bsm == 0:
   smodel = ""
+
+if (options.ecm_up <= options.ecm_low): 
+  print "ecm_up must be greater than ecm_low"
+if options.ecm_low or options.ecm_up < 0: 
+  print "ecm must be postitive definite"
+
 
 # Default iseed
 seed = 12345 if options.iseed else random.randint(0,100000)
 
 # Strings
 executable="zprime"
-sfinal = "2to2" if (final_state == "0") else "2to6"
+if (final_state == "-1"):
+  sfinal = "ll"
+elif (final_state == "0"):
+  sfinal = "2to2"
+else :
+  sfinal = "2to6"
 config = StringIO.StringIO()
 handler = StringIO.StringIO()
-
-# Gauge sectors
-if   options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 1:
-  sector = ""
-elif options.include_qcd == 1 and options.include_ew == 1 and options.include_bsm == 0:
-  sector = "SM"
-elif options.include_qcd == 1 and options.include_ew == 0 and options.include_bsm == 1:
-  sector = "_QCD-Zp"  
-elif options.include_qcd == 0 and options.include_ew == 1 and options.include_bsm == 1:
-  sector = "_EW-Zp" 
-elif options.include_qcd == 1 and options.include_ew == 0 and options.include_bsm == 0:
-  sector = "QCD"    
-elif options.include_qcd == 0 and options.include_ew == 1 and options.include_bsm == 0:
-  sector = "EW"
-elif options.include_qcd == 0 and options.include_ew == 0 and options.include_bsm == 1:
-  sector = "_Zp"
-elif options.include_qcd == 0 and options.include_ew == 0 and options.include_bsm == 0:
-  sector = "PS"
 
 all_options = ""
 
@@ -99,6 +100,13 @@ if (options.interference == 4) and (options.include_ew == 0):
   options.interference = 2
   print 'EW sector must be active to calculate interference with Zprimes.'
   print 'Switching to default interference.'
+
+if options.qcd == 0 and final_state >= 0:
+  all_options += "C"
+elif options.ew == 0:
+  all_options += "F"
+elif options.bsm == 0:
+  all_options += "Z"
 
 if options.interference == 0:
   all_options += "i0"
@@ -147,7 +155,7 @@ elif (os == "linux2"):
   
 logfile = '> Logs/%s.log &' % (filename) if options.output else ''
 output_file = "%s.out" % filename
-ntuple_file = ntuple_directory + '%s.root' % filename
+ntuple_file = '%s%s/%s.root' % (ntuple_directory, sfinal, filename)
 
 # print config file
 print >> config, '%s' % ntuple_file
@@ -201,6 +209,10 @@ print >> config, '%s ! symmetrise_costheta_5' % options.symmetrise_costheta_5
 print >> config, '%s ! symmetrise_costheta_7' % options.symmetrise_costheta_7
 
 print >> config, '%s ! verbose mode' % options.verbose
+
+print >> config, '%s.d0 ! ecm_low' % options.ecm_low
+
+print >> config, '%s.d0 ! ecm_up' % options.ecm_up
 
 try:
   with open('Config/%s.com' % filename,'w') as cfile1:

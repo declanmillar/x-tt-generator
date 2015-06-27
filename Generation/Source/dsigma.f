@@ -21,14 +21,14 @@ function dsigma(x,wgt)
   ! external functions
   real :: dsigma, alfas, sqqff_qcd, sggff_qcd, sqqff_ewp, sqqbbffff_qcd, sggbbffff_qcd, sqqbbffff_ewp, ctq6pdf
 
-  real :: ecm, ecm_max, pcm, qcm2
+  real :: ecm, ecm_max, ecm_min, pcm, qcm2
   real :: hist, hist1, hist2
   real :: gs, gs2
   real :: gcol, qcm
   real :: pt356, pt478, phi356, phi478, ycol356, ycol478
   real :: phit
   real :: pq5, pq52, pq56, pq7, pq78
-  real :: q2, qq
+  real :: qq
   real :: qqd1, qqd2
   real :: resall
   real :: rl356, rl478, rl56, rl78, rpl356, rpl478
@@ -105,15 +105,25 @@ function dsigma(x,wgt)
 
   ! --- Method ---
 
-  ! store top parameters
-  rmt = tmass
-  gamt = fwidth(11)
+  call debug("Start of fxn")
 
-  ! centre of mass energy
-  ecm_max = collider_energy
-  ecm = x((2 + 12*tops_decay)*(1 - use_rambo) + use_rambo) &
-        *(ecm_max - m3 - m4 - m5 - m6 - m7 - m8) &
-        + m3 + m4 + m5 + m6 + m7 + m8
+  ! store top parameters
+  rmt = fmass(ffinal)
+  gamt = fwidth(ffinal)
+
+  ! limits
+  if (ecm_up == 0.d0) then
+    ecm_max = collider_energy
+  else 
+    ecm_max = ecm_up
+  end if 
+  if (ecm_low == 0.d0) then
+    ecm_min = m3 + m4 + m5 + m6 + m7 + m8
+  else
+    ecm_min = ecm_low
+  end if
+  
+  ecm = x((2 + 12*tops_decay)*(1 - use_rambo) + use_rambo)*(ecm_max - ecm_min) + ecm_min
   shat = ecm*ecm
   tau = shat/s
 
@@ -137,7 +147,7 @@ function dsigma(x,wgt)
       do i5 = 1, i5max ! loop over costheta5
         fffffxn = 0
         do i7 = 1, i7max ! loop over costheta7
-!           call debug("Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx, ", i5: ", i5, ",  i7: ", i7)
+          if (verbose == 1) print*, "Generating event ", npoints + 1, ", x it:", ix, ", c it: ", jx, ", i5: ", i5, ",  i7: ", i7
 
           ! initialisation
           fffxn = 0.d0
@@ -155,21 +165,32 @@ function dsigma(x,wgt)
           end do
 
           ! scale for the pdfs
-          qq = 2.d0*rmt
+          if (final_state < 0) then
+            qq = rm_z
+          else
+            qq = 2.d0*rmt
+          end if
+          if (qq == 0.d0) then
+            call debug("qq = 0! Setting to Z mass.")
+            qq = rm_z
+          end if
+
 
           call debug("Constructing hadronic structure functions...")
           if (structure_function <= 4) then
-            q2 = qq*qq
             if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("x1 out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("x2 out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
             if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("qq out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
 
@@ -193,49 +214,58 @@ function dsigma(x,wgt)
             glu2 = x2*ctq6pdf(0, x2, qq)
 
           else if (structure_function == 5) then
-            imode=1
+            imode = 1
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
             call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
           else if (structure_function == 6) then
-            imode=2
+            imode = 2
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
             call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
           else if (structure_function == 7) then
-            imode=3
+            imode = 3
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -243,15 +273,18 @@ function dsigma(x,wgt)
           else if (structure_function == 8) then
             imode = 4
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
-              fffxn=0.d0
+              fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -260,14 +293,17 @@ function dsigma(x,wgt)
             imode = 5
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -334,7 +370,7 @@ function dsigma(x,wgt)
           q(1,2) = 0.d0
           call debug("...complete.")
 
-          if (final_state == 0) then
+          if (final_state <= 0) then
             if (use_rambo == 0) then
               call debug("Calculating 2to2 final state momenta in the parton CoM frame manually...")
               ! give vegas assigned values
@@ -352,6 +388,7 @@ function dsigma(x,wgt)
               qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
               if (qcm2 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 qcm = sqrt(qcm2)
@@ -404,6 +441,7 @@ function dsigma(x,wgt)
                 m356_2 = (rmt**2 + rl356)
                 if (m356_2 < 0.d0) then
                   fffxn = 0.d0
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m356 = sqrt(m356_2)
@@ -423,6 +461,7 @@ function dsigma(x,wgt)
                 m478_2 = (rmt**2 + rl478)
                 if (m478_2 < 0.d0) then
                   fffxn = 0.d0
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m478 = sqrt(m478_2)
@@ -442,6 +481,7 @@ function dsigma(x,wgt)
                 m56_2 = (rm_w**2 + rl56)
                 if (m56_2 < 0.d0) then
                   fffxn = 0.d0
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m56 = sqrt(m56_2)
@@ -461,6 +501,7 @@ function dsigma(x,wgt)
                 m78_2 = (rm_w**2 + rl78)
                 if (m78_2 < 0.d0) then
                   fffxn = 0.d0
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m78 = sqrt(m78_2)
@@ -495,6 +536,7 @@ function dsigma(x,wgt)
               rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
               if (rq2 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq = sqrt(rq2)
@@ -514,6 +556,7 @@ function dsigma(x,wgt)
               rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
               if (rq562 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq56 = sqrt(rq562)
@@ -537,6 +580,7 @@ function dsigma(x,wgt)
               rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
               if (rq782 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq78 = sqrt(rq782)
@@ -560,6 +604,7 @@ function dsigma(x,wgt)
               rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
               if (rq52 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq5 = sqrt(rq52)
@@ -583,6 +628,7 @@ function dsigma(x,wgt)
               rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
               if (rq72 < 0.d0) then
                 fffxn = 0.d0
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq7 = sqrt(rq72)
@@ -662,7 +708,7 @@ function dsigma(x,wgt)
           call debug("..done.")
 
           if (verbose == 1) then
-            if (final_state == 0) then
+            if (final_state <= 0) then
               print*, "Checking 2to2 kinematics..."
               print*, "p1  = ", p1
               print*, "p2  = ", p2
@@ -682,8 +728,8 @@ function dsigma(x,wgt)
               mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
               print*, "m1 = ", mass1
               print*, "m2 = ", mass2
-              print*, "m3 = ", mass3
-              print*, "m4 = ", mass4
+              print*, "m3 = ", mass3, m3
+              print*, "m4 = ", mass4, m4
 
             else if (final_state > 0) then
               print*, "Checking 2to6 kinematics..."
@@ -732,7 +778,7 @@ function dsigma(x,wgt)
             else if (ix == 2) then
               pfxtot = 0.5/x2
             end if
-            if (final_state == 0) then
+            if (final_state <= 0) then
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
                   if (ix == 1) then
@@ -773,6 +819,7 @@ function dsigma(x,wgt)
               ewzpoluu2(lam3,lam4) = 0.d0
               ewzpoldd2(lam3,lam4) = 0.d0
               ewzpolbb2(lam3,lam4) = 0.d0
+              pfx(lam3,lam4) = 0.d0
               do i = 1, 20
                 weight(lam3,lam4,i) = 0.d0
               end do
@@ -780,7 +827,7 @@ function dsigma(x,wgt)
           end do
 
           resall = 0
-          if (final_state == 0) then
+          if (final_state <= 0) then
             call debug("Computing 2to2 square matrix elements...")
             if (include_qcd == 1) then
               call debug("Computing QCD matrix elements...")
@@ -803,12 +850,12 @@ function dsigma(x,wgt)
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
                   if (include_qq == 1) then
-                    ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,11,p1,p2,p3,p4,lam3,lam4)
-                    ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,11,p2,p1,p3,p4,lam3,lam4)
-                    ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,11,p1,p2,p3,p4,lam3,lam4)
-                    ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,11,p2,p1,p3,p4,lam3,lam4)
-                    ewzpolbb1(lam3,lam4) = sqqff_ewp(12,11,p1,p2,p3,p4,lam3,lam4)
-                    ewzpolbb2(lam3,lam4) = sqqff_ewp(12,11,p2,p1,p3,p4,lam3,lam4)
+                    ewzpoluu1(lam3,lam4) = sqqff_ewp( 3,ffinal,p1,p2,p3,p4,lam3,lam4)
+                    ewzpoluu2(lam3,lam4) = sqqff_ewp( 3,ffinal,p2,p1,p3,p4,lam3,lam4)
+                    ewzpoldd1(lam3,lam4) = sqqff_ewp( 4,ffinal,p1,p2,p3,p4,lam3,lam4)
+                    ewzpoldd2(lam3,lam4) = sqqff_ewp( 4,ffinal,p2,p1,p3,p4,lam3,lam4)
+                    ewzpolbb1(lam3,lam4) = sqqff_ewp(12,ffinal,p1,p2,p3,p4,lam3,lam4)
+                    ewzpolbb2(lam3,lam4) = sqqff_ewp(12,ffinal,p2,p1,p3,p4,lam3,lam4)
                   end if
                   resall = resall &
                  + ewzpoluu1(lam3,lam4) + ewzpoluu2(lam3,lam4) &
@@ -849,9 +896,9 @@ function dsigma(x,wgt)
                    + ewzuu2 + ewzdd2 + ewzbb2
           end if
 
-          if ((resall) == 0.d0) then
-            ! print*, '|m|^2 = 0 for phase space point ',npoints
+          if (resall == 0.d0) then
             fffxn = 0.d0
+            call debug("No |M^2| contributions. Setting fxn = 0 and skipping.")
             go to 999
           end if
 
@@ -860,7 +907,7 @@ function dsigma(x,wgt)
           qcdgg = qcdgg*gs**4
       
           pfxtot = 0.d0
-          if (final_state == 0) then
+          if (final_state <= 0) then
             call debug("Summing over 2to2 |m|^2 with pdfs of all initial partons..." )
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
@@ -907,10 +954,11 @@ function dsigma(x,wgt)
 
           if (pfxtot == 0.d0) then
               fffxn = 0.d0
+              call debug("fxn = 0. Skipping.")
             go to 999
           end if
 
-          if (final_state == 0) then
+          if (final_state <= 0) then
             ! weight for distributions
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
@@ -934,7 +982,7 @@ function dsigma(x,wgt)
           call debug("...complete.")
 
           call debug("Multiplying by phase space volume and flux factor and azimuthal integration...")
-          if (final_state == 0) then
+          if (final_state <= 0) then
             if (use_rambo == 0) then
               ! 2-body phase space factor + azimuthal integration
               fffxn = fffxn*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
@@ -977,9 +1025,14 @@ function dsigma(x,wgt)
           call debug("...complete.")
 
           call debug("Writing final particle collider frame momenta to Ntuple...")
+          if (final_state == -1) then
+            call rootaddparticle(11,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
+            call rootaddparticle(-11,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
+          end if
+
           if (final_state == 0) then
-            call rootaddparticle(5,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-5,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
+            call rootaddparticle(6,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
+            call rootaddparticle(-6,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
           end if
 
           if (final_state == 1) then
@@ -1010,7 +1063,7 @@ function dsigma(x,wgt)
           end if
           call debug("...complete.")
              
-          if (final_state == 0) then
+          if (final_state <= 0) then
             call debug("Computing polarised event weightings...")
             do lam3 = -1, +1, 2
               do lam4 = -1, +1, 2

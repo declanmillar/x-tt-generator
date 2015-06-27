@@ -26,9 +26,7 @@ program zprime
   real :: sigma_ee, sigma_emu, sigma_eq, sigma_qq
   real :: error_sigma_ee, error_sigma_emu, error_sigma_eq, error_sigma_qq
   real :: sigma_pol_tot(-1:1,-1:1), error_pol_tot(-1:1,-1:1)
-  real :: sigma_fb_tot(-1:1,n_fb_asymmetries), error_fb_tot(-1:1,n_fb_asymmetries)
   real :: all, error_all, al, error_al, apv, error_apv
-  real :: afb(n_fb_asymmetries), error_afb(n_fb_asymmetries)
   real :: chi2_sigma, error_sigma, stantot
   real :: alfas, qcdl4
   ! branching ratio for t->benu=bmuv=btaumu (1/9 with QCD corrections)
@@ -100,9 +98,9 @@ program zprime
     fac_qq = 36  
   end if
 
-  if (final_state == 0) then
-    m3 = tmass
-    m4 = tmass
+  if (final_state <= 0) then
+    m3 = fmass(ffinal)
+    m4 = fmass(ffinal)
     m5 = 0.d0
     m6 = 0.d0
     m7 = 0.d0
@@ -118,10 +116,10 @@ program zprime
 
   ! VEGAS parameters
   if (use_rambo == 0) then
-    if (final_state == 0) then
+    if (final_state <= 0) then
       ! integrates on:
       ! x(3) = (x1 - tau)/(1 - tau),
-      ! x(2) = (ecm - m3 - m4)/(ecm_max - m3 - m4),
+      ! x(2) = (ecm - ecm_min)/(ecm_max - ecm_min),
       ! x(1) = cos(theta3_cm)
       ndimensions = 3
 
@@ -138,8 +136,8 @@ program zprime
     else if (final_state > 0) then
       ! integrates on:         
       ! x(15) = (x1 - tau)/(1 - tau),
-      ! x(14) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)
-      !        /(ecm_max - m3 - m4 - m5 - m6 - m7 - m8),
+      ! x(14) = (ecm - ecm_min)
+      !        /(ecm_max - ecm_min),
       ! x(13) = (xx356 - xx356min)/(xx356max - xx356min),
       ! where xx356 = arctg((m356**2 - m3**2)/m3/gamt),
       ! or x(13) = (m356 - m356min)/(m356max - m356min),
@@ -188,8 +186,8 @@ program zprime
   else if (use_rambo == 1) then
     ! integrates on:
     ! x(2) = (x1 - tau)/(1 - tau),
-    ! x(1) = (ecm - m3 - m4 - m5 - m6 - m7 - m8)/
-    !        (ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+    ! x(1) = (ecm - ecm_min)/
+    !        (ecm_max - ecm_min)
     ndimensions = 2
     do i = 2, 1, -1
       xl(i) = 0.d0
@@ -209,38 +207,25 @@ program zprime
   print*, '-----------------------------------------------------'
   print*, 'process'
   if (initial_state == 0) then
-    if (final_state == 0) then
-      print*, 'pp #rightarrow t#bar{t}', &
-               ' #times br(t#rightarrow bl#nu)^{2}'
+    if (final_state == -1) then
+      print*, 'pp #rightarrow l^{+}l^{-}' 
+    else if (final_state == 0) then
+      print*, 'pp #rightarrow t#bar{t}'
     else if (final_state == 1) then
       print*, 'pp #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    else if (final_state == 2) then
-      print*, 'pp #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               '#rightarrow b#bar{b} q#bar{q} l #nu'
-    else if (final_state == 3) then
-      print*, 'pp #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
     end if
   else if (initial_state == 1) then
-    if (final_state == 0) then
+    if (final_state == -1) then
+      print*, 'p#bar{p} #rightarrow l^{+}l^{-}' 
+    else if (final_state == 0) then
       print*, 'p#bar{p} #rightarrow t#bar{t}', &
                ' #times br(t#rightarrow bl#nu)^{2}'
     else if (final_state == 1) then
       print*, 'p#bar{p} #rightarrow t#bar{t}', &
                '#rightarrow b#bar{b} w^{+}w^{-}', &
                '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
-    else if (final_state == 2) then
-      print*, 'p#bar{p} #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               '#rightarrow b#bar{b} q#bar{q} l #nu'
-    else if (final_state == 3) then
-      print*, 'p#bar{p} #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               "#rightarrow b#bar{b} q#bar{q}q'#bar{q}'"
     end if
   end if
   print*, '-----------------------------------------------------'
@@ -331,7 +316,7 @@ program zprime
   npoints = 0
 
   ! reset 
-  if (final_state == 0) then
+  if (final_state <= 0) then
     do i = 1, 20
       resl(i) = 0.d0
       standdevl(i) = 0.d0
@@ -340,12 +325,6 @@ program zprime
         do lam4 = -1, +1, 2
           sigma_pol(lam3, lam4, i) = 0.d0
           error_pol(lam3, lam4, i) = 0.d0
-        end do
-      end do
-      do ifb = 1, n_fb_asymmetries
-        do iab = -1, +1, 2
-          sigma_fb(ifb, iab, i) = 0.d0
-          error_fb(ifb, iab, i) = 0.d0
         end do
       end do
     end do
@@ -359,14 +338,17 @@ program zprime
   print*, "...complete."  
 
   ! convert results to different tt classifications
-  sigma_ee = sigma*fac_ee
-  error_sigma_ee = error_sigma*fac_ee
-  sigma_emu = sigma*fac_emu
-  error_sigma_emu = error_sigma*fac_emu
-  sigma_eq = sigma*fac_eq
-  error_sigma_eq = error_sigma*fac_eq
-  sigma_qq = sigma*fac_qq
-  error_sigma_qq = error_sigma*fac_qq
+
+  if (final_state >= 0) then
+    sigma_ee = sigma*fac_ee
+    error_sigma_ee = error_sigma*fac_ee
+    sigma_emu = sigma*fac_emu
+    error_sigma_emu = error_sigma*fac_emu
+    sigma_eq = sigma*fac_eq
+    error_sigma_eq = error_sigma*fac_eq
+    sigma_qq = sigma*fac_qq
+    error_sigma_qq = error_sigma*fac_qq
+  end if
 
   if (sigma == 0.d0) then
     print*, "Error: sigma = 0. Are any gauge sectors active?"
@@ -377,14 +359,20 @@ program zprime
       print*, "sigma_tt (pb)", "Uncertainty (pb)"
       print*, sigma, error_sigma
     end if
-    print*, "sigma_ee (pb)", "Uncertainty (pb)"
-    print*, sigma_ee, error_sigma_ee
-    print*, "sigma_emu (pb)", "Uncertainty (pb)"
-    print*, sigma_emu, error_sigma_emu
-    print*, "sigma_eq (pb)", "Uncertainty (pb)"
-    print*, sigma_eq, error_sigma_eq
-    print*, "sigma_qq (pb)", "Uncertainty (pb)"
-    print*, sigma_qq, error_sigma_qq
+    if (final_state == -1) then
+      print*, "sigma_ll (pb)", "Uncertainty (pb)"
+      print*, sigma, error_sigma
+    end if
+    if (final_state >= 0) then
+      print*, "sigma_ee (pb)", "Uncertainty (pb)"
+      print*, sigma_ee, error_sigma_ee
+      print*, "sigma_emu (pb)", "Uncertainty (pb)"
+      print*, sigma_emu, error_sigma_emu
+      print*, "sigma_eq (pb)", "Uncertainty (pb)"
+      print*, sigma_eq, error_sigma_eq
+      print*, "sigma_qq (pb)", "Uncertainty (pb)"
+      print*, sigma_qq, error_sigma_qq
+    end if
   end if
 
   print*, "Calculating factor to re-weight for different iterations."
@@ -412,8 +400,8 @@ program zprime
   end do
   close(11)
 
-  print*, "Collating polar cross sections..."
   if (final_state == 0) then
+    print*, "Collating polar cross sections..."
     do lam3 = -1, +1, 2
       do lam4 = -1, +1, 2
         sigma_pol_tot(lam3,lam4) = 0.d0
@@ -427,11 +415,10 @@ program zprime
         error_pol_tot(lam3,lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
       end do
     end do
-  end if
-  print*, "...complete."
+    print*, "...complete."
 
-  print*, "Calculating polar asymmetries..."
-  if (final_state == 0) then
+    print*, "Calculating polar asymmetries..."
+
     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
          - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
     error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
@@ -444,21 +431,18 @@ program zprime
 
     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1))/sigma/2.d0
     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
-  end if
-  print*, "...complete."
+    print*, "...complete."
 
-  print*, "Printing total asymmetries..."
-  print*, "total asymmetries"
-  if (final_state == 0) then
+    print*, "Printing total asymmetries..."
+    print*, "total asymmetries"
     print*, "ALL:                    uncertainty:"
     print*, all, error_all
     print*, "AL:                     uncertainty:"
     print*, al, error_al
     print*, "APV:                    uncertainty:"
     print*, apv, error_apv
+    print*, "...complete."
   end if
-
-  print*, "...complete."
 
   call rootclose
   call cpu_time(finish_time)

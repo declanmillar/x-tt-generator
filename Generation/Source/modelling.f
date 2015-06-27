@@ -46,6 +46,10 @@ module modelling
   real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5),gZpb(2,5), gZpt(2,5), gZpl3(2,5), gZpn3(2,5)
   integer :: manual_width(5)
 
+  ! model parameters
+  integer :: model_type
+  real :: xparam, sin2phiparam 
+
   ! methods
   public :: initialise_standard_model
   public :: initialise_zprimes
@@ -155,9 +159,9 @@ subroutine initialise_zprimes
 
   integer imodel_name, i
 
-  call initialise_non_universal
+!   call initialise_non_universal
 
-  return
+!   return
 
   call reset_zprimes
 
@@ -171,39 +175,46 @@ subroutine initialise_zprimes
 
   ! read model file
   open(unit = 42, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
-  read(42,*) mass_zp
-  read(42,*) gamZp
-  read(42,*) gp
-  read(42,*) paramZp
-  read(42,*) gV_u
-  read(42,*) gA_u
-  read(42,*) gV_d
-  read(42,*) gA_d
-  read(42,*) gV_l
-  read(42,*) gA_l
-  read(42,*) gV_nu
-  read(42,*) gA_nu
+  read(42,*) model_type
+  if (model_type == 0) then 
+    read(42,*) mass_zp
+    read(42,*) gamZp
+    read(42,*) gp
+    read(42,*) paramZp
+    read(42,*) gV_u
+    read(42,*) gA_u
+    read(42,*) gV_d
+    read(42,*) gA_d
+    read(42,*) gV_l
+    read(42,*) gA_l
+    read(42,*) gV_nu
+    read(42,*) gA_nu
+  else if (model_type == 1) then
+    read(42,*) xparam
+    read(42,*) sin2phiparam
+  else
+    print*, "Invalid model type!"
+  end if
   close(42)
   print*, "Reading of model file complete."
 
+  if (model_type == 0) then
+    ! Check whether width has been specified
+    ! (If gamZp is negative, the function widthZp is used instead.)
+    do i = 1, 5
+      if ((mass_zp(i) > 0.d0) .and. (gamzp(i) < 0.d0)) then
+        manual_width(i) = 0
+      else
+        manual_width(i) = 1
+      end if
+    enddo
 
-  ! Check whether width has been specified
-  ! (If gamZp is negative, the function widthZp is used instead.)
-  do i = 1, 5
-    if ((mass_zp(i) > 0.d0) .and. (gamzp(i) < 0.d0)) then
-      manual_width(i) = 0
-    else
-      manual_width(i) = 1
-    end if
-  enddo
+    ! convert from VA to LR couplings
+    call convert_zprime_couplings
 
-  ! ! Calculate sequential Zp widths
-  !  do i = 1, 5
-  !    if (manual_width(i) == 0) gamZp(i) = width_zprime_ssm(mass_zp(i))
-  !  end do
-
-  ! convert from VA to LR couplings
-  call convert_zprime_couplings
+  else if (model_type == 1) then
+    call initialise_non_universal
+  end if
 
   ! Calculate benchmark widths
   call width_zprime_benchmark
@@ -225,8 +236,11 @@ subroutine initialise_non_universal
 
   call reset_zprimes
 
-  x = 600
-  sin2phi = 0.85
+!   x = 56
+!   sin2phi = 0.1
+  x = xparam
+  sin2phi = sin2phiparam
+
 
   e = sqrt(4.d0*pi*a_em)
   st = sqrt(s2w)
@@ -234,22 +248,22 @@ subroutine initialise_non_universal
   sp = sqrt(sin2phi)
   cp = sqrt(1.d0 - sin2phi)
   m0 = e*vev/2/st
-  mass_zp(1) = m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp) 
+  mass_zp(1) = sqrt(m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp))
 
   ! leptons
-  gZpl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
-  gZpn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
-  gZpl3(1,1) = gZpl(1,1) - e/2/st/sp/cp
-  gZpn3(1,1) = gZpn(1,1) + e/2/st/sp/cp
+  gZpl(1,1) = e/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
+  gZpn(1,1) = e/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
+  gZpl3(1,1) = gZpl(1,1) - e/st/sp/cp
+  gZpn3(1,1) = gZpn(1,1) + e/st/sp/cp
 
   ! quarks
-  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
-  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
-  gZpt(1,1) = gZpu(1,1) + e/2/st/sp/cp
-  gZpb(1,1) = gZpd(1,1) - e/2/st/sp/cp
+  gZpu(1,1) = e/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
+  gZpd(1,1) = e/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
+  gZpt(1,1) = gZpu(1,1) + e/st/sp/cp
+  gZpb(1,1) = gZpd(1,1) - e/st/sp/cp
 
   ! right handed couplings
-  gZpl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
+  gZpl(2,1) = e*st*2*st*st*sp*sp*sp*cp/x/ct/ct
   gZpn(2,1) = 0
   gZpl3(2,1) = gZpl(2,1)
   gZpn3(2,1) = gZpn(2,1)
@@ -263,8 +277,6 @@ subroutine initialise_non_universal
   do i = 2, 5
     manual_width(i) = 1
   enddo
-
-  call width_zprime_benchmark
 
   return
 
@@ -367,10 +379,10 @@ subroutine width_zprime_benchmark
 
         if (mzp > 2.d0*ml) then
 
-          if (i == 1 .or. i == 3 .or. i == 5) then
+          if (i == 1 .or. i == 3) then
             gv = gzpl(1,n) + gzpl(2,n)
             ga = gzpl(1,n) - gzpl(2,n)
-          else if (i == 2 .or. i == 4 .or. i == 6) then
+          else if (i == 2 .or. i == 4) then
             gv = gzpn(1,n) + gzpn(2,n)
             ga = gzpn(1,n) - gzpn(2,n)
           else if (i == 5) then
@@ -384,7 +396,7 @@ subroutine width_zprime_benchmark
           widthll_tmp = 1.d0/48.d0/pi*mzp &
                         *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
                         *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
-                        +ga**2*(1.d0 - 4.d0*mq**2/mzp**2))
+                        + ga**2*(1.d0 - 4.d0*mq**2/mzp**2))
 
           widthll = widthll + widthll_tmp
         end if
