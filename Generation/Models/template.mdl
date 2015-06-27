@@ -1,3 +1,4 @@
+0 ! model type
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! Z prime mass [GeV]
 -1.d0, -1.d0, -1.d0, -1.d0 ! Z prime width [GeV]
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! gauge coupling g'
