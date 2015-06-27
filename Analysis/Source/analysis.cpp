@@ -14,6 +14,7 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   m_chainNtup(NULL),
   m_outputFile(NULL)
 {  
+  printf("m_channel = %s\n", m_channel.Data());
   this->PreLoop();
   this->Loop();
   this->PostLoop();
@@ -22,6 +23,7 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
 void AnalysisZprime::EachEvent()
 {
   // 0 = b, 1 = bbar, 2 = l+, 3 = nu, 4 = l-, 5 = nubar
+
 
   vector<TLorentzVector> pcol(6);
   vector<TLorentzVector> p(6);
@@ -112,7 +114,7 @@ void AnalysisZprime::EachEvent()
   }
 
   // top and antitop
-  if (m_channel == "2to2") {
+  if (m_channel == "2to2" or "ll") {
     ptcol = pcol[0];
     ptbcol = pcol[1];
     pt = p[0];
@@ -126,6 +128,7 @@ void AnalysisZprime::EachEvent()
     ptcolReco = pcolReco[0] + pcolReco[2] + pcolReco[3];
     ptReco = pReco[0] + pReco[2] + pReco[3];
   }
+
 
   double ytcol = ptcol.Rapidity();
   double ytbcol = ptbcol.Rapidity();
@@ -279,6 +282,7 @@ void AnalysisZprime::EachEvent()
     // call rootadddouble(cosfl, "cosphil")
     //         end if
   }
+
 
   if (this->PassCuts())
   {    
@@ -533,7 +537,7 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
 void AnalysisZprime::CreateHistograms() 
 {
 
-  h_Mtt = new TH1D("Mtt", "M_{tt}", 100, 0.0, 13000.0);
+  h_Mtt = new TH1D("Mtt", "M_{tt}", 1300, 0.0, 13000.0);
   h_AFBstar1 = new TH1D("AFstar", "AFstar", 130, 0.0, 13000.0);
   h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13000.0);
   h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13000.0);
@@ -683,8 +687,11 @@ void AnalysisZprime::WriteHistograms()
 
   // Save histograms
 
-  if (m_channel == "2to2" || m_channel == "2to6") {
+  if (m_channel == "2to2" or "2to6" or "ll" ) {
     h_Mtt->Write();
+  }
+
+  if (m_channel == "2to2" || m_channel == "2to6") {
     h_AFBstar->Write();
     h_AttC->Write();
     h_ytt->Write();
@@ -755,6 +762,10 @@ bool AnalysisZprime::PassCuts() const
 
 bool AnalysisZprime::PassCuts_MET() const
 {
+  if (m_channel == "ll")
+  {
+    return true;
+  }  
   if (m_channel == "2to2")
   {
     return true;

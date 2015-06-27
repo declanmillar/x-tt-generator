@@ -7,24 +7,24 @@ int main(int argc, char* argv[])
   AtlasROOTStyle atlasStyle;
   atlasStyle.SetStyle();
 
-  TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
-  TString outDir("/afs/cern.ch/work/d/demillar/Histos_Zprime/");
-  // TString inDir("/Users/declan/Data/Ntuples_Zprime/");
-  // TString outDir("/Users/declan/Data/Histos_Zprime/");
+  // TString inDir("/afs/cern.ch/work/d/demillar/Ntuples_Zprime/");
+  // TString outDir("/afs/cern.ch/work/d/demillar/Histos_Zprime/");
+  TString inDir("/Users/declan/Data/Ntuples_Zprime/");
+  TString outDir("/Users/declan/Data/Histos_Zprime/");
 
-  TString channel("2to6"); 
-  TString model("SM");
-  TString options("_xc_");
+  TString channel("ll"); 
+  TString model("SM_EW-Zp");
+  TString options("_");
   TString energy("13");
-  TString points("5x2000000");
+  TString points("5x500000");
   TString base(channel + "_" + model + "_" + energy + options + points);
   TString inputFileName(inDir + "/" + channel + "/" + base + ".root");
   TString outputFileName(outDir + base + "_histos.root");  
 
-  TString channel2("2to6"); 
-  TString model2("GSM-SM");
-  TString options2("_xc_");
-  TString points2("5x2000000");
+  TString channel2("ll"); 
+  TString model2("NUSU2-50_EW-Zp");
+  TString options2("_");
+  TString points2("5x500000");
   TString base2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
   TString inputFileName2(inDir + "/" + channel + "/" + base2 + ".root");
   TString outputFileName2(outDir + base2 + "_histos.root");
@@ -54,6 +54,16 @@ int main(int argc, char* argv[])
 
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 
+  if (channel == "ll") {
+    TCanvas* c_Mtt =overlay(false, false, "Mtt", model, outputFileName,
+                                      "Mtt", model2, outputFileName2
+                                      // "Mtt", model3, outputFileName3,
+                                      // "Mtt", model4, outputFileName4
+                                      );
+    c_Mtt->Draw();
+    RootApp->Run(kTRUE);
+  }
+
     // TCanvas* c_AttC =overlay(false, false, "AttC", model, outputFileName, 
     //                                    "AttC", model2, outputFileName2,
     //                                    "AFBstar", model3, outputFileName3,
@@ -61,12 +71,12 @@ int main(int argc, char* argv[])
     // c_AttC->Draw();
     // RootApp->Run(kTRUE);
 
-    TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFileName, 
-                                              "AFBstar", model2, outputFileName2);
-                                          // "AFBstar", model3, outputFileName3);
-                                          // "AFBstar", model4, outputFileName4);
-    c_AFBstar->Draw();
-    RootApp->Run(kTRUE);
+    // TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFileName, 
+    //                                           "AFBstar", model2, outputFileName2);
+    //                                       // "AFBstar", model3, outputFileName3);
+    //                                       // "AFBstar", model4, outputFileName4);
+    // c_AFBstar->Draw();
+    // RootApp->Run(kTRUE);
 
 
   if (channel == "2to2") {
