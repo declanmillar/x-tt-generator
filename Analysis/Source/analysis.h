@@ -17,7 +17,7 @@
 
 class AnalysisZprime{
 public:
-  AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& outputFileName);
+  AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& weightsFileName, const TString& outputFileName);
   virtual ~AnalysisZprime();
   
 protected:
@@ -64,6 +64,7 @@ private:
   TString m_channel;  
   TString m_model;
   TString m_inputFileName;
+  TString m_weightsFileName;
   TString m_outputFileName;
   double m_sigma;
   vector<double> m_cnorm;

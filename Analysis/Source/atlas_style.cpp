@@ -7,7 +7,7 @@ AtlasROOTStyle::AtlasROOTStyle()
 
 void AtlasROOTStyle::SetStyle()
 {
-  std::cout << "\nApplying ATLAS style settings...\n" << std::endl ;
+  printf("Applying ATLAS style settings...\n");
   TStyle* atlasStyle = this->AtlasStyle();
   gROOT->SetStyle("ATLAS");
   gROOT->ForceStyle();

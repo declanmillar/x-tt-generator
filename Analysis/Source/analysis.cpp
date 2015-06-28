@@ -1,6 +1,6 @@
 #include "analysis.h"
 
-AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& outputFileName) :
+AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& weightsFileName, const TString& outputFileName) :
   m_pi(3.14159265),
   m_GeV(1000.0),
   m_intLumi(0),//(300000.0),
@@ -8,13 +8,13 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   m_channel(channel),
   m_model(model),
   m_inputFileName(inputFileName),
+  m_weightsFileName(weightsFileName),
   m_outputFileName(outputFileName),
   m_inputFiles(NULL),
   m_ntup(NULL),
   m_chainNtup(NULL),
   m_outputFile(NULL)
 {  
-  printf("m_channel = %s\n", m_channel.Data());
   this->PreLoop();
   this->Loop();
   this->PostLoop();
@@ -388,18 +388,20 @@ void AnalysisZprime::EachEvent()
 
 void AnalysisZprime::PostLoop()
 {
+  printf("------\n");
   double sigma = h_Mtt->Integral("width");
-  if (sigma != m_sigma) {
+  if (std::abs(sigma - m_sigma) > 10e-11) {
     printf("Cross section from generation and analysis stage do not match!\n");
     printf("sigma_generation = %f\n", m_sigma);
     printf("sigma_analysis   = %f\n", sigma);
   }
-  else printf("Total cross section = %f\n", sigma);
+  else printf("sigma = %f [pb]\n", sigma);
   if (m_channel == "2to2") {
     h_ALL = this->MttALL();
     h_AL = this->MttAL();
     this->TotalSpinAsymmetries();
   }
+  printf("------\n");
 
   h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFBstar1, h_AFBstar2);
   h_AttC = this->Asymmetry("AttC", "A_{C}", h_AttC1, h_AttC2);
@@ -794,7 +796,7 @@ bool AnalysisZprime::PassCuts_Mtt() const
 
 void AnalysisZprime::PreLoop()
 {
-  TString cnormsName(m_inputFileName + ".txt");
+  TString cnormsName(m_weightsFileName);
   ifstream cnorms(cnormsName.Data());
   if (!cnorms.is_open()) printf("Failed to open %s\n", cnormsName.Data());
   cnorms >> m_sigma;
@@ -813,13 +815,13 @@ void AnalysisZprime::Loop()
   // Loop over all files
   for(Itr_s i = m_inputFiles->begin(); i != m_inputFiles->end(); ++i)
   {
-    cout<<"Processing File = "<<(*i)<<endl;
+    cout << "Processing File '" << (*i) << "'." << endl;
     
     this->SetupTreesForNewFile((*i));
  
     // The Event Loop
     Long64_t nEvents = this->TotalEvents();
-    printf("--- Start of event loop. ---\n");
+    printf("Looping over events...\n");
     for(Long64_t jentry=0; jentry<nEvents;++jentry) 
     {
       // printf("Processing entry %lli\n", jentry);
@@ -827,7 +829,7 @@ void AnalysisZprime::Loop()
       if (ientry < 0) break;
       this->EachEvent();
     }
-    printf("---  End of event loop.  ---\n");
+    printf("...complete.\n");
     this->CleanUp();
   }
 }
@@ -841,7 +843,7 @@ AnalysisZprime::~AnalysisZprime()
 void AnalysisZprime::SetupOutputFiles()
 {
   m_outputFile = new TFile(m_outputFileName,"RECREATE");
-  printf("Histograms will be saved to %s.\n", m_outputFileName.Data());
+  printf("Histograms will be written to '%s'.\n", m_outputFileName.Data());
 }
 
 void AnalysisZprime::SetupInputFiles()
