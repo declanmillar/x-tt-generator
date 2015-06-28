@@ -1,5 +1,5 @@
 module modelling
-  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4
+  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug
 
   implicit none
 
@@ -40,7 +40,7 @@ module modelling
   real, parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
 
   ! zprime parameters
-  real :: mass_zp(5),gamZp(5)
+  real :: mass_zp(5), gamZp(5)
   real :: paramZp(5)
   real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
   real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5),gZpb(2,5), gZpt(2,5), gZpl3(2,5), gZpn3(2,5)
@@ -51,19 +51,28 @@ module modelling
   real :: xparam, sin2phiparam 
 
   ! methods
-  public :: initialise_standard_model
-  public :: initialise_zprimes
-  public :: width_zprime_ssm
-  public :: convert_zprime_couplings
-  public :: width_zprime_benchmark
+  public :: initialise_model
+  private :: initialise_standard_model
+  private :: initialise_zprimes
+  private :: reset_zprimes
+  private :: convert_zprime_couplings
+  private :: width_zprimes
+  private :: width_zprime_ssm
 
 contains
+
+subroutine initialise_model
+
+  call initialise_standard_model
+  call initialise_zprimes
+
+end subroutine initialise_model
 
 subroutine initialise_standard_model
 
   integer i
 
-	print*, "Initialising standard model..."
+	call debug("Initialising standard model...")
 
   fmass(1)  = emass
   fmass(2)  = nuemass
@@ -124,8 +133,75 @@ subroutine initialise_standard_model
   gg(1) = -g
   gg(2) = -g
 
-  print*, "...done"
+  call debug("..complete.")
 end subroutine initialise_standard_model
+
+subroutine initialise_zprimes
+
+  integer imodel_name, i
+
+  call reset_zprimes
+
+  call debug("Initialising zprimes...")
+
+  ! Extract model_name filename (Remove white space.)
+  imodel_name = len(model_name)
+  do while(model_name(imodel_name:imodel_name) == '')
+    imodel_name = imodel_name - 1
+  end do
+
+  ! read model file
+  open(unit = 42, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
+  read(42,*) model_type
+  if (model_type == 0) then 
+    read(42,*) mass_zp
+    read(42,*) gamZp
+    read(42,*) gp
+    read(42,*) paramZp
+    read(42,*) gV_u
+    read(42,*) gA_u
+    read(42,*) gV_d
+    read(42,*) gA_d
+    read(42,*) gV_l
+    read(42,*) gA_l
+    read(42,*) gV_nu
+    read(42,*) gA_nu
+  else if (model_type == 1) then
+    read(42,*) xparam
+    read(42,*) sin2phiparam
+  else
+    print*, "Error: invalid model type! Must be 0-1."
+  end if
+  close(42)
+  call debug("Reading of model file complete.")
+
+  if (model_type == 0) then
+    ! If gamZp is negative, the function widthZp is used.
+    do i = 1, 5
+      if ((mass_zp(i) > 0.d0) .and. (gamzp(i) < 0.d0)) then
+        manual_width(i) = 0
+      else
+        manual_width(i) = 1
+      end if
+    enddo
+
+    ! convert from VA to LR couplings
+    call convert_zprime_couplings
+
+  else if (model_type == 1) then
+    call initialise_non_universal
+  end if
+
+  ! Calculate benchmark widths
+  call width_zprimes
+
+  ! igw=0 ! don't include w width effects
+  ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
+  ! call printconstants
+  return
+
+  call debug("...complete.")
+end subroutine initialise_zprimes
 
 subroutine reset_zprimes
   integer :: i, j
@@ -154,78 +230,6 @@ subroutine reset_zprimes
   end do
 
 end subroutine reset_zprimes
-
-subroutine initialise_zprimes
-
-  integer imodel_name, i
-
-!   call initialise_non_universal
-
-!   return
-
-  call reset_zprimes
-
-  print*, "Initialising zprimes..."
-
-  ! Extract model_name filename (Remove white space.)
-  imodel_name = len(model_name)
-  do while(model_name(imodel_name:imodel_name) == '')
-    imodel_name = imodel_name - 1
-  end do
-
-  ! read model file
-  open(unit = 42, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
-  read(42,*) model_type
-  if (model_type == 0) then 
-    read(42,*) mass_zp
-    read(42,*) gamZp
-    read(42,*) gp
-    read(42,*) paramZp
-    read(42,*) gV_u
-    read(42,*) gA_u
-    read(42,*) gV_d
-    read(42,*) gA_d
-    read(42,*) gV_l
-    read(42,*) gA_l
-    read(42,*) gV_nu
-    read(42,*) gA_nu
-  else if (model_type == 1) then
-    read(42,*) xparam
-    read(42,*) sin2phiparam
-  else
-    print*, "Invalid model type!"
-  end if
-  close(42)
-  print*, "Reading of model file complete."
-
-  if (model_type == 0) then
-    ! Check whether width has been specified
-    ! (If gamZp is negative, the function widthZp is used instead.)
-    do i = 1, 5
-      if ((mass_zp(i) > 0.d0) .and. (gamzp(i) < 0.d0)) then
-        manual_width(i) = 0
-      else
-        manual_width(i) = 1
-      end if
-    enddo
-
-    ! convert from VA to LR couplings
-    call convert_zprime_couplings
-
-  else if (model_type == 1) then
-    call initialise_non_universal
-  end if
-
-  ! Calculate benchmark widths
-  call width_zprime_benchmark
-
-  ! igw=0 ! don't include w width effects
-  ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
-  ! call printconstants
-  return
-
-  print*, "...done."
-end subroutine initialise_zprimes
 
 subroutine initialise_non_universal 
 
@@ -289,7 +293,7 @@ subroutine convert_zprime_couplings
 
   integer i
 
-	print*, "Converting zprime couplings from AV to LR..."
+	call debug("Converting zprime couplings from AV to LR...")
 
   do i = 1, 5
       gZpd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
@@ -310,12 +314,12 @@ subroutine convert_zprime_couplings
       gZpn3(2,i) = gZpn(2,i)
   enddo
 
-  print*, "...done."
+  call debug("...complete.")
    
   return
 end subroutine convert_zprime_couplings
 
-subroutine width_zprime_benchmark
+subroutine width_zprimes
 
   ! calculates Z' width contributions from decay to fermions
 
@@ -328,7 +332,7 @@ subroutine width_zprime_benchmark
   real :: pi
   real :: a_s, alfas
 
-  print*, "Calculating Z' widths..."
+  call debug("Calculating Z' widths...")
 
   ! couplings.
   pi = dacos(-1.d0)
@@ -404,16 +408,16 @@ subroutine width_zprime_benchmark
 
       width = widthqq + widthll
 
-      print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
-      print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
-      print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+!       print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
+!       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
+!       print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
       
       gamZp(n) = width
     end if
   end do
-  print*, "...done."
+  call debug("...complete.")
   return
-end subroutine width_zprime_benchmark
+end subroutine width_zprimes
 
 function width_zprime_ssm(rm_Zp)
 
@@ -437,7 +441,7 @@ function width_zprime_ssm(rm_Zp)
   real :: temp, temp1, temp2
   real :: alfas, a_s
 
-  print*, "Calculating zprime widths..."
+  call debug("Calculating zprime widths...")
 
   rmt=fmass(11)
   gamt=fwidth(11)
@@ -543,11 +547,11 @@ function width_zprime_ssm(rm_Zp)
 
   end do
 
-        print *,'Z'' width due to quarks+leptons:',width_zprime_ssm,' [GeV]'
+!         print *,'Z'' width due to quarks+leptons:',width_zprime_ssm,' [GeV]'
   !       print *,'(so that due to leptons are:',temp,' [GeV])'
   !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
   !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
-  print*, "...done."
+  call debug("...complete.")
   return
 end function width_zprime_ssm
 

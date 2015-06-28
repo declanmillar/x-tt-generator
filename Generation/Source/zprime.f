@@ -81,8 +81,7 @@ program zprime
   if (structure_function == 9) nloops = 1
 
   ! initialise madgraph - masses and coupling constants of particles
-  call initialise_standard_model
-  call initialise_zprimes
+  call initialise_model
 
   if (final_state == 0) then
     ! multiply by branching ratios
@@ -184,7 +183,7 @@ program zprime
       end do
     end if
   else if (use_rambo == 1) then
-    ! integrates on:
+    ! integrates ON:
     ! x(2) = (x1 - tau)/(1 - tau),
     ! x(1) = (ecm - ecm_min)/
     !        (ecm_max - ecm_min)
@@ -199,118 +198,111 @@ program zprime
   nprn = 0   
 
   ! output information before integration
-  print*, '====================================================='
+  print*, '-----------------------------------------------------'
   call idate(today)     ! today(1) = day, (2) = month, (3) = year
   call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
-  print*, 'date ', today(3), today(2), today(1)
-  print*, 'time ', now(1), now(2), now(3)
+  print*, 'Date: ', today(3), today(2), today(1)
+  print*, 'Time: ', now(1), now(2), now(3)
   print*, '-----------------------------------------------------'
-  print*, 'process'
   if (initial_state == 0) then
     if (final_state == -1) then
-      print*, 'pp #rightarrow l^{+}l^{-}' 
+      print*, "Process: p p -> l+ l-"
     else if (final_state == 0) then
-      print*, 'pp #rightarrow t#bar{t}'
+      print*, 'Process: p p -> t t~'
     else if (final_state == 1) then
-      print*, 'pp #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
+      print*, 'Process: p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      print*, 'p#bar{p} #rightarrow l^{+}l^{-}' 
+      print*, 'p#bar{p} -> l+l-' 
     else if (final_state == 0) then
-      print*, 'p#bar{p} #rightarrow t#bar{t}', &
-               ' #times br(t#rightarrow bl#nu)^{2}'
+      print*, 'p#bar{p} -> t#bar{t}', &
+               ' #times br(t-> bl#nu)^{2}'
     else if (final_state == 1) then
-      print*, 'p#bar{p} #rightarrow t#bar{t}', &
-               '#rightarrow b#bar{b} w^{+}w^{-}', &
-               '#rightarrow b#bar{b} l^{+}l^{-} #nu#bar{#nu}'
+      print*, 'p#bar{p} -> t#bar{t}', &
+               '-> b#bar{b} W+W-', &
+               '-> b#bar{b} l+l- #nu#bar{#nu}'
     end if
   end if
+  if (structure_function == 1) print*, 'PDFs: CTEQ6m'
+  if (structure_function == 2) print*, 'PDFs: CTEQ6d'
+  if (structure_function == 3) print*, 'PDFs: CTEQ6l'
+  if (structure_function == 4) print*, 'PDFs: CTEQ6l1'
+  if (structure_function == 5) print*, 'PDFs: MRS99 (cor01)'
+  if (structure_function == 6) print*, 'PDFs: MRS99 (cor02)'
+  if (structure_function == 7) print*, 'PDFs: MRS99 (cor03)'
+  if (structure_function == 8) print*, 'PDFs: MRS99 (cor04)'
+  if (structure_function == 9) print*, 'PDFs: MRS99 (cor05)'
+  if ((final_state >= 1) .and. (use_nwa == 1)) print*, 'NWA: ON'
+  if ((final_state >= 1) .and. (use_nwa == 0)) print*, 'NWA: OFF'
+  print*, 'Model: ', model_name
+  if (include_qcd == 1) print*, 'QCD: ON '
+  if (include_qcd == 0) print*, 'QCD: OFF'
+  if (include_ew == 1) print*, 'QFD: ON '
+  if (include_ew == 0) print*, 'QFD: OFF'
+  if (include_bsm == 1) print*, 'BSM: ON '
+  if (include_bsm == 0) print*, 'BSM: OFF'
+  if (include_gg == 1) print*, 'gg: ON '
+  if (include_gg == 0) print*, 'gg: OFF'
+  if (include_qq == 1) print*, 'qq: ON '
+  if (include_qq == 0) print*, 'qq: OFF'
+  if (interference == 0) print*, "Interference: none"
+  if (interference == 1) print*, "Interference: no (Z',SM)"
+  if (interference == 2) print*, "Interference: Z' + (Z',SM) + SM"
+  if (interference == 3) print*, "Interference: Z' + (Z',SM)"
+  if (interference == 4) print*, "Interference: (Z',SM)"
+  if (symmetrise_x1x2 == 1) print*, 'Symmetrising integration: x1<->x2'
+  if (symmetrise_costheta_t == 1) print*, 'symmetrising integration: costhetat'
+  if (symmetrise_costheta_5 == 1) print*, 'symmetrising integration: costheta5'
+  if (symmetrise_costheta_7 == 1) print*, 'symmetrising integration: costheta7'
+  if (use_rambo == 1) print*, 'RAMBO: ON'
+  if (map_phase_space == 0) print*, "Phase space mapping: ON"
+  if (ecm_low > 0) print*, "E_CM low: ", ecm_low
+  if (ecm_up > 0) print*, "E_CM up: ", ecm_up
+  print*, 'Seed: ', seed
   print*, '-----------------------------------------------------'
-  print*, 'notes'
-  print*, 'units: gev'
-  print*, 'quarks: all massless except t, b.'
-  if (structure_function == 1) print*, 'PDFs: CTEQ6m.'
-  if (structure_function == 2) print*, 'PDFs: CTEQ6d.'
-  if (structure_function == 3) print*, 'PDFs: CTEQ6l.'
-  if (structure_function == 4) print*, 'PDFs: CTEQ6l1.'
-  if (structure_function == 5) print*, 'PDFs: MRS99 (cor01).'
-  if (structure_function == 6) print*, 'PDFs: MRS99 (cor02).'
-  if (structure_function == 7) print*, 'PDFs: MRS99 (cor03).'
-  if (structure_function == 8) print*, 'PDFs: MRS99 (cor04).'
-  if (structure_function == 9) print*, 'PDFs: MRS99 (cor05).'
-  if ((final_state >= 1) .and. (use_nwa == 0)) print*, 'tops: off-shell.'
-  if ((final_state >= 1) .and. (use_nwa == 1)) print*, 'tops: nwa.'
-  print*, 'bsm model_name: ', model_name
-  if (include_qcd == 1) print*, 'QCD: on '
-  if (include_qcd == 0) print*, 'QCD: off'
-  if (include_ew == 1) print*, 'EW:  on '
-  if (include_ew == 0) print*, 'EW:  off'
-  if (include_bsm == 1) print*, 'BSM: on '
-  if (include_bsm == 0) print*, 'BSM: off'
-  if (include_gg == 1) print*, 'gg: on '
-  if (include_gg == 0) print*, 'gg: off'
-  if (include_qq == 1) print*, 'qq: on '
-  if (include_qq == 0) print*, 'qq: off'
-  if (interference == 0) print*, 'interference: none'
-  if (interference == 1) print*, 'interference: sm'
-  if (interference == 2) print*, 'interference: full'
-  if (interference == 3) print*, 'interference: no square terms.'
-  if (phase_space_only == 1) print*, 'phase space only'
-  if (symmetrise_x1x2 == 1) print*, 'symmetrical integration over x1<->x2'
-  if (symmetrise_costheta_t == 1) print*, 'symmetrical integration over cost'
-  if (include_errors == 1) print*, 'Distribution errors included.'
-  if (include_errors == 0) print*, 'Distribution errors excluded.'
-  if (use_rambo == 0) print*, 'PS is MANUAL'
-  if (use_rambo == 1) print*, 'PS is RAMBO'
-  if (map_phase_space == 0) print*, "Phase space is unmapped."
-  if (map_phase_space == 1) print*, "Phase space is mapped."
-  print*, 'seed: ', seed
+  print*, 'Collider energy   = ', collider_energy
+  print*, 'Loops             = ', nloops
+  print*, 'alpha_s(m_Z)      = ', alfas(rm_z, lambdaqcd4, nloops)
+  print*, 'lambda_QCD^4      = ', qcdl4
+  print*, 'm_b               = ', fmass(12)
+  print*, 'Gamma_b           = ', fwidth(12)
+  print*, 'm_t               = ', fmass(11)
+  print*, 'Gamma_t           = ', fwidth(11)
+  print*, 'm_Z               = ', rm_z
+  print*, 'Gamma_Z           = ', gamma_z
+  print*, 'm_W               = ', rm_w
+  print*, 'Gamma_W           = ', gamma_w
+  print*, 'm_h               = ', rm_h
+  print*, 'Gamma_h           = ', gamma_h
   print*, '-----------------------------------------------------'
-  print*, 'parameters'
-  print*, '#sqrt{s}              ', collider_energy
-  print*, 'at |y| <              ', 100
-  print*, 'loops a_s evaluated at', nloops
-  print*, 'a_{s}(m_{z})          ', alfas(rm_z, lambdaqcd4, nloops)
-  print*, '#lambda_{qcd}(4)      ', qcdl4
-  print*, 'm_{b}                 ', fmass(12)
-  print*, '#gamma_{b}            ', fwidth(12)
-  print*, 'm_{t}                 ', fmass(11)
-  print*, '#gamma_{t}            ', fwidth(11)
-  print*, 'm_{z}                 ', rm_z
-  print*, '#gamma_{z}            ', gamma_z
-  print*, 'm_{w}                 ', rm_w
-  print*, '#gamma_{w}            ', gamma_w
-  print*, 'm_{h}                 ', rm_h
-  print*, '#gamma_{h}            ', gamma_h
-  print*, '-----------------------------------------------------'
-  print*, 'zprime parameters'
-  do i = 1, 5
-    if (mass_zp(i) > 0) then
-      print*, 'z#prime               ', i
-      print*, 'm_{z#prime}           ', mass_zp(i)
-      print*, '#Gamma_{z#prime}      ', gamzp(i)
-      print*, 'Gamma/m               ', gamzp(i)/mass_zp(i)             
-      print*, 'g_{L}^{u}             ', gZpu(1,i)
-      print*, 'g_{R}^{u}             ', gZpu(2,i)
-      print*, 'g_{L}^{d}             ', gZpd(1,i)
-      print*, 'g_{R}^{d}             ', gZpd(2,i)
-      print*, 'g_{L}^{l}             ', gZpl(1,i)
-      print*, 'g_{R}^{l}             ', gZpl(2,i)
-      print*, 'g_{L}^{n}             ', gZpn(1,i)
-      print*, 'g_{R}^{n}             ', gZpn(2,i)
-      print*, 'g_{L}^{t}             ', gZpt(1,i)
-      print*, 'g_{R}^{t}             ', gZpt(2,i)
-      print*, 'g_{L}^{b}             ', gZpb(1,i)
-      print*, 'g_{R}^{b}             ', gZpb(2,i)
-      print*, 'g_{L}^{l3}            ', gZpl3(1,i)
-      print*, 'g_{R}^{l3}            ', gZpl3(2,i)
-      print*, 'g_{L}^{n3}            ', gZpn3(1,i)
-      print*, 'g_{R}^{n3}            ', gZpn3(2,i)
-    end if
-  end do
+  if (include_bsm == 1) then
+    do i = 1, 5
+      if (mass_zp(i) > 0) then
+        print*, "Z' number             ", i
+        print*, "m_Z'                  ", mass_zp(i)
+        print*, "Gamma_Z'              ", gamzp(i)
+        print*, "Gamma_Z'/m_Z'         ", gamzp(i)/mass_zp(i)             
+        print*, "gLu                   ", gZpu(1,i)
+        print*, "gRu                   ", gZpu(2,i)
+        print*, "gLd                   ", gZpd(1,i)
+        print*, "gRd                   ", gZpd(2,i)
+        print*, "gLl                   ", gZpl(1,i)
+        print*, "gRl                   ", gZpl(2,i)
+        print*, "gLn                   ", gZpn(1,i)
+        print*, "gRn                   ", gZpn(2,i)
+        print*, "gLt                   ", gZpt(1,i)
+        print*, "gRt                   ", gZpt(2,i)
+        print*, "gLb                   ", gZpb(1,i)
+        print*, "gRb                   ", gZpb(2,i)
+        print*, "gLl3                  ", gZpl3(1,i)
+        print*, "gRl3                  ", gZpl3(2,i)
+        print*, "gLn3                  ", gZpn3(1,i)
+        print*, "gRn3                  ", gZpn3(2,i)
+      end if
+    end do
+    print*, '-----------------------------------------------------'
+  end if
 
   ! reset counter
   npoints = 0
@@ -331,11 +323,11 @@ program zprime
   end if
 
   ! integrate 
-  print*, 'Starting integration... '
+  call debug("Starting integration... ")
   it = 0 
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
-  print*, "...complete."  
+  call debug("...complete.") 
 
   ! convert results to different tt classifications
 
@@ -350,32 +342,31 @@ program zprime
     error_sigma_qq = error_sigma*fac_qq
   end if
 
+  print*, '-----------------------------------------------------'
   if (sigma == 0.d0) then
-    print*, "Error: sigma = 0. Are any gauge sectors active?"
+    print*, "Error: sigma = 0."
     stop
   else
-    print*, "Using ", npoints, " points:"
+    print*, "Total cross section"
     if (final_state == 0) then
-      print*, "sigma_tt (pb)", "Uncertainty (pb)"
-      print*, sigma, error_sigma
+      print*, "sigma", sigma,  "pm", error_sigma, "[pb]"
     end if
     if (final_state == -1) then
-      print*, "sigma_ll (pb)", "Uncertainty (pb)"
-      print*, sigma, error_sigma
+      print*, "sigma", sigma,  "pm", error_sigma, "[pb]"
     end if
     if (final_state >= 0) then
-      print*, "sigma_ee (pb)", "Uncertainty (pb)"
+      print*, "sigma_{ee} [pb]", " Uncertainty [pb]"
       print*, sigma_ee, error_sigma_ee
-      print*, "sigma_emu (pb)", "Uncertainty (pb)"
+      print*, "sigma_emu [pb]", " Uncertainty [pb]"
       print*, sigma_emu, error_sigma_emu
-      print*, "sigma_eq (pb)", "Uncertainty (pb)"
+      print*, "sigma_{eq} [pb]", " Uncertainty [pb]"
       print*, sigma_eq, error_sigma_eq
-      print*, "sigma_qq (pb)", "Uncertainty (pb)"
+      print*, "sigma_{qq} [pb]", " Uncertainty [pb]"
       print*, sigma_qq, error_sigma_qq
     end if
   end if
 
-  print*, "Calculating factor to re-weight for different iterations."
+  call debug("Calculating factor to re-weight for different iterations.")
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
@@ -386,7 +377,7 @@ program zprime
   do i = 1, it
     cnorm(i) = resl(i)*standdevl(i)
   end do
-  print*, "...complete."
+  call debug("...complete.")
 
   ! write sigma and cnorms to a txt file
   i = len(ntuple_file)
@@ -401,7 +392,7 @@ program zprime
   close(11)
 
   if (final_state == 0) then
-    print*, "Collating polar cross sections..."
+    call debug("Collating polar cross sections...")
     do lam3 = -1, +1, 2
       do lam4 = -1, +1, 2
         sigma_pol_tot(lam3,lam4) = 0.d0
@@ -415,9 +406,9 @@ program zprime
         error_pol_tot(lam3,lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
       end do
     end do
-    print*, "...complete."
+    call debug("...complete.")
 
-    print*, "Calculating polar asymmetries..."
+    call debug("Calculating polar asymmetries...")
 
     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
          - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
@@ -431,18 +422,18 @@ program zprime
 
     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1))/sigma/2.d0
     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
-    print*, "...complete."
+    call debug("...complete.")
 
-    print*, "Printing total asymmetries..."
-    print*, "total asymmetries"
+    print*, "Total asymmetries"
     print*, "ALL:                    uncertainty:"
     print*, all, error_all
     print*, "AL:                     uncertainty:"
     print*, al, error_al
     print*, "APV:                    uncertainty:"
     print*, apv, error_apv
-    print*, "...complete."
   end if
+  print*, "Points:", npoints
+  print*, '-----------------------------------------------------'
 
   call rootclose
   call cpu_time(finish_time)

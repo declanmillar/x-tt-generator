@@ -1,249 +1,282 @@
 #!/usr/bin/env python 
-# ------------------------------------------------------------------------------------------
-# Command line executor for Zp-tt code.
-# Generates a .com file then runs the zprime executable using it.
-# Do ./run.py -h for help.
 
-# Arguments:
-#   0 = mdl:   name of model_name file in Models directory
-#   2 = ecm:   centre of mass energy (input:TeV, output: GeV)
-#   3 = final_state: final_state state (-1: drell-yan, 0: tops no decay, 1: tops dilepton decay)
-#   4 = ncall: number of vegas calls (monte carlo/phase space points)
-# ------------------------------------------------------------------------------------------
+# Python run script for the Zprime program
+# Generates a configuration file then runs the zprime executable using it,
+# either locally or by submission to the LXPLUS batch system.
+# Usage: './run.py model_name collider_energy final_state phase_space_points [option]'.
+# Do './run.py -h' for help.
+# Author: Declan Millar (d.millar@soton.ac.uk)
 
 import os, StringIO, re, optparse, subprocess, time, sys, random
 
-# Usage help
-parser = optparse.OptionParser("usage: ./%prog [options] model_name ecm_col o_final ncall")
+# Usage
+parser = optparse.OptionParser("./run.py model_name collider_energy final_state phase_space_points [option]")
 
 # Execution options
-parser.add_option("-L", "--output", default=False, action="store_true" , help="output to logfile")
-parser.add_option("-t", "--tag", default="", type="string", help="add a name tag to logfile")
-parser.add_option("-b", "--batch", default=False, action="store_true", help = "run in batch mode")
+parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
+parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
+parser.add_option("-B", "--batch", default = False, action = "store_true", help = "run in batch mode")
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
-parser.add_option("-C", "--include_qcd", default = 1, const = 0, action = "store_const", help = "turn off QCD")
-parser.add_option("-F", "--include_ew", default = 1, const = 0, action = "store_const", help = "turn off EW")
-parser.add_option("-Z", "--include_bsm", default = 1, const = 0, action = "store_const", help = "turn off Z'")
-parser.add_option("-g", "--include_gg", default = 1, const = 0, action = "store_const", help = "turn off gg")
-parser.add_option("-q", "--include_qq", default = 1, const = 0, action = "store_const", help = "turn off qq")
+parser.add_option("-C", "--include_qcd", default = True, action = "store_false", help = "turn off QCD")
+parser.add_option("-F", "--include_ew", default = True, action = "store_false", help = "turn off EW")
+parser.add_option("-Z", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
+parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
-parser.add_option("-w", "--use_nwa", default = 0, const = 1, action = "store_const", help = "turn on use_nwa")
+parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
 parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
 parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper limit")
 
 # Monte Carlo options
-parser.add_option("-s", "--iseed", default = False, action = "store_true", help = "used fixed iseed for random number generator")
+parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
 parser.add_option("-m", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise_x1x2", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over x1 and x2")
-parser.add_option("-c", "--symmetrise_costheta_t", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_t")
-parser.add_option("-5", "--symmetrise_costheta_5", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_5")
-parser.add_option("-7", "--symmetrise_costheta_7", default = 0, const = 1, action = "store_const", help = "symmatrise phase space over costheta_7")
-parser.add_option("-R", "--use_rambo", default = 0, const = 1, action = "store_const", help = "Use RAMBO for PS. Default is manual.")
-parser.add_option("-M", "--map_phase_space", default = 1, const = 0, action = "store_const", help = "Flatten Breit-Wigners in integrand for manual phase space.")
+parser.add_option("-x", "--symmetrise_x1x2", default = False, action = "store_true", help = "symmetrise phase space over x1 and x2")
+parser.add_option("-c", "--symmetrise_costheta_t", default = False, action = "store_true", help = "symmetrise phase space over costheta_t")
+parser.add_option("-5", "--symmetrise_costheta_5", default = False, action = "store_true", help = "symmetrise phase space over costheta_5")
+parser.add_option("-7", "--symmetrise_costheta_7", default = False, action = "store_true", help = "symmetrise phase space over costheta_7")
+parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for PS")
+parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
-# Debug options
-parser.add_option("-P", "--phase_space_only", default = 0, const = 1, action = "store_const", help = "Set |M|^2  =  1")
-parser.add_option("-v", "--verbose", default = 0, const = 1, action = "store_const", help = "Run in verbose mode.")
+# Debug option
+parser.add_option("-P", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2  =  1")
+parser.add_option("-v", "--verbose", default = False, action = "store_true", help = "Run in verbose mode.")
 
-(options, args) = parser.parse_args()
-print "\n Generating config file..."
-  
-# Collect arguments
-model_name = args[0]
-collider_energy = args[1]
-final_state = args[2]
-ncall = args[3]
+(option, args) = parser.parse_args()
 
-if (final_state == "l"):
-  final_state = "-1"
+if len(args) != 4:
+  sys.exit("Error: incorrect number of arguments!\nusage: ./run.py model_name collider_energy final_state phase_space_points [option]") 
 
-if final_state == "-1":
-  options.include_qcd = 0
+model_name = str(args[0])
+collider_energy = int(args[1])
+final_state = str(args[2])
+ncall = int(args[3])
 
-if options.phase_space_only == 1:
-  options.include_qcd = 0
-  options.include_ew = 0
-  options.include_bsm = 0
+# Check arguments are valid
+if os.path.isfile("Models/%s.mdl" % model_name) is False:
+  sys.exit("Model/%s.mdl does not exist." % model_name) 
 
-if options.include_bsm == 1:
-  smodel = model_name
-elif options.include_bsm == 0:
-  smodel = ""
+if collider_energy  < 0:
+  sys.exit("Error: collider energy must be positive definite.")
+elif collider_energy > 14:
+  sys.exit("Error: collider energy is higher than 14 TeV! Is this the future? I hope I still have my hair.")
 
-if (options.ecm_up <= options.ecm_low): 
-  print "ecm_up must be greater than ecm_low"
-if options.ecm_low or options.ecm_up < 0: 
-  print "ecm must be postitive definite"
+if final_state != "ll" and final_state != "tt" and final_state != "bblnln" and final_state != "bblnqq" and final_state != "bbqqqq":
+  sys.exit("Error: unavailable final state.\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq.")
 
+if ncall < 1:
+  sys.exit("Error: Must have at least one vegas point.")
+
+# Check options are valid
+if option.ecm_low or option.ecm_up < 0: 
+  sys.exit("Error: COM energy must be positive definite")
+
+if option.ecm_low or option.ecm_up > collider_energy*1000: 
+  sys.exit("Error: COM energy cannot exceed collider energy")
+
+if (option.ecm_low and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
+  sys.exit("Error: E_CM up must be greater than E_CM low")
+
+if sys.platform != "linux2" and option.batch is True:
+  sys.exit("Error: Must be on lxplus to submit a batch job.")
+
+if option.interference < 0 or option.interference > 4:
+  sys.exit("Error: interference must be from 0-4.")
+
+if option.structure_function < 1 or option.structure_function > 9:
+  sys.exit("Error: structure_function ID must be from 1 to 9.")
+
+if option.itmx > 20:
+   sys.exit('Error: itmx does not have to exceed 20!')
+
+# Modify configuration for consistency
+if model_name == "SM":
+  option.include_bsm = False
+
+if option.include_bsm is False:
+  model_name = "SM"
+
+if final_state == "ll":
+  option.include_qcd = False
+  option.include_gg = False
+
+if option.phase_space_only == True:
+  option.include_qcd = False
+  option.include_ew = False
+  option.include_bsm = False
+
+if option.interference == 4 and option.include_ew is False:
+  print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
+  option.interference = 2
+
+if option.use_rambo is True:
+  option.map_phase_space = False
+
+if final_state == "ll" or final_state == "tt":
+  option.use_nwa = False
+  option.symmetrise_costheta_5 = False
+  option.symmetrise_costheta_7 = False
 
 # Default iseed
-seed = 12345 if options.iseed else random.randint(0,100000)
+seed = 12345 if option.fixed_seed else random.randint(0,100000)
 
 # Strings
-executable="zprime"
-if (final_state == "-1"):
-  sfinal = "ll"
-elif (final_state == "0"):
-  sfinal = "2to2"
-else :
-  sfinal = "2to6"
-config = StringIO.StringIO()
-handler = StringIO.StringIO()
+executable = "zprime"
 
-all_options = ""
+options = ""
 
-# Interference
-if (options.interference == 4) and (options.include_ew == 0):
-  options.interference = 2
-  print 'EW sector must be active to calculate interference with Zprimes.'
-  print 'Switching to default interference.'
+if option.initial_state == 1:
+  options += "p"
 
-if options.qcd == 0 and final_state >= 0:
-  all_options += "C"
-elif options.ew == 0:
-  all_options += "F"
-elif options.bsm == 0:
-  all_options += "Z"
+if option.structure_function != 4:
+  options += "S%s" % option.structure_function
 
-if options.interference == 0:
-  all_options += "i0"
-elif options.interference == 1:
-  all_options += "i1"
-elif options.interference == 3:
-  all_options += "i3"
-elif options.interference == 4:
-  all_options += "i4"
+if option.include_qcd is False and final_state != "ll":
+  options += "C"
+if option.include_ew is False:
+  options += "F"
+if option.include_gg is False and final_state != "ll":
+  options += "g"
+if option.include_qq is False:
+  options += "q"
+
+if option.interference == 0:
+  options += "i0"
+elif option.interference == 1:
+  options += "i1"
+elif option.interference == 3:
+  options += "i3"
+elif option.interference == 4:
+  options += "i4"
+
+elif option.use_nwa is True:
+  options += "w"
+
+if option.ecm_low != 0:
+  options += "l%s" % option.ecm_low
+if option.ecm_up != 0:
+  options += "u%s" % option.ecm_up
+
+# exclude divergence
+if final_state == "ll" and option.ecm_low == 0:
+  option.ecm_low = 20
+
+if option.fixed_seed is True:
+  options += "s"
 
 # symmetrization
-if options.symmetrise_x1x2 == 1:
-  all_options += "x"
-if options.symmetrise_costheta_t == 1:
-  all_options += "c"
-if options.symmetrise_costheta_5 == 1:
-  all_options += "5"
-if options.symmetrise_costheta_7 == 1:
-  all_options += "7"
+if option.symmetrise_x1x2 is True:
+  options += "x"
+if option.symmetrise_costheta_t is True:
+  options += "c"
+if option.symmetrise_costheta_5 is True:
+  options += "5"
+if option.symmetrise_costheta_7 is True:
+  options += "7"
 
-if options.use_rambo == 1:
-  all_options += "R"
-if options.map_phase_space == 0:
-  all_options += "M"
+if option.use_rambo is True:
+  options += "R"
+if option.map_phase_space is False:
+  options += "M"
 
-if options.include_gg == 0:
-  all_options += "g"
-if options.include_qq == 0:
-  all_options += "q"
+if len(options) > 0:
+  options = "_" + options
 
-if len(all_options) > 0:
-  all_options = "_" + all_options
+if len(option.tag) > 0:
+  options = "_" + option.tag
 
 # filename
-filename = '%s_%s%s_%s%s%s_%sx%s' % (sfinal, smodel, sector, collider_energy, all_options, options.tag, options.itmx, ncall)
+filename = '%s_%s_%s%s_%sx%s' % (final_state, model_name, collider_energy, options, option.itmx, ncall)
+
+# Generate fortran friendly configuration
+if final_state == "ll":
+  final_state_id = -1
+elif final_state == "tt":
+  final_state_id = 0
+elif final_state == "bbllnn":
+  final_state_id = 1
+elif final_state == "bblnqq":
+  final_state_id = 2
+elif final_state == "bbqqqq":
+  final_state_id = 3
 
 # logfile 
-os = sys.platform
-if (os == "darwin"):
-  ntuple_directory = "/Users/declan/Data/Ntuples_Zprime/"
-elif (os == "linux2"):
-  if options.batch == False:
-    subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell=True)
-    subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell=True)
-  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime/"
-  
-logfile = '> Logs/%s.log &' % (filename) if options.output else ''
-output_file = "%s.out" % filename
-ntuple_file = '%s%s/%s.root' % (ntuple_directory, sfinal, filename)
+if sys.platform == "darwin":
+  ntuple_directory = "/Users/declan/Data/Ntuples_Zprime"
+elif sys.platform == "linux2":
+  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime"
+
+config_name = "%s.cfg" % filename
+logfile = "%s.log" % filename
+handler_anem = "%s.sh &" % filename
+ntuple_file = "%s/%s/%s.root" % (ntuple_directory, final_state, filename)
+logfile_command = "> Logs/%s &" % (logfile) if option.write_logfile else ""
 
 # print config file
+config = StringIO.StringIO()
+
 print >> config, '%s' % ntuple_file
-
-print >> config, '%s ! output file' % output_file
-
-print >> config, '%s ! initial_state' % options.initial_state
-
-print >> config, '%s ! final_state' % final_state
-
+print >> config, '%i ! initial_state' % option.initial_state
+print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
-
-print >> config, '%s ! istructure' % options.structure_function
-
-print >> config, '%s ! include_qcd' % options.include_qcd
-
-print >> config, '%s ! include_ew' % options.include_ew
-
-print >> config, '%s ! include_bsm' % options.include_bsm
-
-print >> config, '%s ! include_gg' % options.include_gg
-
-print >> config, '%s ! include_qq' % options.include_qq
-
-print >> config, '%s ! phase_space_only' % options.phase_space_only
-
-print >> config, '%s ! interference' % options.interference
-
-print >> config, '%s ! use_nwa' % options.use_nwa
-
-print >> config, '%s.d3 ! ecm_col' % collider_energy
-
-print >> config, '%s ! iseed' % seed
-
-print >> config, '%s ! itmx' % options.itmx
-
-print >> config, '%s ! ncall' % ncall
-
+print >> config, '%i ! istructure' % option.structure_function
+print >> config, '%i ! include_qcd' % option.include_qcd
+print >> config, '%i ! include_ew' % option.include_ew
+print >> config, '%i ! include_bsm' % option.include_bsm
+print >> config, '%i ! include_gg' % option.include_gg
+print >> config, '%i ! include_qq' % option.include_qq
+print >> config, '%i ! phase_space_only' % option.phase_space_only
+print >> config, '%i ! interference' % option.interference
+print >> config, '%i ! use_nwa' % option.use_nwa
+print >> config, '%i.d3 ! ecm_col' % collider_energy
+print >> config, '%i ! iseed' % seed
+print >> config, '%i ! itmx' % option.itmx
+print >> config, '%i ! ncall' % ncall
 print >> config, '-1.d0 ! acc'
-
-print >> config, '%s ! use rambo' % options.use_rambo
-
-print >> config, '%s ! map phase space' % options.map_phase_space
-
-print >> config, '%s ! symmetrise_x1x2' % options.symmetrise_x1x2
-
-print >> config, '%s ! symmetrise_costheta_t' % options.symmetrise_costheta_t
-
-print >> config, '%s ! symmetrise_costheta_5' % options.symmetrise_costheta_5
-
-print >> config, '%s ! symmetrise_costheta_7' % options.symmetrise_costheta_7
-
-print >> config, '%s ! verbose mode' % options.verbose
-
-print >> config, '%s.d0 ! ecm_low' % options.ecm_low
-
-print >> config, '%s.d0 ! ecm_up' % options.ecm_up
+print >> config, '%i ! use rambo' % option.use_rambo
+print >> config, '%i ! map phase space' % option.map_phase_space
+print >> config, '%i ! symmetrise_x1x2' % option.symmetrise_x1x2
+print >> config, '%i ! symmetrise_costheta_t' % option.symmetrise_costheta_t
+print >> config, '%i ! symmetrise_costheta_5' % option.symmetrise_costheta_5
+print >> config, '%i ! symmetrise_costheta_7' % option.symmetrise_costheta_7
+print >> config, '%i ! verbose mode' % option.verbose
+print >> config, '%i.d0 ! ecm_low' % option.ecm_low
+print >> config, '%i.d0 ! ecm_up' % option.ecm_up
 
 try:
-  with open('Config/%s.com' % filename,'w') as cfile1:
-    cfile1.write(config.getvalue())
+  with open('Config/%s' % config_name,'w') as config_file:
+    config_file.write(config.getvalue())
+    print " Config file written to Config/%s." % config_name
 except IOError:
-  print "Not in right directory?"
-  sys.exit()
+  sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
 
-if options.batch == True:
+if option.batch == True:
+  handler = StringIO.StringIO()
   print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
   print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
   print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
   print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s.com %s' % (executable,filename,logfile)
 
   try:
-    with open('%s.sh' % filename,'w') as hfile:
-      hfile.write(handler.getvalue())
+    with open('%s.sh' % filename, 'w') as handler_file:
+      handler_file.write(handler.getvalue())
+    print " Handler file written to %s.sh." % filename
   except IOError:
-    print "Not in right directory?"
-    sys.exit()
-else:
-  subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell=True)
-  subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell=True)
+    sys.exit(" Error: cannot write handler file.")
 
-# Command
-if options.batch == True:
- permission = "chmod a+x %s.sh" % filename
- subprocess.call(permission, shell=True)
- command = 'bsub -q 1nw /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename
-else:
- command = './Binary/%s < Config/%s.com %s' % (executable,filename,logfile)
-print " ...complete."
-print ' Executing ', command, '...'
-subprocess.call(command, shell=True)
+  subprocess.call("chmod a+x %s.sh" % filename, shell = True)
+  print " Submitting batch job."
+  subprocess.call('bsub -q 1nw /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+
+elif option.batch == False:
+  if sys.platform == "linux2":
+    print " Sourcing ROOT..."
+    subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
+    print " Adding RootTuple libraries to library path..."
+    subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
+  print " Executing locally."
+  if (option.write_logfile is True):
+    print " Output will be written to Logs/%s" % logfile
+  subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
