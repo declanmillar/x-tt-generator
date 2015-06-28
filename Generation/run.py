@@ -3,14 +3,13 @@
 # Python run script for the Zprime program
 # Generates a configuration file then runs the zprime executable using it,
 # either locally or by submission to the LXPLUS batch system.
-# Usage: './run.py model_name collider_energy final_state phase_space_points [option]'.
 # Do './run.py -h' for help.
 # Author: Declan Millar (d.millar@soton.ac.uk)
 
-import os, StringIO, re, optparse, subprocess, time, sys, random
+import os, StringIO, re, optparse, subprocess, time, sys, random, glob
 
-# Usage
-parser = optparse.OptionParser("./run.py model_name collider_energy final_state phase_space_points [option]")
+usage = "Usage: ./run.py final_state model_name collider_energy vegas_points [options]"
+parser = optparse.OptionParser(usage)
 
 # Execution options
 parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
@@ -47,25 +46,31 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 (option, args) = parser.parse_args()
 
 if len(args) != 4:
-  sys.exit("Error: incorrect number of arguments!\nusage: ./run.py model_name collider_energy final_state phase_space_points [option]") 
+  sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage)) 
 
-model_name = str(args[0])
-collider_energy = int(args[1])
-final_state = str(args[2])
-ncall = int(args[3])
+final_state = str(args[0])
+model_name = str(args[1])
+try:
+  collider_energy = int(args[2])
+except ValueError:
+  sys.exit("Error: invalid collider energy '%s [TeV]'.\n%s" % (args[2],usage))
+try:
+  ncall = int(args[3])
+except ValueError:
+  sys.exit("Error: invalid VEGAS points '%s'.\n%s" % (args[3],usage))
 
 # Check arguments are valid
 if os.path.isfile("Models/%s.mdl" % model_name) is False:
-  sys.exit("Model/%s.mdl does not exist." % model_name) 
+  sys.exit("'Model/%s.mdl' does not exist.\n%s\nAvailable model files: %s" % (model_name,usage,glob.glob("Models/*.mdl")))
 
 if collider_energy  < 0:
-  sys.exit("Error: collider energy must be positive definite.")
+  sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
 if final_state != "ll" and final_state != "tt" and final_state != "bblnln" and final_state != "bblnqq" and final_state != "bbqqqq":
-  sys.exit("Error: unavailable final state.\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq.")
+  sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq." % (final_state,usage))
 
-if ncall < 1:
-  sys.exit("Error: Must have at least one vegas point.")
+if ncall < 2:
+  sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
 if option.ecm_low or option.ecm_up < 0: 

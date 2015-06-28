@@ -248,7 +248,7 @@ program zprime
   if (include_qq == 0) print*, 'qq: OFF'
   if (interference == 0) print*, "Interference: none"
   if (interference == 1) print*, "Interference: no (Z',SM)"
-  if (interference == 2) print*, "Interference: Z' + (Z',SM) + SM"
+  if (interference == 2) print*, "Interference: full"
   if (interference == 3) print*, "Interference: Z' + (Z',SM)"
   if (interference == 4) print*, "Interference: (Z',SM)"
   if (symmetrise_x1x2 == 1) print*, 'Symmetrising integration: x1<->x2'
@@ -257,31 +257,31 @@ program zprime
   if (symmetrise_costheta_7 == 1) print*, 'symmetrising integration: costheta7'
   if (use_rambo == 1) print*, 'RAMBO: ON'
   if (map_phase_space == 0) print*, "Phase space mapping: ON"
-  if (ecm_low > 0) print*, "E_CM low: ", ecm_low
-  if (ecm_up > 0) print*, "E_CM up: ", ecm_up
   print*, 'Seed: ', seed
   print*, '------'
-  print*, 'Collider energy   = ', collider_energy
+  print*, 'Collider energy   = ', collider_energy, "[GeV]"
+  if (ecm_low > 0) print*, "E_CM low          = ", ecm_low, "[GeV]"
+  if (ecm_up > 0) print*, "E_CM up             ", ecm_up, "[GeV]"
   print*, 'Loops             = ', nloops
   print*, 'alpha_s(m_Z)      = ', alfas(rm_z, lambdaqcd4, nloops)
-  print*, 'lambda_QCD^4      = ', qcdl4
-  print*, 'm_b               = ', fmass(12)
-  print*, 'Gamma_b           = ', fwidth(12)
-  print*, 'm_t               = ', fmass(11)
-  print*, 'Gamma_t           = ', fwidth(11)
-  print*, 'm_Z               = ', rm_z
-  print*, 'Gamma_Z           = ', gamma_z
-  print*, 'm_W               = ', rm_w
-  print*, 'Gamma_W           = ', gamma_w
-  print*, 'm_h               = ', rm_h
-  print*, 'Gamma_h           = ', gamma_h
+  print*, 'lambda4QCD        = ', qcdl4
+  print*, 'm_b               = ', fmass(12), "[GeV]"
+  print*, 'Gamma_b           = ', fwidth(12), "[GeV]"
+  print*, 'm_t               = ', fmass(11), "[GeV]"
+  print*, 'Gamma_t           = ', fwidth(11), "[GeV]"
+  print*, 'm_Z               = ', rm_z, "[GeV]"
+  print*, 'Gamma_Z           = ', gamma_z, "[GeV]"
+  print*, 'm_W               = ', rm_w, "[GeV]"
+  print*, 'Gamma_W           = ', gamma_w, "[GeV]"
+  print*, 'm_h               = ', rm_h, "[GeV]"
+  print*, 'Gamma_h           = ', gamma_h, "[GeV]"
   print*, '------'
   if (include_bsm == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
         print*, "Z' number             ", i
-        print*, "m_Z'                  ", mass_zp(i)
-        print*, "Gamma_Z'              ", gamzp(i)
+        print*, "m_Z'                  ", mass_zp(i), "[GeV]"
+        print*, "Gamma_Z'              ", gamzp(i), "[GeV]"
         print*, "Gamma_Z'/m_Z'         ", gamzp(i)/mass_zp(i)             
         print*, "gLu                   ", gZpu(1,i)
         print*, "gRu                   ", gZpu(2,i)
