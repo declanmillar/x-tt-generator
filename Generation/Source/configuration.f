@@ -11,6 +11,7 @@ module configuration
   integer :: structure_function
   character(50) :: model_name
   character(100) :: ntuple_file
+  character(100) :: weight_file
   integer :: include_qcd
   integer :: include_ew
   integer :: include_bsm
@@ -48,7 +49,8 @@ contains
     ! read config file
     call debug("Reading config file...")
 
-    read(5,"(a)") ntuple_file      
+    read(5,"(a)") ntuple_file
+    read(5,"(a)") weight_file      
     read(5,*) initial_state ! 0 = pp, 1 = ppbar
     read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron      
     read(5,*) model_name      

@@ -92,7 +92,7 @@ if option.structure_function < 1 or option.structure_function > 9:
   sys.exit("Error: structure_function ID must be from 1 to 9.")
 
 if option.itmx > 20:
-   sys.exit('Error: itmx does not have to exceed 20!')
+   sys.exit('Error: itmx does not have to exceed 20.')
 
 # Modify configuration for consistency
 if model_name == "SM":
@@ -207,23 +207,38 @@ elif final_state == "bbqqqq":
 
 # logfile 
 if sys.platform == "darwin":
-  ntuple_directory = "/Users/declan/Data/Ntuples_Zprime"
+  data_directory = "/Users/declan/Data/Zp-tt_pheno"
 elif sys.platform == "linux2":
-  ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime"
+  data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
+
+ntuple_directory = data_directory + "/NTuples"
+weights_directory = data_directory + "/Weights"
+log_directory = data_directory + "/Logs"
+
+if os.path.isdir("%s" % data_directory) is False:
+  sys.exit("The target data directory '%s' does not exist" % data_directory)
 
 if os.path.isdir("%s/%s" % (ntuple_directory, final_state)) is False:
   sys.exit("The target NTuple directory '%s/%s' does not exist" % (ntuple_directory, final_state))
 
+if os.path.isdir("%s/%s" % (weights_directory, final_state)) is False:
+  sys.exit("The target weights directory '%s/%s' does not exist" % (weights_directory, final_state))
+
+if os.path.isdir("%s/%s" % (log_directory, final_state)) is False:
+  sys.exit("The target log directory '%s/%s' does not exist" % (log_directory, final_state))
+
 config_name = "%s.cfg" % filename
 logfile = "%s.log" % filename
-handler_anem = "%s.sh &" % filename
+handler_name = "%s.sh" % filename
+weights_file = '%s/%s/%s.txt' % (weights_directory, final_state, filename) 
 ntuple_file = "%s/%s/%s.root" % (ntuple_directory, final_state, filename)
-logfile_command = "> Logs/%s &" % (logfile) if option.write_logfile else ""
+logfile_command = "> %s/%s &" % (logfile_directory, final_state, logfile) if option.write_logfile else ""
 
 # print config file
 config = StringIO.StringIO()
 
 print >> config, '%s' % ntuple_file
+print >> config, '%s' % weights_file
 print >> config, '%i ! initial_state' % option.initial_state
 print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
@@ -266,7 +281,7 @@ if option.batch == True:
   print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s.com %s' % (executable,filename,logfile)
 
   try:
-    with open('%s.sh' % filename, 'w') as handler_file:
+    with open('%s' % handler_name, 'w') as handler_file:
       handler_file.write(handler.getvalue())
     print " Handler file written to %s.sh." % filename
   except IOError:

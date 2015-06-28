@@ -45,6 +45,7 @@ program zprime
   call modify_config
 
   print*, "Output Ntuple will be written to ", ntuple_file
+  print*, "Iteration weightings will be written to ", weight_file
   call rootinit(ntuple_file)
 
   s = collider_energy*collider_energy
@@ -375,11 +376,11 @@ program zprime
   call debug("...complete.")
 
   ! write sigma and cnorms to a txt file
-  i = len(ntuple_file)
-  do while(ntuple_file(i:i) == '')
+  i = len(weight_file)
+  do while(weight_file(i:i) == '')
     i = i-1
   end do
-  open(unit = 11, file = ntuple_file(1:i)//".txt", status = "replace", action = "write")
+  open(unit = 11, file = weight_file(1:i), status = "replace", action = "write")
   write(11,*) sigma
   do i = 1, it
   	write(11,*) cnorm(i)
