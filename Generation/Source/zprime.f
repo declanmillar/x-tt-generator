@@ -198,12 +198,12 @@ program zprime
   nprn = 0   
 
   ! output information before integration
-  print*, '-----------------------------------------------------'
+  print*, '------'
   call idate(today)     ! today(1) = day, (2) = month, (3) = year
   call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
   print*, 'Date: ', today(3), today(2), today(1)
   print*, 'Time: ', now(1), now(2), now(3)
-  print*, '-----------------------------------------------------'
+  print*, '------'
   if (initial_state == 0) then
     if (final_state == -1) then
       print*, "Process: p p -> l+ l-"
@@ -260,7 +260,7 @@ program zprime
   if (ecm_low > 0) print*, "E_CM low: ", ecm_low
   if (ecm_up > 0) print*, "E_CM up: ", ecm_up
   print*, 'Seed: ', seed
-  print*, '-----------------------------------------------------'
+  print*, '------'
   print*, 'Collider energy   = ', collider_energy
   print*, 'Loops             = ', nloops
   print*, 'alpha_s(m_Z)      = ', alfas(rm_z, lambdaqcd4, nloops)
@@ -275,7 +275,7 @@ program zprime
   print*, 'Gamma_W           = ', gamma_w
   print*, 'm_h               = ', rm_h
   print*, 'Gamma_h           = ', gamma_h
-  print*, '-----------------------------------------------------'
+  print*, '------'
   if (include_bsm == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
@@ -301,7 +301,7 @@ program zprime
         print*, "gRn3                  ", gZpn3(2,i)
       end if
     end do
-    print*, '-----------------------------------------------------'
+    print*, '------'
   end if
 
   ! reset counter
@@ -342,27 +342,22 @@ program zprime
     error_sigma_qq = error_sigma*fac_qq
   end if
 
-  print*, '-----------------------------------------------------'
+  print*, '------'
   if (sigma == 0.d0) then
     print*, "Error: sigma = 0."
     stop
   else
-    print*, "Total cross section"
     if (final_state == 0) then
-      print*, "sigma", sigma,  "pm", error_sigma, "[pb]"
+      print*, "sigma     = ", sigma, "+-", error_sigma, "[pb]"
     end if
     if (final_state == -1) then
-      print*, "sigma", sigma,  "pm", error_sigma, "[pb]"
+      print*, "sigma     = ", sigma, "+-", error_sigma, "[pb]"
     end if
     if (final_state >= 0) then
-      print*, "sigma_{ee} [pb]", " Uncertainty [pb]"
-      print*, sigma_ee, error_sigma_ee
-      print*, "sigma_emu [pb]", " Uncertainty [pb]"
-      print*, sigma_emu, error_sigma_emu
-      print*, "sigma_{eq} [pb]", " Uncertainty [pb]"
-      print*, sigma_eq, error_sigma_eq
-      print*, "sigma_{qq} [pb]", " Uncertainty [pb]"
-      print*, sigma_qq, error_sigma_qq
+      print*, "sigma_ee  = ", sigma_ee, "+-", error_sigma_ee, "[pb]"
+      print*, "sigma_emu = ", sigma_emu, "+-", error_sigma_emu, "[pb]"
+      print*, "sigma_eq  = ", sigma_eq, "+-", error_sigma_eq, "[pb]"
+      print*, "sigma_qq  = ", sigma_qq, "+-", error_sigma_qq, "[pb]"
     end if
   end if
 
@@ -424,19 +419,14 @@ program zprime
     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
     call debug("...complete.")
 
-    print*, "Total asymmetries"
-    print*, "ALL:                    uncertainty:"
-    print*, all, error_all
-    print*, "AL:                     uncertainty:"
-    print*, al, error_al
-    print*, "APV:                    uncertainty:"
-    print*, apv, error_apv
+    print*, "ALL       = ", all, "+-", error_all
+    print*, "AL        = ", al, "+-", error_al
+    print*, "APV       = ", apv, "+-", error_apv
   end if
+  print*, '------'
   print*, "Points:", npoints
-  print*, '-----------------------------------------------------'
-
   call rootclose
   call cpu_time(finish_time)
-  print '(" Program completed in ",f10.6," seconds.")', finish_time - start_time
+  print*, "Time:", finish_time - start_time
   stop
 end program zprime

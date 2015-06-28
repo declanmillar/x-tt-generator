@@ -60,8 +60,6 @@ if os.path.isfile("Models/%s.mdl" % model_name) is False:
 
 if collider_energy  < 0:
   sys.exit("Error: collider energy must be positive definite.")
-elif collider_energy > 14:
-  sys.exit("Error: collider energy is higher than 14 TeV! Is this the future? I hope I still have my hair.")
 
 if final_state != "ll" and final_state != "tt" and final_state != "bblnln" and final_state != "bblnqq" and final_state != "bbqqqq":
   sys.exit("Error: unavailable final state.\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq.")
@@ -207,6 +205,9 @@ if sys.platform == "darwin":
   ntuple_directory = "/Users/declan/Data/Ntuples_Zprime"
 elif sys.platform == "linux2":
   ntuple_directory = "/afs/cern.ch/work/d/demillar/Ntuples_Zprime"
+
+if os.path.isdir("%s/%s" % (ntuple_directory, final_state)) is False:
+  sys.exit("The target NTuple directory '%s/%s' does not exist" % (ntuple_directory, final_state))
 
 config_name = "%s.cfg" % filename
 logfile = "%s.log" % filename
