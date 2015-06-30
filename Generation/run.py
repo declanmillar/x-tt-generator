@@ -283,6 +283,7 @@ if option.batch:
   print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
   print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
   print >> handler, '%s/Binary/%s < %s/Config/%s' % (code_directory, executable, code_directory, config_name)
+  print >> handler, 'mv LSFJOB_* Jobs'
   print >> handler, 'rm -- "$0"'
 
 
