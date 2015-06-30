@@ -66,7 +66,7 @@ if os.path.isfile("Models/%s.mdl" % model_name) is False:
 if collider_energy  < 0:
   sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
-if final_state != "ll" and final_state != "tt" and final_state != "bblnln" and final_state != "bblnqq" and final_state != "bbqqqq":
+if final_state != "ll" and final_state != "tt" and final_state != "bbllnn" and final_state != "bblnqq" and final_state != "bbqqqq":
   sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq." % (final_state,usage))
 
 if ncall < 2:
