@@ -73,6 +73,9 @@ if ncall < 2:
   sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
+if option.batch: 
+  option.write_logfile = False
+
 if option.ecm_low or option.ecm_up < 0: 
   sys.exit("Error: COM energy must be positive definite")
 
@@ -82,7 +85,7 @@ if option.ecm_low or option.ecm_up > collider_energy*1000:
 if (option.ecm_low and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
-if sys.platform != "linux2" and option.batch is True:
+if sys.platform != "linux2" and option.batch:
   sys.exit("Error: Must be on lxplus to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
@@ -105,7 +108,7 @@ if final_state == "ll":
   option.include_qcd = False
   option.include_gg = False
 
-if option.phase_space_only == True:
+if option.phase_space_only:
   option.include_qcd = False
   option.include_ew = False
   option.include_bsm = False
@@ -114,7 +117,7 @@ if option.interference == 4 and option.include_ew is False:
   print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
   option.interference = 2
 
-if option.use_rambo is True:
+if option.use_rambo:
   option.map_phase_space = False
 
 if final_state == "ll" or final_state == "tt":
@@ -154,7 +157,7 @@ elif option.interference == 3:
 elif option.interference == 4:
   options += "i4"
 
-elif option.use_nwa is True:
+elif option.use_nwa:
   options += "w"
 
 if option.ecm_low != 0:
@@ -166,22 +169,22 @@ if option.ecm_up != 0:
 if final_state == "ll" and option.ecm_low == 0:
   option.ecm_low = 20
 
-if option.fixed_seed is True:
+if option.fixed_seed:
   options += "s"
 
 # symmetrization
-if option.symmetrise_x1x2 is True:
+if option.symmetrise_x1x2:
   options += "x"
-if option.symmetrise_costheta_t is True:
+if option.symmetrise_costheta_t:
   options += "c"
-if option.symmetrise_costheta_5 is True:
+if option.symmetrise_costheta_5:
   options += "5"
-if option.symmetrise_costheta_7 is True:
+if option.symmetrise_costheta_7:
   options += "7"
 
-if option.use_rambo is True:
+if option.use_rambo:
   options += "R"
-if option.map_phase_space is False:
+if not option.map_phase_space:
   options += "M"
 
 if len(options) > 0:
@@ -209,6 +212,7 @@ elif final_state == "bbqqqq":
 if sys.platform == "darwin":
   data_directory = "/Users/declan/Data/Zp-tt_pheno"
 elif sys.platform == "linux2":
+  code_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno/Generation"
   data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
 
 ntuple_directory = data_directory + "/NTuples"
@@ -273,12 +277,14 @@ try:
 except IOError:
   sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
 
-if option.batch == True:
+if option.batch:
   handler = StringIO.StringIO()
   print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
   print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
   print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
-  print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s %s' % (executable,config_name,logfile_command)
+  print >> handler, '%s/Binary/%s < %s/Config/%s' % (code_directory, executable, code_directory, config_name)
+  print >> handler, 'rm -- "$0"'
+
 
   try:
     with open('%s' % handler_name, 'w') as handler_file:
@@ -291,13 +297,13 @@ if option.batch == True:
   print " Submitting batch job."
   subprocess.call('bsub -q 1nw /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
 
-elif option.batch == False:
+else:
   if sys.platform == "linux2":
     print " Sourcing ROOT..."
     subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
     print " Adding RootTuple libraries to library path..."
     subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
   print " Executing locally."
-  if (option.write_logfile is True):
+  if option.write_logfile:
     print " Output will be written to Logs/%s" % logfile
   subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
