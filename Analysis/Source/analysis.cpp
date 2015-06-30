@@ -91,7 +91,7 @@ void AnalysisZprime::EachEvent()
   double PzNuRecoCol = -999;
   double MttReco =-999;
   double yttReco =-999;
-  if (m_channel =="2to6") {
+  if (m_channel =="bbllnn") {
     // resolve longitudinal neutrino momentum in the semihadronic case
     PzNuRecoCol = resolveNeutrinoPz(pcol[2], pTcol[3]);
     pcolReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, std::sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Py()+PzNuRecoCol*PzNuRecoCol));
@@ -114,13 +114,13 @@ void AnalysisZprime::EachEvent()
   }
 
   // top and antitop
-  if (m_channel == "2to2" or "ll") {
+  if (m_channel == "tt" or "ll") {
     ptcol = pcol[0];
     ptbcol = pcol[1];
     pt = p[0];
     ptb = p[1];
   }
-  else if (m_channel == "2to6") {
+  else if (m_channel == "bbllnn") {
     ptcol = pcol[0] + pcol[2] + pcol[3];
     ptbcol = pcol[1] + pcol[4] + pcol[5];
     pt = p[0] + p[2] + p[3];
@@ -187,7 +187,7 @@ void AnalysisZprime::EachEvent()
 	// double MCTblbl = -999;
   double deltaEtal = -999;
 
-  if (m_channel == "2to6") {
+  if (m_channel == "bbllnn") {
     TLorentzVector plepptop = pcol[2];
     TLorentzVector plepmtop = pcol[4];
     plepptop.Boost(vtcol);
@@ -291,6 +291,8 @@ void AnalysisZprime::EachEvent()
     // re-weight for different iterations
     weight = weight*m_sigma/m_cnorm[it-1];
 
+    Mtt = Mtt/1000; // convert to TeV
+
     // Fill Histograms (assumes fixed bin width!)
     h_Mtt->Fill(Mtt, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
     h_ytt->Fill(ytt, weight/h_ytt->GetXaxis()->GetBinWidth(1));
@@ -314,13 +316,13 @@ void AnalysisZprime::EachEvent()
       h_AttC2->Fill(Mtt, weight/h_AttC2->GetXaxis()->GetBinWidth(1));
     }
 
-    if (m_channel == "2to2") {
+    if (m_channel == "tt") {
       h_MttLL->Fill(Mtt, m_ntup->weightLL()/h_MttLL->GetXaxis()->GetBinWidth(1));
       h_MttLR->Fill(Mtt, m_ntup->weightLR()/h_MttLR->GetXaxis()->GetBinWidth(1));
       h_MttRL->Fill(Mtt, m_ntup->weightRL()/h_MttRL->GetXaxis()->GetBinWidth(1));
       h_MttRR->Fill(Mtt, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
-    else if (m_channel == "2to6") {
+    else if (m_channel == "bbllnn") {
       h_yttReco->Fill(yttReco, weight/h_yttReco->GetXaxis()->GetBinWidth(1));
       h_CosThetaReco->Fill(CosThetaReco, weight/h_CosThetaReco->GetXaxis()->GetBinWidth(1));
       h_CosThetaStarReco->Fill(CosThetaStarReco, weight/h_CosThetaStarReco->GetXaxis()->GetBinWidth(1));
@@ -396,7 +398,7 @@ void AnalysisZprime::PostLoop()
     printf("sigma_analysis   = %f\n", sigma);
   }
   else printf("sigma = %f [pb]\n", sigma);
-  if (m_channel == "2to2") {
+  if (m_channel == "tt") {
     h_ALL = this->MttALL();
     h_AL = this->MttAL();
     this->TotalSpinAsymmetries();
@@ -415,7 +417,7 @@ void AnalysisZprime::PostLoop()
   // printf("ALL = %f\n", ALL);
   // printf("AL = %f\n", AL);
 
-  if (m_channel == "2to6") {
+  if (m_channel == "bbllnn") {
     this->ALL2to6();
     h_AL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
     h_ALL = this->Asymmetry("ALL", "A_{LL}", h_ALLF, h_ALLB);
@@ -539,27 +541,27 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
 void AnalysisZprime::CreateHistograms() 
 {
 
-  h_Mtt = new TH1D("Mtt", "M_{tt}", 1300, 0.0, 13000.0);
-  h_AFBstar1 = new TH1D("AFstar", "AFstar", 130, 0.0, 13000.0);
-  h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13000.0);
-  h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13000.0);
-  h_AttC2 = new TH1D("AttC2", "AttC2", 130, 0.0, 13000.0);
+  h_Mtt = new TH1D("Mtt", "M_{tt}", 1300, 0.0, 13.0);
+  h_AFBstar1 = new TH1D("AFstar", "AFstar", 130, 0.0, 13.0);
+  h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13.0);
+  h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13.0);
+  h_AttC2 = new TH1D("AttC2", "AttC2", 130, 0.0, 13.0);
   h_ytt = new TH1D("ytt", "ytt", 50, -2.5, 2.5);
   h_CosTheta = new TH1D("CosTheta", "cos#theta", 50, -1.0, 1.0);
   h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^*", 50, -1.0, 1.0);
 
 
-  if (m_channel == "2to2") {
-    h_MttLL = new TH1D("MttLL", "MttLL", 130, 0.0, 13000.0);
-    h_MttLR = new TH1D("MttLR", "MttLR", 130, 0.0, 13000.0);
-    h_MttRL = new TH1D("MttRL", "MttRL", 130, 0.0, 13000.0);
-    h_MttRR = new TH1D("MttRR", "MttRR", 130, 0.0, 13000.0);
+  if (m_channel == "tt") {
+    h_MttLL = new TH1D("MttLL", "MttLL", 130, 0.0, 13.0);
+    h_MttLR = new TH1D("MttLR", "MttLR", 130, 0.0, 13.0);
+    h_MttRL = new TH1D("MttRL", "MttRL", 130, 0.0, 13.0);
+    h_MttRR = new TH1D("MttRR", "MttRR", 130, 0.0, 13.0);
   }
 
-  if (m_channel == "2to6") {
+  if (m_channel == "bbllnn") {
     h_yttReco = new TH1D("yttReco", "yttReco", 100, -2.5, 2.5);
     h_PzNuReco = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, -1000.0, 1000.0);
-    h_MttReco = new TH1D("MttReco", "M^{reco}_{tt}", 100, 0.0, 13000.0);
+    h_MttReco = new TH1D("MttReco", "M^{reco}_{tt}", 100, 0.0, 13.0);
     h_PzNu = new TH1D("PzNu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
     h_costheta5 = new TH1D("costheta5", "cos#theta_{l^{+}} (eq)", 50, -1.0, 1.0);
     h_CosThetaReco = new TH1D("CosThetaReco", "cos#theta_{t}^{reco}", 50, -1.0, 1.0);
@@ -585,14 +587,14 @@ void AnalysisZprime::CreateHistograms()
     h_dphi_MCTll = new TH2D("dphi_MCTll", "dphi_MCTll", 20, 0, 2*m_pi, 20, 0, 4000);
     h_dphi_MTblbl = new TH2D("dphi_MTblbl", "dphi_MTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
     h_dphi_MCTblbl = new TH2D("dphi_MCTblbl", "dphi_MCTblbl", 20, 0, 2*m_pi, 20, 0, 4000);
-    h_AlLF = new TH1D("AlLF", "AlLF", 20, 0.0, 13000.0);
-    h_AlLB = new TH1D("AlLB", "AlLB", 20, 0.0, 13000.0);
-    h_ALLF = new TH1D("ALLF", "ALLF", 50, 0.0, 13000.0);
-    h_ALLB = new TH1D("ALLB", "ALLB", 50, 0.0, 13000.0);
-    h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13000.0);
-    h_AllCB = new TH1D("AllCB", "AllCB", 50, 0.0, 13000.0);
-    h_AFBstarReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 65, 0.0, 13000.0);
-    h_AFBstarReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 65, 0.0, 13000.0);
+    h_AlLF = new TH1D("AlLF", "AlLF", 20, 0.0, 13.0);
+    h_AlLB = new TH1D("AlLB", "AlLB", 20, 0.0, 13.0);
+    h_ALLF = new TH1D("ALLF", "ALLF", 50, 0.0, 13.0);
+    h_ALLB = new TH1D("ALLB", "ALLB", 50, 0.0, 13.0);
+    h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13.0);
+    h_AllCB = new TH1D("AllCB", "AllCB", 50, 0.0, 13.0);
+    h_AFBstarReco1 = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 65, 0.0, 13.0);
+    h_AFBstarReco2 = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 65, 0.0, 13.0);
   }
 }
 
@@ -600,22 +602,22 @@ void AnalysisZprime::MakeGraphs()
 {
   printf("Making Graphs...\n");
   TString numBase;
-  if (m_channel == "2to2") numBase = "d#sigma(pp->t#bar{t}) / d"; 
-  if (m_channel == "2to6") numBase = "d#sigma / d"; //pp->t#bar{t}->b#bar{b}l^{+}l^{-}#nu#bar{#nu}
+  if (m_channel == "tt") numBase = "d#sigma(pp->t#bar{t}) / d"; 
+  if (m_channel == "bbllnn") numBase = "d#sigma / d"; //pp->t#bar{t}->b#bar{b}l^{+}l^{-}#nu#bar{#nu}
   TString units = "pb";
 
   // TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
   // c_Mtt->cd(); 
   // h_Mtt->Draw("hist"); 
-  h_Mtt->GetXaxis()->SetTitle(h_Mtt->GetTitle());
-  h_Mtt->GetYaxis()->SetTitle(numBase + h_Mtt->GetTitle() + " [" + units +"/GeV]");
+  h_Mtt->GetXaxis()->SetTitle("M_{tt} [TeV]");
+  h_Mtt->GetYaxis()->SetTitle(numBase + "M_{tt}" + " [" + units +"/TeV]");
 
   // TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
   // c_AFBstar->cd(); 
   // h_AFBstar->Draw("hist"); 
   // h_AFBstar->GetYaxis()->SetTitle("");
 
-  if (m_channel == "2to6") {
+  if (m_channel == "bbllnn") {
     // TCanvas *c_pz5 = new TCanvas(h_pz5->GetName(), h_pz5->GetTitle());
     // c_pz5->cd();
     // h_pz5->Draw("hist"); 
@@ -659,7 +661,7 @@ void AnalysisZprime::MakeGraphs()
     h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
   }
 
-  if (m_channel == "2to2") {
+  if (m_channel == "tt") {
     h_MttLL->GetYaxis()->SetTitle(numBase + h_MttLL->GetTitle() + " [" + units +"/GeV]");
     h_MttLR->GetYaxis()->SetTitle(numBase + h_MttLR->GetTitle() + " [" + units +"/GeV]");
     h_MttRL->GetYaxis()->SetTitle(numBase + h_MttRL->GetTitle() + " [" + units +"/GeV]");
@@ -689,11 +691,11 @@ void AnalysisZprime::WriteHistograms()
 
   // Save histograms
 
-  if (m_channel == "2to2" or "2to6" or "ll" ) {
+  if (m_channel == "tt" or "bbllnn" or "ll" ) {
     h_Mtt->Write();
   }
 
-  if (m_channel == "2to2" || m_channel == "2to6") {
+  if (m_channel == "tt" || m_channel == "bbllnn") {
     h_AFBstar->Write();
     h_AttC->Write();
     h_ytt->Write();
@@ -701,7 +703,7 @@ void AnalysisZprime::WriteHistograms()
     h_CosThetaStar->Write();
   }
   
-  if (m_channel == "2to2") {
+  if (m_channel == "tt") {
     h_MttLL->Write();
     h_MttLR->Write();
     h_MttRL->Write();
@@ -710,7 +712,7 @@ void AnalysisZprime::WriteHistograms()
     h_AL->Write();
   }
 
-  if (m_channel == "2to6") {
+  if (m_channel == "bbllnn") {
     h_dphi->Write();
     h_AL->Write();
     h_ALL->Write();
@@ -768,11 +770,11 @@ bool AnalysisZprime::PassCuts_MET() const
   {
     return true;
   }  
-  if (m_channel == "2to2")
+  if (m_channel == "tt")
   {
     return true;
   }
-  if (m_channel == "2to6")
+  if (m_channel == "bbllnn")
   {
     // if (m_ntup->Etmiss() > 0.0 * m_GeV)
     // {

@@ -18,23 +18,24 @@ int main(int argc, char* argv[])
   TString weightsDirectory = dataDirectory + "/Weights";
   TString histogramDirectory = dataDirectory + "/Histograms";
 
-  TString channel("ll"); 
+  TString channel("tt"); 
   TString model("SM");
-  TString options("_");
+  TString options("_xc_");
   TString energy("13");
-  TString points("5x5000");
+  TString points("5x50000");
   TString filename(channel + "_" + model + "_" + energy + options + points);
   TString inputFilename(ntupleDirectory + "/" + channel + "/" + filename + ".root");
   TString weightFilename(weightsDirectory + "/" + channel + "/" + filename + ".txt");
   TString outputFilename(histogramDirectory + "/" + channel + "/" + filename + "_hist.root");
 
-  // TString channel2("ll"); 
-  // TString model2("NUSU2-50_EW-Zp");
-  // TString options2("_");
-  // TString points2("5x500000");
-  // TString filename2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
-  // TString inputFilename2(ntupleDirectory + "/" + channel2 + "/" + filename2);
-  // TString outputFilename2(histogramDirectory + filename2 + "_hist.root");
+  TString channel2("tt"); 
+  TString model2("NUSU2-40");
+  TString options2("_xc_");
+  TString points2("5x50000");
+  TString filename2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
+  TString inputFilename2(ntupleDirectory + "/" + channel2 + "/" + filename2 + ".root");
+  TString weightFilename2(weightsDirectory + "/" + channel + "/" + filename2 + ".txt");
+  TString outputFilename2(histogramDirectory + "/" + channel + "/" + filename2 + "_hist.root");
 
   // TString channel3("2to6"); 
   // TString model3("GLR-R");
@@ -52,24 +53,24 @@ int main(int argc, char* argv[])
   // TString inputFilename4(ntupleDirectory + "/" + channel4 + "/" + filename4);
   // TString outputFilename4(histogramDirectory + "/"  filename4 + "_hist.root");
 
-  AnalysisZprime analysis(channel, model, inputFilename, weightFilename, outputFilename);
-  // AnalysisZprime analysis2(channel2, model2, inputFilename2, outputFilename2);
+  // AnalysisZprime analysis(channel, model, inputFilename, weightFilename, outputFilename);
+  // AnalysisZprime analysis2(channel2, model2, inputFilename2, weightFilename2, outputFilename2);
   // AnalysisZprime analysis3(channel3, model3, inputFilename3, outputFilename3);
   // AnalysisZprime analysis4(channel4, model4, inputFilename4, outputFilename4);
 
   // bool overlayTransverse = false;
 
-  // TApplication* RootApp = new TApplication("RootApp",&argc,argv);
+  TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 
-  // if (channel == "ll") {
-  //   TCanvas* c_Mtt =overlay(false, false, "Mtt", model, outputFilename,
-  //                                     "Mtt", model2, outputFilename2
-  //                                     // "Mtt", model3, outputFilename3,
-  //                                     // "Mtt", model4, outputFilename4
-  //                                     );
-  //   c_Mtt->Draw();
-  //   RootApp->Run(kTRUE);
-  // }
+  if (channel == "ll" or channel == "tt") {
+    TCanvas* c_Mtt =overlay(false, false, "Mtt", model, outputFilename,
+                                      "Mtt", model2, outputFilename2
+                                      // "Mtt", model3, outputFilename3,
+                                      // "Mtt", model4, outputFilename4
+                                      );
+    c_Mtt->Draw();
+    RootApp->Run(kTRUE);
+  }
 
   //   // TCanvas* c_AttC =overlay(false, false, "AttC", model, outputFilename, 
   //   //                                    "AttC", model2, outputFilename2,
@@ -78,12 +79,16 @@ int main(int argc, char* argv[])
   //   // c_AttC->Draw();
   //   // RootApp->Run(kTRUE);
 
-  //   // TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFilename, 
-  //   //                                           "AFBstar", model2, outputFilename2);
-  //   //                                       // "AFBstar", model3, outputFilename3);
-  //   //                                       // "AFBstar", model4, outputFilename4);
-  //   // c_AFBstar->Draw();
-  //   // RootApp->Run(kTRUE);
+  if (channel == "tt") {
+
+
+    TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFilename, 
+                                              "AFBstar", model2, outputFilename2);
+                                          // "AFBstar", model3, outputFilename3);
+                                          // "AFBstar", model4, outputFilename4);
+    c_AFBstar->Draw();
+    RootApp->Run(kTRUE);
+  }
 
 
   // if (channel == "2to2") {

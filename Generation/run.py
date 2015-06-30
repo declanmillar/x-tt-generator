@@ -232,7 +232,7 @@ logfile = "%s.log" % filename
 handler_name = "%s.sh" % filename
 weights_file = '%s/%s/%s.txt' % (weights_directory, final_state, filename) 
 ntuple_file = "%s/%s/%s.root" % (ntuple_directory, final_state, filename)
-logfile_command = "> %s/%s &" % (logfile_directory, final_state, logfile) if option.write_logfile else ""
+logfile_command = "> %s/%s/%s &" % (log_directory, final_state, logfile) if option.write_logfile else ""
 
 # print config file
 config = StringIO.StringIO()
