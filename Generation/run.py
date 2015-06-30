@@ -278,7 +278,7 @@ if option.batch == True:
   print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
   print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
   print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
-  print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s.com %s' % (executable,filename,logfile)
+  print >> handler, '/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Binary/%s < /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/Config/%s %s' % (executable,config_name,logfile_command)
 
   try:
     with open('%s' % handler_name, 'w') as handler_file:
