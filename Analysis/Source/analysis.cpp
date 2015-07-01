@@ -809,6 +809,17 @@ bool AnalysisZprime::PassCutsFiducial()
   return true;
 }
 
+bool AnalysisZprime::PassCutsYtt()
+{ 
+  if (Mff > 1200.0)
+  {
+      UpdateCutflow(cutYtt, true);
+      return true;
+  }
+  UpdateCutflow(cutMtt, false);
+  return false;
+}
+
 void AnalysisZprime::PreLoop()
 {
   TString cnormsName(m_weightsFileName);
