@@ -23,18 +23,18 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
 void AnalysisZprime::EachEvent()
 {
   // 0 = b, 1 = bbar, 2 = l+, 3 = nu, 4 = l-, 5 = nubar
+  UpdateCutflow(cutEvent,true);
+  pcol = vector<TLorentzVector>(6);
+  p = vector<TLorentzVector>(6);
+  pcolReco = vector<TLorentzVector>(6);
+  pReco = vector<TLorentzVector>(6);
 
-
-  vector<TLorentzVector> pcol(6);
-  vector<TLorentzVector> p(6);
-  vector<TLorentzVector> pcolReco(6);
-  vector<TLorentzVector> pReco(6);
   TLorentzVector pcoltot, ptot;
   vector<double> mass(6);
   vector<double> ETcol(6);
-  vector<TVector2> pTcol(6);
-  vector<double> ycol(6);
-  vector<double> etacol(6);
+  pTcol = vector<TVector2>(6);
+  ycol = vector<double>(6);
+  etacol = vector<double>(6);
   vector<double> phicol(6);
   vector<double> ET(6);
   vector<TVector2> pT(6);
@@ -93,7 +93,7 @@ void AnalysisZprime::EachEvent()
   double yttReco =-999;
   if (m_channel =="bbllnn") {
     // resolve longitudinal neutrino momentum in the semihadronic case
-    PzNuRecoCol = resolveNeutrinoPz(pcol[2], pTcol[3]);
+    PzNuRecoCol = ResolveNeutrinoPz(pcol[2], pTcol[3]);
     pcolReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, std::sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Py()+PzNuRecoCol*PzNuRecoCol));
     pReco[3].SetPxPyPzE(pcol[3].Px(), pcol[3].Py(), PzNuRecoCol, std::sqrt(pcol[3].Px()*pcol[3].Px()+pcol[3].Py()*pcol[3].Py()+PzNuRecoCol*PzNuRecoCol));
     TLorentzVector pcoltotReco = pcoltot - pcol[3] + pcolReco[3];
@@ -161,7 +161,7 @@ void AnalysisZprime::EachEvent()
   TLorentzVector plepmtop;
 
   int it = m_ntup->iteration();
-  double Mtt = std::abs(pcoltot.M());
+  Mff = std::abs(pcoltot.M());
   double costhetalpcol = -999;
   double costhetalmcol = -999;
   double costhetalptop = -999;
@@ -291,36 +291,36 @@ void AnalysisZprime::EachEvent()
     // re-weight for different iterations
     weight = weight*m_sigma/m_cnorm[it-1];
 
-    Mtt = Mtt/1000; // convert to TeV
+    Mff = Mff/1000; // convert to TeV
 
     // Fill Histograms (assumes fixed bin width!)
-    h_Mtt->Fill(Mtt, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
+    h_Mtt->Fill(Mff, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
     h_ytt->Fill(ytt, weight/h_ytt->GetXaxis()->GetBinWidth(1));
     h_CosTheta->Fill(CosTheta, weight/h_CosTheta->GetXaxis()->GetBinWidth(1));
     h_CosThetaStar->Fill(CosThetaStar, weight/h_CosThetaStar->GetXaxis()->GetBinWidth(1));
 
     // asymmetries
     if (CosThetaStar > 0) {
-      h_AFBstar1->Fill(Mtt, weight/h_AFBstar1->GetXaxis()->GetBinWidth(1));
+      h_AFBstar1->Fill(Mff, weight/h_AFBstar1->GetXaxis()->GetBinWidth(1));
     }
 
     if (CosThetaStar < 0) {
-      h_AFBstar2->Fill(Mtt, weight/h_AFBstar2->GetXaxis()->GetBinWidth(1));
+      h_AFBstar2->Fill(Mff, weight/h_AFBstar2->GetXaxis()->GetBinWidth(1));
     }
 
     if (deltaYcol > 0) {
-      h_AttC1->Fill(Mtt, weight/h_AttC1->GetXaxis()->GetBinWidth(1));
+      h_AttC1->Fill(Mff, weight/h_AttC1->GetXaxis()->GetBinWidth(1));
     }
 
     if (deltaYcol < 0) {
-      h_AttC2->Fill(Mtt, weight/h_AttC2->GetXaxis()->GetBinWidth(1));
+      h_AttC2->Fill(Mff, weight/h_AttC2->GetXaxis()->GetBinWidth(1));
     }
 
     if (m_channel == "tt") {
-      h_MttLL->Fill(Mtt, m_ntup->weightLL()/h_MttLL->GetXaxis()->GetBinWidth(1));
-      h_MttLR->Fill(Mtt, m_ntup->weightLR()/h_MttLR->GetXaxis()->GetBinWidth(1));
-      h_MttRL->Fill(Mtt, m_ntup->weightRL()/h_MttRL->GetXaxis()->GetBinWidth(1));
-      h_MttRR->Fill(Mtt, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
+      h_MttLL->Fill(Mff, m_ntup->weightLL()/h_MttLL->GetXaxis()->GetBinWidth(1));
+      h_MttLR->Fill(Mff, m_ntup->weightLR()/h_MttLR->GetXaxis()->GetBinWidth(1));
+      h_MttRL->Fill(Mff, m_ntup->weightRL()/h_MttRL->GetXaxis()->GetBinWidth(1));
+      h_MttRR->Fill(Mff, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "bbllnn") {
       h_yttReco->Fill(yttReco, weight/h_yttReco->GetXaxis()->GetBinWidth(1));
@@ -354,27 +354,27 @@ void AnalysisZprime::EachEvent()
 
       // asymmetries
       if (costhetalptop > 0) {
-        h_AlLF->Fill(Mtt, weight/h_AlLF->GetXaxis()->GetBinWidth(1));
+        h_AlLF->Fill(Mff, weight/h_AlLF->GetXaxis()->GetBinWidth(1));
       }
 
       if (costhetalptop < 0) {
-        h_AlLB->Fill(Mtt, weight/h_AlLB->GetXaxis()->GetBinWidth(1));
+        h_AlLB->Fill(Mff, weight/h_AlLB->GetXaxis()->GetBinWidth(1));
       }
 
       if (clpclmtop > 0) {
-        h_ALLF->Fill(Mtt, weight/h_ALLF->GetXaxis()->GetBinWidth(1));
+        h_ALLF->Fill(Mff, weight/h_ALLF->GetXaxis()->GetBinWidth(1));
       }
 
       if (clpclmtop < 0) {
-        h_ALLB->Fill(Mtt, weight/h_ALLB->GetXaxis()->GetBinWidth(1));
+        h_ALLB->Fill(Mff, weight/h_ALLB->GetXaxis()->GetBinWidth(1));
       }
 
       if (deltaEtal > 0) {
-        h_AllCF->Fill(Mtt, weight/h_AllCF->GetXaxis()->GetBinWidth(1));
+        h_AllCF->Fill(Mff, weight/h_AllCF->GetXaxis()->GetBinWidth(1));
       }
 
       if (deltaEtal < 0) {
-        h_AllCB->Fill(Mtt, weight/h_AllCB->GetXaxis()->GetBinWidth(1));
+        h_AllCB->Fill(Mff, weight/h_AllCB->GetXaxis()->GetBinWidth(1));
       }
 
       if (CosThetaStarReco > 0) {
@@ -425,6 +425,7 @@ void AnalysisZprime::PostLoop()
     h_AFBstarReco = this->Asymmetry("AFBstarNuReco", "A_{FB}^* (#nu reconstructed)", h_AFBstarReco1, h_AFBstarReco2);
   }
   this->MakeGraphs();
+  this->PrintCutflow();
   this->WriteHistograms();
 }
 
@@ -540,8 +541,7 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
 
 void AnalysisZprime::CreateHistograms() 
 {
-
-  h_Mtt = new TH1D("Mtt", "M_{tt}", 1300, 0.0, 13.0);
+  h_Mtt = new TH1D("Mff", "M_{tt}", 1300, 0.0, 13.0);
   h_AFBstar1 = new TH1D("AFstar", "AFstar", 130, 0.0, 13.0);
   h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13.0);
   h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13.0);
@@ -746,54 +746,67 @@ void AnalysisZprime::WriteHistograms()
     // h_dphi_MTblbl->Write();
     // h_dphi_MCTblbl->Write();
   }
-
+  h_cutflow->Write();
   printf("...complete\n");
   m_outputFile->Close();
   delete m_outputFile;
 }
 
-bool AnalysisZprime::PassCuts() const
+bool AnalysisZprime::PassCuts() 
 {
-  if (this->PassCuts_Mtt())
-  {
-    if (this->PassCuts_MET())
-      {
-        return true;
-      }
-  }
-  return false;
-}
-
-bool AnalysisZprime::PassCuts_MET() const
-{
-  if (m_channel == "ll")
-  {
-    return true;
-  }  
-  if (m_channel == "tt")
-  {
-    return true;
-  }
-  if (m_channel == "bbllnn")
-  {
-    // if (m_ntup->Etmiss() > 0.0 * m_GeV)
-    // {
-      return true;
-    // }
-  }  
-  return false;
-}
-
-bool AnalysisZprime::PassCuts_Mtt() const
-{
-  // if (m_ntup->Mtt() > 1200.0)
-  //   {
-  //     if (m_ntup->Mtt() < 2200.0)
+  // if (this->PassCuts_Mtt())
+  // {
+  //   if (this->PassCuts_MET())
+  //     {
+  //       if (this->PassCutsFiducial())
   //       {
+        return true;
+  //       }
+  //     }
+  // }
+  // return false;
+}
+
+bool AnalysisZprime::PassCuts_MET()
+{
+  bool pass;
+  if (m_channel == "ll") pass = true;
+  else if (m_channel == "tt") pass = true;
+  else if (m_channel == "bbllnn") pass = true;
+  else pass = true;
+
+  this->UpdateCutflow(cutMET, pass);
+  return pass;
+}
+
+bool AnalysisZprime::PassCuts_Mtt()
+{
+  // if (Mff > 1200.0)
+  //   {
+  //     if (Mff < 2200.0)
+  //       {
+          UpdateCutflow(cutMtt, true);
           return true;
   //       }
   //   }
+  // UpdateCutflow(cutMtt, false);
   // return false;
+}
+
+bool AnalysisZprime::PassCutsFiducial()
+{ 
+  for (int i = 0; i < 6; i++) {
+    bool outsideCrack = etacol[i] <= 1.37 || etacol[i] >= 1.52;
+    bool central      = etacol[i] <= 2.47;
+    bool passesFiducialCuts = outsideCrack && central;
+    if (passesFiducialCuts == false){
+      UpdateCutflow(cutFiducial, false);
+      return false;
+    }
+    else continue;
+  }
+  UpdateCutflow(cutFiducial, true);
+  return true;
 }
 
 void AnalysisZprime::PreLoop()
@@ -808,6 +821,7 @@ void AnalysisZprime::PreLoop()
   cnorms.close();
 
   this->SetupInputFiles();
+  this->InitialiseCutflow();
   this->SetupOutputFiles();
   this->CreateHistograms();
 }
@@ -815,7 +829,7 @@ void AnalysisZprime::PreLoop()
 void AnalysisZprime::Loop()
 {
   // Loop over all files
-  for(Itr_s i = m_inputFiles->begin(); i != m_inputFiles->end(); ++i)
+  for (Itr_s i = m_inputFiles->begin(); i != m_inputFiles->end(); ++i)
   {
     cout << "Processing File '" << (*i) << "'." << endl;
     
@@ -824,7 +838,7 @@ void AnalysisZprime::Loop()
     // The Event Loop
     Long64_t nEvents = this->TotalEvents();
     printf("Looping over events...\n");
-    for(Long64_t jentry=0; jentry<nEvents;++jentry) 
+    for (Long64_t jentry=0; jentry<nEvents;++jentry) 
     {
       // printf("Processing entry %lli\n", jentry);
       Long64_t ientry = this->IncrementEvent(jentry);
@@ -884,7 +898,7 @@ void AnalysisZprime::CleanUp()
   delete m_ntup;
 }
 
-double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) 
+double AnalysisZprime::ResolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) 
 {
 
   // finds the longitudinal neutrino momentum for semi-hadronic decay
@@ -937,8 +951,8 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu)
   // printf("b = %f, %f\n", b, b2);
   // printf("c = %f, %f\n", c, c2);
 
-  root = this->solveQuadratic(a, b, c);
-  // root2 = this->solveQuadratic(a2, b2, c2);
+  root = this->SolveQuadratic(a, b, c);
+  // root2 = this->SolveQuadratic(a2, b2, c2);
 
   // for (int i = 0; i < 2; i++) cout << "root " << root[i] << ", " << root2[i] << endl;
 
@@ -966,7 +980,7 @@ double AnalysisZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu)
   return PzNu;
 }
 
-std::vector<std::complex<double> > AnalysisZprime::solveQuadratic(double a, double b, double c) 
+std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, double b, double c) 
 {
     // solves quadratic for both roots 
     // returns both as complex values in a complex vector x(2)
@@ -984,4 +998,37 @@ std::vector<std::complex<double> > AnalysisZprime::solveQuadratic(double a, doub
     roots.push_back(term1 - term2);
     
     return roots;
+}
+
+const void AnalysisZprime::UpdateCutflow(int cut, bool passed)
+{
+  if (cutflow[cut] == -999) cutflow[cut] = 0;
+  if (passed) cutflow[cut] +=1;
+}
+
+void AnalysisZprime::InitialiseCutflow() 
+{
+  cutflow = std::vector<int>(nCuts, -999);
+  cutNames = std::vector<TString>(nCuts, "no name");
+  cutNames[cutEvent] = "Event";
+  cutNames[cutMET] = "MET";
+  cutNames[cutMtt] = "Mff";
+  cutNames[cutFiducial] = "Fiducial";
+
+
+  h_cutflow = new TH1D("Cutflow", "Cutflow", nCuts, 0, nCuts);
+}
+
+void AnalysisZprime::PrintCutflow() 
+{
+  printf("------\n");
+  for (int cut = 0; cut < nCuts; cut++) {
+    if (cutflow[cut] == -999) continue;
+
+    h_cutflow->SetBinContent(cut+1, cutflow[cut]);
+    h_cutflow->GetXaxis()->SetBinLabel(cut+1, cutNames[cut]);
+
+    printf("%s cut: %i pass\n", cutNames[cut].Data(), cutflow[cut]);
+  }
+  printf("------\n");
 }

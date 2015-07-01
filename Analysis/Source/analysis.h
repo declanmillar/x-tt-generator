@@ -45,12 +45,17 @@ protected:
   TH1D* MttALL();
   TH1D* MttAL();
   double deltaPhi(const double& phi1,const double& phi2) const;
-  vector<std::complex<double> > solveQuadratic(double a, double b, double c);
-  double resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu);
+  vector<std::complex<double> > SolveQuadratic(double a, double b, double c);
+  double ResolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu);
   
-  bool PassCuts() const;
-  bool PassCuts_MET() const;
-  bool PassCuts_Mtt() const;
+  bool PassCuts();
+  bool PassCuts_MET();
+  bool PassCuts_Mtt();
+  bool PassCutsFiducial();
+
+  void InitialiseCutflow();
+  void PrintCutflow();
+  const void UpdateCutflow(int cut, bool passed);
      
 private:
   AnalysisZprime();
@@ -68,6 +73,15 @@ private:
   TString m_outputFileName;
   double m_sigma;
   vector<double> m_cnorm;
+  // int m_cuts = 2;
+  enum m_cuts{
+    cutEvent,
+    cutMtt,
+    cutMET,
+    cuty,
+    cutFiducial,
+    nCuts // keep as last entry
+  };
 
 
   // Input Data
@@ -77,6 +91,11 @@ private:
   
   // OutputFile
   TFile* m_outputFile;
+
+  // cutflow
+  TH1D* h_cutflow;
+  std::vector<int> cutflow;
+  std::vector<TString> cutNames;
   
   // Angular histograms
   TH1D* h_dphi;
@@ -85,7 +104,6 @@ private:
   TH1D* h_CosTheta;
   TH1D* h_CosThetaReco;
   TH1D* h_CosThetaStar;
-
 
   // Rapidity
   TH1D* h_ytt;
@@ -151,6 +169,16 @@ private:
   TH2D* h_dphi_MCTll;
   TH2D* h_dphi_MTblbl;
   TH2D* h_dphi_MCTblbl;
+
+  // kinematics
+  vector<TLorentzVector> pcol;
+  vector<TLorentzVector> p;
+  vector<TLorentzVector> pcolReco;
+  vector<TLorentzVector> pReco;
+  double Mff;
+  vector<double> ycol;
+  vector<double> etacol;
+  vector<TVector2> pTcol;
 
   typedef vector<TString>::const_iterator Itr_s;
 };
