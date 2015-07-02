@@ -52,6 +52,7 @@ protected:
   bool PassCuts_MET();
   bool PassCuts_Mtt();
   bool PassCutsFiducial();
+  bool PassCutsYtt();
 
   void InitialiseCutflow();
   void PrintCutflow();
@@ -78,7 +79,7 @@ private:
     cutEvent,
     cutMtt,
     cutMET,
-    cuty,
+    cutYtt,
     cutFiducial,
     nCuts // keep as last entry
   };
@@ -173,8 +174,10 @@ private:
   // kinematics
   vector<TLorentzVector> pcol;
   vector<TLorentzVector> p;
-  vector<TLorentzVector> pcolReco;
-  vector<TLorentzVector> pReco;
+  vector<TLorentzVector> pcolRecot;
+  vector<TLorentzVector> pRecot;
+  vector<TLorentzVector> pcolRecotb;
+  vector<TLorentzVector> pRecotb;
   double Mff;
   vector<double> ycol;
   vector<double> etacol;
