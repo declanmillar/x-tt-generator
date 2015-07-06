@@ -66,8 +66,8 @@ if os.path.isfile("Models/%s.mdl" % model_name) is False:
 if collider_energy  < 0:
   sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
-if final_state != "ll" and final_state != "tt" and final_state != "bbllnn" and final_state != "bblnqq" and final_state != "bbqqqq":
-  sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn, bblnqq, bbqqqq." % (final_state,usage))
+if final_state != "ll" and final_state != "tt" and final_state != "bbllnn":
+  sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn" % (final_state,usage))
 
 if ncall < 2:
   sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
@@ -203,10 +203,6 @@ elif final_state == "tt":
   final_state_id = 0
 elif final_state == "bbllnn":
   final_state_id = 1
-elif final_state == "bblnqq":
-  final_state_id = 2
-elif final_state == "bbqqqq":
-  final_state_id = 3
 
 # logfile 
 if sys.platform == "darwin":

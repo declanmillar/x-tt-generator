@@ -331,7 +331,34 @@ void KinematicsZprime::SetupOutputFiles()
 {
   m_outputFile = new TFile(m_outputFileName,"RECREATE");
   printf("Processed TTree will be saved to %s.\n", m_outputFileName.Data());
-  TTree *tree = new TTree("T","Processed Z->tt data"); 
+  TTree *tree = new TTree("T","Processed Z->tt data");
+  tree->Branch("e_chargeQ",m_e_Q);
+  tree->Branch("e_E",m_e_E);
+  tree->Branch("e_Px",m_e_Px);
+  tree->Branch("e_Px",m_e_Py);
+  tree->Branch("e_Px",m_e_Pz);
+
+  tree->Branch("nu_E",m_nu_E);
+  tree->Branch("nu_Px",m_nu_Px);
+  tree->Branch("nu_Px",m_nu_Py);
+  tree->Branch("nu_Px",m_nu_Pz);
+
+  tree->Branch("b_Q",m_b_Q);
+  tree->Branch("b_E",m_b_E);
+  tree->Branch("b_Pz",m_b_Py);
+  tree->Branch("b_Py",m_b_Pz);
+  tree->Branch("b_Px",m_b_Px);
+
+  tree->Branch("q_Q",m_q_Q);
+  tree->Branch("q_E",m_q_E);
+  tree->Branch("q_Px",m_q_Px);
+  tree->Branch("q_Pz",m_q_Py);
+  tree->Branch("q_Py",m_q_Pz);
+
+  tree->Branch("MET_E",m_MET_E);
+  tree->Branch("MET_Px",m_MET_Px);
+  tree->Branch("MET_Py",m_MET_Py);
+
 }
 
 void KinematicsZprime::SetupInputFiles()
@@ -368,106 +395,4 @@ void KinematicsZprime::CleanUp()
 {
   delete m_chainNtup;
   delete m_ntup;
-}
-
-double KinematicsZprime::resolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu) 
-{
-
-  // finds the longitudinal neutrino momentum for semi-hadronic decay
-  // assuming all particles are massless
-
-  double PzNu;
-  std::vector<std::complex<double> > root, root2;
-  double a = -999, b = -999, c = -999, k = -999;
-  // double a2 = -999, b2 = -999, c2 = -999;
-
-  // recalculate lepton energy in zero mass approximation
-  double p_l0 = std::sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
-
-  // check this matches the 4-vector energy
-  // printf("p_l.E() = %f\n", p_l.E());
-  // printf("p_l0 = %f\n", p_l0);
-  if ( std::abs(p_l0 - p_l.E() > 0.00001)) printf("p_l0 doesn't match\n");
-
-  // // Alternative calculation from Ruth
-  // double lx = p_l.Px();
-  // double ly = p_l.Py();
-  // double lz = p_l.Pz();
-  // double nx = pT_nu.Px();
-  // double ny = pT_nu.Py();
-  // double nz = 0.;
-
-  // a2 = (4.*lx*lx
-  //    +4.*ly*ly );
-  // b2 = (-4.*m_Wmass*m_Wmass*lz
-  //     -8.*lx*nx*lz
-  //     -8.*ly*ny*lz );
-  // c2  = ( 4.*ly*ly*nx*nx
-  //      + 4.*lz*lz*nx*nx
-  //      + 4.*lx*lx*ny*ny
-  //      + 4.*lz*lz*ny*ny
-  //      - 8.*lx*nx*ly*ny
-  //      - 4.*lx*nx*m_Wmass*m_Wmass
-  //      - 4.*ly*ny*m_Wmass*m_Wmass
-  //      - m_Wmass*m_Wmass*m_Wmass*m_Wmass );
-
-  k = m_Wmass*m_Wmass/2 + p_l.Px()*pT_nu.Px() + p_l.Py()*pT_nu.Py();
-
-  a = p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py();
-
-  b = -2*k*(p_l.Pz());
-
-  c = (pT_nu.Px()*pT_nu.Px() + pT_nu.Py()*pT_nu.Py())*p_l.E()*p_l.E() - k*k;
-
-  // printf("a = %f, %f\n", a, a2);
-  // printf("b = %f, %f\n", b, b2);
-  // printf("c = %f, %f\n", c, c2);
-
-  root = this->solveQuadratic(a, b, c);
-  // root2 = this->solveQuadratic(a2, b2, c2);
-
-  // for (int i = 0; i < 2; i++) cout << "root " << root[i] << ", " << root2[i] << endl;
-
-  // select single solution
-  if (root[0].imag() == 0 and root[1].imag() == 0) {
-    // two real solutions - pick smallest one
-    if (std::abs(root[0].real()) < std::abs(root[1].real())) {
-      // solution 1 < than solution 2
-      PzNu = root[0].real();
-    }
-    else if (std::abs(root[0].real()) > std::abs(root[1].real())) { 
-      // solution 1 > than solution 2
-      PzNu = root[1].real();
-    }
-    else {
-      // solutions are equal pick 1
-      PzNu = root[0].real();
-    }
-  }
-  else {
-    // no real solutions - take the real part of 1
-    PzNu = root[0].real();
-  }
-
-  return PzNu;
-}
-
-std::vector<std::complex<double> > KinematicsZprime::solveQuadratic(double a, double b, double c) 
-{
-    // solves quadratic for both roots 
-    // returns both as complex values in a complex vector x(2)
-
-    std::vector<std::complex<double> > roots;
-    std::complex<double> term1;
-    std::complex<double> term2;
-    std::complex<double> discriminator;
-
-    term1 = -b/(2*a);
-    discriminator = b*b - 4*a*c;
-    term2 = std::sqrt(discriminator)/(2*a);
-
-    roots.push_back(term1 + term2);
-    roots.push_back(term1 - term2);
-    
-    return roots;
 }

@@ -62,6 +62,9 @@ private:
   AnalysisZprime();
   AnalysisZprime(const AnalysisZprime& rhs);  
   void operator=(const AnalysisZprime& rhs);  
+
+  m_bAssignAttempts;
+  m_bAssignSuccesses;
   
   float m_pi;
   float m_GeV;
@@ -73,15 +76,14 @@ private:
   TString m_weightsFileName;
   TString m_outputFileName;
   double m_sigma;
-  vector<double> m_cnorm;
-  // int m_cuts = 2;
-  enum m_cuts{
-    cutEvent,
-    cutMtt,
-    cutMET,
-    cutYtt,
-    cutFiducial,
-    nCuts // keep as last entry
+  vector<double> m_weights;
+  enum m_cutlist{
+    c_Event,
+    c_Mtt,
+    c_MET,
+    c_Ytt,
+    c_Fiducial,
+    m_cuts // keep as last entry
   };
 
 
@@ -95,93 +97,75 @@ private:
 
   // cutflow
   TH1D* h_cutflow;
-  std::vector<int> cutflow;
-  std::vector<TString> cutNames;
-  
-  // Angular histograms
-  TH1D* h_dphi;
-  TH1D* h_costheta5;
-  TH1D* h_ct7ct5; 
-  TH1D* h_CosTheta;
-  TH1D* h_CosThetaReco;
-  TH1D* h_CosThetaStar;
+  std::vector<int> m_cutflow;
+  std::vector<TString> m_cutNames;
 
-  // Rapidity
+  // regualar
+  TH1D* h_Mff;
   TH1D* h_ytt;
-  TH1D* h_yttReco;
+  TH1D* h_Pz_nu;
+  TH1D* h_CosTheta;
+  TH1D* h_CosThetaStar;
+  
+  // reconstruction
+  TH1D* h_Pz_nu_r;
+  TH1D* h_Mtt_r;
+  TH1D* h_CosTheta_r;
+  TH1D* h_CosThetaStar_r;
+  TH1D* h_ytt_r;
 
-  // asymmetry histograms
+  // polarisation weighted
+  TH1D* h_Mff_LL;
+  TH1D* h_Mff_LR;
+  TH1D* h_Mff_RL;
+  TH1D* h_Mff_RR;
+
+  // Spin Asymmetries
+  TH1D* h_ALL;
+  TH1D* h_AL;
+
+  // FB-type histograms
   TH1D* h_AFBstar;
-  TH1D* h_AFBstar1;
-  TH1D* h_AFBstar2;
+  TH1D* h_AFBstarF;
+  TH1D* h_AFBstarB;
 
-  TH1D* h_AFBstarReco;
-  TH1D* h_AFBstarReco1;
-  TH1D* h_AFBstarReco2;
+  TH1D* h_AFBstar_r;
+  TH1D* h_AFBstar_rF;
+  TH1D* h_AFBstar_rB;
 
   TH1D* h_AttC;
-  TH1D* h_AttC1;
-  TH1D* h_AttC2;
+  TH1D* h_AttCF;
+  TH1D* h_AttCB;
 
   TH1D* h_AllC;  
   TH1D* h_AllCF;
   TH1D* h_AllCB;
 
-  TH1D* h_AL;
+  TH1D* h_AlL;
   TH1D* h_AlLF;
   TH1D* h_AlLB;
 
-  TH1D* h_ALL;
-  TH1D* h_ALLF;
-  TH1D* h_ALLB;
-
-  // neutrino resolution
-  TH1D* h_PzNu;
-  TH1D* h_PzNuReco;
-  TH1D* h_Mtt;
-  TH1D* h_MttReco;
-  TH1D* h_CosThetaStarReco;
-
-  // polarisation weighted
-  TH1D* h_MttLL;
-  TH1D* h_MttLR;
-  TH1D* h_MttRL;
-  TH1D* h_MttRR;
-
-  // transverse variables 
-  TH1D* h_MET;
-  TH1D* h_HT;
-  TH1D* h_Mbbll;
-  TH1D* h_mll;
-  TH1D* h_ETbbll;
-  TH1D* h_KTbbll;
-  TH1D* h_MTll;
-  TH1D* h_MCTll;
-  TH1D* h_MTblbl;
-  TH1D* h_MCTblbl;
-
-  // 2d Histograms
-  TH2D* h_dphi_HT;
-  TH2D* h_dphi_Mbbll;
-  TH2D* h_dphi_mll;
-  TH2D* h_dphi_ETbbll;
-  TH2D* h_dphi_KTbbll;
-  TH2D* h_dphi_MTll;
-  TH2D* h_dphi_MCTll;
-  TH2D* h_dphi_MTblbl;
-  TH2D* h_dphi_MCTblbl;
-
   // kinematics
-  vector<TLorentzVector> pcol;
   vector<TLorentzVector> p;
-  vector<TLorentzVector> pcolRecot;
-  vector<TLorentzVector> pRecot;
-  vector<TLorentzVector> pcolRecotb;
-  vector<TLorentzVector> pRecotb;
-  double Mff;
-  vector<double> ycol;
-  vector<double> etacol;
-  vector<TVector2> pTcol;
+  vector<TLorentzVector> pcm;
+  vector<TLorentzVector> p_r1;
+  vector<TLorentzVector> p_r2;
+  vector<TLorentzVector> pcm_r1;
+  vector<TLorentzVector> pcm_r2;
+
+  vector<TLorentzVector> P;
+  vector<TLorentzVector> Pcm;
+  vector<TLorentzVector> P_r1;
+  vector<TLorentzVector> P_r2;
+  vector<TLorentzVector> Pcm_r1;
+  vector<TLorentzVector> Pcm_r2;
+
+  vector<TLorentzVector> p_t;
+  vector<TLorentzVector> p_tb;
+  vector<TLorentzVector> p_t_r1;
+  vector<TLorentzVector> p_tb_r1;
+  vector<TLorentzVector> p_t_r2;
+  vector<TLorentzVector> p_tb_r2;
 
   typedef vector<TString>::const_iterator Itr_s;
 };

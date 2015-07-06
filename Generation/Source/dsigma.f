@@ -1021,48 +1021,12 @@ function dsigma(x,wgt)
           end if
 
           fffxn = fffxn/real(ixmax)/real(jxmax)/real(i5max)/real(i7max)
+
+          ! binning
+          hist = fffxn*wgt
           
           call debug("...complete.")
 
-          call debug("Writing final particle collider frame momenta to Ntuple...")
-          if (final_state == -1) then
-            call rootaddparticle(11,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-11,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
-          end if
-
-          if (final_state == 0) then
-            call rootaddparticle(6,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-6,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
-          end if
-
-          if (final_state == 1) then
-            call rootaddparticle(5,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-5,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
-            call rootaddparticle(-11,qcol(1,5),qcol(2,5),qcol(3,5),qcol(4,5))
-            call rootaddparticle(12,qcol(1,6),qcol(2,6),qcol(3,6),qcol(4,6))
-            call rootaddparticle(11,qcol(1,7),qcol(2,7),qcol(3,7),qcol(4,7))
-            call rootaddparticle(-12,qcol(1,8),qcol(2,8),qcol(3,8),qcol(4,8))
-          end if
-
-          if (final_state == 2) then
-            call rootaddparticle(5,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-5,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
-            call rootaddparticle(-11,qcol(1,5),qcol(2,5),qcol(3,5),qcol(4,5))
-            call rootaddparticle(12,qcol(1,6),qcol(2,6),qcol(3,6),qcol(4,6))
-            call rootaddparticle(1,qcol(1,7),qcol(2,7),qcol(3,7),qcol(4,7))
-            call rootaddparticle(-2,qcol(1,8),qcol(2,8),qcol(3,8),qcol(4,8))
-          end if
-
-          if (final_state == 3) then
-            call rootaddparticle(5,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
-            call rootaddparticle(-5,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
-            call rootaddparticle(-1,qcol(1,5),qcol(2,5),qcol(3,5),qcol(4,5))
-            call rootaddparticle(2,qcol(1,6),qcol(2,6),qcol(3,6),qcol(4,6))
-            call rootaddparticle(1,qcol(1,7),qcol(2,7),qcol(3,7),qcol(4,7))
-            call rootaddparticle(-2,qcol(1,8),qcol(2,8),qcol(3,8),qcol(4,8))
-          end if
-          call debug("...complete.")
-             
           if (final_state <= 0) then
             call debug("Computing polarised event weightings...")
             do lam3 = -1, +1, 2
@@ -1079,13 +1043,26 @@ function dsigma(x,wgt)
             call debug("...complete.")
           end if
 
+          call debug("Writing final particle collider frame momenta to Ntuple...")
+          if (final_state == -1) then
+            call rootaddparticle(11,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
+            call rootaddparticle(-11,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
+          else if (final_state == 0) then
+            call rootaddparticle(6,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
+            call rootaddparticle(-6,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
+          else if (final_state == 1) then
+            call rootaddparticle(5,qcol(1,3),qcol(2,3),qcol(3,3),qcol(4,3))
+            call rootaddparticle(-5,qcol(1,4),qcol(2,4),qcol(3,4),qcol(4,4))
+            call rootaddparticle(-11,qcol(1,5),qcol(2,5),qcol(3,5),qcol(4,5))
+            call rootaddparticle(12,qcol(1,6),qcol(2,6),qcol(3,6),qcol(4,6))
+            call rootaddparticle(11,qcol(1,7),qcol(2,7),qcol(3,7),qcol(4,7))
+            call rootaddparticle(-12,qcol(1,8),qcol(2,8),qcol(3,8),qcol(4,8))
+          end if
+             
           call rootadddouble(weightLL, "weightLL")
           call rootadddouble(weightLR, "weightLR")
           call rootadddouble(weightRL, "weightRL")
           call rootadddouble(weightRR, "weightRR")
-
-          ! binning
-          hist = fffxn*wgt
           
           ! convert results to different tt classifications
           call rootadddouble(hist*fac_ee,"weight_ee")
@@ -1094,6 +1071,8 @@ function dsigma(x,wgt)
           call rootadddouble(hist*fac_qq,"weight_qq")
           call rootaddint(it,"iteration")
           call rootaddevent(hist)
+
+          call debug("...complete.")
 
           ! stats
           npoints = npoints + 1

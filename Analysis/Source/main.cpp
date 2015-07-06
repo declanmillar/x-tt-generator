@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   TString channel2("bbllnn"); 
   TString model2("GSM-SM");
   TString options2("_xc_");
-  TString points2("5x5000000");
+  TString points2("5x2000000");
   TString filename2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
   TString inputFilename2(ntupleDirectory + "/" + channel2 + "/" + filename2 + ".root");
   TString weightFilename2(weightsDirectory + "/" + channel + "/" + filename2 + ".txt");
