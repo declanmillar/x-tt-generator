@@ -58,7 +58,6 @@ int main(int argc, char* argv[])
   // AnalysisZprime analysis3(channel3, model3, inputFilename3, outputFilename3);
   // AnalysisZprime analysis4(channel4, model4, inputFilename4, outputFilename4);
 
-  bool overlayTransverse = false;
 
   TApplication* RootApp = new TApplication("RootApp",&argc,argv);
 

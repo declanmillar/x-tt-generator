@@ -5,6 +5,7 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   m_GeV(1000.0),
   m_intLumi(0),//(300000.0),
   m_Wmass(80.23),
+  m_tmass(175.0),
   m_channel(channel),
   m_model(model),
   m_inputFileName(inputFileName),
@@ -20,9 +21,9 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   this->PostLoop();
 }
 
-void AnalysisZprime::EachEvent(TString l_Q)
+void AnalysisZprime::EachEvent()
 {
-  UpdateCutflow(cutEvent, true);
+  UpdateCutflow(c_Event, true);
 
   p = vector<TLorentzVector>(6);
   for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
@@ -46,11 +47,11 @@ void AnalysisZprime::EachEvent(TString l_Q)
 
   if (m_channel == "bbllnn") {
     // resolve longitudinal neutrino momentum in the semihadronic case
-    this->Resolvebbnu(p,1);
-    this->Resolvebbnu(p,1);
+    p_r1 = this->Resolvebbnu(p,1);
+    p_r2 = this->Resolvebbnu(p,2);
 
     
-    // reconstructed final particle parton CoM variables
+    // _rnstructed final particle parton CoM variables
     TVector3 V_r1 = -1*P_r1.BoostVector();
     TVector3 V_r2 = -1*P_r2.BoostVector();
     for (int i = 0; i < p.size(); i++) {
@@ -102,31 +103,31 @@ void AnalysisZprime::EachEvent(TString l_Q)
     weight = weight*m_sigma/m_weights[it-1];
 
     // convert to TeV
-    Mff = P.M()/1000;
-    Mtt_r1 = P_r1.M()/1000;
-    Mtt_r2 = P_r2,M()/1000;
+    double Mff = P.M()/1000;
+    double Mtt_r1 = P_r1.M()/1000;
+    double Mtt_r2 = P_r2.M()/1000;
 
     // fill histograms (assumes fixed bin width!)
-    h_Mff->Fill(Mff, weight/h_Mtt->GetXaxis()->GetBinWidth(1));
+    h_Mff->Fill(Mff, weight/h_Mff->GetXaxis()->GetBinWidth(1));
     h_ytt->Fill(ytt, weight/h_ytt->GetXaxis()->GetBinWidth(1));
     h_CosTheta->Fill(CosTheta, weight/h_CosTheta->GetXaxis()->GetBinWidth(1));
     h_CosThetaStar->Fill(CosThetaStar, weight/h_CosThetaStar->GetXaxis()->GetBinWidth(1));
 
     // asymmetries
     if (CosThetaStar > 0) {
-      h_AFBstar1->Fill(Mff, weight/h_AFBstar1->GetXaxis()->GetBinWidth(1));
+      h_AFBstarF->Fill(Mff, weight/h_AFBstarF->GetXaxis()->GetBinWidth(1));
     }
 
     if (CosThetaStar < 0) {
-      h_AFBstar2->Fill(Mff, weight/h_AFBstar2->GetXaxis()->GetBinWidth(1));
+      h_AFBstarB->Fill(Mff, weight/h_AFBstarB->GetXaxis()->GetBinWidth(1));
     }
 
-    if (deltaYcol > 0) {
-      h_AttC1->Fill(Mff, weight/h_AttC1->GetXaxis()->GetBinWidth(1));
+    if (dy > 0) {
+      h_AttCF->Fill(Mff, weight/h_AttCF->GetXaxis()->GetBinWidth(1));
     }
 
-    if (deltaYcol < 0) {
-      h_AttC2->Fill(Mff, weight/h_AttC2->GetXaxis()->GetBinWidth(1));
+    if (dy < 0) {
+      h_AttCB->Fill(Mff, weight/h_AttCB->GetXaxis()->GetBinWidth(1));
     }
 
     if (m_channel == "tt") {
@@ -136,35 +137,35 @@ void AnalysisZprime::EachEvent(TString l_Q)
       h_MttRR->Fill(Mff, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "bbllnn") {
-      h_Pz_nu->Fill(pcol[3].Pz(), weight/h_PzNu->GetXaxis()->GetBinWidth(1));
+      h_Pz_nu->Fill(p[3].Pz(), weight/h_Pz_nu->GetXaxis()->GetBinWidth(1));
 
       h_ytt_r->Fill(ytt_r1, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
       h_ytt_r->Fill(ytt_r2, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
 
-      h_CosTheta_r->Fill(CosTheta_r, weight/2/h_CosTheta_r->GetXaxis()->GetBinWidth(1));
-      h_CosTheta_r->Fill(CosTheta_r, weight/2/h_CosTheta_r->GetXaxis()->GetBinWidth(1));
+      h_CosTheta_r->Fill(CosTheta_r1, weight/2/h_CosTheta_r->GetXaxis()->GetBinWidth(1));
+      h_CosTheta_r->Fill(CosTheta_r2, weight/2/h_CosTheta_r->GetXaxis()->GetBinWidth(1));
 
       h_CosThetaStar_r->Fill(CosThetaStar_r1, weight/2/h_CosThetaStar_r->GetXaxis()->GetBinWidth(1));
       h_CosThetaStar_r->Fill(CosThetaStar_r2, weight/2/h_CosThetaStar_r->GetXaxis()->GetBinWidth(1));
 
-      h_Pz_nu_r->Fill(p_r1[3] weight/2/h_PzNu_r->GetXaxis()->GetBinWidth(1));
-      h_Pz_nu_r->Fill(p_r2[5], weight/2/h_PzNu_r->GetXaxis()->GetBinWidth(1));
+      h_Pz_nu_r->Fill(p_r1[3].Pz(), weight/2/h_Pz_nu_r->GetXaxis()->GetBinWidth(1));
+      h_Pz_nu_r->Fill(p_r2[5].Pz(), weight/2/h_Pz_nu_r->GetXaxis()->GetBinWidth(1));
 
       h_Mtt_r->Fill(Mtt_r1, weight/2/h_Mtt_r->GetXaxis()->GetBinWidth(1));
       h_Mtt_r->Fill(Mtt_r2, weight/2/h_Mtt_r->GetXaxis()->GetBinWidth(1));
 
       if (CosThetaStar_r1 > 0) {
-        h_AFBstarReco1->Fill(Mtt_r1, weight/2/h_AFBstarReco1->GetXaxis()->GetBinWidth(1));
+        h_AFBstar_rF->Fill(Mtt_r1, weight/2/h_AFBstar_rF->GetXaxis()->GetBinWidth(1));
       }
       if (CosThetaStar_r2 > 0) {
-        h_AFBstarReco1->Fill(Mtt_r2, weight/2/h_AFBstarReco1->GetXaxis()->GetBinWidth(1));
+        h_AFBstar_rF->Fill(Mtt_r2, weight/2/h_AFBstar_rF->GetXaxis()->GetBinWidth(1));
       }
 
       if (CosThetaStar_r1 < 0) {
-        h_AFBstarReco2->Fill(Mtt_r1, weight/2/h_AFBstarReco2->GetXaxis()->GetBinWidth(1));
+        h_AFBstar_rB->Fill(Mtt_r1, weight/2/h_AFBstar_rB->GetXaxis()->GetBinWidth(1));
       }
       if (CosThetaStar_r2 < 0) {
-        h_AFBstarReco2->Fill(Mtt_r2, weight/2/h_AFBstarReco2->GetXaxis()->GetBinWidth(1));
+        h_AFBstar_rB->Fill(Mtt_r2, weight/2/h_AFBstar_rB->GetXaxis()->GetBinWidth(1));
       }
     }
   }
@@ -173,7 +174,7 @@ void AnalysisZprime::EachEvent(TString l_Q)
 void AnalysisZprime::PostLoop()
 {
   printf("------\n");
-  double sigma = h_Mtt->Integral("width");
+  double sigma = h_Mff->Integral("width");
   if (std::abs(sigma - m_sigma) > 10e-11) {
     printf("Cross section from generation and analysis stage do not match!\n");
     printf("sigma_generation = %f\n", m_sigma);
@@ -181,22 +182,21 @@ void AnalysisZprime::PostLoop()
   }
   else printf("sigma = %f [pb]\n", sigma);
   if (m_channel == "tt") {
-    h_ALL = this->MttALL();
-    h_AL = this->MttAL();
+    h_ALL = this->PlotALL();
+    h_AL = this->PlotAL();
     this->TotalSpinAsymmetries();
   }
   printf("------\n");
 
-  h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFBstar1, h_AFBstar2);
-  h_AttC = this->Asymmetry("AttC", "A_{C}", h_AttC1, h_AttC2);
+  h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFBstarF, h_AFBstarB);
+  h_AttC = this->Asymmetry("AttC", "A_{C}", h_AttCF, h_AttCB);
 
-  printf("b-assigniment success rate: %f\n", m_bAssignSuccesses/m_bAssignAttempts);
+  printf("b-assigniment success rate: %f\n", float(m_bAssignSuccesses)/float(m_bAssignAttempts));
 
   if (m_channel == "bbllnn") {
-    this->ALL2to6();
     h_AlL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
     h_AllC = this->Asymmetry("AllC", "A^{ll}_{C}", h_AllCF, h_AllCB);
-    h_AFBstarReco = this->Asymmetry("AFBstarNuReco", "A_{FB}^* (#nu reconstructed)", h_AFBstarReco1, h_AFBstarReco2);
+    h_AFBstar_r = this->Asymmetry("AFBstarNu_r", "A_{FB}^* (#nu _rnstructed)", h_AFBstar_rF, h_AFBstar_rB);
   }
   this->MakeGraphs();
   this->PrintCutflow();
@@ -236,7 +236,7 @@ TH1D* AnalysisZprime::PlotAL()
 
 void AnalysisZprime::TotalSpinAsymmetries()
 {
-  double sigma = h_Mtt->Integral("width");
+  double sigma = h_Mff->Integral("width");
   double sigmaLL = h_MttLL->Integral("width");
   double sigmaLR = h_MttLR->Integral("width");
   double sigmaRL = h_MttRL->Integral("width");
@@ -300,10 +300,10 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
 void AnalysisZprime::CreateHistograms() 
 {
   h_Mff = new TH1D("Mff", "M_{tt}", 1300, 0.0, 13.0);
-  h_AFBstar1 = new TH1D("AFstar", "AFstar", 130, 0.0, 13.0);
-  h_AFBstar2 = new TH1D("ABstar", "ABstar", 130, 0.0, 13.0);
-  h_AttC1 = new TH1D("AttC1", "AttC1", 130, 0.0, 13.0);
-  h_AttC2 = new TH1D("AttC2", "AttC2", 130, 0.0, 13.0);
+  h_AFBstarF = new TH1D("AFstar", "AFstar", 130, 0.0, 13.0);
+  h_AFBstarB = new TH1D("ABstar", "ABstar", 130, 0.0, 13.0);
+  h_AttCF = new TH1D("AttC1", "AttC1", 130, 0.0, 13.0);
+  h_AttCB = new TH1D("AttC2", "AttC2", 130, 0.0, 13.0);
   h_ytt = new TH1D("ytt", "ytt", 50, -2.5, 2.5);
   h_CosTheta = new TH1D("CosTheta", "cos#theta", 50, -1.0, 1.0);
   h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^*", 50, -1.0, 1.0);
@@ -317,18 +317,18 @@ void AnalysisZprime::CreateHistograms()
   }
 
   if (m_channel == "bbllnn") {
-    h_Pz_nu = new TH1D("PzNu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
+    h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
 
-    h_ytt_r = new TH1D("yttReco", "y_{tt}^{reco}", 100, -2.5, 2.5);
-    h_Pz_nu_r = new TH1D("PzNuReco", "p_{z}^{#nu} (reconstructed)", 100, -1000.0, 1000.0);
-    h_Mtt_r = new TH1D("MttReco", "M^{reco}_{tt}", 100, 0.0, 13.0);
+    h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 100, -2.5, 2.5);
+    h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (_rnstructed)", 100, -1000.0, 1000.0);
+    h_Mtt_r = new TH1D("Mtt_r", "M^{_r}_{tt}", 100, 0.0, 13.0);
 
     h_AlLF = new TH1D("AlLF", "AlLF", 20, 0.0, 13.0);
     h_AlLB = new TH1D("AlLB", "AlLB", 20, 0.0, 13.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13.0);
     h_AllCB = new TH1D("AllCB", "AllCB", 50, 0.0, 13.0);
-    h_AFBstar_rF = new TH1D("AFBstarNuReco1", "AFBstarNuReco1", 65, 0.0, 13.0);
-    h_AFBstar_rB = new TH1D("AFBstarNuReco2", "AFBstarNuReco2", 65, 0.0, 13.0);
+    h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 65, 0.0, 13.0);
+    h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 65, 0.0, 13.0);
   }
 }
 
@@ -343,8 +343,8 @@ void AnalysisZprime::MakeGraphs()
   // TCanvas *c_Mtt   = new TCanvas(h_Mtt->GetName(), h_Mtt->GetTitle());
   // c_Mtt->cd(); 
   // h_Mtt->Draw("hist"); 
-  h_Mtt->GetXaxis()->SetTitle("M_{tt} [TeV]");
-  h_Mtt->GetYaxis()->SetTitle(numBase + "M_{tt}" + " [" + units +"/TeV]");
+  h_Mff->GetXaxis()->SetTitle("M_{tt} [TeV]");
+  h_Mff->GetYaxis()->SetTitle(numBase + "M_{tt}" + " [" + units +"/TeV]");
 
   // TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
   // c_AFBstar->cd(); 
@@ -353,14 +353,14 @@ void AnalysisZprime::MakeGraphs()
 
   if (m_channel == "bbllnn") {
 
-    h_PzNu->GetYaxis()->SetTitle(numBase + h_PzNu->GetTitle() + " [" + units +"/GeV]");
-    h_PzNu->GetXaxis()->SetTitle(h_PzNu->GetTitle());
+    h_Pz_nu->GetYaxis()->SetTitle(numBase + h_Pz_nu->GetTitle() + " [" + units +"/GeV]");
+    h_Pz_nu->GetXaxis()->SetTitle(h_Pz_nu->GetTitle());
 
-    h_PzNuReco->GetYaxis()->SetTitle(numBase + h_PzNuReco->GetTitle() + " [" + units +"/GeV]");
-    h_PzNuReco->GetXaxis()->SetTitle(h_PzNuReco->GetTitle());
+    h_Pz_nu_r->GetYaxis()->SetTitle(numBase + h_Pz_nu_r->GetTitle() + " [" + units +"/GeV]");
+    h_Pz_nu_r->GetXaxis()->SetTitle(h_Pz_nu_r->GetTitle());
 
-    h_MttReco->GetYaxis()->SetTitle(numBase + h_MttReco->GetTitle() + " [" + units +"/GeV]");
-    h_MttReco->GetXaxis()->SetTitle(h_MttReco->GetTitle());
+    h_Mtt_r->GetYaxis()->SetTitle(numBase + h_Mtt_r->GetTitle() + " [" + units +"/GeV]");
+    h_Mtt_r->GetXaxis()->SetTitle(h_Mtt_r->GetTitle());
 
     h_AllC->GetYaxis()->SetTitle(h_AllC->GetTitle());
     h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
@@ -397,7 +397,7 @@ void AnalysisZprime::WriteHistograms()
   // Save histograms
 
   if (m_channel == "tt" or "bbllnn" or "ll" ) {
-    h_Mtt->Write();
+    h_Mff->Write();
   }
 
   if (m_channel == "tt" || m_channel == "bbllnn") {
@@ -418,19 +418,16 @@ void AnalysisZprime::WriteHistograms()
   }
 
   if (m_channel == "bbllnn") {
-    h_dphi->Write();
     h_AL->Write();
     h_ALL->Write();
     h_AllC->Write();
-    h_AFBstarReco->Write();
-    h_PzNu->Write();
-    h_PzNuReco->Write();
-    h_MttReco->Write();
-    h_costheta5->Write();
-    h_ct7ct5->Write();
-    h_yttReco->Write();
-    h_CosThetaReco->Write();
-    h_CosThetaStarReco->Write();
+    h_AFBstar_r->Write();
+    h_Pz_nu->Write();
+    h_Pz_nu_r->Write();
+    h_Mtt_r->Write();
+    h_ytt_r->Write();
+    h_CosTheta_r->Write();
+    h_CosThetaStar_r->Write();
   }
   h_cutflow->Write();
   printf("...complete\n");
@@ -481,7 +478,7 @@ bool AnalysisZprime::PassCutsMtt()
 
 bool AnalysisZprime::PassCutsFiducial()
 { 
-  for (int i = 0; i < p.size[i]; i++) {
+  for (int i = 0; i < p.size(); i++) {
     bool outsideCrack = p[i].PseudoRapidity() <= 1.37 || p[i].PseudoRapidity() >= 1.52;
     bool central      = p[i].PseudoRapidity() <= 2.47;
     bool passesFiducialCuts = outsideCrack && central;
@@ -603,7 +600,7 @@ void AnalysisZprime::CleanUp()
 //   // finds the longitudinal neutrino momentum for semi-hadronic decay
 //   // assuming all particles are massless
 
-//   double PzNu;
+//   double Pz_nu;
 //   std::vector<std::complex<double> > root, root2;
 //   double a = -999, b = -999, c = -999, k = -999;
 //   // double a2 = -999, b2 = -999, c2 = -999;
@@ -629,24 +626,24 @@ void AnalysisZprime::CleanUp()
 //     // two real solutions - pick smallest one
 //     if (std::abs(root[0].real()) < std::abs(root[1].real())) {
 //       // solution 1 < than solution 2
-//       PzNu = root[0].real();
+//       Pz_nu = root[0].real();
 //     }
 //     else if (std::abs(root[0].real()) > std::abs(root[1].real())) { 
 //       // solution 1 > than solution 2
-//       PzNu = root[1].real();
+//       Pz_nu = root[1].real();
 //     }
 //     else {
 //       // solutions are equal pick 1
-//       PzNu = root[0].real();
+//       Pz_nu = root[0].real();
 //     }
 //   }
 //   else {
 //     // no real solutions - take the real part of 1
-//     PzNu = root[0].real();
+//     Pz_nu = root[0].real();
 //   }
 // }
 
-std::vector<TLorentzVector> KinematicsZprime::resolvebbnu(std::vector<TLorentzVector> p, int l_Q) 
+std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVector> p, int l_Q) 
 {
 
   // finds the longitudinal neutrino momentum and matches b-quarks to the leptonially or hadronically decayin top quark
@@ -656,33 +653,35 @@ std::vector<TLorentzVector> KinematicsZprime::resolvebbnu(std::vector<TLorentzVe
   TLorentzVector p_nu;
   std::vector<TLorentzVector> p_b(2);
   std::vector<TLorentzVector> p_q(2);
+  std::vector<TLorentzVector> p_r(p.size());
 
   p_b[0] = p[0];
-  p_b[1] = p[1]
-  if (l_Q = 1) {
+  p_b[1] = p[1];
+  if (l_Q == 1) {
     p_l = p[2];
     p_nu = p[3];
     p_q[0] = p[4];
     p_q[1]= p[5];
   }
-  else if )l_Q = 1) {
+  else if (l_Q == 2) {
     p_l = p[4];
     p_nu = p[5];
     p_q[0] = p[2];
     p_q[1]= p[3];
   }
   else {
-    printf("Invalid charge.\n");
-    return 0;
+    printf("Error: Invalid charge.\n");
   }
 
-  double PzNu;
   double X2, X2min;
+
+  TLorentzVector p_nu_r;
 
   double px_nu = p_nu.Px();
   double py_nu = p_nu.Py();
-  double pz_nu = -999
-  std::vector<std::complex<double>> root;
+  double pz_nu = -999;
+  std::vector<std::complex<double> > root;
+  std::vector<double> rroot(root.size());
   double a = -999, b = -999, c = -999, k = -999;
 
   // recalculate lepton energy in zero mass approximation
@@ -690,49 +689,76 @@ std::vector<TLorentzVector> KinematicsZprime::resolvebbnu(std::vector<TLorentzVe
 
   if ( std::abs(p_l0 - p_l.E() > 0.00001)) printf("p_l0 doesn't match\n");
 
-  k = m_Wmass*m_Wmass/2 + p_l.Px()*pT_nu.Px() + p_l.Py()*pT_nu.Py();
+  k = m_Wmass*m_Wmass/2 + p_l.Px()*p_nu.Px() + p_l.Py()*p_nu.Py();
 
   a = p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py();
 
   b = -2*k*(p_l.Pz());
 
-  c = (pT_nu.Px()*pT_nu.Px() + pT_nu.Py()*pT_nu.Py())*p_l.E()*p_l.E() - k*k;
+  c = (p_nu.Px()*p_nu.Px() + p_nu.Py()*p_nu.Py())*p_l.E()*p_l.E() - k*k;
 
-  root = this->solveQuadratic(a, b, c);
+  root = this->SolveQuadratic(a, b, c);
 
   // select single solution
 
+  double dh = -999, dl = -999, E_nu = -999, mblv = -999, mjjb = -999;
+
+  int imin = -999, jmin = -999, it = 0;
+
   if (root[0].imag() == 0 and root[1].imag() == 0) {
-    for (int j = 0; j < 2; i++) {
+    for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 2; j++) {
-        E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + root[i]*root[i])
-        p_nu.SetPxPyPzE(px_nu, py_nu, root[i], E_nu);
-        mblv = (p_b[std::abs(j-1)] + p_l + p_nu).M();
-        mjjb = (p_b[std::abs(j)] + p_q[0] + p_q[1]).M();
-        dh = mjjb - tmass;
-        dl = mblv - tmass;
+        rroot[i] = root[i].real();
+        E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + rroot[i]*rroot[i]);
+        p_nu_r.SetPxPyPzE(px_nu, py_nu, rroot[i], E_nu);
+        mblv = (p_b[std::abs(j)] + p_l + p_nu).M();
+        mjjb = (p_b[std::abs(j-1)] + p_q[0] + p_q[1]).M();
+        dh = mjjb - m_tmass;
+        dl = mblv - m_tmass;
         X2 = dh*dh + dl*dl;
-        if (it == 0){
+        if (it == 0) {
           X2min = X2;
           imin = i;
           jmin = j;
-        if (X2 < X2min){
+        }
+        if (X2 < X2min) {
           X2min = X2;
           imin = i;
           jmin = j;
-        } 
+        }
+        it++;
       }
-    }
-    
+    }  
+  }  
   else {
     // no real solutions - take the real part of 1
-    printf("NO REAL SOLUTIONS!\n");;
+    printf("NO REAL SOLUTIONS!\n");
   }
-  pz_nu = root[imin];
-  pz_nu_truth = p_nu.Pz();
-  bool RecoMatchesTruth(jmin = 0);
-  if (RecoMatchesTruth) printf("b-assignment: correct. \n");
+  pz_nu = rroot[imin];
+  double pz_nu_truth = p_nu.Pz();
+  bool recoMatchesTruth(jmin == l_Q-1);
+  E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + pz_nu*pz_nu);
+  p_nu_r.SetPxPyPzE(px_nu, py_nu, pz_nu, E_nu);
+  if (recoMatchesTruth) printf("b-assignment: correct. \n");
   else printf("b-assignment: incorrect. \n");
+  printf("True pz_nu = %f, Rseolved pz_nu = %f\n", pz_nu_truth, pz_nu);
+  if (l_Q == 1){
+    p_r[0] = p_b[jmin];
+    p_r[1] = p_b[std::abs(jmin-1)];
+    p_r[2] = p[2];
+    p_r[3] = p_nu_r;
+    p_r[4] = p[4];
+    p_r[5] = p[5];
+  }
+  else if (l_Q == 2) {
+    p_r[0] = p_b[std::abs(jmin-1)];
+    p_r[1] = p_b[jmin];
+    p_r[2] = p[2];
+    p_r[3] = p[3];
+    p_r[4] = p[4];
+    p_r[5] = p_nu_r;
+  }
+  return p_r;
 
 }
 
@@ -758,18 +784,18 @@ std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, doub
 
 const void AnalysisZprime::UpdateCutflow(int cut, bool passed)
 {
-  if (cutflow[cut] == -999) cutflow[cut] = 0;
-  if (passed) cutflow[cut] +=1;
+  if (m_cutflow[cut] == -999) m_cutflow[cut] = 0;
+  if (passed) m_cutflow[cut] +=1;
 }
 
 void AnalysisZprime::InitialiseCutflow() 
 {
-  cutflow = std::vector<int>(m_cuts, -999);
-  cutNames = std::vector<TString>(m_cuts, "no name");
-  cutNames[c_Event] = "Event";
-  cutNames[c_MET] = "MET";
-  cutNames[c_Mtt] = "Mff";
-  cutNames[c_Fiducial] = "Fiducial";
+  m_cutflow = std::vector<int>(m_cuts, -999);
+  m_cutNames = std::vector<TString>(m_cuts, "no name");
+  m_cutNames[c_Event] = "Event";
+  m_cutNames[c_MET] = "MET";
+  m_cutNames[c_Mtt] = "Mff";
+  m_cutNames[c_Fiducial] = "Fiducial";
 
 
   h_cutflow = new TH1D("Cutflow", "Cutflow", m_cuts, 0, m_cuts);
@@ -779,12 +805,12 @@ void AnalysisZprime::PrintCutflow()
 {
   printf("------\n");
   for (int cut = 0; cut < m_cuts; cut++) {
-    if (cutflow[cut] == -999) continue;
+    if (m_cutflow[cut] == -999) continue;
 
-    h_cutflow->SetBinContent(cut+1, cutflow[cut]);
-    h_cutflow->GetXaxis()->SetBinLabel(cut+1, cutNames[cut]);
+    h_cutflow->SetBinContent(cut+1, m_cutflow[cut]);
+    h_cutflow->GetXaxis()->SetBinLabel(cut+1, m_cutNames[cut]);
 
-    printf("%s cut: %i pass\n", cutNames[cut].Data(), cutflow[cut]);
+    printf("%s cut: %i pass\n", m_cutNames[cut].Data(), m_cutflow[cut]);
   }
   printf("------\n");
 }

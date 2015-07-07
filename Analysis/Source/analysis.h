@@ -42,34 +42,37 @@ protected:
   TH1D* Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B);
   void AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B);
   void ALL2to6();
-  TH1D* MttALL();
-  TH1D* MttAL();
+  TH1D* PlotALL();
+  TH1D* PlotAL();
   double deltaPhi(const double& phi1,const double& phi2) const;
   vector<std::complex<double> > SolveQuadratic(double a, double b, double c);
   double ResolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu);
   
   bool PassCuts();
-  bool PassCuts_MET();
-  bool PassCuts_Mtt();
+  bool PassCutsMET();
+  bool PassCutsMtt();
   bool PassCutsFiducial();
   bool PassCutsYtt();
 
   void InitialiseCutflow();
   void PrintCutflow();
   const void UpdateCutflow(int cut, bool passed);
+
+  std::vector<TLorentzVector> Resolvebbnu(std::vector<TLorentzVector> p, int l_Q);
      
 private:
   AnalysisZprime();
   AnalysisZprime(const AnalysisZprime& rhs);  
   void operator=(const AnalysisZprime& rhs);  
 
-  m_bAssignAttempts;
-  m_bAssignSuccesses;
+  int m_bAssignAttempts;
+  int m_bAssignSuccesses;
   
   float m_pi;
   float m_GeV;
   double m_intLumi;
   double m_Wmass;
+  double m_tmass;
   TString m_channel;  
   TString m_model;
   TString m_inputFileName;
@@ -115,10 +118,10 @@ private:
   TH1D* h_ytt_r;
 
   // polarisation weighted
-  TH1D* h_Mff_LL;
-  TH1D* h_Mff_LR;
-  TH1D* h_Mff_RL;
-  TH1D* h_Mff_RR;
+  TH1D* h_MttLL;
+  TH1D* h_MttLR;
+  TH1D* h_MttRL;
+  TH1D* h_MttRR;
 
   // Spin Asymmetries
   TH1D* h_ALL;
@@ -153,19 +156,19 @@ private:
   vector<TLorentzVector> pcm_r1;
   vector<TLorentzVector> pcm_r2;
 
-  vector<TLorentzVector> P;
-  vector<TLorentzVector> Pcm;
-  vector<TLorentzVector> P_r1;
-  vector<TLorentzVector> P_r2;
-  vector<TLorentzVector> Pcm_r1;
-  vector<TLorentzVector> Pcm_r2;
+  TLorentzVector P;
+  TLorentzVector Pcm;
+  TLorentzVector P_r1;
+  TLorentzVector P_r2;
+  TLorentzVector Pcm_r1;
+  TLorentzVector Pcm_r2;
 
-  vector<TLorentzVector> p_t;
-  vector<TLorentzVector> p_tb;
-  vector<TLorentzVector> p_t_r1;
-  vector<TLorentzVector> p_tb_r1;
-  vector<TLorentzVector> p_t_r2;
-  vector<TLorentzVector> p_tb_r2;
+  TLorentzVector p_t;
+  TLorentzVector p_tb;
+  TLorentzVector p_t_r1;
+  TLorentzVector p_tb_r1;
+  TLorentzVector p_t_r2;
+  TLorentzVector p_tb_r2;
 
   typedef vector<TString>::const_iterator Itr_s;
 };
