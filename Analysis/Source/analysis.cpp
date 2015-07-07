@@ -25,20 +25,22 @@ void AnalysisZprime::EachEvent()
 {
   UpdateCutflow(c_Event, true);
 
+  printf("Reading final particle momenta from ntuple.\n");
   p = vector<TLorentzVector>(6);
   for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
     p[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
   }
 
-  for (int i = 0; i < p.size(); i++) {
-    Pcm += pcm[i];
+  printf("Summing momenta.\n");
+  pcm = vector<TLorentzVector>((int) p.size());
+  for (int i = 0; i < (int) p.size(); i++) {
+    P += p[i];
     pcm[i] = p[i];
-    p_r1[i] = p[i];
-    p_r2[i] = p[i];
   }
    
   TVector3 V = -1*P.BoostVector();
 
+  printf("Boosting to parton CoM.\n");
   pcm = vector<TLorentzVector>(6);
   for (int i = 0; i < p.size(); i++) {
     pcm[i].Boost(V);
@@ -47,13 +49,16 @@ void AnalysisZprime::EachEvent()
 
   if (m_channel == "bbllnn") {
     // resolve longitudinal neutrino momentum in the semihadronic case
+    printf("About to resolve b b nu\n");
     p_r1 = this->Resolvebbnu(p,1);
     p_r2 = this->Resolvebbnu(p,2);
-
+    printf("Finished resolving b b nu\n");
     
-    // _rnstructed final particle parton CoM variables
+    // reconstructed final particle parton CoM variables
     TVector3 V_r1 = -1*P_r1.BoostVector();
     TVector3 V_r2 = -1*P_r2.BoostVector();
+    pcm_r1 = vector<TLorentzVector>((int) p.size());
+    pcm_r2 = vector<TLorentzVector>((int) p.size());
     for (int i = 0; i < p.size(); i++) {
       pcm_r1[i].Boost(V_r1);
       pcm_r2[i].Boost(V_r2);
@@ -95,6 +100,7 @@ void AnalysisZprime::EachEvent()
     CosThetaStar_r2 = int(ytt_r2/std::abs(ytt_r2))*CosTheta_r2;
   }
     
+  printf("Finished calculating variables.\n");
   if (this->PassCuts())
   {    
     // re-weight for different iterations
@@ -137,8 +143,8 @@ void AnalysisZprime::EachEvent()
       h_MttRR->Fill(Mff, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "bbllnn") {
+      printf("Filling bbllnn specific histograms.\n");
       h_Pz_nu->Fill(p[3].Pz(), weight/h_Pz_nu->GetXaxis()->GetBinWidth(1));
-
       h_ytt_r->Fill(ytt_r1, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
       h_ytt_r->Fill(ytt_r2, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
 
@@ -167,6 +173,7 @@ void AnalysisZprime::EachEvent()
       if (CosThetaStar_r2 < 0) {
         h_AFBstar_rB->Fill(Mtt_r2, weight/2/h_AFBstar_rB->GetXaxis()->GetBinWidth(1));
       }
+      printf("done.\n");
     }
   }
 }
@@ -318,11 +325,11 @@ void AnalysisZprime::CreateHistograms()
 
   if (m_channel == "bbllnn") {
     h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
-
+    h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_r", 50, -1.0, 1.0);
+    h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_r^*", 50, -1.0, 1.0);
     h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 100, -2.5, 2.5);
     h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (_rnstructed)", 100, -1000.0, 1000.0);
     h_Mtt_r = new TH1D("Mtt_r", "M^{_r}_{tt}", 100, 0.0, 13.0);
-
     h_AlLF = new TH1D("AlLF", "AlLF", 20, 0.0, 13.0);
     h_AlLB = new TH1D("AlLB", "AlLB", 20, 0.0, 13.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13.0);
@@ -536,7 +543,7 @@ void AnalysisZprime::Loop()
     printf("Looping over events...\n");
     for (Long64_t jentry=0; jentry<nEvents;++jentry) 
     {
-      // printf("Processing entry %lli\n", jentry);
+      printf("Processing entry %lli\n", jentry);
       Long64_t ientry = this->IncrementEvent(jentry);
       if (ientry < 0) break;
       this->EachEvent();
@@ -645,7 +652,7 @@ void AnalysisZprime::CleanUp()
 
 std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVector> p, int l_Q) 
 {
-
+  m_bAssignAttempts++;
   // finds the longitudinal neutrino momentum and matches b-quarks to the leptonially or hadronically decayin top quark
   //  for semi-leptonic decay
 
@@ -672,6 +679,7 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
   else {
     printf("Error: Invalid charge.\n");
   }
+  // printf("Finished assigning momenta.\n");
 
   double X2, X2min;
 
@@ -681,7 +689,6 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
   double py_nu = p_nu.Py();
   double pz_nu = -999;
   std::vector<std::complex<double> > root;
-  std::vector<double> rroot(root.size());
   double a = -999, b = -999, c = -999, k = -999;
 
   // recalculate lepton energy in zero mass approximation
@@ -704,6 +711,9 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
   double dh = -999, dl = -999, E_nu = -999, mblv = -999, mjjb = -999;
 
   int imin = -999, jmin = -999, it = 0;
+
+  // printf("Solved Quadratic.\n");
+  std::vector<double> rroot(root.size());
 
   if (root[0].imag() == 0 and root[1].imag() == 0) {
     for (int i = 0; i < 2; i++) {
@@ -734,14 +744,25 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
     // no real solutions - take the real part of 1
     printf("NO REAL SOLUTIONS!\n");
   }
+  // printf("Selected solution.\n");
   pz_nu = rroot[imin];
   double pz_nu_truth = p_nu.Pz();
+  double Root0MinusTruth = std::abs(root[0].real() - pz_nu_truth);
+  double Root1MinusTruth = std::abs(root[1].real() - pz_nu_truth);
+  int bestRoot;
+  if (Root0MinusTruth < Root1MinusTruth) {
+    bestRoot = 0;
+  }
+  else if (Root1MinusTruth < Root0MinusTruth) {
+    bestRoot = 1;
+  }
+  else {
+    bestRoot = 0;
+  }
   bool recoMatchesTruth(jmin == l_Q-1);
   E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + pz_nu*pz_nu);
   p_nu_r.SetPxPyPzE(px_nu, py_nu, pz_nu, E_nu);
-  if (recoMatchesTruth) printf("b-assignment: correct. \n");
-  else printf("b-assignment: incorrect. \n");
-  printf("True pz_nu = %f, Rseolved pz_nu = %f\n", pz_nu_truth, pz_nu);
+  
   if (l_Q == 1){
     p_r[0] = p_b[jmin];
     p_r[1] = p_b[std::abs(jmin-1)];
@@ -758,8 +779,18 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
     p_r[4] = p[4];
     p_r[5] = p_nu_r;
   }
+  printf("---\n");
+  printf("True pz_nu = %f\n", p_nu.Pz());
+  printf("Possible neutrino solutions:\n");
+  printf("                             %f + %fi\n", root[0].real(), root[0].imag());
+  printf("                             %f + %fi\n", root[1].real(), root[1].imag());
+  printf("Chosen solution:             %f + %fi\n", root[imin].real(), root[imin].imag());
+  if (imin == bestRoot) printf("Neutrino solution: correct. \n");
+  else printf("Neutrino solution: incorrect. \n");
+  if (recoMatchesTruth) printf("b-assignment: correct. \n");
+  else printf("b-assignment: incorrect. \n");
+  printf("---\n");
   return p_r;
-
 }
 
 std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, double b, double c) 
@@ -776,8 +807,13 @@ std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, doub
     discriminator = b*b - 4*a*c;
     term2 = std::sqrt(discriminator)/(2*a);
 
+    // print terms
+    // printf("term1 = %f + %fi\n", term1.real(), term1.imag());
+    // printf("term2 = %f + %fi\n", term2.real(), term2.imag());
+
     roots.push_back(term1 + term2);
     roots.push_back(term1 - term2);
+
     
     return roots;
 }
