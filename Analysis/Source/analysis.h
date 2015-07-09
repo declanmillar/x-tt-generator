@@ -22,7 +22,6 @@ public:
   virtual ~AnalysisZprime();
   
 protected:
-  // Internal for Event Looping
   Long64_t TotalEvents();
   Long64_t IncrementEvent(Long64_t i);
   void SetupTreesForNewFile(const TString& s);
@@ -30,6 +29,7 @@ protected:
   
   void SetupInputFiles();
   void SetupOutputFiles();
+  void SetupWeightsFiles();
   
   void PreLoop();
   void Loop();
@@ -38,16 +38,17 @@ protected:
   void CreateHistograms();
   void MakeGraphs();
   void WriteHistograms();
+  void GetResults();
+  void CheckPerformance();
+
   double TotalAsymmetry(TH1D* h_A, TH1D* h_B);
   void TotalSpinAsymmetries();
   TH1D* Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B);
   void AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B);
-  void ALL2to6();
-  TH1D* PlotALL();
-  TH1D* PlotAL();
-  double deltaPhi(const double& phi1,const double& phi2) const;
+  TH1D* MakeALL();
+  TH1D* MakeAL();
   vector<std::complex<double> > SolveQuadratic(double a, double b, double c);
-  double ResolveNeutrinoPz(TLorentzVector p_l, TVector2 pT_nu);
+  std::vector<TLorentzVector> ReconstructSemiLeptonic(std::vector<TLorentzVector> p, int l_Q);
   
   bool PassCuts();
   bool PassCutsMET();
@@ -55,49 +56,53 @@ protected:
   bool PassCutsFiducial();
   bool PassCutsYtt();
 
+  void ResetCounters();
   void InitialiseCutflow();
   void PrintCutflow();
   const void UpdateCutflow(int cut, bool passed);
 
   static inline void ProgressBar(unsigned int x, unsigned int n, unsigned int w);
-
-  std::vector<TLorentzVector> Resolvebbnu(std::vector<TLorentzVector> p, int l_Q);
      
 private:
   AnalysisZprime();
   AnalysisZprime(const AnalysisZprime& rhs);  
-  void operator=(const AnalysisZprime& rhs);  
+  void operator = (const AnalysisZprime& rhs);  
 
+  // Counters
   unsigned int m_nReco;
   unsigned int m_nQuarksMatched;
   unsigned int m_nNeutrinoMatched;
-  unsigned int m_nRealRoots = 0;
-  unsigned int m_nComplexRoots = 0;
+  unsigned int m_nRealRoots;
+  unsigned int m_nComplexRoots;
   
+  // Parameters
   float m_pi;
   float m_GeV;
   double m_intLumi;
   double m_Wmass;
   double m_tmass;
-  double m_nEvents;
+
+  double m_sigma;
+  vector<double> m_weights;
+
+  // Strings
   TString m_channel;  
   TString m_model;
   TString m_inputFileName;
   TString m_weightsFileName;
   TString m_outputFileName;
-  double m_sigma;
-  vector<double> m_weights;
+
+  // Cuts
   enum m_cutlist{
     c_Event,
     c_Mtt,
     c_MET,
     c_Ytt,
     c_Fiducial,
-    m_cuts // keep as last entry
+    m_cuts // Keep as last entry
   };
 
-
-  // Input Data
+  // Input data
   vector<TString>* m_inputFiles;
   RootTuple* m_ntup;
   TChain* m_chainNtup; 
@@ -105,36 +110,36 @@ private:
   // OutputFile
   TFile* m_outputFile;
 
-  // cutflow
+  // Cutflow
   TH1D* h_cutflow;
   std::vector<int> m_cutflow;
   std::vector<TString> m_cutNames;
 
-  // regualar
+  // Regular
   TH1D* h_Mff;
   TH1D* h_ytt;
   TH1D* h_Pz_nu;
   TH1D* h_CosTheta;
   TH1D* h_CosThetaStar;
   
-  // reconstruction
+  // Reconstruction histograms
   TH1D* h_Pz_nu_r;
   TH1D* h_Mtt_r;
   TH1D* h_CosTheta_r;
   TH1D* h_CosThetaStar_r;
   TH1D* h_ytt_r;
 
-  // polarisation weighted
+  // Polarisation weighted histograms
   TH1D* h_MttLL;
   TH1D* h_MttLR;
   TH1D* h_MttRL;
   TH1D* h_MttRR;
 
-  // Spin Asymmetries
+  // Spin asymmetry historgrams
   TH1D* h_ALL;
   TH1D* h_AL;
 
-  // FB-type histograms
+  // Charge asymmetry histograms
   TH1D* h_AFBstar;
   TH1D* h_AFBstarF;
   TH1D* h_AFBstarB;
@@ -155,7 +160,7 @@ private:
   TH1D* h_AlLF;
   TH1D* h_AlLB;
 
-  // kinematics
+  // Final particle 4-vectors
   vector<TLorentzVector> p;
   vector<TLorentzVector> pcm;
   vector<TLorentzVector> p_r1;
@@ -163,13 +168,13 @@ private:
   vector<TLorentzVector> pcm_r1;
   vector<TLorentzVector> pcm_r2;
 
+  // Event 4-vectors
   TLorentzVector P;
   TLorentzVector Pcm;
   TLorentzVector P_r1;
   TLorentzVector P_r2;
-  TLorentzVector Pcm_r1;
-  TLorentzVector Pcm_r2;
 
+  // Top 4-vectors
   TLorentzVector p_t;
   TLorentzVector p_tb;
   TLorentzVector p_t_r1;

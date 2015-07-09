@@ -47,8 +47,8 @@ int RootTuple::GetEntry(Long64_t entry){
   return fChain->GetEntry(entry); 
 } 
 
-Long64_t RootTuple::totalEvents(){ 
-  return fChain->GetEntriesFast(); 
+Long64_t RootTuple::totalEvents(){
+  return fChain->GetEntriesFast();
 } 
 
 Long64_t RootTuple::LoadTree(Long64_t entry){ 

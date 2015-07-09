@@ -155,28 +155,28 @@ int main(int argc, char* argv[])
     c_AFBstarNuReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_PzNu =overlay(false, false, "Pz_nu", "truth", outputFilename, 
-                          "Pz_nu_r", "reconstructed", outputFilename);
+    TCanvas* c_PzNu =overlay(false, false, "Pz_nu", "Truth", outputFilename, 
+                          "Pz_nu_r", "Reconstructed", outputFilename);
     c_PzNu->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_MttReco =overlay(false, false, "Mff", "truth", outputFilename, 
-                              "Mtt_r", "reconstructed", outputFilename);
+    TCanvas* c_MttReco =overlay(false, false, "Mff", "Truth", outputFilename, 
+                              "Mtt_r", "Reconstructed", outputFilename);
     c_MttReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_yttReco =overlay(false, false, "ytt", "truth", outputFilename, 
-                              "ytt_r", "reconstructed", outputFilename);
+    TCanvas* c_yttReco =overlay(false, false, "ytt", "Truth", outputFilename, 
+                              "ytt_r", "Reconstructed", outputFilename);
     c_yttReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_CosThetaReco =overlay(false, false, "CosTheta", "truth", outputFilename, 
-                              "CosTheta_r", "reconstructed", outputFilename);
+    TCanvas* c_CosThetaReco =overlay(false, false, "CosTheta", "Truth", outputFilename, 
+                              "CosTheta_r", "Reconstructed", outputFilename);
     c_CosThetaReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_CosThetaStarReco =overlay(false, false, "CosThetaStar", "truth", outputFilename, 
-                              "CosThetaStar_r", "reconstructed", outputFilename);
+    TCanvas* c_CosThetaStarReco =overlay(false, false, "CosThetaStar", "Truth", outputFilename, 
+                              "CosThetaStar_r", "Reconstructed", outputFilename);
     c_CosThetaStarReco->Draw();
     RootApp->Run(kTRUE);
   }

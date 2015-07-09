@@ -43,6 +43,8 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
   double rightmargin = 0.1;
   double leftmargin = 0.2;
 
+  double minValue, newMinValue, maxValue, newMaxValue;
+
   // Define upper
   TPad* upperPad = new TPad("upperPad","upperPad",0, 0.2, 1, 1);
   upperPad->SetFillColor(-1);
@@ -74,6 +76,8 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
   h1->SetLineColor(kGray);
   h1->GetYaxis()->SetTitleOffset(1.3);
   h1->GetXaxis()->SetTitleOffset(1.2);
+  maxValue = h1->GetBinContent(h1->GetMaximumBin());
+  minValue = h1->GetBinContent(h1->GetMinimumBin());
 
 
   if (histName2 != "NULL") {
@@ -87,6 +91,10 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
     h2->Draw("HIST SAME");//("E1x0PSAME");
     h2->SetLineColor(kRed);
     h2->SetMarkerColor(kRed);
+    newMinValue = h2->GetBinContent(h2->GetMinimumBin());
+    if (newMinValue < minValue) minValue = newMinValue;
+    newMaxValue = h2->GetBinContent(h2->GetMaximumBin());
+    if (newMaxValue > maxValue) maxValue = newMaxValue;
   }
 
   if (histName3 != "NULL") {
@@ -100,6 +108,10 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
     h3->Draw("HIST SAME");//("E1x0PSAME");
     h3->SetLineColor(kAzure+5);
     h3->SetMarkerColor(kAzure+5);
+    newMinValue = h3->GetBinContent(h3->GetMinimumBin());
+    if (newMinValue < minValue) minValue = newMinValue;
+    newMaxValue = h3->GetBinContent(h3->GetMaximumBin());
+    if (newMaxValue > maxValue) maxValue = newMaxValue;
   }
 
   if (histName4 != "NULL") {
@@ -113,7 +125,19 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
     h4->Draw("HIST SAME");//("E1x0PSAME");
     h4->SetLineColor(kGreen+2);
     h4->SetMarkerColor(kGreen+2);
+    newMinValue = h4->GetBinContent(h4->GetMinimumBin());
+    if (newMinValue < minValue) minValue = newMinValue;
+    newMaxValue = h4->GetBinContent(h4->GetMaximumBin());
+    if (newMaxValue > maxValue) maxValue = newMaxValue;
   }
+
+  // adjust y-axis range
+  maxValue *= 1.2;
+  if (minValue < 0) minValue *= 1.2;
+  else if (minValue > 0) minValue = minValue - minValue*0.2;
+  else minValue = 0;
+
+  h1->GetYaxis()->SetRangeUser(minValue, maxValue);
 
   if (findSignificance == true) {
     if (histName2 != "NULL") h2sig = Significance(h2, h1);
@@ -153,7 +177,7 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
       }
       printf("Overlapping area = %f\n", overlap);
       sigPerOverlap = overlap/h2->Integral()*100;
-      printf("Signal in overlapping area: %f\%\n", sigPerOverlap);
+      printf("Signal in overlapping area: %f%%\n", sigPerOverlap);
     }
   }
 
@@ -180,7 +204,7 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
   // }
 
 
-  TLegend* legend = new TLegend(0.50, 0.60, 0.88, 0.88, "");
+  TLegend* legend = new TLegend(0.70, 0.70, 0.90, 0.90, "");
   legend->SetBorderSize(0);
   legend->AddEntry(h1, h1->GetTitle());
   if (histName2 != "NULL") legend->AddEntry(h2, h2->GetTitle());
