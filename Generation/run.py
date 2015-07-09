@@ -76,13 +76,13 @@ if ncall < 2:
 if option.batch: 
   option.write_logfile = False
 
-if option.ecm_low or option.ecm_up < 0: 
+if option.ecm_low < 0 or option.ecm_up < 0:
   sys.exit("Error: COM energy must be positive definite")
 
-if option.ecm_low or option.ecm_up > collider_energy*1000: 
+if option.ecm_low > collider_energy*1000 or option.ecm_up > collider_energy*1000: 
   sys.exit("Error: COM energy cannot exceed collider energy")
 
-if (option.ecm_low and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
+if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
 if sys.platform != "linux2" and option.batch:
