@@ -148,35 +148,35 @@ int main(int argc, char* argv[])
     c_AFBstar->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_AFBstarNuReco =overlay(false, false, "AFBstarNuReco", model, outputFilename, 
-                                                "AFBstarNuReco", model2, outputFilename2);
+    TCanvas* c_AFBstarNuReco =overlay(false, false, "AFBstar_r", model, outputFilename, 
+                                                "AFBstar_r", model2, outputFilename2);
                                                 // "AFBstarNuReco", model3, outputFilename3);
                                                 // "AFBstarNuReco", model4, outputFilename4);
     c_AFBstarNuReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_PzNu =overlay(false, false, "PzNu", "truth", outputFilename, 
-                          "PzNuReco", "reconstructed", outputFilename);
+    TCanvas* c_PzNu =overlay(false, false, "Pz_nu", "truth", outputFilename, 
+                          "Pz_nu_r", "reconstructed", outputFilename);
     c_PzNu->Draw();
     RootApp->Run(kTRUE);
 
     TCanvas* c_MttReco =overlay(false, false, "Mff", "truth", outputFilename, 
-                              "MttReco", "reconstructed", outputFilename);
+                              "Mtt_r", "reconstructed", outputFilename);
     c_MttReco->Draw();
     RootApp->Run(kTRUE);
 
     TCanvas* c_yttReco =overlay(false, false, "ytt", "truth", outputFilename, 
-                              "yttReco", "reconstructed", outputFilename);
+                              "ytt_r", "reconstructed", outputFilename);
     c_yttReco->Draw();
     RootApp->Run(kTRUE);
 
     TCanvas* c_CosThetaReco =overlay(false, false, "CosTheta", "truth", outputFilename, 
-                              "CosThetaReco", "reconstructed", outputFilename);
+                              "CosTheta_r", "reconstructed", outputFilename);
     c_CosThetaReco->Draw();
     RootApp->Run(kTRUE);
 
     TCanvas* c_CosThetaStarReco =overlay(false, false, "CosThetaStar", "truth", outputFilename, 
-                              "CosThetaStarReco", "reconstructed", outputFilename);
+                              "CosThetaStar_r", "reconstructed", outputFilename);
     c_CosThetaStarReco->Draw();
     RootApp->Run(kTRUE);
   }

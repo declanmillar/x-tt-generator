@@ -68,9 +68,11 @@ private:
   AnalysisZprime(const AnalysisZprime& rhs);  
   void operator=(const AnalysisZprime& rhs);  
 
-  int m_nReco;
-  int m_nQuarksMatched;
-  int m_nNeutrinoMatched;
+  unsigned int m_nReco;
+  unsigned int m_nQuarksMatched;
+  unsigned int m_nNeutrinoMatched;
+  unsigned int m_nRealRoots = 0;
+  unsigned int m_nComplexRoots = 0;
   
   float m_pi;
   float m_GeV;

@@ -6,7 +6,7 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   m_intLumi(0),//(300000.0),
   m_Wmass(80.23),
   m_tmass(175.0),
-  m_nEvents(1000000),
+  m_nEvents(-999),
   m_channel(channel),
   m_model(model),
   m_inputFileName(inputFileName),
@@ -28,13 +28,13 @@ void AnalysisZprime::EachEvent()
 
   // printf("Reading final particle momenta from ntuple.\n");
   p = vector<TLorentzVector>(6);
-  for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
+  for (unsigned int i = 0; i < m_ntup->E()->size(); i++) {
     p[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
   }
 
   // printf("Summing momenta.\n");
   pcm = vector<TLorentzVector>((int) p.size());
-  for (int i = 0; i < (int) p.size(); i++) {
+  for (unsigned int i = 0; i < p.size(); i++) {
     P += p[i];
     pcm[i] = p[i];
   }
@@ -43,7 +43,7 @@ void AnalysisZprime::EachEvent()
 
   // printf("Boosting to parton CoM.\n");
   pcm = vector<TLorentzVector>(6);
-  for (int i = 0; i < p.size(); i++) {
+  for (unsigned int i = 0; i < p.size(); i++) {
     pcm[i].Boost(V);
     Pcm += pcm[i];
   }  
@@ -60,7 +60,7 @@ void AnalysisZprime::EachEvent()
     TVector3 V_r2 = -1*P_r2.BoostVector();
     pcm_r1 = vector<TLorentzVector>((int) p.size());
     pcm_r2 = vector<TLorentzVector>((int) p.size());
-    for (int i = 0; i < p.size(); i++) {
+    for (unsigned int i = 0; i < p.size(); i++) {
       pcm_r1[i].Boost(V_r1);
       pcm_r2[i].Boost(V_r2);
     }  
@@ -209,7 +209,7 @@ void AnalysisZprime::PostLoop()
   if (m_channel == "bbllnn") {
     h_AlL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
     h_AllC = this->Asymmetry("AllC", "A^{ll}_{C}", h_AllCF, h_AllCB);
-    h_AFBstar_r = this->Asymmetry("AFBstarNu_r", "A_{FB}^* (#nu _rnstructed)", h_AFBstar_rF, h_AFBstar_rB);
+    h_AFBstar_r = this->Asymmetry("AFBstar_r", "A_{FB}^* (reco)", h_AFBstar_rF, h_AFBstar_rB);
   }
   this->MakeGraphs();
   this->PrintCutflow();
@@ -320,7 +320,7 @@ void AnalysisZprime::CreateHistograms()
   h_AttCB = new TH1D("AttC2", "AttC2", 130, 0.0, 13.0);
   h_ytt = new TH1D("ytt", "ytt", 50, -2.5, 2.5);
   h_CosTheta = new TH1D("CosTheta", "cos#theta", 50, -1.0, 1.0);
-  h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^*", 50, -1.0, 1.0);
+  h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^{*}", 50, -1.0, 1.0);
 
 
   if (m_channel == "tt") {
@@ -332,11 +332,11 @@ void AnalysisZprime::CreateHistograms()
 
   if (m_channel == "bbllnn") {
     h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
-    h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_r", 50, -1.0, 1.0);
-    h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_r^*", 50, -1.0, 1.0);
+    h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_{reco}", 50, -1.0, 1.0);
+    h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_{reco}^{*}", 50, -1.0, 1.0);
     h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 100, -2.5, 2.5);
     h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (_rnstructed)", 100, -1000.0, 1000.0);
-    h_Mtt_r = new TH1D("Mtt_r", "M^{_r}_{tt}", 100, 0.0, 13.0);
+    h_Mtt_r = new TH1D("Mtt_r", "M^{reco}_{tt}", 100, 0.0, 13.0);
     h_AlLF = new TH1D("AlLF", "AlLF", 20, 0.0, 13.0);
     h_AlLB = new TH1D("AlLB", "AlLB", 20, 0.0, 13.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 0.0, 13.0);
@@ -360,26 +360,6 @@ void AnalysisZprime::MakeGraphs()
   h_Mff->GetXaxis()->SetTitle("M_{tt} [TeV]");
   h_Mff->GetYaxis()->SetTitle(numBase + "M_{tt}" + " [" + units +"/TeV]");
 
-  // TCanvas *c_AFBstar   = new TCanvas(h_AFBstar->GetName(), h_AFBstar->GetTitle());
-  // c_AFBstar->cd(); 
-  // h_AFBstar->Draw("hist"); 
-  // h_AFBstar->GetYaxis()->SetTitle("");
-
-  if (m_channel == "bbllnn") {
-
-    h_Pz_nu->GetYaxis()->SetTitle(numBase + h_Pz_nu->GetTitle() + " [" + units +"/GeV]");
-    h_Pz_nu->GetXaxis()->SetTitle(h_Pz_nu->GetTitle());
-
-    h_Pz_nu_r->GetYaxis()->SetTitle(numBase + h_Pz_nu_r->GetTitle() + " [" + units +"/GeV]");
-    h_Pz_nu_r->GetXaxis()->SetTitle(h_Pz_nu_r->GetTitle());
-
-    h_Mtt_r->GetYaxis()->SetTitle(numBase + h_Mtt_r->GetTitle() + " [" + units +"/GeV]");
-    h_Mtt_r->GetXaxis()->SetTitle(h_Mtt_r->GetTitle());
-
-    h_AllC->GetYaxis()->SetTitle(h_AllC->GetTitle());
-    h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
-  }
-
   if (m_channel == "tt") {
     h_MttLL->GetYaxis()->SetTitle(numBase + h_MttLL->GetTitle() + " [" + units +"/GeV]");
     h_MttLR->GetYaxis()->SetTitle(numBase + h_MttLR->GetTitle() + " [" + units +"/GeV]");
@@ -398,6 +378,50 @@ void AnalysisZprime::MakeGraphs()
     h_AFBstar->GetXaxis()->SetTitle("M_{tt} [GeV]");
     h_AttC->GetXaxis()->SetTitle("M_{tt} [GeV]");
   }
+
+  if (m_channel == "bbllnn") {
+
+    h_CosTheta->GetYaxis()->SetTitle(numBase + h_CosTheta->GetTitle() + " [" + units +"/GeV]");
+    h_CosTheta->GetXaxis()->SetTitle(h_CosTheta->GetTitle());
+
+    h_CosThetaStar->GetYaxis()->SetTitle(numBase + h_CosThetaStar->GetTitle() + " [" + units +"/GeV]");
+    h_CosThetaStar->GetXaxis()->SetTitle(h_CosThetaStar->GetTitle());
+
+    h_ytt->GetYaxis()->SetTitle(numBase + h_ytt->GetTitle() + " [" + units +"/GeV]");
+    h_ytt->GetXaxis()->SetTitle(h_ytt->GetTitle());
+
+    h_ytt_r->GetYaxis()->SetTitle(numBase + h_ytt_r->GetTitle() + " [" + units +"]");
+    h_ytt_r->GetXaxis()->SetTitle(h_ytt_r->GetTitle());
+
+    h_AFBstar->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
+    h_AFBstar->GetXaxis()->SetTitle("M_{tt} [GeV]");
+
+    h_CosTheta_r->GetYaxis()->SetTitle(numBase + h_CosTheta_r->GetTitle() + " [" + units +"/GeV]");
+    h_CosTheta_r->GetXaxis()->SetTitle(h_CosTheta_r->GetTitle());
+
+    h_CosThetaStar_r->GetYaxis()->SetTitle(numBase + h_CosThetaStar_r->GetTitle() + " [" + units +"/GeV]");
+    h_CosThetaStar_r->GetXaxis()->SetTitle(h_CosThetaStar_r->GetTitle());
+
+    h_AFBstar_r->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
+    h_AFBstar_r->GetXaxis()->SetTitle("M_{tt} [GeV]");
+
+    h_Pz_nu->GetYaxis()->SetTitle(numBase + h_Pz_nu->GetTitle() + " [" + units +"/GeV]");
+    h_Pz_nu->GetXaxis()->SetTitle(h_Pz_nu->GetTitle());
+
+    h_Pz_nu_r->GetYaxis()->SetTitle(numBase + h_Pz_nu_r->GetTitle() + " [" + units +"/GeV]");
+    h_Pz_nu_r->GetXaxis()->SetTitle(h_Pz_nu_r->GetTitle());
+
+    h_Mtt_r->GetYaxis()->SetTitle(numBase + h_Mtt_r->GetTitle() + " [" + units +"/TeV]");
+    h_Mtt_r->GetXaxis()->SetTitle(h_Mtt_r->GetTitle());
+
+    h_ytt_r->GetYaxis()->SetTitle(numBase + h_ytt_r->GetTitle() + " [" + units +"/TeV]");
+    h_ytt_r->GetXaxis()->SetTitle(h_ytt_r->GetTitle());
+
+    h_AllC->GetYaxis()->SetTitle(h_AllC->GetTitle());
+    h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
+  }
+
+  
   printf("...complete.\n");
 }
 
@@ -490,7 +514,7 @@ bool AnalysisZprime::PassCutsMtt()
 
 bool AnalysisZprime::PassCutsFiducial()
 { 
-  for (int i = 0; i < p.size(); i++) {
+  for (unsigned int i = 0; i < p.size(); i++) {
     bool outsideCrack = p[i].PseudoRapidity() <= 1.37 || p[i].PseudoRapidity() >= 1.52;
     bool central      = p[i].PseudoRapidity() <= 2.47;
     bool passesFiducialCuts = outsideCrack && central;
@@ -528,6 +552,8 @@ void AnalysisZprime::PreLoop()
   m_nQuarksMatched = 0;
   m_nNeutrinoMatched = 0;
   m_nReco = 0;
+  m_nRealRoots = 0;
+  m_nComplexRoots = 0;
 
 
   this->SetupInputFiles();
@@ -718,54 +744,33 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
 
   // select single solution and match 'jets'
 
-  double X2, X2min;
+  double X2 = -999, X2min = -999;
   TLorentzVector p_nu_r;
   double dh = -999, dl = -999, E_nu_r = -999, mblv = -999, mjjb = -999;
   int imin = -999, jmin = -999, it = 0;
   std::vector<double> rootR(root.size());
-
+  unsigned int nReal;
   if (root[0].imag() == 0 and root[1].imag() == 0) {
-    // Two real solutions: pick best match.
-    for (int i = 0; i < 2; i++) {
-      E_nu_r = sqrt(px_nu*px_nu + py_nu*py_nu + rootR[i]*rootR[i]);
-      p_nu_r.SetPxPyPzE(px_nu, py_nu, rootR[i], E_nu_r);
-      for (int j = 0; j < 2; j++) {
-        rootR[i] = root[i].real();
-        mblv = (p_b[std::abs(j)] + p_l + p_nu_r).M();
-        mjjb = (p_b[std::abs(j-1)] + p_q[0] + p_q[1]).M();
-        // printf("For i = %i, j = %i: m_bjj = %.15le, mblv = %.15le\n", i, j, mjjb, mblv);
-        dh = mjjb - m_tmass;
-        dl = mblv - m_tmass;
-        X2 = dh*dh + dl*dl;
-        if (it == 0) {
-          X2min = X2;
-          imin = i;
-          jmin = j;
-        }
-        if (X2 < X2min) {
-          X2min = X2;
-          imin = i;
-          jmin = j;
-        }
-        it++;
-      }
-    }
-
-  }  
+    nReal = 2; // Two real solutions: pick best match.
+    m_nRealRoots++;
+  }
   else {
-    // No real solutions: take the real part of 1 (real parts are the same)
-    // printf("Info: no real solutions.\n");
-    int i = 0;
+    nReal = 1; // No real solutions: take the real part of 1 (real parts are the same)
+    m_nComplexRoots++;
+  }
+
+  for (unsigned int i = 0; i < nReal; i++) {
+    rootR[i] = root[i].real();
+    E_nu_r = sqrt(px_nu*px_nu + py_nu*py_nu + rootR[i]*rootR[i]);
+    p_nu_r.SetPxPyPzE(px_nu, py_nu, rootR[i], E_nu_r);
     for (int j = 0; j < 2; j++) {
-      rootR[i] = root[i].real();
-      E_nu_r = sqrt(px_nu*px_nu + py_nu*py_nu + rootR[i]*rootR[i]);
-      p_nu_r.SetPxPyPzE(px_nu, py_nu, rootR[i], E_nu_r);
-      mblv = (p_b[std::abs(j)] + p_l + p_nu).M();
+      mblv = (p_b[std::abs(j)] + p_l + p_nu_r).M();
       mjjb = (p_b[std::abs(j-1)] + p_q[0] + p_q[1]).M();
-      // printf("For i = %i, j = %i: m_bjj = %f, mblv =  %f\n", i, j, mjjb, mblv);
+      // printf("For i = %i, j = %i: m_bjj = %.15le, mblv = %.15le\n", i, j, mjjb, mblv);
       dh = mjjb - m_tmass;
       dl = mblv - m_tmass;
       X2 = dh*dh + dl*dl;
+      // printf("For i = %i, j = %i: X2 = %.15le\n", i, j, X2);
       if (it == 0) {
         X2min = X2;
         imin = i;
@@ -778,7 +783,8 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
       }
       it++;
     }
-  }
+  } 
+
   // printf("Chosen solution: imin = %i, jmin = %i\n", imin, jmin);
 
   // Assess neutrino reconstruction performance.
@@ -897,14 +903,14 @@ void AnalysisZprime::PrintCutflow()
 
 inline void AnalysisZprime::ProgressBar(unsigned int x, unsigned int n, unsigned int w)
 {
-    if ( (x != n) && (x % (n/100+1) != 0) ) return;
- 
-    float ratio = x/(float)n;
-    int c = ratio * w;
- 
-    cout << "Processing events: "<< std::setw(3) << (int)(ratio*100) << "% [";
-    for (int x=0; x<c; x++) cout << "=";
-    for (int x=c; x<w; x++) cout << " ";
-    if (x == n) cout << "]\n" << std::flush;
-    else cout << "]\r" << std::flush;
+  if ( (x != n) && (x % (n/100+1) != 0) ) return;
+
+  float ratio = x/(float)n;
+  unsigned int c = ratio * w;
+
+  cout << "\rProcessing events: "<< std::setw(3) << (int)(ratio*100) << "% [";
+  for (unsigned int i = 0; i < c; i++) cout << "=";
+  for (unsigned int i = c; i < w; i++) cout << " ";
+  if (x == n) cout << "]\n" << std::flush;
+  else cout << "]\r" << std::flush;
 }
