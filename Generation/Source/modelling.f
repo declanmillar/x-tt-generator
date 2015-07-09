@@ -15,7 +15,7 @@ module modelling
   real :: fmass(12), fwidth(12), qmass(6), lmass(6)
 
   ! quark masses
-  real, parameter :: umass = 0.d0, cmass = 0.d0, tmass = 175.d0
+  real, parameter :: umass = 0.d0, cmass = 0.d0, tmass = 173.d0
   real, parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
 
   ! leptons masses

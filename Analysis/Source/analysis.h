@@ -14,6 +14,7 @@
 #include <fstream>
 #include "TLegend.h"
 #include <complex>
+#include <iomanip>
 
 class AnalysisZprime{
 public:
@@ -58,6 +59,8 @@ protected:
   void PrintCutflow();
   const void UpdateCutflow(int cut, bool passed);
 
+  static inline void ProgressBar(unsigned int x, unsigned int n, unsigned int w);
+
   std::vector<TLorentzVector> Resolvebbnu(std::vector<TLorentzVector> p, int l_Q);
      
 private:
@@ -65,14 +68,16 @@ private:
   AnalysisZprime(const AnalysisZprime& rhs);  
   void operator=(const AnalysisZprime& rhs);  
 
-  int m_bAssignAttempts;
-  int m_bAssignSuccesses;
+  int m_nReco;
+  int m_nQuarksMatched;
+  int m_nNeutrinoMatched;
   
   float m_pi;
   float m_GeV;
   double m_intLumi;
   double m_Wmass;
   double m_tmass;
+  double m_nEvents;
   TString m_channel;  
   TString m_model;
   TString m_inputFileName;

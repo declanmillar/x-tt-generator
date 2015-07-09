@@ -6,6 +6,7 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   m_intLumi(0),//(300000.0),
   m_Wmass(80.23),
   m_tmass(175.0),
+  m_nEvents(1000000),
   m_channel(channel),
   m_model(model),
   m_inputFileName(inputFileName),
@@ -25,13 +26,13 @@ void AnalysisZprime::EachEvent()
 {
   UpdateCutflow(c_Event, true);
 
-  printf("Reading final particle momenta from ntuple.\n");
+  // printf("Reading final particle momenta from ntuple.\n");
   p = vector<TLorentzVector>(6);
   for (int i = 0; i < (int) m_ntup->E()->size(); i++) {
     p[i].SetPxPyPzE(m_ntup->Px()->at(i), m_ntup->Py()->at(i), m_ntup->Pz()->at(i), m_ntup->E()->at(i));
   }
 
-  printf("Summing momenta.\n");
+  // printf("Summing momenta.\n");
   pcm = vector<TLorentzVector>((int) p.size());
   for (int i = 0; i < (int) p.size(); i++) {
     P += p[i];
@@ -40,7 +41,7 @@ void AnalysisZprime::EachEvent()
    
   TVector3 V = -1*P.BoostVector();
 
-  printf("Boosting to parton CoM.\n");
+  // printf("Boosting to parton CoM.\n");
   pcm = vector<TLorentzVector>(6);
   for (int i = 0; i < p.size(); i++) {
     pcm[i].Boost(V);
@@ -49,10 +50,10 @@ void AnalysisZprime::EachEvent()
 
   if (m_channel == "bbllnn") {
     // resolve longitudinal neutrino momentum in the semihadronic case
-    printf("About to resolve b b nu\n");
+    // printf("About to resolve b b nu\n");
     p_r1 = this->Resolvebbnu(p,1);
-    p_r2 = this->Resolvebbnu(p,2);
-    printf("Finished resolving b b nu\n");
+    p_r2 = this->Resolvebbnu(p,-1);
+    // printf("Finished resolving b b nu\n");
     
     // reconstructed final particle parton CoM variables
     TVector3 V_r1 = -1*P_r1.BoostVector();
@@ -100,7 +101,7 @@ void AnalysisZprime::EachEvent()
     CosThetaStar_r2 = int(ytt_r2/std::abs(ytt_r2))*CosTheta_r2;
   }
     
-  printf("Finished calculating variables.\n");
+  // printf("Finished calculating variables.\n");
   if (this->PassCuts())
   {    
     // re-weight for different iterations
@@ -143,7 +144,7 @@ void AnalysisZprime::EachEvent()
       h_MttRR->Fill(Mff, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "bbllnn") {
-      printf("Filling bbllnn specific histograms.\n");
+      // printf("Filling bbllnn specific histograms.\n");
       h_Pz_nu->Fill(p[3].Pz(), weight/h_Pz_nu->GetXaxis()->GetBinWidth(1));
       h_ytt_r->Fill(ytt_r1, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
       h_ytt_r->Fill(ytt_r2, weight/2/h_ytt_r->GetXaxis()->GetBinWidth(1));
@@ -173,7 +174,7 @@ void AnalysisZprime::EachEvent()
       if (CosThetaStar_r2 < 0) {
         h_AFBstar_rB->Fill(Mtt_r2, weight/2/h_AFBstar_rB->GetXaxis()->GetBinWidth(1));
       }
-      printf("done.\n");
+      // printf("done.\n");
     }
   }
 }
@@ -198,7 +199,12 @@ void AnalysisZprime::PostLoop()
   h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFBstarF, h_AFBstarB);
   h_AttC = this->Asymmetry("AttC", "A_{C}", h_AttCF, h_AttCB);
 
-  printf("b-assigniment success rate: %f\n", float(m_bAssignSuccesses)/float(m_bAssignAttempts));
+  printf("m_nQuarksMatched = %i\n", m_nQuarksMatched);
+  printf("m_nNeutrinoMatched = %i\n", m_nNeutrinoMatched);
+  printf("m_nReco = %i\n", m_nReco);  
+
+  printf("Quark matching success rate: %f\n", float(m_nQuarksMatched)/float(m_nReco));
+  printf("Neutrino matching success rate: %f\n", float(m_nNeutrinoMatched)/float(m_nReco));
 
   if (m_channel == "bbllnn") {
     h_AlL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
@@ -208,6 +214,7 @@ void AnalysisZprime::PostLoop()
   this->MakeGraphs();
   this->PrintCutflow();
   this->WriteHistograms();
+  printf("Analysis complete.\n");
 }
 
 TH1D* AnalysisZprime::PlotALL()
@@ -425,8 +432,6 @@ void AnalysisZprime::WriteHistograms()
   }
 
   if (m_channel == "bbllnn") {
-    h_AL->Write();
-    h_ALL->Write();
     h_AllC->Write();
     h_AFBstar_r->Write();
     h_Pz_nu->Write();
@@ -520,8 +525,10 @@ void AnalysisZprime::PreLoop()
   double cnorm;
   while ( cnorms >> cnorm ) m_weights.push_back(cnorm);
   cnorms.close();
-  m_bAssignAttempts = 0;
-  m_bAssignSuccesses = 0;
+  m_nQuarksMatched = 0;
+  m_nNeutrinoMatched = 0;
+  m_nReco = 0;
+
 
   this->SetupInputFiles();
   this->InitialiseCutflow();
@@ -537,18 +544,18 @@ void AnalysisZprime::Loop()
     cout << "Processing File '" << (*i) << "'." << endl;
     
     this->SetupTreesForNewFile((*i));
- 
-    // The Event Loop
-    Long64_t nEvents = this->TotalEvents();
-    printf("Looping over events...\n");
-    for (Long64_t jentry=0; jentry<nEvents;++jentry) 
+    
+    Long64_t nEvents;
+    if(m_nEvents < 0) nEvents = this->TotalEvents();
+    else nEvents = m_nEvents;
+    for (Long64_t jentry = 0; jentry < nEvents; ++jentry) 
     {
-      printf("Processing entry %lli\n", jentry);
+      // printf("Processing entry %lli\n", jentry);
       Long64_t ientry = this->IncrementEvent(jentry);
       if (ientry < 0) break;
       this->EachEvent();
+      this->ProgressBar(jentry, nEvents-1, 50);
     }
-    printf("...complete.\n");
     this->CleanUp();
   }
 }
@@ -650,79 +657,83 @@ void AnalysisZprime::CleanUp()
 //   }
 // }
 
-std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVector> p, int l_Q) 
+std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVector> p, int Q_l) 
 {
-  m_bAssignAttempts++;
-  // finds the longitudinal neutrino momentum and matches b-quarks to the leptonially or hadronically decayin top quark
-  //  for semi-leptonic decay
+  // Returns a vector of 4-momenta for all 6 particles in the final state with matching of b-quarks to each top
+  // and matching of 
+  // Takes a vector of true final-state particle momenta as the argument and the charge of the final
+  // state lepton: if +, t decayed leptonically; if -, t~ decayed leptonically.
+  // As going from bbllnn->bblnqq/bbqqln requires only a simple reweighting for parton truth, 
+  // it saves on storage space and processing time to store all events as bbllnn. However,
+  // when we reconstruct the neutrino, we must account for the fact either the top, or the anti-top
+  // may decay hadronically. This means there are two distinguishable final states:
+  // Q_l = +1 : pp -> b b~ l+ nu q q'
+  // Q_l = -1 : pp -> b b~ q q' l- nu
+  // Note that the order here is important, as the order of indicies in the vector of final state momenta
+  // relates to the parent particle t=(0,2,3), t~=(1,4,5) and is fixed at the generator level.
+  // If we want the results combining each final state, we must add these together.
+  // Note: Experimentally p^{x,y}_nu is equated to the MET, of course. 
 
-  TLorentzVector p_l;
-  TLorentzVector p_nu;
-  std::vector<TLorentzVector> p_b(2);
-  std::vector<TLorentzVector> p_q(2);
-  std::vector<TLorentzVector> p_r(p.size());
+  // printf("---\n");
+  m_nReco++;
+
+  std::vector<TLorentzVector> p_r(p.size()); // I am returned!
+  TLorentzVector p_l, p_nu;
+  std::vector<TLorentzVector> p_b(2), p_q(2);
 
   p_b[0] = p[0];
   p_b[1] = p[1];
-  if (l_Q == 1) {
+  if (Q_l == 1) {
     p_l = p[2];
     p_nu = p[3];
     p_q[0] = p[4];
     p_q[1]= p[5];
   }
-  else if (l_Q == 2) {
+  else if (Q_l == -1) {
     p_l = p[4];
     p_nu = p[5];
     p_q[0] = p[2];
     p_q[1]= p[3];
   }
   else {
-    printf("Error: Invalid charge.\n");
+    printf("ERROR: Invalid lepton charge.\n");
   }
-  // printf("Finished assigning momenta.\n");
 
-  double X2, X2min;
-
-  TLorentzVector p_nu_r;
-
-  double px_nu = p_nu.Px();
-  double py_nu = p_nu.Py();
-  double pz_nu = -999;
+  // Calculate neutrino pz solutions
+  
+  double px_l = p_l.Px(), py_l = p_l.Py(), pz_l = p_l.Pz(), E_l;
+  double px_nu = p_nu.Px(), py_nu = p_nu.Py();
   std::vector<std::complex<double> > root;
   double a = -999, b = -999, c = -999, k = -999;
 
-  // recalculate lepton energy in zero mass approximation
-  double p_l0 = std::sqrt(p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py() + p_l.Pz()*p_l.Pz());
+  E_l = std::sqrt(px_l*px_l + py_l*py_l + pz_l*pz_l);
+  if (std::abs(E_l - p_l.E()) > 0.00001) printf("ERROR: Lepton energy doesn't match.\n");
 
-  if ( std::abs(p_l0 - p_l.E() > 0.00001)) printf("p_l0 doesn't match\n");
-
-  k = m_Wmass*m_Wmass/2 + p_l.Px()*p_nu.Px() + p_l.Py()*p_nu.Py();
-
-  a = p_l.Px()*p_l.Px() + p_l.Py()*p_l.Py();
-
-  b = -2*k*(p_l.Pz());
-
-  c = (p_nu.Px()*p_nu.Px() + p_nu.Py()*p_nu.Py())*p_l.E()*p_l.E() - k*k;
+  k = m_Wmass*m_Wmass/2 + px_l*px_nu + py_l*py_nu;
+  a = px_l*px_l + py_l*py_l;
+  b = -2*k*(pz_l);
+  c = (px_nu*px_nu + py_nu*py_nu)*E_l*E_l - k*k;
 
   root = this->SolveQuadratic(a, b, c);
 
-  // select single solution
+  // select single solution and match 'jets'
 
-  double dh = -999, dl = -999, E_nu = -999, mblv = -999, mjjb = -999;
-
+  double X2, X2min;
+  TLorentzVector p_nu_r;
+  double dh = -999, dl = -999, E_nu_r = -999, mblv = -999, mjjb = -999;
   int imin = -999, jmin = -999, it = 0;
-
-  // printf("Solved Quadratic.\n");
-  std::vector<double> rroot(root.size());
+  std::vector<double> rootR(root.size());
 
   if (root[0].imag() == 0 and root[1].imag() == 0) {
+    // Two real solutions: pick best match.
     for (int i = 0; i < 2; i++) {
+      E_nu_r = sqrt(px_nu*px_nu + py_nu*py_nu + rootR[i]*rootR[i]);
+      p_nu_r.SetPxPyPzE(px_nu, py_nu, rootR[i], E_nu_r);
       for (int j = 0; j < 2; j++) {
-        rroot[i] = root[i].real();
-        E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + rroot[i]*rroot[i]);
-        p_nu_r.SetPxPyPzE(px_nu, py_nu, rroot[i], E_nu);
-        mblv = (p_b[std::abs(j)] + p_l + p_nu).M();
+        rootR[i] = root[i].real();
+        mblv = (p_b[std::abs(j)] + p_l + p_nu_r).M();
         mjjb = (p_b[std::abs(j-1)] + p_q[0] + p_q[1]).M();
+        // printf("For i = %i, j = %i: m_bjj = %.15le, mblv = %.15le\n", i, j, mjjb, mblv);
         dh = mjjb - m_tmass;
         dl = mblv - m_tmass;
         X2 = dh*dh + dl*dl;
@@ -738,32 +749,76 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
         }
         it++;
       }
-    }  
+    }
+
   }  
   else {
-    // no real solutions - take the real part of 1
-    printf("NO REAL SOLUTIONS!\n");
+    // No real solutions: take the real part of 1 (real parts are the same)
+    // printf("Info: no real solutions.\n");
+    int i = 0;
+    for (int j = 0; j < 2; j++) {
+      rootR[i] = root[i].real();
+      E_nu_r = sqrt(px_nu*px_nu + py_nu*py_nu + rootR[i]*rootR[i]);
+      p_nu_r.SetPxPyPzE(px_nu, py_nu, rootR[i], E_nu_r);
+      mblv = (p_b[std::abs(j)] + p_l + p_nu).M();
+      mjjb = (p_b[std::abs(j-1)] + p_q[0] + p_q[1]).M();
+      // printf("For i = %i, j = %i: m_bjj = %f, mblv =  %f\n", i, j, mjjb, mblv);
+      dh = mjjb - m_tmass;
+      dl = mblv - m_tmass;
+      X2 = dh*dh + dl*dl;
+      if (it == 0) {
+        X2min = X2;
+        imin = i;
+        jmin = j;
+      }
+      if (X2 < X2min) {
+        X2min = X2;
+        imin = i;
+        jmin = j;
+      }
+      it++;
+    }
   }
-  // printf("Selected solution.\n");
-  pz_nu = rroot[imin];
+  // printf("Chosen solution: imin = %i, jmin = %i\n", imin, jmin);
+
+  // Assess neutrino reconstruction performance.
+
   double pz_nu_truth = p_nu.Pz();
   double Root0MinusTruth = std::abs(root[0].real() - pz_nu_truth);
   double Root1MinusTruth = std::abs(root[1].real() - pz_nu_truth);
   int bestRoot;
-  if (Root0MinusTruth < Root1MinusTruth) {
-    bestRoot = 0;
-  }
-  else if (Root1MinusTruth < Root0MinusTruth) {
-    bestRoot = 1;
-  }
-  else {
-    bestRoot = 0;
-  }
-  bool recoMatchesTruth(jmin == l_Q-1);
-  E_nu = sqrt(px_nu*px_nu + py_nu*py_nu + pz_nu*pz_nu);
-  p_nu_r.SetPxPyPzE(px_nu, py_nu, pz_nu, E_nu);
+  if (Root0MinusTruth < Root1MinusTruth) bestRoot = 0;
+  else if (Root1MinusTruth < Root0MinusTruth) bestRoot = 1;
+  else bestRoot = 0;
+  if (imin == bestRoot) m_nNeutrinoMatched++;
+
+  // Access q-matching performance
+  int b_lep = -999;
+  if (Q_l == 1) b_lep = 0;
+  if (Q_l == -1) b_lep = 1;
+
+  bool b_match;
+  if (b_lep == jmin) b_match = true;
+  else b_match = false;
+  if (b_match) m_nQuarksMatched++;
   
-  if (l_Q == 1){
+  // Print reconstruction performance.
+  // printf("True pz_nu = %f\n", p_nu.Pz());
+  // printf("Possible neutrino solutions:\n");
+  // printf("                             %f + %fi\n", root[0].real(), root[0].imag());
+  // printf("                             %f + %fi\n", root[1].real(), root[1].imag());
+  // printf("Chosen solution:             %f + %fi\n", root[imin].real(), root[imin].imag());
+  // if (imin == bestRoot) printf("Neutrino solution: correct. \n");
+  // else printf("Neutrino solution: incorrect. \n");
+  // if (b_match) printf("b-assignment: correct. \n");
+  // else printf("b-assignment: incorrect. \n");
+  // printf("---\n");
+
+  // Fill output vector
+  double pz_nu_r = rootR[imin];
+  E_nu_r = std::sqrt(px_nu*px_nu + py_nu*py_nu + pz_nu_r*pz_nu_r);
+  p_nu_r.SetPxPyPzE(px_nu, py_nu, pz_nu_r, E_nu_r);
+  if (Q_l == 1){
     p_r[0] = p_b[jmin];
     p_r[1] = p_b[std::abs(jmin-1)];
     p_r[2] = p[2];
@@ -771,7 +826,7 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
     p_r[4] = p[4];
     p_r[5] = p[5];
   }
-  else if (l_Q == 2) {
+  else if (Q_l == -1) {
     p_r[0] = p_b[std::abs(jmin-1)];
     p_r[1] = p_b[jmin];
     p_r[2] = p[2];
@@ -779,17 +834,6 @@ std::vector<TLorentzVector> AnalysisZprime::Resolvebbnu(std::vector<TLorentzVect
     p_r[4] = p[4];
     p_r[5] = p_nu_r;
   }
-  printf("---\n");
-  printf("True pz_nu = %f\n", p_nu.Pz());
-  printf("Possible neutrino solutions:\n");
-  printf("                             %f + %fi\n", root[0].real(), root[0].imag());
-  printf("                             %f + %fi\n", root[1].real(), root[1].imag());
-  printf("Chosen solution:             %f + %fi\n", root[imin].real(), root[imin].imag());
-  if (imin == bestRoot) printf("Neutrino solution: correct. \n");
-  else printf("Neutrino solution: incorrect. \n");
-  if (recoMatchesTruth) printf("b-assignment: correct. \n");
-  else printf("b-assignment: incorrect. \n");
-  printf("---\n");
   return p_r;
 }
 
@@ -849,4 +893,18 @@ void AnalysisZprime::PrintCutflow()
     printf("%s cut: %i pass\n", m_cutNames[cut].Data(), m_cutflow[cut]);
   }
   printf("------\n");
+}
+
+inline void AnalysisZprime::ProgressBar(unsigned int x, unsigned int n, unsigned int w)
+{
+    if ( (x != n) && (x % (n/100+1) != 0) ) return;
+ 
+    float ratio = x/(float)n;
+    int c = ratio * w;
+ 
+    cout << "Processing events: "<< std::setw(3) << (int)(ratio*100) << "% [";
+    for (int x=0; x<c; x++) cout << "=";
+    for (int x=c; x<w; x++) cout << " ";
+    if (x == n) cout << "]\n" << std::flush;
+    else cout << "]\r" << std::flush;
 }
