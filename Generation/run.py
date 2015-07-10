@@ -79,7 +79,7 @@ if option.batch:
 if option.ecm_low < 0 or option.ecm_up < 0:
   sys.exit("Error: COM energy must be positive definite")
 
-if option.ecm_low > collider_energy*1000 or option.ecm_up > collider_energy*1000: 
+if option.ecm_low > collider_energy or option.ecm_up > collider_energy: 
   sys.exit("Error: COM energy cannot exceed collider energy")
 
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
@@ -208,7 +208,7 @@ elif final_state == "bbllnn":
 if sys.platform == "darwin":
   data_directory = "/Users/declan/Data/Zp-tt_pheno"
 elif sys.platform == "linux2":
-  code_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno/Generation"
+  run_directory = "/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation"
   data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
 
 ntuple_directory = data_directory + "/NTuples"
@@ -263,8 +263,8 @@ print >> config, '%i ! symmetrise_costheta_t' % option.symmetrise_costheta_t
 print >> config, '%i ! symmetrise_costheta_5' % option.symmetrise_costheta_5
 print >> config, '%i ! symmetrise_costheta_7' % option.symmetrise_costheta_7
 print >> config, '%i ! verbose mode' % option.verbose
-print >> config, '%i.d0 ! ecm_low' % option.ecm_low
-print >> config, '%i.d0 ! ecm_up' % option.ecm_up
+print >> config, '%i.d3 ! ecm_low' % option.ecm_low
+print >> config, '%i.d3 ! ecm_up' % option.ecm_up
 
 try:
   with open('Config/%s' % config_name,'w') as config_file:
@@ -278,10 +278,9 @@ if option.batch:
   print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
   print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
   print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
-  print >> handler, '%s/Binary/%s < %s/Config/%s' % (code_directory, executable, code_directory, config_name)
+  print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
   print >> handler, 'mv LSFJOB_* Jobs'
   print >> handler, 'rm -- "$0"'
-
 
   try:
     with open('%s' % handler_name, 'w') as handler_file:
