@@ -7,13 +7,13 @@ bool BinsMatch(TH1D* h1, TH1D* h2){
   return true;
 }
 
-TH1D* Significance(TH1D* h1, TH1D* h2){
+TH1D *Significance(TH1D *h1, TH1D *h2){
   if (!BinsMatch(h1, h2)){
     printf("Bins do not match\n");
   }
   TString name = (TString) h1->GetName() + "_sig";
   TH1D* h = (TH1D*) h1->Clone(name);
-  h->Add(h2,-1);
+  h->Add(h2, -1);
   double error1, error2, error;
   for (int i = 0; i < h->GetNbinsX(); i++){
     error1 = h1->GetBinError(i);
@@ -21,91 +21,114 @@ TH1D* Significance(TH1D* h1, TH1D* h2){
     error = std::sqrt(error1*error1 + error2*error2);
     h->SetBinContent(i, h->GetBinContent(i)/error);
   }
-  h->GetYaxis()->SetTitle("S");
+  h->GetYaxis()->SetTitle("Significance");
+  double labelSize = h1->GetXaxis()->GetLabelSize();
+  double titleSize = h1->GetXaxis()->GetTitleSize();
+  double titleOffset = h1->GetXaxis()->GetTitleOffset();
+  // printf("x label size: %f \n", xLabelSize);
+  h->GetXaxis()->SetLabelSize(labelSize*3.2);
+  h->GetXaxis()->SetTitleSize(titleSize*3.2);
+  h->GetXaxis()->SetTitleOffset(titleOffset/1.5);
+
+  h->GetYaxis()->SetLabelSize(labelSize*2);
+  h->GetYaxis()->SetTitleSize(titleSize*3.2);
+  h->GetYaxis()->SetTitleOffset(titleOffset/3.2);
+  // h->GetYaxis()->SetNdivisions(3);
+
+
   return h;
 }
 
-TCanvas* overlay(const bool normalise, const bool findSignificance,
+TCanvas* Overlay(const bool normalise, const bool findSignificance,
                  TString histName1, TString histTitle1, TString fileName1, 
                  TString histName2, TString histTitle2, TString fileName2, 
                  TString histName3, TString histTitle3, TString fileName3,
                  TString histName4, TString histTitle4, TString fileName4) {
+
+  bool plot2(histName2 != "NULL");
+  bool plot3(histName3 != "NULL");
+  bool plot4(histName4 != "NULL");
 
   TFile *f1, *f2, *f3, *f4;
   TH1D *h1, *h2, *h3, *h4;
   TH1D *h2sig, *h3sig, *h4sig;
   TString name1, name2, name3, name4;
   TString epsFileName;
-  
+
+  const bool showErrors(true);
+  TString drawOption;
+  if (showErrors) drawOption = "E1x0P";
+  else drawOption = "HIST";
+
   TCanvas *canvas = new TCanvas(histName1, histTitle1, 1280, 751);
   canvas->cd();
 
-  double rightmargin = 0.1;
-  double leftmargin = 0.2;
+  double leftMargin = 0.2, rightMargin = 0.1; 
 
   double minValue, newMinValue, maxValue, newMaxValue;
+  TPad *lowerPad, *upperPad;
 
-  // Define upper
-  TPad* upperPad = new TPad("upperPad","upperPad",0, 0.2, 1, 1);
-  upperPad->SetFillColor(-1);
-  upperPad->Draw();
-  upperPad->SetRightMargin(rightmargin);
-  upperPad->SetLeftMargin(leftmargin);
+  if (findSignificance) {
+    // double 
+    upperPad = new TPad("upperPad", "upperPad", 0, 0.2, 1, 1);
+    upperPad->SetFillColor(-1);
+    upperPad->Draw();
+    upperPad->SetRightMargin(rightMargin);
+    upperPad->SetLeftMargin(leftMargin);
 
-  // Define lower pad
-  TPad* lowerPad = new TPad("lowerPad","lowerPad",0, 0.05, 1, 0.3);
-  lowerPad->SetFillColor(-1);
-  lowerPad->SetTopMargin(0);
-  lowerPad->Draw();
-  lowerPad->SetBottomMargin(0.3);
-  lowerPad->SetTopMargin(0.1);
-  lowerPad->SetRightMargin(rightmargin);
-  lowerPad->SetLeftMargin(leftmargin);
+    lowerPad = new TPad("lowerPad", "lowerPad", 0, 0.05, 1, 0.3);
+    lowerPad->SetFillColor(-1);
+    lowerPad->SetTopMargin(0);
+    lowerPad->Draw();
+    lowerPad->SetBottomMargin(0.3);
+    lowerPad->SetTopMargin(0);
+    lowerPad->SetRightMargin(rightMargin);
+    lowerPad->SetLeftMargin(leftMargin);
 
-  if (findSignificance == true) upperPad->cd();
+    upperPad->cd();
+  }
 
   f1 = new TFile(fileName1, "READ");
   if (!f1->IsOpen()) printf("Failed to open %s\n", fileName1.Data());
   h1 = (TH1D*) f1->Get(histName1);
-  name1 = histName1 + '@' + fileName1;
-  if (histTitle1 == "NULL") h1->SetTitle(name1);
-  else h1->SetTitle(histTitle1);
+  h1->SetTitle(histTitle1);
   h1->SetMarkerStyle(20);
-  h1->Draw("HIST");//("E1x0P");
-  h1->SetMarkerColor(kGray);
-  h1->SetLineColor(kGray);
+  h1->Draw(drawOption);
+  h1->SetMarkerColor(kCyan+4);
+  h1->SetLineColor(kCyan+4);
   h1->GetYaxis()->SetTitleOffset(1.3);
   h1->GetXaxis()->SetTitleOffset(1.2);
   maxValue = h1->GetBinContent(h1->GetMaximumBin());
   minValue = h1->GetBinContent(h1->GetMinimumBin());
 
+  double xLabelSize = h1->GetXaxis()->GetLabelSize();
+  printf("x label size: %f \n", xLabelSize);
 
-  if (histName2 != "NULL") {
+
+  if (plot2) {
     f2 = new TFile(fileName2, "READ");
-    if (!f2->IsOpen()) printf("Failed to open %s\n", fileName2.Data());
-    name2 = histName2 + '@' + fileName2;
+    if (!f2->IsOpen()) printf("Error: failed to open %s.\n", fileName2.Data());
     h2 = (TH1D*) f2->Get(histName2);
-    if (histTitle2 == "NULL") h2->SetTitle(name2);
-    else h2->SetTitle(histTitle2);
+    h2->SetTitle(histTitle2);
     h2->SetMarkerStyle(20);
-    h2->Draw("HIST SAME");//("E1x0PSAME");
-    h2->SetLineColor(kRed);
-    h2->SetMarkerColor(kRed);
+    h2->Draw(drawOption + "SAME");
+    h2->SetLineColor(kPink-8);
+    h2->SetMarkerColor(kPink-8);
     newMinValue = h2->GetBinContent(h2->GetMinimumBin());
     if (newMinValue < minValue) minValue = newMinValue;
     newMaxValue = h2->GetBinContent(h2->GetMaximumBin());
     if (newMaxValue > maxValue) maxValue = newMaxValue;
   }
 
-  if (histName3 != "NULL") {
+  if (plot3) {
     f3 = new TFile(fileName3, "READ");
-    if (!f3->IsOpen()) printf("Failed to open %s\n", fileName3.Data());
+    if (!f3->IsOpen()) printf("Error: failed to open %s.\n", fileName3.Data());
     h3 = (TH1D*) f3->Get(histName3);
     name3 = histName3 + '@' + fileName3;
-    if (histTitle3 == "NULL") h3->SetTitle(name3);
+    if (plot3) h3->SetTitle(name3);
     else h3->SetTitle(histTitle3);
     h3->SetMarkerStyle(20);
-    h3->Draw("HIST SAME");//("E1x0PSAME");
+    h3->Draw(drawOption + "SAME");
     h3->SetLineColor(kAzure+5);
     h3->SetMarkerColor(kAzure+5);
     newMinValue = h3->GetBinContent(h3->GetMinimumBin());
@@ -114,15 +137,13 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
     if (newMaxValue > maxValue) maxValue = newMaxValue;
   }
 
-  if (histName4 != "NULL") {
+  if (plot4) {
     f4 = new TFile(fileName4, "READ");
-    if (!f4->IsOpen()) printf("Failed to open %s\n", fileName4.Data());
+    if (!f4->IsOpen()) printf("Error: failed to open %s\n", fileName4.Data());
     h4 = (TH1D*) f4->Get(histName4);
-    name4 = histName4 + '@' + fileName4;
-    if (histTitle4 == "NULL") h4->SetTitle(name4);
-    else h4->SetTitle(histTitle4);
+    h4->SetTitle(histTitle4);
     h4->SetMarkerStyle(20);
-    h4->Draw("HIST SAME");//("E1x0PSAME");
+    h4->Draw(drawOption + "SAME");
     h4->SetLineColor(kGreen+2);
     h4->SetMarkerColor(kGreen+2);
     newMinValue = h4->GetBinContent(h4->GetMinimumBin());
@@ -139,29 +160,29 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
 
   h1->GetYaxis()->SetRangeUser(minValue, maxValue);
 
-  if (findSignificance == true) {
-    if (histName2 != "NULL") h2sig = Significance(h2, h1);
-    if (histName3 != "NULL") h3sig = Significance(h3, h1);
-    if (histName4 != "NULL") h4sig = Significance(h4, h1);
+  if (findSignificance) {
+    if (plot2) h2sig = Significance(h2, h1);
+    if (plot3) h3sig = Significance(h3, h1);
+    if (plot4) h4sig = Significance(h4, h1);
   }
 
   // normalize histograms
-  if (normalise == true) { 
+  if (normalise) { 
     TString yTitle;
     yTitle = h1->GetYaxis()->GetTitle();
     yTitle = "1/#sigma #times " + yTitle;
     h1->GetYaxis()->SetTitle(yTitle);
     h1->Scale(1.0/std::abs(h1->Integral()));
-    if (histName2 != "NULL") h2->Scale(std::abs(1.0/h2->Integral()));
-    if (histName3 != "NULL") h3->Scale(std::abs(1.0/h3->Integral()));
-    if (histName4 != "NULL") h4->Scale(std::abs(1.0/h4->Integral()));
+    if (plot2) h2->Scale(std::abs(1.0/h2->Integral()));
+    if (plot3) h3->Scale(std::abs(1.0/h3->Integral()));
+    if (plot4) h4->Scale(std::abs(1.0/h4->Integral()));
   }
 
   bool overlap = false;
   double sigPerOverlap = 0;
   // find overlapping area (histograms must be have the same user ranges and same number of bins)
   if (overlap == true) {
-    if (histName2 != "NULL") {
+    if (plot3) {
       double overlapPerBin = 0;
       double overlap = 0;
       for (int i = 0; i < h1->GetNbinsX(); i++) {
@@ -187,9 +208,9 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
   // rangeMax = 4000;
   // if(rangeMin != -999 && rangeMax != -999) {
   //   h1->GetXaxis()->SetRangeUser(rangeMin, rangeMax); 
-  //   if (histName2 != "NULL") h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-  //   if (histName3 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
-  //   if (histName4 != "NULL") h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (plot3) h2->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (plot3) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
+  //   if (plot4) h3->GetXaxis()->SetRangeUser(rangeMin, rangeMax);
   // }
 
   // double yRangeMin = -999;
@@ -198,34 +219,35 @@ TCanvas* overlay(const bool normalise, const bool findSignificance,
   // yRangeMax = 1;
   // if(yRangeMin != -999 && yRangeMax != -999) {
   //   h1->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax); 
-  //   if (histName2 != "NULL") h2->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
-  //   if (histName3 != "NULL") h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
-  //   if (histName4 != "NULL") h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  //   if (plot3) h2->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  //   if (plot3) h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
+  //   if (plot4) h3->GetXaxis()->SetRangeUser(yRangeMin, yRangeMax);
   // }
 
 
-  TLegend* legend = new TLegend(0.70, 0.70, 0.90, 0.90, "");
+  TLegend* legend = new TLegend(0.70, 0.70, 0.88, 0.88, "");
   legend->SetBorderSize(0);
   legend->AddEntry(h1, h1->GetTitle());
-  if (histName2 != "NULL") legend->AddEntry(h2, h2->GetTitle());
-  if (histName3 != "NULL") legend->AddEntry(h3, h3->GetTitle());
-  if (histName4 != "NULL") legend->AddEntry(h4, h4->GetTitle());
+  if (plot2) legend->AddEntry(h2, h2->GetTitle());
+  if (plot3) legend->AddEntry(h3, h3->GetTitle());
+  if (plot4) legend->AddEntry(h4, h4->GetTitle());
   legend->Draw();
-  if (overlap == true) {
+  if (overlap) {
     std::ostringstream strs;
     strs << sigPerOverlap;
     std::string str = strs.str();
     TString tstr(str);
-    TString SigOverlap = "Signal in overlapping area = " + tstr + "\%";
+    TString SigOverlap = "Signal in overlapping area = " + tstr + "%%";
     TLatex* texBox = new TLatex(0.5,0.5, SigOverlap);
     texBox->Draw();
   }
 
-  if (findSignificance == true) {
+  if (findSignificance) {
     lowerPad->cd();
-    if (histName2 != "NULL") h2sig->Draw();
-    if (histName3 != "NULL") h3sig->Draw();
-    if (histName4 != "NULL") h4sig->Draw();
+    if (plot2) h2sig->Draw("HIST");
+    if (plot3) h3sig->Draw("HIST SAME");
+    if (plot4) h4sig->Draw("HIST SAME");
+   h1->GetXaxis()->SetLabelSize(0);
   }
 
   return canvas;

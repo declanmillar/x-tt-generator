@@ -18,11 +18,12 @@ int main(int argc, char* argv[])
   TString weightsDirectory = dataDirectory + "/Weights";
   TString histogramDirectory = dataDirectory + "/Histograms";
 
+  const double luminosity(300000);
   TString channel("bbllnn"); 
   TString model("SM");
   TString options("_xc_");
   TString energy("13");
-  TString points("5x2000000");
+  TString points("5x100000");
   TString filename(channel + "_" + model + "_" + energy + options + points);
   TString inputFilename(ntupleDirectory + "/" + channel + "/" + filename + ".root");
   TString weightFilename(weightsDirectory + "/" + channel + "/" + filename + ".txt");
@@ -53,129 +54,65 @@ int main(int argc, char* argv[])
   // TString inputFilename4(ntupleDirectory + "/" + channel4 + "/" + filename4);
   // TString outputFilename4(histogramDirectory + "/"  filename4 + "_hist.root");
 
-  AnalysisZprime analysis(channel, model, inputFilename, weightFilename, outputFilename);
-  AnalysisZprime analysis2(channel2, model2, inputFilename2, weightFilename2, outputFilename2);
+  AnalysisZprime analysis(channel, model, luminosity, inputFilename, weightFilename, outputFilename);
+  // AnalysisZprime analysis2(channel2, model2, luminosity, inputFilename2, weightFilename2, outputFilename2);
   // AnalysisZprime analysis3(channel3, model3, inputFilename3, outputFilename3);
   // AnalysisZprime analysis4(channel4, model4, inputFilename4, outputFilename4);
 
 
-  TApplication* RootApp = new TApplication("RootApp",&argc,argv);
-
-  // if (channel == "ll" or channel == "tt") {
-  //   TCanvas* c_Mtt =overlay(false, false, "Mtt", model, outputFilename,
-  //                                     "Mtt", model2, outputFilename2
-  //                                     // "Mtt", model3, outputFilename3,
-  //                                     // "Mtt", model4, outputFilename4
-  //                                     );
-  //   c_Mtt->Draw();
-  //   RootApp->Run(kTRUE);
-  // }
-
-  //   // TCanvas* c_AttC =overlay(false, false, "AttC", model, outputFilename, 
-  //   //                                    "AttC", model2, outputFilename2,
-  //   //                                    "AFBstar", model3, outputFilename3,
-  //   //                                    "AFBstar", model4, outputFilename4);
-  //   // c_AttC->Draw();
-  //   // RootApp->Run(kTRUE);
-
-  // if (channel == "tt") {
-
-
-  //   TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFilename, 
-  //                                             "AFBstar", model2, outputFilename2);
-  //                                         // "AFBstar", model3, outputFilename3);
-  //                                         // "AFBstar", model4, outputFilename4);
-  //   c_AFBstar->Draw();
-  //   RootApp->Run(kTRUE);
-  // }
-
-
-  // if (channel == "2to2") {
-
-  //   TCanvas* c_Mtt =overlay(false, false, "Mtt", model, outputFilename, 
-  //                                     "Mtt", model2, outputFilename2,
-  //                                     "Mtt", model3, outputFilename3,
-  //                                     "Mtt", model4, outputFilename4
-  //                                     );
-  //   c_Mtt->Draw();
-  //   RootApp->Run(kTRUE);
-
-  //   TCanvas* c_AL =overlay(false, false,  "AL", model, outputFilename, 
-  //                                     "AL", model2, outputFilename2,
-  //                                     "AL", model3, outputFilename3,
-  //                                     "AL", model4, outputFilename4);
-  //   c_AL->Draw();
-  //   RootApp->Run(kTRUE);
-
-
-  //   TCanvas* c_ALL =overlay(false, false, "ALL", model, outputFilename, 
-  //                                     "ALL", model2, outputFilename2,
-  //                                     "ALL", model3, outputFilename3,
-  //                                     "ALL", model4, outputFilename4);
-  //   c_ALL->Draw();
-  //   RootApp->Run(kTRUE);
-  // }
+  TApplication* RootApp = new TApplication("RootApp", &argc, argv);
 
   if (channel == "bbllnn") {
-    // if (overlayTransverse == true) {
-    //   TCanvas* c_KTbbll =overlay(true, "KTbbll", "SM", outputFilename, 
-    //                                 "KTbbll", "(Z',SM) (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFilename2);
-    //   c_KTbbll->Draw();
-    //   RootApp->Run(kTRUE);
 
-    //   TCanvas* c_HT =overlay(true, "HT", "SM", outputFilename, 
-    //                             "HT", "(Z',SM) (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFilename2);
-    //   c_HT->Draw();
-    //   RootApp->Run(kTRUE);
+    TCanvas* c_Mtt =Overlay(false, true, "Mff", model, outputFilename);//, 
+                                                // "Mff", model2, outputFilename2);
+                                                // "MttNuReco", model3, outputFilename3);
+                                                // "MttNuReco", model4, outputFilename4);
+    c_Mtt->Draw();
+    RootApp->Run(kTRUE);
 
-    //   TCanvas* c_dphi_HT =superpose2d(true, "dphi_HT", "|M_{SM}|^{2}", outputFilename, 
-    //                             "dphi_HT", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFilename2);
-    //   c_dphi_HT->Draw();
+    TCanvas* c_Mtt_r =Overlay(false, true, "Mtt_r", model, outputFilename, 
+                                                "Mtt_r", model2, outputFilename2);
+                                                // "Mtt_rNuReco", model3, outputFilename3);
+                                                // "Mtt_rNuReco", model4, outputFilename4);
+    c_Mtt_r->Draw();
+    RootApp->Run(kTRUE);
 
-    //   RootApp->Run(kTRUE);
-
-    //   TCanvas* c_dphi_KTbbll =superpose2d(true, "dphi_KTbbll", "|M_{SM}|^{2}", outputFilename, 
-    //                             "dphi_KTbbll", "|M_{Z'}|^{2} (M = 2.5TeV, #Gamma = 0.5 TeV)", outputFilename2);
-    //   c_dphi_KTbbll->Draw();
-
-    //   RootApp->Run(kTRUE);
-    // }
-
-    TCanvas* c_AFBstar =overlay(false, false, "AFBstar", model, outputFilename, 
+    TCanvas* c_AFBstar =Overlay(false, true, "AFBstar", model, outputFilename, 
                                                 "AFBstar", model2, outputFilename2);
                                                 // "AFBstarNuReco", model3, outputFilename3);
                                                 // "AFBstarNuReco", model4, outputFilename4);
     c_AFBstar->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_AFBstarNuReco =overlay(false, false, "AFBstar_r", model, outputFilename, 
+    TCanvas* c_AFBstarNuReco =Overlay(false, true, "AFBstar_r", model, outputFilename, 
                                                 "AFBstar_r", model2, outputFilename2);
                                                 // "AFBstarNuReco", model3, outputFilename3);
                                                 // "AFBstarNuReco", model4, outputFilename4);
     c_AFBstarNuReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_PzNu =overlay(false, false, "Pz_nu", "Truth", outputFilename, 
+    TCanvas* c_PzNu =Overlay(false, false, "Pz_nu", "Truth", outputFilename, 
                           "Pz_nu_r", "Reconstructed", outputFilename);
     c_PzNu->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_MttReco =overlay(false, false, "Mff", "Truth", outputFilename, 
+    TCanvas* c_MttReco =Overlay(false, false, "Mff", "Truth", outputFilename, 
                               "Mtt_r", "Reconstructed", outputFilename);
     c_MttReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_yttReco =overlay(false, false, "ytt", "Truth", outputFilename, 
+    TCanvas* c_yttReco =Overlay(false, false, "ytt", "Truth", outputFilename, 
                               "ytt_r", "Reconstructed", outputFilename);
     c_yttReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_CosThetaReco =overlay(false, false, "CosTheta", "Truth", outputFilename, 
+    TCanvas* c_CosThetaReco =Overlay(false, false, "CosTheta", "Truth", outputFilename, 
                               "CosTheta_r", "Reconstructed", outputFilename);
     c_CosThetaReco->Draw();
     RootApp->Run(kTRUE);
 
-    TCanvas* c_CosThetaStarReco =overlay(false, false, "CosThetaStar", "Truth", outputFilename, 
+    TCanvas* c_CosThetaStarReco =Overlay(false, false, "CosThetaStar", "Truth", outputFilename, 
                               "CosThetaStar_r", "Reconstructed", outputFilename);
     c_CosThetaStarReco->Draw();
     RootApp->Run(kTRUE);

@@ -18,7 +18,7 @@
 
 class AnalysisZprime{
 public:
-  AnalysisZprime(const TString channel, const TString model, const TString& inputFileName, const TString& weightsFileName, const TString& outputFileName);
+  AnalysisZprime(const TString channel, const TString model, const double luminosity, const TString& inputFileName, const TString& weightsFileName, const TString& outputFileName);
   virtual ~AnalysisZprime();
   
 protected:
@@ -44,6 +44,7 @@ protected:
   double TotalAsymmetry(TH1D* h_A, TH1D* h_B);
   void TotalSpinAsymmetries();
   TH1D* Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B);
+  void ApplyLuminosity(TH1D*);
   void AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B);
   TH1D* MakeALL();
   TH1D* MakeAL();
@@ -69,6 +70,7 @@ private:
   void operator = (const AnalysisZprime& rhs);  
 
   // Counters
+  bool m_useLumi;
   unsigned int m_nReco;
   unsigned int m_nQuarksMatched;
   unsigned int m_nNeutrinoMatched;
@@ -78,7 +80,7 @@ private:
   // Parameters
   float m_pi;
   float m_GeV;
-  double m_intLumi;
+  double m_luminosity;
   double m_Wmass;
   double m_tmass;
 
