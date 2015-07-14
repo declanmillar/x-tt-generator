@@ -125,11 +125,11 @@ void AnalysisZprime::EachEvent()
 
     // asymmetries
     if (CosThetaStar > 0) {
-      h_AFBstarF->Fill(Mff, weight/h_AFBstarF->GetXaxis()->GetBinWidth(1));
+      h_AFBstarF->Fill(Mff, 2*weight/h_AFBstarF->GetXaxis()->GetBinWidth(1));
     }
 
     if (CosThetaStar < 0) {
-      h_AFBstarB->Fill(Mff, weight/h_AFBstarB->GetXaxis()->GetBinWidth(1));
+      h_AFBstarB->Fill(Mff, 2*weight/h_AFBstarB->GetXaxis()->GetBinWidth(1));
     }
 
     if (dy > 0) {
@@ -147,7 +147,8 @@ void AnalysisZprime::EachEvent()
       h_MttRR->Fill(Mff, m_ntup->weightRR()/h_MttRR->GetXaxis()->GetBinWidth(1));
     }    
     else if (m_channel == "bbllnn") {
-      h_Pz_nu->Fill(p[3].Pz(), weight/h_Pz_nu->GetXaxis()->GetBinWidth(1));
+      h_Pz_nu->Fill(p[3].Pz(), weight*2/h_Pz_nu->GetXaxis()->GetBinWidth(1));
+      
       h_ytt_r->Fill(ytt_r1, weight/h_ytt_r->GetXaxis()->GetBinWidth(1));
       h_ytt_r->Fill(ytt_r2, weight/h_ytt_r->GetXaxis()->GetBinWidth(1));
 
@@ -218,7 +219,7 @@ void AnalysisZprime::CheckPerformance()
   if (m_channel == "bbllnn") {
     h_AlL = this->Asymmetry("AL", "A_{L}", h_AlLF, h_AlLB);
     h_AllC = this->Asymmetry("AllC", "A^{ll}_{C}", h_AllCF, h_AllCB);
-    h_AFBstar_r = this->Asymmetry("AFBstar_r", "A_{FB}^* (reco)", h_AFBstar_rF, h_AFBstar_rB);
+    h_AFBstar_r = this->Asymmetry("AFBstar_r", "A_{FB}^{*} (reco)", h_AFBstar_rF, h_AFBstar_rB);
   }
 }
 
@@ -294,6 +295,8 @@ TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_
 void AnalysisZprime::ApplyLuminosity(TH1D* h)
 {
   if (!m_useLumi) return;
+  // printf("Name: %s\n", h->GetTitle());
+  // printf("Luminosity: %f\n", m_luminosity);
   double sigma = -999, N = -999, dN = -999;
   double efficiency = 1.0;
   for (int i = 1; i < h->GetNbinsX(); i++) {
@@ -302,8 +305,10 @@ void AnalysisZprime::ApplyLuminosity(TH1D* h)
     h->SetBinContent(i, N);
     dN = std::sqrt(N);
     h->SetBinError(i, dN);
-    printf("N = %f, dN = %f\n", N, dN);
+    // printf("sigma = %f, N = %f, dN = %f\n", sigma, N, dN);
   }
+  TString events = "Events";
+  h->GetYaxis()->SetTitle(events);
 }
 
 void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B)
@@ -321,48 +326,48 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
     N = m_luminosity*efficiency*sigma;
     if (N > 0) deltaA = std::sqrt((1.0 - A*A)/N);
     else deltaA = 0;
-    printf("A = %f, dA= %f, N= %f\n", A, deltaA, N);
+    // printf("A = %f, dA= %f, N= %f\n", A, deltaA, N);
     h_Asymmetry->SetBinError(i, deltaA);
   }
 }
 
 void AnalysisZprime::CreateHistograms() 
 {
-  h_AFBstarF = new TH1D("AFstar", "m_{tt}^{F*}", 130, 2.0, 4.0);
-  h_AFBstarB = new TH1D("ABstar", "m_{tt}^{B*}", 130, 2.0, 4.0);
-  h_AttCF = new TH1D("AttCF", "m_{tt}^{CF}", 130, 2.0, 4.0);
-  h_AttCB = new TH1D("AttCB", "m_{tt}^{CB}", 130, 2.0, 4.0);
+  h_AFBstarF = new TH1D("AFstar", "m_{tt}^{F*}", 50, 2.0, 4.0);
+  h_AFBstarB = new TH1D("ABstar", "m_{tt}^{B*}", 50, 2.0, 4.0);
+  h_AttCF = new TH1D("AttCF", "m_{tt}^{CF}", 50, 2.0, 4.0);
+  h_AttCB = new TH1D("AttCB", "m_{tt}^{CB}", 50, 2.0, 4.0);
   h_CosTheta = new TH1D("CosTheta", "cos#theta", 50, -1.0, 1.0);
   h_CosThetaStar = new TH1D("CosThetaStar", "cos#theta^{*}", 50, -1.0, 1.0);
 
   if (m_channel == "ll") {
-    h_Mff = new TH1D("Mff", "m_{ll}", 130, 2.0, 4.0);
+    h_Mff = new TH1D("Mff", "m_{ll}", 50, 2.0, 4.0);
   }
 
   if (m_channel == "tt") {
-    h_Mff = new TH1D("Mff", "m_{tt}", 130, 2.0, 4.0);
+    h_Mff = new TH1D("Mff", "m_{tt}", 50, 2.0, 4.0);
     h_ytt = new TH1D("ytt", "y_{tt}", 50, -2.5, 2.5);
-    h_MttLL = new TH1D("MttLL", "m_{tt}^{LL}", 130, 2.0, 4.0);
-    h_MttLR = new TH1D("MttLR", "m_{tt}^{LR}", 130, 2.0, 4.0);
-    h_MttRL = new TH1D("MttRL", "m_{tt}^{RL}", 130, 2.0, 4.0);
-    h_MttRR = new TH1D("MttRR", "m_{tt}^{RR}", 130, 2.0, 4.0);
+    h_MttLL = new TH1D("MttLL", "m_{tt}^{LL}", 50, 2.0, 4.0);
+    h_MttLR = new TH1D("MttLR", "m_{tt}^{LR}", 50, 2.0, 4.0);
+    h_MttRL = new TH1D("MttRL", "m_{tt}^{RL}", 50, 2.0, 4.0);
+    h_MttRR = new TH1D("MttRR", "m_{tt}^{RR}", 50, 2.0, 4.0);
   }
 
   if (m_channel == "bbllnn") {
-    h_Mff = new TH1D("Mff", "m_{tt}", 130, 2.0, 4.0);
+    h_Mff = new TH1D("Mff", "m_{tt}", 50, 2.0, 4.0);
     h_ytt = new TH1D("ytt", "y_{tt}", 50, -2.5, 2.5);
-    h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 100,-1000.0, 1000.0);
+    h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 50,-500.0, 500.0);
     h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_{reco}", 50, -1.0, 1.0);
     h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_{reco}^{*}", 50, -1.0, 1.0);
-    h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 100, -2.5, 2.5);
-    h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (reco)", 100, -1000.0, 1000.0);
-    h_Mtt_r = new TH1D("Mtt_r", "M^{reco}_{tt}", 130, 2.0, 4.0);
-    h_AlLF = new TH1D("AlLF", "AlLF", 20, 2.0, 4.0);
-    h_AlLB = new TH1D("AlLB", "AlLB", 20, 2.0, 4.0);
+    h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 50, -2.5, 2.5);
+    h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (reco)", 50, -500.0, 500.0);
+    h_Mtt_r = new TH1D("Mtt_r", "M^{reco}_{tt}", 50, 2.0, 4.0);
+    h_AlLF = new TH1D("AlLF", "AlLF", 50, 2.0, 4.0);
+    h_AlLB = new TH1D("AlLB", "AlLB", 50, 2.0, 4.0);
     h_AllCF = new TH1D("AllCF", "AllCF", 50, 2.0, 4.0);
     h_AllCB = new TH1D("AllCB", "AllCB", 50, 2.0, 4.0);
-    h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 65, 2.0, 4.0);
-    h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 65, 2.0, 4.0);
+    h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 50, 2.0, 4.0);
+    h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 50, 2.0, 4.0);
   }
 }
 
@@ -378,6 +383,8 @@ void AnalysisZprime::MakeGraphs()
   h_Mff->GetXaxis()->SetTitle(h_Mff->GetTitle() + TeV);
   h_Mff->GetYaxis()->SetTitle(numBase + h_Mff->GetTitle() + " [" + units +"/TeV]");
   this->ApplyLuminosity(h_Mff);
+
+
 
   h_AFBstar = this->Asymmetry("AFBstar", "A^{*}_{FB}", h_AFBstarF, h_AFBstarB);
   h_AttC = this->Asymmetry("AttC", "A_{C}", h_AttCF, h_AttCB);
@@ -413,13 +420,13 @@ void AnalysisZprime::MakeGraphs()
 
   if (m_channel == "bbllnn") {
 
-    h_ytt->GetYaxis()->SetTitle(numBase + h_ytt->GetTitle() + " [" + units +"]");
-    h_ytt->GetXaxis()->SetTitle(h_ytt->GetTitle());
-    this->ApplyLuminosity(h_ytt);
-
     h_ytt_r->GetYaxis()->SetTitle(numBase + h_ytt_r->GetTitle() + " [" + units +"]");
     h_ytt_r->GetXaxis()->SetTitle(h_ytt_r->GetTitle());
     this->ApplyLuminosity(h_ytt_r);
+
+    h_ytt->GetYaxis()->SetTitle(numBase + h_ytt->GetTitle() + " [" + units +"]");
+    h_ytt->GetXaxis()->SetTitle(h_ytt->GetTitle());
+    this->ApplyLuminosity(h_ytt);
 
     h_AFBstar->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
     h_AFBstar->GetXaxis()->SetTitle("M_{tt} [GeV]");
@@ -432,8 +439,8 @@ void AnalysisZprime::MakeGraphs()
     h_CosThetaStar_r->GetXaxis()->SetTitle(h_CosThetaStar_r->GetTitle());
     this->ApplyLuminosity(h_CosThetaStar_r);
 
-    h_AFBstar_r->GetYaxis()->SetTitle(h_AFBstar->GetTitle());
-    h_AFBstar_r->GetXaxis()->SetTitle("M_{tt} [GeV]");
+    h_AFBstar_r->GetYaxis()->SetTitle(h_AFBstar_r->GetTitle());
+    h_AFBstar_r->GetXaxis()->SetTitle("M_{tt}^{reco} [GeV]");
 
     h_Pz_nu->GetYaxis()->SetTitle(numBase + h_Pz_nu->GetTitle() + " [" + units +"GeV]");
     h_Pz_nu->GetXaxis()->SetTitle(h_Pz_nu->GetTitle());
@@ -446,10 +453,6 @@ void AnalysisZprime::MakeGraphs()
     h_Mtt_r->GetYaxis()->SetTitle(numBase + h_Mtt_r->GetTitle() + " [" + units +"/TeV]");
     h_Mtt_r->GetXaxis()->SetTitle(h_Mtt_r->GetTitle() + TeV);
     this->ApplyLuminosity(h_Mtt_r);
-
-    h_ytt_r->GetYaxis()->SetTitle(numBase + h_ytt_r->GetTitle() + " [" + units +"]");
-    h_ytt_r->GetXaxis()->SetTitle(h_ytt_r->GetTitle());
-    this->ApplyLuminosity(h_ytt_r);
 
     h_AllC->GetYaxis()->SetTitle(h_AllC->GetTitle());
     h_AllC->GetXaxis()->SetTitle("M_{tt} [GeV]");
@@ -607,15 +610,16 @@ void AnalysisZprime::Loop()
     cout << "Input:  '" << (*i) << "'." << endl;
     this->SetupTreesForNewFile((*i));
     
-    Long64_t nEvents;
-    nEvents = this->TotalEvents();
+    Long64_t nEntries;
+    nEntries = this->TotalEvents();
     printf("--- Event Loop ---\n");
-    for (Long64_t jentry = 0; jentry < nEvents; ++jentry) 
+    printf("File contains %lld entries.\n", nEntries);
+    for (Long64_t jentry = 0; jentry < nEntries; ++jentry) 
     {
       Long64_t ientry = this->IncrementEvent(jentry);
       if (ientry < 0) break;
       this->EachEvent();
-      this->ProgressBar(jentry, nEvents-1, 50);
+      this->ProgressBar(jentry, nEntries-1, 50);
     }
     this->CleanUp();
   }

@@ -291,7 +291,7 @@ if option.batch:
 
   subprocess.call("chmod a+x %s.sh" % filename, shell = True)
   print " Submitting batch job."
-  subprocess.call('bsub -q 1nw /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+  subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
 
 else:
   if sys.platform == "linux2":

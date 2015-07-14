@@ -255,19 +255,19 @@ subroutine initialise_non_universal
   mass_zp(1) = sqrt(m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp))
 
   ! leptons
-  gZpl(1,1) = e/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
-  gZpn(1,1) = e/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
-  gZpl3(1,1) = gZpl(1,1) - e/st/sp/cp
-  gZpn3(1,1) = gZpn(1,1) + e/st/sp/cp
+  gZpl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
+  gZpn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
+  gZpl3(1,1) = gZpl(1,1) - e/2/st/sp/cp
+  gZpn3(1,1) = gZpn(1,1) + e/2/st/sp/cp
 
   ! quarks
-  gZpu(1,1) = e/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
-  gZpd(1,1) = e/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
-  gZpt(1,1) = gZpu(1,1) + e/st/sp/cp
-  gZpb(1,1) = gZpd(1,1) - e/st/sp/cp
+  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
+  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
+  gZpt(1,1) = gZpu(1,1) + e/2/st/sp/cp
+  gZpb(1,1) = gZpd(1,1) - e/2/st/sp/cp
 
   ! right handed couplings
-  gZpl(2,1) = e*st*2*st*st*sp*sp*sp*cp/x/ct/ct
+  gZpl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
   gZpn(2,1) = 0
   gZpl3(2,1) = gZpl(2,1)
   gZpn3(2,1) = gZpn(2,1)
