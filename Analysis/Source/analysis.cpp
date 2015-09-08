@@ -345,29 +345,29 @@ void AnalysisZprime::CreateHistograms()
   }
 
   if (m_channel == "tt") {
-    h_Mff = new TH1D("Mff", "m_{tt}", 50, 2.0, 4.0);
-    h_ytt = new TH1D("ytt", "y_{tt}", 50, -2.5, 2.5);
-    h_MttLL = new TH1D("MttLL", "m_{tt}^{LL}", 50, 2.0, 4.0);
-    h_MttLR = new TH1D("MttLR", "m_{tt}^{LR}", 50, 2.0, 4.0);
-    h_MttRL = new TH1D("MttRL", "m_{tt}^{RL}", 50, 2.0, 4.0);
-    h_MttRR = new TH1D("MttRR", "m_{tt}^{RR}", 50, 2.0, 4.0);
+    h_Mff = new TH1D("Mff", "m_{tt}", 25, 2.0, 4.0);
+    h_ytt = new TH1D("ytt", "y_{tt}", 25, -2.5, 2.5);
+    h_MttLL = new TH1D("MttLL", "m_{tt}^{LL}", 25, 2.0, 4.0);
+    h_MttLR = new TH1D("MttLR", "m_{tt}^{LR}", 25, 2.0, 4.0);
+    h_MttRL = new TH1D("MttRL", "m_{tt}^{RL}", 25, 2.0, 4.0);
+    h_MttRR = new TH1D("MttRR", "m_{tt}^{RR}", 25, 2.0, 4.0);
   }
 
   if (m_channel == "bbllnn") {
-    h_Mff = new TH1D("Mff", "m_{tt}", 50, 2.0, 4.0);
-    h_ytt = new TH1D("ytt", "y_{tt}", 50, -2.5, 2.5);
-    h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 50,-500.0, 500.0);
-    h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_{reco}", 50, -1.0, 1.0);
-    h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_{reco}^{*}", 50, -1.0, 1.0);
-    h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 50, -2.5, 2.5);
-    h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (reco)", 50, -500.0, 500.0);
-    h_Mtt_r = new TH1D("Mtt_r", "M^{reco}_{tt}", 50, 2.0, 4.0);
-    h_AlLF = new TH1D("AlLF", "AlLF", 50, 2.0, 4.0);
-    h_AlLB = new TH1D("AlLB", "AlLB", 50, 2.0, 4.0);
-    h_AllCF = new TH1D("AllCF", "AllCF", 50, 2.0, 4.0);
-    h_AllCB = new TH1D("AllCB", "AllCB", 50, 2.0, 4.0);
-    h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 50, 2.0, 4.0);
-    h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 50, 2.0, 4.0);
+    h_Mff = new TH1D("Mff", "m_{tt}", 25, 2.0, 4.0);
+    h_ytt = new TH1D("ytt", "y_{tt}", 25, -2.5, 2.5);
+    h_Pz_nu = new TH1D("Pz_nu", "p_{z}^{#nu}", 25,-250.0, 250.0);
+    h_CosTheta_r = new TH1D("CosTheta_r", "cos#theta_{reco}", 25, -1.0, 1.0);
+    h_CosThetaStar_r = new TH1D("CosThetaStar_r", "cos#theta_{reco}^{*}", 25, -1.0, 1.0);
+    h_ytt_r = new TH1D("ytt_r", "y_{tt}^{_r}", 25, -2.5, 2.5);
+    h_Pz_nu_r = new TH1D("Pz_nu_r", "p_{z}^{#nu} (reco)", 25, -250.0, 250.0);
+    h_Mtt_r = new TH1D("Mtt_r", "M^{reco}_{tt}", 25, 2.0, 4.0);
+    h_AlLF = new TH1D("AlLF", "AlLF", 25, 2.0, 4.0);
+    h_AlLB = new TH1D("AlLB", "AlLB", 25, 2.0, 4.0);
+    h_AllCF = new TH1D("AllCF", "AllCF", 25, 2.0, 4.0);
+    h_AllCB = new TH1D("AllCB", "AllCB", 25, 2.0, 4.0);
+    h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 25, 2.0, 4.0);
+    h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 25, 2.0, 4.0);
   }
 }
 

@@ -55,7 +55,7 @@ TCanvas* Overlay(const bool normalise, const bool findSignificance,
   TString name1, name2, name3, name4;
   TString epsFileName;
 
-  const bool showErrors(false);
+  const bool showErrors(true);
   TString drawOption;
   if (showErrors) drawOption = "E1x0P";
   else drawOption = "HIST";
