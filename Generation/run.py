@@ -4,9 +4,9 @@
 # Generates a configuration file then runs the zprime executable using it,
 # either locally or by submission to the LXPLUS batch system.
 # Do './run.py -h' for help.
-# Author: Declan Millar (d.millar@soton.ac.uk)
+# Author: Declan Millar, d.millar@soton.ac.uk.
 
-import os, StringIO, re, optparse, subprocess, time, sys, random, glob
+import os, StringIO, re, optparse, subprocess, time, sys, random, glob, socket
 
 usage = "Usage: ./run.py final_state model_name collider_energy vegas_points [options]"
 parser = optparse.OptionParser(usage)
@@ -15,6 +15,7 @@ parser = optparse.OptionParser(usage)
 parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
 parser.add_option("-B", "--batch", default = False, action = "store_true", help = "run in batch mode")
+parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
@@ -73,7 +74,7 @@ if ncall < 2:
   sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
-if option.batch: 
+if option.batch and "lxplus" in socket.HostName: 
   option.write_logfile = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
@@ -85,8 +86,8 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
-if sys.platform != "linux2" and option.batch:
-  sys.exit("Error: Must be on lxplus to submit a batch job.")
+if "lxplus" in socket.HostName or "iridis" in socket.HostName:
+  sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
   sys.exit("Error: interference must be from 0-4.")
@@ -204,12 +205,15 @@ elif final_state == "tt":
 elif final_state == "bbllnn":
   final_state_id = 1
 
-# logfile 
-if sys.platform == "darwin":
+# Logfile 
+if socket.HostName is "Lorkhan":
   data_directory = "/Users/declan/Data/Zp-tt_pheno"
-elif sys.platform == "linux2":
+elif "lxplus" in socket.HostName:
   run_directory = "/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation"
   data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
+elif "iridis" in socket.HostName:
+  run_directory = "/home/dam1g09/Zp-tt_pheno/Generation"
+  data_directory = "/scratch/dam1g09/Zp-tt_pheno"
 
 ntuple_directory = data_directory + "/NTuples"
 weights_directory = data_directory + "/Weights"
@@ -234,7 +238,7 @@ weights_file = '%s/%s/%s.txt' % (weights_directory, final_state, filename)
 ntuple_file = "%s/%s/%s.root" % (ntuple_directory, final_state, filename)
 logfile_command = "> %s/%s/%s &" % (log_directory, final_state, logfile) if option.write_logfile else ""
 
-# print config file
+# Print config file
 config = StringIO.StringIO()
 
 print >> config, '%s' % ntuple_file
@@ -269,19 +273,27 @@ print >> config, '%i.d3 ! ecm_up' % option.ecm_up
 try:
   with open('Config/%s' % config_name,'w') as config_file:
     config_file.write(config.getvalue())
-    print " Config file written to Config/%s." % config_name
+    print " Config: %s." % config_name
 except IOError:
   sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
 
 if option.batch:
   handler = StringIO.StringIO()
-  print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
-  print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
-  print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
-  print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
-  print >> handler, 'mv LSFJOB_* Jobs'
+  if "lxplus" in socket.HostName:
+    print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
+    print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
+    print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
+    print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
+    print >> handler, 'mv LSFJOB_* Jobs'
+  if "iridis" in socket.HostName:
+    print "walltime = %s" % option.walltime
+    print >> handler, "#!/bin/bash"
+    print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
+    print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
+    print >> handler, "cd %s" % run_directory
+    # print >> handler, "cd $PBS_O_WORKDIR"
+    print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
   print >> handler, 'rm -- "$0"'
-
   try:
     with open('%s' % handler_name, 'w') as handler_file:
       handler_file.write(handler.getvalue())
@@ -291,10 +303,13 @@ if option.batch:
 
   subprocess.call("chmod a+x %s.sh" % filename, shell = True)
   print " Submitting batch job."
-  subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+  if "lxplus" in socket.HostName: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+  if "iridis" in socket.HostName: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+
+import socket
 
 else:
-  if sys.platform == "linux2":
+  if "lxplus" in socket.gethostname:
     print " Sourcing ROOT..."
     subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
     print " Adding RootTuple libraries to library path..."
