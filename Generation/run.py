@@ -306,8 +306,6 @@ if option.batch:
   if "lxplus" in socket.HostName: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
   if "iridis" in socket.HostName: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
-import socket
-
 else:
   if "lxplus" in socket.gethostname:
     print " Sourcing ROOT..."
