@@ -46,6 +46,8 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 
 (option, args) = parser.parse_args()
 
+hostname = socket.gethostname()
+
 if len(args) != 4:
   sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage)) 
 
@@ -74,7 +76,7 @@ if ncall < 2:
   sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
-if option.batch and "lxplus" in socket.HostName: 
+if option.batch and "lxplus" in hostname: 
   option.write_logfile = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
@@ -86,7 +88,7 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
-if "lxplus" in socket.HostName or "iridis" in socket.HostName:
+if ("lxplus" in hostname) or ("iridis" in hostname):
   sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
@@ -205,13 +207,15 @@ elif final_state == "tt":
 elif final_state == "bbllnn":
   final_state_id = 1
 
-# Logfile 
-if socket.HostName is "Lorkhan":
+# Logfile
+run_directory = "."
+data_directory = "."
+if "Lorkhan" in hostname:
   data_directory = "/Users/declan/Data/Zp-tt_pheno"
-elif "lxplus" in socket.HostName:
+elif "lxplus" in hostname:
   run_directory = "/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation"
   data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
-elif "iridis" in socket.HostName:
+elif "iridis" in hostname:
   run_directory = "/home/dam1g09/Zp-tt_pheno/Generation"
   data_directory = "/scratch/dam1g09/Zp-tt_pheno"
 
@@ -279,13 +283,13 @@ except IOError:
 
 if option.batch:
   handler = StringIO.StringIO()
-  if "lxplus" in socket.HostName:
+  if "lxplus" in hostname:
     print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
     print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
     print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
     print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
     print >> handler, 'mv LSFJOB_* Jobs'
-  if "iridis" in socket.HostName:
+  if "iridis" in hostname:
     print "walltime = %s" % option.walltime
     print >> handler, "#!/bin/bash"
     print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
@@ -303,16 +307,16 @@ if option.batch:
 
   subprocess.call("chmod a+x %s.sh" % filename, shell = True)
   print " Submitting batch job."
-  if "lxplus" in socket.HostName: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
-  if "iridis" in socket.HostName: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+  if "lxplus" in hostname: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+  if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
 else:
-  if "lxplus" in socket.gethostname:
+  if "lxplus" in hostname:
     print " Sourcing ROOT..."
     subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
     print " Adding RootTuple libraries to library path..."
     subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
   print " Executing locally."
   if option.write_logfile:
-    print " Output will be written to Logs/%s" % logfile
+    print " Logfile: /%s" % logfile
   subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
