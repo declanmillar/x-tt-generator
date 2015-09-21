@@ -1,4 +1,4 @@
-# Z' -> tt 
+# Z' -> tt Generator
 
 ---
 
