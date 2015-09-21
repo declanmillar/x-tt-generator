@@ -368,6 +368,8 @@ void AnalysisZprime::CreateHistograms()
     h_AllCB = new TH1D("AllCB", "AllCB", 25, 2.0, 4.0);
     h_AFBstar_rF = new TH1D("AFBstarNu_r1", "AFBstarNu_r1", 25, 2.0, 4.0);
     h_AFBstar_rB = new TH1D("AFBstarNu_r2", "AFBstarNu_r2", 25, 2.0, 4.0);
+    h_real = new TH1D("real", "m_{tt}", 25, 2.0, 4.0);
+    h_imaginary = new TH1D("imaginary", "m_{tt}", 25, 2.0, 4.0);
   }
 }
 

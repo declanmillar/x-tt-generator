@@ -23,20 +23,20 @@ int main(int argc, char* argv[])
   TString model("SM");
   TString options("_xc_");
   TString energy("13");
-  TString points("5x2000000");
+  TString points("5x5000");
   TString filename(channel + "_" + model + "_" + energy + options + points);
   TString inputFilename(ntupleDirectory + "/" + channel + "/" + filename + ".root");
   TString weightFilename(weightsDirectory + "/" + channel + "/" + filename + ".txt");
   TString outputFilename(histogramDirectory + "/" + channel + "/" + filename + "_hist.root");
 
-  TString channel2("bbllnn"); 
-  TString model2("GLR-R");
-  TString options2("_l2u4xc_");
-  TString points2("5x2000000");
-  TString filename2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
-  TString inputFilename2(ntupleDirectory + "/" + channel2 + "/" + filename2 + ".root");
-  TString weightFilename2(weightsDirectory + "/" + channel + "/" + filename2 + ".txt");
-  TString outputFilename2(histogramDirectory + "/" + channel + "/" + filename2 + "_hist.root");
+  // TString channel2("bbllnn"); 
+  // TString model2("GLR-R");
+  // TString options2("_xc_");
+  // TString points2("5x5000");
+  // TString filename2(channel2 + "_" + model2 + "_" + energy + options2 + points2);
+  // TString inputFilename2(ntupleDirectory + "/" + channel2 + "/" + filename2 + ".root");
+  // TString weightFilename2(weightsDirectory + "/" + channel + "/" + filename2 + ".txt");
+  // TString outputFilename2(histogramDirectory + "/" + channel + "/" + filename2 + "_hist.root");
 
   // TString channel3("2to6"); 
   // TString model3("GLR-R");

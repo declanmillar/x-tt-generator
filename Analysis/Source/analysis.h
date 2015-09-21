@@ -141,6 +141,10 @@ private:
   TH1D* h_ALL;
   TH1D* h_AL;
 
+  // counting
+  TH1D* h_imaginary;
+  TH1D* h_real;
+
   // Charge asymmetry histograms
   TH1D* h_AFBstar;
   TH1D* h_AFBstarF;
