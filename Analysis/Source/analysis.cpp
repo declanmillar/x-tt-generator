@@ -1,5 +1,6 @@
 #include "analysis.h"
 
+
 AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const double luminosity, const TString& inputFileName, const TString& weightsFileName, const TString& outputFileName) :
   m_pi(3.14159265),
   m_GeV(1000.0),
@@ -21,8 +22,8 @@ AnalysisZprime::AnalysisZprime(const TString channel, const TString model, const
   this->PostLoop();
 }
 
-void AnalysisZprime::EachEvent()
-{
+
+void AnalysisZprime::EachEvent () {
   UpdateCutflow(c_Event, true);
 
   p = vector<TLorentzVector>(6);
@@ -181,8 +182,8 @@ void AnalysisZprime::EachEvent()
   }
 }
 
-void AnalysisZprime::PostLoop()
-{
+
+void AnalysisZprime::PostLoop () {
   this->GetResults();
   this->CheckPerformance();
   this->MakeGraphs();
@@ -191,8 +192,8 @@ void AnalysisZprime::PostLoop()
   printf("--- Done ---\n");
 }
 
-void AnalysisZprime::GetResults()
-{
+
+void AnalysisZprime::GetResults () {
   printf("--- Results ---\n");
   double sigma = h_Mff->Integral("width");
   if (std::abs(sigma - m_sigma) > 10e-11) {
@@ -204,8 +205,8 @@ void AnalysisZprime::GetResults()
   if (m_channel == "tt") this->TotalSpinAsymmetries();
 }
 
-void AnalysisZprime::CheckPerformance()
-{
+
+void AnalysisZprime::CheckPerformance () {
   // printf("m_nQuarksMatched = %i\n", m_nQuarksMatched);
   // printf("m_nNeutrinoMatched = %i\n", m_nNeutrinoMatched);
   // printf("m_nReco = %i\n", m_nReco);  
@@ -223,8 +224,8 @@ void AnalysisZprime::CheckPerformance()
   }
 }
 
-TH1D* AnalysisZprime::MakeALL()
-{
+
+TH1D* AnalysisZprime::MakeALL () {
   TH1D* h_A = (TH1D*) h_MttLL->Clone();
   TH1D* h_B = (TH1D*) h_MttLR->Clone();
 
@@ -240,8 +241,8 @@ TH1D* AnalysisZprime::MakeALL()
   return h_ALL;
 }
 
-TH1D* AnalysisZprime::MakeAL()
-{
+
+TH1D* AnalysisZprime::MakeAL () {
   TH1D* h_A = (TH1D*) h_MttLL->Clone();
   TH1D* h_B = (TH1D*) h_MttRR->Clone();
 
@@ -254,8 +255,8 @@ TH1D* AnalysisZprime::MakeAL()
   return h_AL;
 }
 
-void AnalysisZprime::TotalSpinAsymmetries()
-{
+
+void AnalysisZprime::TotalSpinAsymmetries () {
   double sigmaLL = h_MttLL->Integral("width");
   double sigmaLR = h_MttLR->Integral("width");
   double sigmaRL = h_MttRL->Integral("width");
@@ -271,16 +272,16 @@ void AnalysisZprime::TotalSpinAsymmetries()
   printf("AL = %f\n", AL);  
 }
 
-double AnalysisZprime::TotalAsymmetry(TH1D* h_A, TH1D* h_B)
-{
+
+double AnalysisZprime::TotalAsymmetry(TH1D* h_A, TH1D* h_B) {
   double A = h_A->Integral("width");
   double B = h_B->Integral("width");
   double Atot = (A - B)/(A + B);
   return Atot;
 }
 
-TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B)
-{
+
+TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_B) {
   TH1D* h_numerator = (TH1D*) h_A->Clone(name);
   TH1D* h_denominator = (TH1D*) h_A->Clone();
   h_numerator->SetTitle(title);
@@ -292,8 +293,8 @@ TH1D* AnalysisZprime::Asymmetry(TString name, TString title, TH1D* h_A, TH1D* h_
   return h_numerator;
 }
 
-void AnalysisZprime::ApplyLuminosity(TH1D* h)
-{
+
+void AnalysisZprime::ApplyLuminosity(TH1D* h) {
   if (!m_useLumi) return;
   // printf("Name: %s\n", h->GetTitle());
   // printf("Luminosity: %f\n", m_luminosity);
@@ -311,8 +312,8 @@ void AnalysisZprime::ApplyLuminosity(TH1D* h)
   h->GetYaxis()->SetTitle(events);
 }
 
-void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B)
-{
+
+void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_B) {
   double efficiency = 1.0;
   double A;
   double sigmaA, sigmaB, sigma;
@@ -331,8 +332,8 @@ void AnalysisZprime::AsymmetryUncertainty(TH1D* h_Asymmetry, TH1D* h_A, TH1D* h_
   }
 }
 
-void AnalysisZprime::CreateHistograms() 
-{
+
+void AnalysisZprime::CreateHistograms() {
   h_AFBstarF = new TH1D("AFstar", "m_{tt}^{F*}", 50, 2.0, 4.0);
   h_AFBstarB = new TH1D("ABstar", "m_{tt}^{B*}", 50, 2.0, 4.0);
   h_AttCF = new TH1D("AttCF", "m_{tt}^{CF}", 50, 2.0, 4.0);
@@ -373,8 +374,9 @@ void AnalysisZprime::CreateHistograms()
   }
 }
 
-void AnalysisZprime::MakeGraphs() 
-{
+
+
+void AnalysisZprime::MakeGraphs() {
   // printf("Making Graphs...\n");
   TString numBase;
   if (m_channel == "tt") numBase = "d#sigma(pp->t#bar{t}) / d"; 
@@ -461,8 +463,8 @@ void AnalysisZprime::MakeGraphs()
   }
 }
 
-void AnalysisZprime::WriteHistograms() 
-{
+
+void AnalysisZprime::WriteHistograms() {
   m_outputFile->cd();
   m_outputFile->cd("/");
 
@@ -502,8 +504,8 @@ void AnalysisZprime::WriteHistograms()
   delete m_outputFile;
 }
 
-bool AnalysisZprime::PassCuts() 
-{
+
+bool AnalysisZprime::PassCuts() {
   // if (this->PassCuts_Mtt())
   // {
   //   if (this->PassCuts_MET())
@@ -517,8 +519,8 @@ bool AnalysisZprime::PassCuts()
   // return false;
 }
 
-bool AnalysisZprime::PassCutsMET()
-{
+
+bool AnalysisZprime::PassCutsMET () {
   bool pass;
   if (m_channel == "ll") pass = true;
   else if (m_channel == "tt") pass = true;
@@ -529,8 +531,8 @@ bool AnalysisZprime::PassCutsMET()
   return pass;
 }
 
-bool AnalysisZprime::PassCutsMtt()
-{
+
+bool AnalysisZprime::PassCutsMtt () {
   // if (Mff > 1200.0)
   //   {
   //     if (Mff < 2200.0)
@@ -543,8 +545,8 @@ bool AnalysisZprime::PassCutsMtt()
   // return false;
 }
 
-bool AnalysisZprime::PassCutsFiducial()
-{ 
+
+bool AnalysisZprime::PassCutsFiducial () { 
   for (unsigned int i = 0; i < p.size(); i++) {
     bool outsideCrack = p[i].PseudoRapidity() <= 1.37 || p[i].PseudoRapidity() >= 1.52;
     bool central      = p[i].PseudoRapidity() <= 2.47;
@@ -559,8 +561,8 @@ bool AnalysisZprime::PassCutsFiducial()
   return true;
 }
 
-bool AnalysisZprime::PassCutsYtt()
-{ 
+
+bool AnalysisZprime::PassCutsYtt () { 
   if (std::abs(P.Rapidity()) > 0)
   {
     UpdateCutflow(c_Ytt, true);
@@ -570,8 +572,8 @@ bool AnalysisZprime::PassCutsYtt()
   return false;
 }
 
-void AnalysisZprime::PreLoop()
-{
+
+void AnalysisZprime::PreLoop () {
   printf("--- Setup ---\n");
   this->ResetCounters();
   this->SetupInputFiles();
@@ -581,8 +583,8 @@ void AnalysisZprime::PreLoop()
   this->CreateHistograms();
 }
 
-void AnalysisZprime::ResetCounters()
-{
+
+void AnalysisZprime::ResetCounters () {
   if (m_luminosity >= 0) m_useLumi = true;
   else m_luminosity = false;
   m_nQuarksMatched = 0;
@@ -592,8 +594,8 @@ void AnalysisZprime::ResetCounters()
   m_nComplexRoots = 0;
 }
 
-void AnalysisZprime::SetupWeightsFiles()
-{
+
+void AnalysisZprime::SetupWeightsFiles () {
   TString weightsName(m_weightsFileName);
   ifstream weights(weightsName.Data());
   if (!weights.is_open()) printf("Error: failed to open %s\n", weightsName.Data());
@@ -604,8 +606,8 @@ void AnalysisZprime::SetupWeightsFiles()
   weights.close();
 }
 
-void AnalysisZprime::Loop()
-{
+
+void AnalysisZprime::Loop () {
   // Loop over all files
   for (Itr_s i = m_inputFiles->begin(); i != m_inputFiles->end(); ++i)
   {
@@ -627,37 +629,36 @@ void AnalysisZprime::Loop()
   }
 }
 
-AnalysisZprime::~AnalysisZprime() {
-  delete m_inputFiles;
-}
 
-void AnalysisZprime::SetupOutputFiles()
-{
+AnalysisZprime::~AnalysisZprime() { delete m_inputFiles; }
+
+
+void AnalysisZprime::SetupOutputFiles() {
   m_outputFile = new TFile(m_outputFileName,"RECREATE");
   printf("Output: '%s'.\n", m_outputFileName.Data());
 }
 
-void AnalysisZprime::SetupInputFiles()
-{
+
+void AnalysisZprime::SetupInputFiles () {
   m_inputFiles = new vector<TString>;  
   m_inputFiles->push_back(m_inputFileName);
 }
 
-Long64_t AnalysisZprime::TotalEvents()
-{
+
+Long64_t AnalysisZprime::TotalEvents () {
   if (m_ntup != 0){return m_ntup->totalEvents();}
   return -999;  
 }
 
-Long64_t AnalysisZprime::IncrementEvent(Long64_t i)
-{
+
+Long64_t AnalysisZprime::IncrementEvent(Long64_t i) {
   Long64_t ev(-1);
   if (m_ntup != 0){ev = m_ntup->LoadTree(i);}
   return ev;  
 }
 
-void AnalysisZprime::SetupTreesForNewFile(const TString& s)
-{
+
+void AnalysisZprime::SetupTreesForNewFile(const TString& s) {
   TString treeToUse = "RootTuple";
   
   m_chainNtup = new TChain(treeToUse,"");
@@ -666,14 +667,14 @@ void AnalysisZprime::SetupTreesForNewFile(const TString& s)
   m_ntup = new RootTuple(m_chainNtup);  
 }
 
-void AnalysisZprime::CleanUp()
-{
+
+void AnalysisZprime::CleanUp () {
   delete m_chainNtup;
   delete m_ntup;
 }
 
-std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<TLorentzVector> p, int Q_l) 
-{
+
+std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<TLorentzVector> p, int Q_l) {
   // Returns a vector of 4-momenta for all 6 particles in the final state with matching of b-quarks to each top
   // and matching of 
   // Takes a vector of true final-state particle momenta as the argument and the charge of the final
@@ -715,7 +716,6 @@ std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<
   }
 
   // Calculate neutrino pz solutions
-  
   double px_l = p_l.Px(), py_l = p_l.Py(), pz_l = p_l.Pz(), E_l;
   double px_nu = p_nu.Px(), py_nu = p_nu.Py();
   std::vector<std::complex<double> > root;
@@ -732,7 +732,6 @@ std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<
   root = this->SolveQuadratic(a, b, c);
 
   // select single solution and match 'jets'
-
   double X2 = -999, X2min = -999;
   TLorentzVector p_nu_r;
   double dh = -999, dl = -999, E_nu_r = -999, mblv = -999, mjjb = -999;
@@ -744,14 +743,14 @@ std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<
   if (root[0].imag() == 0 and root[1].imag() == 0) {
     nReal = 2; // Two real solutions: pick best match.
     m_nRealRoots++;
-    h_real_r1->Fill(Mtt_r1, weight/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
-    h_real_r2->Fill(Mtt_r2, weight/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
+    h_real_r1->Fill(Mtt_r1, m_ntuple->weight()/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
+    h_real_r2->Fill(Mtt_r2, m_ntuple->weight()/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
   }
   else {
     nReal = 1; // No real solutions: take the real part of 1 (real parts are the same)
     m_nComplexRoots++;
-    h_imaginary_r1->Fill(Mtt_r1, weight/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
-    h_imaginary_r2->Fill(Mtt_r2, weight/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
+    h_imaginary_r1->Fill(Mtt_r1, m_ntuple->weight()/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
+    h_imaginary_r2->Fill(Mtt_r2, m_ntuple->weight()/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
   }
 
   for (unsigned int i = 0; i < nReal; i++) {
@@ -838,8 +837,8 @@ std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<
   return p_r;
 }
 
-std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, double b, double c) 
-{
+
+std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, double b, double c) {
     // solves quadratic for both roots 
     // returns both as complex values in a complex vector x(2)
 
@@ -859,18 +858,17 @@ std::vector<std::complex<double> > AnalysisZprime::SolveQuadratic(double a, doub
     roots.push_back(term1 + term2);
     roots.push_back(term1 - term2);
 
-    
     return roots;
 }
 
-const void AnalysisZprime::UpdateCutflow(int cut, bool passed)
-{
+
+const void AnalysisZprime::UpdateCutflow(int cut, bool passed) {
   if (m_cutflow[cut] == -999) m_cutflow[cut] = 0;
   if (passed) m_cutflow[cut] +=1;
 }
 
-void AnalysisZprime::InitialiseCutflow() 
-{
+
+void AnalysisZprime::InitialiseCutflow() {
   m_cutflow = std::vector<int>(m_cuts, -999);
   m_cutNames = std::vector<TString>(m_cuts, "no name");
   m_cutNames[c_Event] = "Event";
@@ -878,12 +876,11 @@ void AnalysisZprime::InitialiseCutflow()
   m_cutNames[c_Mtt] = "Mff";
   m_cutNames[c_Fiducial] = "Fiducial";
 
-
   h_cutflow = new TH1D("Cutflow", "Cutflow", m_cuts, 0, m_cuts);
 }
 
-void AnalysisZprime::PrintCutflow() 
-{
+
+void AnalysisZprime::PrintCutflow() {
   printf("--- Cutflow ---\n");
   for (int cut = 0; cut < m_cuts; cut++) {
     if (m_cutflow[cut] == -999) continue;
@@ -895,8 +892,8 @@ void AnalysisZprime::PrintCutflow()
   }
 }
 
-inline void AnalysisZprime::ProgressBar(unsigned int x, unsigned int n, unsigned int w)
-{
+
+inline void AnalysisZprime::ProgressBar(unsigned int x, unsigned int n, unsigned int w) {
   if ( (x != n) && (x % (n/100+1) != 0) ) return;
 
   float ratio = x/(float)n;
