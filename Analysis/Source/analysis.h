@@ -137,13 +137,13 @@ private:
   TH1D* h_MttRL;
   TH1D* h_MttRR;
 
-  // Spin asymmetry historgrams
+  // Spin asymmetry histograms
   TH1D* h_ALL;
   TH1D* h_AL;
 
   // Counting
-  TH1D* h_imaginary;
-  TH1D* h_real;
+  TH1D* h_imaginary_r;
+  TH1D* h_real_r;
   TH1D* h_imaginary_r1;
   TH1D* h_real_r1;
   TH1D* h_imaginary_r2;
