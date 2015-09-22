@@ -373,7 +373,7 @@ void AnalysisZprime::CreateHistograms()
   }
 }
 
-void AnalysisZprime::MakeGraphs()
+void AnalysisZprime::MakeGraphs() 
 {
   // printf("Making Graphs...\n");
   TString numBase;
@@ -627,9 +627,7 @@ void AnalysisZprime::Loop()
   }
 }
 
-AnalysisZprime::~AnalysisZprime()
-{
-
+AnalysisZprime::~AnalysisZprime() {
   delete m_inputFiles;
 }
 
@@ -741,13 +739,19 @@ std::vector<TLorentzVector> AnalysisZprime::ReconstructSemiLeptonic(std::vector<
   int imin = -999, jmin = -999, it = 0;
   std::vector<double> rootR(root.size());
   unsigned int nReal;
+  double Mtt_r1 = P_r1.M()/1000;
+  double Mtt_r2 = P_r2.M()/1000;
   if (root[0].imag() == 0 and root[1].imag() == 0) {
     nReal = 2; // Two real solutions: pick best match.
     m_nRealRoots++;
+    h_real_r1->Fill(Mtt_r1, weight/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
+    h_real_r2->Fill(Mtt_r2, weight/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
   }
   else {
     nReal = 1; // No real solutions: take the real part of 1 (real parts are the same)
     m_nComplexRoots++;
+    h_imaginary_r1->Fill(Mtt_r1, weight/h_Mtt_r1->GetXaxis()->GetBinWidth(1));
+    h_imaginary_r2->Fill(Mtt_r2, weight/h_Mtt_r2->GetXaxis()->GetBinWidth(1));
   }
 
   for (unsigned int i = 0; i < nReal; i++) {
