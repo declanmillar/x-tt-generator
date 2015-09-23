@@ -1,24 +1,23 @@
 function sggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8)
-! returns amplitude squared summed/avg over colors and helicities
-! for the point in phase space p1,p2,p3,p4,p5,p6,p7,p8, lam357, lam468
-! for process :
-!  g g  -> b b~ ta+ ta- vt vt~
+  ! returns amplitude squared summed/avg over colors and helicities
+  ! for the point in phase space p1,p2,p3,p4,p5,p6,p7,p8, lam357, lam468
+  ! for process :
+  !  g g  -> b b~ ta+ ta- vt vt~
 
   implicit none
 
   real :: polgg
-  real sggbbffff_qcd
+  real :: sggbbffff_qcd
 
-! constants
+  ! constants
   integer :: iq ! incoming fermion species (see initialise for IDs)
-  integer ::    nexternal,   ncomb
-  parameter (nexternal=8, ncomb=256)
+  integer :: nexternal, ncomb
+  parameter (nexternal = 8, ncomb = 256)
 
-! arguments
-  real :: p1(0:3),p2(0:3), &
-  p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+  ! arguments
+  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
-! local variables
+  ! local variables
   integer :: i,j
   integer :: nhel(nexternal,ncomb),ntry
   real :: t
@@ -329,7 +328,6 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   implicit none
 
   ! constants
-
   integer :: iq   ! incoming fermion species (see initialise for IDs)
   integer ::    ngraphs,    neigen,    nexternal
   parameter (ngraphs=  3,neigen=  2,nexternal=8)
@@ -338,7 +336,6 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   parameter (zero=0d0)
 
   ! arguments
-
   real :: p1(0:3),p2(0:3), &
   p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
   integer :: nhel(nexternal)
