@@ -1,8 +1,7 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 
-# Python run script for the Zprime program
-# Generates a configuration file then runs the zprime executable using it,
-# either locally or by submission to the LXPLUS batch system.
+# Python run script for the Zprime program.
+# Generates a configuration file, then runs the zprime executable using it, either locally or by submission to the LXPLUS or Iridis batch system.
 # Do './run.py -h' for help.
 # Author: Declan Millar, d.millar@soton.ac.uk.
 
@@ -49,7 +48,7 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 hostname = socket.gethostname()
 
 if len(args) != 4:
-  sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage)) 
+  sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage))
 
 final_state = str(args[0])
 model_name = str(args[1])
@@ -76,19 +75,19 @@ if ncall < 2:
   sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
-if option.batch and "lxplus" in hostname: 
+if option.batch and "lxplus" in hostname:
   option.write_logfile = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
   sys.exit("Error: COM energy must be positive definite")
 
-if option.ecm_low > collider_energy or option.ecm_up > collider_energy: 
+if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
   sys.exit("Error: COM energy cannot exceed collider energy")
 
-if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low): 
+if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
-if ("lxplus" in hostname) or ("iridis" in hostname):
+if option.batch and (("lxplus" in hostname) or ("iridis" in hostname)):
   sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
@@ -211,42 +210,29 @@ elif final_state == "bbllnn":
 run_directory = "."
 data_directory = "."
 if "Lorkhan" in hostname:
-  data_directory = "/Users/declan/Data/Zp-tt_pheno"
+  data_directory = "/Users/declan/Data/Zprime"
 elif "lxplus" in hostname:
-  run_directory = "/afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation"
-  data_directory = "/afs/cern.ch/work/d/demillar/Zp-tt_pheno"
+  run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
+  data_directory = "/afs/cern.ch/work/d/demillar/zprime"
 elif "iridis" in hostname:
-  run_directory = "/home/dam1g09/Zp-tt_pheno/Generation"
-  data_directory = "/scratch/dam1g09/Zp-tt_pheno"
-
-ntuple_directory = data_directory + "/NTuples"
-weights_directory = data_directory + "/Weights"
-log_directory = data_directory + "/Logs"
+  run_directory = "/home/dam1g09/zprime-top-generator"
+  data_directory = "/scratch/dam1g09/zprime"
 
 if os.path.isdir("%s" % data_directory) is False:
   sys.exit("The target data directory '%s' does not exist" % data_directory)
 
-if os.path.isdir("%s/%s" % (ntuple_directory, final_state)) is False:
-  sys.exit("The target NTuple directory '%s/%s' does not exist" % (ntuple_directory, final_state))
-
-if os.path.isdir("%s/%s" % (weights_directory, final_state)) is False:
-  sys.exit("The target weights directory '%s/%s' does not exist" % (weights_directory, final_state))
-
-if os.path.isdir("%s/%s" % (log_directory, final_state)) is False:
-  sys.exit("The target log directory '%s/%s' does not exist" % (log_directory, final_state))
-
 config_name = "%s.cfg" % filename
 logfile = "%s.log" % filename
 handler_name = "%s.sh" % filename
-weights_file = '%s/%s/%s.txt' % (weights_directory, final_state, filename) 
-ntuple_file = "%s/%s/%s.root" % (ntuple_directory, final_state, filename)
-logfile_command = "> %s/%s/%s &" % (log_directory, final_state, logfile) if option.write_logfile else ""
+data_file = '%s/%s.txt' % (data_directory, filename)
+ntuple_file = "%s/%s.root" % (data_directory, filename)
+logfile_command = "> %s/%s &" % (data_directory, logfile) if option.write_logfile else ""
 
 # Print config file
 config = StringIO.StringIO()
 
 print >> config, '%s' % ntuple_file
-print >> config, '%s' % weights_file
+print >> config, '%s' % data_file
 print >> config, '%i ! initial_state' % option.initial_state
 print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
