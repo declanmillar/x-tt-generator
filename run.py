@@ -90,7 +90,7 @@ if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low
 print hostname
 
 if option.batch:
-  if ("lxplus" not in hostname) or ("iridis" not in hostname):
+  if not ("lxplus" in hostname) or ("iridis" in hostname):
     sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
