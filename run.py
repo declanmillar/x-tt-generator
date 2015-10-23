@@ -87,6 +87,8 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
   sys.exit("Error: E_CM up must be greater than E_CM low")
 
+print hostname
+
 if option.batch:
   if ("lxplus" not in hostname) or ("iridis" not in hostname)):
     sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
