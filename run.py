@@ -275,7 +275,7 @@ if option.batch:
   if "lxplus" in hostname:
     print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
     print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
-    print >> handler, "cd /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/"
+    print >> handler, "cd %s" % run_directory
     print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
     print >> handler, 'mv LSFJOB_* Jobs'
   if "iridis" in hostname:
