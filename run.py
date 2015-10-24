@@ -296,7 +296,7 @@ if option.batch:
 
   subprocess.call("chmod a+x %s.sh" % filename, shell = True)
   print " Submitting batch job."
-  if "lxplus" in hostname: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % filename, shell = True)
+  if "lxplus" in hostname: subprocess.call('bsub -q 1nh /afs/cern.ch/user/d/demillar/Zp-tt_pheno/Generation/%s.sh' % (run_directory, filename), shell = True)
   if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
 else:
