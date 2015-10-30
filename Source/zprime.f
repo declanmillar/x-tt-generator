@@ -239,8 +239,8 @@ program zprime
   print*, 'Model: ', model_name
   if (include_qcd == 1) print*, 'QCD: ON '
   if (include_qcd == 0) print*, 'QCD: OFF'
-  if (include_ew == 1) print*, 'QFD: ON '
-  if (include_ew == 0) print*, 'QFD: OFF'
+  if (include_qfd == 1) print*, 'QFD: ON '
+  if (include_qfd == 0) print*, 'QFD: OFF'
   if (include_bsm == 1) print*, 'BSM: ON '
   if (include_bsm == 0) print*, 'BSM: OFF'
   if (include_gg == 1) print*, 'gg: ON '

@@ -23,16 +23,16 @@ parser.add_option("-S", "--structure_function", default = 4, type = "int", help 
 # gauge sectors
 parser.add_option("-C", "--include_qcd", default = False, action = "store_true", help = "turn on QCD")
 parser.add_option("-F", "--include_qfd", default = True, action = "store_false", help = "turn off QFD")
+parser.add_option("-X", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
 
 # Initial partons
 parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
 parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq")
 
 # Intermediate particles
-parser.add_option("-G", "--include_G", default = True, action = "store_false", help = "turn off gluon")
-parser.add_option("-X", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
-parser.add_option("-A", "--include_A", default = True, action = "store_false", help = "turn off photon")
-parser.add_option("-Z", "--include_Z", default = True, action = "store_false", help = "turn off Z boson")
+# parser.add_option("-G", "--include_G", default = True, action = "store_false", help = "turn off gluon")
+# parser.add_option("-A", "--include_A", default = True, action = "store_false", help = "turn off photon")
+# parser.add_option("-Z", "--include_Z", default = True, action = "store_false", help = "turn off Z boson")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")

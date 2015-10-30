@@ -13,7 +13,7 @@ module configuration
   character(100) :: ntuple_file
   character(100) :: weight_file
   integer :: include_qcd
-  integer :: include_ew
+  integer :: include_qfd
   integer :: include_bsm
   integer :: include_gg
   integer :: include_qq
@@ -56,7 +56,7 @@ contains
     read(5,*) model_name      
     read(5,*) structure_function
     read(5,*) include_qcd
-    read(5,*) include_ew
+    read(5,*) include_qfd
     read(5,*) include_bsm
     read(5,*) include_gg
     read(5,*) include_qq

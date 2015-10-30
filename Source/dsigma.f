@@ -845,7 +845,7 @@ function dsigma(x,wgt)
               end do
               call debug("...complete.")
             end if
-            if ((include_ew == 1) .or. (include_bsm == 1)) then
+            if ((include_qfd == 1) .or. (include_bsm == 1)) then
               call debug("Computing EW+Z' matrix elements...")
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
@@ -880,7 +880,7 @@ function dsigma(x,wgt)
               end if              
               call debug("...complete.")
             end if
-            if ((include_ew == 1) .or. (include_bsm == 1)) then
+            if ((include_qfd == 1) .or. (include_bsm == 1)) then
               call debug("Computing EW+Z' matrix elements...")
               if (include_qq == 1) then 
                 ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
