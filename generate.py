@@ -19,11 +19,21 @@ parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", he
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
-parser.add_option("-C", "--include_qcd", default = True, action = "store_false", help = "turn off QCD")
-parser.add_option("-F", "--include_ew", default = True, action = "store_false", help = "turn off EW")
-parser.add_option("-Z", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
+
+# gauge sectors
+parser.add_option("-C", "--include_qcd", default = False, action = "store_true", help = "turn on QCD")
+parser.add_option("-F", "--include_qfd", default = True, action = "store_false", help = "turn off QFD")
+
+# Initial partons
 parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
 parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq")
+
+# Intermediate particles
+parser.add_option("-G", "--include_G", default = True, action = "store_false", help = "turn off gluon")
+parser.add_option("-X", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
+parser.add_option("-A", "--include_A", default = True, action = "store_false", help = "turn off photon")
+parser.add_option("-Z", "--include_Z", default = True, action = "store_false", help = "turn off Z boson")
+
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
 parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
@@ -115,10 +125,10 @@ if final_state == "ll":
 
 if option.phase_space_only:
   option.include_qcd = False
-  option.include_ew = False
+  option.include_qfd = False
   option.include_bsm = False
 
-if option.interference == 4 and option.include_ew is False:
+if option.interference == 4 and option.include_qfd is False:
   print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
   option.interference = 2
 
@@ -146,7 +156,7 @@ if option.structure_function != 4:
 
 if option.include_qcd is False and final_state != "ll":
   options += "C"
-if option.include_ew is False:
+if option.include_qfd is False:
   options += "F"
 if option.include_gg is False and final_state != "ll":
   options += "g"
@@ -241,7 +251,7 @@ print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
 print >> config, '%i ! istructure' % option.structure_function
 print >> config, '%i ! include_qcd' % option.include_qcd
-print >> config, '%i ! include_ew' % option.include_ew
+print >> config, '%i ! include_qfd' % option.include_qfd
 print >> config, '%i ! include_bsm' % option.include_bsm
 print >> config, '%i ! include_gg' % option.include_gg
 print >> config, '%i ! include_qq' % option.include_qq
