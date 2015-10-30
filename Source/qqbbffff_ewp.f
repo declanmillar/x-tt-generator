@@ -310,7 +310,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   ! and helicity nhel(1),nhel(2)
   ! for process : q q -> b b l+ l- v_l v_l via (via A ,Z ,{Z'})
 
-  use Configuration, only: include_EW, include_BSM, interference
+  use Configuration, only: include_qfd, include_BSM, interference
   use modelling
 
   implicit none
@@ -466,7 +466,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 ! t-bar coupled to b-bar and W vector current
   call fvixxx( w4 ,w11 ,gWf ,fmass(11) ,fwidth(11) ,w13 )
 
-  if (include_EW == 1)then
+  if (include_qfd == 1)then
   ! A coupled to q q-bar vector current
     call jioxxx( w1 ,w2 ,gAq ,rm_A ,Gamma_A ,w9  )
   ! A diagram
