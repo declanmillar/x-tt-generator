@@ -154,7 +154,7 @@ if option.initial_state == 1:
 if option.structure_function != 4:
     options += "S%s" % option.structure_function
 
-if option.include_qcd is False and final_state != "ll":
+if option.include_qcd is True and final_state != "ll":
     options += "C"
 if option.include_qfd is False:
     options += "F"
@@ -286,7 +286,7 @@ if option.batch:
         print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
         print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
+        print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
         # print >> handler, 'mv LSFJOB_* Jobs'
     if "iridis" in hostname:
         print "walltime = %s" % option.walltime
