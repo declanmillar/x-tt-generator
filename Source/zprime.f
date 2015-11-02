@@ -1,6 +1,6 @@
 program zprime
 
-  ! Calculates the cross section, asymmetries 
+  ! Calculates the cross section, asymmetries
   ! and generates events or distributions for
 
   ! pp -> tt,
@@ -33,7 +33,7 @@ program zprime
   real, parameter :: brtbln = 0.10779733d0
   ! branching ratio for t->bqq is leftover after 3 l generations
   real, parameter :: brtbqq = 1 - brtbln*3
-  integer :: ndimensions, iab, iasy, ifb, icteq, lam3, lam4
+  integer :: ndimensions, lam3, lam4
   integer :: i, j, k
   integer :: today(3), now(3)
   double precision :: start_time, finish_time
@@ -50,7 +50,7 @@ program zprime
 
   s = collider_energy*collider_energy
 
-  ! (pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd)
+  ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
   if (structure_function == 1) qcdl4 = 0.326d0
   if (structure_function == 2) qcdl4 = 0.326d0
   if (structure_function == 3) qcdl4 = 0.326d0
@@ -65,10 +65,7 @@ program zprime
   lambdaqcd4 = qcdl4
 
   ! initialise cteq grids.
-  if (structure_function <= 4) then
-    icteq = structure_function
-    call setctq6(icteq)
-  end if
+  if (structure_function <= 4) call setctq6(structure_function)
 
   ! use appropriately evolved alphas.
   if (structure_function == 1) nloops = 2
@@ -95,7 +92,7 @@ program zprime
     fac_ee = 1
     fac_emu = 2
     fac_eq = 12
-    fac_qq = 36  
+    fac_qq = 36
   end if
 
   if (final_state <= 0) then
@@ -134,7 +131,7 @@ program zprime
       end do
 
     else if (final_state > 0) then
-      ! integrates on:         
+      ! integrates on:
       ! x(15) = (x1 - tau)/(1 - tau),
       ! x(14) = (ecm - ecm_min)
       !        /(ecm_max - ecm_min),
@@ -196,7 +193,7 @@ program zprime
   end if
 
   ! if nprn<0 no print-out
-  nprn = 0   
+  nprn = 0
 
   ! output information before integration
   print*, '------'
@@ -215,7 +212,7 @@ program zprime
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      print*, 'p#bar{p} -> l+l-' 
+      print*, 'p#bar{p} -> l+l-'
     else if (final_state == 0) then
       print*, 'p#bar{p} -> t#bar{t}', &
                ' #times br(t-> bl#nu)^{2}'
@@ -283,7 +280,7 @@ program zprime
         print*, "Z' number             ", i
         print*, "m_Z'                  ", mass_zp(i), "[GeV]"
         print*, "Gamma_Z'              ", gamzp(i), "[GeV]"
-        print*, "Gamma_Z'/m_Z'         ", gamzp(i)/mass_zp(i)             
+        print*, "Gamma_Z'/m_Z'         ", gamzp(i)/mass_zp(i)
         print*, "gLu                   ", gZpu(1,i)
         print*, "gRu                   ", gZpu(2,i)
         print*, "gLd                   ", gZpd(1,i)
@@ -308,7 +305,7 @@ program zprime
   ! reset counter
   npoints = 0
 
-  ! reset 
+  ! reset
   if (final_state <= 0) then
     do i = 1, 20
       resl(i) = 0.d0
@@ -323,12 +320,12 @@ program zprime
     end do
   end if
 
-  ! integrate 
+  ! integrate
   call debug("Starting integration... ")
-  it = 0 
+  it = 0
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
-  call debug("...complete.") 
+  call debug("...complete.")
 
   ! convert results to different tt classifications
 

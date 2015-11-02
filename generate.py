@@ -50,7 +50,7 @@ parser.add_option("-R", "--use_rambo", default = False, action = "store_true", h
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
 # Debug option
-parser.add_option("-P", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2  =  1")
+parser.add_option("-P", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2 =    1")
 parser.add_option("-v", "--verbose", default = False, action = "store_true", help = "Run in verbose mode.")
 
 (option, args) = parser.parse_args()
@@ -58,87 +58,87 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 hostname = socket.gethostname()
 
 if len(args) != 4:
-  sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage))
+    sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage))
 
 final_state = str(args[0])
 model_name = str(args[1])
 try:
-  collider_energy = int(args[2])
+    collider_energy = int(args[2])
 except ValueError:
-  sys.exit("Error: invalid collider energy '%s [TeV]'.\n%s" % (args[2],usage))
+    sys.exit("Error: invalid collider energy '%s [TeV]'.\n%s" % (args[2],usage))
 try:
-  ncall = int(args[3])
+    ncall = int(args[3])
 except ValueError:
-  sys.exit("Error: invalid VEGAS points '%s'.\n%s" % (args[3],usage))
+    sys.exit("Error: invalid VEGAS points '%s'.\n%s" % (args[3],usage))
 
 # Check arguments are valid
 if os.path.isfile("Models/%s.mdl" % model_name) is False:
-  sys.exit("'Model/%s.mdl' does not exist.\n%s\nAvailable model files: %s" % (model_name,usage,glob.glob("Models/*.mdl")))
+    sys.exit("'Model/%s.mdl' does not exist.\n%s\nAvailable model files: %s" % (model_name,usage,glob.glob("Models/*.mdl")))
 
-if collider_energy  < 0:
-  sys.exit("Error: collider energy must be positive definite.\n" % usage)
+if collider_energy    < 0:
+    sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
 if final_state != "ll" and final_state != "tt" and final_state != "bbllnn":
-  sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn" % (final_state,usage))
+    sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn" % (final_state,usage))
 
 if ncall < 2:
-  sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
+    sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
 if option.batch and "lxplus" in hostname:
-  option.write_logfile = False
+    option.write_logfile = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
-  sys.exit("Error: COM energy must be positive definite")
+    sys.exit("Error: COM energy must be positive definite")
 
 if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
-  sys.exit("Error: COM energy cannot exceed collider energy")
+    sys.exit("Error: COM energy cannot exceed collider energy")
 
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
-  sys.exit("Error: E_CM up must be greater than E_CM low")
+    sys.exit("Error: E_CM up must be greater than E_CM low")
 
 print hostname
 
 if option.batch:
-  if not ("lxplus" in hostname) or ("iridis" in hostname):
-    sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
+    if not ("lxplus" in hostname) or ("iridis" in hostname):
+        sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
-  sys.exit("Error: interference must be from 0-4.")
+    sys.exit("Error: interference must be from 0-4.")
 
 if option.structure_function < 1 or option.structure_function > 9:
-  sys.exit("Error: structure_function ID must be from 1 to 9.")
+    sys.exit("Error: structure_function ID must be from 1 to 9.")
 
 if option.itmx > 20:
-   sys.exit('Error: itmx does not have to exceed 20.')
+     sys.exit('Error: itmx does not have to exceed 20.')
 
 # Modify configuration for consistency
 if model_name == "SM":
-  option.include_bsm = False
+    option.include_bsm = False
 
 if option.include_bsm is False:
-  model_name = "SM"
+    model_name = "SM"
 
 if final_state == "ll":
-  option.include_qcd = False
-  option.include_gg = False
+    option.include_qcd = False
+    option.include_gg = False
 
 if option.phase_space_only:
-  option.include_qcd = False
-  option.include_qfd = False
-  option.include_bsm = False
+    option.include_qcd = False
+    option.include_qfd = False
+    option.include_bsm = False
 
 if option.interference == 4 and option.include_qfd is False:
-  print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
-  option.interference = 2
+    print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
+    option.interference = 2
 
 if option.use_rambo:
-  option.map_phase_space = False
+    option.map_phase_space = False
 
 if final_state == "ll" or final_state == "tt":
-  option.use_nwa = False
-  option.symmetrise_costheta_5 = False
-  option.symmetrise_costheta_7 = False
+    option.use_nwa = False
+    option.symmetrise_costheta_5 = False
+    option.symmetrise_costheta_7 = False
 
 # Default iseed
 seed = 12345 if option.fixed_seed else random.randint(0,100000)
@@ -149,90 +149,90 @@ executable = "zprime"
 options = ""
 
 if option.initial_state == 1:
-  options += "p"
+    options += "p"
 
 if option.structure_function != 4:
-  options += "S%s" % option.structure_function
+    options += "S%s" % option.structure_function
 
 if option.include_qcd is False and final_state != "ll":
-  options += "C"
+    options += "C"
 if option.include_qfd is False:
-  options += "F"
+    options += "F"
 if option.include_gg is False and final_state != "ll":
-  options += "g"
+    options += "g"
 if option.include_qq is False:
-  options += "q"
+    options += "q"
 
 if option.interference == 0:
-  options += "i0"
+    options += "i0"
 elif option.interference == 1:
-  options += "i1"
+    options += "i1"
 elif option.interference == 3:
-  options += "i3"
+    options += "i3"
 elif option.interference == 4:
-  options += "i4"
+    options += "i4"
 
 elif option.use_nwa:
-  options += "w"
+    options += "w"
 
 if option.ecm_low != 0:
-  options += "l%s" % option.ecm_low
+    options += "l%s" % option.ecm_low
 if option.ecm_up != 0:
-  options += "u%s" % option.ecm_up
+    options += "u%s" % option.ecm_up
 
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
-  option.ecm_low = 20
+    option.ecm_low = 20
 
 if option.fixed_seed:
-  options += "s"
+    options += "s"
 
 # symmetrization
 if option.symmetrise_x1x2:
-  options += "x"
+    options += "x"
 if option.symmetrise_costheta_t:
-  options += "c"
+    options += "c"
 if option.symmetrise_costheta_5:
-  options += "5"
+    options += "5"
 if option.symmetrise_costheta_7:
-  options += "7"
+    options += "7"
 
 if option.use_rambo:
-  options += "R"
+    options += "R"
 if not option.map_phase_space:
-  options += "M"
+    options += "M"
 
 if len(options) > 0:
-  options = "_" + options
+    options = "_" + options
 
 if len(option.tag) > 0:
-  options = "_" + option.tag
+    options = "_" + option.tag
 
 # filename
 filename = '%s_%s_%s%s_%sx%s' % (final_state, model_name, collider_energy, options, option.itmx, ncall)
 
 # Generate fortran friendly configuration
 if final_state == "ll":
-  final_state_id = -1
+    final_state_id = -1
 elif final_state == "tt":
-  final_state_id = 0
+    final_state_id = 0
 elif final_state == "bbllnn":
-  final_state_id = 1
+    final_state_id = 1
 
 # Logfile
 run_directory = "."
 data_directory = "."
 if "Lorkhan" in hostname:
-  data_directory = "/Users/declan/Data/Zprime"
+    data_directory = "/Users/declan/Data/Zprime"
 elif "lxplus" in hostname:
-  run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
-  data_directory = "/afs/cern.ch/work/d/demillar/zprime"
+    run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
+    data_directory = "/afs/cern.ch/work/d/demillar/zprime"
 elif "iridis" in hostname:
-  run_directory = "/home/dam1g09/zprime-top-generator"
-  data_directory = "/scratch/dam1g09/zprime"
+    run_directory = "/home/dam1g09/zprime-top-generator"
+    data_directory = "/scratch/dam1g09/zprime"
 
 if os.path.isdir("%s" % data_directory) is False:
-  sys.exit("The target data directory '%s' does not exist" % data_directory)
+    sys.exit("The target data directory '%s' does not exist" % data_directory)
 
 config_name = "%s.cfg" % filename
 logfile = "%s.log" % filename
@@ -274,48 +274,48 @@ print >> config, '%i.d3 ! ecm_low' % option.ecm_low
 print >> config, '%i.d3 ! ecm_up' % option.ecm_up
 
 try:
-  with open('Config/%s' % config_name,'w') as config_file:
-    config_file.write(config.getvalue())
-    print " Config: %s." % config_name
+    with open('Config/%s' % config_name,'w') as config_file:
+        config_file.write(config.getvalue())
+        print " Config: %s." % config_name
 except IOError:
-  sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
+    sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
 
 if option.batch:
-  handler = StringIO.StringIO()
-  if "lxplus" in hostname:
-    print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
-    print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
-    print >> handler, "cd %s" % run_directory
-    print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
-    print >> handler, 'mv LSFJOB_* Jobs'
-  if "iridis" in hostname:
-    print "walltime = %s" % option.walltime
-    print >> handler, "#!/bin/bash"
-    print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
-    print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
-    print >> handler, "cd %s" % run_directory
-    # print >> handler, "cd $PBS_O_WORKDIR"
-    print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
-  print >> handler, 'rm -- "$0"'
-  try:
-    with open('%s' % handler_name, 'w') as handler_file:
-      handler_file.write(handler.getvalue())
-    print " Handler file written to %s.sh." % filename
-  except IOError:
-    sys.exit(" Error: cannot write handler file.")
+    handler = StringIO.StringIO()
+    if "lxplus" in hostname:
+        print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
+        print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
+        print >> handler, "cd %s" % run_directory
+        print >> handler, '%s/Binary/%s < %s/Config/%s' % (run_directory, executable, run_directory, config_name)
+        # print >> handler, 'mv LSFJOB_* Jobs'
+    if "iridis" in hostname:
+        print "walltime = %s" % option.walltime
+        print >> handler, "#!/bin/bash"
+        print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
+        print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
+        print >> handler, "cd %s" % run_directory
+        # print >> handler, "cd $PBS_O_WORKDIR"
+        print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
+    print >> handler, 'rm -- "$0"'
+    try:
+        with open('%s' % handler_name, 'w') as handler_file:
+            handler_file.write(handler.getvalue())
+        print " Handler file written to %s.sh." % filename
+    except IOError:
+        sys.exit(" Error: cannot write handler file.")
 
-  subprocess.call("chmod a+x %s.sh" % filename, shell = True)
-  print " Submitting batch job."
-  if "lxplus" in hostname: subprocess.call('bsub -q 1nw %s/%s.sh' % (run_directory, filename), shell = True)
-  if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+    subprocess.call("chmod a+x %s.sh" % filename, shell = True)
+    print " Submitting batch job."
+    if "lxplus" in hostname: subprocess.call('bsub -q 1nw %s/%s.sh' % (run_directory, filename), shell = True)
+    if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
 else:
-  if "lxplus" in hostname:
-    print " Sourcing ROOT..."
-    subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
-    print " Adding RootTuple libraries to library path..."
-    subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
-  print " Executing locally."
-  if option.write_logfile:
-    print " Logfile: /%s" % logfile
-  subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
+    if "lxplus" in hostname:
+        print " Sourcing ROOT..."
+        subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
+        print " Adding RootTuple libraries to library path..."
+        subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
+    print " Executing locally."
+    if option.write_logfile:
+        print " Logfile: /%s" % logfile
+    subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
