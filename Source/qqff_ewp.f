@@ -18,7 +18,7 @@ function sqqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4)
   integer :: nexternal  ! number of external legs
   integer :: ncomb  ! number of helicity combinations
   parameter ( nexternal=4, ncomb= 16 )
-   
+
   ! local variables
   integer :: nhel(nexternal,ncomb),ntry
   real :: t
@@ -276,7 +276,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    do i = 1, 2 
+    do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
     qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
@@ -285,7 +285,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    do i = 1, 2 
+    do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
     qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
