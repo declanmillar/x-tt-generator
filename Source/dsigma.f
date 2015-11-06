@@ -1,11 +1,17 @@
 function dsigma(x,wgt)
 
   ! Computes the fully differential cross section for
-  ! * pp -> tt,
-  ! * pp -> tt -> bw^+bbarw^- -> bbbare^+nue^-nubar.
-  ! Calculates matrix element using helas subroutines; scales by PDFs, phase
-  ! space volume factor and populates root ntuple with final state collider momenta.
-  ! authors: declan millar, stefano moretti
+
+  ! pp -> ff,
+  ! pp -> tt -> bbWW -> bbllvv.
+
+  ! Uses adapted MadGraph functions.
+  ! Uses HELAS subroutines.
+  ! Uses VEGAS Monte Carlo integration.
+  ! Uses CTEQ6 and MRS99 PDF subroutines.
+  ! Uses RootTuple for filling ntuples.
+
+  ! Authors: Declan Millar, Stefano Moretti.
 
   use mathematics, only: pi
   use configuration
@@ -15,7 +21,7 @@ function dsigma(x,wgt)
   use integration
 
   implicit none
-  
+
   real :: x(100), wgt
 
   ! external functions

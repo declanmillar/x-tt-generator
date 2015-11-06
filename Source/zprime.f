@@ -1,14 +1,15 @@
 program zprime
 
-  ! Calculates the cross section, asymmetries
-  ! and generates events or distributions for
+  ! Calculates the cross section, asymmetries, and generates events for
 
-  ! pp -> tt,
-  ! pp -> tt -> bbWW -> bbllnunu.
+  ! pp -> ff,
+  ! pp -> tt -> bbWW -> bbllvv.
 
   ! Uses adapted MadGraph functions.
   ! Uses HELAS subroutines.
+  ! Uses VEGAS Monte Carlo integration.
   ! Uses CTEQ6 and MRS99 PDF subroutines.
+  ! Uses RootTuple for filling ntuples.
 
   ! Authors: Declan Millar, Stefano Moretti.
 
@@ -117,7 +118,7 @@ program zprime
       ! integrates on:
       ! x(3) = (x1 - tau)/(1 - tau),
       ! x(2) = (ecm - ecm_min)/(ecm_max - ecm_min),
-      ! x(1) = cos(theta3_cm)
+      ! x(1) = cos(theta3_cm).
       ndimensions = 3
 
       ! limits:
@@ -133,24 +134,23 @@ program zprime
     else if (final_state > 0) then
       ! integrates on:
       ! x(15) = (x1 - tau)/(1 - tau),
-      ! x(14) = (ecm - ecm_min)
-      !        /(ecm_max - ecm_min),
+      ! x(14) = (ecm - ecm_min)/(ecm_max - ecm_min),
       ! x(13) = (xx356 - xx356min)/(xx356max - xx356min),
-      ! where xx356 = arctg((m356**2 - m3**2)/m3/gamt),
-      ! or x(13) = (m356 - m356min)/(m356max - m356min),
-      ! where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
+      !   where xx356 = arctg((m356**2 - m3**2)/m3/gamt),
+      !   or x(13) = (m356 - m356min)/(m356max - m356min),
+      !   where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
       ! x(12) = (xx478 - xx478min)/(xx478max - xx478min),
-      ! where xx478 = arctg((m478**2 - m3**2)/m3/gamt),
-      ! or x(12) = (m478 - m478min)/(m478max - m478min),
-      ! where m478min = m4 + m7 + m8, m478max = ecm_max - m356
+      !   where xx478 = arctg((m478**2 - m3**2)/m3/gamt),
+      !   or x(12) = (m478 - m478min)/(m478max - m478min),
+      !   where m478min = m4 + m7 + m8, m478max = ecm_max - m356
       ! x(11) = (xx56 - xx56min)/(xx56max - xx56min),
-      ! where xx56 = arctg((m56**2 - rm_w**2)/rm_w/gamw),
-      ! or x(11) = (m56 - m56min)/(m56max - m56min),
-      ! where m56min = m5 + m6, m56max = m356 - m3
+      !   where xx56 = arctg((m56**2 - rm_w**2)/rm_w/gamw),
+      !   or x(11) = (m56 - m56min)/(m56max - m56min),
+      !   where m56min = m5 + m6, m56max = m356 - m3
       ! x(10) = (xx78 - xx78min)/(xx78max - xx78min),
-      ! where xx78 = arctg((m78**2 - rm_w**2)/rm_w/gamw),
-      ! or x(10) = (m78 - m78min)/(m78max - m78min),
-      ! where m78min = m7 + m8, m78max = m478 - m4
+      !   where xx78 = arctg((m78**2 - rm_w**2)/rm_w/gamw),
+      !   or x(10) = (m78 - m78min)/(m78max - m78min),
+      !   where m78min = m7 + m8, m78max = m478 - m4
       ! x(9) = cos(theta_cm_356) = -cos(theta_cm_478),
       ! x(8) = cos(theta56_cm_356),
       ! x(7) = cos(theta78_cm_478),
@@ -159,7 +159,7 @@ program zprime
       ! x(4) = fi56_cm_356,
       ! x(3) = fi78_cm_478,
       ! x(2) = fi5_cm_56,
-      ! x(1) = fi8_cm_78;
+      ! x(1) = fi8_cm_78.
       ndimensions = 15
 
       ! set integration limits:
@@ -181,10 +181,9 @@ program zprime
       end do
     end if
   else if (use_rambo == 1) then
-    ! integrates ON:
+    ! integrates on:
     ! x(2) = (x1 - tau)/(1 - tau),
-    ! x(1) = (ecm - ecm_min)/
-    !        (ecm_max - ecm_min)
+    ! x(1) = (ecm - ecm_min)/(ecm_max - ecm_min)
     ndimensions = 2
     do i = 2, 1, -1
       xl(i) = 0.d0
@@ -192,7 +191,7 @@ program zprime
     end do
   end if
 
-  ! if nprn<0 no print-out
+  ! if nprn < 0 no print-out
   nprn = 0
 
   ! output information before integration
@@ -212,14 +211,11 @@ program zprime
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      print*, 'p#bar{p} -> l+l-'
+      print*, 'pp~ -> l+l-'
     else if (final_state == 0) then
-      print*, 'p#bar{p} -> t#bar{t}', &
-               ' #times br(t-> bl#nu)^{2}'
+      print*, 'pp~ -> tt~'
     else if (final_state == 1) then
-      print*, 'p#bar{p} -> t#bar{t}', &
-               '-> b#bar{b} W+W-', &
-               '-> b#bar{b} l+l- #nu#bar{#nu}'
+      print*, 'Process: p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   end if
   if (structure_function == 1) print*, 'PDFs: CTEQ6m'
@@ -375,7 +371,7 @@ program zprime
   ! write sigma and cnorms to a txt file
   i = len(weight_file)
   do while(weight_file(i:i) == '')
-    i = i-1
+    i = i - 1
   end do
   open(unit = 11, file = weight_file(1:i), status = "replace", action = "write")
   write(11,*) sigma

@@ -162,7 +162,7 @@
     qsq=q2save
     return
     end subroutine mrs991
-          
+
     subroutine mrs992(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -248,7 +248,7 @@
     qsq=q2save
     return
     end subroutine mrs992
-          
+
     subroutine mrs993(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -334,8 +334,8 @@
     qsq=q2save
     return
     end subroutine mrs993
-          
-          
+
+
     subroutine mrs994(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -421,7 +421,7 @@
     qsq=q2save
     return
     end subroutine mrs994
-          
+
     subroutine mrs995(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -507,7 +507,7 @@
     qsq=q2save
     return
     end subroutine mrs995
-          
+
 
     subroutine mrs996(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
@@ -594,7 +594,7 @@
     qsq=q2save
     return
     end subroutine mrs996
-          
+
     subroutine mrs997(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -680,7 +680,7 @@
     qsq=q2save
     return
     end subroutine mrs997
-          
+
 
 
     subroutine mrs998(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
@@ -768,7 +768,7 @@
     qsq=q2save
     return
     end subroutine mrs998
-          
+
     subroutine mrs999(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -854,7 +854,7 @@
     qsq=q2save
     return
     end subroutine mrs999
-          
+
 
 
     subroutine mrs9910(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
@@ -942,7 +942,7 @@
     qsq=q2save
     return
     end subroutine mrs9910
-          
+
     subroutine mrs9911(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -1028,8 +1028,8 @@
     qsq=q2save
     return
     end subroutine mrs9911
-          
-          
+
+
     subroutine mrs9912(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
@@ -1115,4 +1115,3 @@
     qsq=q2save
     return
     end subroutine mrs9912
-          
