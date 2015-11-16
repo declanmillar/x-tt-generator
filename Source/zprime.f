@@ -29,7 +29,7 @@ program zprime
   real :: sigma_pol_tot(-1:1,-1:1), error_pol_tot(-1:1,-1:1)
   real :: all, error_all, al, error_al, apv, error_apv
   real :: chi2_sigma, error_sigma, stantot
-  real :: alfas, qcdl4
+  real :: alfas
   ! branching ratio for t->benu=bmuv=btaumu (1/9 with QCD corrections)
   real, parameter :: brtbln = 0.10779733d0
   ! branching ratio for t->bqq is leftover after 3 l generations
@@ -52,18 +52,15 @@ program zprime
   s = collider_energy*collider_energy
 
   ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
-  if (structure_function == 1) qcdl4 = 0.326d0
-  if (structure_function == 2) qcdl4 = 0.326d0
-  if (structure_function == 3) qcdl4 = 0.326d0
-  if (structure_function == 4) qcdl4 = 0.215d0
-  if (structure_function == 5) qcdl4 = 0.300d0
-  if (structure_function == 6) qcdl4 = 0.300d0
-  if (structure_function == 7) qcdl4 = 0.300d0
-  if (structure_function == 8) qcdl4 = 0.229d0
-  if (structure_function == 9) qcdl4 = 0.383d0
-
-  ! Match Lambda QCD for PDF fits.
-  lambdaqcd4 = qcdl4
+  if (structure_function == 1) lambdaqcd4 = 0.326d0
+  if (structure_function == 2) lambdaqcd4 = 0.326d0
+  if (structure_function == 3) lambdaqcd4 = 0.326d0
+  if (structure_function == 4) lambdaqcd4 = 0.215d0
+  if (structure_function == 5) lambdaqcd4 = 0.300d0
+  if (structure_function == 6) lambdaqcd4 = 0.300d0
+  if (structure_function == 7) lambdaqcd4 = 0.300d0
+  if (structure_function == 8) lambdaqcd4 = 0.229d0
+  if (structure_function == 9) lambdaqcd4 = 0.383d0
 
   ! initialise cteq grids.
   if (structure_function <= 4) call setctq6(structure_function)
@@ -258,7 +255,7 @@ program zprime
   if (ecm_up > 0) print*, "E_CM up             ", ecm_up, "[GeV]"
   print*, 'Loops             = ', nloops
   print*, 'alpha_s(m_Z)      = ', alfas(rm_z, lambdaqcd4, nloops)
-  print*, 'lambda4QCD        = ', qcdl4
+  print*, 'lambda4QCD        = ', lambdaqcd4
   print*, 'm_b               = ', fmass(12), "[GeV]"
   print*, 'Gamma_b           = ', fwidth(12), "[GeV]"
   print*, 'm_t               = ', fmass(11), "[GeV]"

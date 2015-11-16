@@ -7,7 +7,7 @@ module configuration
   ! Config
   real    :: collider_energy
   integer :: initial_state
-  integer :: final_state 
+  integer :: final_state
   integer :: structure_function
   character(50) :: model_name
   character(100) :: ntuple_file
@@ -17,7 +17,7 @@ module configuration
   integer :: include_bsm
   integer :: include_gg
   integer :: include_qq
-  integer :: interference  
+  integer :: interference
   integer :: use_nwa
   integer :: symmetrise_x1x2
   integer :: symmetrise_costheta_t
@@ -36,7 +36,7 @@ module configuration
   integer :: nloops
   real :: lambdaqcd4
   integer :: ixmax, jxmax, i5max, i7max
-  
+
   ! Methods
   public :: read_config
   public :: modify_config
@@ -50,10 +50,10 @@ contains
     call debug("Reading config file...")
 
     read(5,"(a)") ntuple_file
-    read(5,"(a)") weight_file      
+    read(5,"(a)") weight_file
     read(5,*) initial_state ! 0 = pp, 1 = ppbar
-    read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron      
-    read(5,*) model_name      
+    read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
+    read(5,*) model_name
     read(5,*) structure_function
     read(5,*) include_qcd
     read(5,*) include_qfd
@@ -79,7 +79,7 @@ contains
     read(5,*) ecm_up
 
     call debug("...complete.")
-    
+
   end subroutine read_config
 
   subroutine modify_config
@@ -127,7 +127,7 @@ contains
     else
       tops_decay = 1
     end if
-    
+
     call debug("...complete.")
   end subroutine modify_config
 
