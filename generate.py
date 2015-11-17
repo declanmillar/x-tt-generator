@@ -97,8 +97,6 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
     sys.exit("Error: E_CM up must be greater than E_CM low")
 
-print hostname
-
 if option.batch:
     if not ("lxplus" in hostname) or ("iridis" in hostname):
         sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
@@ -276,7 +274,7 @@ print >> config, '%i.d3 ! ecm_up' % option.ecm_up
 try:
     with open('Config/%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        print " Config: %s." % config_name
+        print "Config: %s" % config_name
 except IOError:
     sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
 
@@ -300,22 +298,20 @@ if option.batch:
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
-        print " Handler file written to %s.sh." % filename
+        print "Handler file written to %s.sh." % filename
     except IOError:
         sys.exit(" Error: cannot write handler file.")
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
-    print " Submitting batch job."
+    print "Submitting batch job."
     if "lxplus" in hostname: subprocess.call('bsub -q 1nw %s/%s.sh' % (run_directory, filename), shell = True)
     if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
 else:
     if "lxplus" in hostname:
-        print " Sourcing ROOT..."
+        print "Sourcing ROOT..."
         subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
-        print " Adding RootTuple libraries to library path..."
+        print "Adding RootTuple libraries to library path..."
         subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
-    print " Executing locally."
-    if option.write_logfile:
-        print " Logfile: /%s" % logfile
+    print "Program will run locally..."
     subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)

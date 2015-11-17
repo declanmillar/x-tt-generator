@@ -5,11 +5,12 @@ program zprime
   ! pp -> ff,
   ! pp -> tt -> bbWW -> bbllvv.
 
-  ! Uses adapted MadGraph functions.
-  ! Uses HELAS subroutines.
-  ! Uses VEGAS Monte Carlo integration.
-  ! Uses CTEQ6 and MRS99 PDF subroutines.
-  ! Uses RootTuple for filling ntuples.
+  ! Uses :
+  !  - adapted MadGraph functions
+  !  - HELAS subroutines
+  !  - VEGAS Monte Carlo integration
+  !  - CTEQ6 and MRS99 PDF subroutines
+  !  - RootTuple for filling ntuples
 
   ! Authors: Declan Millar, Stefano Moretti.
 
@@ -24,8 +25,6 @@ program zprime
 
   external dsigma
 
-  real :: sigma_ee, sigma_emu, sigma_eq, sigma_qq
-  real :: error_sigma_ee, error_sigma_emu, error_sigma_eq, error_sigma_qq
   real :: sigma_pol_tot(-1:1,-1:1), error_pol_tot(-1:1,-1:1)
   real :: all, error_all, al, error_al, apv, error_apv
   real :: chi2_sigma, error_sigma, stantot
@@ -37,17 +36,22 @@ program zprime
   integer :: ndimensions, lam3, lam4
   integer :: i, j, k
   integer :: today(3), now(3)
+  integer, parameter :: log = 27
   double precision :: start_time, finish_time
 
   call cpu_time(start_time)
-
   call read_config
-
   call modify_config
-
-  print*, "Output Ntuple will be written to ", ntuple_file
-  print*, "Iteration weightings will be written to ", weight_file
   call rootinit(ntuple_file)
+
+  i = len(log_file)
+  do while(log_file(i:i) == '')
+    i = i - 1
+  end do
+  open(unit = log, file = log_file(1:i), status = "replace", action = "write")
+
+  print*, "Ntuple: ", ntuple_file
+  print*, "Log: ", log_file
 
   s = collider_energy*collider_energy
 
@@ -66,32 +70,14 @@ program zprime
   if (structure_function <= 4) call setctq6(structure_function)
 
   ! use appropriately evolved alphas.
-  if (structure_function == 1) nloops = 2
-  if (structure_function == 2) nloops = 2
-  if (structure_function == 3) nloops = 1
-  if (structure_function == 4) nloops = 1
-  if (structure_function == 5) nloops = 1
-  if (structure_function == 6) nloops = 1
-  if (structure_function == 7) nloops = 1
-  if (structure_function == 8) nloops = 1
-  if (structure_function == 9) nloops = 1
+  if (structure_function <= 2) then
+    nloops = 2
+  else
+    nloops = 1
+  end if
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
-
-  if (final_state == 0) then
-    ! multiply by branching ratios
-    fac_ee = brtbln*brtbln
-    fac_emu = 2*brtbln*brtbln
-    fac_eq = brtbln*brtbqq
-    fac_qq = brtbqq*brtbqq
-  else if (final_state > 0) then
-    ! scale dilepton to other classifications
-    fac_ee = 1
-    fac_emu = 2
-    fac_eq = 12
-    fac_qq = 36
-  end if
 
   if (final_state <= 0) then
     m3 = fmass(ffinal)
@@ -188,108 +174,97 @@ program zprime
     end do
   end if
 
-  ! if nprn < 0 no print-out
-  nprn = 0
 
-  ! output information before integration
-  print*, '------'
-  call idate(today)     ! today(1) = day, (2) = month, (3) = year
-  call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
-  print*, 'Date: ', today(3), today(2), today(1)
-  print*, 'Time: ', now(1), now(2), now(3)
-  print*, '------'
   if (initial_state == 0) then
     if (final_state == -1) then
-      print*, "Process: p p -> l+ l-"
+      write(log,*) "Process = p p -> l+ l-"
     else if (final_state == 0) then
-      print*, 'Process: p p -> t t~'
+      write(log,*) 'Process = p p -> t t~'
     else if (final_state == 1) then
-      print*, 'Process: p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+      write(log,*) 'Process = p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      print*, 'pp~ -> l+l-'
+      write(log,*) 'pp~ -> l+l-'
     else if (final_state == 0) then
-      print*, 'pp~ -> tt~'
+      write(log,*) 'pp~ -> tt~'
     else if (final_state == 1) then
-      print*, 'Process: p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+      write(log,*) 'Process = p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   end if
-  if (structure_function == 1) print*, 'PDFs: CTEQ6m'
-  if (structure_function == 2) print*, 'PDFs: CTEQ6d'
-  if (structure_function == 3) print*, 'PDFs: CTEQ6l'
-  if (structure_function == 4) print*, 'PDFs: CTEQ6l1'
-  if (structure_function == 5) print*, 'PDFs: MRS99 (cor01)'
-  if (structure_function == 6) print*, 'PDFs: MRS99 (cor02)'
-  if (structure_function == 7) print*, 'PDFs: MRS99 (cor03)'
-  if (structure_function == 8) print*, 'PDFs: MRS99 (cor04)'
-  if (structure_function == 9) print*, 'PDFs: MRS99 (cor05)'
-  if ((final_state >= 1) .and. (use_nwa == 1)) print*, 'NWA: ON'
-  if ((final_state >= 1) .and. (use_nwa == 0)) print*, 'NWA: OFF'
-  print*, 'Model: ', model_name
-  if (include_qcd == 1) print*, 'QCD: ON '
-  if (include_qcd == 0) print*, 'QCD: OFF'
-  if (include_qfd == 1) print*, 'QFD: ON '
-  if (include_qfd == 0) print*, 'QFD: OFF'
-  if (include_bsm == 1) print*, 'BSM: ON '
-  if (include_bsm == 0) print*, 'BSM: OFF'
-  if (include_gg == 1) print*, 'gg: ON '
-  if (include_gg == 0) print*, 'gg: OFF'
-  if (include_qq == 1) print*, 'qq: ON '
-  if (include_qq == 0) print*, 'qq: OFF'
-  if (interference == 0) print*, "Interference: none"
-  if (interference == 1) print*, "Interference: no (Z',SM)"
-  if (interference == 2) print*, "Interference: full"
-  if (interference == 3) print*, "Interference: Z' + (Z',SM)"
-  if (interference == 4) print*, "Interference: (Z',SM)"
-  if (symmetrise_x1x2 == 1) print*, 'Symmetrising integration: x1<->x2'
-  if (symmetrise_costheta_t == 1) print*, 'symmetrising integration: costhetat'
-  if (symmetrise_costheta_5 == 1) print*, 'symmetrising integration: costheta5'
-  if (symmetrise_costheta_7 == 1) print*, 'symmetrising integration: costheta7'
-  if (use_rambo == 1) print*, 'RAMBO: ON'
-  if (map_phase_space == 0) print*, "Phase space mapping: ON"
-  print*, 'Seed: ', seed
-  print*, '------'
-  print*, 'Collider energy   = ', collider_energy, "[GeV]"
-  if (ecm_low > 0) print*, "E_CM low          = ", ecm_low, "[GeV]"
-  if (ecm_up > 0) print*, "E_CM up             ", ecm_up, "[GeV]"
-  print*, 'Loops             = ', nloops
-  print*, 'alpha_s(m_Z)      = ', alfas(rm_z, lambdaqcd4, nloops)
-  print*, 'lambda4QCD        = ', lambdaqcd4
-  print*, 'm_b               = ', fmass(12), "[GeV]"
-  print*, 'Gamma_b           = ', fwidth(12), "[GeV]"
-  print*, 'm_t               = ', fmass(11), "[GeV]"
-  print*, 'Gamma_t           = ', fwidth(11), "[GeV]"
-  print*, 'm_Z               = ', rm_z, "[GeV]"
-  print*, 'Gamma_Z           = ', gamma_z, "[GeV]"
-  print*, 'm_W               = ', rm_w, "[GeV]"
-  print*, 'Gamma_W           = ', gamma_w, "[GeV]"
-  print*, 'm_h               = ', rm_h, "[GeV]"
-  print*, 'Gamma_h           = ', gamma_h, "[GeV]"
-  print*, '------'
+  if (structure_function == 1) write(log,*) 'PDFs = CTEQ6m'
+  if (structure_function == 2) write(log,*) 'PDFs = CTEQ6d'
+  if (structure_function == 3) write(log,*) 'PDFs = CTEQ6l'
+  if (structure_function == 4) write(log,*) 'PDFs = CTEQ6l1'
+  if (structure_function == 5) write(log,*) 'PDFs = MRS99 (cor01)'
+  if (structure_function == 6) write(log,*) 'PDFs = MRS99 (cor02)'
+  if (structure_function == 7) write(log,*) 'PDFs = MRS99 (cor03)'
+  if (structure_function == 8) write(log,*) 'PDFs = MRS99 (cor04)'
+  if (structure_function == 9) write(log,*) 'PDFs = MRS99 (cor05)'
+  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA = ON'
+  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA = OFF'
+  write(log,*) 'Model = ', model_name
+  if (include_qcd == 1) write(log,*) 'QCD = ON '
+  if (include_qcd == 0) write(log,*) 'QCD = OFF'
+  if (include_qfd == 1) write(log,*) 'QFD = ON '
+  if (include_qfd == 0) write(log,*) 'QFD = OFF'
+  if (include_bsm == 1) write(log,*) 'BSM = ON '
+  if (include_bsm == 0) write(log,*) 'BSM = OFF'
+  if (include_gg == 1) write(log,*) 'gg = ON '
+  if (include_gg == 0) write(log,*) 'gg = OFF'
+  if (include_qq == 1) write(log,*) 'qq = ON '
+  if (include_qq == 0) write(log,*) 'qq = OFF'
+  if (interference == 0) write(log,*) "Interference = none"
+  if (interference == 1) write(log,*) "Interference = no (Z',SM)"
+  if (interference == 2) write(log,*) "Interference = full"
+  if (interference == 3) write(log,*) "Interference = Z' + (Z',SM)"
+  if (interference == 4) write(log,*) "Interference = (Z',SM)"
+  if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration = x1<->x2'
+  if (symmetrise_costheta_t == 1) write(log,*) 'symmetrising integration = costhetat'
+  if (symmetrise_costheta_5 == 1) write(log,*) 'symmetrising integration = costheta5'
+  if (symmetrise_costheta_7 == 1) write(log,*) 'symmetrising integration = costheta7'
+  if (use_rambo == 1) write(log,*) 'RAMBO = ON'
+  if (map_phase_space == 0) write(log,*) "Phase space mapping = ON"
+  write(log,*) 'Seed = ', seed
+  write(log,*) 'Collider energy = ', collider_energy
+  if (ecm_low > 0) write(log,*) "E_CM low          = ", ecm_low
+  if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
+  write(log,*) 'Loops = ', nloops
+  write(log,*) 'alpha_s(m_Z) = ', alfas(rm_z, lambdaqcd4, nloops)
+  write(log,*) 'lambda4QCD = ', lambdaqcd4
+  write(log,*) 'm_b = ', fmass(12)
+  write(log,*) 'Gamma_b = ', fwidth(12)
+  write(log,*) 'm_t = ', fmass(11)
+  write(log,*) 'Gamma_t = ', fwidth(11)
+  write(log,*) 'm_Z = ', rm_z
+  write(log,*) 'Gamma_Z = ', gamma_z
+  write(log,*) 'm_W = ', rm_w
+  write(log,*) 'Gamma_W = ', gamma_w
+  write(log,*) 'm_h = ', rm_h
+  write(log,*) 'Gamma_h = ', gamma_h
   if (include_bsm == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
-        print*, "Z' number             ", i
-        print*, "m_Z'                  ", mass_zp(i), "[GeV]"
-        print*, "Gamma_Z'              ", gamzp(i), "[GeV]"
-        print*, "Gamma_Z'/m_Z'         ", gamzp(i)/mass_zp(i)
-        print*, "gLu                   ", gZpu(1,i)
-        print*, "gRu                   ", gZpu(2,i)
-        print*, "gLd                   ", gZpd(1,i)
-        print*, "gRd                   ", gZpd(2,i)
-        print*, "gLl                   ", gZpl(1,i)
-        print*, "gRl                   ", gZpl(2,i)
-        print*, "gLn                   ", gZpn(1,i)
-        print*, "gRn                   ", gZpn(2,i)
-        print*, "gLt                   ", gZpt(1,i)
-        print*, "gRt                   ", gZpt(2,i)
-        print*, "gLb                   ", gZpb(1,i)
-        print*, "gRb                   ", gZpb(2,i)
-        print*, "gLl3                  ", gZpl3(1,i)
-        print*, "gRl3                  ", gZpl3(2,i)
-        print*, "gLn3                  ", gZpn3(1,i)
-        print*, "gRn3                  ", gZpn3(2,i)
+        write(log,*) "Z' no. = ", i
+        write(log,*) "m_Z' = ", mass_zp(i), "[GeV]"
+        write(log,*) "Gamma_Z' = ", gamzp(i), "[GeV]"
+        write(log,*) "Gamma_Z'/m_Z' = ", gamzp(i)/mass_zp(i)
+        write(log,*) "gLu = ", gZpu(1,i)
+        write(log,*) "gRu = ", gZpu(2,i)
+        write(log,*) "gLd = ", gZpd(1,i)
+        write(log,*) "gRd = ", gZpd(2,i)
+        write(log,*) "gLl = ", gZpl(1,i)
+        write(log,*) "gRl = ", gZpl(2,i)
+        write(log,*) "gLn = ", gZpn(1,i)
+        write(log,*) "gRn = ", gZpn(2,i)
+        write(log,*) "gLt = ", gZpt(1,i)
+        write(log,*) "gRt = ", gZpt(2,i)
+        write(log,*) "gLb = ", gZpb(1,i)
+        write(log,*) "gRb = ", gZpb(2,i)
+        write(log,*) "gLl3 = ", gZpl3(1,i)
+        write(log,*) "gRl3 = ", gZpl3(2,i)
+        write(log,*) "gLn3 = ", gZpn3(1,i)
+        write(log,*) "gRn3 = ", gZpn3(2,i)
       end if
     end do
     print*, '------'
@@ -316,41 +291,11 @@ program zprime
   ! integrate
   call debug("Starting integration... ")
   it = 0
+  ! if nprn < 0 no print-out
+  nprn = 0
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
   call debug("...complete.")
-
-  ! convert results to different tt classifications
-
-  if (final_state >= 0) then
-    sigma_ee = sigma*fac_ee
-    error_sigma_ee = error_sigma*fac_ee
-    sigma_emu = sigma*fac_emu
-    error_sigma_emu = error_sigma*fac_emu
-    sigma_eq = sigma*fac_eq
-    error_sigma_eq = error_sigma*fac_eq
-    sigma_qq = sigma*fac_qq
-    error_sigma_qq = error_sigma*fac_qq
-  end if
-
-  print*, '------'
-  if (sigma == 0.d0) then
-    print*, "Error: sigma = 0."
-    stop
-  else
-    if (final_state == 0) then
-      print*, "sigma     = ", sigma, "+-", error_sigma, "[pb]"
-    end if
-    if (final_state == -1) then
-      print*, "sigma     = ", sigma, "+-", error_sigma, "[pb]"
-    end if
-    if (final_state >= 0) then
-      print*, "sigma_ee  = ", sigma_ee, "+-", error_sigma_ee, "[pb]"
-      print*, "sigma_emu = ", sigma_emu, "+-", error_sigma_emu, "[pb]"
-      print*, "sigma_eq  = ", sigma_eq, "+-", error_sigma_eq, "[pb]"
-      print*, "sigma_qq  = ", sigma_qq, "+-", error_sigma_qq, "[pb]"
-    end if
-  end if
 
   call debug("Calculating factor to re-weight for different iterations.")
   stantot = 0.d0
@@ -365,17 +310,16 @@ program zprime
   end do
   call debug("...complete.")
 
-  ! write sigma and cnorms to a txt file
-  i = len(weight_file)
-  do while(weight_file(i:i) == '')
-    i = i - 1
-  end do
-  open(unit = 11, file = weight_file(1:i), status = "replace", action = "write")
-  write(11,*) sigma
   do i = 1, it
-  	write(11,*) cnorm(i)
+  	write(log,*) "Iteration weighting ", i, " = ", cnorm(i)
   end do
-  close(11)
+
+  if (sigma == 0.d0) then
+    write(log,*) "Error = sigma = 0"
+    stop
+  else
+    write(log,*) "sigma =", sigma, "+-", error_sigma, "[pb]"
+  end if
 
   if (final_state == 0) then
     call debug("Collating polar cross sections...")
@@ -395,29 +339,30 @@ program zprime
     call debug("...complete.")
 
     call debug("Calculating polar asymmetries...")
+    all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
+    error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/4.d0*all
 
-    all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) &
-         - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
-    error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) &
-               + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/4.d0*all
-
-    al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) &
-        + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1))/sigma
-    error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) &
-              + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1))/4.d0*al
+    al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1))/sigma
+    error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1))/4.d0*al
 
     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1))/sigma/2.d0
     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
+
+    write(log,*) "ALL = ", all, "+-", error_all
+    write(log,*) "AL = ", al, "+-", error_al
+    write(log,*) "APV = ", apv, "+-", error_apv
     call debug("...complete.")
 
-    print*, "ALL       = ", all, "+-", error_all
-    print*, "AL        = ", al, "+-", error_al
-    print*, "APV       = ", apv, "+-", error_apv
   end if
-  print*, '------'
-  print*, "Points:", npoints
+  write(log,*) "VEGAS points:", npoints
   call rootclose
+  write(log,*) 'Authors = Declan Millar, Stefano Moretti'
+  call idate(today)     ! today(1) = day, (2) = month, (3) = year
+  call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
+  write(log,*) 'Date = ', today(3), today(2), today(1)
+  write(log,*) 'Time = ', now(1), now(2), now(3)
   call cpu_time(finish_time)
-  print*, "Time:", finish_time - start_time
+  write(log,*), "Run-time:", finish_time - start_time
+  close(log)
   stop
 end program zprime

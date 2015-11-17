@@ -1,4 +1,4 @@
-module integration 
+module integration
 
   ! store information from vegas
 
@@ -16,7 +16,7 @@ module integration
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
   xl/100*0.d0/,xu/100*1.d0/, &
   alph/1.5d0/,ndmx/50/,mds/1/,ndev/6/, &
-  ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/  
+  ndo/1/,xi/5000*1.d0/,it/0/,si,swgt,schi/3*0.d0/
 
 end module integration
 
@@ -257,17 +257,31 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   28 END DO
 
   if(it < itmx .AND. acc*abs(avgi) < sd) go to 9
-  200 format(/35h input parameters for vegas:  ndim=,i3,8h  ncall=,f8.0 &
-  /28x,5h  it=,i5,7h  itmx=,i5/28x,6h  acc=,g9.3 &
-  /28x,7h  nprn=,i3,7h  alph=,f5.2/28x,6h  mds=,i3,6h   nd=,i4 &
-  /28x,10h  (xl,xu)=,(t40,2h( ,g12.6,3h , ,g12.6,2h )))
-  201 format(///21h integration by vegas//14h iteration no.,i3, &
-  &   14h:   integral =,g14.8/21x,10hstd dev  =,g10.4/ &
-  &   34h accumulated results:   integral =,g14.8/ &
-  &   24x,10hstd dev  =,g10.4/24x,17hchi**2 per it'n =,g10.4)
+  200 format(18h VEGAS parameters &
+  /8h  ndim = i3 &
+  /9h  ncall = f8.1 &
+  /6h  it = i2 &
+  /8h  itmx = i2 &
+  /7h  acc = f5.1 &
+  /8h  nprn = i2 &
+  /8h  alph = f5.2 &
+  /7h  mds = i3 &
+  /7h  nd = i2 &
+  /12h  (xl, xu) = (t14,1h(f4.1,3h , f4.1,2h )))
+
+  201 format(21h Integration by VEGAS &
+  /18h  Iteration number i2 &
+  /14h   Integral = f14.8 &
+  /13h   std dev = f10.4 &
+  /20h  Accumulated results &
+  /14h   Integral = f14.8 &
+  /13h   std dev  = f10.4 &
+  /24h   chi^2 per iteration = f10.4)
+
   202 format(/15h data for axis ,i2/25h    x       delta i       , &
   &   24h   x       delta i       ,18h   x       delta i &
   /(1h ,f7.6,1x,g11.4,5x,f7.6,1x,g11.4,5x,f7.6,1x,g11.4))
+
   return
 end subroutine vegas
 
@@ -291,7 +305,7 @@ end subroutine vegas
 
 
 ! subroutine store_vegas(ndim,name)
-  
+
 !   ! store vegas data for possible later use
 
 !   implicit double precision(a-h,o-z)
