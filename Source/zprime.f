@@ -215,10 +215,10 @@ program zprime
   if (include_qq == 1) write(log,*) 'qq = ON '
   if (include_qq == 0) write(log,*) 'qq = OFF'
   if (interference == 0) write(log,*) "Interference = none"
-  if (interference == 1) write(log,*) "Interference = no (Z',SM)"
-  if (interference == 2) write(log,*) "Interference = full"
-  if (interference == 3) write(log,*) "Interference = Z' + (Z',SM)"
-  if (interference == 4) write(log,*) "Interference = (Z',SM)"
+  if (interference == 1) write(log,*) "Interference = (gamma + Z) + (Z')"
+  if (interference == 2) write(log,*) "Interference = (gamma + Z + Z')"
+  if (interference == 3) write(log,*) "Interference = (gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) write(log,*) "Interference = (gamma + Z + Z') - (gamma) - (Z) - (Z')"
   if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration = x1<->x2'
   if (symmetrise_costheta_t == 1) write(log,*) 'symmetrising integration = costhetat'
   if (symmetrise_costheta_5 == 1) write(log,*) 'symmetrising integration = costheta5'
