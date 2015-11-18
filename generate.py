@@ -34,7 +34,7 @@ parser.add_option("-q", "--include_qq", default = True, action = "store_false", 
 # parser.add_option("-A", "--include_A", default = True, action = "store_false", help = "turn off photon")
 # parser.add_option("-Z", "--include_Z", default = True, action = "store_false", help = "turn off Z boson")
 
-parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference: 0 = none, 1 = SM, 2 = full, 3 = full-SM")
+parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
 parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
 parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper limit")

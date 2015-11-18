@@ -177,11 +177,11 @@ program zprime
 
   if (initial_state == 0) then
     if (final_state == -1) then
-      write(log,*) "Process = p p -> l+ l-"
+      write(log,*) "Process:p p -> l+ l-"
     else if (final_state == 0) then
-      write(log,*) 'Process = p p -> t t~'
+      write(log,*) 'Process:p p -> t t~'
     else if (final_state == 1) then
-      write(log,*) 'Process = p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+      write(log,*) 'Process:p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
@@ -189,82 +189,82 @@ program zprime
     else if (final_state == 0) then
       write(log,*) 'pp~ -> tt~'
     else if (final_state == 1) then
-      write(log,*) 'Process = p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+      write(log,*) 'Process:p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   end if
-  if (structure_function == 1) write(log,*) 'PDFs = CTEQ6m'
-  if (structure_function == 2) write(log,*) 'PDFs = CTEQ6d'
-  if (structure_function == 3) write(log,*) 'PDFs = CTEQ6l'
-  if (structure_function == 4) write(log,*) 'PDFs = CTEQ6l1'
-  if (structure_function == 5) write(log,*) 'PDFs = MRS99 (cor01)'
-  if (structure_function == 6) write(log,*) 'PDFs = MRS99 (cor02)'
-  if (structure_function == 7) write(log,*) 'PDFs = MRS99 (cor03)'
-  if (structure_function == 8) write(log,*) 'PDFs = MRS99 (cor04)'
-  if (structure_function == 9) write(log,*) 'PDFs = MRS99 (cor05)'
-  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA = ON'
-  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA = OFF'
-  write(log,*) 'Model = ', model_name
-  if (include_qcd == 1) write(log,*) 'QCD = ON '
-  if (include_qcd == 0) write(log,*) 'QCD = OFF'
-  if (include_qfd == 1) write(log,*) 'QFD = ON '
-  if (include_qfd == 0) write(log,*) 'QFD = OFF'
-  if (include_bsm == 1) write(log,*) 'BSM = ON '
-  if (include_bsm == 0) write(log,*) 'BSM = OFF'
-  if (include_gg == 1) write(log,*) 'gg = ON '
-  if (include_gg == 0) write(log,*) 'gg = OFF'
-  if (include_qq == 1) write(log,*) 'qq = ON '
-  if (include_qq == 0) write(log,*) 'qq = OFF'
-  if (interference == 0) write(log,*) "Interference = none"
-  if (interference == 1) write(log,*) "Interference = (gamma + Z) + (Z')"
-  if (interference == 2) write(log,*) "Interference = (gamma + Z + Z')"
-  if (interference == 3) write(log,*) "Interference = (gamma + Z + Z') - (gamma) - (Z)"
-  if (interference == 4) write(log,*) "Interference = (gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration = x1<->x2'
-  if (symmetrise_costheta_t == 1) write(log,*) 'symmetrising integration = costhetat'
-  if (symmetrise_costheta_5 == 1) write(log,*) 'symmetrising integration = costheta5'
-  if (symmetrise_costheta_7 == 1) write(log,*) 'symmetrising integration = costheta7'
-  if (use_rambo == 1) write(log,*) 'RAMBO = ON'
-  if (map_phase_space == 0) write(log,*) "Phase space mapping = ON"
-  write(log,*) 'Seed = ', seed
-  write(log,*) 'Collider energy = ', collider_energy
-  if (ecm_low > 0) write(log,*) "E_CM low          = ", ecm_low
+  if (structure_function == 1) write(log,*) 'PDFs:CTEQ6m'
+  if (structure_function == 2) write(log,*) 'PDFs:CTEQ6d'
+  if (structure_function == 3) write(log,*) 'PDFs:CTEQ6l'
+  if (structure_function == 4) write(log,*) 'PDFs:CTEQ6l1'
+  if (structure_function == 5) write(log,*) 'PDFs:MRS99 (cor01)'
+  if (structure_function == 6) write(log,*) 'PDFs:MRS99 (cor02)'
+  if (structure_function == 7) write(log,*) 'PDFs:MRS99 (cor03)'
+  if (structure_function == 8) write(log,*) 'PDFs:MRS99 (cor04)'
+  if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
+  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
+  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
+  write(log,*) 'Model:', model_name
+  if (include_qcd == 1) write(log,*) 'QCD:ON '
+  if (include_qcd == 0) write(log,*) 'QCD:OFF'
+  if (include_qfd == 1) write(log,*) 'QFD:ON '
+  if (include_qfd == 0) write(log,*) 'QFD:OFF'
+  if (include_bsm == 1) write(log,*) 'BSM:ON '
+  if (include_bsm == 0) write(log,*) 'BSM:OFF'
+  if (include_gg == 1) write(log,*) 'gg:ON '
+  if (include_gg == 0) write(log,*) 'gg:OFF'
+  if (include_qq == 1) write(log,*) 'qq:ON '
+  if (include_qq == 0) write(log,*) 'qq:OFF'
+  if (interference == 0) write(log,*) "Interference:none"
+  if (interference == 1) write(log,*) "Interference:(gamma + Z) + (Z')"
+  if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
+  if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
+  if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration:x1<->x2'
+  if (symmetrise_costheta_t == 1) write(log,*) 'symmetrising integration:costhetat'
+  if (symmetrise_costheta_5 == 1) write(log,*) 'symmetrising integration:costheta5'
+  if (symmetrise_costheta_7 == 1) write(log,*) 'symmetrising integration:costheta7'
+  if (use_rambo == 1) write(log,*) 'RAMBO:ON'
+  if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
+  write(log,*) 'Seed:', seed
+  write(log,*) 'Collider energy:', collider_energy
+  if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
   if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
-  write(log,*) 'Loops = ', nloops
-  write(log,*) 'alpha_s(m_Z) = ', alfas(rm_z, lambdaqcd4, nloops)
-  write(log,*) 'lambda4QCD = ', lambdaqcd4
-  write(log,*) 'm_b = ', fmass(12)
-  write(log,*) 'Gamma_b = ', fwidth(12)
-  write(log,*) 'm_t = ', fmass(11)
-  write(log,*) 'Gamma_t = ', fwidth(11)
-  write(log,*) 'm_Z = ', rm_z
-  write(log,*) 'Gamma_Z = ', gamma_z
-  write(log,*) 'm_W = ', rm_w
-  write(log,*) 'Gamma_W = ', gamma_w
-  write(log,*) 'm_h = ', rm_h
-  write(log,*) 'Gamma_h = ', gamma_h
+  write(log,*) 'Loops:', nloops
+  write(log,*) 'alpha_s(m_Z):', alfas(rm_z, lambdaqcd4, nloops)
+  write(log,*) 'lambdaQCD^4:', lambdaqcd4
+  write(log,*) 'm_b:', fmass(12)
+  write(log,*) 'Gamma_b:', fwidth(12)
+  write(log,*) 'm_t:', fmass(11)
+  write(log,*) 'Gamma_t:', fwidth(11)
+  write(log,*) 'm_Z:', rm_z
+  write(log,*) 'Gamma_Z:', gamma_z
+  write(log,*) 'm_W:', rm_w
+  write(log,*) 'Gamma_W:', gamma_w
+  write(log,*) 'm_h:', rm_h
+  write(log,*) 'Gamma_h:', gamma_h
   if (include_bsm == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
-        write(log,*) "Z' no. = ", i
-        write(log,*) "m_Z' = ", mass_zp(i), "[GeV]"
-        write(log,*) "Gamma_Z' = ", gamzp(i), "[GeV]"
-        write(log,*) "Gamma_Z'/m_Z' = ", gamzp(i)/mass_zp(i)
-        write(log,*) "gLu = ", gZpu(1,i)
-        write(log,*) "gRu = ", gZpu(2,i)
-        write(log,*) "gLd = ", gZpd(1,i)
-        write(log,*) "gRd = ", gZpd(2,i)
-        write(log,*) "gLl = ", gZpl(1,i)
-        write(log,*) "gRl = ", gZpl(2,i)
-        write(log,*) "gLn = ", gZpn(1,i)
-        write(log,*) "gRn = ", gZpn(2,i)
-        write(log,*) "gLt = ", gZpt(1,i)
-        write(log,*) "gRt = ", gZpt(2,i)
-        write(log,*) "gLb = ", gZpb(1,i)
-        write(log,*) "gRb = ", gZpb(2,i)
-        write(log,*) "gLl3 = ", gZpl3(1,i)
-        write(log,*) "gRl3 = ", gZpl3(2,i)
-        write(log,*) "gLn3 = ", gZpn3(1,i)
-        write(log,*) "gRn3 = ", gZpn3(2,i)
+        write(log,*) "Z' no.:", i
+        write(log,*) "m_Z':", mass_zp(i), "[GeV]"
+        write(log,*) "Gamma_Z':", gamzp(i), "[GeV]"
+        write(log,*) "Gamma_Z'/m_Z':", gamzp(i)/mass_zp(i)
+        write(log,*) "gLu:", gZpu(1,i)
+        write(log,*) "gRu:", gZpu(2,i)
+        write(log,*) "gLd:", gZpd(1,i)
+        write(log,*) "gRd:", gZpd(2,i)
+        write(log,*) "gLl:", gZpl(1,i)
+        write(log,*) "gRl:", gZpl(2,i)
+        write(log,*) "gLn:", gZpn(1,i)
+        write(log,*) "gRn:", gZpn(2,i)
+        write(log,*) "gLt:", gZpt(1,i)
+        write(log,*) "gRt:", gZpt(2,i)
+        write(log,*) "gLb:", gZpb(1,i)
+        write(log,*) "gRb:", gZpb(2,i)
+        write(log,*) "gLl3:", gZpl3(1,i)
+        write(log,*) "gRl3:", gZpl3(2,i)
+        write(log,*) "gLn3:", gZpn3(1,i)
+        write(log,*) "gRn3:", gZpn3(2,i)
       end if
     end do
     print*, '------'
@@ -311,7 +311,7 @@ program zprime
   call debug("...complete.")
 
   do i = 1, it
-  	write(log,*) "Iteration weighting ", i, " = ", cnorm(i)
+  	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
   end do
 
   if (sigma == 0.d0) then
@@ -356,11 +356,11 @@ program zprime
   end if
   write(log,*) "VEGAS points:", npoints
   call rootclose
-  write(log,*) 'Authors = Declan Millar, Stefano Moretti'
-  call idate(today)     ! today(1) = day, (2) = month, (3) = year
-  call itime(now)       ! now(1) = hour, (2) = minute, (3) = second
-  write(log,*) 'Date = ', today(3), today(2), today(1)
-  write(log,*) 'Time = ', now(1), now(2), now(3)
+  write(log,*) 'Author:Declan Millar'
+  call idate(today)     ! today(1):day, (2):month, (3):year
+  call itime(now)       ! now(1):hour, (2):minute, (3):second
+  write(log,*) 'Date:', today(3), today(2), today(1)
+  write(log,*) 'Time:', now(1), now(2), now(3)
   call cpu_time(finish_time)
   write(log,*), "Run-time:", finish_time - start_time
   close(log)
