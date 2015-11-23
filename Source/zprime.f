@@ -29,13 +29,7 @@ program zprime
   real :: all, error_all, al, error_al, apv, error_apv
   real :: chi2_sigma, error_sigma, stantot
   real :: alfas
-  ! branching ratio for t->benu=bmuv=btaumu (1/9 with QCD corrections)
-  real, parameter :: brtbln = 0.10779733d0
-  ! branching ratio for t->bqq is leftover after 3 l generations
-  real, parameter :: brtbqq = 1 - brtbln*3
-  integer :: ndimensions, lam3, lam4
-  integer :: i, j, k
-  integer :: today(3), now(3)
+  integer :: ndimensions, lam3, lam4, i, j, k, today(3), now(3)
   integer, parameter :: log = 27
   double precision :: start_time, finish_time
 
