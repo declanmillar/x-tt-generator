@@ -318,7 +318,7 @@ program zprime
     write(log,*) "Error = sigma = 0"
     stop
   else
-    write(log,*) "sigma =", sigma, "+-", error_sigma, "[pb]"
+    write(log,*) "Cross section:", sigma, ":", error_sigma, ":[pb]"
   end if
 
   if (final_state == 0) then
@@ -348,9 +348,9 @@ program zprime
     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1))/sigma/2.d0
     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1))/2.d0*apv
 
-    write(log,*) "ALL = ", all, "+-", error_all
-    write(log,*) "AL = ", al, "+-", error_al
-    write(log,*) "APV = ", apv, "+-", error_apv
+    write(log,*) "ALL:", all, ":", error_all
+    write(log,*) "AL:", al, ":", error_al
+    write(log,*) "APV:", apv, ":", error_apv
     call debug("...complete.")
 
   end if
