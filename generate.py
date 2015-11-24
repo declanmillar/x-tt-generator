@@ -232,18 +232,17 @@ elif "iridis" in hostname:
 if os.path.isdir("%s" % data_directory) is False:
     sys.exit("The target data directory '%s' does not exist" % data_directory)
 
-config_name = "%s.cfg" % filename
-logfile = "%s.log" % filename
+config_name = '%s/%s.cfg' % (data_directory, filename)
+logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
-data_file = '%s/%s.txt' % (data_directory, filename)
 ntuple_file = "%s/%s.root" % (data_directory, filename)
-logfile_command = "> %s/%s &" % (data_directory, logfile) if option.write_logfile else ""
+# logfile_command = "> %s/%s &" % (data_directory, logfile) if option.write_logfile else ""
 
 # Print config file
 config = StringIO.StringIO()
 
 print >> config, '%s' % ntuple_file
-print >> config, '%s' % data_file
+print >> config, '%s' % logfile
 print >> config, '%i ! initial_state' % option.initial_state
 print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
@@ -272,11 +271,11 @@ print >> config, '%i.d3 ! ecm_low' % option.ecm_low
 print >> config, '%i.d3 ! ecm_up' % option.ecm_up
 
 try:
-    with open('Config/%s' % config_name,'w') as config_file:
+    with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
         print "Config: %s" % config_name
 except IOError:
-    sys.exit(" Error: cannot write Config/%s. Are you running in the right directory?" % config_name)
+    sys.exit(" Error: cannot write to %s" % config_name)
 
 if option.batch:
     handler = StringIO.StringIO()
@@ -284,7 +283,7 @@ if option.batch:
         print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
         print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
+        print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
         # print >> handler, 'mv LSFJOB_* Jobs'
     if "iridis" in hostname:
         print "walltime = %s" % option.walltime
@@ -293,7 +292,7 @@ if option.batch:
         print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
         print >> handler, "cd %s" % run_directory
         # print >> handler, "cd $PBS_O_WORKDIR"
-        print >> handler, '%s/Binary/%s < %s/Config/%s %s' % (run_directory, executable, run_directory, config_name, logfile_command)
+        print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
     print >> handler, 'rm -- "$0"'
     try:
         with open('%s' % handler_name, 'w') as handler_file:
@@ -314,4 +313,4 @@ else:
         print "Adding RootTuple libraries to library path..."
         subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
     print "Program will run locally..."
-    subprocess.call("./Binary/%s < Config/%s %s" % (executable, config_name, logfile_command), shell = True)
+    subprocess.call("./Binary/%s < %s" % (executable, config_name), shell = True)
