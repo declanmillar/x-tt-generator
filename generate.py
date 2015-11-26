@@ -20,7 +20,7 @@ parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", he
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-f", "--final_state", default = "bbllnn", action = "store", help = "set final state: ll, tt, bbllnn")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
-parser.add_option("-E", "--collider_energy", default = "SM" action = "store", help = "collider energy")
+parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
 
 # gauge sectors
