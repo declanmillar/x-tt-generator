@@ -18,6 +18,9 @@ parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", he
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
+parser.add_option("-f", "--final_state", default = "bbllnn" action = "store", help = "set final state: ll, tt, bbllnn")
+parser.add_option("-m", "--model", default = "SM" action = "store", help = "set model")
+parser.add_option("-E", "--collider_energy", default = "SM" action = "store", help = "collider energy")
 parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
 
 # gauge sectors
@@ -41,6 +44,7 @@ parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper
 
 # Monte Carlo options
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
+parser.add_option("-n", "--vegas_points", default = 5000000, type = "int", help = "number of VEGAS points")
 parser.add_option("-m", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default = False, action = "store_true", help = "symmetrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default = False, action = "store_true", help = "symmetrise phase space over costheta_t")
@@ -57,17 +61,14 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 
 hostname = socket.gethostname()
 
-if len(args) != 4:
-    sys.exit("Error: incorrect number of arguments %i/4.\n%s" % (len(args),usage))
-
-final_state = str(args[0])
-model_name = str(args[1])
+final_state = str(option.final_state)
+model_name = str(option.model)
 try:
-    collider_energy = int(args[2])
+    collider_energy = int(option.collider_energy)
 except ValueError:
     sys.exit("Error: invalid collider energy '%s [TeV]'.\n%s" % (args[2],usage))
 try:
-    ncall = int(args[3])
+    ncall = int(option.vegas_points)
 except ValueError:
     sys.exit("Error: invalid VEGAS points '%s'.\n%s" % (args[3],usage))
 

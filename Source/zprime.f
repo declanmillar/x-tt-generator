@@ -18,12 +18,9 @@ program zprime
   use configuration
   use modelling
   use scattering
-  use kinematics
   use integration
 
   implicit none
-
-  external dsigma
 
   real :: sigma_pol_tot(-1:1,-1:1), error_pol_tot(-1:1,-1:1)
   real :: all, error_all, al, error_al, apv, error_apv
