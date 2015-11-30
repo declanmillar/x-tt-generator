@@ -15,6 +15,7 @@ parser.add_option("-L", "--write_logfile", default = False, action = "store_true
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
 parser.add_option("-B", "--batch", default = True, action = "store_true", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
+parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lxbatch queue'")
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
@@ -74,7 +75,7 @@ except ValueError:
 
 # Check arguments are valid
 if os.path.isfile("Models/%s.mdl" % model_name) is False:
-    sys.exit("'Model/%s.mdl' does not exist.\n%s\nAvailable model files: %s" % (model_name,usage,glob.glob("Models/*.mdl")))
+    sys.exit("%s is not a valid model.\n Available model files: %s" % (model_name, glob.glob("Models/*.mdl")))
 
 if collider_energy    < 0:
     sys.exit("Error: collider energy must be positive definite.\n" % usage)
@@ -304,7 +305,7 @@ if option.batch:
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
     print "Submitting batch job."
-    if "lxplus" in hostname: subprocess.call('bsub -q 1nw %s/%s.sh' % (run_directory, filename), shell = True)
+    if "lxplus" in hostname: subprocess.call('bsub -q %s %s/%s.sh' % (option.queue, run_directory, filename), shell = True)
     if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
 
 else:

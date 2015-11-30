@@ -8,7 +8,7 @@ contains
 
   function solve_quadratic(a, b, c)
 
-    ! solves quadratic for both roots 
+    ! solves quadratic for both roots
     ! returns both as complex values in a complex vector x(2)
 
     implicit none
@@ -24,12 +24,12 @@ contains
     discriminator = b*b - 4*a*c
 !     print *, discriminator
     term2 = sqrt(discriminator)/(2*a)
-!     print *, term2    
+!     print *, term2
 
-    solve_quadratic(1) = term1+term2
-    solve_quadratic(2) = term1-term2
-    
+    solve_quadratic(1) = term1 + term2
+    solve_quadratic(2) = term1 - term2
+
     return
-    
+
   end function solve_quadratic
 end module mathematics
