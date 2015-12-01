@@ -13,7 +13,7 @@ parser = optparse.OptionParser(usage)
 # Execution options
 parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
-parser.add_option("-B", "--batch", default = True, action = "store_true", help = "run in batch mode")
+parser.add_option("-B", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lxbatch queue'")
 
