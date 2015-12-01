@@ -46,7 +46,7 @@ parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper
 # Monte Carlo options
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
 parser.add_option("-n", "--vegas_points", default = 5000000, type = "int", help = "number of VEGAS points")
-parser.add_option("-I", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
+parser.add_option("-N", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
 parser.add_option("-x", "--symmetrise_x1x2", default = True, action = "store_true", help = "symmetrise phase space over x1 and x2")
 parser.add_option("-c", "--symmetrise_costheta_t", default = True, action = "store_true", help = "symmetrise phase space over costheta_t")
 parser.add_option("-5", "--symmetrise_costheta_5", default = False, action = "store_true", help = "symmetrise phase space over costheta_5")
