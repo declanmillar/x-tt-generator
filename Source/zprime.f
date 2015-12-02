@@ -14,7 +14,6 @@ program zprime
 
   ! Authors: Declan Millar, Stefano Moretti.
 
-  use mathematics
   use configuration
   use modelling
   use scattering
@@ -221,18 +220,18 @@ program zprime
   if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
   if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
   write(log,*) 'Loops:', nloops
-  write(log,*) 'alpha_s(m_Z):', alfas(rm_z, lambdaqcd4, nloops)
+  write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
   write(log,*) 'm_b:', fmass(12)
   write(log,*) 'Gamma_b:', fwidth(12)
   write(log,*) 'm_t:', fmass(11)
   write(log,*) 'Gamma_t:', fwidth(11)
-  write(log,*) 'm_Z:', rm_z
-  write(log,*) 'Gamma_Z:', gamma_z
-  write(log,*) 'm_W:', rm_w
-  write(log,*) 'Gamma_W:', gamma_w
-  write(log,*) 'm_h:', rm_h
-  write(log,*) 'Gamma_h:', gamma_h
+  write(log,*) 'm_Z:', zmass
+  write(log,*) 'Gamma_Z:', zwidth
+  write(log,*) 'm_W:', wmass
+  write(log,*) 'Gamma_W:', wwidth
+  write(log,*) 'm_h:', hmass
+  write(log,*) 'Gamma_h:', hwidth
   if (include_bsm == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then

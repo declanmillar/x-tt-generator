@@ -23,7 +23,6 @@ function dsigma(x,wgt)
 
   ! Authors: Declan Millar, Stefano Moretti.
 
-  use mathematics
   use configuration
   use modelling
   use integration
@@ -890,9 +889,7 @@ function dsigma(x,wgt)
             if (include_qcd == 1) then
               call debug("Computing QCD matrix elements...")
               if (include_gg == 1) then
-                ! qcdgg = sggbbffff_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
                 qcdgg = sgg_bbbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
-                print*, "qcdgg ", qcdgg
               end if
               if (include_qq == 1) then
                 qcdqq = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)

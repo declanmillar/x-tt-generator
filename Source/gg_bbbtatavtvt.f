@@ -1501,7 +1501,6 @@ function gg_bbbtatavtvt(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
         ztemp = (0.d0,0.d0)
         do j = 1, ngraphs
             ztemp = ztemp + eigen_vec(j,i)*amp(j)
-            ! if ((i==1) .and. (j==1)) print*, "j=", j,"amp =", amp(j)
         enddo
         gg_bbbtatavtvt =gg_bbbtatavtvt+ztemp*eigen_val(i)*conjg(ztemp)
     enddo

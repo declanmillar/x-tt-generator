@@ -39,6 +39,9 @@ module configuration
   real :: lambdaqcd4
   integer :: ixmax, jxmax, i5max, i7max
 
+  ! constants
+  real, parameter :: pi = 3.14159265358979323846d0
+
   ! Methods
   public :: read_config
   public :: modify_config
