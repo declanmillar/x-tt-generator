@@ -23,7 +23,7 @@ function dsigma(x,wgt)
 
   ! Authors: Declan Millar, Stefano Moretti.
 
-  use mathematics, only: pi
+  use mathematics
   use configuration
   use modelling
   use integration
