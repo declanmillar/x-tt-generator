@@ -139,6 +139,9 @@ if option.interference == 4 and option.include_qfd is False:
 if option.use_rambo:
     option.map_phase_space = False
 
+if option.include_background:
+    option.map_phase_space = False
+
 if final_state == "ll" or final_state == "tt":
     option.use_nwa = False
     option.symmetrise_costheta_5 = False
