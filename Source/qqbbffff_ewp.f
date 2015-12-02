@@ -19,7 +19,7 @@ function sqqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8)
   real sqqbbffff_EWp
   real :: p1(0:3),p2(0:3) &
   ,p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
-     
+
 ! local variables
   integer :: nhel(nexternal,ncomb),ntry
   real :: t
@@ -293,7 +293,7 @@ function sqqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8)
       ,p1,p2,p3,p4,p5,p6,p7,p8,nhel(1,ihel))
       sqqbbffff_EWp = sqqbbffff_EWp + t
       if (t > 0d0 .AND. .NOT. goodhel(ihel)) then
-        goodhel(ihel)= .TRUE. 
+        goodhel(ihel)= .TRUE.
       !                   write(*,*) ihel,t
       endif
     endif
@@ -327,7 +327,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3), &
   p5(0:3),p6(0:3),p7(0:3),p8(0:3)
   integer :: nhel(nexternal) ! n_hel
-         
+
 ! local variables
   integer :: i,j
   complex*16 amp_tmp, amp_tmp2
@@ -339,7 +339,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   real :: gZq(2),gZf(2) ! coupling of z to q, t
   real :: gZpq(2,5),gZpf(2,5) ! coupling of z to q, t
   real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
-       
+
   if ((iq == 3) .or. (iq == 7)) then
     do i = 1,2
       gAq(i) = gAu(i)
@@ -458,9 +458,9 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
   call ixxxxx( p8  ,fmass(2  ) ,nhel(8  ) ,-1 ,w8 )
 
 ! W coupled to e- nu-bar vector current
-  call jioxxx( w5 ,w7 ,gWf ,rm_W ,Gamma_W ,w10 )
+  call jioxxx( w5 ,w7 ,gWf ,wmass ,wwidth ,w10 )
 ! W coupled to e+ nu vector current
-  call jioxxx( w8 ,w6 ,gWf ,rm_W ,Gamma_W ,w11 )
+  call jioxxx( w8 ,w6 ,gWf ,wmass ,wwidth ,w11 )
 ! t (off shell) coupled to b and W vector current
   call fvoxxx( w3 ,w10 ,gWf ,fmass(11) ,fwidth(11) ,w12 )
 ! t-bar coupled to b-bar and W vector current
@@ -468,11 +468,11 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
 
   if (include_qfd == 1)then
   ! A coupled to q q-bar vector current
-    call jioxxx( w1 ,w2 ,gAq ,rm_A ,Gamma_A ,w9  )
+    call jioxxx( w1 ,w2 ,gAq ,amass ,amass ,w9  )
   ! A diagram
     call iovxxx( w13 ,w12 ,w9 ,gAf ,amp(1) )
   ! Z (off shell) coupled to q and q-bar vector current
-    call jioxxx( w1 ,w2 ,gZq ,rm_Z ,Gamma_Z ,w14 )
+    call jioxxx( w1 ,w2 ,gZq ,zmass ,zwidth ,w14 )
   ! Z diagram
     call iovxxx( w13 ,w12 ,w14 ,gZf ,amp(2) )
   else
@@ -536,7 +536,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    do i = 1, 2 
+    do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
     qqbbffff_EWp = qqbbffff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
@@ -545,7 +545,7 @@ function qqbbffff_EWp(iq,jf,p1,p2,p3,p4,p5,p6,p7,p8,nhel)
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    do i = 1, 2 
+    do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
     qqbbffff_EWp = qqbbffff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)

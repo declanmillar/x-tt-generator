@@ -31,8 +31,8 @@ module modelling
   real, parameter :: nuewidth = 0.d0, numuwidth = 0.d0, nutauwidth = 0.d0
 
   ! SM boson masses
-  real, parameter :: rm_w = 80.23d0,rm_z = 91.19d0,gamma_w = 2.08d0,gamma_z = 2.5d0
-  real, parameter :: rm_a = 0d0, gamma_a = 0d0, rm_h = 125.d0, gamma_h = 0.31278d-2
+  real, parameter :: wmass = 80.23d0,zmass = 91.19d0,wwidth = 2.08d0,zwidth = 2.5d0
+  real, parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 0.31278d-2
 
   real :: Gamma_t = twidth
 
@@ -48,7 +48,7 @@ module modelling
 
   ! model parameters
   integer :: model_type
-  real :: xparam, sin2phiparam 
+  real :: xparam, sin2phiparam
 
   ! methods
   public :: initialise_model
@@ -123,9 +123,9 @@ subroutine initialise_standard_model
   ! call SM HELAS couplings
   call coup1x(s2w, gw, gwwa, gwwZ)
   call coup2x(s2w, gal, gau, gad, gwf, gZn, gZl, gZu, gZd, g1)
-  call coup3x(s2w, rm_Z, rm_h, gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh)
+  call coup3x(s2w, zmass, hmass, gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh)
   do i = 1, 12
-    call coup4x(s2w, rm_Z, fmass(i), gchf(1,i))
+    call coup4x(s2w, zmass, fmass(i), gchf(1,i))
   enddo
 
   ! QCD couplings (set to one, multiply correctly in zprime)
@@ -153,7 +153,7 @@ subroutine initialise_zprimes
   ! read model file
   open(unit = 42, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
   read(42,*) model_type
-  if (model_type == 0) then 
+  if (model_type == 0) then
     read(42,*) mass_zp
     read(42,*) gamZp
     read(42,*) gp
@@ -231,11 +231,11 @@ subroutine reset_zprimes
 
 end subroutine reset_zprimes
 
-subroutine initialise_non_universal 
+subroutine initialise_non_universal
 
   use mathematics, only: pi
 
-  integer :: i, j 
+  integer :: i, j
   real :: x, sin2phi, e, st, ct, sp, cp, m0
 
   call reset_zprimes
@@ -315,7 +315,7 @@ subroutine convert_zprime_couplings
   enddo
 
   call debug("...complete.")
-   
+
   return
 end subroutine convert_zprime_couplings
 
@@ -361,7 +361,7 @@ subroutine width_zprimes
           else if (i == 6) then
             gv = gzpb(1,n) + gzpb(2,n)
             ga = gzpb(1,n) - gzpb(2,n)
-          end if    
+          end if
 
           ! with QCD kfactor
           widthqq_tmp = 3.d0/48.d0/pi*mzp &
@@ -371,7 +371,7 @@ subroutine width_zprimes
                       *(1.d0 + 1.045d0*a_s/pi)
 
           widthqq = widthqq + widthqq_tmp
-              
+
         end if
       end do
 
@@ -396,7 +396,7 @@ subroutine width_zprimes
             gv = gzpn3(1,n) + gzpn3(2,n)
             ga = gzpn3(1,n) - gzpn3(2,n)
           end if
-            
+
           widthll_tmp = 1.d0/48.d0/pi*mzp &
                         *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
                         *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
@@ -411,7 +411,7 @@ subroutine width_zprimes
 !       print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
 !       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
 !       print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
-      
+
       gamZp(n) = width
     end if
   end do
@@ -445,7 +445,7 @@ function width_zprime_ssm(rm_Zp)
 
   rmt=fmass(11)
   gamt=fwidth(11)
-  
+
   ! couplings.
   pi=dacos(-1.d0)
   ctw=sqrt(1.d0-s2w)
@@ -454,7 +454,7 @@ function width_zprime_ssm(rm_Zp)
   a_s=alfas(rm_Zp,lambdaqcd4,nloops)
   GF=1.16639D-5
   ! renormalise e.
-  e=sqrt(s2w*8.d0*rm_Z*rm_Z*ctw*ctw*GF/sqrt(2.d0))
+  e=sqrt(s2w*8.d0*zmass*zmass*ctw*ctw*GF/sqrt(2.d0))
   ! Zp width.
   width_zprime_ssm=0.d0
   do i=1,6
@@ -472,7 +472,7 @@ function width_zprime_ssm(rm_Zp)
       eq=-1.d0/3.d0
     end if
     if(rm_Zp <= 2.d0*mq)goto 123
-    width_zprime_ssm=width_zprime_ssm+3.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    width_zprime_ssm=width_zprime_ssm+3.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
     *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
     *(1.d0-4.d0*mq**2/rm_Zp**2) &
@@ -509,7 +509,7 @@ function width_zprime_ssm(rm_Zp)
       t3q=-1.d0/2.d0
       eq=-1.d0
     end if
-    width_zprime_ssm=width_zprime_ssm+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    width_zprime_ssm=width_zprime_ssm+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
     *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
     *(1.d0-4.d0*mq**2/rm_Zp**2) &
@@ -524,21 +524,21 @@ function width_zprime_ssm(rm_Zp)
   !     &               *(4.d0*gv**2*(1.d0+2.d0*mq**2/rm_Zp**2)
   !     &                +4.d0*ga**2*(1.d0-4.d0*mq**2/rm_Zp**2))
 
-    temp=temp+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    temp=temp+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
     *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
     *(1.d0-4.d0*mq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
     *(1.d0+2.d0*mq**2/rm_Zp**2))
     if((i == 2) .OR. (i == 4) .OR. (i == 6)) &
-    temp1=temp1+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    temp1=temp1+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
     *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
     *(1.d0-4.d0*mq**2/rm_Zp**2) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
     *(1.d0+2.d0*mq**2/rm_Zp**2))
     if((i == 1) .OR. (i == 3) .OR. (i == 5)) &
-    temp2=temp2+1.d0*rm_Z**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
+    temp2=temp2+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
     *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
     *((2.d0*t3q)**2 &
     *(1.d0-4.d0*mq**2/rm_Zp**2) &

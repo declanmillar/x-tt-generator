@@ -12,6 +12,8 @@ module configuration
   character(50) :: model_name
   character(100) :: ntuple_file
   character(100) :: log_file
+  integer :: include_signal
+  integer :: include_background
   integer :: include_qcd
   integer :: include_qfd
   integer :: include_bsm
@@ -55,6 +57,8 @@ contains
     read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
     read(5,*) model_name
     read(5,*) structure_function
+    read(5,*) include_signal
+    read(5,*) include_background
     read(5,*) include_qcd
     read(5,*) include_qfd
     read(5,*) include_bsm

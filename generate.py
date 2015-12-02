@@ -13,7 +13,7 @@ parser = optparse.OptionParser(usage)
 # Execution options
 parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
-parser.add_option("-B", "--batch", default = True, action = "store_false", help = "run in batch mode")
+parser.add_option("-b", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lxbatch queue'")
 
@@ -22,7 +22,11 @@ parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "sto
 parser.add_option("-f", "--final_state", default = "bbllnn", action = "store", help = "set final state: ll, tt, bbllnn")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
-parser.add_option("-S", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
+parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
+
+
+parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
+parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
 
 # gauge sectors
 parser.add_option("-C", "--include_qcd", default = False, action = "store_true", help = "turn on QCD")
@@ -55,7 +59,7 @@ parser.add_option("-R", "--use_rambo", default = False, action = "store_true", h
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
 # Debug option
-parser.add_option("-P", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2 =    1")
+parser.add_option("-O", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2 =    1")
 parser.add_option("-v", "--verbose", default = False, action = "store_true", help = "Run in verbose mode.")
 
 (option, args) = parser.parse_args()
@@ -249,6 +253,8 @@ print >> config, '%i ! initial_state' % option.initial_state
 print >> config, '%i ! final_state' % final_state_id
 print >> config, '%s ! model_name' % model_name
 print >> config, '%i ! istructure' % option.structure_function
+print >> config, '%i ! include_signal' % option.include_signal
+print >> config, '%i ! include_background' % option.include_background
 print >> config, '%i ! include_qcd' % option.include_qcd
 print >> config, '%i ! include_qfd' % option.include_qfd
 print >> config, '%i ! include_bsm' % option.include_bsm

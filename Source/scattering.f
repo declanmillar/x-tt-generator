@@ -33,7 +33,10 @@ function dsigma(x,wgt)
   real :: x(100), wgt
 
   ! external functions
-  real :: dsigma, alfas, sqqff_qcd, sggff_qcd, sqqff_ewp, sqqbbffff_qcd, sggbbffff_qcd, sqqbbffff_ewp, ctq6pdf
+  real :: dsigma, alfas
+  real :: sqqff_qcd, sggff_qcd, sqqff_ewp, sqqbbffff_qcd, sggbbffff_qcd, sqqbbffff_ewp
+  real :: sgg_bbbtatavtvt
+  real :: ctq6pdf
 
   real :: ecm, ecm_max, ecm_min, pcm, qcm2
   real :: hist, hist1, hist2
@@ -180,13 +183,13 @@ function dsigma(x,wgt)
 
           ! scale for the pdfs
           if (final_state < 0) then
-            qq = rm_z
+            qq = zmass
           else
             qq = 2.d0*rmt
           end if
           if (qq == 0.d0) then
             call debug("qq = 0! Setting to Z mass.")
-            qq = rm_z
+            qq = zmass
           end if
 
 
@@ -488,11 +491,11 @@ function dsigma(x,wgt)
                 m56 = x(11)*(m56max - m56min) + m56min
               else
                 ! flatten the integrand around the W+ propagator
-                xx56min = atan(((m56min)**2 - rm_w**2)/rm_w/gamma_w)
-                xx56max = atan(((m56max)**2 - rm_w**2)/rm_w/gamma_w)
+                xx56min = atan(((m56min)**2 - wmass**2)/wmass/wwidth)
+                xx56max = atan(((m56max)**2 - wmass**2)/wmass/wwidth)
                 xx = x(11)*(xx56max - xx56min) + xx56min
-                rl56 = tan(xx)*rm_w*gamma_w
-                m56_2 = (rm_w**2 + rl56)
+                rl56 = tan(xx)*wmass*wwidth
+                m56_2 = (wmass**2 + rl56)
                 if (m56_2 < 0.d0) then
                   fffxn = 0.d0
                   call debug("fxn = 0. Skipping.")
@@ -508,11 +511,11 @@ function dsigma(x,wgt)
                 m78 = x(10)*(m78max - m78min) + m78min
               else
                 ! flatten the integrand around the W- propagator
-                xx78min = atan(((m78min)**2 - rm_w**2)/rm_w/gamma_w)
-                xx78max = atan(((m78max)**2 - rm_w**2)/rm_w/gamma_w)
+                xx78min = atan(((m78min)**2 - wmass**2)/wmass/wwidth)
+                xx78max = atan(((m78max)**2 - wmass**2)/wmass/wwidth)
                 xx = x(10)*(xx78max - xx78min) + xx78min
-                rl78 = tan(xx)*rm_w*gamma_w
-                m78_2 = (rm_w**2 + rl78)
+                rl78 = tan(xx)*wmass*wwidth
+                m78_2 = (wmass**2 + rl78)
                 if (m78_2 < 0.d0) then
                   fffxn = 0.d0
                   call debug("fxn = 0. Skipping.")
@@ -848,6 +851,7 @@ function dsigma(x,wgt)
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
                   if (include_gg == 1) then
+                    ! qcdpolgg(lam3,lam4) = sggff_qcd(p1,p2,p3,p4,lam3,lam4)*gs**4
                     qcdpolgg(lam3,lam4) = sggff_qcd(p1,p2,p3,p4,lam3,lam4)*gs**4
                   end if
                   if (include_qq == 1) then
@@ -886,7 +890,9 @@ function dsigma(x,wgt)
             if (include_qcd == 1) then
               call debug("Computing QCD matrix elements...")
               if (include_gg == 1) then
-                qcdgg = sggbbffff_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
+                ! qcdgg = sggbbffff_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdgg = sgg_bbbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
+                print*, "qcdgg ", qcdgg
               end if
               if (include_qq == 1) then
                 qcdqq = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
@@ -1016,8 +1022,8 @@ function dsigma(x,wgt)
               if (map_phase_space == 1) then
                 fffxn = fffxn*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt
                 fffxn = fffxn*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
-                fffxn = fffxn*((m56*m56 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx56max - xx56min)/(2.d0*m56)/rm_w/gamma_w
-                fffxn = fffxn*((m78*m78 - rm_w*rm_w)**2 + rm_w**2*gamma_w**2)*(xx78max - xx78min)/(2.d0*m78)/rm_w/gamma_w
+                fffxn = fffxn*((m56*m56 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx56max - xx56min)/(2.d0*m56)/wmass/wwidth
+                fffxn = fffxn*((m78*m78 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx78max - xx78min)/(2.d0*m78)/wmass/wwidth
                 ! nwa
                 fffxn = fffxn*gamt/gamma_t*gamt/gamma_t
               else

@@ -69,7 +69,7 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
   ! and helicity nhel(1),nhel(2) for process :
   !   qqb -> ttb (via A,Z,{Z'})
 
-  use Configuration, only: include_qfd, include_BSM, interference
+  use configuration, only: include_qfd, include_BSM, interference
   use modelling
 
   implicit none
@@ -221,10 +221,10 @@ function qqff_ewp(iq,jf,p1,p2,p3,p4,lam3,lam4,nhel)
 
   if (include_qfd == 1) then
     ! A diagram
-    call jioxxx( w1  ,w2  ,gAq ,rm_a ,gamma_A ,w5 )
+    call jioxxx( w1  ,w2  ,gAq ,amass ,awidth ,w5 )
     call iovxxx( w4  ,w3  ,w5  ,gAf   ,amp(1) )
     ! Z diagram
-    call jioxxx( w1 ,w2 ,gZq ,rm_Z ,gamma_Z ,w6 )
+    call jioxxx( w1 ,w2 ,gZq ,zmass, zwidth ,w6 )
     call iovxxx( w4 ,w3 ,w6  ,gZf ,amp(2) )
   else
     continue

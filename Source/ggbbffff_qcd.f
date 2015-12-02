@@ -320,7 +320,7 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   ! returns amplitude squared summed/avg over colors
   ! for the point in phase space p1,p2,p3,p4,...
   ! and helicity nhel(1),nhel(2),....
-  
+
   ! for process : g g  -> b b~ ta+ ta- vt vt~
 
   use modelling
@@ -376,21 +376,27 @@ function ggbbffff_qcd(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   call oxxxxx(p6  ,zero,nhel(6  ), 1,w6  )
   call oxxxxx(p7  ,zero,nhel(7  ), 1,w7  )
   call ixxxxx(p8  ,zero,nhel(8  ),-1,w8  )
-  call jioxxx(w5  ,w7  ,gwf,rm_W,Gamma_W,w9  )
-  call jioxxx(w8  ,w6  ,gwf,rm_W,Gamma_W,w10 )
+
+  ! currents
+  call jioxxx(w5  ,w7  ,gwf,wmass,wwidth,w9  )
+  call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w10 )
   call fvoxxx(w3  ,w9  ,gwf,fmass(11 ),fwidth(11 ),w11 )
   call fvixxx(w4  ,w10 ,gwf,fmass(11 ),fwidth(11 ),w12 )
   call fvoxxx(w11 ,w2  ,gg,fmass(11 ),fwidth(11 ),w13 )
-  call iovxxx(w12 ,w13 ,w1  ,gg,amp(1  ))
   call fvoxxx(w11 ,w1  ,gg,fmass(11 ),fwidth(11 ),w14 )
-  call iovxxx(w12 ,w14 ,w2  ,gg,amp(2  ))
   call jggxxx(w1  ,w2  ,g,w15 )
+
+  ! amplitudes
+  call iovxxx(w12 ,w13 ,w1  ,gg,amp(1  ))
+  call iovxxx(w12 ,w14 ,w2  ,gg,amp(2  ))
   call iovxxx(w12 ,w11 ,w15 ,gg,amp(3  ))
+
   ggbbffff_qcd = 0.d0
   do i = 1, neigen
     ztemp = (0.d0,0.d0)
     do j = 1, ngraphs
       ztemp = ztemp + eigen_vec(j,i)*amp(j)
+      ! if ((i==1) .and. (j==1)) print*, "j=", j,"amp =", amp(j)
     enddo
     ggbbffff_qcd =ggbbffff_qcd+ztemp*eigen_val(i)*conjg(ztemp)
   enddo
