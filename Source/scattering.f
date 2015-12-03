@@ -891,20 +891,26 @@ function dsigma(x,wgt)
                 qcdgg = sgg_bbbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               if (include_qq == 1) then
-                qcdqq = sqq_bbeevv_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
-                qcdbb = sqq_bbeevv_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdqq = sqq_bbeevv_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdbb = sqq_bbeevv_qcd(p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               call debug("...complete.")
             end if
             if ((include_qfd == 1) .or. (include_bsm == 1)) then
               call debug("Computing EW+Z' matrix elements...")
               if (include_qq == 1) then
-                ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
-                ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
-                ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
-                ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
-                ewzbb1 = sqqbbffff_ewp(12,11, p1, p2, p3, p4, p5, p7, p6, p8)
-                ewzbb2 = sqqbbffff_ewp(12,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ! ewzuu1 = sqqbbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ! ewzuu2 = sqqbbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ! ewzdd1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ! ewzdd2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ! ewzbb1 = sqqbbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8) ! 12
+                ! ewzbb2 = sqqbbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8) ! 12
+                ewzuu1 = sqq_bbffff_ewp( 3,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzuu2 = sqq_bbffff_ewp( 3,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ewzdd1 = sqq_bbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzdd2 = sqq_bbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
+                ewzbb1 = sqq_bbffff_ewp( 4,11, p1, p2, p3, p4, p5, p7, p6, p8)
+                ewzbb2 = sqq_bbffff_ewp( 4,11, p2, p1, p3, p4, p5, p7, p6, p8)
               end if
               call debug("...complete.")
             end if
