@@ -1,5 +1,5 @@
 module modelling
-  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug
+  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug, pi
 
   implicit none
 
@@ -232,8 +232,6 @@ subroutine reset_zprimes
 end subroutine reset_zprimes
 
 subroutine initialise_non_universal
-
-  use mathematics, only: pi
 
   integer :: i, j
   real :: x, sin2phi, e, st, ct, sp, cp, m0

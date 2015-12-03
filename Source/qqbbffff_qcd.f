@@ -382,6 +382,7 @@ function qqbbffff_qcd(iq,p1, p2, p3, p4, p5, p6, p7, p8,nhel)
   call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w11 )
   call fvoxxx(w3  ,w10 ,gwf,fmass(11 ),fwidth(11 ),w12 )
   call fvixxx(w4  ,w11 ,gwf,fmass(11 ),fwidth(11 ),w13 )
+
   call iovxxx(w13 ,w12 ,w9  ,gg,amp(1  ))
   qqbbffff_qcd = 0.d0
   do i = 1, neigen

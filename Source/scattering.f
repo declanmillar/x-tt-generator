@@ -34,7 +34,7 @@ function dsigma(x,wgt)
   ! external functions
   real :: dsigma, alfas
   real :: sqqff_qcd, sggff_qcd, sqqff_ewp, sqqbbffff_qcd, sggbbffff_qcd, sqqbbffff_ewp
-  real :: sgg_bbbtatavtvt
+  real :: sgg_bbbtatavtvt, sqq_bbeevv_qcd
   real :: ctq6pdf
 
   real :: ecm, ecm_max, ecm_min, pcm, qcm2
@@ -850,7 +850,6 @@ function dsigma(x,wgt)
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
                   if (include_gg == 1) then
-                    ! qcdpolgg(lam3,lam4) = sggff_qcd(p1,p2,p3,p4,lam3,lam4)*gs**4
                     qcdpolgg(lam3,lam4) = sggff_qcd(p1,p2,p3,p4,lam3,lam4)*gs**4
                   end if
                   if (include_qq == 1) then
@@ -892,8 +891,8 @@ function dsigma(x,wgt)
                 qcdgg = sgg_bbbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               if (include_qq == 1) then
-                qcdqq = sqqbbffff_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
-                qcdbb = sqqbbffff_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdqq = sqq_bbeevv_qcd(3 , p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdbb = sqq_bbeevv_qcd(12, p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               call debug("...complete.")
             end if
