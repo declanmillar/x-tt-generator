@@ -196,8 +196,10 @@ program zprime
   write(log,*) 'Model:', model_name
   if (include_qcd == 1) write(log,*) 'QCD:ON '
   if (include_qcd == 0) write(log,*) 'QCD:OFF'
-  if (include_qfd == 1) write(log,*) 'QFD:ON '
-  if (include_qfd == 0) write(log,*) 'QFD:OFF'
+  if (include_a == 1) write(log,*) 'photon:ON '
+  if (include_a == 0) write(log,*) 'photon:OFF'
+  if (include_z == 1) write(log,*) 'Z boson:ON '
+  if (include_z == 0) write(log,*) 'Z boson:OFF'
   if (include_bsm == 1) write(log,*) 'BSM:ON '
   if (include_bsm == 0) write(log,*) 'BSM:OFF'
   if (include_gg == 1) write(log,*) 'gg:ON '

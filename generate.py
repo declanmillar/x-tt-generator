@@ -19,7 +19,7 @@ parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lx
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
-parser.add_option("-f", "--final_state", default = "bbllnn", action = "store", help = "set final state: ll, tt, bbllnn")
+parser.add_option("-f", "--final_state", default = "tt_bbllvv", action = "store", help = "set final state: ll, tt, tt_bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
@@ -29,9 +29,10 @@ parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "st
 parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
 
 # gauge sectors
-parser.add_option("-C", "--include_qcd", default = False, action = "store_true", help = "turn on QCD")
-parser.add_option("-F", "--include_qfd", default = True, action = "store_false", help = "turn off QFD")
-parser.add_option("-X", "--include_bsm", default = True, action = "store_false", help = "turn off Z'")
+parser.add_option("-G", "--include_g", default = False, action = "store_true", help = "turn on QCD")
+parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "turn off photon")
+parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "turn off Z boson")
+parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "turn off Z' bosons")
 
 # Initial partons
 parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
@@ -84,9 +85,6 @@ if os.path.isfile("Models/%s.mdl" % model_name) is False:
 if collider_energy    < 0:
     sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
-if final_state != "ll" and final_state != "tt" and final_state != "bbllnn":
-    sys.exit("Error: unavailable final state '%s'.\n%s\nPossible final states: ll, tt, bbllnn" % (final_state,usage))
-
 if ncall < 2:
     sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
@@ -124,11 +122,11 @@ if option.include_bsm is False:
     model_name = "SM"
 
 if final_state == "ll":
-    option.include_qcd = False
+    option.include_g = False
     option.include_gg = False
 
 if option.phase_space_only:
-    option.include_qcd = False
+    option.include_g = False
     option.include_qfd = False
     option.include_bsm = False
 
@@ -161,7 +159,7 @@ if option.initial_state == 1:
 if option.structure_function != 4:
     options += "S%s" % option.structure_function
 
-if option.include_qcd is True and final_state != "ll":
+if option.include_g is True and final_state != "ll":
     options += "C"
 if option.include_qfd is False:
     options += "F"
@@ -223,8 +221,18 @@ if final_state == "ll":
     final_state_id = -1
 elif final_state == "tt":
     final_state_id = 0
-elif final_state == "bbllnn":
+elif final_state == "tt_bbllvv":
     final_state_id = 1
+elif final_state == "bbeeveve":
+    final_state_id = 2
+elif final_state == "bbemuvevm":
+    final_state_id = 3
+elif final_state == "bbmuvmvm":
+    final_state_id = 4
+elif final_state == "bbtatavtvt":
+    final_state_id = 5
+else
+    sys.exit("Error: unavailable final state '%s'." % final_state)
 
 # Logfile
 run_directory = "."
@@ -258,9 +266,10 @@ print >> config, '%s ! model_name' % model_name
 print >> config, '%i ! istructure' % option.structure_function
 print >> config, '%i ! include_signal' % option.include_signal
 print >> config, '%i ! include_background' % option.include_background
-print >> config, '%i ! include_qcd' % option.include_qcd
-print >> config, '%i ! include_qfd' % option.include_qfd
-print >> config, '%i ! include_bsm' % option.include_bsm
+print >> config, '%i ! include_g' % option.include_g
+print >> config, '%i ! include_a' % option.include_a
+print >> config, '%i ! include_z' % option.include_z
+print >> config, '%i ! include_x' % option.include_x
 print >> config, '%i ! include_gg' % option.include_gg
 print >> config, '%i ! include_qq' % option.include_qq
 print >> config, '%i ! phase_space_only' % option.phase_space_only

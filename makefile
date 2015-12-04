@@ -7,7 +7,7 @@ UNAME_S := $(shell uname -s)
 BIN = zprime
 
 # object files
-OBJ = rambo.o vegas.o cteq61pdf.o configuration.o modelling.o scattering.o alpha_EWNG.o helas.o ggbbffff_qcd.o ggff_qcd.o mrs99.o qqbbffff_ewp.o qqbbffff_qcd.o qqff_ewp.o qqff_qcd.o gg_bbeevv.o qq_bbeevv_qcd.o qq_bbeevv.o rangen.o zprime.o
+OBJ = rambo.o vegas.o cteq61pdf.o mrs99.o configuration.o modelling.o scattering.o alpha_EWNG.o helas.o gg_tt.o qq_tt.o qq_ff.o gg_tt_bbeevv.o qq_tt_bbeevv_qcd.o qq_tt_bbeevv.o gg_bbeevv.o qq_bbeevv_qcd.o qq_bbeevv.o rangen.o zprime.o
 
 # Source directory
 SRC = Source

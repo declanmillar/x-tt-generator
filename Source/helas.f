@@ -1,16 +1,16 @@
-    subroutine boostx(p,q , pboost)
+subroutine boostx(p,q , pboost)
 
-! this subroutine performs the lorentz boost of a four-momentum.  the
-! momentum p is assumed to be given in the rest frame of q.  pboost is
-! the momentum p boosted to the frame in which q is given.  q must be a
-! timelike momentum.
+    ! this subroutine performs the lorentz boost of a four-momentum.  the
+    ! momentum p is assumed to be given in the rest frame of q.  pboost is
+    ! the momentum p boosted to the frame in which q is given.  q must be a
+    ! timelike momentum.
 
-! input:
-!       real    p(0:3)         : four-momentum p in the q rest  frame
-!       real    q(0:3)         : four-momentum q in the boosted frame
+    ! input:
+    !       real    p(0:3)         : four-momentum p in the q rest  frame
+    !       real    q(0:3)         : four-momentum q in the boosted frame
 
-! output:
-!       real    pboost(0:3)    : four-momentum p in the boosted frame
+    ! output:
+    !       real    pboost(0:3)    : four-momentum p in the boosted frame
 
     real*8 ::    p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
 
@@ -35,22 +35,22 @@
     endif
 
     return
-    end subroutine boostx
+end subroutine boostx
 
-! **********************************************************************
+    ! **********************************************************************
 
-    subroutine coup1x(sw2 , gw,gwwa,gwwz)
+subroutine coup1x(sw2 , gw,gwwa,gwwz)
 
-! this subroutine sets up the coupling constants of the gauge bosons in
-! the standard model_name.
+    ! this subroutine sets up the coupling constants of the gauge bosons in
+    ! the standard model_name.
 
-! input:
-!       real    sw2            : square of sine of the weak angle
+    ! input:
+    !       real    sw2            : square of sine of the weak angle
 
-! output:
-!       real    gw             : weak coupling constant
-!       real    gwwa           : dimensionless coupling of w-,w+,a
-!       real    gwwz           : dimensionless coupling of w-,w+,z
+    ! output:
+    !       real    gw             : weak coupling constant
+    !       real    gwwa           : dimensionless coupling of w-,w+,a
+    !       real    gwwz           : dimensionless coupling of w-,w+,z
 
     real*8 ::    sw2,gw,gwwa,gwwz,alpha,fourpi,ee,sw,cw
 
@@ -59,7 +59,7 @@
     parameter( r_pi=3.14159265358979323846d0, r_ialph=137.0359895d0 )
 
     alpha = r_one / r_ote
-!      alpha = r_one / r_ialph
+      !      alpha = r_one / r_ialph
     fourpi = r_four * r_pi
     ee=sqrt( alpha * fourpi )
     sw=sqrt( sw2 )
@@ -70,30 +70,30 @@
     gwwz  =  ee*cw/sw
 
     return
-    end subroutine coup1x
+end subroutine coup1x
 
 
 
-    subroutine coup2x(sw2 , gal,gau,gad,gwf,gzn,gzl,gzu,gzd,g1)
+subroutine coup2x(sw2 , gal,gau,gad,gwf,gzn,gzl,gzu,gzd,g1)
 
-! this subroutine sets up the coupling constants for the fermion-
-! fermion-vector vertices in the standard model_name.  the array of the
-! couplings specifies the chirality of the flowing-in fermion.  g??(1)
-! denotes a left-handed coupling, and g??(2) a right-handed coupling.
+    ! this subroutine sets up the coupling constants for the fermion-
+    ! fermion-vector vertices in the standard model_name.  the array of the
+    ! couplings specifies the chirality of the flowing-in fermion.  g??(1)
+    ! denotes a left-handed coupling, and g??(2) a right-handed coupling.
 
-! input:
-!       real    sw2            : square of sine of the weak angle
+    ! input:
+    !       real    sw2            : square of sine of the weak angle
 
-! output:
-!       real    gal(2)         : coupling with a of charged leptons
-!       real    gau(2)         : coupling with a of up-type quarks
-!       real    gad(2)         : coupling with a of down-type quarks
-!       real    gwf(2)         : coupling with w-,w+ of fermions
-!       real    gzn(2)         : coupling with z of neutrinos
-!       real    gzl(2)         : coupling with z of charged leptons
-!       real    gzu(2)         : coupling with z of up-type quarks
-!       real    gzd(2)         : coupling with z of down-type quarks
-!       real    g1(2)          : unit coupling of fermions
+    ! output:
+    !       real    gal(2)         : coupling with a of charged leptons
+    !       real    gau(2)         : coupling with a of up-type quarks
+    !       real    gad(2)         : coupling with a of down-type quarks
+    !       real    gwf(2)         : coupling with w-,w+ of fermions
+    !       real    gzn(2)         : coupling with z of neutrinos
+    !       real    gzl(2)         : coupling with z of charged leptons
+    !       real    gzu(2)         : coupling with z of up-type quarks
+    !       real    gzd(2)         : coupling with z of down-type quarks
+    !       real    g1(2)          : unit coupling of fermions
 
     real*8 :: gal(2),gau(2),gad(2),gwf(2),gzn(2),gzl(2),gzu(2),gzd(2), &
     g1(2),sw2,alpha,fourpi,ee,sw,cw,ez,ey
@@ -106,7 +106,7 @@
     parameter( r_pi=3.14159265358979323846d0, r_ialph=137.0359895d0 )
 
     alpha = r_one / r_ote
-!      alpha = r_one / r_ialph
+      !      alpha = r_one / r_ialph
     fourpi = r_four * r_pi
     ee=sqrt( alpha * fourpi )
     sw=sqrt( sw2 )
@@ -134,28 +134,28 @@
     g1(2)  =  r_one
 
     return
-    end subroutine coup2x
+end subroutine coup2x
 
 
 
-    subroutine coup3x(sw2,zmass,hmass , &
+subroutine coup3x(sw2,zmass,hmass , &
     gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh)
 
-! this subroutine sets up the coupling constants of the gauge bosons and
-! higgs boson in the standard model_name.
+      ! this subroutine sets up the coupling constants of the gauge bosons and
+      ! higgs boson in the standard model_name.
 
-! input:
-!       real    sw2            : square of sine of the weak angle
-!       real    zmass          : mass of z
-!       real    hmass          : mass of higgs
+      ! input:
+      !       real    sw2            : square of sine of the weak angle
+      !       real    zmass          : mass of z
+      !       real    hmass          : mass of higgs
 
-! output:
-!       real    gwwh           : dimensionful  coupling of w-,w+,h
-!       real    gzzh           : dimensionful  coupling of z, z, h
-!       real    ghhh           : dimensionful  coupling of h, h, h
-!       real    gwwhh          : dimensionful  coupling of w-,w+,h, h
-!       real    gzzhh          : dimensionful  coupling of z, z, h, h
-!       real    ghhhh          : dimensionless coupling of h, h, h, h
+      ! output:
+      !       real    gwwh           : dimensionful  coupling of w-,w+,h
+      !       real    gzzh           : dimensionful  coupling of z, z, h
+      !       real    ghhh           : dimensionful  coupling of h, h, h
+      !       real    gwwhh          : dimensionful  coupling of w-,w+,h, h
+      !       real    gzzhh          : dimensionful  coupling of z, z, h, h
+      !       real    ghhhh          : dimensionless coupling of h, h, h, h
 
     real*8 ::    sw2,zmass,hmass,gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh, &
     alpha,fourpi,ee2,sc2,v
@@ -167,7 +167,7 @@
     parameter( r_pi=3.14159265358979323846d0, r_ialph=137.0359895d0 )
 
     alpha = r_one / r_ote
-!      alpha = r_one / r_ialph
+      !      alpha = r_one / r_ialph
     fourpi = r_four * r_pi
     ee2=alpha*fourpi
     sc2=sw2*( r_one - sw2 )
@@ -181,32 +181,32 @@
     ghhhh = -(hmass/v)**2*r_three
 
     return
-    end subroutine coup3x
+end subroutine coup3x
 
 
 
-    SUBROUTINE COUP4X(SW2,ZMASS,FMASS , GCHF)
+SUBROUTINE COUP4X(SW2,ZMASS,FMASS , GCHF)
 
-! This subroutine sets up the coupling constant for the fermion-fermion-
-! Higgs vertex in the STANDARD MODEL.  The coupling is COMPLEX and the
-! array of the coupling specifies the chirality of the flowing-IN
-! fermion.  GCHF(1) denotes a left-handed coupling, and GCHF(2) a right-
-! handed coupling.
+    ! This subroutine sets up the coupling constant for the fermion-fermion-
+    ! Higgs vertex in the STANDARD MODEL.  The coupling is COMPLEX and the
+    ! array of the coupling specifies the chirality of the flowing-IN
+    ! fermion.  GCHF(1) denotes a left-handed coupling, and GCHF(2) a right-
+    ! handed coupling.
 
-! INPUT:
-!       real    SW2            : square of sine of the weak angle
-!       real    ZMASS          : Z       mass
-!       real    FMASS          : fermion mass
+    ! INPUT:
+    !       real    SW2            : square of sine of the weak angle
+    !       real    ZMASS          : Z       mass
+    !       real    FMASS          : fermion mass
 
-! OUTPUT:
-!       complex GCHF(2)        : coupling of fermion and Higgs
+    ! OUTPUT:
+    !       complex GCHF(2)        : coupling of fermion and Higgs
 
     implicit none
     COMPLEX*16 GCHF(2)
     REAL*8 ::    SW2,ZMASS,FMASS,ALPHA,FOURPI,EZ,G
 
     ALPHA=1.d0/128.d0
-!      ALPHA=1./REAL(137.0359895)
+      !      ALPHA=1./REAL(137.0359895)
     FOURPI=4.D0*3.14159265358979323846D0
     EZ=SQRT(ALPHA*FOURPI)/SQRT(SW2*(1.d0-SW2))
     G=EZ*FMASS*0.5d0/ZMASS
@@ -215,28 +215,28 @@
     GCHF(2) = DCMPLX( -G )
 
     RETURN
-    END SUBROUTINE COUP4X
+END SUBROUTINE COUP4X
 
 
 
-    SUBROUTINE EAIXXX(EB,EA,SHLF,CHLF,PHI,NHE,NHA , EAI)
+SUBROUTINE EAIXXX(EB,EA,SHLF,CHLF,PHI,NHE,NHA , EAI)
 
-! This subroutine computes an off-shell electron wavefunction after
-! emitting a photon from the electron beam, with a special care for the
-! small angle region.  The momenta are measured in the laboratory frame,
-! where the e- beam is along the positive z axis.
+    ! This subroutine computes an off-shell electron wavefunction after
+    ! emitting a photon from the electron beam, with a special care for the
+    ! small angle region.  The momenta are measured in the laboratory frame,
+    ! where the e- beam is along the positive z axis.
 
-! INPUT:
-!       real    EB             : energy (GeV)    of beam  e-
-!       real    EA             : energy (GeV)    of final photon
-!       real    SHLF           : sin(theta/2)    of final photon
-!       real    CHLF           : cos(theta/2)    of final photon
-!       real    PHI            : azimuthal angle of final photon
-!       integer NHE  = -1 or 1 : helicity        of beam  e-
-!       integer NHA  = -1 or 1 : helicity        of final photon
+    ! INPUT:
+    !       real    EB             : energy (GeV)    of beam  e-
+    !       real    EA             : energy (GeV)    of final photon
+    !       real    SHLF           : sin(theta/2)    of final photon
+    !       real    CHLF           : cos(theta/2)    of final photon
+    !       real    PHI            : azimuthal angle of final photon
+    !       integer NHE  = -1 or 1 : helicity        of beam  e-
+    !       integer NHA  = -1 or 1 : helicity        of final photon
 
-! OUTPUT:
-!       complex EAI(6)         : off-shell electron             |e',A,e>
+    ! OUTPUT:
+    !       complex EAI(6)         : off-shell electron             |e',A,e>
 
     implicit none
     COMPLEX*16 EAI(6),PHS
@@ -270,28 +270,28 @@
     EAI(6) = -EB*X*S*dCMPLX( CSP , SNP )
 
     RETURN
-    END SUBROUTINE EAIXXX
+END SUBROUTINE EAIXXX
 
 
 
-    SUBROUTINE EAOXXX(EB,EA,SHLF,CHLF,PHI,NHE,NHA , EAO)
+SUBROUTINE EAOXXX(EB,EA,SHLF,CHLF,PHI,NHE,NHA , EAO)
 
-! This subroutine computes an off-shell positron wavefunction after
-! emitting a photon from the positron beam, with a special care for the
-! small angle region.  The momenta are measured in the laboratory frame,
-! where the e+ beam is along the negative z axis.
+    ! This subroutine computes an off-shell positron wavefunction after
+    ! emitting a photon from the positron beam, with a special care for the
+    ! small angle region.  The momenta are measured in the laboratory frame,
+    ! where the e+ beam is along the negative z axis.
 
-! INPUT:
-!       real    EB             : energy (GeV)    of beam  e+
-!       real    EA             : energy (GeV)    of final photon
-!       real    SHLF           : sin(theta/2)    of final photon
-!       real    CHLF           : cos(theta/2)    of final photon
-!       real    PHI            : azimuthal angle of final photon
-!       integer NHE  = -1 or 1 : helicity        of beam  e+
-!       integer NHA  = -1 or 1 : helicity        of final photon
+    ! INPUT:
+    !       real    EB             : energy (GeV)    of beam  e+
+    !       real    EA             : energy (GeV)    of final photon
+    !       real    SHLF           : sin(theta/2)    of final photon
+    !       real    CHLF           : cos(theta/2)    of final photon
+    !       real    PHI            : azimuthal angle of final photon
+    !       integer NHE  = -1 or 1 : helicity        of beam  e+
+    !       integer NHA  = -1 or 1 : helicity        of final photon
 
-! OUTPUT:
-!       complex EAO(6)         : off-shell positron             <e,A,e'|
+    ! OUTPUT:
+    !       complex EAO(6)         : off-shell positron             <e,A,e'|
 
     implicit none
     COMPLEX*16 EAO(6),PHS
@@ -325,24 +325,24 @@
     EAO(6) = EB*X*S*dCMPLX( CSP , SNP )
 
     RETURN
-    END SUBROUTINE EAOXXX
+END SUBROUTINE EAOXXX
 
 
 
-    subroutine fsixxx(fi,sc,gc,fmass,fwidth , fsi)
+subroutine fsixxx(fi,sc,gc,fmass,fwidth , fsi)
 
-! this subroutine computes an off-shell fermion wavefunction from a
-! flowing-in external fermion and a vector boson.
+    ! this subroutine computes an off-shell fermion wavefunction from a
+    ! flowing-in external fermion and a vector boson.
 
-! input:
-!       complex*16 fi(6)          : flow-in  fermion                   |fi>
-!       complex*16 sc(3)          : input    scalar                      s
-!       complex*16 gc(2)          : coupling constants                 gchf
-!       real    fmass          : mass  of output fermion f'
-!       real    fwidth         : width of output fermion f'
+    ! input:
+    !       complex*16 fi(6)          : flow-in  fermion                   |fi>
+    !       complex*16 sc(3)          : input    scalar                      s
+    !       complex*16 gc(2)          : coupling constants                 gchf
+    !       real    fmass          : mass  of output fermion f'
+    !       real    fwidth         : width of output fermion f'
 
-! output:
-!       complex fsi(6)         : off-shell fermion             |f',s,fi>
+    ! output:
+    !       complex fsi(6)         : off-shell fermion             |f',s,fi>
 
     complex*16 fi(6),sc(3),fsi(6),gc(2),sl1,sl2,sr1,sr2,ds
     real*8 ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
@@ -370,24 +370,24 @@
     fsi(4) = ( gc(2)*fmass*fi(4) + sl2 )*ds
 
     return
-    end subroutine fsixxx
+end subroutine fsixxx
 
 
 
-    subroutine fsoxxx(fo,sc,gc,fmass,fwidth , fso)
+subroutine fsoxxx(fo,sc,gc,fmass,fwidth , fso)
 
-! this subroutine computes an off-shell fermion wavefunction from a
-! flowing-out external fermion and a vector boson.
+    ! this subroutine computes an off-shell fermion wavefunction from a
+    ! flowing-out external fermion and a vector boson.
 
-! input:
-!       complex*16 fo(6)          : flow-out fermion                   <fo|
-!       complex*16 sc(6)          : input    scalar                      s
-!       complex*16 gc(2)          : coupling constants                 gchf
-!       real     fmass          : mass  of output fermion f'
-!       real     fwidth         : width of output fermion f'
+    ! input:
+    !       complex*16 fo(6)          : flow-out fermion                   <fo|
+    !       complex*16 sc(6)          : input    scalar                      s
+    !       complex*16 gc(2)          : coupling constants                 gchf
+    !       real     fmass          : mass  of output fermion f'
+    !       real     fwidth         : width of output fermion f'
 
-! output:
-!       complex fso(6)         : off-shell fermion             <fo,s,f'|
+    ! output:
+    !       complex fso(6)         : off-shell fermion             <fo,s,f'|
 
     complex*16 fo(6),sc(6),fso(6),gc(2),sl1,sl2,sr1,sr2,ds
     real*8 ::     pf(0:3),fmass,fwidth,pf2,p0p3,p0m3
@@ -415,24 +415,24 @@
     fso(4) = ( gc(2)*fmass*fo(4) + sr2 )*ds
 
     return
-    end subroutine fsoxxx
+end subroutine fsoxxx
 
 
 
-    subroutine fvixxx(fi,vc,g,fmass,fwidth , fvi)
+subroutine fvixxx(fi,vc,g,fmass,fwidth , fvi)
 
-! this subroutine computes an off-shell fermion wavefunction from a
-! flowing-in external fermion and a vector boson.
+    ! this subroutine computes an off-shell fermion wavefunction from a
+    ! flowing-in external fermion and a vector boson.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex vc(6)          : input    vector                      v
-!       real    g(2)           : coupling constants                  gvf
-!       real    fmass          : mass  of output fermion f'
-!       real    fwidth         : width of output fermion f'
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex vc(6)          : input    vector                      v
+    !       real    g(2)           : coupling constants                  gvf
+    !       real    fmass          : mass  of output fermion f'
+    !       real    fwidth         : width of output fermion f'
 
-! output:
-!       complex fvi(6)         : off-shell fermion             |f',v,fi>
+    ! output:
+    !       complex fvi(6)         : off-shell fermion             |f',v,fi>
 
     complex*16 fi(6),vc(6),fvi(6),sl1,sl2,sr1,sr2,d
     real*8 ::    g(2),pf(0:3),fmass,fwidth,pf2
@@ -440,7 +440,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -464,7 +464,7 @@
         -(vc(2)-c_imag*vc(3))*fi(4)
         sr2=-(vc(2)+c_imag*vc(3))*fi(3) &
         +(vc(1)+       vc(4))*fi(4)
-    
+
         fvi(1) = ( g(1)*((pf(0)-pf(3))*sl1 -conjg(fvi(6))*sl2) &
         +g(2)*fmass*sr1)*d
         fvi(2) = ( g(1)*(      -fvi(6)*sl1 +(pf(0)+pf(3))*sl2) &
@@ -473,7 +473,7 @@
         +g(1)*fmass*sl1)*d
         fvi(4) = ( g(2)*(       fvi(6)*sr1 +(pf(0)-pf(3))*sr2) &
         +g(1)*fmass*sl2)*d
-    
+
     else
         fvi(1) = g(1)*((pf(0)-pf(3))*sl1 -conjg(fvi(6))*sl2)*d
         fvi(2) = g(1)*(      -fvi(6)*sl1 +(pf(0)+pf(3))*sl2)*d
@@ -482,24 +482,24 @@
     end if
 
     return
-    end subroutine fvixxx
+end subroutine fvixxx
 
 
 
-    subroutine fvoxxx(fo,vc,g,fmass,fwidth , fvo)
+subroutine fvoxxx(fo,vc,g,fmass,fwidth , fvo)
 
-! this subroutine computes an off-shell fermion wavefunction from a
-! flowing-out external fermion and a vector boson.
+    ! this subroutine computes an off-shell fermion wavefunction from a
+    ! flowing-out external fermion and a vector boson.
 
-! input:
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       complex vc(6)          : input    vector                      v
-!       real    g(2)           : coupling constants                  gvf
-!       real    fmass          : mass  of output fermion f'
-!       real    fwidth         : width of output fermion f'
+    ! input:
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       complex vc(6)          : input    vector                      v
+    !       real    g(2)           : coupling constants                  gvf
+    !       real    fmass          : mass  of output fermion f'
+    !       real    fwidth         : width of output fermion f'
 
-! output:
-!       complex fvo(6)         : off-shell fermion             <fo,v,f'|
+    ! output:
+    !       complex fvo(6)         : off-shell fermion             <fo,v,f'|
 
     complex*16 fo(6),vc(6),fvo(6),sl1,sl2,sr1,sr2,d
     real*8 ::    g(2),pf(0:3),fmass,fwidth,pf2
@@ -507,7 +507,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -531,7 +531,7 @@
         -(vc(2)+c_imag*vc(3))*fo(2)
         sr2=-(vc(2)-c_imag*vc(3))*fo(1) &
         +(vc(1)+       vc(4))*fo(2)
-    
+
         fvo(1) = ( g(2)*( (pf(0)+pf(3))*sr1        +fvo(6)*sr2) &
         +g(1)*fmass*sl1)*d
         fvo(2) = ( g(2)*( conjg(fvo(6))*sr1 +(pf(0)-pf(3))*sr2) &
@@ -540,7 +540,7 @@
         +g(2)*fmass*sr1)*d
         fvo(4) = ( g(1)*(-conjg(fvo(6))*sl1 +(pf(0)+pf(3))*sl2) &
         +g(2)*fmass*sr2)*d
-    
+
     else
         fvo(1) = g(1)*fmass*sl1*d
         fvo(2) = g(1)*fmass*sl2*d
@@ -549,41 +549,41 @@
     end if
 
     return
-    end subroutine fvoxxx
+end subroutine fvoxxx
 
 
 
-    subroutine ggggxx(wm,w31,wp,w32,g, vertex)
+subroutine ggggxx(wm,w31,wp,w32,g, vertex)
 
-! this subroutine computes an amplitude of the four-point coupling of
-! the w-, w+ and two w3/z/a.  the amplitude includes the contributions
-! of w exchange diagrams.  the internal w propagator is given in unitary
-! gauge.  if one sets wmass=0.0, then the gggg vertex is given (see sect
-! 2.9.1 of the manual).
+    ! this subroutine computes an amplitude of the four-point coupling of
+    ! the w-, w+ and two w3/z/a.  the amplitude includes the contributions
+    ! of w exchange diagrams.  the internal w propagator is given in unitary
+    ! gauge.  if one sets wmass=0.0, then the gggg vertex is given (see sect
+    ! 2.9.1 of the manual).
 
-! input:
-!       complex wm(0:3)        : flow-out w-                         wm
-!       complex w31(0:3)       : first    w3/z/a                     w31
-!       complex wp(0:3)        : flow-out w+                         wp
-!       complex w32(0:3)       : second   w3/z/a                     w32
-!       real    g              : coupling of w31 with w-/w+
-!                                                  (see the table below)
+    ! input:
+    !       complex wm(0:3)        : flow-out w-                         wm
+    !       complex w31(0:3)       : first    w3/z/a                     w31
+    !       complex wp(0:3)        : flow-out w+                         wp
+    !       complex w32(0:3)       : second   w3/z/a                     w32
+    !       real    g              : coupling of w31 with w-/w+
+    !                                                  (see the table below)
 
-! the possible sets of the inputs are as follows:
-!   -------------------------------------------
-!   |  wm  |  w31 |  wp  |  w32 |  g31 |  g32 |
-!   -------------------------------------------
-!   |  w-  |  w3  |  w+  |  w3  |  gw  |  gw  |
-!   |  w-  |  w3  |  w+  |  z   |  gw  | gwwz |
-!   |  w-  |  w3  |  w+  |  a   |  gw  | gwwa |
-!   |  w-  |  z   |  w+  |  z   | gwwz | gwwz |
-!   |  w-  |  z   |  w+  |  a   | gwwz | gwwa |
-!   |  w-  |  a   |  w+  |  a   | gwwa | gwwa |
-!   -------------------------------------------
-! where all the bosons are defined by the flowing-out quantum number.
+    ! the possible sets of the inputs are as follows:
+    !   -------------------------------------------
+    !   |  wm  |  w31 |  wp  |  w32 |  g31 |  g32 |
+    !   -------------------------------------------
+    !   |  w-  |  w3  |  w+  |  w3  |  gw  |  gw  |
+    !   |  w-  |  w3  |  w+  |  z   |  gw  | gwwz |
+    !   |  w-  |  w3  |  w+  |  a   |  gw  | gwwa |
+    !   |  w-  |  z   |  w+  |  z   | gwwz | gwwz |
+    !   |  w-  |  z   |  w+  |  a   | gwwz | gwwa |
+    !   |  w-  |  a   |  w+  |  a   | gwwa | gwwa |
+    !   -------------------------------------------
+    ! where all the bosons are defined by the flowing-out quantum number.
 
-! output:
-!       complex vertex         : amplitude          gamma(wm,w31,wp,w32)
+    ! output:
+    !       complex vertex         : amplitude          gamma(wm,w31,wp,w32)
 
     implicit none
     complex*16    wm(6),w31(6),wp(6),w32(6),vertex
@@ -657,23 +657,23 @@
     vertex = dcmplx( dvertx ) * (g*g)
 
     return
-    end subroutine ggggxx
+end subroutine ggggxx
 
 
 
-    subroutine gggxxx(wm,wp,w3,g , vertex)
+subroutine gggxxx(wm,wp,w3,g , vertex)
 
-! this subroutine computes an amplitude of the three-point coupling of
-! the gauge bosons.
+    ! this subroutine computes an amplitude of the three-point coupling of
+    ! the gauge bosons.
 
-! input:
-!       complex wm(6)          : vector               flow-out w-
-!       complex wp(6)          : vector               flow-out w+
-!       complex w3(6)          : vector               j3 or a    or z
-!       real    g              : coupling constant    gw or gwwa or gwwz
+    ! input:
+    !       complex wm(6)          : vector               flow-out w-
+    !       complex wp(6)          : vector               flow-out w+
+    !       complex w3(6)          : vector               j3 or a    or z
+    !       real    g              : coupling constant    gw or gwwa or gwwz
 
-! output:
-!       complex vertex         : amplitude               gamma(wm,wp,w3)
+    ! output:
+    !       complex vertex         : amplitude               gamma(wm,wp,w3)
 
     complex*16 wm(6),wp(6),w3(6),vertex, &
     xv1,xv2,xv3,v12,v23,v31,p12,p13,p21,p23,p31,p32
@@ -732,22 +732,22 @@
     vertex = -(v12*(p13-p23)+v23*(p21-p31)+v31*(p32-p12))*g
 
     return
-    end subroutine gggxxx
+end subroutine gggxxx
 
-    subroutine hioxxx(fi,fo,gc,smass,swidth , hio)
+subroutine hioxxx(fi,fo,gc,smass,swidth , hio)
 
-! this subroutine computes an off-shell scalar current from an external
-! fermion pair.
+    ! this subroutine computes an off-shell scalar current from an external
+    ! fermion pair.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       complex gc(2)          : coupling constants                 gchf
-!       real    smass          : mass  of output scalar s
-!       real    swidth         : width of output scalar s
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       complex gc(2)          : coupling constants                 gchf
+    !       real    smass          : mass  of output scalar s
+    !       real    swidth         : width of output scalar s
 
-! output:
-!       complex hio(3)         : scalar current             j(<fi|s|fo>)
+    ! output:
+    !       complex hio(3)         : scalar current             j(<fi|s|fo>)
 
     complex*16 fi(6),fo(6),hio(3),gc(2),dn
     real*8 ::  q(0:3),smass,swidth,q2
@@ -767,25 +767,25 @@
     +gc(2)*(fo(3)*fi(3)+fo(4)*fi(4)) )/dn
 
     return
-    end subroutine hioxxx
+end subroutine hioxxx
 
 
 
-    SUBROUTINE HSSSXX(S1,S2,S3,G,SMASS,SWIDTH , HSSS)
+SUBROUTINE HSSSXX(S1,S2,S3,G,SMASS,SWIDTH , HSSS)
 
-! This subroutine computes an off-shell scalar current from the four-
-! scalar coupling.
+    ! This subroutine computes an off-shell scalar current from the four-
+    ! scalar coupling.
 
-! INPUT:
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       complex S3(3)          : third  scalar                        S3
-!       real    G              : coupling constant                 GHHHH
-!       real    SMASS          : mass  of OUTPUT scalar S'
-!       real    SWIDTH         : width of OUTPUT scalar S'
+    ! INPUT:
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       complex S3(3)          : third  scalar                        S3
+    !       real    G              : coupling constant                 GHHHH
+    !       real    SMASS          : mass  of OUTPUT scalar S'
+    !       real    SWIDTH         : width of OUTPUT scalar S'
 
-! OUTPUT:
-!       complex HSSS(3)        : scalar current           J(S':S1,S2,S3)
+    ! OUTPUT:
+    !       complex HSSS(3)        : scalar current           J(S':S1,S2,S3)
 
     implicit none
     COMPLEX*16 S1(3),S2(3),S3(3),HSSS(3),DG
@@ -805,23 +805,23 @@
     HSSS(1) = DG * S1(1)*S2(1)*S3(1)
 
     RETURN
-    END SUBROUTINE HSSSXX
+END SUBROUTINE HSSSXX
 
 
-    SUBROUTINE HSSXXX(S1,S2,G,SMASS,SWIDTH , HSS)
+SUBROUTINE HSSXXX(S1,S2,G,SMASS,SWIDTH , HSS)
 
-! This subroutine computes an off-shell scalar current from the three-
-! scalar coupling.
+    ! This subroutine computes an off-shell scalar current from the three-
+    ! scalar coupling.
 
-! INPUT:
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       real    G              : coupling constant                  GHHH
-!       real    SMASS          : mass  of OUTPUT scalar S'
-!       real    SWIDTH         : width of OUTPUT scalar S'
+    ! INPUT:
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       real    G              : coupling constant                  GHHH
+    !       real    SMASS          : mass  of OUTPUT scalar S'
+    !       real    SWIDTH         : width of OUTPUT scalar S'
 
-! OUTPUT:
-!       complex HSS(3)         : scalar current              J(S':S1,S2)
+    ! OUTPUT:
+    !       complex HSS(3)         : scalar current              J(S':S1,S2)
 
     implicit none
     COMPLEX*16 S1(3),S2(3),HSS(3),DG
@@ -841,41 +841,41 @@
     HSS(1) = DG*S1(1)*S2(1)
 
     RETURN
-    END SUBROUTINE HSSXXX
+END SUBROUTINE HSSXXX
 
 
 
 
-    subroutine hvsxxx(vc,sc,g,smass,swidth , hvs)
+subroutine hvsxxx(vc,sc,g,smass,swidth , hvs)
 
-! this subroutine computes an off-shell scalar current from the vector-
-! scalar-scalar coupling.  the coupling is absent in the minimal sm in
-! unitary gauge.
+    ! this subroutine computes an off-shell scalar current from the vector-
+    ! scalar-scalar coupling.  the coupling is absent in the minimal sm in
+    ! unitary gauge.
 
-! input:
-!       complex vc(6)          : input vector                          v
-!       complex sc(3)          : input scalar                          s
-!       complex g              : coupling constant (s charge)
-!       real    smass          : mass  of output scalar s'
-!       real    swidth         : width of output scalar s'
+    ! input:
+    !       complex vc(6)          : input vector                          v
+    !       complex sc(3)          : input scalar                          s
+    !       complex g              : coupling constant (s charge)
+    !       real    smass          : mass  of output scalar s'
+    !       real    swidth         : width of output scalar s'
 
-! examples of the coupling constant g for susy particles are as follows:
-!   -----------------------------------------------------------
-!   |    s1    | (q,i3) of s1  ||   v=a   |   v=z   |   v=w   |
-!   -----------------------------------------------------------
-!   | nu~_l    | (  0  , +1/2) ||   ---   |  gzn(1) |  gwf(1) |
-!   | e~_l     | ( -1  , -1/2) ||  gal(1) |  gzl(1) |  gwf(1) |
-!   | u~_l     | (+2/3 , +1/2) ||  gau(1) |  gzu(1) |  gwf(1) |
-!   | d~_l     | (-1/3 , -1/2) ||  gad(1) |  gzd(1) |  gwf(1) |
-!   -----------------------------------------------------------
-!   | e~_r-bar | ( +1  ,  0  ) || -gal(2) | -gzl(2) | -gwf(2) |
-!   | u~_r-bar | (-2/3 ,  0  ) || -gau(2) | -gzu(2) | -gwf(2) |
-!   | d~_r-bar | (+1/3 ,  0  ) || -gad(2) | -gzd(2) | -gwf(2) |
-!   -----------------------------------------------------------
-! where the sc charge is defined by the flowing-out quantum number.
+    ! examples of the coupling constant g for susy particles are as follows:
+    !   -----------------------------------------------------------
+    !   |    s1    | (q,i3) of s1  ||   v=a   |   v=z   |   v=w   |
+    !   -----------------------------------------------------------
+    !   | nu~_l    | (  0  , +1/2) ||   ---   |  gzn(1) |  gwf(1) |
+    !   | e~_l     | ( -1  , -1/2) ||  gal(1) |  gzl(1) |  gwf(1) |
+    !   | u~_l     | (+2/3 , +1/2) ||  gau(1) |  gzu(1) |  gwf(1) |
+    !   | d~_l     | (-1/3 , -1/2) ||  gad(1) |  gzd(1) |  gwf(1) |
+    !   -----------------------------------------------------------
+    !   | e~_r-bar | ( +1  ,  0  ) || -gal(2) | -gzl(2) | -gwf(2) |
+    !   | u~_r-bar | (-2/3 ,  0  ) || -gau(2) | -gzu(2) | -gwf(2) |
+    !   | d~_r-bar | (+1/3 ,  0  ) || -gad(2) | -gzd(2) | -gwf(2) |
+    !   -----------------------------------------------------------
+    ! where the sc charge is defined by the flowing-out quantum number.
 
-! output:
-!       complex hvs(3)         : scalar current                j(s':v,s)
+    ! output:
+    !       complex hvs(3)         : scalar current                j(s':v,s)
 
     implicit none
     complex*16 vc(6),sc(3),hvs(3),dg,qvv,qpv,g
@@ -905,24 +905,24 @@
     hvs(1) = dg*(2d0*qpv+qvv)*sc(1)
 
     return
-    end subroutine hvsxxx
+end subroutine hvsxxx
 
 
 
-    subroutine hvvxxx(v1,v2,g,smass,swidth , hvv)
+subroutine hvvxxx(v1,v2,g,smass,swidth , hvv)
 
-! this subroutine computes an off-shell scalar current from the vector-
-! vector-scalar coupling.
+    ! this subroutine computes an off-shell scalar current from the vector-
+    ! vector-scalar coupling.
 
-! input:
-!       complex v1(6)          : first  vector                        v1
-!       complex v2(6)          : second vector                        v2
-!       real    g              : coupling constant                  gvvh
-!       real    smass          : mass  of output scalar s
-!       real    swidth         : width of output scalar s
+    ! input:
+    !       complex v1(6)          : first  vector                        v1
+    !       complex v2(6)          : second vector                        v2
+    !       real    g              : coupling constant                  gvvh
+    !       real    smass          : mass  of output scalar s
+    !       real    swidth         : width of output scalar s
 
-! output:
-!       complex hvv(3)         : off-shell scalar current     j(s:v1,v2)
+    ! output:
+    !       complex hvv(3)         : off-shell scalar current     j(s:v1,v2)
 
     complex*16 v1(6),v2(6),hvv(3),dg
     real*8 ::    q(0:3),g,smass,swidth,q2
@@ -944,23 +944,23 @@
     hvv(1) = dg*(v1(1)*v2(1)-v1(2)*v2(2)-v1(3)*v2(3)-v1(4)*v2(4))
 
     return
-    end subroutine hvvxxx
+end subroutine hvvxxx
 
 
 
-    SUBROUTINE IOSXXX(FI,FO,SC,GC , VERTEX)
+SUBROUTINE IOSXXX(FI,FO,SC,GC , VERTEX)
 
-! This subroutine computes an amplitude of the fermion-fermion-scalar
-! coupling.
+    ! This subroutine computes an amplitude of the fermion-fermion-scalar
+    ! coupling.
 
-! INPUT:
-!       complex FI(6)          : flow-in  fermion                   |FI>
-!       complex FO(6)          : flow-out fermion                   <FO|
-!       complex SC(3)          : input    scalar                      S
-!       complex GC(2)          : coupling constants                 GCHF
+    ! INPUT:
+    !       complex FI(6)          : flow-in  fermion                   |FI>
+    !       complex FO(6)          : flow-out fermion                   <FO|
+    !       complex SC(3)          : input    scalar                      S
+    !       complex GC(2)          : coupling constants                 GCHF
 
-! OUTPUT:
-!       complex VERTEX         : amplitude                     <FO|S|FI>
+    ! OUTPUT:
+    !       complex VERTEX         : amplitude                     <FO|S|FI>
 
     COMPLEX*16 FI(6),FO(6),SC(3),GC(2),VERTEX
 
@@ -968,23 +968,23 @@
     +GC(2)*(FI(3)*FO(3)+FI(4)*FO(4)) )
 
     RETURN
-    END SUBROUTINE IOSXXX
+END SUBROUTINE IOSXXX
 
 
 
-    subroutine iovxxx(fi,fo,vc,g , vertex)
+subroutine iovxxx(fi,fo,vc,g , vertex)
 
-! this subroutine computes an amplitude of the fermion-fermion-vector
-! coupling.
+    ! this subroutine computes an amplitude of the fermion-fermion-vector
+    ! coupling.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       complex vc(6)          : input    vector                      v
-!       real    g(2)           : coupling constants                  gvf
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       complex vc(6)          : input    vector                      v
+    !       real    g(2)           : coupling constants                  gvf
 
-! output:
-!       complex vertex         : amplitude                     <fo|v|fi>
+    ! output:
+    !       complex vertex         : amplitude                     <fo|v|fi>
 
     complex*16 fi(6),fo(6),vc(6),vertex
     real*8 ::    g(2)
@@ -992,7 +992,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -1010,7 +1010,7 @@
     end if
 
     return
-    end subroutine iovxxx
+end subroutine iovxxx
 
 !	Subroutine returns the desired fermion or
 !	anti-fermion spinor. ie., |f>
@@ -1019,7 +1019,7 @@
 !	Adam Duff,  1992 August 31
 !	<duff@phenom.physics.wisc.edu>
 
-    subroutine ixxxxx( &
+subroutine ixxxxx( &
     p,		 & !in: four vector momentum
     fmass,	 & !in: fermion mass
     nhel,	 & !in: spinor helicity, -1 or 1
@@ -1028,22 +1028,22 @@
     )
     implicit none
 
-! declare input/output variables
+      ! declare input/output variables
 
     complex*16 fi(6)
     integer*4 :: nhel, nsf
     real*8 :: p(0:3), fmass
 
-! declare local variables
+      ! declare local variables
 
     real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
-!      parameter( c_zero=dcmplx( r_zero, r_zero ) )
+      !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
     real*8 :: plat, pabs, omegap, omegam, rs2pa, spaz
 
-! define kinematic parameters
+      ! define kinematic parameters
 
     c_zero=dcmplx( r_zero, r_zero )
 
@@ -1053,7 +1053,7 @@
     pabs = sqrt( p(1)**2 + p(2)**2 + p(3)**2 )
     omegap = sqrt( p(0) + pabs )
 
-! do massive fermion case
+      ! do massive fermion case
 
     if ( fmass /= r_zero ) then
         omegam = fmass / omegap
@@ -1223,9 +1223,9 @@
             print *, 'ixxxxx:  fermion type must be +1,-1'
             stop
         end if
-    
-    ! do massless fermion case
-    
+
+          ! do massless fermion case
+
     else
         if ( nsf == 1 ) then
             if ( nhel == 1 ) then
@@ -1367,31 +1367,31 @@
         end if
     end if
 
-! done
+      ! done
 
     return
-    end subroutine ixxxxx
+end subroutine ixxxxx
 
 
 
-    subroutine j3xxxx(fi,fo,gaf,gzf,zmass,zwidth , j3)
+subroutine j3xxxx(fi,fo,gaf,gzf,zmass,zwidth , j3)
 
-! this subroutine computes the sum of photon and z currents with the
-! suitable weights ( j(w3) = cos(theta_w) j(z) + sin(theta_w) j(a) ).
-! the output j3 is useful as an input of vvvxxx, jvvxxx or w3w3xx.
-! the photon propagator is given in feynman gauge, and the z propagator
-! is given in unitary gauge.
+    ! this subroutine computes the sum of photon and z currents with the
+    ! suitable weights ( j(w3) = cos(theta_w) j(z) + sin(theta_w) j(a) ).
+    ! the output j3 is useful as an input of vvvxxx, jvvxxx or w3w3xx.
+    ! the photon propagator is given in feynman gauge, and the z propagator
+    ! is given in unitary gauge.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       real    gaf(2)         : fi couplings with a                 gaf
-!       real    gzf(2)         : fi couplings with z                 gzf
-!       real    zmass          : mass  of z
-!       real    zwidth         : width of z
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       real    gaf(2)         : fi couplings with a                 gaf
+    !       real    gzf(2)         : fi couplings with z                 gzf
+    !       real    zmass          : mass  of z
+    !       real    zwidth         : width of z
 
-! output:
-!       complex j3(6)          : w3 current             j^mu(<fo|w3|fi>)
+    ! output:
+    !       complex j3(6)          : w3 current             j^mu(<fo|w3|fi>)
 
     complex*16 fi(6),fo(6),j3(6), &
     c0l,c1l,c2l,c3l,csl,c0r,c1r,c2r,c3r,csr,dz,ddif
@@ -1401,7 +1401,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -1421,11 +1421,11 @@
     dz=r_one/dcmplx( q2-zm2 , ww )
     ddif=dcmplx( -zm2 , ww )*da*dz
 
-! ddif is the difference : ddif=da-dz
-!  for the running width, use below instead of the above ww,dz and ddif.
-!      ww=max( zwidth*q2/zmass ,r_zero)
-!      dz=r_one/dcmplx( q2-zm2 , ww )
-!      ddif=dcmplx( -zm2 , ww )*da*dz
+      ! ddif is the difference : ddif=da-dz
+      !  for the running width, use below instead of the above ww,dz and ddif.
+      !      ww=max( zwidth*q2/zmass ,r_zero)
+      !      dz=r_one/dcmplx( q2-zm2 , ww )
+      !      ddif=dcmplx( -zm2 , ww )*da*dz
 
     cw=r_one/sqrt(r_one+(gzf(2)/gaf(2))**2)
     sw=sqrt((r_one-cw)*(r_one+cw))
@@ -1453,29 +1453,29 @@
     + gn*(c3r*ddif-csr*q(3)*dz)
 
     return
-    end subroutine j3xxxx
+end subroutine j3xxxx
 
 
 
-    SUBROUTINE JEEXXX(EB,EF,SHLF,CHLF,PHI,NHB,NHF,NSF , JEE)
+SUBROUTINE JEEXXX(EB,EF,SHLF,CHLF,PHI,NHB,NHF,NSF , JEE)
 
-! This subroutine computes an off-shell photon wavefunction emitted from
-! the electron or positron beam, with a special care for the small angle
-! region.  The momenta are measured in the laboratory frame, where the
-! e- (e+) beam is along the positive (negative) z axis.
+    ! This subroutine computes an off-shell photon wavefunction emitted from
+    ! the electron or positron beam, with a special care for the small angle
+    ! region.  The momenta are measured in the laboratory frame, where the
+    ! e- (e+) beam is along the positive (negative) z axis.
 
-! INPUT:
-!       real    EB             : energy (GeV)    of beam  e-/e+
-!       real    EF             : energy (GeV)    of final e-/e+
-!       real    SHLF           : sin(theta/2)    of final e-/e+
-!       real    CHLF           : cos(theta/2)    of final e-/e+
-!       real    PHI            : azimuthal angle of final e-/e+
-!       integer NHB  = -1 or 1 : helicity        of beam  e-/e+
-!       integer NHF  = -1 or 1 : helicity        of final e-/e+
-!       integer NSF  = -1 or 1 : +1 for electron, -1 for positron
+    ! INPUT:
+    !       real    EB             : energy (GeV)    of beam  e-/e+
+    !       real    EF             : energy (GeV)    of final e-/e+
+    !       real    SHLF           : sin(theta/2)    of final e-/e+
+    !       real    CHLF           : cos(theta/2)    of final e-/e+
+    !       real    PHI            : azimuthal angle of final e-/e+
+    !       integer NHB  = -1 or 1 : helicity        of beam  e-/e+
+    !       integer NHF  = -1 or 1 : helicity        of final e-/e+
+    !       integer NSF  = -1 or 1 : +1 for electron, -1 for positron
 
-! OUTPUT:
-!       complex JEE(6)         : off-shell photon          J^mu(<e|A|e>)
+    ! OUTPUT:
+    !       complex JEE(6)         : off-shell photon          J^mu(<e|A|e>)
 
     implicit none
     COMPLEX*16 JEE(6),COEFF
@@ -1492,8 +1492,8 @@
     SFH=NHB*NSF
     CS((3+NSF)/2)=SHLF
     CS((3-NSF)/2)=CHLF
-! CS(1)=CHLF and CS(2)=SHLF for electron
-! CS(1)=SHLF and CS(2)=CHLF for positron
+      ! CS(1)=CHLF and CS(2)=SHLF for electron
+      ! CS(1)=SHLF and CS(2)=CHLF for positron
     X=EF/EB
     ME2=ME**2
     Q2=-4.*CS(2)**2*(EF*EB-ME2) &
@@ -1527,29 +1527,29 @@
     JEE(6) =  EB*X*S*dCMPLX( CSP , SNP )
 
     RETURN
-    END SUBROUTINE JEEXXX
+END SUBROUTINE JEEXXX
 
 
 
 
-    subroutine jgggxx(w1,w2,w3,g, jw3w)
+subroutine jgggxx(w1,w2,w3,g, jw3w)
 
-! this subroutine computes an off-shell w+, w-, w3, z or photon current
-! from the four-point gauge boson coupling, including the contributions
-! of w exchange diagrams.  the vector propagator is given in feynman
-! gauge for a photon and in unitary gauge for w and z bosons.  if one
-! sets wmass=0.0, then the ggg-->g current is given (see sect 2.9.1 of
-! the manual).
+    ! this subroutine computes an off-shell w+, w-, w3, z or photon current
+    ! from the four-point gauge boson coupling, including the contributions
+    ! of w exchange diagrams.  the vector propagator is given in feynman
+    ! gauge for a photon and in unitary gauge for w and z bosons.  if one
+    ! sets wmass=0.0, then the ggg-->g current is given (see sect 2.9.1 of
+    ! the manual).
 
-! input:
-!       complex w1(6)          : first  vector                        w1
-!       complex w2(6)          : second vector                        w2
-!       complex w3(6)          : third  vector                        w3
-!       real    g             : first  coupling constant
-!                                                  (see the table below)
+    ! input:
+    !       complex w1(6)          : first  vector                        w1
+    !       complex w2(6)          : second vector                        w2
+    !       complex w3(6)          : third  vector                        w3
+    !       real    g             : first  coupling constant
+    !                                                  (see the table below)
 
-! output:
-!       complex jw3w(6)        : w current             j^mu(w':w1,w2,w3)
+    ! output:
+    !       complex jw3w(6)        : w current             j^mu(w':w1,w2,w3)
 
     implicit none
     complex*16  w1(6),w2(6),w3(6),jw3w(6)
@@ -1598,8 +1598,8 @@
 
     dv = 1.0d0/dcmplx( q2 )
 
-!  for the running width, use below instead of the above dv.
-!      dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dwv*q2/dmv,0.d0) )
+      !  for the running width, use below instead of the above dv.
+      !      dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dwv*q2/dmv,0.d0) )
 
     w32=dw3(0)*dw2(0)-dw3(1)*dw2(1)-dw3(2)*dw2(2)-dw3(3)*dw2(3)
 
@@ -1617,23 +1617,23 @@
     jw3w(4) = dcmplx( jj(3)*dv )
 
     return
-    end subroutine jgggxx
+end subroutine jgggxx
 
 
 
-    subroutine jggxxx(v1,v2,g, jvv)
+subroutine jggxxx(v1,v2,g, jvv)
 
-! this subroutine computes an off-shell vector current from the three-
-! point gauge boson coupling.  the vector propagator is given in feynman
-! gauge for a massless vector and in unitary gauge for a massive vector.
+    ! this subroutine computes an off-shell vector current from the three-
+    ! point gauge boson coupling.  the vector propagator is given in feynman
+    ! gauge for a massless vector and in unitary gauge for a massive vector.
 
-! input:
-!       complex v1(6)          : first  vector                        v1
-!       complex v2(6)          : second vector                        v2
-!       real    g              : coupling constant (see the table below)
+    ! input:
+    !       complex v1(6)          : first  vector                        v1
+    !       complex v2(6)          : second vector                        v2
+    !       real    g              : coupling constant (see the table below)
 
-! output:
-!       complex jvv(6)         : vector current            j^mu(v:v1,v2)
+    ! output:
+    !       complex jvv(6)         : vector current            j^mu(v:v1,v2)
 
     complex*16 v1(6),v2(6),jvv(6),j12(0:3), &
     sv1,sv2,v12
@@ -1677,25 +1677,25 @@
     jvv(4) = gs*j12(3)
 
     return
-    end subroutine jggxxx
+end subroutine jggxxx
 
 
 
-    subroutine jioxxx(fi,fo,g,vmass,vwidth , jio)
+subroutine jioxxx(fi,fo,g,vmass,vwidth , jio)
 
-! this subroutine computes an off-shell vector current from an external
-! fermion pair.  the vector boson propagator is given in feynman gauge
-! for a massless vector and in unitary gauge for a massive vector.
+    ! this subroutine computes an off-shell vector current from an external
+    ! fermion pair.  the vector boson propagator is given in feynman gauge
+    ! for a massless vector and in unitary gauge for a massive vector.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       real    g(2)           : coupling constants                  gvf
-!       real    vmass          : mass  of output vector v
-!       real    vwidth         : width of output vector v
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       real    g(2)           : coupling constants                  gvf
+    !       real    vmass          : mass  of output vector v
+    !       real    vwidth         : width of output vector v
 
-! output:
-!       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
+    ! output:
+    !       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
 
     complex*16 fi(6),fo(6),jio(6),c0,c1,c2,c3,cs,d
     real*8 ::    g(2),q(0:3),vmass,vwidth,q2,vm2,dd
@@ -1703,7 +1703,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -1718,13 +1718,13 @@
     vm2=vmass**2
 
     if (vmass /= r_zero) then
-    
+
         d=r_one/dcmplx( q2-vm2 , max(sign( vmass*vwidth ,q2),r_zero) )
-    !  for the running width, use below instead of the above d.
-    !      d=r_one/dcmplx( q2-vm2 , max( vwidth*q2/vmass ,r_zero) )
-    
+          !  for the running width, use below instead of the above d.
+          !      d=r_one/dcmplx( q2-vm2 , max( vwidth*q2/vmass ,r_zero) )
+
         if (g(2) /= r_zero) then
-        
+
             c0=  g(1)*( fo(3)*fi(1)+fo(4)*fi(2)) &
             +g(2)*( fo(1)*fi(3)+fo(2)*fi(4))
             c1= -g(1)*( fo(3)*fi(2)+fo(4)*fi(1)) &
@@ -1734,24 +1734,24 @@
             c3=  g(1)*(-fo(3)*fi(1)+fo(4)*fi(2)) &
             +g(2)*( fo(1)*fi(3)-fo(2)*fi(4))
         else
-        
+
             d=d*g(1)
             c0=  fo(3)*fi(1)+fo(4)*fi(2)
             c1= -fo(3)*fi(2)-fo(4)*fi(1)
             c2=( fo(3)*fi(2)-fo(4)*fi(1))*c_imag
             c3= -fo(3)*fi(1)+fo(4)*fi(2)
         end if
-    
+
         cs=(q(0)*c0-q(1)*c1-q(2)*c2-q(3)*c3)/vm2
-    
+
         jio(1) = (c0-cs*q(0))*d
         jio(2) = (c1-cs*q(1))*d
         jio(3) = (c2-cs*q(2))*d
         jio(4) = (c3-cs*q(3))*d
-    
+
     else
         dd=r_one/q2
-    
+
         if (g(2) /= r_zero) then
             jio(1) = ( g(1)*( fo(3)*fi(1)+fo(4)*fi(2)) &
             +g(2)*( fo(1)*fi(3)+fo(2)*fi(4)) )*dd
@@ -1762,10 +1762,10 @@
             *dcmplx(r_zero,dd)
             jio(4) = ( g(1)*(-fo(3)*fi(1)+fo(4)*fi(2)) &
             +g(2)*( fo(1)*fi(3)-fo(2)*fi(4)) )*dd
-        
+
         else
             dd=dd*g(1)
-        
+
             jio(1) =  ( fo(3)*fi(1)+fo(4)*fi(2))*dd
             jio(2) = -( fo(3)*fi(2)+fo(4)*fi(1))*dd
             jio(3) =  ( fo(3)*fi(2)-fo(4)*fi(1))*dcmplx(r_zero,dd)
@@ -1774,40 +1774,40 @@
     end if
 
     return
-    end subroutine jioxxx
+end subroutine jioxxx
 
 
-    SUBROUTINE JSSXXX(S1,S2,G,VMASS,VWIDTH , JSS)
+SUBROUTINE JSSXXX(S1,S2,G,VMASS,VWIDTH , JSS)
 
-! This subroutine computes an off-shell vector current from the vector-
-! scalar-scalar coupling.  The coupling is absent in the minimal SM in
-! unitary gauge.  The propagator is given in Feynman gauge for a
-! massless vector and in unitary gauge for a massive vector.
+    ! This subroutine computes an off-shell vector current from the vector-
+    ! scalar-scalar coupling.  The coupling is absent in the minimal SM in
+    ! unitary gauge.  The propagator is given in Feynman gauge for a
+    ! massless vector and in unitary gauge for a massive vector.
 
-! INPUT:
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       real    G              : coupling constant (S1 charge)
-!       real    VMASS          : mass  of OUTPUT vector V
-!       real    VWIDTH         : width of OUTPUT vector V
+    ! INPUT:
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       real    G              : coupling constant (S1 charge)
+    !       real    VMASS          : mass  of OUTPUT vector V
+    !       real    VWIDTH         : width of OUTPUT vector V
 
-! Examples of the coupling constant G for SUSY particles are as follows:
-!   -----------------------------------------------------------
-!   |    S1    | (Q,I3) of S1  ||   V=A   |   V=Z   |   V=W   |
-!   -----------------------------------------------------------
-!   | nu~_L    | (  0  , +1/2) ||   ---   |  GZN(1) |  GWF(1) |
-!   | e~_L     | ( -1  , -1/2) ||  GAL(1) |  GZL(1) |  GWF(1) |
-!   | u~_L     | (+2/3 , +1/2) ||  GAU(1) |  GZU(1) |  GWF(1) |
-!   | d~_L     | (-1/3 , -1/2) ||  GAD(1) |  GZD(1) |  GWF(1) |
-!   -----------------------------------------------------------
-!   | e~_R-bar | ( +1  ,  0  ) || -GAL(2) | -GZL(2) | -GWF(2) |
-!   | u~_R-bar | (-2/3 ,  0  ) || -GAU(2) | -GZU(2) | -GWF(2) |
-!   | d~_R-bar | (+1/3 ,  0  ) || -GAD(2) | -GZD(2) | -GWF(2) |
-!   -----------------------------------------------------------
-! where the S1 charge is defined by the flowing-OUT quantum number.
+    ! Examples of the coupling constant G for SUSY particles are as follows:
+    !   -----------------------------------------------------------
+    !   |    S1    | (Q,I3) of S1  ||   V=A   |   V=Z   |   V=W   |
+    !   -----------------------------------------------------------
+    !   | nu~_L    | (  0  , +1/2) ||   ---   |  GZN(1) |  GWF(1) |
+    !   | e~_L     | ( -1  , -1/2) ||  GAL(1) |  GZL(1) |  GWF(1) |
+    !   | u~_L     | (+2/3 , +1/2) ||  GAU(1) |  GZU(1) |  GWF(1) |
+    !   | d~_L     | (-1/3 , -1/2) ||  GAD(1) |  GZD(1) |  GWF(1) |
+    !   -----------------------------------------------------------
+    !   | e~_R-bar | ( +1  ,  0  ) || -GAL(2) | -GZL(2) | -GWF(2) |
+    !   | u~_R-bar | (-2/3 ,  0  ) || -GAU(2) | -GZU(2) | -GWF(2) |
+    !   | d~_R-bar | (+1/3 ,  0  ) || -GAD(2) | -GZD(2) | -GWF(2) |
+    !   -----------------------------------------------------------
+    ! where the S1 charge is defined by the flowing-OUT quantum number.
 
-! OUTPUT:
-!       complex JSS(6)         : vector current            J^mu(V:S1,S2)
+    ! OUTPUT:
+    !       complex JSS(6)         : vector current            J^mu(V:S1,S2)
 
     implicit none
     COMPLEX*16 S1(3),S2(3),JSS(6),DG,ADG
@@ -1826,8 +1826,8 @@
     IF (VMASS == 0.) GOTO 10
 
     DG=G/dCMPLX( Q2-VM2, MAX(SIGN( VMASS*VWIDTH ,Q2),0.d0))
-!  For the running width, use below instead of the above DG.
-!      DG=G/dCMPLX( Q2-VM2 , MAX( VWIDTH*Q2/VMASS ,0.) )
+      !  For the running width, use below instead of the above DG.
+      !      DG=G/dCMPLX( Q2-VM2 , MAX( VWIDTH*Q2/VMASS ,0.) )
 
     ADG=DG*S1(1)*S2(1)
 
@@ -1858,24 +1858,24 @@
     JSS(4) = ADG*aimag(S1(2)-S2(2))
 
     RETURN
-    END SUBROUTINE JSSXXX
+END SUBROUTINE JSSXXX
 
 
 
 
-    subroutine jtioxx(fi,fo,g , jio)
+subroutine jtioxx(fi,fo,g , jio)
 
-! this subroutine computes an off-shell vector current from an external
-! fermion pair.  the vector boson propagator is not included in this
-! routine.
+    ! this subroutine computes an off-shell vector current from an external
+    ! fermion pair.  the vector boson propagator is not included in this
+    ! routine.
 
-! input:
-!       complex fi(6)          : flow-in  fermion                   |fi>
-!       complex fo(6)          : flow-out fermion                   <fo|
-!       real    g(2)           : coupling constants                  gvf
+    ! input:
+    !       complex fi(6)          : flow-in  fermion                   |fi>
+    !       complex fo(6)          : flow-out fermion                   <fo|
+    !       real    g(2)           : coupling constants                  gvf
 
-! output:
-!       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
+    ! output:
+    !       complex jio(6)         : vector current          j^mu(<fo|v|fi>)
 
     complex*16 fi(6),fo(6),jio(6)
     real*8 ::    g(2)
@@ -1883,7 +1883,7 @@
     real*8 :: r_zero, r_one
     parameter( r_zero=0.0d0, r_one=1.0d0 )
     complex*16 c_imag
-!      parameter( c_imag=dcmplx( r_zero, r_one ) )
+      !      parameter( c_imag=dcmplx( r_zero, r_one ) )
 
     c_imag=dcmplx( r_zero, r_one )
 
@@ -1899,7 +1899,7 @@
         +g(2)*(-fo(1)*fi(4)+fo(2)*fi(3)) )*c_imag
         jio(4) = ( g(1)*(-fo(3)*fi(1)+fo(4)*fi(2)) &
         +g(2)*( fo(1)*fi(3)-fo(2)*fi(4)) )
-    
+
     else
         jio(1) =  ( fo(3)*fi(1)+fo(4)*fi(2))*g(1)
         jio(2) = -( fo(3)*fi(2)+fo(4)*fi(1))*g(1)
@@ -1908,26 +1908,26 @@
     end if
 
     return
-    end subroutine jtioxx
+end subroutine jtioxx
 
 
-    SUBROUTINE JVSSXX(VC,S1,S2,G,VMASS,VWIDTH , JVSS)
+SUBROUTINE JVSSXX(VC,S1,S2,G,VMASS,VWIDTH , JVSS)
 
-! This subroutine computes an off-shell vector current from the vector-
-! vector-scalar-scalar coupling.  The vector propagator is given in
-! Feynman gauge for a massless vector and in unitary gauge for a massive
-! vector.
+    ! This subroutine computes an off-shell vector current from the vector-
+    ! vector-scalar-scalar coupling.  The vector propagator is given in
+    ! Feynman gauge for a massless vector and in unitary gauge for a massive
+    ! vector.
 
-! INPUT:
-!       complex VC(6)          : input  vector                        V
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       real    G              : coupling constant                 GVVHH
-!       real    VMASS          : mass  of OUTPUT vector V'
-!       real    VWIDTH         : width of OUTPUT vector V'
+    ! INPUT:
+    !       complex VC(6)          : input  vector                        V
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       real    G              : coupling constant                 GVVHH
+    !       real    VMASS          : mass  of OUTPUT vector V'
+    !       real    VWIDTH         : width of OUTPUT vector V'
 
-! OUTPUT:
-!       complex JVSS(6)        : vector current         J^mu(V':V,S1,S2)
+    ! OUTPUT:
+    !       complex JVSS(6)        : vector current         J^mu(V':V,S1,S2)
 
     implicit none
     COMPLEX*16 VC(6),S1(3),S2(3),JVSS(6),DG,VK
@@ -1946,8 +1946,8 @@
     IF (VMASS == 0.) GOTO 10
 
     DG=G*S1(1)*S2(1)/dCMPLX( Q2-VM2,MAX(SIGN( VMASS*VWIDTH,Q2),0.d0))
-!  For the running width, use below instead of the above DG.
-!      DG=G*S1(1)*S2(1)/CMPLX( Q2-VM2 , MAX( VWIDTH*Q2/VMASS ,0.))
+      !  For the running width, use below instead of the above DG.
+      !      DG=G*S1(1)*S2(1)/CMPLX( Q2-VM2 , MAX( VWIDTH*Q2/VMASS ,0.))
 
     VK=(Q(0)*VC(1)-Q(1)*VC(2)-Q(2)*VC(3)-Q(3)*VC(4))/VM2
 
@@ -1966,27 +1966,27 @@
     JVSS(4) = DG*VC(4)
 
     RETURN
-    END SUBROUTINE JVSSXX
+END SUBROUTINE JVSSXX
 
 
 
 
-    subroutine jvsxxx(vc,sc,g,vmass,vwidth , jvs)
+subroutine jvsxxx(vc,sc,g,vmass,vwidth , jvs)
     implicit real(a-h,o-z)
 
-! this subroutine computes an off-shell vector current from the vector-
-! vector-scalar coupling.  the vector propagator is given in feynman
-! gauge for a massless vector and in unitary gauge for a massive vector.
+      ! this subroutine computes an off-shell vector current from the vector-
+      ! vector-scalar coupling.  the vector propagator is given in feynman
+      ! gauge for a massless vector and in unitary gauge for a massive vector.
 
-! input:
-!       complex vc(6)          : input vector                          v
-!       complex sc(3)          : input scalar                          s
-!       real    g              : coupling constant                  gvvh
-!       real    vmass          : mass  of output vector v'
-!       real    vwidth         : width of output vector v'
+      ! input:
+      !       complex vc(6)          : input vector                          v
+      !       complex sc(3)          : input scalar                          s
+      !       real    g              : coupling constant                  gvvh
+      !       real    vmass          : mass  of output vector v'
+      !       real    vwidth         : width of output vector v'
 
-! output:
-!       complex jvs(6)         : vector current             j^mu(v':v,s)
+      ! output:
+      !       complex jvs(6)         : vector current             j^mu(v':v,s)
 
     complex*16 vc(6),sc(3),jvs(6),dg,vk
     real*8 ::    q(0:3),vmass,vwidth,q2,vm2,g
@@ -2004,8 +2004,8 @@
     if (vmass == 0.) goto 10
 
     dg=g*sc(1)/dcmplx( q2-vm2 , max(sign( vmass*vwidth ,q2),0.d0) )
-!  for the running width, use below instead of the above dg.
-!      dg=g*sc(1)/dcmplx( q2-vm2 , max( vwidth*q2/vmass ,0.) )
+      !  for the running width, use below instead of the above dg.
+      !      dg=g*sc(1)/dcmplx( q2-vm2 , max( vwidth*q2/vmass ,0.) )
 
     vk=(-q(0)*vc(1)+q(1)*vc(2)+q(2)*vc(3)+q(3)*vc(4))/vm2
 
@@ -2024,35 +2024,35 @@
     jvs(4) = dg*vc(4)
 
     return
-    end subroutine jvsxxx
+end subroutine jvsxxx
 
 
 
-    subroutine jvvxxx(v1,v2,g,vmass,vwidth , jvv)
+subroutine jvvxxx(v1,v2,g,vmass,vwidth , jvv)
 
-! this subroutine computes an off-shell vector current from the three-
-! point gauge boson coupling.  the vector propagator is given in feynman
-! gauge for a massless vector and in unitary gauge for a massive vector.
+    ! this subroutine computes an off-shell vector current from the three-
+    ! point gauge boson coupling.  the vector propagator is given in feynman
+    ! gauge for a massless vector and in unitary gauge for a massive vector.
 
-! input:
-!       complex v1(6)          : first  vector                        v1
-!       complex v2(6)          : second vector                        v2
-!       real    g              : coupling constant (see the table below)
-!       real    vmass          : mass  of output vector v
-!       real    vwidth         : width of output vector v
+    ! input:
+    !       complex v1(6)          : first  vector                        v1
+    !       complex v2(6)          : second vector                        v2
+    !       real    g              : coupling constant (see the table below)
+    !       real    vmass          : mass  of output vector v
+    !       real    vwidth         : width of output vector v
 
-! the possible sets of the inputs are as follows:
-!    ------------------------------------------------------------------
-!    |   v1   |   v2   |  jvv   |      g       |   vmass  |  vwidth   |
-!    ------------------------------------------------------------------
-!    |   w-   |   w+   |  a/z   |  gwwa/gwwz   | 0./zmass | 0./zwidth |
-!    | w3/a/z |   w-   |  w+    | gw/gwwa/gwwz |   wmass  |  wwidth   |
-!    |   w+   | w3/a/z |  w-    | gw/gwwa/gwwz |   wmass  |  wwidth   |
-!    ------------------------------------------------------------------
-! where all the bosons are defined by the flowing-out quantum number.
+    ! the possible sets of the inputs are as follows:
+    !    ------------------------------------------------------------------
+    !    |   v1   |   v2   |  jvv   |      g       |   vmass  |  vwidth   |
+    !    ------------------------------------------------------------------
+    !    |   w-   |   w+   |  a/z   |  gwwa/gwwz   | 0./zmass | 0./zwidth |
+    !    | w3/a/z |   w-   |  w+    | gw/gwwa/gwwz |   wmass  |  wwidth   |
+    !    |   w+   | w3/a/z |  w-    | gw/gwwa/gwwz |   wmass  |  wwidth   |
+    !    ------------------------------------------------------------------
+    ! where all the bosons are defined by the flowing-out quantum number.
 
-! output:
-!       complex jvv(6)         : vector current            j^mu(v:v1,v2)
+    ! output:
+    !       complex jvv(6)         : vector current            j^mu(v:v1,v2)
 
     complex*16 v1(6),v2(6),jvv(6),j12(0:3),js,dg, &
     sv1,sv2,s11,s12,s21,s22,v12
@@ -2097,20 +2097,20 @@
         s21=p2(0)*v1(1)-p2(1)*v1(2)-p2(2)*v1(3)-p2(3)*v1(4)
         s22=p2(0)*v2(1)-p2(1)*v2(2)-p2(2)*v2(3)-p2(3)*v2(4)
         js=(v12*(-m1+m2) +s11*s12 -s21*s22)/vm2
-    
+
         dg=-g/dcmplx( s-vm2 , max(sign( vmass*vwidth ,s),r_zero) )
-    
-    !  for the running width, use below instead of the above dg.
-    !         dg=-g/dcmplx( s-vm2 , max( vwidth*s/vmass ,r_zero) )
-    
+
+          !  for the running width, use below instead of the above dg.
+          !         dg=-g/dcmplx( s-vm2 , max( vwidth*s/vmass ,r_zero) )
+
         jvv(1) = dg*(j12(0)-q(0)*js)
         jvv(2) = dg*(j12(1)-q(1)*js)
         jvv(3) = dg*(j12(2)-q(2)*js)
         jvv(4) = dg*(j12(3)-q(3)*js)
-    
+
     else
         gs=-g/s
-    
+
         jvv(1) = gs*j12(0)
         jvv(2) = gs*j12(1)
         jvv(3) = gs*j12(2)
@@ -2118,59 +2118,59 @@
     end if
 
     return
-    end subroutine jvvxxx
+end subroutine jvvxxx
 
 
 
-    subroutine jw3wxx(w1,w2,w3,g1,g2,wmass,wwidth,vmass,vwidth , jw3w)
+subroutine jw3wxx(w1,w2,w3,g1,g2,wmass,wwidth,vmass,vwidth , jw3w)
 
-! this subroutine computes an off-shell w+, w-, w3, z or photon current
-! from the four-point gauge boson coupling, including the contributions
-! of w exchange diagrams.  the vector propagator is given in feynman
-! gauge for a photon and in unitary gauge for w and z bosons.  if one
-! sets wmass=0.0, then the ggg-->g current is given (see sect 2.9.1 of
-! the manual).
+    ! this subroutine computes an off-shell w+, w-, w3, z or photon current
+    ! from the four-point gauge boson coupling, including the contributions
+    ! of w exchange diagrams.  the vector propagator is given in feynman
+    ! gauge for a photon and in unitary gauge for w and z bosons.  if one
+    ! sets wmass=0.0, then the ggg-->g current is given (see sect 2.9.1 of
+    ! the manual).
 
-! input:
-!       complex w1(6)          : first  vector                        w1
-!       complex w2(6)          : second vector                        w2
-!       complex w3(6)          : third  vector                        w3
-!       real    g1             : first  coupling constant
-!       real    g2             : second coupling constant
-!                                                  (see the table below)
-!       real    wmass          : mass  of internal w
-!       real    wwidth         : width of internal w
-!       real    vmass          : mass  of output w'
-!       real    vwidth         : width of output w'
+    ! input:
+    !       complex w1(6)          : first  vector                        w1
+    !       complex w2(6)          : second vector                        w2
+    !       complex w3(6)          : third  vector                        w3
+    !       real    g1             : first  coupling constant
+    !       real    g2             : second coupling constant
+    !                                                  (see the table below)
+    !       real    wmass          : mass  of internal w
+    !       real    wwidth         : width of internal w
+    !       real    vmass          : mass  of output w'
+    !       real    vwidth         : width of output w'
 
-! the possible sets of the inputs are as follows:
-!   -------------------------------------------------------------------
-!   |  w1  |  w2  |  w3  | g1 | g2 |wmass|wwidth|vmass|vwidth || jw3w |
-!   -------------------------------------------------------------------
-!   |  w-  |  w3  |  w+  | gw |gwwz|wmass|wwidth|zmass|zwidth ||  z   |
-!   |  w-  |  w3  |  w+  | gw |gwwa|wmass|wwidth|  0. |  0.   ||  a   |
-!   |  w-  |  z   |  w+  |gwwz|gwwz|wmass|wwidth|zmass|zwidth ||  z   |
-!   |  w-  |  z   |  w+  |gwwz|gwwa|wmass|wwidth|  0. |  0.   ||  a   |
-!   |  w-  |  a   |  w+  |gwwa|gwwz|wmass|wwidth|zmass|zwidth ||  z   |
-!   |  w-  |  a   |  w+  |gwwa|gwwa|wmass|wwidth|  0. |  0.   ||  a   |
-!   -------------------------------------------------------------------
-!   |  w3  |  w-  |  w3  | gw | gw |wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  w3  |  w+  |  w3  | gw | gw |wmass|wwidth|wmass|wwidth ||  w-  |
-!   |  w3  |  w-  |  z   | gw |gwwz|wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  w3  |  w+  |  z   | gw |gwwz|wmass|wwidth|wmass|wwidth ||  w-  |
-!   |  w3  |  w-  |  a   | gw |gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  w3  |  w+  |  a   | gw |gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
-!   |  z   |  w-  |  z   |gwwz|gwwz|wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  z   |  w+  |  z   |gwwz|gwwz|wmass|wwidth|wmass|wwidth ||  w-  |
-!   |  z   |  w-  |  a   |gwwz|gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  z   |  w+  |  a   |gwwz|gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
-!   |  a   |  w-  |  a   |gwwa|gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
-!   |  a   |  w+  |  a   |gwwa|gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
-!   -------------------------------------------------------------------
-! where all the bosons are defined by the flowing-out quantum number.
+    ! the possible sets of the inputs are as follows:
+    !   -------------------------------------------------------------------
+    !   |  w1  |  w2  |  w3  | g1 | g2 |wmass|wwidth|vmass|vwidth || jw3w |
+    !   -------------------------------------------------------------------
+    !   |  w-  |  w3  |  w+  | gw |gwwz|wmass|wwidth|zmass|zwidth ||  z   |
+    !   |  w-  |  w3  |  w+  | gw |gwwa|wmass|wwidth|  0. |  0.   ||  a   |
+    !   |  w-  |  z   |  w+  |gwwz|gwwz|wmass|wwidth|zmass|zwidth ||  z   |
+    !   |  w-  |  z   |  w+  |gwwz|gwwa|wmass|wwidth|  0. |  0.   ||  a   |
+    !   |  w-  |  a   |  w+  |gwwa|gwwz|wmass|wwidth|zmass|zwidth ||  z   |
+    !   |  w-  |  a   |  w+  |gwwa|gwwa|wmass|wwidth|  0. |  0.   ||  a   |
+    !   -------------------------------------------------------------------
+    !   |  w3  |  w-  |  w3  | gw | gw |wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  w3  |  w+  |  w3  | gw | gw |wmass|wwidth|wmass|wwidth ||  w-  |
+    !   |  w3  |  w-  |  z   | gw |gwwz|wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  w3  |  w+  |  z   | gw |gwwz|wmass|wwidth|wmass|wwidth ||  w-  |
+    !   |  w3  |  w-  |  a   | gw |gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  w3  |  w+  |  a   | gw |gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
+    !   |  z   |  w-  |  z   |gwwz|gwwz|wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  z   |  w+  |  z   |gwwz|gwwz|wmass|wwidth|wmass|wwidth ||  w-  |
+    !   |  z   |  w-  |  a   |gwwz|gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  z   |  w+  |  a   |gwwz|gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
+    !   |  a   |  w-  |  a   |gwwa|gwwa|wmass|wwidth|wmass|wwidth ||  w+  |
+    !   |  a   |  w+  |  a   |gwwa|gwwa|wmass|wwidth|wmass|wwidth ||  w-  |
+    !   -------------------------------------------------------------------
+    ! where all the bosons are defined by the flowing-out quantum number.
 
-! output:
-!       complex jw3w(6)        : w current             j^mu(w':w1,w2,w3)
+    ! output:
+    !       complex jw3w(6)        : w current             j^mu(w':w1,w2,w3)
 
     complex*16  w1(6),w2(6),w3(6),jw3w(6)
     complex*16 dw1(0:3),dw2(0:3),dw3(0:3), &
@@ -2227,36 +2227,36 @@
     else
         dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(sign(dmv*dwv,q2 ),0.d0) )
     endif
-!  for the running width, use below instead of the above dv.
-!      dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dwv*q2/dmv,0.d0) )
+      !  for the running width, use below instead of the above dv.
+      !      dv = 1.0d0/dcmplx( q2 -mv2 , dmax1(dwv*q2/dmv,0.d0) )
 
     w12=dw1(0)*dw2(0)-dw1(1)*dw2(1)-dw1(2)*dw2(2)-dw1(3)*dw2(3)
     w32=dw3(0)*dw2(0)-dw3(1)*dw2(1)-dw3(2)*dw2(2)-dw3(3)*dw2(3)
 
     if ( wmass /= r_zero ) then
         w13=dw1(0)*dw3(0)-dw1(1)*dw3(1)-dw1(2)*dw3(2)-dw1(3)*dw3(3)
-    
+
         j4(0)=dg2*( dw1(0)*w32 + dw3(0)*w12 - 2.d0*dw2(0)*w13 )
         j4(1)=dg2*( dw1(1)*w32 + dw3(1)*w12 - 2.d0*dw2(1)*w13 )
         j4(2)=dg2*( dw1(2)*w32 + dw3(2)*w12 - 2.d0*dw2(2)*w13 )
         j4(3)=dg2*( dw1(3)*w32 + dw3(3)*w12 - 2.d0*dw2(3)*w13 )
-    
+
         jj(0)=j4(0)
         jj(1)=j4(1)
         jj(2)=j4(2)
         jj(3)=j4(3)
 
     else
-    
+
         w12=dw1(0)*dw2(0)-dw1(1)*dw2(1)-dw1(2)*dw2(2)-dw1(3)*dw2(3)
         w32=dw3(0)*dw2(0)-dw3(1)*dw2(1)-dw3(2)*dw2(2)-dw3(3)*dw2(3)
         w13=dw1(0)*dw3(0)-dw1(1)*dw3(1)-dw1(2)*dw3(2)-dw1(3)*dw3(3)
-    
+
         j4(0)=dg2*( dw1(0)*w32 - dw2(0)*w13 )
         j4(1)=dg2*( dw1(1)*w32 - dw2(1)*w13 )
         j4(2)=dg2*( dw1(2)*w32 - dw2(2)*w13 )
         j4(3)=dg2*( dw1(3)*w32 - dw2(3)*w13 )
-    
+
         jj(0)=j4(0)
         jj(1)=j4(1)
         jj(2)=j4(2)
@@ -2265,16 +2265,16 @@
     end if
 
     if ( vmass /= r_zero ) then
-    
+
         jq=(jj(0)*q(0)-jj(1)*q(1)-jj(2)*q(2)-jj(3)*q(3))/mv2
-    
+
         jw3w(1) = dcmplx( (jj(0)-jq*q(0))*dv )
         jw3w(2) = dcmplx( (jj(1)-jq*q(1))*dv )
         jw3w(3) = dcmplx( (jj(2)-jq*q(2))*dv )
         jw3w(4) = dcmplx( (jj(3)-jq*q(3))*dv )
-    
+
     else
-    
+
         jw3w(1) = dcmplx( jj(0)*dv )
         jw3w(2) = dcmplx( jj(1)*dv )
         jw3w(3) = dcmplx( jj(2)*dv )
@@ -2282,41 +2282,41 @@
     end if
 
     return
-    end subroutine jw3wxx
+end subroutine jw3wxx
 
 
 
-    subroutine jwwwxx(w1,w2,w3,gwwa,gwwz,zmass,zwidth,wmass,wwidth , &
+subroutine jwwwxx(w1,w2,w3,gwwa,gwwz,zmass,zwidth,wmass,wwidth , &
     jwww)
 
-! this subroutine computes an off-shell w+/w- current from the four-
-! point gauge boson coupling, including the contributions of photon and
-! z exchanges.  the vector propagators for the output w and the internal
-! z bosons are given in unitary gauge, and that of the internal photon
-! is given in feynman gauge.
+      ! this subroutine computes an off-shell w+/w- current from the four-
+      ! point gauge boson coupling, including the contributions of photon and
+      ! z exchanges.  the vector propagators for the output w and the internal
+      ! z bosons are given in unitary gauge, and that of the internal photon
+      ! is given in feynman gauge.
 
-! input:
-!       complex w1(6)          : first  vector                        w1
-!       complex w2(6)          : second vector                        w2
-!       complex w3(6)          : third  vector                        w3
-!       real    gwwa           : coupling constant of w and a       gwwa
-!       real    gwwz           : coupling constant of w and z       gwwz
-!       real    zmass          : mass  of internal z
-!       real    zwidth         : width of internal z
-!       real    wmass          : mass  of output w
-!       real    wwidth         : width of output w
+      ! input:
+      !       complex w1(6)          : first  vector                        w1
+      !       complex w2(6)          : second vector                        w2
+      !       complex w3(6)          : third  vector                        w3
+      !       real    gwwa           : coupling constant of w and a       gwwa
+      !       real    gwwz           : coupling constant of w and z       gwwz
+      !       real    zmass          : mass  of internal z
+      !       real    zwidth         : width of internal z
+      !       real    wmass          : mass  of output w
+      !       real    wwidth         : width of output w
 
-! the possible sets of the inputs are as follows:
-!   -------------------------------------------------------------------
-!   |  w1  |  w2  |  w3  |gwwa|gwwz|zmass|zwidth|wmass|wwidth || jwww |
-!   -------------------------------------------------------------------
-!   |  w-  |  w+  |  w-  |gwwa|gwwz|zmass|zwidth|wmass|wwidth ||  w+  |
-!   |  w+  |  w-  |  w+  |gwwa|gwwz|zmass|zwidth|wmass|wwidth ||  w-  |
-!   -------------------------------------------------------------------
-! where all the bosons are defined by the flowing-out quantum number.
+      ! the possible sets of the inputs are as follows:
+      !   -------------------------------------------------------------------
+      !   |  w1  |  w2  |  w3  |gwwa|gwwz|zmass|zwidth|wmass|wwidth || jwww |
+      !   -------------------------------------------------------------------
+      !   |  w-  |  w+  |  w-  |gwwa|gwwz|zmass|zwidth|wmass|wwidth ||  w+  |
+      !   |  w+  |  w-  |  w+  |gwwa|gwwz|zmass|zwidth|wmass|wwidth ||  w-  |
+      !   -------------------------------------------------------------------
+      ! where all the bosons are defined by the flowing-out quantum number.
 
-! output:
-!       complex jwww(6)        : w current             j^mu(w':w1,w2,w3)
+      ! output:
+      !       complex jwww(6)        : w current             j^mu(w':w1,w2,w3)
 
     complex*16  w1(6),w2(6),w3(6),jwww(6)
     complex*16 dw1(0:3),dw2(0:3),dw3(0:3), &
@@ -2386,8 +2386,8 @@
     dzs=-dgwwz2/dcmplx( ks2-mz2 , dmax1(sign(dmz*dwz,ks2),0.d0) )
     dzt=-dgwwz2/dcmplx( kt2-mz2 , dmax1(sign(dmz*dwz,kt2),0.d0) )
     dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(sign(dmw*dww,q2 ),0.d0) )
-!  for the running width, use below instead of the above dw.
-!      dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(dww*q2/dmw,0.d0) )
+      !  for the running width, use below instead of the above dw.
+      !      dw =-1.0d0/dcmplx( q2 -mw2 , dmax1(dww*q2/dmw,0.d0) )
 
     w12=dw1(0)*dw2(0)-dw1(1)*dw2(1)-dw1(2)*dw2(2)-dw1(3)*dw2(3)
     w32=dw3(0)*dw2(0)-dw3(1)*dw2(1)-dw3(2)*dw2(2)-dw3(3)*dw2(3)
@@ -2450,10 +2450,10 @@
     j4(2)=dgw2*( dw1(2)*w32 + dw3(2)*w12 - 2.d0*dw2(2)*w13 )
     j4(3)=dgw2*( dw1(3)*w32 + dw3(3)*w12 - 2.d0*dw2(3)*w13 )
 
-!      jj(0)=js(0)+jt(0)+j4(0)
-!      jj(1)=js(1)+jt(1)+j4(1)
-!      jj(2)=js(2)+jt(2)+j4(2)
-!      jj(3)=js(3)+jt(3)+j4(3)
+      !      jj(0)=js(0)+jt(0)+j4(0)
+      !      jj(1)=js(1)+jt(1)+j4(1)
+      !      jj(2)=js(2)+jt(2)+j4(2)
+      !      jj(3)=js(3)+jt(3)+j4(3)
 
     jj(0)=j4(0)
     jj(1)=j4(1)
@@ -2469,26 +2469,26 @@
     jwww(4) = dcmplx( (jj(3)-jq*q(3))*dw )
 
     return
-    end subroutine jwwwxx
+end subroutine jwwwxx
 
 
 
 
-    SUBROUTINE MOM2CX(ESUM,MASS1,MASS2,COSTH1,PHI1 , P1,P2)
+SUBROUTINE MOM2CX(ESUM,MASS1,MASS2,COSTH1,PHI1 , P1,P2)
 
-! This subroutine sets up two four-momenta in the two particle rest
-! frame.
+    ! This subroutine sets up two four-momenta in the two particle rest
+    ! frame.
 
-! INPUT:
-!       real    ESUM           : energy sum of particle 1 and 2
-!       real    MASS1          : mass            of particle 1
-!       real    MASS2          : mass            of particle 2
-!       real    COSTH1         : cos(theta)      of particle 1
-!       real    PHI1           : azimuthal angle of particle 1
+    ! INPUT:
+    !       real    ESUM           : energy sum of particle 1 and 2
+    !       real    MASS1          : mass            of particle 1
+    !       real    MASS2          : mass            of particle 2
+    !       real    COSTH1         : cos(theta)      of particle 1
+    !       real    PHI1           : azimuthal angle of particle 1
 
-! OUTPUT:
-!       real    P1(0:3)        : four-momentum of particle 1
-!       real    P2(0:3)        : four-momentum of particle 2
+    ! OUTPUT:
+    !       real    P1(0:3)        : four-momentum of particle 1
+    !       real    P2(0:3)        : four-momentum of particle 2
 
     REAL*8 ::    P1(0:3),P2(0:3), &
     ESUM,MASS1,MASS2,COSTH1,PHI1,MD2,ED,PP,SINTH1
@@ -2497,7 +2497,7 @@
     ED=MD2/ESUM
     IF (MASS1*MASS2 == 0.) THEN
         PP=(ESUM-ABS(ED))*0.5d0
-    
+
     ELSE
         PP=SQRT((MD2/ESUM)**2-2.0d0*(MASS1**2+MASS2**2)+ESUM**2)*0.5d0
     ENDIF
@@ -2514,21 +2514,21 @@
     P2(3) = -P1(3)
 
     RETURN
-    END SUBROUTINE MOM2CX
-! **********************************************************************
+END SUBROUTINE MOM2CX
+    ! **********************************************************************
 
-    SUBROUTINE MOMNTX(ENERGY,MASS,COSTH,PHI , P)
+SUBROUTINE MOMNTX(ENERGY,MASS,COSTH,PHI , P)
 
-! This subroutine sets up a four-momentum from the four inputs.
+    ! This subroutine sets up a four-momentum from the four inputs.
 
-! INPUT:
-!       real    ENERGY         : energy
-!       real    MASS           : mass
-!       real    COSTH          : cos(theta)
-!       real    PHI            : azimuthal angle
+    ! INPUT:
+    !       real    ENERGY         : energy
+    !       real    MASS           : mass
+    !       real    COSTH          : cos(theta)
+    !       real    PHI            : azimuthal angle
 
-! OUTPUT:
-!       real    P(0:3)         : four-momentum
+    ! OUTPUT:
+    !       real    P(0:3)         : four-momentum
 
     implicit none
     REAL*8 ::    P(0:3),ENERGY,MASS,COSTH,PHI,PP,SINTH
@@ -2551,7 +2551,7 @@
         ENDIF
     ENDIF
     RETURN
-    END SUBROUTINE MOMNTX
+END SUBROUTINE MOMNTX
 
 
 
@@ -2562,7 +2562,7 @@
 !	Adam Duff,  1992 August 31
 !	<duff@phenom.physics.wisc.edu>
 
-    subroutine oxxxxx( &
+subroutine oxxxxx( &
     p,		 & !in: four vector momentum
     fmass,	 & !in: fermion mass
     nhel,	 & !in: anti-spinor helicity, -1 or 1
@@ -2571,22 +2571,22 @@
     )
     implicit none
 
-! declare input/output variables
+      ! declare input/output variables
 
     complex*16 fo(6)
     integer*4 :: nhel, nsf
     real*8 :: p(0:3), fmass
 
-! declare local variables
+      ! declare local variables
 
     real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
-!      parameter( c_zero=dcmplx( r_zero, r_zero ) )
+      !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
     real*8 :: plat, pabs, omegap, omegam, rs2pa, spaz
 
-! define kinematic parameters
+      ! define kinematic parameters
 
     c_zero=dcmplx( r_zero, r_zero )
 
@@ -2596,7 +2596,7 @@
     pabs = sqrt( p(1)**2 + p(2)**2 + p(3)**2 )
     omegap = sqrt( p(0) + pabs )
 
-! do massive fermion case
+      ! do massive fermion case
 
     if ( fmass /= r_zero ) then
         omegam = fmass / omegap
@@ -2766,9 +2766,9 @@
             print *, 'oxxxxx:  fermion type must be +1,-1'
             stop
         end if
-    
-    ! do massless case
-    
+
+          ! do massless case
+
     else
         if ( nsf == 1 ) then
             if ( nhel == 1 ) then
@@ -2910,26 +2910,26 @@
         end if
     end if
 
-! done
+      ! done
 
     return
-    end subroutine oxxxxx
+end subroutine oxxxxx
 
 
 
-    subroutine rotxxx(p,q , prot)
+subroutine rotxxx(p,q , prot)
 
-! this subroutine performs the spacial rotation of a four-momentum.
-! the momentum p is assumed to be given in the frame where the spacial
-! component of q points the positive z-axis.  prot is the momentum p
-! rotated to the frame where q is given.
+    ! this subroutine performs the spacial rotation of a four-momentum.
+    ! the momentum p is assumed to be given in the frame where the spacial
+    ! component of q points the positive z-axis.  prot is the momentum p
+    ! rotated to the frame where q is given.
 
-! input:
-!       real    p(0:3)         : four-momentum p in q(1)=q(2)=0 frame
-!       real    q(0:3)         : four-momentum q in the rotated frame
+    ! input:
+    !       real    p(0:3)         : four-momentum p in q(1)=q(2)=0 frame
+    !       real    q(0:3)         : four-momentum q in the rotated frame
 
-! output:
-!       real    prot(0:3)      : four-momentum p in the rotated frame
+    ! output:
+    !       real    prot(0:3)      : four-momentum p in the rotated frame
 
     real*8 ::    p(0:3),q(0:3),prot(0:3),qt2,qt,psgn,qq,p1
 
@@ -2961,22 +2961,22 @@
     endif
 
     return
-    end subroutine rotxxx
+end subroutine rotxxx
 
 
-    SUBROUTINE SSSSXX(S1,S2,S3,S4,G , VERTEX)
+SUBROUTINE SSSSXX(S1,S2,S3,S4,G , VERTEX)
 
-! This subroutine computes an amplitude of the four-scalar coupling.
+    ! This subroutine computes an amplitude of the four-scalar coupling.
 
-! INPUT:
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       complex S3(3)          : third  scalar                        S3
-!       complex S4(3)          : fourth scalar                        S4
-!       real    G              : coupling constant                 GHHHH
+    ! INPUT:
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       complex S3(3)          : third  scalar                        S3
+    !       complex S4(3)          : fourth scalar                        S4
+    !       real    G              : coupling constant                 GHHHH
 
-! OUTPUT:
-!       complex VERTEX         : amplitude            Gamma(S1,S2,S3,S4)
+    ! OUTPUT:
+    !       complex VERTEX         : amplitude            Gamma(S1,S2,S3,S4)
 
     implicit none
     COMPLEX*16 S1(3),S2(3),S3(3),S4(3),VERTEX
@@ -2985,22 +2985,22 @@
     VERTEX = G*S1(1)*S2(1)*S3(1)*S4(1)
 
     RETURN
-    END SUBROUTINE SSSSXX
+END SUBROUTINE SSSSXX
 
 
 
-    SUBROUTINE SSSXXX(S1,S2,S3,G , VERTEX)
+SUBROUTINE SSSXXX(S1,S2,S3,G , VERTEX)
 
-! This subroutine computes an amplitude of the three-scalar coupling.
+    ! This subroutine computes an amplitude of the three-scalar coupling.
 
-! INPUT:
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       complex S3(3)          : third  scalar                        S3
-!       real    G              : coupling constant                  GHHH
+    ! INPUT:
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       complex S3(3)          : third  scalar                        S3
+    !       real    G              : coupling constant                  GHHH
 
-! OUTPUT:
-!       complex VERTEX         : amplitude               Gamma(S1,S2,S3)
+    ! OUTPUT:
+    !       complex VERTEX         : amplitude               Gamma(S1,S2,S3)
 
     implicit none
     COMPLEX*16 S1(3),S2(3),S3(3),VERTEX
@@ -3009,21 +3009,21 @@
     VERTEX = G*S1(1)*S2(1)*S3(1)
 
     RETURN
-    END SUBROUTINE SSSXXX
+END SUBROUTINE SSSXXX
 
 
 
 
-    SUBROUTINE SXXXXX(P,NSS , SC)
+SUBROUTINE SXXXXX(P,NSS , SC)
 
-! This subroutine computes a complex SCALAR wavefunction.
+    ! This subroutine computes a complex SCALAR wavefunction.
 
-! INPUT:
-!       real    P(0:3)         : four-momentum of scalar boson
-!       integer NSS  = -1 or 1 : +1 for final, -1 for initial
+    ! INPUT:
+    !       real    P(0:3)         : four-momentum of scalar boson
+    !       integer NSS  = -1 or 1 : +1 for final, -1 for initial
 
-! OUTPUT:
-!       complex SC(3)          : scalar wavefunction                   S
+    ! OUTPUT:
+    !       complex SC(3)          : scalar wavefunction                   S
 
     COMPLEX*16 SC(3)
     REAL*8 ::    P(0:3)
@@ -3034,37 +3034,37 @@
     SC(3) = DCMPLX(P(1),P(2))*NSS
 
     RETURN
-    END SUBROUTINE SXXXXX
+END SUBROUTINE SXXXXX
 
 
 
-    subroutine vssxxx(vc,s1,s2,g , vertex)
+subroutine vssxxx(vc,s1,s2,g , vertex)
 
-! this subroutine computes an amplitude from the vector-scalar-scalar
-! coupling.  the coupling is absent in the minimal sm in unitary gauge.
+    ! this subroutine computes an amplitude from the vector-scalar-scalar
+    ! coupling.  the coupling is absent in the minimal sm in unitary gauge.
 
-!       complex vc(6)          : input  vector                        v
-!       complex s1(3)          : first  scalar                        s1
-!       complex s2(3)          : second scalar                        s2
-!       complex g              : coupling constant (s1 charge)
+    !       complex vc(6)          : input  vector                        v
+    !       complex s1(3)          : first  scalar                        s1
+    !       complex s2(3)          : second scalar                        s2
+    !       complex g              : coupling constant (s1 charge)
 
-! examples of the coupling constant g for susy particles are as follows:
-!   -----------------------------------------------------------
-!   |    s1    | (q,i3) of s1  ||   v=a   |   v=z   |   v=w   |
-!   -----------------------------------------------------------
-!   | nu~_l    | (  0  , +1/2) ||   ---   |  gzn(1) |  gwf(1) |
-!   | e~_l     | ( -1  , -1/2) ||  gal(1) |  gzl(1) |  gwf(1) |
-!   | u~_l     | (+2/3 , +1/2) ||  gau(1) |  gzu(1) |  gwf(1) |
-!   | d~_l     | (-1/3 , -1/2) ||  gad(1) |  gzd(1) |  gwf(1) |
-!   -----------------------------------------------------------
-!   | e~_r-bar | ( +1  ,  0  ) || -gal(2) | -gzl(2) | -gwf(2) |
-!   | u~_r-bar | (-2/3 ,  0  ) || -gau(2) | -gzu(2) | -gwf(2) |
-!   | d~_r-bar | (+1/3 ,  0  ) || -gad(2) | -gzd(2) | -gwf(2) |
-!   -----------------------------------------------------------
-! where the s1 charge is defined by the flowing-out quantum number.
+    ! examples of the coupling constant g for susy particles are as follows:
+    !   -----------------------------------------------------------
+    !   |    s1    | (q,i3) of s1  ||   v=a   |   v=z   |   v=w   |
+    !   -----------------------------------------------------------
+    !   | nu~_l    | (  0  , +1/2) ||   ---   |  gzn(1) |  gwf(1) |
+    !   | e~_l     | ( -1  , -1/2) ||  gal(1) |  gzl(1) |  gwf(1) |
+    !   | u~_l     | (+2/3 , +1/2) ||  gau(1) |  gzu(1) |  gwf(1) |
+    !   | d~_l     | (-1/3 , -1/2) ||  gad(1) |  gzd(1) |  gwf(1) |
+    !   -----------------------------------------------------------
+    !   | e~_r-bar | ( +1  ,  0  ) || -gal(2) | -gzl(2) | -gwf(2) |
+    !   | u~_r-bar | (-2/3 ,  0  ) || -gau(2) | -gzu(2) | -gwf(2) |
+    !   | d~_r-bar | (+1/3 ,  0  ) || -gad(2) | -gzd(2) | -gwf(2) |
+    !   -----------------------------------------------------------
+    ! where the s1 charge is defined by the flowing-out quantum number.
 
-! output:
-!       complex vertex         : amplitude                gamma(v,s1,s2)
+    ! output:
+    !       complex vertex         : amplitude                gamma(v,s1,s2)
 
     complex*16 vc(6),s1(3),s2(3),vertex,g
     real*8 ::    p(0:3)
@@ -3078,22 +3078,22 @@
     *(vc(1)*p(0)-vc(2)*p(1)-vc(3)*p(2)-vc(4)*p(3))
 
     return
-    end subroutine vssxxx
+end subroutine vssxxx
 
-    SUBROUTINE VVSSXX(V1,V2,S1,S2,G , VERTEX)
+SUBROUTINE VVSSXX(V1,V2,S1,S2,G , VERTEX)
 
-! This subroutine computes an amplitude of the vector-vector-scalar-
-! scalar coupling.
+    ! This subroutine computes an amplitude of the vector-vector-scalar-
+    ! scalar coupling.
 
-! INPUT:
-!       complex V1(6)          : first  vector                        V1
-!       complex V2(6)          : second vector                        V2
-!       complex S1(3)          : first  scalar                        S1
-!       complex S2(3)          : second scalar                        S2
-!       real    G              : coupling constant                 GVVHH
+    ! INPUT:
+    !       complex V1(6)          : first  vector                        V1
+    !       complex V2(6)          : second vector                        V2
+    !       complex S1(3)          : first  scalar                        S1
+    !       complex S2(3)          : second scalar                        S2
+    !       real    G              : coupling constant                 GVVHH
 
-! OUTPUT:
-!       complex VERTEX         : amplitude            Gamma(V1,V2,S1,S2)
+    ! OUTPUT:
+    !       complex VERTEX         : amplitude            Gamma(V1,V2,S1,S2)
 
     implicit none
     COMPLEX*16 V1(6),V2(6),S1(3),S2(3),VERTEX
@@ -3103,24 +3103,24 @@
     *(V1(1)*V2(1)-V1(2)*V2(2)-V1(3)*V2(3)-V1(4)*V2(4))
 
     RETURN
-    END SUBROUTINE VVSSXX
+END SUBROUTINE VVSSXX
 
 
 
 
-    subroutine vvsxxx(v1,v2,sc,g , vertex)
+subroutine vvsxxx(v1,v2,sc,g , vertex)
 
-! this subroutine computes an amplitude of the vector-vector-scalar
-! coupling.
+    ! this subroutine computes an amplitude of the vector-vector-scalar
+    ! coupling.
 
-! input:
-!       complex v1(6)          : first  vector                        v1
-!       complex v2(6)          : second vector                        v2
-!       complex sc(3)          : input  scalar                        s
-!       real    g              : coupling constant                  gvvh
+    ! input:
+    !       complex v1(6)          : first  vector                        v1
+    !       complex v2(6)          : second vector                        v2
+    !       complex sc(3)          : input  scalar                        s
+    !       real    g              : coupling constant                  gvvh
 
-! output:
-!       complex vertex         : amplitude                gamma(v1,v2,s)
+    ! output:
+    !       complex vertex         : amplitude                gamma(v1,v2,s)
 
     complex*16 v1(6),v2(6),sc(3),vertex
     real*8 ::    g
@@ -3128,23 +3128,23 @@
     vertex = g*sc(1)*(v1(1)*v2(1)-v1(2)*v2(2)-v1(3)*v2(3)-v1(4)*v2(4))
 
     return
-    end subroutine vvsxxx
+end subroutine vvsxxx
 
 
 
-    subroutine vvvxxx(wm,wp,w3,g , vertex)
+subroutine vvvxxx(wm,wp,w3,g , vertex)
 
-! this subroutine computes an amplitude of the three-point coupling of
-! the gauge bosons.
+    ! this subroutine computes an amplitude of the three-point coupling of
+    ! the gauge bosons.
 
-! input:
-!       complex wm(6)          : vector               flow-out w-
-!       complex wp(6)          : vector               flow-out w+
-!       complex w3(6)          : vector               j3 or a    or z
-!       real    g              : coupling constant    gw or gwwa or gwwz
+    ! input:
+    !       complex wm(6)          : vector               flow-out w-
+    !       complex wp(6)          : vector               flow-out w+
+    !       complex w3(6)          : vector               j3 or a    or z
+    !       real    g              : coupling constant    gw or gwwa or gwwz
 
-! output:
-!       complex vertex         : amplitude               gamma(wm,wp,w3)
+    ! output:
+    !       complex vertex         : amplitude               gamma(wm,wp,w3)
 
     complex*16 wm(6),wp(6),w3(6),vertex, &
     xv1,xv2,xv3,v12,v23,v31,p12,p13,p21,p23,p31,p32
@@ -3203,7 +3203,7 @@
     vertex = -(v12*(p13-p23)+v23*(p21-p31)+v31*(p32-p12))*g
 
     return
-    end subroutine vvvxxx
+end subroutine vvvxxx
 
 
 !	Subroutine returns the value of evaluated
@@ -3213,7 +3213,7 @@
 !	Adam Duff,  1992 September 3
 !	<duff@phenom.physics.wisc.edu>
 
-    subroutine vxxxxx( &
+subroutine vxxxxx( &
     p,		 & !in: boson four momentum
     vmass,	 & !in: boson mass
     nhel,	 & !in: boson helicity
@@ -3222,22 +3222,22 @@
     )
     implicit none
 
-! declare input/output variables
+      ! declare input/output variables
 
     complex*16 vc(6)
     integer*4 :: nhel, nsv
     real*8 :: p(0:3), vmass
 
-! declare local variables
+      ! declare local variables
 
     real*8 :: r_zero, r_one, r_two
     parameter( r_zero=0.0d0, r_one=1.0d0, r_two=2.0d0 )
     complex*16 c_zero
-!      parameter( c_zero=dcmplx( r_zero, r_zero ) )
+      !      parameter( c_zero=dcmplx( r_zero, r_zero ) )
 
     real*8 :: plat, pabs, rs2, rplat, rpabs, rden
 
-! define internal/external momenta
+      ! define internal/external momenta
 
     if ( nsv**2 /= 1 ) then
         print *, 'vxxxxx:  nsv is not one of -1, +1'
@@ -3252,7 +3252,7 @@
     plat = sqrt( p(1)**2 + p(2)**2 )
     pabs = sqrt( p(1)**2 + p(2)**2 + p(3)**2 )
 
-! calculate polarisation four vectors
+      ! calculate polarisation four vectors
 
     if ( nhel**2 == 1 ) then
         if ( (pabs == r_zero) .OR. (plat == r_zero) ) then
@@ -3311,47 +3311,47 @@
         stop
     end if
 
-! done
+      ! done
 
     return
-    end subroutine vxxxxx
+end subroutine vxxxxx
 
 
 
-    subroutine w3w3xx(wm,w31,wp,w32,g31,g32,wmass,wwidth , vertex)
+subroutine w3w3xx(wm,w31,wp,w32,g31,g32,wmass,wwidth , vertex)
 
-! this subroutine computes an amplitude of the four-point coupling of
-! the w-, w+ and two w3/z/a.  the amplitude includes the contributions
-! of w exchange diagrams.  the internal w propagator is given in unitary
-! gauge.  if one sets wmass=0.0, then the gggg vertex is given (see sect
-! 2.9.1 of the manual).
+    ! this subroutine computes an amplitude of the four-point coupling of
+    ! the w-, w+ and two w3/z/a.  the amplitude includes the contributions
+    ! of w exchange diagrams.  the internal w propagator is given in unitary
+    ! gauge.  if one sets wmass=0.0, then the gggg vertex is given (see sect
+    ! 2.9.1 of the manual).
 
-! input:
-!       complex wm(0:3)        : flow-out w-                         wm
-!       complex w31(0:3)       : first    w3/z/a                     w31
-!       complex wp(0:3)        : flow-out w+                         wp
-!       complex w32(0:3)       : second   w3/z/a                     w32
-!       real    g31            : coupling of w31 with w-/w+
-!       real    g32            : coupling of w32 with w-/w+
-!                                                  (see the table below)
-!       real    wmass          : mass  of w
-!       real    wwidth         : width of w
+    ! input:
+    !       complex wm(0:3)        : flow-out w-                         wm
+    !       complex w31(0:3)       : first    w3/z/a                     w31
+    !       complex wp(0:3)        : flow-out w+                         wp
+    !       complex w32(0:3)       : second   w3/z/a                     w32
+    !       real    g31            : coupling of w31 with w-/w+
+    !       real    g32            : coupling of w32 with w-/w+
+    !                                                  (see the table below)
+    !       real    wmass          : mass  of w
+    !       real    wwidth         : width of w
 
-! the possible sets of the inputs are as follows:
-!   -------------------------------------------
-!   |  wm  |  w31 |  wp  |  w32 |  g31 |  g32 |
-!   -------------------------------------------
-!   |  w-  |  w3  |  w+  |  w3  |  gw  |  gw  |
-!   |  w-  |  w3  |  w+  |  z   |  gw  | gwwz |
-!   |  w-  |  w3  |  w+  |  a   |  gw  | gwwa |
-!   |  w-  |  z   |  w+  |  z   | gwwz | gwwz |
-!   |  w-  |  z   |  w+  |  a   | gwwz | gwwa |
-!   |  w-  |  a   |  w+  |  a   | gwwa | gwwa |
-!   -------------------------------------------
-! where all the bosons are defined by the flowing-out quantum number.
+    ! the possible sets of the inputs are as follows:
+    !   -------------------------------------------
+    !   |  wm  |  w31 |  wp  |  w32 |  g31 |  g32 |
+    !   -------------------------------------------
+    !   |  w-  |  w3  |  w+  |  w3  |  gw  |  gw  |
+    !   |  w-  |  w3  |  w+  |  z   |  gw  | gwwz |
+    !   |  w-  |  w3  |  w+  |  a   |  gw  | gwwa |
+    !   |  w-  |  z   |  w+  |  z   | gwwz | gwwz |
+    !   |  w-  |  z   |  w+  |  a   | gwwz | gwwa |
+    !   |  w-  |  a   |  w+  |  a   | gwwa | gwwa |
+    !   -------------------------------------------
+    ! where all the bosons are defined by the flowing-out quantum number.
 
-! output:
-!       complex vertex         : amplitude          gamma(wm,w31,wp,w32)
+    ! output:
+    !       complex vertex         : amplitude          gamma(wm,w31,wp,w32)
 
     complex*16    wm(6),w31(6),wp(6),w32(6),vertex
     complex*16 dv1(0:3),dv2(0:3),dv3(0:3),dv4(0:3),dvertx, &
@@ -3379,19 +3379,19 @@
     dv4(3)=dcmplx(w32(4))
 
     if ( dble(wmass) /= r_zero ) then
-    !         dm2inv = r_one / dmw2
-    
+        !         dm2inv = r_one / dmw2
+
         v12= dv1(0)*dv2(0)-dv1(1)*dv2(1)-dv1(2)*dv2(2)-dv1(3)*dv2(3)
         v13= dv1(0)*dv3(0)-dv1(1)*dv3(1)-dv1(2)*dv3(2)-dv1(3)*dv3(3)
         v14= dv1(0)*dv4(0)-dv1(1)*dv4(1)-dv1(2)*dv4(2)-dv1(3)*dv4(3)
         v23= dv2(0)*dv3(0)-dv2(1)*dv3(1)-dv2(2)*dv3(2)-dv2(3)*dv3(3)
         v24= dv2(0)*dv4(0)-dv2(1)*dv4(1)-dv2(2)*dv4(2)-dv2(3)*dv4(3)
         v34= dv3(0)*dv4(0)-dv3(1)*dv4(1)-dv3(2)*dv4(2)-dv3(3)*dv4(3)
-    
+
         dvertx = v12*v34 +v14*v23 -2.d0*v13*v24
-    
+
         vertex = dcmplx( dvertx ) * (g31*g32)
-    
+
     else
         v12= dv1(0)*dv2(0)-dv1(1)*dv2(1)-dv1(2)*dv2(2)-dv1(3)*dv2(3)
         v13= dv1(0)*dv3(0)-dv1(1)*dv3(1)-dv1(2)*dv3(2)-dv1(3)*dv3(3)
@@ -3399,37 +3399,37 @@
         v23= dv2(0)*dv3(0)-dv2(1)*dv3(1)-dv2(2)*dv3(2)-dv2(3)*dv3(3)
         v24= dv2(0)*dv4(0)-dv2(1)*dv4(1)-dv2(2)*dv4(2)-dv2(3)*dv4(3)
         v34= dv3(0)*dv4(0)-dv3(1)*dv4(1)-dv3(2)*dv4(2)-dv3(3)*dv4(3)
-    
+
 
         dvertx = v14*v23 -v13*v24
-    
+
         vertex = dcmplx( dvertx ) * (g31*g32)
     end if
 
     return
-    end subroutine w3w3xx
+end subroutine w3w3xx
 
 
 
-    subroutine wwwwxx(wm1,wp1,wm2,wp2,gwwa,gwwz,zmass,zwidth , vertex)
+subroutine wwwwxx(wm1,wp1,wm2,wp2,gwwa,gwwz,zmass,zwidth , vertex)
 
-! this subroutine computes an amplitude of the four-point w-/w+
-! coupling, including the contributions of photon and z exchanges.  the
-! photon propagator is given in feynman gauge and the z propagator is
-! given in unitary gauge.
+    ! this subroutine computes an amplitude of the four-point w-/w+
+    ! coupling, including the contributions of photon and z exchanges.  the
+    ! photon propagator is given in feynman gauge and the z propagator is
+    ! given in unitary gauge.
 
-! input:
-!       complex wm1(0:3)       : first  flow-out w-                  wm1
-!       complex wp1(0:3)       : first  flow-out w+                  wp1
-!       complex wm2(0:3)       : second flow-out w-                  wm2
-!       complex wp2(0:3)       : second flow-out w+                  wp2
-!       real    gwwa           : coupling constant of w and a       gwwa
-!       real    gwwz           : coupling constant of w and z       gwwz
-!       real    zmass          : mass  of z
-!       real    zwidth         : width of z
+    ! input:
+    !       complex wm1(0:3)       : first  flow-out w-                  wm1
+    !       complex wp1(0:3)       : first  flow-out w+                  wp1
+    !       complex wm2(0:3)       : second flow-out w-                  wm2
+    !       complex wp2(0:3)       : second flow-out w+                  wp2
+    !       real    gwwa           : coupling constant of w and a       gwwa
+    !       real    gwwz           : coupling constant of w and z       gwwz
+    !       real    zmass          : mass  of z
+    !       real    zwidth         : width of z
 
-! output:
-!       complex vertex         : amplitude        gamma(wm1,wp1,wm2,wp2)
+    ! output:
+    !       complex vertex         : amplitude        gamma(wm1,wp1,wm2,wp2)
 
     complex*16    wm1(6),wp1(6),wm2(6),wp2(6),vertex
     complex*16 dv1(0:3),dv2(0:3),dv3(0:3),dv4(0:3), &
@@ -3569,10 +3569,10 @@
 
     dvertx = (v12*v34 +v14*v23 -r_two*v13*v24)*dgw2
 
-!     &        +(dzs*dgwwz2+das*dgwwa2)*js -dzs*dgwwz2*js12*js34/dmz**2
-!     &        +(dzt*dgwwz2+dat*dgwwa2)*jt -dzt*dgwwz2*js14*js32/dmz**2
+    !     &        +(dzs*dgwwz2+das*dgwwa2)*js -dzs*dgwwz2*js12*js34/dmz**2
+    !     &        +(dzt*dgwwz2+dat*dgwwa2)*jt -dzt*dgwwz2*js14*js32/dmz**2
 
     vertex = -dcmplx( dvertx )
 
     return
-    end subroutine wwwwxx
+end subroutine wwwwxx

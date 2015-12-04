@@ -15,7 +15,8 @@ module configuration
   integer :: include_signal
   integer :: include_background
   integer :: include_qcd
-  integer :: include_qfd
+  integer :: include_a
+  integer :: include_z
   integer :: include_bsm
   integer :: include_gg
   integer :: include_qq
@@ -63,7 +64,8 @@ contains
     read(5,*) include_signal
     read(5,*) include_background
     read(5,*) include_qcd
-    read(5,*) include_qfd
+    read(5,*) include_a
+    read(5,*) include_z
     read(5,*) include_bsm
     read(5,*) include_gg
     read(5,*) include_qq
