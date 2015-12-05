@@ -42,7 +42,7 @@ module modelling
   ! zprime parameters
   real :: mass_zp(5), gamZp(5)
   real :: paramZp(5)
-  real :: gp(5),gV_d(5),gA_d(5),gV_u(5),gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
+  real :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
   real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5),gZpb(2,5), gZpt(2,5), gZpl3(2,5), gZpn3(2,5)
   integer :: manual_width(5)
 
