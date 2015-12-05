@@ -107,7 +107,7 @@ function dsigma(x,wgt)
   real :: qfdpoluu2(-1:1, -1:1), qfdpoldd2(-1:1, -1:1), qfdpolbb2(-1:1, -1:1)
 
   ! square matrix elements
-  real :: qfduu1 ,qfduu2, qfddd1, qfddd2, qfdbb1, qfdbb2, qcdqq, qcdgg, qcdbb
+  real :: qfduu1 ,qfduu2, qfddd1, qfddd2, qcdqq, qcdgg, qcdbb
 
   ! weight per polarisation
   real :: weight(-1:1, -1:1, 20)
@@ -121,7 +121,7 @@ function dsigma(x,wgt)
 
   ! --- Method ---
 
-  ! call debug("Start of fxn")
+  call debug("Start of fxn")
 
   ! store top parameters
   rmt = fmass(ffinal)
@@ -187,26 +187,26 @@ function dsigma(x,wgt)
             qq = 2.d0*rmt
           end if
           if (qq == 0.d0) then
-            ! call debug("qq = 0! Setting to Z mass.")
+            call debug("qq = 0! Setting to Z mass.")
             qq = zmass
           end if
 
 
-          ! call debug("Constructing hadronic structure functions...")
+          call debug("Constructing hadronic structure functions...")
           if (structure_function <= 4) then
             if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("x1 out of range. Setting fxn = 0 and Skipping.")
+              call debug("x1 out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("x2 out of range. Setting fxn = 0 and Skipping.")
+              call debug("x2 out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
             if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
               fffxn = 0.d0
-              ! call debug("qq out of range. Setting fxn = 0 and Skipping.")
+              call debug("qq out of range. Setting fxn = 0 and Skipping.")
               go to 999
             end if
 
@@ -233,17 +233,17 @@ function dsigma(x,wgt)
             imode = 1
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -252,17 +252,17 @@ function dsigma(x,wgt)
             imode = 2
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -271,17 +271,17 @@ function dsigma(x,wgt)
             imode = 3
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -290,17 +290,17 @@ function dsigma(x,wgt)
             imode = 4
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
@@ -309,23 +309,23 @@ function dsigma(x,wgt)
             imode = 5
             if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) then
               fffxn = 0.d0
-              ! call debug("fxn = 0. Skipping.")
+              call debug("fxn = 0. Skipping.")
               go to 999
             end if
             call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
             call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
           end if
-          ! call debug("...complete.")
+          call debug("...complete.")
           if (structure_function > 4) then
             u1 = u1 + usea1
             d1 = d1 + dsea1
@@ -337,7 +337,7 @@ function dsigma(x,wgt)
             dbar2 = dsea2
           end if
 
-          ! call debug("Constructing PDFs...")
+          call debug("Constructing PDFs...")
 
           ! initialise pdfs
           fx1(1) = d1
@@ -372,9 +372,9 @@ function dsigma(x,wgt)
           do i = 1, 13
             fx2(i) = fx2(i)/x2
           end do
-          ! call debug("...complete.")
+          call debug("...complete.")
 
-          ! call debug("Creating initial (massless) parton momenta.")
+          call debug("Creating initial (massless) parton momenta.")
           pcm = ecm/2.d0
           q(4,1) = pcm
           q(3,1) = pcm
@@ -384,11 +384,11 @@ function dsigma(x,wgt)
           q(3,2) = -pcm
           q(2,2) = 0.d0
           q(1,2) = 0.d0
-          ! call debug("...complete.")
+          call debug("...complete.")
 
           if (final_state <= 0) then
             if (use_rambo == 0) then
-              ! call debug("Calculating 2to2 final state momenta in the parton CoM frame manually...")
+              call debug("Calculating 2to2 final state momenta in the parton CoM frame manually...")
               ! give vegas assigned values
               phit = 2.d0*pi*ran(jseed)
               if (jx == 1) then
@@ -404,7 +404,7 @@ function dsigma(x,wgt)
               qcm2 = ((ecm*ecm - m3*m3 - m4*m4)**2 - (2.d0*m3*m4)**2)/(4.d0*ecm*ecm)
               if (qcm2 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 qcm = sqrt(qcm2)
@@ -419,7 +419,7 @@ function dsigma(x,wgt)
               q(2,4) = -qcm*st*cos(phit)
               q(1,4) = -qcm*st*sin(phit)
             else if (use_rambo == 1) then
-              ! call debug("Calculating 2to2 final state momenta in the parton CoM frame using RAMBO...")
+              call debug("Calculating 2to2 final state momenta in the parton CoM frame using RAMBO...")
               xmass(1) = m3
               xmass(2) = m4
               jps = 2
@@ -437,11 +437,11 @@ function dsigma(x,wgt)
               q(i,7) = 0.d0
               q(i,8) = 0.d0
             end do
-            ! call debug("...complete.")
+            call debug("...complete.")
 
           else if (final_state > 0) then
             if (use_rambo == 0) then
-              ! call debug("Calculating 2to6 final state momenta in the parton CoM frame manually...")
+              call debug("Calculating 2to6 final state momenta in the parton CoM frame manually...")
               phit = 2.d0*pi*ran(jseed)
 
               m356min = m3 + m5 + m6
@@ -457,7 +457,7 @@ function dsigma(x,wgt)
                 m356_2 = (rmt**2 + rl356)
                 if (m356_2 < 0.d0) then
                   fffxn = 0.d0
-                  ! call debug("fxn = 0. Skipping.")
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m356 = sqrt(m356_2)
@@ -477,7 +477,7 @@ function dsigma(x,wgt)
                 m478_2 = (rmt**2 + rl478)
                 if (m478_2 < 0.d0) then
                   fffxn = 0.d0
-                  ! call debug("fxn = 0. Skipping.")
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m478 = sqrt(m478_2)
@@ -497,7 +497,7 @@ function dsigma(x,wgt)
                 m56_2 = (wmass**2 + rl56)
                 if (m56_2 < 0.d0) then
                   fffxn = 0.d0
-                  ! call debug("fxn = 0. Skipping.")
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m56 = sqrt(m56_2)
@@ -517,7 +517,7 @@ function dsigma(x,wgt)
                 m78_2 = (wmass**2 + rl78)
                 if (m78_2 < 0.d0) then
                   fffxn = 0.d0
-                  ! call debug("fxn = 0. Skipping.")
+                  call debug("fxn = 0. Skipping.")
                   go to 999
                 else
                   m78 = sqrt(m78_2)
@@ -552,7 +552,7 @@ function dsigma(x,wgt)
               rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
               if (rq2 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq = sqrt(rq2)
@@ -572,7 +572,7 @@ function dsigma(x,wgt)
               rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
               if (rq562 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq56 = sqrt(rq562)
@@ -596,7 +596,7 @@ function dsigma(x,wgt)
               rq782 = ((m478*m478 - m4*m4 - m78*m78)**2 - (2.d0*m4*m78)**2)/(4.d0*m478*m478)
               if (rq782 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq78 = sqrt(rq782)
@@ -620,7 +620,7 @@ function dsigma(x,wgt)
               rq52 = ((m56*m56 - m5*m5 - m6*m6)**2 - (2.d0*m5*m6)**2)/(4.d0*m56*m56)
               if (rq52 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq5 = sqrt(rq52)
@@ -644,7 +644,7 @@ function dsigma(x,wgt)
               rq72 = ((m78*m78 - m7*m7 - m8*m8)**2 - (2.d0*m7*m8)**2)/(4.d0*m78*m78)
               if (rq72 < 0.d0) then
                 fffxn = 0.d0
-                ! call debug("fxn = 0. Skipping.")
+                call debug("fxn = 0. Skipping.")
                 go to 999
               else
                 rq7 = sqrt(rq72)
@@ -664,7 +664,7 @@ function dsigma(x,wgt)
                 q(i,8) = p78(i) - q(i,7)
               end do
             else if (use_rambo == 1) then
-              ! call debug("Calculating 2to6 final state momenta in the parton CoM frame using RAMBO...")
+              call debug("Calculating 2to6 final state momenta in the parton CoM frame using RAMBO...")
               xmass(1) = m3
               xmass(2) = m4
               xmass(3) = m5
@@ -680,10 +680,10 @@ function dsigma(x,wgt)
               end do
             end if
 
-            ! call debug("...complete.")
+            call debug("...complete.")
           end if
 
-          ! call debug("Boosting parton CoM momenta to collider frame...")
+          call debug("Boosting parton CoM momenta to collider frame...")
           ! velocity of ttbar system in collider frame
           vcol = (x1 - x2)/(x1 + x2)
 
@@ -697,9 +697,9 @@ function dsigma(x,wgt)
             qcol(2, i) = q(2, i)
             qcol(1, i) = q(1, i)
           end do
-          ! call debug("...complete.")
+          call debug("...complete.")
 
-          ! call debug("Assigning particle 4-momenta...")
+          call debug("Assigning particle 4-momenta...")
 
           ! parton CoM 4 -momenta
           p1(0) = q(4,1)
@@ -721,7 +721,7 @@ function dsigma(x,wgt)
             p8(i) = q(i,8)
           end do
 
-          ! call debug("..done.")
+          call debug("..done.")
 
           if (verbose == 1) then
             if (final_state <= 0) then
@@ -788,7 +788,7 @@ function dsigma(x,wgt)
           end if
 
           if (phase_space_only == 1) then
-            ! call debug("Setting |M|=1 and skipping matrix element calculation...")
+            call debug("Setting |M|=1 and skipping matrix element calculation...")
             if (ix == 1) then
               pfxtot = 0.5/x1
             else if (ix == 2) then
@@ -808,11 +808,11 @@ function dsigma(x,wgt)
             go to 666
           end if
 
-          ! call debug("Calculating QCD coupling...")
+          call debug("Calculating QCD coupling...")
           a_s = alfas(qq,lambdaqcd4,nloops)
           gs2 = 4.d0*pi*a_s
           gs = sqrt(gs2)
-          ! call debug("...complete.")
+          call debug("...complete.")
 
           ! initilise
           qcdqq = 0.d0
@@ -838,9 +838,9 @@ function dsigma(x,wgt)
 
           resall = 0
           if (final_state <= 0) then
-            ! call debug("Computing 2to2 square matrix elements...")
+            call debug("Computing 2to2 square matrix elements...")
             if (include_qcd == 1) then
-              ! call debug("Computing QCD matrix elements...")
+              call debug("Computing QCD matrix elements...")
               do lam3 = -1, 1, 2
                 do lam4 = -1, 1, 2
                   if (include_gg == 1) then
@@ -852,10 +852,10 @@ function dsigma(x,wgt)
                   resall = resall + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) + qcdpolbb(lam3,lam4)
                 end do
               end do
-              ! call debug("...complete.")
+              call debug("...complete.")
             end if
             if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
-              ! call debug("Computing QFD matrix elements...")
+              call debug("Computing QFD matrix elements...")
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
                   if (include_qq == 1) then
@@ -869,38 +869,38 @@ function dsigma(x,wgt)
                   + qfdpoldd1(lam3,lam4) + qfdpoldd2(lam3,lam4)
                 end do
               end do
-              ! call debug("...complete.")
+              call debug("...complete.")
             end if
 
           else if (final_state > 0) then
-            ! call debug("Computing 2to6 square matrix elements...")
+            call debug("Computing 2to6 square matrix elements...")
             ! Do not change the deliberate order of p6 and p7.
             if (include_qcd == 1) then
-              ! call debug("Computing QCD matrix elements...")
+              call debug("Computing QCD matrix elements...")
               if (include_gg == 1) then
                 qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
               end if
               if (include_qq == 1) then
                 qcdqq = sqq_tt_bbeevv_qcd(3, p1, p2, p3, p4, p5, p7, p6, p8)
               end if
-              ! call debug("...complete.")
+              call debug("...complete.")
             end if
             if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
-              ! call debug("Computing EW+Z' matrix elements...")
+              call debug("Computing EW+Z' matrix elements...")
               if (include_qq == 1) then
                 qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
                 qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
                 qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
                 qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
               end if
-              ! call debug("...complete.")
+              call debug("...complete.")
             end if
-            resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfdbb1 + qfduu2 + qfddd2
+            resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
           end if
 
           if (resall == 0.d0) then
             fffxn = 0.d0
-            ! call debug("No |M|^2 contributions. Setting fxn = 0 and skipping.")
+            call debug("No |M|^2 contributions. Setting fxn = 0 and skipping.")
             go to 999
           end if
 
@@ -910,7 +910,7 @@ function dsigma(x,wgt)
 
           pfxtot = 0.d0
           if (final_state <= 0) then
-            ! call debug("Summing over 2to2 |m|^2 with pdfs of all initial partons..." )
+            call debug("Summing over 2to2 |m|^2 with pdfs of all initial partons..." )
             do lam3 = -1, 1, 2
               do lam4 = -1, 1, 2
                           pfx(lam3,lam4) = qcdpolgg(lam3,lam4)*fx1(13)*fx2(13) &
@@ -932,9 +932,9 @@ function dsigma(x,wgt)
                 pfxtot = pfxtot + pfx(lam3,lam4)
               end do
             end do
-            ! call debug("...complete.")
+            call debug("...complete.")
           else if (final_state > 0) then
-            ! call debug("Summing over 2to6 |m|^2 with PDFs of all initial partons..." )
+            call debug("Summing over 2to6 |m|^2 with PDFs of all initial partons..." )
             pfxtot = fx1( 1)*fx2( 7)*(qcdqq + qfddd1) &
                    + fx1( 2)*fx2( 8)*(qcdqq + qfduu1) &
                    + fx1( 3)*fx2( 9)*(qcdqq + qfddd1) &
@@ -951,12 +951,12 @@ function dsigma(x,wgt)
             else if (ix  ==  2) then
               pfxtot = (pfxtot)/x2
             end if
-            ! call debug("...complete." )
+            call debug("...complete." )
           end if
 
           if (pfxtot == 0.d0) then
             fffxn = 0.d0
-            ! call debug("fxn = 0. Skipping.")
+            call debug("fxn = 0. Skipping.")
             go to 999
           end if
 
@@ -970,19 +970,19 @@ function dsigma(x,wgt)
           end if
 
           666 continue
-          ! if (phase_space_only == 1) call debug("...complete.")
+          if (phase_space_only == 1) call debug("...complete.")
 
-          ! call debug("Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)...")
+          call debug("Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)...")
           pfxtot = pfxtot*(1.d0 - tau)*2.d0*ecm/s*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
-          ! call debug("...complete.")
+          call debug("...complete.")
 
           fffxn = pfxtot
 
-          ! call debug("Applying unit converstion")
+          call debug("Applying unit converstion")
           fffxn = fffxn*unit_conv
-          ! call debug("...complete.")
+          call debug("...complete.")
 
-          ! call debug("Multiplying by phase space volume and flux factor and azimuthal integration...")
+          call debug("Multiplying by phase space volume and flux factor and azimuthal integration...")
           if (final_state <= 0) then
             if (use_rambo == 0) then
               ! 2-body phase space factor + azimuthal integration
@@ -1026,12 +1026,12 @@ function dsigma(x,wgt)
           ! binning
           hist = fffxn*wgt
 
-          ! call debug("...complete.")
+          call debug("...complete.")
 
           call rootaddint(it, "iteration")
 
           if (final_state <= 0) then
-            ! call debug("Computing polarised event weightings...")
+            call debug("Computing polarised event weightings...")
             do lam3 = -1, +1, 2
               do lam4 = -1, +1, 2
                 sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + fffxn*wgt*pfx(lam3,lam4)
@@ -1047,10 +1047,10 @@ function dsigma(x,wgt)
             call rootadddouble(weightLR, "weightLR")
             call rootadddouble(weightRL, "weightRL")
             call rootadddouble(weightRR, "weightRR")
-            ! call debug("...complete.")
+            call debug("...complete.")
           end if
 
-          ! call debug("Writing final particle collider frame momenta to Ntuple...")
+          call debug("Writing final particle collider frame momenta to Ntuple...")
           if (final_state == -1) then
             call rootaddparticle(11, qcol(1,3), qcol(2,3), qcol(3,3), qcol(4,3))
             call rootaddparticle(-11, qcol(1,4), qcol(2,4), qcol(3,4), qcol(4,4))
@@ -1069,7 +1069,7 @@ function dsigma(x,wgt)
           ! convert results to different tt classifications
           call rootaddevent(hist)
 
-          ! call debug("...complete.")
+          call debug("...complete.")
 
           ! stats
           npoints = npoints + 1

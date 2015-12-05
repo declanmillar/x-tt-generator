@@ -157,9 +157,11 @@ if option.structure_function != 4:
     options += "S%s" % option.structure_function
 
 if option.include_g is True and final_state != "ll":
-    options += "C"
-if option.include_qfd is False:
-    options += "F"
+    options += "G"
+if option.include_a is False:
+    options += "A"
+if option.include_z is False:
+    options += "Z"
 if option.include_gg is False and final_state != "ll":
     options += "g"
 if option.include_qq is False:
