@@ -122,7 +122,9 @@ if final_state == "ll":
 
 if option.phase_space_only:
     option.include_g = False
-    option.include_qfd = False
+    option.include_a = False
+    option.include_z = False
+    option.include_g = False
     option.include_bsm = False
 
 if option.interference == 4 and option.include_qfd is False:
