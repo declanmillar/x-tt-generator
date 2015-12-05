@@ -38,11 +38,6 @@ parser.add_option("-X", "--include_x", default = True, action = "store_false", h
 parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
 parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq")
 
-# Intermediate particles
-# parser.add_option("-G", "--include_G", default = True, action = "store_false", help = "turn off gluon")
-# parser.add_option("-A", "--include_A", default = True, action = "store_false", help = "turn off photon")
-# parser.add_option("-Z", "--include_Z", default = True, action = "store_false", help = "turn off Z boson")
-
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
 parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
@@ -231,7 +226,7 @@ elif final_state == "bbmuvmvm":
     final_state_id = 4
 elif final_state == "bbtatavtvt":
     final_state_id = 5
-else
+else:
     sys.exit("Error: unavailable final state '%s'." % final_state)
 
 # Logfile
