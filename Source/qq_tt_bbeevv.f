@@ -286,8 +286,14 @@ function sqq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8)
   sqq_tt_bbeevv = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-      t = qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
-      sqq_tt_bbeevv = sqq_tt_bbeevv + t
+      if (goodhel(ihel) .OR. ntry < 10) then
+        t = qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
+        sqq_tt_bbeevv = sqq_tt_bbeevv + t
+        if (t > 0d0 .AND. .NOT. goodhel(ihel)) then
+            goodhel(ihel)= .TRUE.
+            ! write(*,*) ihel,t
+        endif
+      end if
   enddo
   sqq_tt_bbeevv = sqq_tt_bbeevv/4d0
 end function sqq_tt_bbeevv
@@ -301,7 +307,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: q q~ -> A, Z, Z' -> b b~ e+ e- v v~
 
-  use Configuration, only: include_a, include_z, include_bsm, interference
+  use Configuration, only: include_a, include_z, include_bsm, interference, verbose
   use modelling
 
   implicit none
@@ -404,14 +410,14 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     ! A coupled to qq~ vector current
     call jioxxx(w1, w2, gAq, amass, amass, w9)
     ! A diagram
-    call iovxxx(w13, w12, w9, gAf, amp(1))
+    call iovxxx(w13, w12, w9, gAu, amp(1))
   end if
 
   if (include_z == 1) then
     ! Z coupled to qq~ vector current
     call jioxxx(w1, w2, gZq, zmass, zwidth, w14)
     ! Z diagram
-    call iovxxx(w13, w12, w14, gZf, amp(2))
+    call iovxxx(w13, w12, w14, gZu, amp(2))
   end if
 
   ! Z' diagrams
