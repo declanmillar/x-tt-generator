@@ -35,8 +35,8 @@ parser.add_option("-Z", "--include_z", default = True, action = "store_false", h
 parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "turn off Z' bosons")
 
 # Initial partons
-parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg")
-parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
+parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq initial parton state")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
@@ -108,6 +108,9 @@ if option.structure_function < 1 or option.structure_function > 9:
 
 if option.itmx > 20:
      sys.exit('Error: itmx does not have to exceed 20.')
+
+if option.model == "SM":
+    option.include_bsm = False
 
 # Modify configuration for consistency
 if model_name == "SM":
@@ -232,6 +235,12 @@ elif final_state == "bbtatavtvt":
     final_state_id = 5
 else:
     sys.exit("Error: unavailable final state '%s'." % final_state)
+
+if final_state_id < 2:
+    include_background = False
+
+if include_background:
+    map_phase_space = False
 
 # Logfile
 run_directory = "."

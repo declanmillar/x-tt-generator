@@ -34,7 +34,7 @@ function dsigma(x,wgt)
   ! external functions
   real :: dsigma, alfas
   real :: sgg_tt, sqq_tt, sqq_ff, sgg_tt_bbeevv, sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
-  ! real :: sgg_bbbtatavtvt, sqqtt_qcd
+  real :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
   real :: ctq6pdf
 
   real :: ecm, ecm_max, ecm_min, pcm, qcm2
@@ -872,7 +872,7 @@ function dsigma(x,wgt)
               call debug("...complete.")
             end if
 
-          else if (final_state > 0) then
+          else if (final_state == 1) then
             call debug("Computing 2to6 square matrix elements...")
             ! Do not change the deliberate order of p6 and p7.
             if (include_qcd == 1) then
@@ -892,6 +892,31 @@ function dsigma(x,wgt)
                 qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
                 qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
                 qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+              end if
+              call debug("...complete.")
+            end if
+            resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
+
+          else if (final_state == 2) then
+            call debug("Computing 2to6 square matrix elements...")
+            ! Do not change the deliberate order of p6 and p7.
+            if (include_qcd == 1) then
+              call debug("Computing QCD matrix elements...")
+              if (include_gg == 1) then
+                qcdgg = sgg_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
+              end if
+              if (include_qq == 1) then
+                qcdqq = sqq_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
+              end if
+              call debug("...complete.")
+            end if
+            if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
+              call debug("Computing EW+Z' matrix elements...")
+              if (include_qq == 1) then
+                qfduu1 = suu_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
+                qfduu2 = suu_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
+                qfddd1 = sdd_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
+                qfddd2 = sdd_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
               end if
               call debug("...complete.")
             end if

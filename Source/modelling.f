@@ -1,5 +1,5 @@
 module modelling
-  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug, pi
+  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug, pi, z_mixing, s2mix
 
   implicit none
 
@@ -38,6 +38,7 @@ module modelling
 
   ! Other SM parameters
   real, parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
+  real :: cotw
 
   ! zprime parameters
   real :: mass_zp(5), gamZp(5)
@@ -327,8 +328,23 @@ subroutine width_zprimes
   real :: mq, ml, mzp
   real :: gv, ga
   real :: width, widthqq, widthll, widthqq_tmp, widthll_tmp
+  real :: widthzh, widthww, fzh
   real :: pi
   real :: a_s, alfas
+  real :: e, st, ct, cotw, gz
+  real :: stmix, ctmix
+  real :: ez, pz
+
+  e = sqrt(4.d0*pi*a_em)
+
+  st = sqrt(s2w)
+  ct = sqrt(1.d0 - s2w)
+
+  stmix = sqrt(s2mix)
+  ctmix = sqrt(1.d0 - s2mix)
+
+  cotw = ct/st
+  gz = e/ct/st
 
   call debug("Calculating Z' widths...")
 
@@ -406,9 +422,26 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-!       print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
-!       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
-!       print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
+
+      if (z_mixing == 1) then
+        widthww = 1/(48.d0*pi)*e*e*cotw*cotw*stmix*mzp*sqrt(1 - 4*wmass*wmass/mzp/mzp) &
+                  *(0.25*(mzp/wmass)**4 + 4*mzp*mzp/wmass/wmass - 17 - 12*wmass*wmass/mzp/mzp)
+
+        fzh = -gz*mzp/zmass*ctmix*stmix/(ctmix*ctmix + mzp*mzp/zmass/zmass*stmix*stmix)**(3/2)
+
+        ez = (mzp*mzp + zmass*zmass - hmass*hmass)/(2*mzp)
+
+        pz = sqrt(ez*ez + zmass*zmass)
+
+        widthzh = 1/(24.d0*pi)*fzh*fzh*pz*(ez*ez/zmass/zmass + 2)
+
+        width = width + widthww + widthzh
+
+        print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+        print*, 'Gamma(Zp(', n, ')->qq)=', widthww,' [GeV]'
+      end if
 
       gamZp(n) = width
     end if

@@ -39,6 +39,8 @@ module configuration
   integer :: nloops
   real :: lambdaqcd4
   integer :: ixmax, jxmax, i5max, i7max
+  integer :: z_mixing
+  real :: s2mix
 
   ! constants
   real, parameter :: pi = 3.14159265358979323846d0
