@@ -19,7 +19,7 @@ parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lx
 
 # Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
-parser.add_option("-f", "--final_state", default = "tt_bbllvv", action = "store", help = "set final state: ll, tt, tt_bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
+parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
@@ -42,6 +42,7 @@ parser.add_option("-i", "--interference", default = 2, type = "int", help = "spe
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
 parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
 parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper limit")
+parser.add_option("-C", "--ecm_cut", default = False, action = "store_true", help = "cut on ecm rather than integration limits")
 
 # Monte Carlo options
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
@@ -84,8 +85,8 @@ if ncall < 2:
     sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
-if option.batch and "lxplus" in hostname:
-    option.write_logfile = False
+if "Lorkhan" in hostname:
+    option.batch = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
     sys.exit("Error: COM energy must be positive definite")
@@ -95,6 +96,9 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
     sys.exit("Error: E_CM up must be greater than E_CM low")
+
+if (option.ecm_cut == True and (option.ecm_up == 0 or option.ecm_low == 0)):
+    sys.exit("Error: Must set ecm_max and ecm_min to cut on ecm")
 
 if option.batch:
     if not ("lxplus" in hostname) or ("iridis" in hostname):
@@ -223,7 +227,7 @@ if final_state == "ll":
     final_state_id = -1
 elif final_state == "tt":
     final_state_id = 0
-elif final_state == "tt_bbllvv":
+elif final_state == "tt-bbllvv":
     final_state_id = 1
 elif final_state == "bbeeveve":
     final_state_id = 2
@@ -297,6 +301,8 @@ print >> config, '%i ! symmetrise_costheta_7' % option.symmetrise_costheta_7
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%i.d3 ! ecm_low' % option.ecm_low
 print >> config, '%i.d3 ! ecm_up' % option.ecm_up
+print >> config, '%i ! ecm_cut' % option.ecm_cut
+
 
 try:
     with open('%s' % config_name,'w') as config_file:

@@ -128,12 +128,12 @@ function dsigma(x,wgt)
   gamt = fwidth(ffinal)
 
   ! limits
-  if (ecm_up == 0.d0) then
+  if ((ecm_up == 0.d0) .or. (ecm_cut == 1)) then
     ecm_max = collider_energy
   else
     ecm_max = ecm_up
   end if
-  if (ecm_low == 0.d0) then
+  if ((ecm_low == 0.d0) .or. (ecm_cut == 1)) then
     ecm_min = m3 + m4 + m5 + m6 + m7 + m8
   else
     ecm_min = ecm_low
@@ -142,6 +142,15 @@ function dsigma(x,wgt)
   ecm = x((2 + 12*tops_decay)*(1 - use_rambo) + use_rambo)*(ecm_max - ecm_min) + ecm_min
   shat = ecm*ecm
   tau = shat/s
+
+  ! cut on ecm
+  if (ecm_cut == 1) then
+    if ((ecm > ecm_up) .or. (ecm < ecm_low)) then
+      fffxn = 0.d0
+      call debug("ecm out of range. Setting fxn = 0 and Skipping.")
+      go to 999
+    end if
+  end if
 
   ! x1 and x2 of the partons
   xx1 = x((3 + 12*tops_decay)*(1 - use_rambo) + 2*use_rambo) * (1.d0 - tau) + tau

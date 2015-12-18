@@ -31,6 +31,7 @@ module configuration
   integer :: map_phase_space
   integer :: verbose
   real :: ecm_low, ecm_up
+  integer :: ecm_cut
 
   ! Derived config
   integer :: n_final
