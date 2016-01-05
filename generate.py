@@ -35,7 +35,7 @@ parser.add_option("-Z", "--include_z", default = True, action = "store_false", h
 parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "turn off Z' bosons")
 
 # Initial partons
-parser.add_option("-g", "--include_x_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
 parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq initial parton state")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
@@ -169,7 +169,7 @@ if option.include_a is False:
     options += "A"
 if option.include_z is False:
     options += "Z"
-if options.include_gg is False and final_state != "ll":
+if option.include_gg is False and final_state != "ll":
     options += "g"
 if option.include_qq is False:
     options += "q"
