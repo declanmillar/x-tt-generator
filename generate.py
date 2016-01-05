@@ -191,8 +191,8 @@ if option.ecm_low != 0:
 if option.ecm_up != 0:
     options += "u%s" % option.ecm_up
 if option.ecm_cut:
-    options += "C" % option.ecm_up
-
+    options += "C"
+    
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
     option.ecm_low = 20
