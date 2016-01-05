@@ -148,7 +148,7 @@ function dsigma(x,wgt)
     if ((ecm > ecm_up) .or. (ecm < ecm_low)) then
       fffxn = 0.d0
       call debug("ecm out of range. Setting fxn = 0 and Skipping.")
-      go to 999
+      return
     end if
   end if
 
