@@ -35,7 +35,7 @@ parser.add_option("-Z", "--include_z", default = True, action = "store_false", h
 parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "turn off Z' bosons")
 
 # Initial partons
-parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
+parser.add_option("-g", "--include_x_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
 parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq initial parton state")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
@@ -114,13 +114,13 @@ if option.itmx > 20:
      sys.exit('Error: itmx does not have to exceed 20.')
 
 if option.model == "SM":
-    option.include_bsm = False
+    option.include_x = False
 
 # Modify configuration for consistency
 if model_name == "SM":
-    option.include_bsm = False
+    option.include_x = False
 
-if option.include_bsm is False:
+if option.include_x is False:
     model_name = "SM"
 
 if final_state == "ll":
@@ -192,7 +192,7 @@ if option.ecm_up != 0:
     options += "u%s" % option.ecm_up
 if option.ecm_cut:
     options += "C"
-    
+
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
     option.ecm_low = 20
