@@ -132,7 +132,7 @@ if option.phase_space_only:
     option.include_a = False
     option.include_z = False
     option.include_g = False
-    option.include_bsm = False
+    option.include_x = False
 
 if option.interference == 4 and option.include_qfd is False:
     print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
@@ -169,7 +169,7 @@ if option.include_a is False:
     options += "A"
 if option.include_z is False:
     options += "Z"
-if option.include_gg is False and final_state != "ll":
+if options.include_gg is False and final_state != "ll":
     options += "g"
 if option.include_qq is False:
     options += "q"
