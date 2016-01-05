@@ -1007,7 +1007,8 @@ function dsigma(x,wgt)
           if (phase_space_only == 1) call debug("...complete.")
 
           call debug("Multiplying by jacobian from dx1 dx2 -> dx(2) dx(3)...")
-          pfxtot = pfxtot*(1.d0 - tau)*2.d0*ecm/s*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+          ! pfxtot = pfxtot*(1.d0 - tau)*2.d0*ecm/s*(ecm_max - m3 - m4 - m5 - m6 - m7 - m8)
+          pfxtot = pfxtot*(1.d0 - tau)*2.d0*ecm/s*(ecm_max - ecm_min) ! may correct 2-4TeV range issue.
           call debug("...complete.")
 
           fffxn = pfxtot
