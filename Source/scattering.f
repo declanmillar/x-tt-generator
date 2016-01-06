@@ -863,7 +863,7 @@ function dsigma(x,wgt)
               end do
               call debug("...complete.")
             end if
-            if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
+            if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
               call debug("Computing QFD matrix elements...")
               do lam3 = -1,1,2
                 do lam4 = -1,1,2
@@ -894,8 +894,8 @@ function dsigma(x,wgt)
               end if
               call debug("...complete.")
             end if
-            if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
-              call debug("Computing EW+Z' matrix elements...")
+            if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
+              call debug("Computing QFD matrix elements...")
               if (include_qq == 1) then
                 qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
                 qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
@@ -919,7 +919,7 @@ function dsigma(x,wgt)
               end if
               call debug("...complete.")
             end if
-            if ((include_a == 1) .or. (include_z == 1) .or. (include_bsm == 1)) then
+            if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
               call debug("Computing EW+Z' matrix elements...")
               if (include_qq == 1) then
                 qfduu1 = suu_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)

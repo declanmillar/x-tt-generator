@@ -200,8 +200,8 @@ program zprime
   if (include_a == 0) write(log,*) 'photon:OFF'
   if (include_z == 1) write(log,*) 'Z boson:ON '
   if (include_z == 0) write(log,*) 'Z boson:OFF'
-  if (include_bsm == 1) write(log,*) 'BSM:ON '
-  if (include_bsm == 0) write(log,*) 'BSM:OFF'
+  if (include_x == 1) write(log,*) 'BSM:ON '
+  if (include_x == 0) write(log,*) 'BSM:OFF'
   if (include_gg == 1) write(log,*) 'gg:ON '
   if (include_gg == 0) write(log,*) 'gg:OFF'
   if (include_qq == 1) write(log,*) 'qq:ON '
@@ -234,7 +234,7 @@ program zprime
   write(log,*) 'Gamma_W:', wwidth
   write(log,*) 'm_h:', hmass
   write(log,*) 'Gamma_h:', hwidth
-  if (include_bsm == 1) then
+  if (include_x == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
         write(log,*) "Z' no.:", i

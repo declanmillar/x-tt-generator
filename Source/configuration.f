@@ -17,7 +17,7 @@ module configuration
   integer :: include_qcd
   integer :: include_a
   integer :: include_z
-  integer :: include_bsm
+  integer :: include_x
   integer :: include_gg
   integer :: include_qq
   integer :: interference
@@ -69,7 +69,7 @@ contains
     read(5,*) include_qcd
     read(5,*) include_a
     read(5,*) include_z
-    read(5,*) include_bsm
+    read(5,*) include_x
     read(5,*) include_gg
     read(5,*) include_qq
     read(5,*) phase_space_only

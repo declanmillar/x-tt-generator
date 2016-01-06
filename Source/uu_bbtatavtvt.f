@@ -303,7 +303,7 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
     ! for process : u u~  -> b b~ e+ e- v v~
 
-    use configuration, only: include_signal, include_background, include_a, include_z, include_BSM, interference
+    use configuration, only: include_signal, include_background, include_a, include_z, include_x, interference
     use modelling
 
     implicit none
@@ -1463,7 +1463,7 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
         call iovxxx(w15 ,w102,w105,gzu,amp(129))
         ! Z' diagrams
       end if
-      if (include_BSM == 1)then
+      if (include_x == 1)then
         do i = 1, 5
           if (mass_zp(i) > 0) then
             do j = 1, 2

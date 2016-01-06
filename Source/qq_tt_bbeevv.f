@@ -307,7 +307,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: q q~ -> A, Z, Z' -> b b~ e+ e- v v~
 
-  use Configuration, only: include_a, include_z, include_bsm, interference, verbose
+  use Configuration, only: include_a, include_z, include_x, interference, verbose
   use modelling
 
   implicit none
@@ -421,7 +421,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   end if
 
   ! Z' diagrams
-  if (include_bsm == 1) then
+  if (include_x == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
         do j = 1, 2

@@ -31,7 +31,7 @@ module modelling
   real, parameter :: nuewidth = 0.d0, numuwidth = 0.d0, nutauwidth = 0.d0
 
   ! SM boson masses
-  real, parameter :: wmass = 80.23d0,zmass = 91.19d0,wwidth = 2.08d0,zwidth = 2.5d0
+  real, parameter :: wmass = 80.23d0, zmass = 91.19d0, wwidth = 2.08d0, zwidth = 2.5d0
   real, parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 0.31278d-2
 
   real :: Gamma_t = twidth

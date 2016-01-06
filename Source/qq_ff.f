@@ -64,7 +64,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1),nhel(2)
   ! for process: q q~  -> A, Z, Z' -> t t~
 
-  use configuration, only: include_a, include_z, include_BSM, interference
+  use configuration, only: include_a, include_z, include_x, interference
   use modelling
 
   implicit none
@@ -245,7 +245,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   end if
 
   ! Z' diagrams
-  if (include_bsm == 1) then
+  if (include_x == 1) then
     do i = 1, 5
       if (mass_zp(i) > 0) then
         do j = 1, 2
