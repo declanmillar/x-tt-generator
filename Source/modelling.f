@@ -124,6 +124,15 @@ subroutine initialise_standard_model
   ! call SM HELAS couplings
   call coup1x(s2w, gw, gwwa, gwwZ)
   call coup2x(s2w, gal, gau, gad, gwf, gZn, gZl, gZu, gZd, g1)
+  print*, "gal =", gal
+  print*, "gau =", gau
+  print*, "gad =", gad
+  print*, "gwf =", gwf
+  print*, "gZn =", gZn
+  print*, "gZl =", gZl
+  print*, "gZu =", gZu
+  print*, "gZd =", gZd
+  print*, "g1 =", g1
   call coup3x(s2w, zmass, hmass, gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh)
   do i = 1, 12
     call coup4x(s2w, zmass, fmass(i), gchf(1,i))

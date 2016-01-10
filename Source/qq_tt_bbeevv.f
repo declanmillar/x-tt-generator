@@ -307,7 +307,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: q q~ -> A, Z, Z' -> b b~ e+ e- v v~
 
-  use Configuration, only: include_a, include_z, include_x, interference, verbose
+  use Configuration, only: include_a, include_z, include_x, interference
   use modelling
 
   implicit none
@@ -331,9 +331,9 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   complex*16 w1(6), w2(6), w3(6), w4(6), w5(6)
   complex*16 w6(6), w7(6), w8(6), w9(6), w10(6)
   complex*16 w11(6), w12(6), w13(6), w14(6), w15(6)
-  real :: gAq(2), gAf(2)
-  real :: gZq(2), gZf(2)
-  real :: gZpq(2,5), gZpf(2,5)
+  real :: gAq(2)
+  real :: gZq(2)
+  real :: gZpq(2,5)
   real :: gZpq_tmp(2), gZpf_tmp(2)
 
   ! initial state
@@ -423,10 +423,12 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! Z' diagrams
   if (include_x == 1) then
     do i = 1, 5
+      print*, mass_zp(i), gamZp(i)
       if (mass_zp(i) > 0) then
         do j = 1, 2
+          print*, gZpq(i,j)
           gZpq_tmp(j) = gZpq(j,i)
-          gZpf_tmp(j) = gZpf(j,i)
+          gZpf_tmp(j) = gZpu(j,i)
         end do
         call jioxxx(w1, w2, gZpq_tmp, mass_zp(i), gamZp(i), w15)
         call iovxxx(w13, w12, w15, gZpf_tmp, amp(2+i))
