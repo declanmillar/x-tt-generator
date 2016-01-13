@@ -423,10 +423,10 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! Z' diagrams
   if (include_x == 1) then
     do i = 1, 5
-      print*, mass_zp(i), gamZp(i)
+      ! print*, mass_zp(i), gamZp(i)
       if (mass_zp(i) > 0) then
         do j = 1, 2
-          print*, gZpq(i,j)
+          ! print*, gZpq(i,j)
           gZpq_tmp(j) = gZpq(j,i)
           gZpf_tmp(j) = gZpu(j,i)
         end do
