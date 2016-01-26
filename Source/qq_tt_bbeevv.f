@@ -428,7 +428,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
         do j = 1, 2
           ! print*, gZpq(i,j)
           gZpq_tmp(j) = gZpq(j,i)
-          gZpf_tmp(j) = gZpu(j,i)
+          gZpf_tmp(j) = gZpt(j,i)
         end do
         call jioxxx(w1, w2, gZpq_tmp, mass_zp(i), gamZp(i), w15)
         call iovxxx(w13, w12, w15, gZpf_tmp, amp(2+i))

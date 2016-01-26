@@ -98,7 +98,7 @@ function dsigma(x,wgt)
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
 
   ! polarised square matrix elements q-qbar
-  real :: qcdpolqq(-1:1, -1:1), qcdpolbb(-1:1, -1:1), qcdpolgg(-1:1, -1:1)
+  real :: qcdpolqq(-1:1, -1:1), qcdpolgg(-1:1, -1:1)!, qcdpolbb(-1:1, -1:1)
   real :: qfdpoluu1(-1:1, -1:1), qfdpoldd1(-1:1, -1:1), qfdpolbb1(-1:1, -1:1)
   real :: pfx(-1:1, -1:1)
   real :: pfxtot
@@ -858,7 +858,7 @@ function dsigma(x,wgt)
                   if (include_qq == 1) then
                     qcdpolqq(lam3,lam4) = sqq_tt(3, p1, p2, p3, p4, lam3, lam4)*gs**4
                   end if
-                  resall = resall + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) + qcdpolbb(lam3,lam4)
+                  resall = resall + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4)! + qcdpolqq(lam3,lam4)
                 end do
               end do
               call debug("...complete.")
@@ -952,7 +952,7 @@ function dsigma(x,wgt)
                 + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
                 + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
                 + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-                + (qcdpolbb(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 5)*fx2(11) &
+                + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 5)*fx2(11) &
                 + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
                 + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
                 + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
