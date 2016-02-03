@@ -285,14 +285,14 @@ function sqq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   data (nhel(ihel, 255), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1, -1/
   data (nhel(ihel, 256), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1,  1/
 
-  sqq_tt_bbeevv_qcd = 0d0
+  sqq_tt_bbeevv_qcd = 0.d0
   ntry = ntry + 1
   do ihel = 1, ncomb
     t = qq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
     sqq_tt_bbeevv_qcd = sqq_tt_bbeevv_qcd + t
   enddo
   sqq_tt_bbeevv_qcd = sqq_tt_bbeevv_qcd/4d0
-  if (sqq_tt_bbeevv_qcd == 0.d0) return
+  ! if (sqq_tt_bbeevv_qcd == 0.d0) return
 end function sqq_tt_bbeevv_qcd
 
 

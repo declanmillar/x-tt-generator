@@ -283,14 +283,14 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
   data (nhel(ihel, 255), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1, -1/
   data (nhel(ihel, 256), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1,  1/
 
-  sgg_tt_bbeevv = 0d0
+  sgg_tt_bbeevv = 0.d0
   ntry = ntry + 1
   do ihel = 1, ncomb
     t = gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
     sgg_tt_bbeevv = sgg_tt_bbeevv + t
   enddo
   sgg_tt_bbeevv = sgg_tt_bbeevv/4d0
-  if (sgg_tt_bbeevv == 0.d0) return
+  ! if (sgg_tt_bbeevv == 0.d0) return
 end function sgg_tt_bbeevv
 
 
@@ -330,7 +330,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   data eigen_vec(2, 1) /7.0710678118654735e-01/
   data eigen_vec(3, 1) /0.0000000000000000e+00/
   data eigen_val(2) /2.8125000000000000e-01/
-  data eigen_vec(1, 2) /-4.0824829046386313e-0 /
+  data eigen_vec(1, 2) /-4.0824829046386313e-01 /
   data eigen_vec(2, 2) /4.0824829046386285e-01/
   data eigen_vec(3, 2) /8.1649658092772603e-01/
 

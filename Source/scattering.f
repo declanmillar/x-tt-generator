@@ -1100,7 +1100,7 @@ function dsigma(x,wgt)
             call rootaddparticle(-12, qcol(1,8), qcol(2,8), qcol(3,8), qcol(4,8))
           end if
 
-          ! convert results to different tt classifications
+          ! store event weight
           call rootaddevent(hist)
 
           call debug("...complete.")
