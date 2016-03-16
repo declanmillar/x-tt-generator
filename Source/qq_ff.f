@@ -9,7 +9,7 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
 
   ! functions
   real :: sqq_ff
-  real :: qqff_EWp
+  real :: qq_ff
 
   ! arguments
   integer :: iq, jf
@@ -48,7 +48,7 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
   sqq_ff = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-    t = qqff_EWp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
+    t = qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
     sqq_ff = sqq_ff + t
   enddo
   sqq_ff = sqq_ff/4d0
@@ -70,7 +70,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   implicit none
 
   ! functions
-  real :: qqff_EWp
+  real :: qq_ff
 
   ! local constants
   integer, parameter :: ngraphs = 7 ,nexternal = 4
@@ -95,7 +95,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then
     continue
   else
-    qqff_EWp = 0.d0
+    qq_ff = 0.d0
     return
   end if
 
@@ -258,14 +258,14 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     end do
   end if
 
-  qqff_EWp = 0.d0
+  qq_ff = 0.d0
   amp_tmp = (0.d0, 0.d0)
   amp_tmp2 = (0.d0, 0.d0)
 
   if (interference == 0) then
     ! |A|^2 + |Z|^2 + |Z'|^2 + ...
     do i = 1, ngraphs
-      qqff_EWp = qqff_EWp + amp(i)*conjg(amp(i))
+      qq_ff = qq_ff + amp(i)*conjg(amp(i))
     end do
 
   else if (interference == 1) then
@@ -273,9 +273,9 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp)
+    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp)
     do i = 3, ngraphs
-      qqff_EWp = qqff_EWp + amp(i)*conjg(amp(i))
+      qq_ff = qq_ff + amp(i)*conjg(amp(i))
     end do
 
   else if (interference == 2) then
@@ -283,7 +283,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
-    qqff_EWp =qqff_EWp + amp_tmp*conjg(amp_tmp)
+    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp)
 
   else if (interference == 3) then
     ! |A + Z + Z' + ...|^2 - |A + Z|^2
@@ -293,7 +293,7 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
-    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
+    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
 
   else if (interference == 4) then
     ! |A + Z + Z' + ...|^2 - |A|^2 + |Z|^2 + |Z'|^2 + ...
@@ -303,9 +303,9 @@ function qqff_ewp(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     do i = 1, 2
       amp_tmp2 = amp_tmp2 + amp(i)
     end do
-    qqff_EWp = qqff_EWp + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
+    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp) - amp_tmp2*conjg(amp_tmp2)
     do i = 3, ngraphs
-      qqff_EWp = qqff_EWp - amp(i)*conjg(amp(i))
+      qq_ff = qq_ff - amp(i)*conjg(amp(i))
     end do
   end if
 
