@@ -139,6 +139,9 @@ function dsigma(x,wgt)
     ecm_min = ecm_low
   end if
 
+  ! print*, "ecm_min = ", ecm_min
+  ! print*, "ecm_max = ", ecm_max
+
   ecm = x((2 + 12*tops_decay)*(1 - use_rambo) + use_rambo)*(ecm_max - ecm_min) + ecm_min
   shat = ecm*ecm
   tau = shat/s

@@ -432,9 +432,11 @@ subroutine width_zprimes
       width = widthqq + widthll
 
       print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
+      print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
       print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
 
       if (z_mixing == 1) then
+        print*, "I am being run."
         widthww = 1/(48.d0*pi)*e*e*cotw*cotw*stmix*mzp*sqrt(1 - 4*wmass*wmass/mzp/mzp) &
                   *(0.25*(mzp/wmass)**4 + 4*mzp*mzp/wmass/wmass - 17 - 12*wmass*wmass/mzp/mzp)
 

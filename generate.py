@@ -40,8 +40,8 @@ parser.add_option("-q", "--include_qq", default = True, action = "store_false", 
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
-parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = "ecm lower limit")
-parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "ecm upper limit")
+parser.add_option("-l", "--ecm_low", default = 0, type = "float", help = "ecm lower limit")
+parser.add_option("-u", "--ecm_up", default = 0, type = "float", help = "ecm upper limit")
 parser.add_option("-C", "--ecm_cut", default = False, action = "store_true", help = "cut on ecm rather than integration limits")
 
 # Monte Carlo options
@@ -78,7 +78,7 @@ except ValueError:
 if os.path.isfile("Models/%s.mdl" % model_name) is False:
     sys.exit("%s is not a valid model.\n Available model files: %s" % (model_name, glob.glob("Models/*.mdl")))
 
-if collider_energy    < 0:
+if collider_energy < 0:
     sys.exit("Error: collider energy must be positive definite.\n" % usage)
 
 if ncall < 2:
@@ -195,7 +195,7 @@ if option.ecm_cut:
 
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
-    option.ecm_low = 20
+    option.ecm_low = 0.5
 
 if option.fixed_seed:
     options += "s"
@@ -301,8 +301,8 @@ print >> config, '%i ! symmetrise_costheta_t' % option.symmetrise_costheta_t
 print >> config, '%i ! symmetrise_costheta_5' % option.symmetrise_costheta_5
 print >> config, '%i ! symmetrise_costheta_7' % option.symmetrise_costheta_7
 print >> config, '%i ! verbose mode' % option.verbose
-print >> config, '%i.d3 ! ecm_low' % option.ecm_low
-print >> config, '%i.d3 ! ecm_up' % option.ecm_up
+print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
+print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
 print >> config, '%i ! ecm_cut' % option.ecm_cut
 
 
