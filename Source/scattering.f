@@ -3,7 +3,7 @@ module scattering
   implicit none
 
   real :: sigma, sigma_pol(-1:1,-1:1,20), error_pol(-1:1,-1:1,20), m3, m4, m5, m6, m7, m8, s
-  real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb
+  real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
   public :: dsigma
 
 contains
