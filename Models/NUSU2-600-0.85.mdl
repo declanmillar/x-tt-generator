@@ -1,0 +1,3 @@
+1 ! model type
+800.d0 ! x
+0.85d0 ! sin2phi
