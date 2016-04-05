@@ -194,13 +194,13 @@ function dsigma(x,wgt)
 
           ! scale for the pdfs
           if (final_state < 0) then
-            qq = zmass
+            qq = ecm
           else
             qq = 2.d0*rmt
           end if
           if (qq == 0.d0) then
-            call debug("qq = 0! Setting to Z mass.")
-            qq = zmass
+            call debug("qq = 0! Setting to Ecm.")
+            qq = ecm
           end if
 
 

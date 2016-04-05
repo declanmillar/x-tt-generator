@@ -309,4 +309,6 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     end do
   end if
 
+  if((jf == 1).or.(jf == 2).or.(jf == 5).or.(jf == 6).or.(jf == 9).or.(jf == 10)) qq_ff = qq_ff/3.d0
+
 end function qq_ff
