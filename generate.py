@@ -85,7 +85,7 @@ if ncall < 2:
     sys.exit("Error: Must have at least 2 VEGAS points.\n%s" % usage)
 
 # Check options are valid
-if "Lorkhan" in hostname:
+if "Sunder" in hostname:
     option.batch = False
 
 if option.ecm_low < 0 or option.ecm_up < 0:
