@@ -155,6 +155,17 @@ function dsigma(x,wgt)
     end if
   end if
 
+  ! scale for the pdfs
+  if (final_state < 0) then
+    qq = ecm
+  else
+    qq = 2.d0*rmt
+  end if
+  if (qq == 0.d0) then
+    call debug("qq = 0! Setting to Ecm.")
+    qq = ecm
+  end if
+
   ! x1 and x2 of the partons
   xx1 = x((3 + 12*tops_decay)*(1 - use_rambo) + 2*use_rambo) * (1.d0 - tau) + tau
   xx2 = tau/xx1
@@ -191,18 +202,6 @@ function dsigma(x,wgt)
               qcol(i,j) = 0.d0
             end do
           end do
-
-          ! scale for the pdfs
-          if (final_state < 0) then
-            qq = ecm
-          else
-            qq = 2.d0*rmt
-          end if
-          if (qq == 0.d0) then
-            call debug("qq = 0! Setting to Ecm.")
-            qq = ecm
-          end if
-
 
           call debug("Constructing hadronic structure functions...")
           if (structure_function <= 4) then

@@ -38,7 +38,7 @@ endif
 ifeq ($(UNAME_S),Darwin)
 	# add roottuple libraries os x
 	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-	LFLAGS = -L/usr/local/lib -lRootTuple -L/usr/local/Cellar/root/5.34.34_1/lib/root -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer
+	LFLAGS = -L/usr/local/lib -lRootTuple -L/usr/local/Cellar/root6/6.06.02_1/lib/root -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer
 endif
 
 # Compile all files ending in .f in SRC
