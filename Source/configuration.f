@@ -23,15 +23,12 @@ module configuration
   integer :: interference
   integer :: use_nwa
   integer :: symmetrise_x1x2
-  integer :: symmetrise_costheta_t
-  integer :: symmetrise_costheta_5
-  integer :: symmetrise_costheta_7
+  integer :: symmetrise_theta
   integer :: phase_space_only
   integer :: use_rambo
   integer :: map_phase_space
   integer :: verbose
   real :: ecm_low, ecm_up
-  integer :: ecm_cut
 
   ! Derived config
   integer :: n_final
@@ -39,7 +36,7 @@ module configuration
   integer :: ffinal
   integer :: nloops
   real :: lambdaqcd4
-  integer :: ixmax, jxmax, i5max, i7max
+  integer :: nx1x2, ntheta
   integer :: z_mixing
   real :: s2mix
 
@@ -83,9 +80,7 @@ contains
     read(5,*) use_rambo
     read(5,*) map_phase_space
     read(5,*) symmetrise_x1x2
-    read(5,*) symmetrise_costheta_t
-    read(5,*) symmetrise_costheta_5
-    read(5,*) symmetrise_costheta_7
+    read(5,*) symmetrise_theta
     read(5,*) verbose
     read(5,*) ecm_low
     read(5,*) ecm_up
@@ -111,27 +106,15 @@ contains
     end if
 
     if (symmetrise_x1x2 == 1) then
-      ixmax = 2
+      nx1x2 = 2
     else
-      ixmax = 1
+      nx1x2 = 1
     end if
 
-    if (symmetrise_costheta_t == 1) then
-      jxmax = 2
+    if (symmetrise_theta == 1) then
+      ntheta = 2
     else
-      jxmax = 1
-    end if
-
-    if (symmetrise_costheta_5 == 1) then
-      i5max = 2
-    else
-      i5max = 1
-    end if
-
-    if (symmetrise_costheta_7 == 1) then
-      i7max = 2
-    else
-      i7max = 1
+      ntheta = 1
     end if
 
     if (final_state <= 0) then

@@ -10,48 +10,37 @@ import os, StringIO, re, optparse, subprocess, time, sys, random, glob, socket
 usage = "Usage: ./generate.py final_state model_name collider_energy vegas_points [options]"
 parser = optparse.OptionParser(usage)
 
-# Execution options
-parser.add_option("-L", "--write_logfile", default = False, action = "store_true" , help = "output to logfile")
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
 parser.add_option("-b", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lxbatch queue'")
 
-# Physics options
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
-
-
 parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
 parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
 
-# gauge sectors
-parser.add_option("-G", "--include_g", default = False, action = "store_true", help = "turn on QCD")
-parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "turn off photon")
-parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "turn off Z boson")
-parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "turn off Z' bosons")
-
-# Initial partons
-parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "turn off gg initial parton state")
-parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "turn off qq initial parton state")
+parser.add_option("-G", "--include_g", default = False, action = "store_true", help = "exclude gluon mediated interactions")
+parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "exclude photon mediated interaction")
+parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "exclude Z boson mediated interaction")
+parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "exclude Z' boson mediated interactions")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "exclude gluon-gluon interactions")
+parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "exclude quark-quark interactions")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
-parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use NWA")
-parser.add_option("-l", "--ecm_low", default = 0, type = "float", help = "ecm lower limit")
-parser.add_option("-u", "--ecm_up", default = 0, type = "float", help = "ecm upper limit")
-parser.add_option("-C", "--ecm_cut", default = False, action = "store_true", help = "cut on ecm rather than integration limits")
+parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use Narrow Width Approximation")
+parser.add_option("-l", "--ecm_low", default = 0, type = "float", help = " Ecm lower limit")
+parser.add_option("-u", "--ecm_up", default = 0, type = "float", help = "Ecm upper limit")
 
 # Monte Carlo options
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
 parser.add_option("-n", "--vegas_points", default = 5000000, type = "int", help = "number of VEGAS points")
 parser.add_option("-N", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise_x1x2", default = True, action = "store_true", help = "symmetrise phase space over x1 and x2")
-parser.add_option("-c", "--symmetrise_costheta_t", default = True, action = "store_true", help = "symmetrise phase space over costheta_t")
-parser.add_option("-5", "--symmetrise_costheta_5", default = False, action = "store_true", help = "symmetrise phase space over costheta_5")
-parser.add_option("-7", "--symmetrise_costheta_7", default = False, action = "store_true", help = "symmetrise phase space over costheta_7")
+parser.add_option("-x", "--symmetrise_x1x2", default = True, action = "store_false", help = "symmetrise phase space over x1 and x2")
+parser.add_option("-c", "--symmetrise_theta", default = True, action = "store_false", help = "symmetrise phase space over costheta")
 parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for PS")
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
@@ -96,9 +85,6 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
     sys.exit("Error: E_CM up must be greater than E_CM low")
-
-if (option.ecm_cut == True and (option.ecm_up == 0 or option.ecm_low == 0)):
-    sys.exit("Error: Must set ecm_max and ecm_min to cut on ecm")
 
 if option.batch:
     if not ("lxplus" in hostname) or ("iridis" in hostname):
@@ -146,8 +132,6 @@ if option.include_background:
 
 if final_state == "ll" or final_state == "tt":
     option.use_nwa = False
-    option.symmetrise_costheta_5 = False
-    option.symmetrise_costheta_7 = False
 
 # Default iseed
 seed = 12345 if option.fixed_seed else random.randint(0,100000)
@@ -190,8 +174,6 @@ if option.ecm_low != 0:
     options += "l%s" % option.ecm_low
 if option.ecm_up != 0:
     options += "u%s" % option.ecm_up
-if option.ecm_cut:
-    options += "C"
 
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
@@ -203,12 +185,8 @@ if option.fixed_seed:
 # symmetrization
 if option.symmetrise_x1x2:
     options += "x"
-if option.symmetrise_costheta_t:
+if option.symmetrise_theta:
     options += "c"
-if option.symmetrise_costheta_5:
-    options += "5"
-if option.symmetrise_costheta_7:
-    options += "7"
 
 if option.use_rambo:
     options += "R"
@@ -251,7 +229,7 @@ if include_background:
 # Logfile
 run_directory = "."
 data_directory = "."
-if "Lorkhan" in hostname:
+if "Sunder" in hostname:
     data_directory = "/Users/declan/Data/Zprime"
 elif "lxplus" in hostname:
     run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
@@ -267,7 +245,7 @@ config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.root" % (data_directory, filename)
-# logfile_command = "> %s/%s &" % (data_directory, logfile) if option.write_logfile else ""
+# logfile_command = "> %s/%s &" % (data_directory, logfile) if option.logfile else ""
 
 # Print config file
 config = StringIO.StringIO()
@@ -297,19 +275,16 @@ print >> config, '-1.d0 ! acc'
 print >> config, '%i ! use rambo' % option.use_rambo
 print >> config, '%i ! map phase space' % option.map_phase_space
 print >> config, '%i ! symmetrise_x1x2' % option.symmetrise_x1x2
-print >> config, '%i ! symmetrise_costheta_t' % option.symmetrise_costheta_t
-print >> config, '%i ! symmetrise_costheta_5' % option.symmetrise_costheta_5
-print >> config, '%i ! symmetrise_costheta_7' % option.symmetrise_costheta_7
+print >> config, '%i ! symmetrise_theta' % option.symmetrise_theta
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
-print >> config, '%i ! ecm_cut' % option.ecm_cut
 
 
 try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        print "Config: %s" % config_name
+        print " Config: %s" % config_name
 except IOError:
     sys.exit(" Error: cannot write to %s" % config_name)
 
@@ -348,5 +323,5 @@ else:
         subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
         print "Adding RootTuple libraries to library path..."
         subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
-    print "Program will run locally..."
+    print " Program will run locally..."
     subprocess.call("./Binary/%s < %s" % (executable, config_name), shell = True)

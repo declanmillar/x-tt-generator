@@ -6,11 +6,11 @@ program zprime
   ! pp -> tt -> bbWW -> bbllvv.
 
   ! Uses :
-  !  - adapted MadGraph functions
+  !  - Adapted MadGraph functions
   !  - HELAS subroutines
   !  - VEGAS Monte Carlo integration
   !  - CTEQ6 and MRS99 PDF subroutines
-  !  - RootTuple for filling ntuples
+  !  - RootTuple for filling Ntuples
 
   ! Authors: Declan Millar, Stefano Moretti.
 
@@ -32,16 +32,20 @@ program zprime
   call cpu_time(start_time)
   call read_config
   call modify_config
+
+  i = len(ntuple_file)
+  do while(ntuple_file(i:i) == '')
+    i = i - 1
+  end do
+  print*, "Ntuple: ", ntuple_file(1:i)
   call rootinit(ntuple_file)
 
   i = len(log_file)
   do while(log_file(i:i) == '')
     i = i - 1
   end do
+  print*, "Log:    ", log_file(1:i)
   open(unit = log, file = log_file(1:i), status = "replace", action = "write")
-
-  print*, "Ntuple: ", ntuple_file
-  print*, "Log: ", log_file
 
   s = collider_energy*collider_energy
 
@@ -212,9 +216,7 @@ program zprime
   if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
   if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
   if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration:x1<->x2'
-  if (symmetrise_costheta_t == 1) write(log,*) 'symmetrising integration:costhetat'
-  if (symmetrise_costheta_5 == 1) write(log,*) 'symmetrising integration:costheta5'
-  if (symmetrise_costheta_7 == 1) write(log,*) 'symmetrising integration:costheta7'
+  if (symmetrise_theta == 1) write(log,*) 'symmetrising integration:costhetat'
   if (use_rambo == 1) write(log,*) 'RAMBO:ON'
   if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
   write(log,*) 'Seed:', seed
