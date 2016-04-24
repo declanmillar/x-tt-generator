@@ -1,5 +1,6 @@
 module modelling
-  use configuration, only: use_nwa, model_name, verbose, nloops, lambdaqcd4, debug, pi, z_mixing, s2mix
+
+  use configuration
 
   implicit none
 
@@ -59,6 +60,7 @@ module modelling
   private :: convert_zprime_couplings
   private :: width_zprimes
   private :: width_zprime_ssm
+  private :: print_model
 
 contains
 
@@ -66,14 +68,13 @@ subroutine initialise_model
 
   call initialise_standard_model
   call initialise_zprimes
+  call print_model
 
 end subroutine initialise_model
 
 subroutine initialise_standard_model
 
   integer i
-
-	call debug("Initialising standard model...")
 
   fmass(1)  = emass
   fmass(2)  = nuemass
@@ -134,7 +135,6 @@ subroutine initialise_standard_model
   gg(1) = -g
   gg(2) = -g
 
-  call debug("..complete.")
 end subroutine initialise_standard_model
 
 subroutine initialise_zprimes
@@ -142,8 +142,6 @@ subroutine initialise_zprimes
   integer imodel_name, i
 
   call reset_zprimes
-
-  call debug("Initialising zprimes...")
 
   ! Extract model_name filename (Remove white space.)
   imodel_name = len(model_name)
@@ -174,7 +172,6 @@ subroutine initialise_zprimes
     print*, "Error: invalid model type! Must be 0-1."
   end if
   close(42)
-  call debug("Reading of model file complete.")
 
   if (model_type == 0) then
     ! If gamZp is negative, the function widthZp is used.
@@ -201,7 +198,6 @@ subroutine initialise_zprimes
   ! call printconstants
   return
 
-  call debug("...complete.")
 end subroutine initialise_zprimes
 
 subroutine reset_zprimes
@@ -243,7 +239,6 @@ subroutine initialise_non_universal
 !   sin2phi = 0.1
   x = xparam
   sin2phi = sin2phiparam
-
 
   e = sqrt(4.d0*pi*a_em)
   st = sqrt(s2w)
@@ -292,7 +287,6 @@ subroutine convert_zprime_couplings
 
   integer i
 
-	call debug("Converting zprime couplings from AV to LR...")
 
   do i = 1, 5
       gZpd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
@@ -313,7 +307,6 @@ subroutine convert_zprime_couplings
       gZpn3(2,i) = gZpn(2,i)
   enddo
 
-  call debug("...complete.")
 
   return
 end subroutine convert_zprime_couplings
@@ -346,7 +339,6 @@ subroutine width_zprimes
   cotw = ct/st
   gz = e/ct/st
 
-  call debug("Calculating Z' widths...")
 
   ! couplings.
   pi = dacos(-1.d0)
@@ -448,9 +440,10 @@ subroutine width_zprimes
       gamZp(n) = width
     end if
   end do
-  call debug("...complete.")
   return
 end subroutine width_zprimes
+
+
 
 function width_zprime_ssm(rm_Zp)
 
@@ -474,7 +467,6 @@ function width_zprime_ssm(rm_Zp)
   real :: temp, temp1, temp2
   real :: alfas, a_s
 
-  call debug("Calculating zprime widths...")
 
   rmt=fmass(11)
   gamt=fwidth(11)
@@ -584,8 +576,50 @@ function width_zprime_ssm(rm_Zp)
   !       print *,'(so that due to leptons are:',temp,' [GeV])'
   !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
   !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
-  call debug("...complete.")
   return
 end function width_zprime_ssm
+
+subroutine print_model
+
+  integer :: i
+
+  write(log,*) 'm_b:', fmass(12)
+  write(log,*) 'Gamma_b:', fwidth(12)
+  write(log,*) 'm_t:', fmass(11)
+  write(log,*) 'Gamma_t:', fwidth(11)
+  write(log,*) 'm_Z:', zmass
+  write(log,*) 'Gamma_Z:', zwidth
+  write(log,*) 'm_W:', wmass
+  write(log,*) 'Gamma_W:', wwidth
+  write(log,*) 'm_h:', hmass
+  write(log,*) 'Gamma_h:', hwidth
+  if (include_x == 1) then
+    do i = 1, 5
+      if (mass_zp(i) > 0) then
+        write(log,*) "Z' no.:", i
+        write(log,*) "m_Z':", mass_zp(i), "[GeV]"
+        write(log,*) "Gamma_Z':", gamzp(i), "[GeV]"
+        write(log,*) "Gamma_Z'/m_Z':", gamzp(i)/mass_zp(i)
+        write(log,*) "gLu:", gZpu(1,i)
+        write(log,*) "gRu:", gZpu(2,i)
+        write(log,*) "gLd:", gZpd(1,i)
+        write(log,*) "gRd:", gZpd(2,i)
+        write(log,*) "gLl:", gZpl(1,i)
+        write(log,*) "gRl:", gZpl(2,i)
+        write(log,*) "gLn:", gZpn(1,i)
+        write(log,*) "gRn:", gZpn(2,i)
+        write(log,*) "gLt:", gZpt(1,i)
+        write(log,*) "gRt:", gZpt(2,i)
+        write(log,*) "gLb:", gZpb(1,i)
+        write(log,*) "gRb:", gZpb(2,i)
+        write(log,*) "gLl3:", gZpl3(1,i)
+        write(log,*) "gRl3:", gZpl3(2,i)
+        write(log,*) "gLn3:", gZpn3(1,i)
+        write(log,*) "gRn3:", gZpn3(2,i)
+      end if
+    end do
+    print*, '------'
+  end if
+end subroutine print_model
 
 end module modelling

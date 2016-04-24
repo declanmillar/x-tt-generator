@@ -2,12 +2,12 @@ module integration
 
   ! store information from vegas
 
-  integer :: ncall,itmx,nprn,ndev
-  real :: xl(100),xu(100),acc
-  integer :: it,ndo
-  real :: si,swgt,schi,xi(50,100)
+  integer :: ncall, itmx, ndev, nprn ! if nprn < 0 no print-out
+  real :: xl(100), xu(100), acc
+  integer :: it, ndo
+  real :: si, swgt, schi, xi(50, 100)
   real :: alph
-  integer :: ndmx,mds
+  integer :: ndmx, mds
   real :: resl(20),standdevl(20)
   integer :: seed
   real :: cnorm(20)
