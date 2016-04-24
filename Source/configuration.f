@@ -22,8 +22,7 @@ module configuration
   integer :: include_qq
   integer :: interference
   integer :: use_nwa
-  integer :: symmetrise_x1x2
-  integer :: symmetrise_theta
+  integer :: symmetrise
   integer :: phase_space_only
   integer :: use_rambo
   integer :: map_phase_space
@@ -36,7 +35,6 @@ module configuration
   integer :: ffinal
   integer :: nloops
   real :: lambdaqcd4
-  integer :: nx1x2, ntheta
   integer :: z_mixing
   real :: s2mix
 
@@ -79,8 +77,7 @@ contains
     read(5,*) acc
     read(5,*) use_rambo
     read(5,*) map_phase_space
-    read(5,*) symmetrise_x1x2
-    read(5,*) symmetrise_theta
+    read(5,*) symmetrise
     read(5,*) verbose
     read(5,*) ecm_low
     read(5,*) ecm_up
@@ -103,18 +100,6 @@ contains
       ffinal = 1
     else
       ffinal = 11
-    end if
-
-    if (symmetrise_x1x2 == 1) then
-      nx1x2 = 2
-    else
-      nx1x2 = 1
-    end if
-
-    if (symmetrise_theta == 1) then
-      ntheta = 2
-    else
-      ntheta = 1
     end if
 
     if (final_state <= 0) then

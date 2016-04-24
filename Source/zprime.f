@@ -215,8 +215,7 @@ program zprime
   if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
   if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
   if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (symmetrise_x1x2 == 1) write(log,*) 'Symmetrising integration:x1<->x2'
-  if (symmetrise_theta == 1) write(log,*) 'symmetrising integration:costhetat'
+  if (symmetrise == 0) write(log,*) 'Not symmetrising integration: x1<->x2!'
   if (use_rambo == 1) write(log,*) 'RAMBO:ON'
   if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
   write(log,*) 'Seed:', seed

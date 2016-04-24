@@ -39,8 +39,7 @@ parser.add_option("-u", "--ecm_up", default = 0, type = "float", help = "Ecm upp
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
 parser.add_option("-n", "--vegas_points", default = 5000000, type = "int", help = "number of VEGAS points")
 parser.add_option("-N", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise_x1x2", default = True, action = "store_false", help = "symmetrise phase space over x1 and x2")
-parser.add_option("-c", "--symmetrise_theta", default = True, action = "store_false", help = "symmetrise phase space over costheta")
+parser.add_option("-x", "--symmetrise", default = True, action = "store_false", help = "symmetrise phase space x1<->x2")
 parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for PS")
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
@@ -183,10 +182,8 @@ if option.fixed_seed:
     options += "s"
 
 # symmetrization
-if option.symmetrise_x1x2:
+if not option.symmetrise:
     options += "x"
-if option.symmetrise_theta:
-    options += "c"
 
 if option.use_rambo:
     options += "R"
@@ -274,8 +271,7 @@ print >> config, '%i ! ncall' % ncall
 print >> config, '-1.d0 ! acc'
 print >> config, '%i ! use rambo' % option.use_rambo
 print >> config, '%i ! map phase space' % option.map_phase_space
-print >> config, '%i ! symmetrise_x1x2' % option.symmetrise_x1x2
-print >> config, '%i ! symmetrise_theta' % option.symmetrise_theta
+print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
