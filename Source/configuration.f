@@ -40,19 +40,18 @@ module configuration
 
   ! constants
   real, parameter :: pi = 3.14159265358979323846d0
+  integer, parameter :: log = 27
 
   ! Methods
   public :: read_config
   public :: modify_config
-  public :: debug
+  public :: print_config
 
 contains
 
   subroutine read_config
 
     ! read config file
-    call debug("Reading config file...")
-
     read(5,"(a)") ntuple_file
     read(5,"(a)") log_file
     read(5,*) initial_state ! 0 = pp, 1 = ppbar
@@ -82,13 +81,9 @@ contains
     read(5,*) ecm_low
     read(5,*) ecm_up
 
-    call debug("...complete.")
-
   end subroutine read_config
 
   subroutine modify_config
-
-    call debug("Interpreting config file...")
 
     if (final_state <= 0) then
       n_final = 4
@@ -108,12 +103,63 @@ contains
       tops_decay = 1
     end if
 
-    call debug("...complete.")
   end subroutine modify_config
 
-  subroutine debug(message)
-    character(*) :: message
-    if (verbose == 1) print*, message
-  end subroutine debug
+subroutine print_config
+
+  if (initial_state == 0) then
+    if (final_state == -1) then
+      write(log,*) "Process:p p -> l+ l-"
+    else if (final_state == 0) then
+      write(log,*) 'Process:p p -> t t~'
+    else if (final_state == 1) then
+      write(log,*) 'Process:p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+    end if
+  else if (initial_state == 1) then
+    if (final_state == -1) then
+      write(log,*) 'pp~ -> l+l-'
+    else if (final_state == 0) then
+      write(log,*) 'pp~ -> tt~'
+    else if (final_state == 1) then
+      write(log,*) 'Process:p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
+    end if
+  end if
+  if (structure_function == 1) write(log,*) 'PDFs:CTEQ6m'
+  if (structure_function == 2) write(log,*) 'PDFs:CTEQ6d'
+  if (structure_function == 3) write(log,*) 'PDFs:CTEQ6l'
+  if (structure_function == 4) write(log,*) 'PDFs:CTEQ6l1'
+  if (structure_function == 5) write(log,*) 'PDFs:MRS99 (cor01)'
+  if (structure_function == 6) write(log,*) 'PDFs:MRS99 (cor02)'
+  if (structure_function == 7) write(log,*) 'PDFs:MRS99 (cor03)'
+  if (structure_function == 8) write(log,*) 'PDFs:MRS99 (cor04)'
+  if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
+  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
+  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
+  write(log,*) 'Model:', model_name
+  if (include_qcd == 1) write(log,*) 'QCD:ON '
+  if (include_qcd == 0) write(log,*) 'QCD:OFF'
+  if (include_a == 1) write(log,*) 'photon:ON '
+  if (include_a == 0) write(log,*) 'photon:OFF'
+  if (include_z == 1) write(log,*) 'Z boson:ON '
+  if (include_z == 0) write(log,*) 'Z boson:OFF'
+  if (include_x == 1) write(log,*) 'BSM:ON '
+  if (include_x == 0) write(log,*) 'BSM:OFF'
+  if (include_gg == 1) write(log,*) 'gg:ON '
+  if (include_gg == 0) write(log,*) 'gg:OFF'
+  if (include_qq == 1) write(log,*) 'qq:ON '
+  if (include_qq == 0) write(log,*) 'qq:OFF'
+  if (interference == 0) write(log,*) "Interference:none"
+  if (interference == 1) write(log,*) "Interference:(gamma + Z) + (Z')"
+  if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
+  if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
+  if (symmetrise == 0) write(log,*) 'Not symmetrising integration: x1<->x2!'
+  if (use_rambo == 1) write(log,*) 'RAMBO:ON'
+  if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
+  write(log,*) 'Seed:', seed
+  write(log,*) 'Collider energy:', collider_energy
+  if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
+  if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
+end subroutine print_config
 
 end module configuration

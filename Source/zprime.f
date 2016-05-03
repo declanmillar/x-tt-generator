@@ -26,7 +26,6 @@ program zprime
   real :: chi2_sigma, error_sigma, stantot
   real :: alfas
   integer :: ndimensions, lam3, lam4, i, j, k, today(3), now(3)
-  integer, parameter :: log = 27
   double precision :: start_time, finish_time
 
   call cpu_time(start_time)
@@ -46,6 +45,8 @@ program zprime
   end do
   print*, "Log:    ", log_file(1:i)
   open(unit = log, file = log_file(1:i), status = "replace", action = "write")
+
+  call print_config
 
   s = collider_energy*collider_energy
 
@@ -69,6 +70,10 @@ program zprime
   else
     nloops = 1
   end if
+
+  write(log,*) 'Loops:', nloops
+  write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
+  write(log,*) 'lambdaQCD^4:', lambdaqcd4
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
@@ -168,101 +173,6 @@ program zprime
     end do
   end if
 
-
-  if (initial_state == 0) then
-    if (final_state == -1) then
-      write(log,*) "Process:p p -> l+ l-"
-    else if (final_state == 0) then
-      write(log,*) 'Process:p p -> t t~'
-    else if (final_state == 1) then
-      write(log,*) 'Process:p p -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
-    end if
-  else if (initial_state == 1) then
-    if (final_state == -1) then
-      write(log,*) 'pp~ -> l+l-'
-    else if (final_state == 0) then
-      write(log,*) 'pp~ -> tt~'
-    else if (final_state == 1) then
-      write(log,*) 'Process:p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
-    end if
-  end if
-  if (structure_function == 1) write(log,*) 'PDFs:CTEQ6m'
-  if (structure_function == 2) write(log,*) 'PDFs:CTEQ6d'
-  if (structure_function == 3) write(log,*) 'PDFs:CTEQ6l'
-  if (structure_function == 4) write(log,*) 'PDFs:CTEQ6l1'
-  if (structure_function == 5) write(log,*) 'PDFs:MRS99 (cor01)'
-  if (structure_function == 6) write(log,*) 'PDFs:MRS99 (cor02)'
-  if (structure_function == 7) write(log,*) 'PDFs:MRS99 (cor03)'
-  if (structure_function == 8) write(log,*) 'PDFs:MRS99 (cor04)'
-  if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
-  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
-  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
-  write(log,*) 'Model:', model_name
-  if (include_qcd == 1) write(log,*) 'QCD:ON '
-  if (include_qcd == 0) write(log,*) 'QCD:OFF'
-  if (include_a == 1) write(log,*) 'photon:ON '
-  if (include_a == 0) write(log,*) 'photon:OFF'
-  if (include_z == 1) write(log,*) 'Z boson:ON '
-  if (include_z == 0) write(log,*) 'Z boson:OFF'
-  if (include_x == 1) write(log,*) 'BSM:ON '
-  if (include_x == 0) write(log,*) 'BSM:OFF'
-  if (include_gg == 1) write(log,*) 'gg:ON '
-  if (include_gg == 0) write(log,*) 'gg:OFF'
-  if (include_qq == 1) write(log,*) 'qq:ON '
-  if (include_qq == 0) write(log,*) 'qq:OFF'
-  if (interference == 0) write(log,*) "Interference:none"
-  if (interference == 1) write(log,*) "Interference:(gamma + Z) + (Z')"
-  if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
-  if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
-  if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (symmetrise == 0) write(log,*) 'Not symmetrising integration: x1<->x2!'
-  if (use_rambo == 1) write(log,*) 'RAMBO:ON'
-  if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
-  write(log,*) 'Seed:', seed
-  write(log,*) 'Collider energy:', collider_energy
-  if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
-  if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
-  write(log,*) 'Loops:', nloops
-  write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
-  write(log,*) 'lambdaQCD^4:', lambdaqcd4
-  write(log,*) 'm_b:', fmass(12)
-  write(log,*) 'Gamma_b:', fwidth(12)
-  write(log,*) 'm_t:', fmass(11)
-  write(log,*) 'Gamma_t:', fwidth(11)
-  write(log,*) 'm_Z:', zmass
-  write(log,*) 'Gamma_Z:', zwidth
-  write(log,*) 'm_W:', wmass
-  write(log,*) 'Gamma_W:', wwidth
-  write(log,*) 'm_h:', hmass
-  write(log,*) 'Gamma_h:', hwidth
-  if (include_x == 1) then
-    do i = 1, 5
-      if (mass_zp(i) > 0) then
-        write(log,*) "Z' no.:", i
-        write(log,*) "m_Z':", mass_zp(i), "[GeV]"
-        write(log,*) "Gamma_Z':", gamzp(i), "[GeV]"
-        write(log,*) "Gamma_Z'/m_Z':", gamzp(i)/mass_zp(i)
-        write(log,*) "gLu:", gZpu(1,i)
-        write(log,*) "gRu:", gZpu(2,i)
-        write(log,*) "gLd:", gZpd(1,i)
-        write(log,*) "gRd:", gZpd(2,i)
-        write(log,*) "gLl:", gZpl(1,i)
-        write(log,*) "gRl:", gZpl(2,i)
-        write(log,*) "gLn:", gZpn(1,i)
-        write(log,*) "gRn:", gZpn(2,i)
-        write(log,*) "gLt:", gZpt(1,i)
-        write(log,*) "gRt:", gZpt(2,i)
-        write(log,*) "gLb:", gZpb(1,i)
-        write(log,*) "gRb:", gZpb(2,i)
-        write(log,*) "gLl3:", gZpl3(1,i)
-        write(log,*) "gRl3:", gZpl3(2,i)
-        write(log,*) "gLn3:", gZpn3(1,i)
-        write(log,*) "gRn3:", gZpn3(2,i)
-      end if
-    end do
-    print*, '------'
-  end if
-
   ! reset counter
   npoints = 0
 
@@ -281,16 +191,9 @@ program zprime
     end do
   end if
 
-  ! integrate
-  call debug("Starting integration... ")
-  it = 0
-  ! if nprn < 0 no print-out
-  nprn = 0
+  ! integrate using VEGAS
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
-  call debug("...complete.")
-
-  call debug("Calculating factor to re-weight for different iterations.")
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
@@ -301,7 +204,6 @@ program zprime
   do i = 1, it
     cnorm(i) = resl(i)*standdevl(i)
   end do
-  call debug("...complete.")
 
   do i = 1, it
   	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
@@ -315,7 +217,6 @@ program zprime
   end if
 
   if (final_state == 0) then
-    call debug("Collating polar cross sections...")
     do lam3 = -1, +1, 2
       do lam4 = -1, +1, 2
         sigma_pol_tot(lam3,lam4) = 0.d0
@@ -329,9 +230,7 @@ program zprime
         error_pol_tot(lam3,lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
       end do
     end do
-    call debug("...complete.")
 
-    call debug("Calculating polar asymmetries...")
     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/sigma
     error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1))/4.d0*all
 
@@ -344,7 +243,6 @@ program zprime
     write(log,*) "ALL:", all, ":", error_all
     write(log,*) "AL:", al, ":", error_al
     write(log,*) "APV:", apv, ":", error_apv
-    call debug("...complete.")
 
   end if
   write(log,*) "VEGAS points:", npoints
