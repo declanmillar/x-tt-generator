@@ -169,13 +169,13 @@ elif option.interference == 4:
 elif option.use_nwa:
     options += "w"
 
-# if option.ecm_low != 0:
-#     options += "l%s" % option.ecm_low
-# if option.ecm_up != 0:
-#     options += "u%s" % option.ecm_up
+if option.ecm_low != 0:
+    options += "l%s" % option.ecm_low
+if option.ecm_up != 0:
+    options += "u%s" % option.ecm_up
 
 if option.ecm_low != 0 and option.ecm_up != 0:
-    options += "%s-%s" % (option.ecm_low, option.ecm_up)
+    options += "%s-%sTeV" % option.ecm_low
 
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
@@ -276,8 +276,8 @@ print >> config, '%i ! use rambo' % option.use_rambo
 print >> config, '%i ! map phase space' % option.map_phase_space
 print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
-print >> config, '%f ! ecm_low' % (option.ecm_low)
-print >> config, '%f ! ecm_up' % (option.ecm_up)
+print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
+print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
 
 
 try:
