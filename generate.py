@@ -5,7 +5,7 @@
 # Do './generate.py -h' for help.
 # Author: Declan Millar, d.millar@soton.ac.uk.
 
-import os, StringIO, re, optparse, subprocess, time, sys, random, glob, socket
+import os, StringIO, re, optparse, subprocess, time, sys, random, glob, socket, string
 
 usage = "Usage: ./generate.py final_state model_name collider_energy vegas_points [options]"
 parser = optparse.OptionParser(usage)
@@ -199,8 +199,25 @@ if len(options) > 0:
 if len(option.tag) > 0:
     options = "_" + option.tag
 
+npoints = str(ncall)
+if "000000" in npoints:
+    npoints = "M".join(npoints.rsplit("000000", 1))
+
+if "000" in npoints:
+    npoints = "k".join(npoints.rsplit("000", 1))
+
+# 'XXX'.join('mississippi'.rsplit('iss', 1))
+
+collider = ""
+if option.initial_state == 1:
+    collider = "TEVATRON_"
+
+energy_collider = ""
+if option.collider_energy != 13:
+    energy_collider = str(collider_energy) + "_"
+
 # filename
-filename = '%s_%s_%s%s_%sx%s' % (final_state, model_name, collider_energy, options, option.itmx, ncall)
+filename = '%s%s%s_%s%s_%sx%s' % (collider, energy_collider, model_name, final_state, options, option.itmx, npoints)
 
 # Generate fortran friendly configuration
 if final_state == "ll":
@@ -278,6 +295,8 @@ print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
+
+
 
 
 try:
