@@ -169,10 +169,10 @@ elif option.interference == 4:
 elif option.use_nwa:
     options += "w"
 
-if option.ecm_low != 0:
-    options += "l%s" % option.ecm_low
-if option.ecm_up != 0:
-    options += "u%s" % option.ecm_up
+# if option.ecm_low != 0:
+#     options += "l%s" % option.ecm_low
+# if option.ecm_up != 0:
+#     options += "u%s" % option.ecm_up
 
 if option.ecm_low != 0 and option.ecm_up != 0:
     options += "%s-%s" % (option.ecm_low, option.ecm_up)
