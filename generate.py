@@ -32,8 +32,8 @@ parser.add_option("-q", "--include_qq", default = True, action = "store_false", 
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use Narrow Width Approximation")
-parser.add_option("-l", "--ecm_low", default = 0, type = "float", help = " Ecm lower limit")
-parser.add_option("-u", "--ecm_up", default = 0, type = "float", help = "Ecm upper limit")
+parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = " Ecm lower limit")
+parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "Ecm upper limit")
 
 # Monte Carlo options
 parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
@@ -169,10 +169,13 @@ elif option.interference == 4:
 elif option.use_nwa:
     options += "w"
 
-if option.ecm_low != 0:
-    options += "l%s" % option.ecm_low
-if option.ecm_up != 0:
-    options += "u%s" % option.ecm_up
+# if option.ecm_low != 0:
+#     options += "l%s" % option.ecm_low
+# if option.ecm_up != 0:
+#     options += "u%s" % option.ecm_up
+
+if option.ecm_low != 0 and option.ecm_up != 0:
+    options += "%s-%s" % (option.ecm_low, option.ecm_up)
 
 # exclude divergence
 if final_state == "ll" and option.ecm_low == 0:
@@ -273,8 +276,8 @@ print >> config, '%i ! use rambo' % option.use_rambo
 print >> config, '%i ! map phase space' % option.map_phase_space
 print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
-print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
-print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
+print >> config, '%f ! ecm_low' % (option.ecm_low)
+print >> config, '%f ! ecm_up' % (option.ecm_up)
 
 
 try:
