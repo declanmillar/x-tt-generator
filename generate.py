@@ -13,7 +13,7 @@ parser = optparse.OptionParser(usage)
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
 parser.add_option("-b", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
-parser.add_option("-Q", "--queue", default = "1nw", action = "store", help = "lxbatch queue'")
+parser.add_option("-Q", "--queue", default = "8nh", action = "store", help = "lxbatch queue'")
 
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
