@@ -5,13 +5,16 @@ module configuration
   implicit none
 
   ! Config
-  real    :: collider_energy
+  integer :: ntuple_out
+  integer :: lhef_out
+  real :: collider_energy
   integer :: initial_state
   integer :: final_state
   integer :: structure_function
   character(50) :: model_name
   character(100) :: ntuple_file
   character(100) :: log_file
+  character(100) :: lhe_file
   integer :: include_signal
   integer :: include_background
   integer :: include_qcd
@@ -52,7 +55,10 @@ contains
   subroutine read_config
 
     ! read config file
+    read(5,*) ntuple_out
+    read(5,*) lhef_out
     read(5,"(a)") ntuple_file
+    read(5,"(a)") lhe_file
     read(5,"(a)") log_file
     read(5,*) initial_state ! 0 = pp, 1 = ppbar
     read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
@@ -84,6 +90,30 @@ contains
   end subroutine read_config
 
   subroutine modify_config
+
+    integer :: i
+
+    i = len(log_file)
+    do while(log_file(i:i) == '')
+      i = i - 1
+    end do
+    log_file = log_file(1:i)
+    print*, "Log:    ", log_file
+
+    i = len(lhe_file)
+    do while(lhe_file(i:i) == '')
+      i = i - 1
+    end do
+    lhe_file = lhe_file(1:i)
+    print*, "LHEF:   ", lhe_file
+
+    i = len(ntuple_file)
+    do while(ntuple_file(i:i) == '')
+      i = i - 1
+    end do
+    ntuple_file = ntuple_file(1:i)
+    print*, "Ntuple: ", ntuple_file
+
 
     if (final_state <= 0) then
       n_final = 4
@@ -160,6 +190,8 @@ subroutine print_config
   write(log,*) 'Collider energy:', collider_energy
   if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
   if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
+  if (lhef_out == 1) write(log,*) "Events written to:", lhe_file
+  if (ntuple_out == 1) write(log,*) "Events written to:", ntuple_file
 end subroutine print_config
 
 end module configuration

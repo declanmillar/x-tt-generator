@@ -18,6 +18,7 @@ program zprime
   use modelling
   use scattering
   use integration
+  use lhef
 
   implicit none
 
@@ -32,19 +33,9 @@ program zprime
   call read_config
   call modify_config
 
-  i = len(ntuple_file)
-  do while(ntuple_file(i:i) == '')
-    i = i - 1
-  end do
-  print*, "Ntuple: ", ntuple_file(1:i)
-  call rootinit(ntuple_file)
-
-  i = len(log_file)
-  do while(log_file(i:i) == '')
-    i = i - 1
-  end do
-  print*, "Log:    ", log_file(1:i)
-  open(unit = log, file = log_file(1:i), status = "replace", action = "write")
+  if (ntuple_out == 1) call rootinit(ntuple_file)
+  if (lhef_out == 1) call lhe_init(lhe_file)
+  open(unit = log, file = log_file, status = "replace", action = "write")
 
   call print_config
 
@@ -246,7 +237,8 @@ program zprime
 
   end if
   write(log,*) "VEGAS points:", npoints
-  call rootclose
+  if (ntuple_out == 1) call rootclose
+  if (lhef_out == 1) call lhe_close(lhe_file)
   write(log,*) 'Author:Declan Millar'
   call idate(today)     ! today(1):day, (2):month, (3):year
   call itime(now)       ! now(1):hour, (2):minute, (3):second

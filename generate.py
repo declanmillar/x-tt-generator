@@ -14,6 +14,8 @@ parser.add_option("-t", "--tag", default = "", type = "string", help = "add a na
 parser.add_option("-b", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "8nh", action = "store", help = "lxbatch queue'")
+parser.add_option("-T", "--ntuple_out", default = True, action = "store_false", help = "write events to ROOT ntuple")
+parser.add_option("-L", "--lhef_out", default = False, action = "store_true", help = "write events to lhef file")
 
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
 parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
@@ -94,6 +96,10 @@ if option.interference < 0 or option.interference > 4:
 
 if option.structure_function < 1 or option.structure_function > 9:
     sys.exit("Error: structure_function ID must be from 1 to 9.")
+
+if option.lhef_out:
+    print "LHEF requires unweighted events. Setting itmx = 1"
+    option.itmx = 1
 
 if option.itmx > 20:
      sys.exit('Error: itmx does not have to exceed 20.')
@@ -262,12 +268,16 @@ config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.root" % (data_directory, filename)
+lhe_file = "%s/%s.lhe" % (data_directory, filename)
 # logfile_command = "> %s/%s &" % (data_directory, logfile) if option.logfile else ""
 
 # Print config file
 config = StringIO.StringIO()
 
+print >> config, '%i ! ntuple_out' % option.ntuple_out
+print >> config, '%i ! lhef_out' % option.lhef_out
 print >> config, '%s' % ntuple_file
+print >> config, '%s' % lhe_file
 print >> config, '%s' % logfile
 print >> config, '%i ! initial_state' % option.initial_state
 print >> config, '%i ! final_state' % final_state_id
@@ -295,9 +305,6 @@ print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
-
-
-
 
 try:
     with open('%s' % config_name,'w') as config_file:
