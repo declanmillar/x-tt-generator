@@ -34,9 +34,8 @@ program zprime
   call modify_config
 
   if (ntuple_out == 1) call rootinit(ntuple_file)
-  if (lhef_out == 1) call lhe_init(lhe_file)
+  call lhe_init(lhe_file)
   open(unit = log, file = log_file, status = "replace", action = "write")
-
   call print_config
 
   s = collider_energy*collider_energy
@@ -65,6 +64,8 @@ program zprime
   write(log,*) 'Loops:', nloops
   write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
+
+  ! call lhe_beam
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
@@ -238,7 +239,7 @@ program zprime
   end if
   write(log,*) "VEGAS points:", npoints
   if (ntuple_out == 1) call rootclose
-  if (lhef_out == 1) call lhe_close(lhe_file)
+  call lhe_close
   write(log,*) 'Author:Declan Millar'
   call idate(today)     ! today(1):day, (2):month, (3):year
   call itime(now)       ! now(1):hour, (2):minute, (3):second

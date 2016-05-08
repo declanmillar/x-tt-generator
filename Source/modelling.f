@@ -139,7 +139,8 @@ end subroutine initialise_standard_model
 
 subroutine initialise_zprimes
 
-  integer imodel_name, i
+  integer :: imodel_name, i
+  integer, parameter :: mdl = 30
 
   call reset_zprimes
 
@@ -150,28 +151,28 @@ subroutine initialise_zprimes
   end do
 
   ! read model file
-  open(unit = 42, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
-  read(42,*) model_type
+  open(unit = mdl, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
+  read(mdl,*) model_type
   if (model_type == 0) then
-    read(42,*) mass_zp
-    read(42,*) gamZp
-    read(42,*) gp
-    read(42,*) paramZp
-    read(42,*) gV_u
-    read(42,*) gA_u
-    read(42,*) gV_d
-    read(42,*) gA_d
-    read(42,*) gV_l
-    read(42,*) gA_l
-    read(42,*) gV_nu
-    read(42,*) gA_nu
+    read(mdl,*) mass_zp
+    read(mdl,*) gamZp
+    read(mdl,*) gp
+    read(mdl,*) paramZp
+    read(mdl,*) gV_u
+    read(mdl,*) gA_u
+    read(mdl,*) gV_d
+    read(mdl,*) gA_d
+    read(mdl,*) gV_l
+    read(mdl,*) gA_l
+    read(mdl,*) gV_nu
+    read(mdl,*) gA_nu
   else if (model_type == 1) then
-    read(42,*) xparam
-    read(42,*) sin2phiparam
+    read(mdl,*) xparam
+    read(mdl,*) sin2phiparam
   else
     print*, "Error: invalid model type! Must be 0-1."
   end if
-  close(42)
+  close(mdl)
 
   if (model_type == 0) then
     ! If gamZp is negative, the function widthZp is used.
