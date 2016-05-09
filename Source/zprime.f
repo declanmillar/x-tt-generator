@@ -28,13 +28,17 @@ program zprime
   real :: alfas
   integer :: ndimensions, lam3, lam4, i, j, k, today(3), now(3)
   double precision :: start_time, finish_time
+  integer idbmup(2) ! ID of beam particle 1 and 2 according to the PDG
+  real ebmup(2) ! energy in GeV of beam particles 1 and 2
+  integer pdfgup(2) ! author group for beam 1 and 2 according to Cernlib PDFlib
+  integer pdfsup(2) ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
 
   call cpu_time(start_time)
   call read_config
   call modify_config
 
   if (ntuple_out == 1) call rootinit(ntuple_file)
-  call lhe_init(lhe_file)
+  if (lhef_out == 1) call lhe_init(lhe_file)
   open(unit = log, file = log_file, status = "replace", action = "write")
   call print_config
 
@@ -65,7 +69,19 @@ program zprime
   write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
 
-  ! call lhe_beam
+  idbmup(1) = 2212
+  if (initial_state == 0) then
+    idbmup(2) = 2212
+  else
+    idbmup(2) = -2212
+  end if
+  do i = 1, 2
+    ebmup(i) = collider_energy/2
+    pdfgup(i) = 1
+    pdfsup(i) = 1
+  end do
+
+  if (lhef_out == 1) call lhe_beam(idbmup, ebmup, pdfgup, pdfsup)
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
@@ -239,7 +255,7 @@ program zprime
   end if
   write(log,*) "VEGAS points:", npoints
   if (ntuple_out == 1) call rootclose
-  call lhe_close
+  if (lhef_out == 1) call lhe_close
   write(log,*) 'Author:Declan Millar'
   call idate(today)     ! today(1):day, (2):month, (3):year
   call itime(now)       ! now(1):hour, (2):minute, (3):second
