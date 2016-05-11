@@ -176,8 +176,6 @@ energy_collider = "_" + str(collider_energy) if option.collider_energy != 13 els
 
 if option.include_g == False:
     option.include_gg = False
-if option.include_gg == False:
-    option.include_g = False
 
 initial_partons = ""
 if option.include_qq:
