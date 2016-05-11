@@ -17,7 +17,7 @@ module configuration
   character(100) :: lhe_file
   integer :: include_signal
   integer :: include_background
-  integer :: include_qcd
+  integer :: include_g
   integer :: include_a
   integer :: include_z
   integer :: include_x
@@ -66,7 +66,7 @@ contains
     read(5,*) structure_function
     read(5,*) include_signal
     read(5,*) include_background
-    read(5,*) include_qcd
+    read(5,*) include_g
     read(5,*) include_a
     read(5,*) include_z
     read(5,*) include_x
@@ -166,8 +166,8 @@ subroutine print_config
   if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
   if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
   write(log,*) 'Model:', model_name
-  if (include_qcd == 1) write(log,*) 'QCD:ON '
-  if (include_qcd == 0) write(log,*) 'QCD:OFF'
+  if (include_g == 1) write(log,*) 'gluon:ON '
+  if (include_g == 0) write(log,*) 'gluon:OFF'
   if (include_a == 1) write(log,*) 'photon:ON '
   if (include_a == 0) write(log,*) 'photon:OFF'
   if (include_z == 1) write(log,*) 'Z boson:ON '

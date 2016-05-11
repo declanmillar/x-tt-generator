@@ -647,7 +647,7 @@ function dsigma(x, wgt)
     resall = 0
     if (final_state <= 0) then
       ! Computing 2->2 square matrix elements
-      if (include_qcd == 1) then
+      if (include_g == 1) then
         ! Computing QCD matrix elements
         do lam3 = -1, 1, 2
           do lam4 = -1, 1, 2
@@ -681,7 +681,7 @@ function dsigma(x, wgt)
     else if (final_state == 1) then
       ! Computing 2->6 square matrix elements
       ! Do not change the deliberate order of p6 and p7.
-      if (include_qcd == 1) then
+      if (include_g == 1) then
         ! Computing QCD matrix elements
         if (include_gg == 1) then
           qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
@@ -704,7 +704,7 @@ function dsigma(x, wgt)
     else if (final_state == 2) then
       ! Computing 2->6 square matrix elements with irreducible backgroud
       ! Do not change the deliberate order of p6 and p7.
-      if (include_qcd == 1) then
+      if (include_g == 1) then
         ! Computing QCD matrix elements
         if (include_gg == 1) then
           qcdgg = sgg_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
