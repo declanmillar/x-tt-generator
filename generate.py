@@ -7,8 +7,7 @@
 
 import os, StringIO, re, optparse, subprocess, time, sys, random, glob, socket, string
 
-usage = "Usage: ./generate.py final_state model_name collider_energy vegas_points [options]"
-parser = optparse.OptionParser(usage)
+parser = optparse.OptionParser()
 
 parser.add_option("-t", "--tag", default = "", type = "string", help = "add a name tag to output files")
 parser.add_option("-b", "--batch", default = True, action = "store_false", help = "run in batch mode")
@@ -17,20 +16,21 @@ parser.add_option("-Q", "--queue", default = "8nh", action = "store", help = "lx
 parser.add_option("-T", "--ntuple_out", default = True, action = "store_false", help = "write events to ROOT ntuple")
 parser.add_option("-L", "--lhef_out", default = False, action = "store_true", help = "write events to lhef file")
 
-parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
-parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
-parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
-parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
-parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
-parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
 
+parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "exclude gluon-gluon interactions")
+parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "exclude quark-quark interactions")
 parser.add_option("-G", "--include_g", default = False, action = "store_true", help = "exclude gluon mediated interactions")
 parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "exclude photon mediated interaction")
 parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "exclude Z boson mediated interaction")
 parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "exclude Z' boson mediated interactions")
-parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "exclude gluon-gluon interactions")
-parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "exclude quark-quark interactions")
+parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store", help = "set final state: ll, tt, tt-bbllvv, bbeevv, bbemuvevm, bbmumuvmvm, bbtatavtvt")
+
+parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
+parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
+parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
+parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use Narrow Width Approximation")
@@ -38,10 +38,10 @@ parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = " Ecm low
 parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "Ecm upper limit")
 
 # Monte Carlo options
-parser.add_option("-s", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
+parser.add_option("-F", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
 parser.add_option("-n", "--vegas_points", default = 5000000, type = "int", help = "number of VEGAS points")
 parser.add_option("-N", "--itmx", default = 5, type = "int", help = "maximum number of VEGAS iterations")
-parser.add_option("-x", "--symmetrise", default = True, action = "store_false", help = "symmetrise phase space x1<->x2")
+parser.add_option("-s", "--symmetrise", default = True, action = "store_false", help = "symmetrise phase space x1<->x2")
 parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for PS")
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "flatten Breit-Wigners in integrand for manual phase space")
 
@@ -87,9 +87,8 @@ if option.ecm_low > collider_energy or option.ecm_up > collider_energy:
 if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low):
     sys.exit("Error: E_CM up must be greater than E_CM low")
 
-if option.batch:
-    if not ("lxplus" in hostname) or ("iridis" in hostname):
-        sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
+if option.batch and ("lxplus" in hostname or "iridis" in hostname):
+    sys.exit("Error: Must be on lxplus or iridis to submit a batch job.")
 
 if option.interference < 0 or option.interference > 4:
     sys.exit("Error: interference must be from 0-4.")
@@ -97,22 +96,9 @@ if option.interference < 0 or option.interference > 4:
 if option.structure_function < 1 or option.structure_function > 9:
     sys.exit("Error: structure_function ID must be from 1 to 9.")
 
-if option.lhef_out:
-    print "LHEF requires unweighted events. Setting itmx = 1"
-    option.itmx = 1
-
-if option.itmx > 20:
-     sys.exit('Error: itmx does not have to exceed 20.')
-
-if option.model == "SM":
-    option.include_x = False
-
 # Modify configuration for consistency
 if model_name == "SM":
     option.include_x = False
-
-if option.include_x is False:
-    model_name = "SM"
 
 if final_state == "ll":
     option.include_g = False
@@ -122,17 +108,9 @@ if option.phase_space_only:
     option.include_g = False
     option.include_a = False
     option.include_z = False
-    option.include_g = False
     option.include_x = False
 
-if option.interference == 4 and option.include_qfd is False:
-    print "EW sector must be active to calculate interference with Zprimes. Switching to default interference."
-    option.interference = 2
-
-if option.use_rambo:
-    option.map_phase_space = False
-
-if option.include_background:
+if option.use_rambo or option.include_background:
     option.map_phase_space = False
 
 if final_state == "ll" or final_state == "tt":
@@ -152,17 +130,6 @@ if option.initial_state == 1:
 if option.structure_function != 4:
     options += "S%s" % option.structure_function
 
-if option.include_g is True and final_state != "ll":
-    options += "G"
-if option.include_a is False:
-    options += "A"
-if option.include_z is False:
-    options += "Z"
-if option.include_gg is False and final_state != "ll":
-    options += "g"
-if option.include_qq is False:
-    options += "q"
-
 if option.interference == 0:
     options += "i0"
 elif option.interference == 1:
@@ -175,11 +142,6 @@ elif option.interference == 4:
 elif option.use_nwa:
     options += "w"
 
-# if option.ecm_low != 0:
-#     options += "l%s" % option.ecm_low
-# if option.ecm_up != 0:
-#     options += "u%s" % option.ecm_up
-
 if option.ecm_low != 0 and option.ecm_up != 0:
     options += "%s-%s" % (option.ecm_low, option.ecm_up)
 
@@ -188,11 +150,10 @@ if final_state == "ll" and option.ecm_low == 0:
     option.ecm_low = 0.5
 
 if option.fixed_seed:
-    options += "s"
+    options += "f"
 
-# symmetrization
 if not option.symmetrise:
-    options += "x"
+    options += "s"
 
 if option.use_rambo:
     options += "R"
@@ -203,27 +164,38 @@ if len(options) > 0:
     options = "_" + options
 
 if len(option.tag) > 0:
-    options = "_" + option.tag
+    options += "_" + option.tag
 
 npoints = str(ncall)
 if "000000" in npoints:
     npoints = "M".join(npoints.rsplit("000000", 1))
-
 if "000" in npoints:
     npoints = "k".join(npoints.rsplit("000", 1))
 
-# 'XXX'.join('mississippi'.rsplit('iss', 1))
+energy_collider = "_" + str(collider_energy) if option.collider_energy != 13 else ""
 
-collider = ""
-if option.initial_state == 1:
-    collider = "TEVATRON_"
+if option.include_g == False:
+    option.include_gg = False
+if option.include_gg == False:
+    option.include_g = False
 
-energy_collider = ""
-if option.collider_energy != 13:
-    energy_collider = str(collider_energy) + "_"
+initial_partons = ""
+if option.include_qq:
+    initial_partons += "qq"
+if option.include_gg:
+    initial_partons += "gg"
 
-# filename
-filename = '%s%s%s_%s%s_%sx%s' % (collider, energy_collider, model_name, final_state, options, option.itmx, npoints)
+intermediates = ""
+if option.include_g:
+    intermediates += "G"
+if option.include_a:
+    intermediates += "A"
+if option.include_z:
+    intermediates += "Z"
+if option.include_x:
+    intermediates += "X"
+
+filename = '%s_%s-%s-%s%s%s_%sx%s' % (model_name, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
 
 # Generate fortran friendly configuration
 if final_state == "ll":
@@ -261,7 +233,7 @@ elif "iridis" in hostname:
     run_directory = "/home/dam1g09/zprime-top-generator"
     data_directory = "/scratch/dam1g09/zprime"
 
-if os.path.isdir("%s" % data_directory) is False:
+if os.path.isdir(data_directory) is False:
     sys.exit("The target data directory '%s' does not exist" % data_directory)
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
@@ -269,11 +241,8 @@ logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.root" % (data_directory, filename)
 lhe_file = "%s/%s.lhe" % (data_directory, filename)
-# logfile_command = "> %s/%s &" % (data_directory, logfile) if option.logfile else ""
 
-# Print config file
 config = StringIO.StringIO()
-
 print >> config, '%i ! ntuple_out' % option.ntuple_out
 print >> config, '%i ! lhef_out' % option.lhef_out
 print >> config, '%s' % ntuple_file

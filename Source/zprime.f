@@ -200,7 +200,13 @@ program zprime
   end if
 
   ! integrate using VEGAS
+  ggtime = 0
+  qqtime = 0
+  uutime = 0
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
+  print*, "ggtime", ggtime
+  print*, "qqtime", qqtime
+  print*, "uutime", uutime
 
   stantot = 0.d0
   do i = 1, it

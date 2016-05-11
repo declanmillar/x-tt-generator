@@ -286,8 +286,13 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
   sgg_tt_bbeevv = 0.d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-    t = gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
-    sgg_tt_bbeevv = sgg_tt_bbeevv + t
+    if (goodhel(ihel) .or. ntry < 10) then
+      t = gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
+      sgg_tt_bbeevv = sgg_tt_bbeevv + t
+      if (t > 0d0 .and. .not. goodhel(ihel)) then
+          goodhel(ihel)= .true.
+      endif
+    end if
   enddo
   sgg_tt_bbeevv = sgg_tt_bbeevv/4d0
   ! if (sgg_tt_bbeevv == 0.d0) return

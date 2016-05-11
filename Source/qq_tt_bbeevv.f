@@ -286,14 +286,13 @@ function sqq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8)
   sqq_tt_bbeevv = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-      if (goodhel(ihel) .OR. ntry < 10) then
-        t = qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
-        sqq_tt_bbeevv = sqq_tt_bbeevv + t
-        if (t > 0d0 .AND. .NOT. goodhel(ihel)) then
-            goodhel(ihel)= .TRUE.
-            ! write(*,*) ihel,t
-        endif
-      end if
+    if (goodhel(ihel) .or. ntry < 10) then
+      t = qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
+      sqq_tt_bbeevv = sqq_tt_bbeevv + t
+      if (t > 0d0 .and. .not. goodhel(ihel)) then
+          goodhel(ihel)= .true.
+      endif
+    end if
   enddo
   sqq_tt_bbeevv = sqq_tt_bbeevv/4d0
 end function sqq_tt_bbeevv

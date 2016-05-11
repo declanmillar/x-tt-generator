@@ -18,8 +18,7 @@ function sqq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   integer :: iq
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
-  ! variables
-  integer :: i, j
+  ! local variables
   integer :: nhel(nexternal, ncomb), ntry
   real :: t
   integer :: ihel
@@ -284,15 +283,18 @@ function sqq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   data (nhel(ihel, 254), ihel = 1, 8) / 1,  1,  1,  1,  1,  1, -1,  1/
   data (nhel(ihel, 255), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1, -1/
   data (nhel(ihel, 256), ihel = 1, 8) / 1,  1,  1,  1,  1,  1,  1,  1/
-
   sqq_tt_bbeevv_qcd = 0.d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-    t = qq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
-    sqq_tt_bbeevv_qcd = sqq_tt_bbeevv_qcd + t
+    if (goodhel(ihel) .or. ntry < 10) then
+      t = qq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
+      sqq_tt_bbeevv_qcd = sqq_tt_bbeevv_qcd + t
+      if (t > 0d0 .and. .not. goodhel(ihel)) then
+          goodhel(ihel)= .true.
+      endif
+    end if
   enddo
   sqq_tt_bbeevv_qcd = sqq_tt_bbeevv_qcd/4d0
-  ! if (sqq_tt_bbeevv_qcd == 0.d0) return
 end function sqq_tt_bbeevv_qcd
 
 

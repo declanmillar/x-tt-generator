@@ -6,6 +6,7 @@ module scattering
   real :: m3, m4, m5, m6, m7, m8, s
   real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
   public :: dsigma
+  double precision :: ggtime, qqtime, uutime
 
 contains
 
@@ -123,6 +124,8 @@ function dsigma(x, wgt)
 
   ! internal random number seed
   integer, parameter :: jseed  = 987654321
+
+  double precision :: time1, time2, time3, time4
 
   ! store top parameters
   rmt = fmass(ffinal)
@@ -677,6 +680,17 @@ function dsigma(x, wgt)
       end if
 
     else if (final_state == 1) then
+      call cpu_time(time1)
+      qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
+      call cpu_time(time2)
+      qcdqq = sqq_tt_bbeevv_qcd(3, p1, p2, p3, p4, p5, p7, p6, p8)
+      call cpu_time(time3)
+      qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+      call cpu_time(time4)
+
+      ggtime = ggtime + time2 - time1
+      qqtime = qqtime + time3 - time2
+      uutime = uutime + time4 - time3
       ! Computing 2->6 square matrix elements
       ! Do not change the deliberate order of p6 and p7.
       if (include_qcd == 1) then
