@@ -297,7 +297,7 @@ if option.batch:
         # print >> handler, "cd $PBS_O_WORKDIR"
         print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
     else:
-        print "Hostname not recognised. No job submitted."
+        print "Hostname not recognised. No handler file created."
     print >> handler, 'rm -- "$0"'
 
     try:
@@ -310,7 +310,8 @@ if option.batch:
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
     print "Submitting batch job."
     if "lxplus" in hostname: subprocess.call('bsub -q %s %s/%s.sh' % (option.queue, run_directory, filename), shell = True)
-    if "iridis" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+    elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+    else: print "Hostname not recognised. No job submitted."
 
 else:
     if "lxplus" in hostname:
