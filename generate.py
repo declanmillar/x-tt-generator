@@ -223,7 +223,7 @@ if include_background:
 run_directory = "."
 data_directory = "."
 if "Sunder" in hostname:
-    data_directory = "/Users/declan/Data/Zprime"
+    data_directory = "/Users/declan/Data/zprime"
 elif "lxplus" in hostname:
     run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
     data_directory = "/afs/cern.ch/work/d/demillar/zprime"
