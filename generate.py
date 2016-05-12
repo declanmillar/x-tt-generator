@@ -53,6 +53,8 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 
 hostname = socket.gethostname()
 
+print "hostname =", hostname
+
 final_state = str(option.final_state)
 model_name = str(option.model)
 try:
