@@ -296,9 +296,9 @@ if option.batch:
         print >> handler, "cd %s" % run_directory
         # print >> handler, "cd $PBS_O_WORKDIR"
         print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
-    print >> handler, 'rm -- "$0"'
     else:
         print "Hostname not recognised. No job submitted."
+    print >> handler, 'rm -- "$0"'
 
     try:
         with open('%s' % handler_name, 'w') as handler_file:
