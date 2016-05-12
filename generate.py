@@ -227,7 +227,7 @@ if "Sunder" in hostname:
 elif "lxplus" in hostname:
     run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
     data_directory = "/afs/cern.ch/work/d/demillar/zprime"
-elif "iridis" in hostname:
+elif "cyan" in hostname:
     run_directory = "/home/dam1g09/zprime-top-generator"
     data_directory = "/scratch/dam1g09/zprime"
 
