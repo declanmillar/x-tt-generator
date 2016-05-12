@@ -53,8 +53,6 @@ parser.add_option("-v", "--verbose", default = False, action = "store_true", hel
 
 hostname = socket.gethostname()
 
-print "hostname =", hostname
-
 final_state = str(option.final_state)
 model_name = str(option.model)
 try:
@@ -290,7 +288,7 @@ if option.batch:
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
         # print >> handler, 'mv LSFJOB_* Jobs'
-    if "iridis" in hostname:
+    if "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
