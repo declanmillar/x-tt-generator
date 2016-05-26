@@ -122,7 +122,7 @@
     If (abs(Iparton) > NfMx) Then
         If (Warn) Then
         !        print a warning for calling extra flavor
-            Warn = .FALSE. 
+            Warn = .FALSE.
             Print *, 'Warning: Iparton out of range in CT14Pdf! '
             Print *, 'Iparton, MxFlvN0: ', Iparton, NfMx
         Endif
@@ -145,8 +145,8 @@
     data ipdsset, ipdsformat/0,0/
     save
 
-    IU= NextUn()
-    Open(IU, File=Tablefile, Status='OLD', Err=100)
+    IU= NextUn14()
+    Open(IU, File='PDFs/'//Tablefile, Status='OLD', Err=100)
     Call Readpds0 (IU)
     Close (IU)
     Isetch=1; ipdsset=1
@@ -539,7 +539,7 @@
             fij(2) = Upd(J1+1) * XV(1)**2
             fij(3) = Upd(J1+2) * XV(2)**2
             fij(4) = Upd(J1+3) * XV(3)**2
-        
+
         !                 Use Polint which allows x to be anywhere w.r.t. the grid
 
             Call Polint4F (XVpow(0), Fij(1), ss, Fx)
@@ -659,18 +659,17 @@
 !               *************************
     END SUBROUTINE POLINT4F
 
-    Function NextUn()
+    Function NextUn14()
 !                                 Returns an unallocated FORTRAN i/o unit.
     Logical :: EX
 
     Do 10 N = 10, 300
         INQUIRE (UNIT=N, OPENED=EX)
         If ( .NOT. EX) then
-            NextUn = N
+            NextUn14 = N
             Return
         Endif
     10 END DO
     Stop ' There is no available I/O unit. '
 !               *************************
-    end Function NextUn
-
+    end Function NextUn14
