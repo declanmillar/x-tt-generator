@@ -223,15 +223,14 @@ if final_state_id < 2:
         intermediates += "Z"
     if option.include_x:
         intermediates += "X"
-
-if len(intermediates) > 0:
-    intermediates = intermediates + "-"
-
 else:
     if option.include_background == False and option.include_signal == True:
         intermediates += "tt"
     if option.include_background == True and option.include_signal == False:
         intermediates += "no"
+        
+if len(intermediates) > 0:
+    intermediates = intermediates + "-"
 
 filename = '%s_%s-%s%s%s%s_%sx%s' % (model_name, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
 
