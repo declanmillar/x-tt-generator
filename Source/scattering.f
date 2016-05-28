@@ -727,26 +727,21 @@ function dsigma(x, wgt)
       end if
       resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
-    else if (final_state == 2) then
-      ! Computing 2->6 square matrix elements with irreducible backgroud
+    else if (final_state == 3) then
       ! Do not change the deliberate order of p6 and p7.
-      if (include_g == 1) then
-        ! Computing QCD matrix elements
-        if (include_gg == 1) then
+      if (include_gg == 1) then
           qcdgg = sgg_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-        end if
-        if (include_qq == 1) then
-          qcdqq = sqq_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-        end if
       end if
-      if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
-        ! Computing EW+Z' matrix elements
-        if (include_qq == 1) then
+      if (include_qq == 1) then
+          qcdqq = sqq_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
+      end if
+      if (include_uu == 1) then
           qfduu1 = suu_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
           qfduu2 = suu_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
+      end if
+      if (include_dd == 1) then
           qfddd1 = sdd_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
           qfddd2 = sdd_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
-        end if
       end if
       resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
     end if

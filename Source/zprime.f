@@ -102,13 +102,20 @@ program zprime
     m6 = 0.d0
     m7 = 0.d0
     m8 = 0.d0
-  else if (final_state > 0) then
+  else if (final_state == 0 .or. final_state == 1) then
     m3 = bmass
     m4 = bmass
     m5 = emass
     m6 = nuemass
     m7 = emass
     m8 = nuemass
+  else if (final_state == 3) then
+    m3 = fmass(12)
+    m4 = fmass(12)
+    m5 = fmass(1)
+    m6 = fmass(5)
+    m7 = fmass(2)
+    m8 = fmass(6)
   end if
 
   ! VEGAS parameters
@@ -211,6 +218,13 @@ program zprime
   ! integrate using VEGAS
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
+  if (sigma == 0.d0) then
+    print*, "ERROR! Cross section = 0. Stopping."
+    stop
+  else
+    write(log,*) "Cross section:", sigma, ":", error_sigma, ":[pb]"
+  end if
+
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0/standdevl(i)/standdevl(i)
@@ -225,13 +239,6 @@ program zprime
   do i = 1, it
   	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
   end do
-
-  if (sigma == 0.d0) then
-    write(log,*) "Error = sigma = 0"
-    stop
-  else
-    write(log,*) "Cross section:", sigma, ":", error_sigma, ":[pb]"
-  end if
 
   if (final_state == 0) then
     do lam3 = -1, +1, 2

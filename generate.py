@@ -14,13 +14,15 @@ parser.add_option("-b", "--batch", default = True, action = "store_false", help 
 parser.add_option("-W", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "8nh", action = "store", help = "lxbatch queue'")
 parser.add_option("-T", "--ntuple_out", default = True, action = "store_false", help = "write events to ROOT ntuple")
-parser.add_option("-L", "--lhef_out", default = False, action = "store_true", help = "write events to lhef file")
+parser.add_option("-H", "--lhef_out", default = False, action = "store_true", help = "write events to lhef file")
 
 parser.add_option("-m", "--model", default = "SM", action = "store", help = "set model")
 
 parser.add_option("-p", "--initial_state", default = 0, const = 1, action = "store_const", help = "switch to p-pbar collisions")
-parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "exclude gluon-gluon interactions")
-parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "exclude quark-quark interactions")
+parser.add_option("-g", "--include_gg", default = True, action = "store_false", help = "gluon-gluon interactions")
+parser.add_option("-q", "--include_qq", default = True, action = "store_false", help = "quark-quark interactions")
+parser.add_option("-u", "--include_uu", default = True, action = "store_false", help = "up-up interactions")
+parser.add_option("-d", "--include_dd", default = True, action = "store_false", help = "down-down interactions")
 parser.add_option("-G", "--include_g", default = False, action = "store_true", help = "exclude gluon mediated interactions")
 parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "exclude photon mediated interaction")
 parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "exclude Z boson mediated interaction")
@@ -30,12 +32,12 @@ parser.add_option("-f", "--final_state", default = "tt-bbllvv", action = "store"
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions set: 1 = CTEQ6M; 2 = CTEQ6D; 3 = CTEQ6L; 4 = CTEQ6L1; ...")
 parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
-parser.add_option("-B", "--include_background", default = 0, const = 1, action = "store_const", help = "include tt background")
+parser.add_option("-B", "--include_background", default = 1, const = 0, action = "store_const", help = "include background")
 
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use Narrow Width Approximation")
-parser.add_option("-l", "--ecm_low", default = 0, type = "int", help = " Ecm lower limit")
-parser.add_option("-u", "--ecm_up", default = 0, type = "int", help = "Ecm upper limit")
+parser.add_option("-L", "--ecm_low", default = 0, type = "int", help = " Ecm lower limit")
+parser.add_option("-U", "--ecm_up", default = 0, type = "int", help = "Ecm upper limit")
 
 # Monte Carlo options
 parser.add_option("-F", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed for random number generator")
@@ -97,6 +99,10 @@ if option.structure_function < 1 or option.structure_function > 11:
     sys.exit("Error: structure_function ID must be from 1 to 11.")
 
 # Modify configuration for consistency
+
+if option.include_background == False and option.include_signal == False:
+    sys.exit("Error: signal and background both off.")
+
 if model_name == "SM":
     option.include_x = False
 
@@ -157,7 +163,7 @@ if not option.symmetrise:
 
 if option.use_rambo:
     options += "R"
-if not option.map_phase_space:
+if  option.include_background == False and option.map_phase_space == False:
     options += "M"
 
 if len(options) > 0:
@@ -173,27 +179,6 @@ if "000" in npoints:
     npoints = "k".join(npoints.rsplit("000", 1))
 
 energy_collider = "_" + str(collider_energy) if option.collider_energy != 13 else ""
-
-if option.include_g == False:
-    option.include_gg = False
-
-initial_partons = ""
-if option.include_qq:
-    initial_partons += "qq"
-if option.include_gg:
-    initial_partons += "gg"
-
-intermediates = ""
-if option.include_g:
-    intermediates += "G"
-if option.include_a:
-    intermediates += "A"
-if option.include_z:
-    intermediates += "Z"
-if option.include_x:
-    intermediates += "X"
-
-filename = '%s_%s-%s-%s%s%s_%sx%s' % (model_name, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
 
 # Generate fortran friendly configuration
 if final_state == "ll":
@@ -214,9 +199,46 @@ else:
     sys.exit("Error: unavailable final state '%s'." % final_state)
 
 if final_state_id < 2:
-    include_background = False
+    if option.include_g == False:
+        option.include_gg = False
 
-if include_background:
+initial_partons = ""
+if option.include_qq:
+    initial_partons += "qq"
+if option.include_gg:
+    initial_partons += "gg"
+if final_state_id > 1:
+    if option.include_uu:
+        initial_partons += "uu"
+    if option.include_dd:
+        initial_partons += "dd"
+
+intermediates = ""
+if final_state_id < 2:
+    if option.include_g:
+        intermediates += "G"
+    if option.include_a:
+        intermediates += "A"
+    if option.include_z:
+        intermediates += "Z"
+    if option.include_x:
+        intermediates += "X"
+
+if len(intermediates) > 0:
+    intermediates = intermediates + "-"
+
+else:
+    if option.include_background == False and option.include_signal == True:
+        intermediates += "tt"
+    if option.include_background == True and option.include_signal == False:
+        intermediates += "no"
+
+filename = '%s_%s-%s%s%s%s_%sx%s' % (model_name, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
+
+if final_state_id < 2:
+    option.include_background = False
+
+if option.include_background:
     map_phase_space = False
 
 # Logfile
@@ -258,6 +280,8 @@ print >> config, '%i ! include_z' % option.include_z
 print >> config, '%i ! include_x' % option.include_x
 print >> config, '%i ! include_gg' % option.include_gg
 print >> config, '%i ! include_qq' % option.include_qq
+print >> config, '%i ! include_uu' % option.include_uu
+print >> config, '%i ! include_dd' % option.include_dd
 print >> config, '%i ! phase_space_only' % option.phase_space_only
 print >> config, '%i ! interference' % option.interference
 print >> config, '%i ! use_nwa' % option.use_nwa

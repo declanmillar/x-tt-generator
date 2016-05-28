@@ -23,6 +23,8 @@ module configuration
   integer :: include_x
   integer :: include_gg
   integer :: include_qq
+  integer :: include_uu
+  integer :: include_dd
   integer :: interference
   integer :: use_nwa
   integer :: symmetrise
@@ -72,6 +74,8 @@ contains
     read(5,*) include_x
     read(5,*) include_gg
     read(5,*) include_qq
+    read(5,*) include_uu
+    read(5,*) include_dd
     read(5,*) phase_space_only
     read(5,*) interference
     read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
