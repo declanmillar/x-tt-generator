@@ -62,7 +62,7 @@ program zprime
   ! initialise cteq grids.
   if (structure_function <= 4) call setctq6(structure_function)
   if (structure_function == 10) tablefile = "ct14ln.pds"
-  if (structure_function == 11) tablefile = "ct14ln.pds"
+  if (structure_function == 11) tablefile = "ct14ll.pds"
   if (structure_function > 9) call setct14(tablefile)
 
   ! use appropriately evolved alphas.
