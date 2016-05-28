@@ -228,7 +228,7 @@ else:
         intermediates += "tt"
     if option.include_background == True and option.include_signal == False:
         intermediates += "no"
-        
+
 if len(intermediates) > 0:
     intermediates = intermediates + "-"
 
@@ -273,14 +273,13 @@ print >> config, '%s ! model_name' % model_name
 print >> config, '%i ! istructure' % option.structure_function
 print >> config, '%i ! include_signal' % option.include_signal
 print >> config, '%i ! include_background' % option.include_background
-print >> config, '%i ! include_g' % option.include_g
-print >> config, '%i ! include_a' % option.include_a
-print >> config, '%i ! include_z' % option.include_z
-print >> config, '%i ! include_x' % option.include_x
 print >> config, '%i ! include_gg' % option.include_gg
 print >> config, '%i ! include_qq' % option.include_qq
 print >> config, '%i ! include_uu' % option.include_uu
 print >> config, '%i ! include_dd' % option.include_dd
+print >> config, '%i ! include_a' % option.include_a
+print >> config, '%i ! include_z' % option.include_z
+print >> config, '%i ! include_x' % option.include_x
 print >> config, '%i ! phase_space_only' % option.phase_space_only
 print >> config, '%i ! interference' % option.interference
 print >> config, '%i ! use_nwa' % option.use_nwa

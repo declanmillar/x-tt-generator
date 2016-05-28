@@ -668,67 +668,47 @@ function dsigma(x, wgt)
 
     resall = 0
     if (final_state <= 0) then
-      ! Computing 2->2 square matrix elements
-      if (include_g == 1) then
-        ! Computing QCD matrix elements
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            if (include_gg == 1) then
-              qcdpolgg(lam3,lam4) = sgg_tt(p1, p2, p3, p4, lam3, lam4)*gs**4
-            end if
-            if (include_qq == 1) then
-              qcdpolqq(lam3,lam4) = sqq_tt(3, p1, p2, p3, p4, lam3, lam4)*gs**4
-            end if
-            resall = resall + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4)! + qcdpolqq(lam3,lam4)
-          end do
+      do lam3 = -1, 1, 2
+        do lam4 = -1, 1, 2
+          if (include_gg == 1) then
+            qcdpolgg(lam3,lam4) = sgg_tt(p1, p2, p3, p4, lam3, lam4)*gs**4
+          end if
+          if (include_qq == 1) then
+            qcdpolqq(lam3,lam4) = sqq_tt(3, p1, p2, p3, p4, lam3, lam4)*gs**4
+          end if
+          if (include_uu == 1) then
+            qfdpoluu1(lam3, lam4) = sqq_ff(3, ffinal, p1, p2, p3, p4, lam3, lam4)
+            qfdpoluu2(lam3, lam4) = sqq_ff(3, ffinal, p2, p1, p3, p4, lam3, lam4)
+          end if
+          if (include_dd == 1) then
+            qfdpoldd1(lam3, lam4) = sqq_ff(4, ffinal, p1, p2, p3, p4, lam3, lam4)
+            qfdpoldd2(lam3, lam4) = sqq_ff(4, ffinal, p2, p1, p3, p4, lam3, lam4)
+          end if
+          resall = resall &
+          + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) &
+          + qfdpoluu1(lam3,lam4) + qfdpoluu2(lam3,lam4) &
+          + qfdpoldd1(lam3,lam4) + qfdpoldd2(lam3,lam4)
         end do
-      end if
-      if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
-        ! Computing QFD matrix elements
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            if (include_qq == 1) then
-              qfdpoluu1(lam3, lam4) = sqq_ff(3, ffinal, p1, p2, p3, p4, lam3, lam4)
-              qfdpoluu2(lam3, lam4) = sqq_ff(3, ffinal, p2, p1, p3, p4, lam3, lam4)
-              qfdpoldd1(lam3, lam4) = sqq_ff(4, ffinal, p1, p2, p3, p4, lam3, lam4)
-              qfdpoldd2(lam3, lam4) = sqq_ff(4, ffinal, p2, p1, p3, p4, lam3, lam4)
-              print*, qfdpoluu1(lam3, lam4)
-              print*, qfdpoluu2(lam3, lam4)
-              print*, qfdpoldd1(lam3, lam4)
-              print*, qfdpoldd2(lam3, lam4)
-            end if
-            resall = resall &
-            + qfdpoluu1(lam3,lam4) + qfdpoluu2(lam3,lam4) &
-            + qfdpoldd1(lam3,lam4) + qfdpoldd2(lam3,lam4)
-          end do
-        end do
-      end if
+      end do
 
     else if (final_state == 1) then
-      ! Computing 2->6 square matrix elements
-      ! Do not change the deliberate order of p6 and p7.
-      if (include_g == 1) then
-        ! Computing QCD matrix elements
-        if (include_gg == 1) then
-          qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
-        end if
-        if (include_qq == 1) then
-          qcdqq = sqq_tt_bbeevv_qcd(3, p1, p2, p3, p4, p5, p7, p6, p8)
-        end if
+      if (include_gg == 1) then
+        qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
       end if
-      if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
-        ! Computing QFD matrix elements
-        if (include_qq == 1) then
-          qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-          qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
-          qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-          qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
-        end if
+      if (include_qq == 1) then
+        qcdqq = sqq_tt_bbeevv_qcd(3, p1, p2, p3, p4, p5, p7, p6, p8)
+      end if
+      if (include_uu == 1) then
+        qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+        qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+      end if
+      if (include_dd == 1) then
+        qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+        qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
       end if
       resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
     else if (final_state == 3) then
-      ! Do not change the deliberate order of p6 and p7.
       if (include_gg == 1) then
           qcdgg = sgg_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
       end if
@@ -755,21 +735,20 @@ function dsigma(x, wgt)
 
     pfxtot = 0.d0
     if (final_state <= 0) then
-      ! Summing over 2to2 |m|^2 with pdfs of all initial partons"
+      ! Summing over 2to2 |m|^2 with pdfs of all initial partons
       do lam3 = -1, 1, 2
         do lam4 = -1, 1, 2
-                    pfx(lam3,lam4) = qcdpolgg(lam3,lam4)*fx1(13)*fx2(13) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-          + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-          + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 5)*fx2(11) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-          + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-          + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-          + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1(11)*fx2( 5)
-          print*, "pfx(", lam3, ", ", lam4, " = ", pfx(lam3, lam4)
+                    pfx(lam3,lam4) = qcdpolgg(lam3,lam4) *fx1(13)*fx2(13) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
+           + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
+           + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 5)*fx2(11) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
+           + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
+           + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
+           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1(11)*fx2( 5)
           if (ix == 1) then
             pfx(lam3,lam4) = pfx(lam3,lam4)/x1
           else if (ix == 2) then

@@ -17,14 +17,13 @@ module configuration
   character(100) :: lhe_file
   integer :: include_signal
   integer :: include_background
-  integer :: include_g
-  integer :: include_a
-  integer :: include_z
-  integer :: include_x
   integer :: include_gg
   integer :: include_qq
   integer :: include_uu
   integer :: include_dd
+  integer :: include_a
+  integer :: include_z
+  integer :: include_x
   integer :: interference
   integer :: use_nwa
   integer :: symmetrise
@@ -68,14 +67,13 @@ contains
     read(5,*) structure_function
     read(5,*) include_signal
     read(5,*) include_background
-    read(5,*) include_g
-    read(5,*) include_a
-    read(5,*) include_z
-    read(5,*) include_x
     read(5,*) include_gg
     read(5,*) include_qq
     read(5,*) include_uu
     read(5,*) include_dd
+    read(5,*) include_a
+    read(5,*) include_z
+    read(5,*) include_x
     read(5,*) phase_space_only
     read(5,*) interference
     read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
@@ -170,18 +168,16 @@ subroutine print_config
   if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
   if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
   write(log,*) 'Model:', model_name
-  if (include_g == 1) write(log,*) 'gluon:ON '
-  if (include_g == 0) write(log,*) 'gluon:OFF'
   if (include_a == 1) write(log,*) 'photon:ON '
   if (include_a == 0) write(log,*) 'photon:OFF'
   if (include_z == 1) write(log,*) 'Z boson:ON '
   if (include_z == 0) write(log,*) 'Z boson:OFF'
   if (include_x == 1) write(log,*) 'BSM:ON '
   if (include_x == 0) write(log,*) 'BSM:OFF'
-  if (include_gg == 1) write(log,*) 'gg:ON '
-  if (include_gg == 0) write(log,*) 'gg:OFF'
-  if (include_qq == 1) write(log,*) 'qq:ON '
-  if (include_qq == 0) write(log,*) 'qq:OFF'
+  write(log,*) "include_gg: ", include_gg
+  write(log,*) "include_qq: ", include_qq
+  write(log,*) "include_uu: ", include_uu
+  write(log,*) "include_dd: ", include_dd
   if (interference == 0) write(log,*) "Interference:none"
   if (interference == 1) write(log,*) "Interference:(gamma + Z) + (Z')"
   if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
