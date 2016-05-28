@@ -48,13 +48,13 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
   sqq_ff = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-    if (goodhel(ihel) .or. ntry < 10) then
+    ! if (goodhel(ihel) .or. ntry < 10) then
       t = qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
       sqq_ff = sqq_ff + t
-      if (t > 0d0 .and. .not. goodhel(ihel)) then
-          goodhel(ihel)= .true.
-      endif
-    end if
+    !   if (t > 0d0 .and. .not. goodhel(ihel)) then
+    !       goodhel(ihel)= .true.
+    !   endif
+    ! end if
   enddo
   sqq_ff = sqq_ff/4d0
 end function sqq_ff

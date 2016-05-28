@@ -32,6 +32,7 @@ program zprime
   real ebmup(2) ! energy in GeV of beam particles 1 and 2
   integer pdfgup(2) ! author group for beam 1 and 2 according to Cernlib PDFlib
   integer pdfsup(2) ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
+  character(40) tablefile
 
   call cpu_time(start_time)
   call read_config
@@ -54,20 +55,28 @@ program zprime
   if (structure_function == 7) lambdaqcd4 = 0.300d0
   if (structure_function == 8) lambdaqcd4 = 0.229d0
   if (structure_function == 9) lambdaqcd4 = 0.383d0
+  ! ?
+  if (structure_function == 10) lambdaqcd4 = 0.215d0 !
+  if (structure_function == 11) lambdaqcd4 = 0.215d0 ! check this
 
   ! initialise cteq grids.
   if (structure_function <= 4) call setctq6(structure_function)
+  if (structure_function == 10) tablefile = "ct14ln.pds"
+  if (structure_function == 11) tablefile = "ct14ln.pds"
+  if (structure_function > 9) call setct14(tablefile)
 
   ! use appropriately evolved alphas.
   if (structure_function <= 2) then
+    nloops = 2
+  else if (structure_function == 11) then
     nloops = 2
   else
     nloops = 1
   end if
 
   write(log,*) 'Loops:', nloops
-  write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
+  write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
 
   idbmup(1) = 2212
   if (initial_state == 0) then
@@ -230,12 +239,18 @@ program zprime
         sigma_pol_tot(lam3,lam4) = 0.d0
         error_pol_tot(lam3,lam4) = 0.d0
         do i = 1, it
+          print*, i
           sigma_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*sigma/cnorm(i)
           error_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*error_sigma/cnorm(i)
           sigma_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + sigma_pol(lam3,lam4,i)
+          print*, "sigma pol tot = ", sigma_pol_tot(lam3,lam4)
           error_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + error_pol(lam3,lam4,i)
         end do
-        error_pol_tot(lam3,lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
+        if (sigma_pol_tot(lam3, lam4) == 0) then
+           error_pol_tot(lam3,lam4) = 0
+        else
+          error_pol_tot(lam3, lam4) = error_pol_tot(lam3,lam4)/sigma_pol_tot(lam3,lam4)
+        end if
       end do
     end do
 

@@ -42,7 +42,7 @@ function dsigma(x, wgt)
   real :: sgg_tt, sqq_tt, sqq_ff
   real :: sgg_tt_bbeevv, sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
   real :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
-  real :: ctq6pdf
+  real :: ctq6pdf, ct14pdf
 
   real :: ecm, ecm_max, ecm_min
   real :: hist
@@ -211,7 +211,7 @@ function dsigma(x, wgt)
       btm2 = x2*ctq6pdf(5, x2, qq)
       glu2 = x2*ctq6pdf(0, x2, qq)
 
-    else if (structure_function > 4) then
+    else if (structure_function > 4 .and. structure_function < 10) then
       imode = structure_function - 4
       if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) return
       if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) return
@@ -228,6 +228,28 @@ function dsigma(x, wgt)
       dbar1 = dsea1
       ubar2 = usea2
       dbar2 = dsea2
+    else if (structure_function > 9) then
+      if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) return
+      if ((x2 <= 1.d-9) .or. (x2 >= 1.d0)) return
+      if ((qq <= 1.3d0) .or. (qq >= 1.d5)) return
+
+      ! *x for compatibility with MRS which return xf(x)
+      u1 = x1*ct14pdf(1, x1, qq)
+      d1 = x1*ct14pdf(2, x1, qq)
+      ubar1 = x1*ct14pdf(-1, x1, qq)
+      dbar1 = x1*ct14pdf(-2, x1, qq)
+      str1 = x1*ct14pdf(3, x1, qq)
+      chm1 = x1*ct14pdf(4, x1, qq)
+      btm1 = x1*ct14pdf(5, x1, qq)
+      glu1 = x1*ct14pdf(0, x1, qq)
+      u2 = x2*ct14pdf(1, x2, qq)
+      d2 = x2*ct14pdf(2, x2, qq)
+      ubar2 = x2*ct14pdf(-1, x2, qq)
+      dbar2 = x2*ct14pdf(-2, x2, qq)
+      str2 = x2*ct14pdf(3, x2, qq)
+      chm2 = x2*ct14pdf(4, x2, qq)
+      btm2 = x2*ct14pdf(5, x2, qq)
+      glu2 = x2*ct14pdf(0, x2, qq)
     end if
 
     ! initialise pdfs
@@ -604,8 +626,8 @@ function dsigma(x, wgt)
         pfxtot = 0.5/x2
       end if
       if (final_state <= 0) then
-        do lam3 = -1,1,2
-          do lam4 = -1,1,2
+        do lam3 = -1, 1, 2
+          do lam4 = -1, 1, 2
             if (ix == 1) then
               pfx(lam3,lam4) = 0.5/x1/(pfxtot + pfxtot)
             else if (ix == 2) then
@@ -618,7 +640,7 @@ function dsigma(x, wgt)
     end if
 
     ! Calculate QCD coupling
-    a_s = alfas(qq,lambdaqcd4,nloops)
+    a_s = alfas(qq, lambdaqcd4, nloops)
     gs2 = 4.d0*pi*a_s
     gs = sqrt(gs2)
 
@@ -663,13 +685,17 @@ function dsigma(x, wgt)
       end if
       if ((include_a == 1) .or. (include_z == 1) .or. (include_x == 1)) then
         ! Computing QFD matrix elements
-        do lam3 = -1,1,2
-          do lam4 = -1,1,2
+        do lam3 = -1, 1, 2
+          do lam4 = -1, 1, 2
             if (include_qq == 1) then
               qfdpoluu1(lam3, lam4) = sqq_ff(3, ffinal, p1, p2, p3, p4, lam3, lam4)
               qfdpoluu2(lam3, lam4) = sqq_ff(3, ffinal, p2, p1, p3, p4, lam3, lam4)
               qfdpoldd1(lam3, lam4) = sqq_ff(4, ffinal, p1, p2, p3, p4, lam3, lam4)
               qfdpoldd2(lam3, lam4) = sqq_ff(4, ffinal, p2, p1, p3, p4, lam3, lam4)
+              print*, qfdpoluu1(lam3, lam4)
+              print*, qfdpoluu2(lam3, lam4)
+              print*, qfdpoldd1(lam3, lam4)
+              print*, qfdpoldd2(lam3, lam4)
             end if
             resall = resall &
             + qfdpoluu1(lam3,lam4) + qfdpoluu2(lam3,lam4) &
@@ -748,6 +774,7 @@ function dsigma(x, wgt)
           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
           + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1(11)*fx2( 5)
+          print*, "pfx(", lam3, ", ", lam4, " = ", pfx(lam3, lam4)
           if (ix == 1) then
             pfx(lam3,lam4) = pfx(lam3,lam4)/x1
           else if (ix == 2) then
@@ -841,23 +868,20 @@ function dsigma(x, wgt)
     ! bin
     hist = ddsigma*wgt
 
+    ! Compute polarised event weightings
+    if (final_state < 1) then
+      do lam3 = -1, 1, 2
+        do lam4 = -1, 1, 2
+          sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + ddsigma*wgt*pfx(lam3,lam4)
+          ! print*, pfx(lam3,lam4), sigma_pol(lam3,lam4,it)
+          weight(lam3,lam4,it) = ddsigma*wgt*pfx(lam3,lam4)
+          error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) + sigma_pol(lam3,lam4,it)**2
+        end do
+      end do
+    end if
+
     if (ntuple_out == 1) then
       call rootaddint(it, "iteration")
-
-      if (final_state < 1) then
-        ! Compute polarised event weightings
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
-            sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + ddsigma*wgt*pfx(lam3,lam4)
-            weight(lam3,lam4,it) = ddsigma*wgt*pfx(lam3,lam4)
-            error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) + sigma_pol(lam3,lam4,it)**2
-          end do
-        end do
-        call rootadddouble(weight(-1,-1,it), "weightLL")
-        call rootadddouble(weight(-1, 1,it), "weightLR")
-        call rootadddouble(weight( 1,-1,it), "weightRL")
-        call rootadddouble(weight( 1, 1,it), "weightRR")
-      end if
 
       ! Write final particle collider frame momenta to Ntuple
       if (final_state == -1) then
@@ -873,6 +897,13 @@ function dsigma(x, wgt)
         call rootaddparticle(12,  qcol(1,6), qcol(2,6), qcol(3,6), qcol(4,6))
         call rootaddparticle(11,  qcol(1,7), qcol(2,7), qcol(3,7), qcol(4,7))
         call rootaddparticle(-12, qcol(1,8), qcol(2,8), qcol(3,8), qcol(4,8))
+      end if
+
+      if (final_state < 1) then
+        call rootadddouble(weight(-1,-1,it), "weightLL")
+        call rootadddouble(weight(-1, 1,it), "weightLR")
+        call rootadddouble(weight( 1,-1,it), "weightRL")
+        call rootadddouble(weight( 1, 1,it), "weightRR")
       end if
 
       call rootaddevent(hist)

@@ -46,13 +46,13 @@ function sgg_tt(p1, p2, p3, p4, lam3, lam4)
   sgg_tt = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
-    if (goodhel(ihel) .or. ntry < 10) then
+    ! if (goodhel(ihel) .or. ntry < 10) then
       t = gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
       sgg_tt = sgg_tt + t
-      if (t > 0d0 .and. .not. goodhel(ihel)) then
-          goodhel(ihel)= .true.
-      endif
-    end if
+      ! if (t > 0d0 .and. .not. goodhel(ihel)) then
+          ! goodhel(ihel)= .true.
+      ! endif
+    ! end if
   enddo
   sgg_tt = sgg_tt/4d0
 end function sgg_tt

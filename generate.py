@@ -93,8 +93,8 @@ if (option.ecm_low > 0 and option.ecm_up > 0 and option.ecm_up <= option.ecm_low
 if option.interference < 0 or option.interference > 4:
     sys.exit("Error: interference must be from 0-4.")
 
-if option.structure_function < 1 or option.structure_function > 9:
-    sys.exit("Error: structure_function ID must be from 1 to 9.")
+if option.structure_function < 1 or option.structure_function > 11:
+    sys.exit("Error: structure_function ID must be from 1 to 11.")
 
 # Modify configuration for consistency
 if model_name == "SM":
