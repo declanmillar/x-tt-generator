@@ -57,7 +57,7 @@ program zprime
   if (structure_function == 9) lambdaqcd4 = 0.383d0
   ! ?
   if (structure_function == 10) lambdaqcd4 = 0.215d0 !
-  if (structure_function == 11) lambdaqcd4 = 0.215d0 ! check this
+  if (structure_function == 11) lambdaqcd4 = 0.326d0 ! check this
 
   ! initialise cteq grids.
   if (structure_function <= 4) call setctq6(structure_function)
