@@ -155,7 +155,19 @@ else:
 if len(intermediates) > 0:
     intermediates = intermediates + "-"
 
-filename = '%s_%s-%s%s%s%s_%sx%s' % (option.model, initial_partons, intermediates, option.final_state, energy_collider, options, option.itmx, npoints)
+final_state = ""
+if option.final_state == -1:
+    final_state = "ll"
+elif option.final_state == 0:
+    final_state = "tt"
+elif option.final_state == 1:
+    final_state = "tt-bbllvv"
+elif option.final_state == 2:
+    final_state = "bbemuvevm"
+elif option.final_state == 3:
+    final_state = "bbtatavtvt"
+
+filename = '%s_%s-%s%s%s%s_%sx%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
 
 # Logfile
 run_directory = "."
