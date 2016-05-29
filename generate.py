@@ -95,25 +95,25 @@ seed = 12345 if option.fixed_seed else random.randint(0, 100000)
 executable = "zprime"
 options = ""
 if option.initial_state == 1:
-    options += ".ppbar"
+    options += "_ppbar"
 if option.structure_function != 4:
-    options += ".pdf%s" % option.structure_function
+    options += "_pdf%s" % option.structure_function
 if option.interference != 2:
-    options += ".int%i" % option.interference
+    options += "_int%i" % option.interference
 if option.use_nwa:
-    options += ".nwa"
+    options += "_nwa"
 if option.fixed_seed:
-    options += ".fixed"
+    options += "_fixed"
 if not option.symmetrise:
-    options += ".nosym"
+    options += "_nosym"
 if option.use_rambo:
-    options += ".R"
+    options += "_R"
 if  option.include_background == False and option.map_phase_space == False:
-    options += ".M"
+    options += "_M"
 if option.ecm_low != 0 and option.ecm_up != 0:
     options += "_%s-%s" % (option.ecm_low, option.ecm_up)
 if len(option.tag) > 0:
-    options += "." + option.tag
+    options += "_" + option.tag
 if option.final_state < 2:
     option.include_background = False
 if option.include_background:
