@@ -102,9 +102,16 @@ program zprime
     m6 = 0.d0
     m7 = 0.d0
     m8 = 0.d0
-  else if (final_state == 0 .or. final_state == 1) then
+  else if (final_state == 1) then
     m3 = bmass
     m4 = bmass
+    m5 = emass
+    m6 = nuemass
+    m7 = emass
+    m8 = nuemass
+  else if (final_state == 2) then
+    m3 = fmass(12)
+    m4 = fmass(12)
     m5 = emass
     m6 = nuemass
     m7 = emass
