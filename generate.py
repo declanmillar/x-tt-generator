@@ -64,7 +64,7 @@ if option.include_background == False and option.include_signal == False:
 if option.final_state < -1 or option.final_state > 3:
     sys.exit("ERROR! invalid final state id." % option.final_state)
 
-if not "lxplus" in hostname or not "cyan" in hostname:
+if "lxplus" not in hostname or "cyan" not in hostname:
     option.batch = False
 if option.model == "SM":
     option.include_x = False
