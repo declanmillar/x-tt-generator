@@ -56,8 +56,8 @@ program zprime
   if (structure_function == 8) lambdaqcd4 = 0.229d0
   if (structure_function == 9) lambdaqcd4 = 0.383d0
   ! ?
-  if (structure_function == 10) lambdaqcd4 = 0.215d0 !
-  if (structure_function == 11) lambdaqcd4 = 0.326d0 ! check this
+  if (structure_function == 10) lambdaqcd4 = 0.326d0 !
+  if (structure_function == 11) lambdaqcd4 = 0.215d0 ! check this
 
   ! initialise cteq grids.
   if (structure_function <= 4) call setctq6(structure_function)
@@ -68,7 +68,7 @@ program zprime
   ! use appropriately evolved alphas.
   if (structure_function <= 2) then
     nloops = 2
-  else if (structure_function == 11) then
+  else if (structure_function == 10) then
     nloops = 2
   else
     nloops = 1
@@ -253,11 +253,9 @@ program zprime
         sigma_pol_tot(lam3,lam4) = 0.d0
         error_pol_tot(lam3,lam4) = 0.d0
         do i = 1, it
-          print*, i
           sigma_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*sigma/cnorm(i)
           error_pol(lam3,lam4,i) = sigma_pol(lam3,lam4,i)*error_sigma/cnorm(i)
           sigma_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + sigma_pol(lam3,lam4,i)
-          print*, "sigma pol tot = ", sigma_pol_tot(lam3,lam4)
           error_pol_tot(lam3,lam4) = sigma_pol_tot(lam3,lam4) + error_pol(lam3,lam4,i)
         end do
         if (sigma_pol_tot(lam3, lam4) == 0) then

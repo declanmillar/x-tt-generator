@@ -165,6 +165,9 @@ subroutine print_config
   if (structure_function == 7) write(log,*) 'PDFs:MRS99 (cor03)'
   if (structure_function == 8) write(log,*) 'PDFs:MRS99 (cor04)'
   if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
+  if (structure_function == 10) write(log,*) 'PDFs:CT14LN'
+  if (structure_function == 10) write(log,*) 'PDFs:CT14LL'
+  if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
   if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
   if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
   write(log,*) 'Model:', model_name
