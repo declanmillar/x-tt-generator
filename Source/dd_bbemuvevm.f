@@ -313,6 +313,9 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
     ! for process : d d~  -> b b~ e+ mu- ve vm~
 
+    use modelling
+    use configuration, only: include_signal, include_background
+
     implicit none
 
     real*8 :: dd_bbemuvevm
@@ -373,27 +376,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     complex*16 w176(6), w177(6), w178(6), w179(6), w180(6)
     complex*16 w181(6), w182(6)
 
-    ! global variables
-
-    real*8 ::         gw, gwwa, gwwz
-    common /coup1/ gw, gwwa, gwwz
-    real*8 ::         gal(2),gau(2),gad(2),gwf(2)
-    common /coup2a/gal,   gau,   gad,   gwf
-    real*8 ::         gzn(2),gzl(2),gzu(2),gzd(2),g1(2)
-    common /coup2b/gzn,   gzl,   gzu,   gzd,   g1
-    real*8 ::         gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-    common /coup3/ gwwh,gzzh,ghhh,gwwhh,gzzhh,ghhhh
-    complex*16     gh(2,12)
-    common /coup4/ gh
-    real*8 ::         wmass,wwidth,zmass,zwidth
-    common /vmass1/wmass,wwidth,zmass,zwidth
-    real*8 ::         amass,awidth,hmass,hwidth
-    common /vmass2/amass,awidth,hmass,hwidth
-    real*8 ::            fmass(12), fwidth(12)
-    common /fermions/ fmass,     fwidth
-
     ! color data
-
     data eigen_val(1  )/       2.3299999999999997e+02 /
     data eigen_vec(1  ,1  )/  -6.5512178208041838e-02 /
     data eigen_vec(2  ,1  )/  -6.5512178208041838e-02 /
@@ -631,6 +614,17 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     ! ----------
     ! begin code
     ! ----------
+
+    ! initalise amps
+    do j = 1, ngraphs
+        amp(j) = 0.d0
+    end do
+
+    if (include_signal == 1) then
+        call iovxxx(w30 ,w59 ,w61 ,gau,amp(49 ))
+        call iovxxx(w30 ,w59 ,w62 ,gzu,amp(50 ))
+    end if
+
     call ixxxxx(p1  ,fmass(4  ),nhel(1  ), 1,w1  )
     call oxxxxx(p2  ,fmass(4  ),nhel(2  ),-1,w2  )
     call oxxxxx(p3  ,fmass(12 ),nhel(3  ), 1,w3  )
@@ -713,13 +707,13 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call iovxxx(w1  ,w28 ,w42 ,gwf,amp(38 ))
     call jvvxxx(w14 ,w11 ,gwwz,wmass,wwidth,w43 )
     call iovxxx(w1  ,w28 ,w43 ,gwf,amp(39 ))
-    call hioxxx(w4  ,w3  ,gh(1,12 ),hmass,hwidth,w44 )
+    call hioxxx(w4  ,w3  ,gchf(1,12 ),hmass,hwidth,w44 )
     call jvsxxx(w11 ,w44 ,gwwh,wmass,wwidth,w45 )
     call iovxxx(w1  ,w28 ,w45 ,gwf,amp(40 ))
     call fvixxx(w8  ,w14 ,gzn,fmass(6  ),fwidth(6  ),w46 )
     call jioxxx(w46 ,w6  ,gwf,wmass,wwidth,w47 )
     call iovxxx(w1  ,w28 ,w47 ,gwf,amp(41 ))
-    call fsixxx(w8  ,w44 ,gh(1,6  ),fmass(6  ),fwidth(6  ),w48 )
+    call fsixxx(w8  ,w44 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w48 )
     call jioxxx(w48 ,w6  ,gwf,wmass,wwidth,w49 )
     call iovxxx(w1  ,w28 ,w49 ,gwf,amp(42 ))
     call fvoxxx(w6  ,w9  ,gal,fmass(5  ),fwidth(5  ),w50 )
@@ -730,7 +724,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call jioxxx(w8  ,w53 ,gwf,wmass,wwidth,w54 )
     call fvixxx(w1  ,w54 ,gwf,fmass(3  ),fwidth(3  ),w55 )
     call iovxxx(w55 ,w2  ,w10 ,gwf,amp(44 ))
-    call fsoxxx(w6  ,w44 ,gh(1,5  ),fmass(5  ),fwidth(5  ),w56 )
+    call fsoxxx(w6  ,w44 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w56 )
     call jioxxx(w8  ,w56 ,gwf,wmass,wwidth,w57 )
     call fvixxx(w1  ,w57 ,gwf,fmass(3  ),fwidth(3  ),w58 )
     call iovxxx(w58 ,w2  ,w10 ,gwf,amp(45 ))
@@ -740,42 +734,40 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call jioxxx(w29 ,w2  ,gwf,wmass,wwidth,w60 )
     call iovxxx(w4  ,w59 ,w60 ,gwf,amp(48 ))
     call jioxxx(w1  ,w2  ,gad,amass,awidth,w61 )
-    call iovxxx(w30 ,w59 ,w61 ,gau,amp(49 ))
     call jioxxx(w1  ,w2  ,gzd,zmass,zwidth,w62 )
-    call iovxxx(w30 ,w59 ,w62 ,gzu,amp(50 ))
     call fvixxx(w4  ,w61 ,gad,fmass(12 ),fwidth(12 ),w63 )
     call jioxxx(w63 ,w3  ,gad,amass,awidth,w64 )
     call vvvxxx(w11 ,w10 ,w64 ,gwwa,amp(51 ))
     call jioxxx(w63 ,w3  ,gzd,zmass,zwidth,w65 )
     call vvvxxx(w11 ,w10 ,w65 ,gwwz,amp(52 ))
-    call hioxxx(w63 ,w3  ,gh(1,12 ),hmass,hwidth,w66 )
+    call hioxxx(w63 ,w3  ,gchf(1,12 ),hmass,hwidth,w66 )
     call vvsxxx(w11 ,w10 ,w66 ,gwwh,amp(53 ))
     call fvixxx(w4  ,w62 ,gzd,fmass(12 ),fwidth(12 ),w67 )
     call jioxxx(w67 ,w3  ,gad,amass,awidth,w68 )
     call vvvxxx(w11 ,w10 ,w68 ,gwwa,amp(54 ))
     call jioxxx(w67 ,w3  ,gzd,zmass,zwidth,w69 )
     call vvvxxx(w11 ,w10 ,w69 ,gwwz,amp(55 ))
-    call hioxxx(w67 ,w3  ,gh(1,12 ),hmass,hwidth,w70 )
+    call hioxxx(w67 ,w3  ,gchf(1,12 ),hmass,hwidth,w70 )
     call vvsxxx(w11 ,w10 ,w70 ,gwwh,amp(56 ))
     call fvixxx(w8  ,w65 ,gzn,fmass(6  ),fwidth(6  ),w71 )
     call iovxxx(w71 ,w6  ,w10 ,gwf,amp(57 ))
-    call fsixxx(w8  ,w66 ,gh(1,6  ),fmass(6  ),fwidth(6  ),w72 )
+    call fsixxx(w8  ,w66 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w72 )
     call iovxxx(w72 ,w6  ,w10 ,gwf,amp(58 ))
     call fvixxx(w8  ,w69 ,gzn,fmass(6  ),fwidth(6  ),w73 )
     call iovxxx(w73 ,w6  ,w10 ,gwf,amp(59 ))
-    call fsixxx(w8  ,w70 ,gh(1,6  ),fmass(6  ),fwidth(6  ),w74 )
+    call fsixxx(w8  ,w70 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w74 )
     call iovxxx(w74 ,w6  ,w10 ,gwf,amp(60 ))
     call fvoxxx(w6  ,w64 ,gal,fmass(5  ),fwidth(5  ),w75 )
     call iovxxx(w8  ,w75 ,w10 ,gwf,amp(61 ))
     call fvoxxx(w6  ,w65 ,gzl,fmass(5  ),fwidth(5  ),w76 )
     call iovxxx(w8  ,w76 ,w10 ,gwf,amp(62 ))
-    call fsoxxx(w6  ,w66 ,gh(1,5  ),fmass(5  ),fwidth(5  ),w77 )
+    call fsoxxx(w6  ,w66 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w77 )
     call iovxxx(w8  ,w77 ,w10 ,gwf,amp(63 ))
     call fvoxxx(w6  ,w68 ,gal,fmass(5  ),fwidth(5  ),w78 )
     call iovxxx(w8  ,w78 ,w10 ,gwf,amp(64 ))
     call fvoxxx(w6  ,w69 ,gzl,fmass(5  ),fwidth(5  ),w79 )
     call iovxxx(w8  ,w79 ,w10 ,gwf,amp(65 ))
-    call fsoxxx(w6  ,w70 ,gh(1,5  ),fmass(5  ),fwidth(5  ),w80 )
+    call fsoxxx(w6  ,w70 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w80 )
     call iovxxx(w8  ,w80 ,w10 ,gwf,amp(66 ))
     call fvixxx(w5  ,w64 ,gal,fmass(1  ),fwidth(1  ),w81 )
     call jioxxx(w81 ,w7  ,gwf,wmass,wwidth,w82 )
@@ -820,33 +812,33 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call vvvxxx(w11 ,w10 ,w105,gwwa,amp(82 ))
     call jioxxx(w4  ,w101,gzd,zmass,zwidth,w106)
     call vvvxxx(w11 ,w10 ,w106,gwwz,amp(83 ))
-    call hioxxx(w4  ,w101,gh(1,12 ),hmass,hwidth,w107)
+    call hioxxx(w4  ,w101,gchf(1,12 ),hmass,hwidth,w107)
     call vvsxxx(w11 ,w10 ,w107,gwwh,amp(84 ))
     call jioxxx(w4  ,w103,gad,amass,awidth,w108)
     call vvvxxx(w11 ,w10 ,w108,gwwa,amp(85 ))
     call jioxxx(w4  ,w103,gzd,zmass,zwidth,w109)
     call vvvxxx(w11 ,w10 ,w109,gwwz,amp(86 ))
-    call hioxxx(w4  ,w103,gh(1,12 ),hmass,hwidth,w110)
+    call hioxxx(w4  ,w103,gchf(1,12 ),hmass,hwidth,w110)
     call vvsxxx(w11 ,w10 ,w110,gwwh,amp(87 ))
     call fvixxx(w8  ,w106,gzn,fmass(6  ),fwidth(6  ),w111)
     call iovxxx(w111,w6  ,w10 ,gwf,amp(88 ))
-    call fsixxx(w8  ,w107,gh(1,6  ),fmass(6  ),fwidth(6  ),w112)
+    call fsixxx(w8  ,w107,gchf(1,6  ),fmass(6  ),fwidth(6  ),w112)
     call iovxxx(w112,w6  ,w10 ,gwf,amp(89 ))
     call fvixxx(w8  ,w109,gzn,fmass(6  ),fwidth(6  ),w113)
     call iovxxx(w113,w6  ,w10 ,gwf,amp(90 ))
-    call fsixxx(w8  ,w110,gh(1,6  ),fmass(6  ),fwidth(6  ),w114)
+    call fsixxx(w8  ,w110,gchf(1,6  ),fmass(6  ),fwidth(6  ),w114)
     call iovxxx(w114,w6  ,w10 ,gwf,amp(91 ))
     call fvoxxx(w6  ,w105,gal,fmass(5  ),fwidth(5  ),w115)
     call iovxxx(w8  ,w115,w10 ,gwf,amp(92 ))
     call fvoxxx(w6  ,w106,gzl,fmass(5  ),fwidth(5  ),w116)
     call iovxxx(w8  ,w116,w10 ,gwf,amp(93 ))
-    call fsoxxx(w6  ,w107,gh(1,5  ),fmass(5  ),fwidth(5  ),w117)
+    call fsoxxx(w6  ,w107,gchf(1,5  ),fmass(5  ),fwidth(5  ),w117)
     call iovxxx(w8  ,w117,w10 ,gwf,amp(94 ))
     call fvoxxx(w6  ,w108,gal,fmass(5  ),fwidth(5  ),w118)
     call iovxxx(w8  ,w118,w10 ,gwf,amp(95 ))
     call fvoxxx(w6  ,w109,gzl,fmass(5  ),fwidth(5  ),w119)
     call iovxxx(w8  ,w119,w10 ,gwf,amp(96 ))
-    call fsoxxx(w6  ,w110,gh(1,5  ),fmass(5  ),fwidth(5  ),w120)
+    call fsoxxx(w6  ,w110,gchf(1,5  ),fmass(5  ),fwidth(5  ),w120)
     call iovxxx(w8  ,w120,w10 ,gwf,amp(97 ))
     call fvixxx(w5  ,w105,gal,fmass(1  ),fwidth(1  ),w121)
     call jioxxx(w121,w7  ,gwf,wmass,wwidth,w122)
@@ -906,13 +898,13 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call iovxxx(w155,w6  ,w10 ,gwf,amp(118))
     call fvixxx(w99 ,w14 ,gzn,fmass(6  ),fwidth(6  ),w156)
     call iovxxx(w156,w6  ,w10 ,gwf,amp(119))
-    call fsixxx(w99 ,w44 ,gh(1,6  ),fmass(6  ),fwidth(6  ),w157)
+    call fsixxx(w99 ,w44 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w157)
     call iovxxx(w157,w6  ,w10 ,gwf,amp(120))
-    call fsixxx(w8  ,w152,gh(1,6  ),fmass(6  ),fwidth(6  ),w158)
+    call fsixxx(w8  ,w152,gchf(1,6  ),fmass(6  ),fwidth(6  ),w158)
     call iovxxx(w158,w6  ,w10 ,gwf,amp(121))
     call fvixxx(w8  ,w153,gzn,fmass(6  ),fwidth(6  ),w159)
     call iovxxx(w159,w6  ,w10 ,gwf,amp(122))
-    call fsoxxx(w6  ,w152,gh(1,5  ),fmass(5  ),fwidth(5  ),w160)
+    call fsoxxx(w6  ,w152,gchf(1,5  ),fmass(5  ),fwidth(5  ),w160)
     call iovxxx(w8  ,w160,w10 ,gwf,amp(123))
     call fvoxxx(w6  ,w153,gzl,fmass(5  ),fwidth(5  ),w161)
     call iovxxx(w8  ,w161,w10 ,gwf,amp(124))
@@ -1009,10 +1001,10 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call iovxxx(w99 ,w6  ,w133,gwf,amp(202))
     call iovxxx(w22 ,w93 ,w9  ,gal,amp(203))
     call iovxxx(w22 ,w93 ,w14 ,gzl,amp(204))
-    call iosxxx(w22 ,w93 ,w44 ,gh(1,5  ),amp(205))
+    call iosxxx(w22 ,w93 ,w44 ,gchf(1,5  ),amp(205))
     call iovxxx(w22 ,w96 ,w9  ,gal,amp(206))
     call iovxxx(w22 ,w96 ,w14 ,gzl,amp(207))
-    call iosxxx(w22 ,w96 ,w44 ,gh(1,5  ),amp(208))
+    call iosxxx(w22 ,w96 ,w44 ,gchf(1,5  ),amp(208))
     call fvixxx(w136,w61 ,gal,fmass(1  ),fwidth(1  ),w175)
     call jioxxx(w175,w7  ,gwf,wmass,wwidth,w176)
     call iovxxx(w8  ,w6  ,w176,gwf,amp(209))

@@ -132,11 +132,10 @@ if option.include_qq:
     initial_partons += "qq"
 if option.include_gg:
     initial_partons += "gg"
-if option.final_state > 1:
-    if option.include_uu:
-        initial_partons += "uu"
-    if option.include_dd:
-        initial_partons += "dd"
+if option.include_uu:
+    initial_partons += "uu"
+if option.include_dd:
+    initial_partons += "dd"
 
 intermediates = ""
 if option.final_state < 2:
