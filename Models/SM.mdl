@@ -6,8 +6,8 @@
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of up type quark
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of up type quark
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of down type quark
-0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of down type quark	
+0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of down type quark
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of electron
-0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of electron	
+0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of electron
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! vector coupling of neutrino
 0.d0, 0.d0, 0.d0, 0.d0, 0.d0 ! axial coupling of neutrino

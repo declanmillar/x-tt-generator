@@ -12,23 +12,20 @@ function sdd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
     real*8 :: sdd_bbemuvevm
 
     ! constants
-
-    integer ::    nexternal,   ncomb
-    parameter (nexternal=8, ncomb=256)
+    integer, parameter :: nexternal = 8, ncomb = 256
 
     ! arguments
-
-    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), &
+              p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
     ! local variables
-
-    integer :: nhel(nexternal,ncomb),ntry
+    integer :: nhel(nexternal, ncomb), ntry
     real*8 :: t
     real*8 :: dd_bbemuvevm
     integer :: ihel
     logical :: goodhel(ncomb)
     data goodhel/ncomb* .false. /
-    data ntry/0/
+    data ntry /0/
     data (nhel(ihel,  1),ihel=1,8) / -1, -1, -1, -1, -1, -1, -1, -1/
     data (nhel(ihel,  2),ihel=1,8) / -1, -1, -1, -1, -1, -1, -1,  1/
     data (nhel(ihel,  3),ihel=1,8) / -1, -1, -1, -1, -1, -1,  1, -1/
@@ -157,142 +154,142 @@ function sdd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
     data (nhel(ihel,126),ihel=1,8) / -1,  1,  1,  1,  1,  1, -1,  1/
     data (nhel(ihel,127),ihel=1,8) / -1,  1,  1,  1,  1,  1,  1, -1/
     data (nhel(ihel,128),ihel=1,8) / -1,  1,  1,  1,  1,  1,  1,  1/
-    data (nhel(ihel,129),ihel=1,8) /  1, -1, -1, -1, -1, -1, -1, -1/
-    data (nhel(ihel,130),ihel=1,8) /  1, -1, -1, -1, -1, -1, -1,  1/
-    data (nhel(ihel,131),ihel=1,8) /  1, -1, -1, -1, -1, -1,  1, -1/
-    data (nhel(ihel,132),ihel=1,8) /  1, -1, -1, -1, -1, -1,  1,  1/
-    data (nhel(ihel,133),ihel=1,8) /  1, -1, -1, -1, -1,  1, -1, -1/
-    data (nhel(ihel,134),ihel=1,8) /  1, -1, -1, -1, -1,  1, -1,  1/
-    data (nhel(ihel,135),ihel=1,8) /  1, -1, -1, -1, -1,  1,  1, -1/
-    data (nhel(ihel,136),ihel=1,8) /  1, -1, -1, -1, -1,  1,  1,  1/
-    data (nhel(ihel,137),ihel=1,8) /  1, -1, -1, -1,  1, -1, -1, -1/
-    data (nhel(ihel,138),ihel=1,8) /  1, -1, -1, -1,  1, -1, -1,  1/
-    data (nhel(ihel,139),ihel=1,8) /  1, -1, -1, -1,  1, -1,  1, -1/
-    data (nhel(ihel,140),ihel=1,8) /  1, -1, -1, -1,  1, -1,  1,  1/
-    data (nhel(ihel,141),ihel=1,8) /  1, -1, -1, -1,  1,  1, -1, -1/
-    data (nhel(ihel,142),ihel=1,8) /  1, -1, -1, -1,  1,  1, -1,  1/
-    data (nhel(ihel,143),ihel=1,8) /  1, -1, -1, -1,  1,  1,  1, -1/
-    data (nhel(ihel,144),ihel=1,8) /  1, -1, -1, -1,  1,  1,  1,  1/
-    data (nhel(ihel,145),ihel=1,8) /  1, -1, -1,  1, -1, -1, -1, -1/
-    data (nhel(ihel,146),ihel=1,8) /  1, -1, -1,  1, -1, -1, -1,  1/
-    data (nhel(ihel,147),ihel=1,8) /  1, -1, -1,  1, -1, -1,  1, -1/
-    data (nhel(ihel,148),ihel=1,8) /  1, -1, -1,  1, -1, -1,  1,  1/
-    data (nhel(ihel,149),ihel=1,8) /  1, -1, -1,  1, -1,  1, -1, -1/
-    data (nhel(ihel,150),ihel=1,8) /  1, -1, -1,  1, -1,  1, -1,  1/
-    data (nhel(ihel,151),ihel=1,8) /  1, -1, -1,  1, -1,  1,  1, -1/
-    data (nhel(ihel,152),ihel=1,8) /  1, -1, -1,  1, -1,  1,  1,  1/
-    data (nhel(ihel,153),ihel=1,8) /  1, -1, -1,  1,  1, -1, -1, -1/
-    data (nhel(ihel,154),ihel=1,8) /  1, -1, -1,  1,  1, -1, -1,  1/
-    data (nhel(ihel,155),ihel=1,8) /  1, -1, -1,  1,  1, -1,  1, -1/
-    data (nhel(ihel,156),ihel=1,8) /  1, -1, -1,  1,  1, -1,  1,  1/
-    data (nhel(ihel,157),ihel=1,8) /  1, -1, -1,  1,  1,  1, -1, -1/
-    data (nhel(ihel,158),ihel=1,8) /  1, -1, -1,  1,  1,  1, -1,  1/
-    data (nhel(ihel,159),ihel=1,8) /  1, -1, -1,  1,  1,  1,  1, -1/
-    data (nhel(ihel,160),ihel=1,8) /  1, -1, -1,  1,  1,  1,  1,  1/
-    data (nhel(ihel,161),ihel=1,8) /  1, -1,  1, -1, -1, -1, -1, -1/
-    data (nhel(ihel,162),ihel=1,8) /  1, -1,  1, -1, -1, -1, -1,  1/
-    data (nhel(ihel,163),ihel=1,8) /  1, -1,  1, -1, -1, -1,  1, -1/
-    data (nhel(ihel,164),ihel=1,8) /  1, -1,  1, -1, -1, -1,  1,  1/
-    data (nhel(ihel,165),ihel=1,8) /  1, -1,  1, -1, -1,  1, -1, -1/
-    data (nhel(ihel,166),ihel=1,8) /  1, -1,  1, -1, -1,  1, -1,  1/
-    data (nhel(ihel,167),ihel=1,8) /  1, -1,  1, -1, -1,  1,  1, -1/
-    data (nhel(ihel,168),ihel=1,8) /  1, -1,  1, -1, -1,  1,  1,  1/
-    data (nhel(ihel,169),ihel=1,8) /  1, -1,  1, -1,  1, -1, -1, -1/
-    data (nhel(ihel,170),ihel=1,8) /  1, -1,  1, -1,  1, -1, -1,  1/
-    data (nhel(ihel,171),ihel=1,8) /  1, -1,  1, -1,  1, -1,  1, -1/
-    data (nhel(ihel,172),ihel=1,8) /  1, -1,  1, -1,  1, -1,  1,  1/
-    data (nhel(ihel,173),ihel=1,8) /  1, -1,  1, -1,  1,  1, -1, -1/
-    data (nhel(ihel,174),ihel=1,8) /  1, -1,  1, -1,  1,  1, -1,  1/
-    data (nhel(ihel,175),ihel=1,8) /  1, -1,  1, -1,  1,  1,  1, -1/
-    data (nhel(ihel,176),ihel=1,8) /  1, -1,  1, -1,  1,  1,  1,  1/
-    data (nhel(ihel,177),ihel=1,8) /  1, -1,  1,  1, -1, -1, -1, -1/
-    data (nhel(ihel,178),ihel=1,8) /  1, -1,  1,  1, -1, -1, -1,  1/
-    data (nhel(ihel,179),ihel=1,8) /  1, -1,  1,  1, -1, -1,  1, -1/
-    data (nhel(ihel,180),ihel=1,8) /  1, -1,  1,  1, -1, -1,  1,  1/
-    data (nhel(ihel,181),ihel=1,8) /  1, -1,  1,  1, -1,  1, -1, -1/
-    data (nhel(ihel,182),ihel=1,8) /  1, -1,  1,  1, -1,  1, -1,  1/
-    data (nhel(ihel,183),ihel=1,8) /  1, -1,  1,  1, -1,  1,  1, -1/
-    data (nhel(ihel,184),ihel=1,8) /  1, -1,  1,  1, -1,  1,  1,  1/
-    data (nhel(ihel,185),ihel=1,8) /  1, -1,  1,  1,  1, -1, -1, -1/
-    data (nhel(ihel,186),ihel=1,8) /  1, -1,  1,  1,  1, -1, -1,  1/
-    data (nhel(ihel,187),ihel=1,8) /  1, -1,  1,  1,  1, -1,  1, -1/
-    data (nhel(ihel,188),ihel=1,8) /  1, -1,  1,  1,  1, -1,  1,  1/
-    data (nhel(ihel,189),ihel=1,8) /  1, -1,  1,  1,  1,  1, -1, -1/
-    data (nhel(ihel,190),ihel=1,8) /  1, -1,  1,  1,  1,  1, -1,  1/
-    data (nhel(ihel,191),ihel=1,8) /  1, -1,  1,  1,  1,  1,  1, -1/
-    data (nhel(ihel,192),ihel=1,8) /  1, -1,  1,  1,  1,  1,  1,  1/
-    data (nhel(ihel,193),ihel=1,8) /  1,  1, -1, -1, -1, -1, -1, -1/
-    data (nhel(ihel,194),ihel=1,8) /  1,  1, -1, -1, -1, -1, -1,  1/
-    data (nhel(ihel,195),ihel=1,8) /  1,  1, -1, -1, -1, -1,  1, -1/
-    data (nhel(ihel,196),ihel=1,8) /  1,  1, -1, -1, -1, -1,  1,  1/
-    data (nhel(ihel,197),ihel=1,8) /  1,  1, -1, -1, -1,  1, -1, -1/
-    data (nhel(ihel,198),ihel=1,8) /  1,  1, -1, -1, -1,  1, -1,  1/
-    data (nhel(ihel,199),ihel=1,8) /  1,  1, -1, -1, -1,  1,  1, -1/
-    data (nhel(ihel,200),ihel=1,8) /  1,  1, -1, -1, -1,  1,  1,  1/
-    data (nhel(ihel,201),ihel=1,8) /  1,  1, -1, -1,  1, -1, -1, -1/
-    data (nhel(ihel,202),ihel=1,8) /  1,  1, -1, -1,  1, -1, -1,  1/
-    data (nhel(ihel,203),ihel=1,8) /  1,  1, -1, -1,  1, -1,  1, -1/
-    data (nhel(ihel,204),ihel=1,8) /  1,  1, -1, -1,  1, -1,  1,  1/
-    data (nhel(ihel,205),ihel=1,8) /  1,  1, -1, -1,  1,  1, -1, -1/
-    data (nhel(ihel,206),ihel=1,8) /  1,  1, -1, -1,  1,  1, -1,  1/
-    data (nhel(ihel,207),ihel=1,8) /  1,  1, -1, -1,  1,  1,  1, -1/
-    data (nhel(ihel,208),ihel=1,8) /  1,  1, -1, -1,  1,  1,  1,  1/
-    data (nhel(ihel,209),ihel=1,8) /  1,  1, -1,  1, -1, -1, -1, -1/
-    data (nhel(ihel,210),ihel=1,8) /  1,  1, -1,  1, -1, -1, -1,  1/
-    data (nhel(ihel,211),ihel=1,8) /  1,  1, -1,  1, -1, -1,  1, -1/
-    data (nhel(ihel,212),ihel=1,8) /  1,  1, -1,  1, -1, -1,  1,  1/
-    data (nhel(ihel,213),ihel=1,8) /  1,  1, -1,  1, -1,  1, -1, -1/
-    data (nhel(ihel,214),ihel=1,8) /  1,  1, -1,  1, -1,  1, -1,  1/
-    data (nhel(ihel,215),ihel=1,8) /  1,  1, -1,  1, -1,  1,  1, -1/
-    data (nhel(ihel,216),ihel=1,8) /  1,  1, -1,  1, -1,  1,  1,  1/
-    data (nhel(ihel,217),ihel=1,8) /  1,  1, -1,  1,  1, -1, -1, -1/
-    data (nhel(ihel,218),ihel=1,8) /  1,  1, -1,  1,  1, -1, -1,  1/
-    data (nhel(ihel,219),ihel=1,8) /  1,  1, -1,  1,  1, -1,  1, -1/
-    data (nhel(ihel,220),ihel=1,8) /  1,  1, -1,  1,  1, -1,  1,  1/
-    data (nhel(ihel,221),ihel=1,8) /  1,  1, -1,  1,  1,  1, -1, -1/
-    data (nhel(ihel,222),ihel=1,8) /  1,  1, -1,  1,  1,  1, -1,  1/
-    data (nhel(ihel,223),ihel=1,8) /  1,  1, -1,  1,  1,  1,  1, -1/
-    data (nhel(ihel,224),ihel=1,8) /  1,  1, -1,  1,  1,  1,  1,  1/
-    data (nhel(ihel,225),ihel=1,8) /  1,  1,  1, -1, -1, -1, -1, -1/
-    data (nhel(ihel,226),ihel=1,8) /  1,  1,  1, -1, -1, -1, -1,  1/
-    data (nhel(ihel,227),ihel=1,8) /  1,  1,  1, -1, -1, -1,  1, -1/
-    data (nhel(ihel,228),ihel=1,8) /  1,  1,  1, -1, -1, -1,  1,  1/
-    data (nhel(ihel,229),ihel=1,8) /  1,  1,  1, -1, -1,  1, -1, -1/
-    data (nhel(ihel,230),ihel=1,8) /  1,  1,  1, -1, -1,  1, -1,  1/
-    data (nhel(ihel,231),ihel=1,8) /  1,  1,  1, -1, -1,  1,  1, -1/
-    data (nhel(ihel,232),ihel=1,8) /  1,  1,  1, -1, -1,  1,  1,  1/
-    data (nhel(ihel,233),ihel=1,8) /  1,  1,  1, -1,  1, -1, -1, -1/
-    data (nhel(ihel,234),ihel=1,8) /  1,  1,  1, -1,  1, -1, -1,  1/
-    data (nhel(ihel,235),ihel=1,8) /  1,  1,  1, -1,  1, -1,  1, -1/
-    data (nhel(ihel,236),ihel=1,8) /  1,  1,  1, -1,  1, -1,  1,  1/
-    data (nhel(ihel,237),ihel=1,8) /  1,  1,  1, -1,  1,  1, -1, -1/
-    data (nhel(ihel,238),ihel=1,8) /  1,  1,  1, -1,  1,  1, -1,  1/
-    data (nhel(ihel,239),ihel=1,8) /  1,  1,  1, -1,  1,  1,  1, -1/
-    data (nhel(ihel,240),ihel=1,8) /  1,  1,  1, -1,  1,  1,  1,  1/
-    data (nhel(ihel,241),ihel=1,8) /  1,  1,  1,  1, -1, -1, -1, -1/
-    data (nhel(ihel,242),ihel=1,8) /  1,  1,  1,  1, -1, -1, -1,  1/
-    data (nhel(ihel,243),ihel=1,8) /  1,  1,  1,  1, -1, -1,  1, -1/
-    data (nhel(ihel,244),ihel=1,8) /  1,  1,  1,  1, -1, -1,  1,  1/
-    data (nhel(ihel,245),ihel=1,8) /  1,  1,  1,  1, -1,  1, -1, -1/
-    data (nhel(ihel,246),ihel=1,8) /  1,  1,  1,  1, -1,  1, -1,  1/
-    data (nhel(ihel,247),ihel=1,8) /  1,  1,  1,  1, -1,  1,  1, -1/
-    data (nhel(ihel,248),ihel=1,8) /  1,  1,  1,  1, -1,  1,  1,  1/
-    data (nhel(ihel,249),ihel=1,8) /  1,  1,  1,  1,  1, -1, -1, -1/
-    data (nhel(ihel,250),ihel=1,8) /  1,  1,  1,  1,  1, -1, -1,  1/
-    data (nhel(ihel,251),ihel=1,8) /  1,  1,  1,  1,  1, -1,  1, -1/
-    data (nhel(ihel,252),ihel=1,8) /  1,  1,  1,  1,  1, -1,  1,  1/
-    data (nhel(ihel,253),ihel=1,8) /  1,  1,  1,  1,  1,  1, -1, -1/
-    data (nhel(ihel,254),ihel=1,8) /  1,  1,  1,  1,  1,  1, -1,  1/
-    data (nhel(ihel,255),ihel=1,8) /  1,  1,  1,  1,  1,  1,  1, -1/
-    data (nhel(ihel,256),ihel=1,8) /  1,  1,  1,  1,  1,  1,  1,  1/
+    data (nhel(ihel,129),ihel=1,8) / 1, -1, -1, -1, -1, -1, -1, -1/
+    data (nhel(ihel,130),ihel=1,8) / 1, -1, -1, -1, -1, -1, -1,  1/
+    data (nhel(ihel,131),ihel=1,8) / 1, -1, -1, -1, -1, -1,  1, -1/
+    data (nhel(ihel,132),ihel=1,8) / 1, -1, -1, -1, -1, -1,  1,  1/
+    data (nhel(ihel,133),ihel=1,8) / 1, -1, -1, -1, -1,  1, -1, -1/
+    data (nhel(ihel,134),ihel=1,8) / 1, -1, -1, -1, -1,  1, -1,  1/
+    data (nhel(ihel,135),ihel=1,8) / 1, -1, -1, -1, -1,  1,  1, -1/
+    data (nhel(ihel,136),ihel=1,8) / 1, -1, -1, -1, -1,  1,  1,  1/
+    data (nhel(ihel,137),ihel=1,8) / 1, -1, -1, -1,  1, -1, -1, -1/
+    data (nhel(ihel,138),ihel=1,8) / 1, -1, -1, -1,  1, -1, -1,  1/
+    data (nhel(ihel,139),ihel=1,8) / 1, -1, -1, -1,  1, -1,  1, -1/
+    data (nhel(ihel,140),ihel=1,8) / 1, -1, -1, -1,  1, -1,  1,  1/
+    data (nhel(ihel,141),ihel=1,8) / 1, -1, -1, -1,  1,  1, -1, -1/
+    data (nhel(ihel,142),ihel=1,8) / 1, -1, -1, -1,  1,  1, -1,  1/
+    data (nhel(ihel,143),ihel=1,8) / 1, -1, -1, -1,  1,  1,  1, -1/
+    data (nhel(ihel,144),ihel=1,8) / 1, -1, -1, -1,  1,  1,  1,  1/
+    data (nhel(ihel,145),ihel=1,8) / 1, -1, -1,  1, -1, -1, -1, -1/
+    data (nhel(ihel,146),ihel=1,8) / 1, -1, -1,  1, -1, -1, -1,  1/
+    data (nhel(ihel,147),ihel=1,8) / 1, -1, -1,  1, -1, -1,  1, -1/
+    data (nhel(ihel,148),ihel=1,8) / 1, -1, -1,  1, -1, -1,  1,  1/
+    data (nhel(ihel,149),ihel=1,8) / 1, -1, -1,  1, -1,  1, -1, -1/
+    data (nhel(ihel,150),ihel=1,8) / 1, -1, -1,  1, -1,  1, -1,  1/
+    data (nhel(ihel,151),ihel=1,8) / 1, -1, -1,  1, -1,  1,  1, -1/
+    data (nhel(ihel,152),ihel=1,8) / 1, -1, -1,  1, -1,  1,  1,  1/
+    data (nhel(ihel,153),ihel=1,8) / 1, -1, -1,  1,  1, -1, -1, -1/
+    data (nhel(ihel,154),ihel=1,8) / 1, -1, -1,  1,  1, -1, -1,  1/
+    data (nhel(ihel,155),ihel=1,8) / 1, -1, -1,  1,  1, -1,  1, -1/
+    data (nhel(ihel,156),ihel=1,8) / 1, -1, -1,  1,  1, -1,  1,  1/
+    data (nhel(ihel,157),ihel=1,8) / 1, -1, -1,  1,  1,  1, -1, -1/
+    data (nhel(ihel,158),ihel=1,8) / 1, -1, -1,  1,  1,  1, -1,  1/
+    data (nhel(ihel,159),ihel=1,8) / 1, -1, -1,  1,  1,  1,  1, -1/
+    data (nhel(ihel,160),ihel=1,8) / 1, -1, -1,  1,  1,  1,  1,  1/
+    data (nhel(ihel,161),ihel=1,8) / 1, -1,  1, -1, -1, -1, -1, -1/
+    data (nhel(ihel,162),ihel=1,8) / 1, -1,  1, -1, -1, -1, -1,  1/
+    data (nhel(ihel,163),ihel=1,8) / 1, -1,  1, -1, -1, -1,  1, -1/
+    data (nhel(ihel,164),ihel=1,8) / 1, -1,  1, -1, -1, -1,  1,  1/
+    data (nhel(ihel,165),ihel=1,8) / 1, -1,  1, -1, -1,  1, -1, -1/
+    data (nhel(ihel,166),ihel=1,8) / 1, -1,  1, -1, -1,  1, -1,  1/
+    data (nhel(ihel,167),ihel=1,8) / 1, -1,  1, -1, -1,  1,  1, -1/
+    data (nhel(ihel,168),ihel=1,8) / 1, -1,  1, -1, -1,  1,  1,  1/
+    data (nhel(ihel,169),ihel=1,8) / 1, -1,  1, -1,  1, -1, -1, -1/
+    data (nhel(ihel,170),ihel=1,8) / 1, -1,  1, -1,  1, -1, -1,  1/
+    data (nhel(ihel,171),ihel=1,8) / 1, -1,  1, -1,  1, -1,  1, -1/
+    data (nhel(ihel,172),ihel=1,8) / 1, -1,  1, -1,  1, -1,  1,  1/
+    data (nhel(ihel,173),ihel=1,8) / 1, -1,  1, -1,  1,  1, -1, -1/
+    data (nhel(ihel,174),ihel=1,8) / 1, -1,  1, -1,  1,  1, -1,  1/
+    data (nhel(ihel,175),ihel=1,8) / 1, -1,  1, -1,  1,  1,  1, -1/
+    data (nhel(ihel,176),ihel=1,8) / 1, -1,  1, -1,  1,  1,  1,  1/
+    data (nhel(ihel,177),ihel=1,8) / 1, -1,  1,  1, -1, -1, -1, -1/
+    data (nhel(ihel,178),ihel=1,8) / 1, -1,  1,  1, -1, -1, -1,  1/
+    data (nhel(ihel,179),ihel=1,8) / 1, -1,  1,  1, -1, -1,  1, -1/
+    data (nhel(ihel,180),ihel=1,8) / 1, -1,  1,  1, -1, -1,  1,  1/
+    data (nhel(ihel,181),ihel=1,8) / 1, -1,  1,  1, -1,  1, -1, -1/
+    data (nhel(ihel,182),ihel=1,8) / 1, -1,  1,  1, -1,  1, -1,  1/
+    data (nhel(ihel,183),ihel=1,8) / 1, -1,  1,  1, -1,  1,  1, -1/
+    data (nhel(ihel,184),ihel=1,8) / 1, -1,  1,  1, -1,  1,  1,  1/
+    data (nhel(ihel,185),ihel=1,8) / 1, -1,  1,  1,  1, -1, -1, -1/
+    data (nhel(ihel,186),ihel=1,8) / 1, -1,  1,  1,  1, -1, -1,  1/
+    data (nhel(ihel,187),ihel=1,8) / 1, -1,  1,  1,  1, -1,  1, -1/
+    data (nhel(ihel,188),ihel=1,8) / 1, -1,  1,  1,  1, -1,  1,  1/
+    data (nhel(ihel,189),ihel=1,8) / 1, -1,  1,  1,  1,  1, -1, -1/
+    data (nhel(ihel,190),ihel=1,8) / 1, -1,  1,  1,  1,  1, -1,  1/
+    data (nhel(ihel,191),ihel=1,8) / 1, -1,  1,  1,  1,  1,  1, -1/
+    data (nhel(ihel,192),ihel=1,8) / 1, -1,  1,  1,  1,  1,  1,  1/
+    data (nhel(ihel,193),ihel=1,8) / 1,  1, -1, -1, -1, -1, -1, -1/
+    data (nhel(ihel,194),ihel=1,8) / 1,  1, -1, -1, -1, -1, -1,  1/
+    data (nhel(ihel,195),ihel=1,8) / 1,  1, -1, -1, -1, -1,  1, -1/
+    data (nhel(ihel,196),ihel=1,8) / 1,  1, -1, -1, -1, -1,  1,  1/
+    data (nhel(ihel,197),ihel=1,8) / 1,  1, -1, -1, -1,  1, -1, -1/
+    data (nhel(ihel,198),ihel=1,8) / 1,  1, -1, -1, -1,  1, -1,  1/
+    data (nhel(ihel,199),ihel=1,8) / 1,  1, -1, -1, -1,  1,  1, -1/
+    data (nhel(ihel,200),ihel=1,8) / 1,  1, -1, -1, -1,  1,  1,  1/
+    data (nhel(ihel,201),ihel=1,8) / 1,  1, -1, -1,  1, -1, -1, -1/
+    data (nhel(ihel,202),ihel=1,8) / 1,  1, -1, -1,  1, -1, -1,  1/
+    data (nhel(ihel,203),ihel=1,8) / 1,  1, -1, -1,  1, -1,  1, -1/
+    data (nhel(ihel,204),ihel=1,8) / 1,  1, -1, -1,  1, -1,  1,  1/
+    data (nhel(ihel,205),ihel=1,8) / 1,  1, -1, -1,  1,  1, -1, -1/
+    data (nhel(ihel,206),ihel=1,8) / 1,  1, -1, -1,  1,  1, -1,  1/
+    data (nhel(ihel,207),ihel=1,8) / 1,  1, -1, -1,  1,  1,  1, -1/
+    data (nhel(ihel,208),ihel=1,8) / 1,  1, -1, -1,  1,  1,  1,  1/
+    data (nhel(ihel,209),ihel=1,8) / 1,  1, -1,  1, -1, -1, -1, -1/
+    data (nhel(ihel,210),ihel=1,8) / 1,  1, -1,  1, -1, -1, -1,  1/
+    data (nhel(ihel,211),ihel=1,8) / 1,  1, -1,  1, -1, -1,  1, -1/
+    data (nhel(ihel,212),ihel=1,8) / 1,  1, -1,  1, -1, -1,  1,  1/
+    data (nhel(ihel,213),ihel=1,8) / 1,  1, -1,  1, -1,  1, -1, -1/
+    data (nhel(ihel,214),ihel=1,8) / 1,  1, -1,  1, -1,  1, -1,  1/
+    data (nhel(ihel,215),ihel=1,8) / 1,  1, -1,  1, -1,  1,  1, -1/
+    data (nhel(ihel,216),ihel=1,8) / 1,  1, -1,  1, -1,  1,  1,  1/
+    data (nhel(ihel,217),ihel=1,8) / 1,  1, -1,  1,  1, -1, -1, -1/
+    data (nhel(ihel,218),ihel=1,8) / 1,  1, -1,  1,  1, -1, -1,  1/
+    data (nhel(ihel,219),ihel=1,8) / 1,  1, -1,  1,  1, -1,  1, -1/
+    data (nhel(ihel,220),ihel=1,8) / 1,  1, -1,  1,  1, -1,  1,  1/
+    data (nhel(ihel,221),ihel=1,8) / 1,  1, -1,  1,  1,  1, -1, -1/
+    data (nhel(ihel,222),ihel=1,8) / 1,  1, -1,  1,  1,  1, -1,  1/
+    data (nhel(ihel,223),ihel=1,8) / 1,  1, -1,  1,  1,  1,  1, -1/
+    data (nhel(ihel,224),ihel=1,8) / 1,  1, -1,  1,  1,  1,  1,  1/
+    data (nhel(ihel,225),ihel=1,8) / 1,  1,  1, -1, -1, -1, -1, -1/
+    data (nhel(ihel,226),ihel=1,8) / 1,  1,  1, -1, -1, -1, -1,  1/
+    data (nhel(ihel,227),ihel=1,8) / 1,  1,  1, -1, -1, -1,  1, -1/
+    data (nhel(ihel,228),ihel=1,8) / 1,  1,  1, -1, -1, -1,  1,  1/
+    data (nhel(ihel,229),ihel=1,8) / 1,  1,  1, -1, -1,  1, -1, -1/
+    data (nhel(ihel,230),ihel=1,8) / 1,  1,  1, -1, -1,  1, -1,  1/
+    data (nhel(ihel,231),ihel=1,8) / 1,  1,  1, -1, -1,  1,  1, -1/
+    data (nhel(ihel,232),ihel=1,8) / 1,  1,  1, -1, -1,  1,  1,  1/
+    data (nhel(ihel,233),ihel=1,8) / 1,  1,  1, -1,  1, -1, -1, -1/
+    data (nhel(ihel,234),ihel=1,8) / 1,  1,  1, -1,  1, -1, -1,  1/
+    data (nhel(ihel,235),ihel=1,8) / 1,  1,  1, -1,  1, -1,  1, -1/
+    data (nhel(ihel,236),ihel=1,8) / 1,  1,  1, -1,  1, -1,  1,  1/
+    data (nhel(ihel,237),ihel=1,8) / 1,  1,  1, -1,  1,  1, -1, -1/
+    data (nhel(ihel,238),ihel=1,8) / 1,  1,  1, -1,  1,  1, -1,  1/
+    data (nhel(ihel,239),ihel=1,8) / 1,  1,  1, -1,  1,  1,  1, -1/
+    data (nhel(ihel,240),ihel=1,8) / 1,  1,  1, -1,  1,  1,  1,  1/
+    data (nhel(ihel,241),ihel=1,8) / 1,  1,  1,  1, -1, -1, -1, -1/
+    data (nhel(ihel,242),ihel=1,8) / 1,  1,  1,  1, -1, -1, -1,  1/
+    data (nhel(ihel,243),ihel=1,8) / 1,  1,  1,  1, -1, -1,  1, -1/
+    data (nhel(ihel,244),ihel=1,8) / 1,  1,  1,  1, -1, -1,  1,  1/
+    data (nhel(ihel,245),ihel=1,8) / 1,  1,  1,  1, -1,  1, -1, -1/
+    data (nhel(ihel,246),ihel=1,8) / 1,  1,  1,  1, -1,  1, -1,  1/
+    data (nhel(ihel,247),ihel=1,8) / 1,  1,  1,  1, -1,  1,  1, -1/
+    data (nhel(ihel,248),ihel=1,8) / 1,  1,  1,  1, -1,  1,  1,  1/
+    data (nhel(ihel,249),ihel=1,8) / 1,  1,  1,  1,  1, -1, -1, -1/
+    data (nhel(ihel,250),ihel=1,8) / 1,  1,  1,  1,  1, -1, -1,  1/
+    data (nhel(ihel,251),ihel=1,8) / 1,  1,  1,  1,  1, -1,  1, -1/
+    data (nhel(ihel,252),ihel=1,8) / 1,  1,  1,  1,  1, -1,  1,  1/
+    data (nhel(ihel,253),ihel=1,8) / 1,  1,  1,  1,  1,  1, -1, -1/
+    data (nhel(ihel,254),ihel=1,8) / 1,  1,  1,  1,  1,  1, -1,  1/
+    data (nhel(ihel,255),ihel=1,8) / 1,  1,  1,  1,  1,  1,  1, -1/
+    data (nhel(ihel,256),ihel=1,8) / 1,  1,  1,  1,  1,  1,  1,  1/
     ! ----------
     ! begin code
     ! ----------
     sdd_bbemuvevm = 0d0
     ntry=ntry+1
-    do ihel=1,ncomb
+    do ihel=1, ncomb
         if (goodhel(ihel) .or. ntry < 10) then
-            t=dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel(1,ihel))
+            t=dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
             sdd_bbemuvevm = sdd_bbemuvevm + t
             if (t > 0d0 .and. .not. goodhel(ihel)) then
                 goodhel(ihel)= .true.
@@ -300,18 +297,18 @@ function sdd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
             endif
         endif
     enddo
-    sdd_bbemuvevm = sdd_bbemuvevm /  4d0
+    sdd_bbemuvevm = sdd_bbemuvevm / 4d0
 end function sdd_bbemuvevm
 
 
-function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
+function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
     ! function generated by madgraph
     ! returns amplitude squared summed/avg over colors
-    ! for the point in phase space p1,p2,p3,p4,...
-    ! and helicity nhel(1),nhel(2),....
+    ! for the point in phase space p1, p2, p3, p4, ...
+    ! and helicity nhel(1), nhel(2), ...
 
-    ! for process : d d~  -> b b~ e+ mu- ve vm~
+    ! for process : d d~ -> b b~ e+ mu- ve vm~
 
     use modelling
     use configuration, only: include_signal, include_background
@@ -321,43 +318,39 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     real*8 :: dd_bbemuvevm
 
     ! constants
-
-    integer ::    ngraphs,    neigen,    nexternal
-    parameter (ngraphs=233,neigen=  1,nexternal=8)
-    real*8 ::     zero
-    parameter (zero=0d0)
+    integer, parameter :: ngraphs = 233, neigen = 1, nexternal = 8
+    real*8, parameter :: zero = 0d0
 
     ! arguments
-
     real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
     integer :: nhel(nexternal)
 
     ! local variables
 
     integer :: i,j
-    real*8 :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
+    real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
     complex*16 ztemp
     complex*16 amp(ngraphs)
-    complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
-    complex*16 w6(6)  , w7(6)  , w8(6)  , w9(6)  , w10(6)
-    complex*16 w11(6) , w12(6) , w13(6) , w14(6) , w15(6)
-    complex*16 w16(6) , w17(6) , w18(6) , w19(6) , w20(6)
-    complex*16 w21(6) , w22(6) , w23(6) , w24(6) , w25(6)
-    complex*16 w26(6) , w27(6) , w28(6) , w29(6) , w30(6)
-    complex*16 w31(6) , w32(6) , w33(6) , w34(6) , w35(6)
-    complex*16 w36(6) , w37(6) , w38(6) , w39(6) , w40(6)
-    complex*16 w41(6) , w42(6) , w43(6) , w44(6) , w45(6)
-    complex*16 w46(6) , w47(6) , w48(6) , w49(6) , w50(6)
-    complex*16 w51(6) , w52(6) , w53(6) , w54(6) , w55(6)
-    complex*16 w56(6) , w57(6) , w58(6) , w59(6) , w60(6)
-    complex*16 w61(6) , w62(6) , w63(6) , w64(6) , w65(6)
-    complex*16 w66(6) , w67(6) , w68(6) , w69(6) , w70(6)
-    complex*16 w71(6) , w72(6) , w73(6) , w74(6) , w75(6)
-    complex*16 w76(6) , w77(6) , w78(6) , w79(6) , w80(6)
-    complex*16 w81(6) , w82(6) , w83(6) , w84(6) , w85(6)
-    complex*16 w86(6) , w87(6) , w88(6) , w89(6) , w90(6)
-    complex*16 w91(6) , w92(6) , w93(6) , w94(6) , w95(6)
-    complex*16 w96(6) , w97(6) , w98(6) , w99(6) , w100(6)
+    complex*16 w1(6),  w2(6),  w3(6),  w4(6),  w5(6)
+    complex*16 w6(6),  w7(6),  w8(6),  w9(6),  w10(6)
+    complex*16 w11(6),  w12(6),  w13(6),  w14(6),  w15(6)
+    complex*16 w16(6),  w17(6),  w18(6),  w19(6),  w20(6)
+    complex*16 w21(6),  w22(6),  w23(6),  w24(6),  w25(6)
+    complex*16 w26(6),  w27(6),  w28(6),  w29(6),  w30(6)
+    complex*16 w31(6),  w32(6),  w33(6),  w34(6),  w35(6)
+    complex*16 w36(6),  w37(6),  w38(6),  w39(6),  w40(6)
+    complex*16 w41(6),  w42(6),  w43(6),  w44(6),  w45(6)
+    complex*16 w46(6),  w47(6),  w48(6),  w49(6),  w50(6)
+    complex*16 w51(6),  w52(6),  w53(6),  w54(6),  w55(6)
+    complex*16 w56(6),  w57(6),  w58(6),  w59(6),  w60(6)
+    complex*16 w61(6),  w62(6),  w63(6),  w64(6),  w65(6)
+    complex*16 w66(6),  w67(6),  w68(6),  w69(6),  w70(6)
+    complex*16 w71(6),  w72(6),  w73(6),  w74(6),  w75(6)
+    complex*16 w76(6),  w77(6),  w78(6),  w79(6),  w80(6)
+    complex*16 w81(6),  w82(6),  w83(6),  w84(6),  w85(6)
+    complex*16 w86(6),  w87(6),  w88(6),  w89(6),  w90(6)
+    complex*16 w91(6),  w92(6),  w93(6),  w94(6),  w95(6)
+    complex*16 w96(6),  w97(6),  w98(6),  w99(6),  w100(6)
     complex*16 w101(6), w102(6), w103(6), w104(6), w105(6)
     complex*16 w106(6), w107(6), w108(6), w109(6), w110(6)
     complex*16 w111(6), w112(6), w113(6), w114(6), w115(6)
@@ -377,240 +370,241 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     complex*16 w181(6), w182(6)
 
     ! color data
-    data eigen_val(1  )/       2.3299999999999997e+02 /
-    data eigen_vec(1  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(2  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(3  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(4  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(5  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(6  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(7  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(8  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(9  ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(10 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(11 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(12 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(13 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(14 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(15 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(16 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(17 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(18 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(19 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(20 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(21 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(22 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(23 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(24 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(25 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(26 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(27 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(28 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(29 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(30 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(31 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(32 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(33 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(34 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(35 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(36 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(37 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(38 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(39 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(40 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(41 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(42 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(43 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(44 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(45 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(46 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(47 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(48 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(49 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(50 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(51 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(52 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(53 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(54 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(55 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(56 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(57 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(58 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(59 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(60 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(61 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(62 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(63 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(64 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(65 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(66 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(67 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(68 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(69 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(70 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(71 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(72 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(73 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(74 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(75 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(76 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(77 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(78 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(79 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(80 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(81 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(82 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(83 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(84 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(85 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(86 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(87 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(88 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(89 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(90 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(91 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(92 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(93 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(94 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(95 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(96 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(97 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(98 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(99 ,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(100,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(101,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(102,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(103,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(104,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(105,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(106,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(107,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(108,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(109,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(110,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(111,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(112,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(113,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(114,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(115,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(116,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(117,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(118,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(119,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(120,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(121,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(122,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(123,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(124,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(125,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(126,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(127,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(128,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(129,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(130,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(131,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(132,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(133,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(134,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(135,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(136,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(137,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(138,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(139,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(140,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(141,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(142,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(143,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(144,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(145,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(146,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(147,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(148,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(149,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(150,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(151,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(152,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(153,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(154,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(155,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(156,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(157,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(158,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(159,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(160,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(161,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(162,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(163,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(164,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(165,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(166,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(167,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(168,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(169,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(170,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(171,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(172,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(173,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(174,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(175,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(176,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(177,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(178,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(179,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(180,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(181,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(182,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(183,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(184,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(185,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(186,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(187,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(188,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(189,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(190,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(191,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(192,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(193,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(194,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(195,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(196,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(197,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(198,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(199,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(200,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(201,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(202,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(203,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(204,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(205,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(206,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(207,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(208,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(209,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(210,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(211,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(212,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(213,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(214,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(215,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(216,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(217,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(218,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(219,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(220,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(221,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(222,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(223,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(224,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(225,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(226,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(227,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(228,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(229,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(230,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(231,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(232,1  )/  -6.5512178208041838e-02 /
-    data eigen_vec(233,1  )/  -6.5512178208041838e-02 /
+    data eigen_val(1) / 2.3299999999999997e+02 /
+    data eigen_vec(1, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(2, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(3, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(4, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(5, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(6, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(7, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(8, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(9, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(10, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(11, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(12, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(13, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(14, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(15, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(16, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(17, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(18, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(19, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(20, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(21, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(22, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(23, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(24, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(25, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(26, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(27, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(28, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(29, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(30, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(31, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(32, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(33, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(34, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(35, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(36, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(37, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(38, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(39, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(40, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(41, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(42, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(43, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(44, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(45, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(46, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(47, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(48, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(49, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(50, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(51, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(52, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(53, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(54, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(55, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(56, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(57, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(58, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(59, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(60, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(61, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(62, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(63, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(64, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(65, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(66, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(67, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(68, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(69, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(70, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(71, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(72, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(73, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(74, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(75, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(76, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(77, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(78, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(79, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(80, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(81, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(82, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(83, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(84, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(85, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(86, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(87, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(88, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(89, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(90, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(91, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(92, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(93, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(94, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(95, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(96, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(97, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(98, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(99, 1) / -6.5512178208041838e-02 /
+    data eigen_vec(100,1) / -6.5512178208041838e-02 /
+    data eigen_vec(101,1) / -6.5512178208041838e-02 /
+    data eigen_vec(102,1) / -6.5512178208041838e-02 /
+    data eigen_vec(103,1) / -6.5512178208041838e-02 /
+    data eigen_vec(104,1) / -6.5512178208041838e-02 /
+    data eigen_vec(105,1) / -6.5512178208041838e-02 /
+    data eigen_vec(106,1) / -6.5512178208041838e-02 /
+    data eigen_vec(107,1) / -6.5512178208041838e-02 /
+    data eigen_vec(108,1) / -6.5512178208041838e-02 /
+    data eigen_vec(109,1) / -6.5512178208041838e-02 /
+    data eigen_vec(110,1) / -6.5512178208041838e-02 /
+    data eigen_vec(111,1) / -6.5512178208041838e-02 /
+    data eigen_vec(112,1) / -6.5512178208041838e-02 /
+    data eigen_vec(113,1) / -6.5512178208041838e-02 /
+    data eigen_vec(114,1) / -6.5512178208041838e-02 /
+    data eigen_vec(115,1) / -6.5512178208041838e-02 /
+    data eigen_vec(116,1) / -6.5512178208041838e-02 /
+    data eigen_vec(117,1) / -6.5512178208041838e-02 /
+    data eigen_vec(118,1) / -6.5512178208041838e-02 /
+    data eigen_vec(119,1) / -6.5512178208041838e-02 /
+    data eigen_vec(120,1) / -6.5512178208041838e-02 /
+    data eigen_vec(121,1) / -6.5512178208041838e-02 /
+    data eigen_vec(122,1) / -6.5512178208041838e-02 /
+    data eigen_vec(123,1) / -6.5512178208041838e-02 /
+    data eigen_vec(124,1) / -6.5512178208041838e-02 /
+    data eigen_vec(125,1) / -6.5512178208041838e-02 /
+    data eigen_vec(126,1) / -6.5512178208041838e-02 /
+    data eigen_vec(127,1) / -6.5512178208041838e-02 /
+    data eigen_vec(128,1) / -6.5512178208041838e-02 /
+    data eigen_vec(129,1) / -6.5512178208041838e-02 /
+    data eigen_vec(130,1) / -6.5512178208041838e-02 /
+    data eigen_vec(131,1) / -6.5512178208041838e-02 /
+    data eigen_vec(132,1) / -6.5512178208041838e-02 /
+    data eigen_vec(133,1) / -6.5512178208041838e-02 /
+    data eigen_vec(134,1) / -6.5512178208041838e-02 /
+    data eigen_vec(135,1) / -6.5512178208041838e-02 /
+    data eigen_vec(136,1) / -6.5512178208041838e-02 /
+    data eigen_vec(137,1) / -6.5512178208041838e-02 /
+    data eigen_vec(138,1) / -6.5512178208041838e-02 /
+    data eigen_vec(139,1) / -6.5512178208041838e-02 /
+    data eigen_vec(140,1) / -6.5512178208041838e-02 /
+    data eigen_vec(141,1) / -6.5512178208041838e-02 /
+    data eigen_vec(142,1) / -6.5512178208041838e-02 /
+    data eigen_vec(143,1) / -6.5512178208041838e-02 /
+    data eigen_vec(144,1) / -6.5512178208041838e-02 /
+    data eigen_vec(145,1) / -6.5512178208041838e-02 /
+    data eigen_vec(146,1) / -6.5512178208041838e-02 /
+    data eigen_vec(147,1) / -6.5512178208041838e-02 /
+    data eigen_vec(148,1) / -6.5512178208041838e-02 /
+    data eigen_vec(149,1) / -6.5512178208041838e-02 /
+    data eigen_vec(150,1) / -6.5512178208041838e-02 /
+    data eigen_vec(151,1) / -6.5512178208041838e-02 /
+    data eigen_vec(152,1) / -6.5512178208041838e-02 /
+    data eigen_vec(153,1) / -6.5512178208041838e-02 /
+    data eigen_vec(154,1) / -6.5512178208041838e-02 /
+    data eigen_vec(155,1) / -6.5512178208041838e-02 /
+    data eigen_vec(156,1) / -6.5512178208041838e-02 /
+    data eigen_vec(157,1) / -6.5512178208041838e-02 /
+    data eigen_vec(158,1) / -6.5512178208041838e-02 /
+    data eigen_vec(159,1) / -6.5512178208041838e-02 /
+    data eigen_vec(160,1) / -6.5512178208041838e-02 /
+    data eigen_vec(161,1) / -6.5512178208041838e-02 /
+    data eigen_vec(162,1) / -6.5512178208041838e-02 /
+    data eigen_vec(163,1) / -6.5512178208041838e-02 /
+    data eigen_vec(164,1) / -6.5512178208041838e-02 /
+    data eigen_vec(165,1) / -6.5512178208041838e-02 /
+    data eigen_vec(166,1) / -6.5512178208041838e-02 /
+    data eigen_vec(167,1) / -6.5512178208041838e-02 /
+    data eigen_vec(168,1) / -6.5512178208041838e-02 /
+    data eigen_vec(169,1) / -6.5512178208041838e-02 /
+    data eigen_vec(170,1) / -6.5512178208041838e-02 /
+    data eigen_vec(171,1) / -6.5512178208041838e-02 /
+    data eigen_vec(172,1) / -6.5512178208041838e-02 /
+    data eigen_vec(173,1) / -6.5512178208041838e-02 /
+    data eigen_vec(174,1) / -6.5512178208041838e-02 /
+    data eigen_vec(175,1) / -6.5512178208041838e-02 /
+    data eigen_vec(176,1) / -6.5512178208041838e-02 /
+    data eigen_vec(177,1) / -6.5512178208041838e-02 /
+    data eigen_vec(178,1) / -6.5512178208041838e-02 /
+    data eigen_vec(179,1) / -6.5512178208041838e-02 /
+    data eigen_vec(180,1) / -6.5512178208041838e-02 /
+    data eigen_vec(181,1) / -6.5512178208041838e-02 /
+    data eigen_vec(182,1) / -6.5512178208041838e-02 /
+    data eigen_vec(183,1) / -6.5512178208041838e-02 /
+    data eigen_vec(184,1) / -6.5512178208041838e-02 /
+    data eigen_vec(185,1) / -6.5512178208041838e-02 /
+    data eigen_vec(186,1) / -6.5512178208041838e-02 /
+    data eigen_vec(187,1) / -6.5512178208041838e-02 /
+    data eigen_vec(188,1) / -6.5512178208041838e-02 /
+    data eigen_vec(189,1) / -6.5512178208041838e-02 /
+    data eigen_vec(190,1) / -6.5512178208041838e-02 /
+    data eigen_vec(191,1) / -6.5512178208041838e-02 /
+    data eigen_vec(192,1) / -6.5512178208041838e-02 /
+    data eigen_vec(193,1) / -6.5512178208041838e-02 /
+    data eigen_vec(194,1) / -6.5512178208041838e-02 /
+    data eigen_vec(195,1) / -6.5512178208041838e-02 /
+    data eigen_vec(196,1) / -6.5512178208041838e-02 /
+    data eigen_vec(197,1) / -6.5512178208041838e-02 /
+    data eigen_vec(198,1) / -6.5512178208041838e-02 /
+    data eigen_vec(199,1) / -6.5512178208041838e-02 /
+    data eigen_vec(200,1) / -6.5512178208041838e-02 /
+    data eigen_vec(201,1) / -6.5512178208041838e-02 /
+    data eigen_vec(202,1) / -6.5512178208041838e-02 /
+    data eigen_vec(203,1) / -6.5512178208041838e-02 /
+    data eigen_vec(204,1) / -6.5512178208041838e-02 /
+    data eigen_vec(205,1) / -6.5512178208041838e-02 /
+    data eigen_vec(206,1) / -6.5512178208041838e-02 /
+    data eigen_vec(207,1) / -6.5512178208041838e-02 /
+    data eigen_vec(208,1) / -6.5512178208041838e-02 /
+    data eigen_vec(209,1) / -6.5512178208041838e-02 /
+    data eigen_vec(210,1) / -6.5512178208041838e-02 /
+    data eigen_vec(211,1) / -6.5512178208041838e-02 /
+    data eigen_vec(212,1) / -6.5512178208041838e-02 /
+    data eigen_vec(213,1) / -6.5512178208041838e-02 /
+    data eigen_vec(214,1) / -6.5512178208041838e-02 /
+    data eigen_vec(215,1) / -6.5512178208041838e-02 /
+    data eigen_vec(216,1) / -6.5512178208041838e-02 /
+    data eigen_vec(217,1) / -6.5512178208041838e-02 /
+    data eigen_vec(218,1) / -6.5512178208041838e-02 /
+    data eigen_vec(219,1) / -6.5512178208041838e-02 /
+    data eigen_vec(220,1) / -6.5512178208041838e-02 /
+    data eigen_vec(221,1) / -6.5512178208041838e-02 /
+    data eigen_vec(222,1) / -6.5512178208041838e-02 /
+    data eigen_vec(223,1) / -6.5512178208041838e-02 /
+    data eigen_vec(224,1) / -6.5512178208041838e-02 /
+    data eigen_vec(225,1) / -6.5512178208041838e-02 /
+    data eigen_vec(226,1) / -6.5512178208041838e-02 /
+    data eigen_vec(227,1) / -6.5512178208041838e-02 /
+    data eigen_vec(228,1) / -6.5512178208041838e-02 /
+    data eigen_vec(229,1) / -6.5512178208041838e-02 /
+    data eigen_vec(230,1) / -6.5512178208041838e-02 /
+    data eigen_vec(231,1) / -6.5512178208041838e-02 /
+    data eigen_vec(232,1) / -6.5512178208041838e-02 /
+    data eigen_vec(233,1) / -6.5512178208041838e-02 /
+
     ! ----------
     ! begin code
     ! ----------
@@ -620,431 +614,439 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
         amp(j) = 0.d0
     end do
 
-    if (include_signal == 1) then
-        call iovxxx(w30 ,w59 ,w61 ,gau,amp(49 ))
-        call iovxxx(w30 ,w59 ,w62 ,gzu,amp(50 ))
+    call ixxxxx(p1, fmass(4), nhel(1), 1, w1)
+    call oxxxxx(p2, fmass(4), nhel(2), -1, w2)
+    call oxxxxx(p3, fmass(12), nhel(3), 1, w3)
+    call ixxxxx(p4, fmass(12), nhel(4), -1, w4)
+    call ixxxxx(p5, fmass(1), nhel(5), -1, w5)
+    call oxxxxx(p6, fmass(5), nhel(6), 1, w6)
+    call oxxxxx(p7, fmass(2), nhel(7), 1, w7)
+    call ixxxxx(p8, fmass(6), nhel(8), -1, w8)
+
+    call fvixxx(w4, w11, gwf, fmass(11), fwidth(11), w30)
+    call fvoxxx(w3, w10, gwf, fmass(11), fwidth(11), w59)
+    call jioxxx(w1, w2, gad, amass, awidth, w61)
+    call jioxxx(w1, w2, gzd, zmass, zwidth, w62)
+    call jioxxx(w5, w7, gwf, wmass, wwidth, w10)
+    call jioxxx(w8, w6, gwf, wmass, wwidth, w11)
+
+    if (include_background == 1) then
+        call jioxxx(w4, w3, gad, amass, awidth, w9)
+        call fvoxxx(w2, w9, gad, fmass(4), fwidth(4), w12)
+        call fvoxxx(w12, w10, gwf, fmass(3), fwidth(3), w13)
+        call jioxxx(w4, w3, gzd,zmass,zwidth, w14)
+        call fvoxxx(w2, w14, gzd, fmass(4), fwidth(4), w15)
+        call fvoxxx(w15, w10, gwf, fmass(3), fwidth(3), w16)
+        call jioxxx(w1, w12, gad, amass, awidth, w17)
+        call jioxxx(w1, w12, gzd, zmass, zwidth, w18)
+        call jioxxx(w1, w15, gad, amass, awidth, w19)
+        call jioxxx(w1, w15, gzd, zmass, zwidth, w20)
+        call fvoxxx(w6, w10, gwf, fmass(6), fwidth(6), w21)
+        call fvixxx(w8, w10, gwf, fmass(5), fwidth(5), w22)
+        call fvixxx(w5, w17, gal, fmass(1), fwidth(1), w23)
+        call fvixxx(w5, w18, gzl, fmass(1), fwidth(1), w24)
+        call fvixxx(w5, w19, gal, fmass(1), fwidth(1), w25)
+        call fvixxx(w5, w20, gzl, fmass(1), fwidth(1), w26)
+        call fvixxx(w5, w11, gwf, fmass(2), fwidth(2), w27)
+        call fvoxxx(w2, w10, gwf, fmass(3), fwidth(3), w28)
+        call fvixxx(w1, w11, gwf, fmass(3), fwidth(3), w29)
+        call jioxxx(w1, w28, gwf, wmass, wwidth, w31)
+        call fvixxx(w1, w9, gad, fmass(4), fwidth(4), w32)
+        call jioxxx(w32, w2, gad, amass, awidth, w33)
+        call jioxxx(w32, w2, gzd, zmass, zwidth, w34)
+        call fvixxx(w1, w14, gzd, fmass(4), fwidth(4), w35)
+        call jioxxx(w35, w2, gad, amass, awidth, w36)
+        call jioxxx(w35, w2, gzd, zmass, zwidth, w37)
+        call fvixxx(w5, w33, gal, fmass(1), fwidth(1), w38)
+        call fvixxx(w5, w34, gzl, fmass(1), fwidth(1), w39)
+        call fvixxx(w5, w36, gal, fmass(1), fwidth(1), w40)
+        call fvixxx(w5, w37, gzl, fmass(1), fwidth(1), w41)
+        call jvvxxx(w9, w11, gwwa, wmass, wwidth, w42)
+        call jvvxxx(w14, w11, gwwz, wmass, wwidth, w43)
+        call hioxxx(w4, w3, gchf(1,12),hmass,hwidth, w44)
+        call jvsxxx(w11, w44, gwwh, wmass, wwidth, w45)
+        call fvixxx(w8, w14, gzn, fmass(6), fwidth(6), w46)
+        call jioxxx(w46, w6, gwf, wmass, wwidth, w47)
+        call fsixxx(w8, w44, gchf(1,6), fmass(6), fwidth(6), w48)
+        call jioxxx(w48, w6, gwf, wmass, wwidth, w49)
+        call fvoxxx(w6, w9, gal, fmass(5), fwidth(5), w50)
+        call jioxxx(w8, w50, gwf, wmass, wwidth, w51)
+        call fvixxx(w1, w51, gwf, fmass(3), fwidth(3), w52)
+        call fvoxxx(w6, w14, gzl, fmass(5), fwidth(5), w53)
+        call jioxxx(w8, w53, gwf, wmass, wwidth, w54)
+        call fvixxx(w1, w54, gwf, fmass(3), fwidth(3), w55)
+        call fsoxxx(w6, w44, gchf(1,5), fmass(5), fwidth(5), w56)
+        call jioxxx(w8, w56, gwf, wmass, wwidth, w57)
+        call fvixxx(w1, w57, gwf, fmass(3), fwidth(3), w58)
+        call jioxxx(w29, w2, gwf, wmass, wwidth, w60)
+        call fvixxx(w4, w61, gad, fmass(12), fwidth(12), w63)
+        call jioxxx(w63, w3, gad,amass, awidth, w64)
+        call jioxxx(w63, w3, gzd,zmass, zwidth, w65)
+        call hioxxx(w63, w3, gchf(1,12), hmass, hwidth, w66)
+        call fvixxx(w4, w62, gzd, fmass(12), fwidth(12), w67)
+        call jioxxx(w67, w3, gad, amass, awidth, w68)
+        call jioxxx(w67, w3, gzd, zmass, zwidth, w69)
+        call hioxxx(w67, w3, gchf(1,12), hmass, hwidth, w70)
+        call fvixxx(w8, w65, gzn, fmass(6), fwidth(6), w71)
+        call fsixxx(w8, w66, gchf(1,6), fmass(6), fwidth(6), w72)
+        call fvixxx(w8, w69, gzn, fmass(6), fwidth(6), w73)
+        call fsixxx(w8, w70, gchf(1,6), fmass(6), fwidth(6), w74)
+        call fvoxxx(w6, w64, gal, fmass(5), fwidth(5), w75)
+        call fvoxxx(w6, w65, gzl, fmass(5), fwidth(5), w76)
+        call fsoxxx(w6, w66, gchf(1,5), fmass(5), fwidth(5), w77)
+        call fvoxxx(w6, w68, gal, fmass(5), fwidth(5), w78)
+        call fvoxxx(w6, w69, gzl, fmass(5), fwidth(5), w79)
+        call fsoxxx(w6, w70, gchf(1,5), fmass(5), fwidth(5), w80)
+        call fvixxx(w5, w64, gal, fmass(1), fwidth(1), w81)
+        call jioxxx(w81, w7, gwf, wmass, wwidth, w82)
+        call fvixxx(w5, w65, gzl, fmass(1), fwidth(1), w83)
+        call jioxxx(w83, w7, gwf, wmass, wwidth, w84)
+        call fvixxx(w5, w68, gal, fmass(1), fwidth(1), w85)
+        call jioxxx(w85, w7, gwf, wmass, wwidth, w86)
+        call fvixxx(w5, w69, gzl, fmass(1), fwidth(1), w87)
+        call jioxxx(w87, w7, gwf, wmass, wwidth, w88)
+        call fvoxxx(w7, w65, gzn, fmass(2), fwidth(2), w89)
+        call fvoxxx(w7, w69, gzn, fmass(2), fwidth(2), w90)
+        call jvvxxx(w61, w11, gwwa, wmass, wwidth, w91)
+        call jvvxxx(w62, w11, gwwz, wmass, wwidth, w92)
+        call fvoxxx(w6, w61, gal, fmass(5), fwidth(5), w93)
+        call jioxxx(w8, w93, gwf, wmass, wwidth, w94)
+        call fvixxx(w4, w94, gwf, fmass(11), fwidth(11), w95)
+        call fvoxxx(w6, w62, gzl, fmass(5), fwidth(5), w96)
+        call jioxxx(w8, w96, gwf, wmass, wwidth, w97)
+        call fvixxx(w4, w97, gwf, fmass(11), fwidth(11), w98)
+        call fvixxx(w8, w62, gzn, fmass(6), fwidth(6), w99)
+        call jioxxx(w99, w6, gwf, wmass, wwidth, w100)
+        call fvoxxx(w3, w61, gad, fmass(12), fwidth(12), w101)
+        call fvoxxx(w101, w10, gwf, fmass(11), fwidth(11), w102)
+        call fvoxxx(w3, w62, gzd, fmass(12), fwidth(12), w103)
+        call fvoxxx(w103, w10, gwf, fmass(11), fwidth(11), w104)
+        call jioxxx(w4, w101, gad, amass, awidth, w105)
+        call jioxxx(w4, w101, gzd, zmass, zwidth, w106)
+        call hioxxx(w4, w101, gchf(1,12), hmass, hwidth, w107)
+        call jioxxx(w4, w103, gad, amass, awidth, w108)
+        call jioxxx(w4, w103, gzd, zmass, zwidth, w109)
+        call hioxxx(w4, w103, gchf(1,12), hmass, hwidth, w110)
+        call fvixxx(w8, w106, gzn, fmass(6), fwidth(6), w111)
+        call fsixxx(w8, w107, gchf(1,6), fmass(6), fwidth(6), w112)
+        call fvixxx(w8, w109, gzn, fmass(6), fwidth(6), w113)
+        call fsixxx(w8, w110, gchf(1,6), fmass(6), fwidth(6), w114)
+        call fvoxxx(w6, w105, gal, fmass(5), fwidth(5), w115)
+        call fvoxxx(w6, w106, gzl, fmass(5), fwidth(5), w116)
+        call fsoxxx(w6, w107, gchf(1,5), fmass(5), fwidth(5), w117)
+        call fvoxxx(w6, w108, gal, fmass(5), fwidth(5), w118)
+        call fvoxxx(w6, w109, gzl, fmass(5), fwidth(5), w119)
+        call fsoxxx(w6, w110, gchf(1,5), fmass(5), fwidth(5), w120)
+        call fvixxx(w5, w105, gal, fmass(1), fwidth(1), w121)
+        call jioxxx(w121, w7, gwf, wmass, wwidth, w122)
+        call fvixxx(w5, w106, gzl, fmass(1), fwidth(1), w123)
+        call jioxxx(w123, w7, gwf, wmass, wwidth, w124)
+        call fvixxx(w5, w108, gal, fmass(1), fwidth(1), w125)
+        call jioxxx(w125, w7, gwf, wmass, wwidth, w126)
+        call fvixxx(w5, w109, gzl, fmass(1), fwidth(1), w127)
+        call jioxxx(w127, w7, gwf, wmass, wwidth, w128)
+        call fvoxxx(w7, w106, gzn, fmass(2), fwidth(2), w129)
+        call fvoxxx(w7, w109, gzn, fmass(2), fwidth(2), w130)
+        call jvvxxx(w10, w9, gwwa, wmass, wwidth, w131)
+        call jvvxxx(w10, w14, gwwz, wmass, wwidth, w132)
+        call jvsxxx(w10, w44, gwwh, wmass, wwidth, w133)
+        call fvoxxx(w7, w14, gzn, fmass(2), fwidth(2), w134)
+        call jioxxx(w5, w134, gwf, wmass, wwidth, w135)
+        call fvixxx(w5, w9, gal, fmass(1), fwidth(1), w136)
+        call jioxxx(w136, w7, gwf, wmass, wwidth, w137)
+        call fvoxxx(w2, w137, gwf, fmass(3), fwidth(3), w138)
+        call fvixxx(w5, w14, gzl, fmass(1), fwidth(1), w139)
+        call jioxxx(w139, w7, gwf, wmass, wwidth, w140)
+        call fvoxxx(w2, w140, gwf, fmass(3), fwidth(3), w141)
+        call jvvxxx(w10, w61, gwwa, wmass, wwidth, w142)
+        call jvvxxx(w10, w62, gwwz, wmass, wwidth, w143)
+        call fvixxx(w5, w61, gal, fmass(1), fwidth(1), w144)
+        call jioxxx(w144, w7, gwf, wmass, wwidth, w145)
+        call fvoxxx(w3, w145, gwf, fmass(11), fwidth(11), w146)
+        call fvixxx(w5, w62, gzl, fmass(1), fwidth(1), w147)
+        call jioxxx(w147, w7, gwf, wmass, wwidth, w148)
+        call fvoxxx(w3, w148, gwf, fmass(11), fwidth(11), w149)
+        call fvoxxx(w7, w62, gzn, fmass(2), fwidth(2), w150)
+        call jioxxx(w5, w150, gwf, wmass, wwidth, w151)
+        call hvvxxx(w62, w14, gzzh,hmass,hwidth, w152)
+        call jvsxxx(w62, w44, gzzh,zmass,zwidth, w153)
+        call fvixxx(w46, w62, gzn, fmass(6), fwidth(6), w154)
+        call fvixxx(w48, w62, gzn, fmass(6), fwidth(6), w155)
+        call fvixxx(w99, w14, gzn, fmass(6), fwidth(6), w156)
+        call fsixxx(w99, w44, gchf(1,6), fmass(6), fwidth(6), w157)
+        call fsixxx(w8, w152, gchf(1,6), fmass(6), fwidth(6), w158)
+        call fvixxx(w8, w153, gzn, fmass(6), fwidth(6), w159)
+        call fsoxxx(w6, w152, gchf(1,5), fmass(5), fwidth(5), w160)
+        call fvoxxx(w6, w153, gzl, fmass(5), fwidth(5), w161)
+        call fvixxx(w5, w153, gzl, fmass(1), fwidth(1), w162)
+        call jioxxx(w162, w7, gwf, wmass, wwidth, w163)
+        call fvoxxx(w134, w62, gzn, fmass(2), fwidth(2), w164)
+        call fvoxxx(w150, w14, gzn, fmass(2), fwidth(2), w165)
+        call fvoxxx(w7, w153, gzn, fmass(2), fwidth(2), w166)
+        call fvixxx(w144, w9, gal, fmass(1), fwidth(1), w167)
+        call jioxxx(w167, w7, gwf, wmass, wwidth, w168)
+        call fvixxx(w144, w14, gzl, fmass(1), fwidth(1), w169)
+        call jioxxx(w169, w7, gwf, wmass, wwidth, w170)
+        call fvixxx(w147, w9, gal, fmass(1), fwidth(1), w171)
+        call jioxxx(w171, w7, gwf, wmass, wwidth, w172)
+        call fvixxx(w147, w14, gzl, fmass(1), fwidth(1), w173)
+        call jioxxx(w173, w7, gwf, wmass, wwidth, w174)
+        call fvixxx(w136, w61, gal, fmass(1), fwidth(1), w175)
+        call jioxxx(w175, w7, gwf, wmass, wwidth, w176)
+        call fvixxx(w139, w61, gal, fmass(1), fwidth(1), w177)
+        call jioxxx(w177, w7, gwf, wmass, wwidth, w178)
+        call fvixxx(w136, w62, gzl, fmass(1), fwidth(1), w179)
+        call jioxxx(w179, w7, gwf, wmass, wwidth, w180)
+        call fvixxx(w139, w62, gzl, fmass(1), fwidth(1), w181)
+        call jioxxx(w181, w7, gwf, wmass, wwidth, w182)
     end if
 
-    call ixxxxx(p1  ,fmass(4  ),nhel(1  ), 1,w1  )
-    call oxxxxx(p2  ,fmass(4  ),nhel(2  ),-1,w2  )
-    call oxxxxx(p3  ,fmass(12 ),nhel(3  ), 1,w3  )
-    call ixxxxx(p4  ,fmass(12 ),nhel(4  ),-1,w4  )
-    call ixxxxx(p5  ,fmass(1  ),nhel(5  ),-1,w5  )
-    call oxxxxx(p6  ,fmass(5  ),nhel(6  ), 1,w6  )
-    call oxxxxx(p7  ,fmass(2  ),nhel(7  ), 1,w7  )
-    call ixxxxx(p8  ,fmass(6  ),nhel(8  ),-1,w8  )
-    call jioxxx(w4  ,w3  ,gad,amass,awidth,w9  )
-    call jioxxx(w5  ,w7  ,gwf,wmass,wwidth,w10 )
-    call jioxxx(w8  ,w6  ,gwf,wmass,wwidth,w11 )
-    call fvoxxx(w2  ,w9  ,gad,fmass(4  ),fwidth(4  ),w12 )
-    call fvoxxx(w12 ,w10 ,gwf,fmass(3  ),fwidth(3  ),w13 )
-    call iovxxx(w1  ,w13 ,w11 ,gwf,amp(1  ))
-    call jioxxx(w4  ,w3  ,gzd,zmass,zwidth,w14 )
-    call fvoxxx(w2  ,w14 ,gzd,fmass(4  ),fwidth(4  ),w15 )
-    call fvoxxx(w15 ,w10 ,gwf,fmass(3  ),fwidth(3  ),w16 )
-    call iovxxx(w1  ,w16 ,w11 ,gwf,amp(2  ))
-    call jioxxx(w1  ,w12 ,gad,amass,awidth,w17 )
-    call vvvxxx(w11 ,w10 ,w17 ,gwwa,amp(3  ))
-    call jioxxx(w1  ,w12 ,gzd,zmass,zwidth,w18 )
-    call vvvxxx(w11 ,w10 ,w18 ,gwwz,amp(4  ))
-    call jioxxx(w1  ,w15 ,gad,amass,awidth,w19 )
-    call vvvxxx(w11 ,w10 ,w19 ,gwwa,amp(5  ))
-    call jioxxx(w1  ,w15 ,gzd,zmass,zwidth,w20 )
-    call vvvxxx(w11 ,w10 ,w20 ,gwwz,amp(6  ))
-    call fvoxxx(w6  ,w10 ,gwf,fmass(6  ),fwidth(6  ),w21 )
-    call iovxxx(w8  ,w21 ,w18 ,gzn,amp(7  ))
-    call iovxxx(w8  ,w21 ,w20 ,gzn,amp(8  ))
-    call fvixxx(w8  ,w10 ,gwf,fmass(5  ),fwidth(5  ),w22 )
-    call iovxxx(w22 ,w6  ,w17 ,gal,amp(9  ))
-    call iovxxx(w22 ,w6  ,w18 ,gzl,amp(10 ))
-    call iovxxx(w22 ,w6  ,w19 ,gal,amp(11 ))
-    call iovxxx(w22 ,w6  ,w20 ,gzl,amp(12 ))
-    call fvixxx(w5  ,w17 ,gal,fmass(1  ),fwidth(1  ),w23 )
-    call iovxxx(w23 ,w7  ,w11 ,gwf,amp(13 ))
-    call fvixxx(w5  ,w18 ,gzl,fmass(1  ),fwidth(1  ),w24 )
-    call iovxxx(w24 ,w7  ,w11 ,gwf,amp(14 ))
-    call fvixxx(w5  ,w19 ,gal,fmass(1  ),fwidth(1  ),w25 )
-    call iovxxx(w25 ,w7  ,w11 ,gwf,amp(15 ))
-    call fvixxx(w5  ,w20 ,gzl,fmass(1  ),fwidth(1  ),w26 )
-    call iovxxx(w26 ,w7  ,w11 ,gwf,amp(16 ))
-    call fvixxx(w5  ,w11 ,gwf,fmass(2  ),fwidth(2  ),w27 )
-    call iovxxx(w27 ,w7  ,w18 ,gzn,amp(17 ))
-    call iovxxx(w27 ,w7  ,w20 ,gzn,amp(18 ))
-    call fvoxxx(w2  ,w10 ,gwf,fmass(3  ),fwidth(3  ),w28 )
-    call fvixxx(w1  ,w11 ,gwf,fmass(3  ),fwidth(3  ),w29 )
-    call iovxxx(w29 ,w28 ,w9  ,gau,amp(19 ))
-    call iovxxx(w29 ,w28 ,w14 ,gzu,amp(20 ))
-    call fvixxx(w4  ,w11 ,gwf,fmass(11 ),fwidth(11 ),w30 )
-    call jioxxx(w1  ,w28 ,gwf,wmass,wwidth,w31 )
-    call iovxxx(w30 ,w3  ,w31 ,gwf,amp(21 ))
-    call fvixxx(w1  ,w9  ,gad,fmass(4  ),fwidth(4  ),w32 )
-    call jioxxx(w32 ,w2  ,gad,amass,awidth,w33 )
-    call vvvxxx(w11 ,w10 ,w33 ,gwwa,amp(22 ))
-    call jioxxx(w32 ,w2  ,gzd,zmass,zwidth,w34 )
-    call vvvxxx(w11 ,w10 ,w34 ,gwwz,amp(23 ))
-    call fvixxx(w1  ,w14 ,gzd,fmass(4  ),fwidth(4  ),w35 )
-    call jioxxx(w35 ,w2  ,gad,amass,awidth,w36 )
-    call vvvxxx(w11 ,w10 ,w36 ,gwwa,amp(24 ))
-    call jioxxx(w35 ,w2  ,gzd,zmass,zwidth,w37 )
-    call vvvxxx(w11 ,w10 ,w37 ,gwwz,amp(25 ))
-    call iovxxx(w8  ,w21 ,w34 ,gzn,amp(26 ))
-    call iovxxx(w8  ,w21 ,w37 ,gzn,amp(27 ))
-    call iovxxx(w22 ,w6  ,w33 ,gal,amp(28 ))
-    call iovxxx(w22 ,w6  ,w34 ,gzl,amp(29 ))
-    call iovxxx(w22 ,w6  ,w36 ,gal,amp(30 ))
-    call iovxxx(w22 ,w6  ,w37 ,gzl,amp(31 ))
-    call fvixxx(w5  ,w33 ,gal,fmass(1  ),fwidth(1  ),w38 )
-    call iovxxx(w38 ,w7  ,w11 ,gwf,amp(32 ))
-    call fvixxx(w5  ,w34 ,gzl,fmass(1  ),fwidth(1  ),w39 )
-    call iovxxx(w39 ,w7  ,w11 ,gwf,amp(33 ))
-    call fvixxx(w5  ,w36 ,gal,fmass(1  ),fwidth(1  ),w40 )
-    call iovxxx(w40 ,w7  ,w11 ,gwf,amp(34 ))
-    call fvixxx(w5  ,w37 ,gzl,fmass(1  ),fwidth(1  ),w41 )
-    call iovxxx(w41 ,w7  ,w11 ,gwf,amp(35 ))
-    call iovxxx(w27 ,w7  ,w34 ,gzn,amp(36 ))
-    call iovxxx(w27 ,w7  ,w37 ,gzn,amp(37 ))
-    call jvvxxx(w9  ,w11 ,gwwa,wmass,wwidth,w42 )
-    call iovxxx(w1  ,w28 ,w42 ,gwf,amp(38 ))
-    call jvvxxx(w14 ,w11 ,gwwz,wmass,wwidth,w43 )
-    call iovxxx(w1  ,w28 ,w43 ,gwf,amp(39 ))
-    call hioxxx(w4  ,w3  ,gchf(1,12 ),hmass,hwidth,w44 )
-    call jvsxxx(w11 ,w44 ,gwwh,wmass,wwidth,w45 )
-    call iovxxx(w1  ,w28 ,w45 ,gwf,amp(40 ))
-    call fvixxx(w8  ,w14 ,gzn,fmass(6  ),fwidth(6  ),w46 )
-    call jioxxx(w46 ,w6  ,gwf,wmass,wwidth,w47 )
-    call iovxxx(w1  ,w28 ,w47 ,gwf,amp(41 ))
-    call fsixxx(w8  ,w44 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w48 )
-    call jioxxx(w48 ,w6  ,gwf,wmass,wwidth,w49 )
-    call iovxxx(w1  ,w28 ,w49 ,gwf,amp(42 ))
-    call fvoxxx(w6  ,w9  ,gal,fmass(5  ),fwidth(5  ),w50 )
-    call jioxxx(w8  ,w50 ,gwf,wmass,wwidth,w51 )
-    call fvixxx(w1  ,w51 ,gwf,fmass(3  ),fwidth(3  ),w52 )
-    call iovxxx(w52 ,w2  ,w10 ,gwf,amp(43 ))
-    call fvoxxx(w6  ,w14 ,gzl,fmass(5  ),fwidth(5  ),w53 )
-    call jioxxx(w8  ,w53 ,gwf,wmass,wwidth,w54 )
-    call fvixxx(w1  ,w54 ,gwf,fmass(3  ),fwidth(3  ),w55 )
-    call iovxxx(w55 ,w2  ,w10 ,gwf,amp(44 ))
-    call fsoxxx(w6  ,w44 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w56 )
-    call jioxxx(w8  ,w56 ,gwf,wmass,wwidth,w57 )
-    call fvixxx(w1  ,w57 ,gwf,fmass(3  ),fwidth(3  ),w58 )
-    call iovxxx(w58 ,w2  ,w10 ,gwf,amp(45 ))
-    call iovxxx(w32 ,w28 ,w11 ,gwf,amp(46 ))
-    call iovxxx(w35 ,w28 ,w11 ,gwf,amp(47 ))
-    call fvoxxx(w3  ,w10 ,gwf,fmass(11 ),fwidth(11 ),w59 )
-    call jioxxx(w29 ,w2  ,gwf,wmass,wwidth,w60 )
-    call iovxxx(w4  ,w59 ,w60 ,gwf,amp(48 ))
-    call jioxxx(w1  ,w2  ,gad,amass,awidth,w61 )
-    call jioxxx(w1  ,w2  ,gzd,zmass,zwidth,w62 )
-    call fvixxx(w4  ,w61 ,gad,fmass(12 ),fwidth(12 ),w63 )
-    call jioxxx(w63 ,w3  ,gad,amass,awidth,w64 )
-    call vvvxxx(w11 ,w10 ,w64 ,gwwa,amp(51 ))
-    call jioxxx(w63 ,w3  ,gzd,zmass,zwidth,w65 )
-    call vvvxxx(w11 ,w10 ,w65 ,gwwz,amp(52 ))
-    call hioxxx(w63 ,w3  ,gchf(1,12 ),hmass,hwidth,w66 )
-    call vvsxxx(w11 ,w10 ,w66 ,gwwh,amp(53 ))
-    call fvixxx(w4  ,w62 ,gzd,fmass(12 ),fwidth(12 ),w67 )
-    call jioxxx(w67 ,w3  ,gad,amass,awidth,w68 )
-    call vvvxxx(w11 ,w10 ,w68 ,gwwa,amp(54 ))
-    call jioxxx(w67 ,w3  ,gzd,zmass,zwidth,w69 )
-    call vvvxxx(w11 ,w10 ,w69 ,gwwz,amp(55 ))
-    call hioxxx(w67 ,w3  ,gchf(1,12 ),hmass,hwidth,w70 )
-    call vvsxxx(w11 ,w10 ,w70 ,gwwh,amp(56 ))
-    call fvixxx(w8  ,w65 ,gzn,fmass(6  ),fwidth(6  ),w71 )
-    call iovxxx(w71 ,w6  ,w10 ,gwf,amp(57 ))
-    call fsixxx(w8  ,w66 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w72 )
-    call iovxxx(w72 ,w6  ,w10 ,gwf,amp(58 ))
-    call fvixxx(w8  ,w69 ,gzn,fmass(6  ),fwidth(6  ),w73 )
-    call iovxxx(w73 ,w6  ,w10 ,gwf,amp(59 ))
-    call fsixxx(w8  ,w70 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w74 )
-    call iovxxx(w74 ,w6  ,w10 ,gwf,amp(60 ))
-    call fvoxxx(w6  ,w64 ,gal,fmass(5  ),fwidth(5  ),w75 )
-    call iovxxx(w8  ,w75 ,w10 ,gwf,amp(61 ))
-    call fvoxxx(w6  ,w65 ,gzl,fmass(5  ),fwidth(5  ),w76 )
-    call iovxxx(w8  ,w76 ,w10 ,gwf,amp(62 ))
-    call fsoxxx(w6  ,w66 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w77 )
-    call iovxxx(w8  ,w77 ,w10 ,gwf,amp(63 ))
-    call fvoxxx(w6  ,w68 ,gal,fmass(5  ),fwidth(5  ),w78 )
-    call iovxxx(w8  ,w78 ,w10 ,gwf,amp(64 ))
-    call fvoxxx(w6  ,w69 ,gzl,fmass(5  ),fwidth(5  ),w79 )
-    call iovxxx(w8  ,w79 ,w10 ,gwf,amp(65 ))
-    call fsoxxx(w6  ,w70 ,gchf(1,5  ),fmass(5  ),fwidth(5  ),w80 )
-    call iovxxx(w8  ,w80 ,w10 ,gwf,amp(66 ))
-    call fvixxx(w5  ,w64 ,gal,fmass(1  ),fwidth(1  ),w81 )
-    call jioxxx(w81 ,w7  ,gwf,wmass,wwidth,w82 )
-    call iovxxx(w8  ,w6  ,w82 ,gwf,amp(67 ))
-    call fvixxx(w5  ,w65 ,gzl,fmass(1  ),fwidth(1  ),w83 )
-    call jioxxx(w83 ,w7  ,gwf,wmass,wwidth,w84 )
-    call iovxxx(w8  ,w6  ,w84 ,gwf,amp(68 ))
-    call fvixxx(w5  ,w68 ,gal,fmass(1  ),fwidth(1  ),w85 )
-    call jioxxx(w85 ,w7  ,gwf,wmass,wwidth,w86 )
-    call iovxxx(w8  ,w6  ,w86 ,gwf,amp(69 ))
-    call fvixxx(w5  ,w69 ,gzl,fmass(1  ),fwidth(1  ),w87 )
-    call jioxxx(w87 ,w7  ,gwf,wmass,wwidth,w88 )
-    call iovxxx(w8  ,w6  ,w88 ,gwf,amp(70 ))
-    call fvoxxx(w7  ,w65 ,gzn,fmass(2  ),fwidth(2  ),w89 )
-    call iovxxx(w5  ,w89 ,w11 ,gwf,amp(71 ))
-    call fvoxxx(w7  ,w69 ,gzn,fmass(2  ),fwidth(2  ),w90 )
-    call iovxxx(w5  ,w90 ,w11 ,gwf,amp(72 ))
-    call jvvxxx(w61 ,w11 ,gwwa,wmass,wwidth,w91 )
-    call iovxxx(w4  ,w59 ,w91 ,gwf,amp(73 ))
-    call jvvxxx(w62 ,w11 ,gwwz,wmass,wwidth,w92 )
-    call iovxxx(w4  ,w59 ,w92 ,gwf,amp(74 ))
-    call fvoxxx(w6  ,w61 ,gal,fmass(5  ),fwidth(5  ),w93 )
-    call jioxxx(w8  ,w93 ,gwf,wmass,wwidth,w94 )
-    call fvixxx(w4  ,w94 ,gwf,fmass(11 ),fwidth(11 ),w95 )
-    call iovxxx(w95 ,w3  ,w10 ,gwf,amp(75 ))
-    call fvoxxx(w6  ,w62 ,gzl,fmass(5  ),fwidth(5  ),w96 )
-    call jioxxx(w8  ,w96 ,gwf,wmass,wwidth,w97 )
-    call fvixxx(w4  ,w97 ,gwf,fmass(11 ),fwidth(11 ),w98 )
-    call iovxxx(w98 ,w3  ,w10 ,gwf,amp(76 ))
-    call fvixxx(w8  ,w62 ,gzn,fmass(6  ),fwidth(6  ),w99 )
-    call jioxxx(w99 ,w6  ,gwf,wmass,wwidth,w100)
-    call iovxxx(w4  ,w59 ,w100,gwf,amp(77 ))
-    call iovxxx(w63 ,w59 ,w11 ,gwf,amp(78 ))
-    call iovxxx(w67 ,w59 ,w11 ,gwf,amp(79 ))
-    call fvoxxx(w3  ,w61 ,gad,fmass(12 ),fwidth(12 ),w101)
-    call fvoxxx(w101,w10 ,gwf,fmass(11 ),fwidth(11 ),w102)
-    call iovxxx(w4  ,w102,w11 ,gwf,amp(80 ))
-    call fvoxxx(w3  ,w62 ,gzd,fmass(12 ),fwidth(12 ),w103)
-    call fvoxxx(w103,w10 ,gwf,fmass(11 ),fwidth(11 ),w104)
-    call iovxxx(w4  ,w104,w11 ,gwf,amp(81 ))
-    call jioxxx(w4  ,w101,gad,amass,awidth,w105)
-    call vvvxxx(w11 ,w10 ,w105,gwwa,amp(82 ))
-    call jioxxx(w4  ,w101,gzd,zmass,zwidth,w106)
-    call vvvxxx(w11 ,w10 ,w106,gwwz,amp(83 ))
-    call hioxxx(w4  ,w101,gchf(1,12 ),hmass,hwidth,w107)
-    call vvsxxx(w11 ,w10 ,w107,gwwh,amp(84 ))
-    call jioxxx(w4  ,w103,gad,amass,awidth,w108)
-    call vvvxxx(w11 ,w10 ,w108,gwwa,amp(85 ))
-    call jioxxx(w4  ,w103,gzd,zmass,zwidth,w109)
-    call vvvxxx(w11 ,w10 ,w109,gwwz,amp(86 ))
-    call hioxxx(w4  ,w103,gchf(1,12 ),hmass,hwidth,w110)
-    call vvsxxx(w11 ,w10 ,w110,gwwh,amp(87 ))
-    call fvixxx(w8  ,w106,gzn,fmass(6  ),fwidth(6  ),w111)
-    call iovxxx(w111,w6  ,w10 ,gwf,amp(88 ))
-    call fsixxx(w8  ,w107,gchf(1,6  ),fmass(6  ),fwidth(6  ),w112)
-    call iovxxx(w112,w6  ,w10 ,gwf,amp(89 ))
-    call fvixxx(w8  ,w109,gzn,fmass(6  ),fwidth(6  ),w113)
-    call iovxxx(w113,w6  ,w10 ,gwf,amp(90 ))
-    call fsixxx(w8  ,w110,gchf(1,6  ),fmass(6  ),fwidth(6  ),w114)
-    call iovxxx(w114,w6  ,w10 ,gwf,amp(91 ))
-    call fvoxxx(w6  ,w105,gal,fmass(5  ),fwidth(5  ),w115)
-    call iovxxx(w8  ,w115,w10 ,gwf,amp(92 ))
-    call fvoxxx(w6  ,w106,gzl,fmass(5  ),fwidth(5  ),w116)
-    call iovxxx(w8  ,w116,w10 ,gwf,amp(93 ))
-    call fsoxxx(w6  ,w107,gchf(1,5  ),fmass(5  ),fwidth(5  ),w117)
-    call iovxxx(w8  ,w117,w10 ,gwf,amp(94 ))
-    call fvoxxx(w6  ,w108,gal,fmass(5  ),fwidth(5  ),w118)
-    call iovxxx(w8  ,w118,w10 ,gwf,amp(95 ))
-    call fvoxxx(w6  ,w109,gzl,fmass(5  ),fwidth(5  ),w119)
-    call iovxxx(w8  ,w119,w10 ,gwf,amp(96 ))
-    call fsoxxx(w6  ,w110,gchf(1,5  ),fmass(5  ),fwidth(5  ),w120)
-    call iovxxx(w8  ,w120,w10 ,gwf,amp(97 ))
-    call fvixxx(w5  ,w105,gal,fmass(1  ),fwidth(1  ),w121)
-    call jioxxx(w121,w7  ,gwf,wmass,wwidth,w122)
-    call iovxxx(w8  ,w6  ,w122,gwf,amp(98 ))
-    call fvixxx(w5  ,w106,gzl,fmass(1  ),fwidth(1  ),w123)
-    call jioxxx(w123,w7  ,gwf,wmass,wwidth,w124)
-    call iovxxx(w8  ,w6  ,w124,gwf,amp(99 ))
-    call fvixxx(w5  ,w108,gal,fmass(1  ),fwidth(1  ),w125)
-    call jioxxx(w125,w7  ,gwf,wmass,wwidth,w126)
-    call iovxxx(w8  ,w6  ,w126,gwf,amp(100))
-    call fvixxx(w5  ,w109,gzl,fmass(1  ),fwidth(1  ),w127)
-    call jioxxx(w127,w7  ,gwf,wmass,wwidth,w128)
-    call iovxxx(w8  ,w6  ,w128,gwf,amp(101))
-    call fvoxxx(w7  ,w106,gzn,fmass(2  ),fwidth(2  ),w129)
-    call iovxxx(w5  ,w129,w11 ,gwf,amp(102))
-    call fvoxxx(w7  ,w109,gzn,fmass(2  ),fwidth(2  ),w130)
-    call iovxxx(w5  ,w130,w11 ,gwf,amp(103))
-    call jvvxxx(w10 ,w9  ,gwwa,wmass,wwidth,w131)
-    call iovxxx(w29 ,w2  ,w131,gwf,amp(104))
-    call jvvxxx(w10 ,w14 ,gwwz,wmass,wwidth,w132)
-    call iovxxx(w29 ,w2  ,w132,gwf,amp(105))
-    call jvsxxx(w10 ,w44 ,gwwh,wmass,wwidth,w133)
-    call iovxxx(w29 ,w2  ,w133,gwf,amp(106))
-    call fvoxxx(w7  ,w14 ,gzn,fmass(2  ),fwidth(2  ),w134)
-    call jioxxx(w5  ,w134,gwf,wmass,wwidth,w135)
-    call iovxxx(w29 ,w2  ,w135,gwf,amp(107))
-    call fvixxx(w5  ,w9  ,gal,fmass(1  ),fwidth(1  ),w136)
-    call jioxxx(w136,w7  ,gwf,wmass,wwidth,w137)
-    call fvoxxx(w2  ,w137,gwf,fmass(3  ),fwidth(3  ),w138)
-    call iovxxx(w1  ,w138,w11 ,gwf,amp(108))
-    call fvixxx(w5  ,w14 ,gzl,fmass(1  ),fwidth(1  ),w139)
-    call jioxxx(w139,w7  ,gwf,wmass,wwidth,w140)
-    call fvoxxx(w2  ,w140,gwf,fmass(3  ),fwidth(3  ),w141)
-    call iovxxx(w1  ,w141,w11 ,gwf,amp(109))
-    call jvvxxx(w10 ,w61 ,gwwa,wmass,wwidth,w142)
-    call iovxxx(w30 ,w3  ,w142,gwf,amp(110))
-    call jvvxxx(w10 ,w62 ,gwwz,wmass,wwidth,w143)
-    call iovxxx(w30 ,w3  ,w143,gwf,amp(111))
-    call fvixxx(w5  ,w61 ,gal,fmass(1  ),fwidth(1  ),w144)
-    call jioxxx(w144,w7  ,gwf,wmass,wwidth,w145)
-    call fvoxxx(w3  ,w145,gwf,fmass(11 ),fwidth(11 ),w146)
-    call iovxxx(w4  ,w146,w11 ,gwf,amp(112))
-    call fvixxx(w5  ,w62 ,gzl,fmass(1  ),fwidth(1  ),w147)
-    call jioxxx(w147,w7  ,gwf,wmass,wwidth,w148)
-    call fvoxxx(w3  ,w148,gwf,fmass(11 ),fwidth(11 ),w149)
-    call iovxxx(w4  ,w149,w11 ,gwf,amp(113))
-    call fvoxxx(w7  ,w62 ,gzn,fmass(2  ),fwidth(2  ),w150)
-    call jioxxx(w5  ,w150,gwf,wmass,wwidth,w151)
-    call iovxxx(w30 ,w3  ,w151,gwf,amp(114))
-    call hvvxxx(w62 ,w14 ,gzzh,hmass,hwidth,w152)
-    call vvsxxx(w11 ,w10 ,w152,gwwh,amp(115))
-    call jvsxxx(w62 ,w44 ,gzzh,zmass,zwidth,w153)
-    call vvvxxx(w11 ,w10 ,w153,gwwz,amp(116))
-    call fvixxx(w46 ,w62 ,gzn,fmass(6  ),fwidth(6  ),w154)
-    call iovxxx(w154,w6  ,w10 ,gwf,amp(117))
-    call fvixxx(w48 ,w62 ,gzn,fmass(6  ),fwidth(6  ),w155)
-    call iovxxx(w155,w6  ,w10 ,gwf,amp(118))
-    call fvixxx(w99 ,w14 ,gzn,fmass(6  ),fwidth(6  ),w156)
-    call iovxxx(w156,w6  ,w10 ,gwf,amp(119))
-    call fsixxx(w99 ,w44 ,gchf(1,6  ),fmass(6  ),fwidth(6  ),w157)
-    call iovxxx(w157,w6  ,w10 ,gwf,amp(120))
-    call fsixxx(w8  ,w152,gchf(1,6  ),fmass(6  ),fwidth(6  ),w158)
-    call iovxxx(w158,w6  ,w10 ,gwf,amp(121))
-    call fvixxx(w8  ,w153,gzn,fmass(6  ),fwidth(6  ),w159)
-    call iovxxx(w159,w6  ,w10 ,gwf,amp(122))
-    call fsoxxx(w6  ,w152,gchf(1,5  ),fmass(5  ),fwidth(5  ),w160)
-    call iovxxx(w8  ,w160,w10 ,gwf,amp(123))
-    call fvoxxx(w6  ,w153,gzl,fmass(5  ),fwidth(5  ),w161)
-    call iovxxx(w8  ,w161,w10 ,gwf,amp(124))
-    call fvixxx(w5  ,w153,gzl,fmass(1  ),fwidth(1  ),w162)
-    call jioxxx(w162,w7  ,gwf,wmass,wwidth,w163)
-    call iovxxx(w8  ,w6  ,w163,gwf,amp(125))
-    call fvoxxx(w134,w62 ,gzn,fmass(2  ),fwidth(2  ),w164)
-    call iovxxx(w5  ,w164,w11 ,gwf,amp(126))
-    call fvoxxx(w150,w14 ,gzn,fmass(2  ),fwidth(2  ),w165)
-    call iovxxx(w5  ,w165,w11 ,gwf,amp(127))
-    call fvoxxx(w7  ,w153,gzn,fmass(2  ),fwidth(2  ),w166)
-    call iovxxx(w5  ,w166,w11 ,gwf,amp(128))
-    call vvvxxx(w11 ,w142,w9  ,gwwa,amp(129))
-    call vvvxxx(w11 ,w142,w14 ,gwwz,amp(130))
-    call vvsxxx(w11 ,w142,w44 ,gwwh,amp(131))
-    call vvvxxx(w11 ,w143,w9  ,gwwa,amp(132))
-    call vvvxxx(w11 ,w143,w14 ,gwwz,amp(133))
-    call vvsxxx(w11 ,w143,w44 ,gwwh,amp(134))
-    call vvvxxx(w51 ,w10 ,w61 ,gwwa,amp(135))
-    call vvvxxx(w54 ,w10 ,w61 ,gwwa,amp(136))
-    call vvvxxx(w57 ,w10 ,w61 ,gwwa,amp(137))
-    call vvvxxx(w51 ,w10 ,w62 ,gwwz,amp(138))
-    call vvvxxx(w54 ,w10 ,w62 ,gwwz,amp(139))
-    call vvvxxx(w57 ,w10 ,w62 ,gwwz,amp(140))
-    call iovxxx(w99 ,w50 ,w10 ,gwf,amp(141))
-    call iovxxx(w99 ,w53 ,w10 ,gwf,amp(142))
-    call iovxxx(w99 ,w56 ,w10 ,gwf,amp(143))
-    call iovxxx(w46 ,w6  ,w142,gwf,amp(144))
-    call iovxxx(w48 ,w6  ,w142,gwf,amp(145))
-    call iovxxx(w46 ,w6  ,w143,gwf,amp(146))
-    call iovxxx(w48 ,w6  ,w143,gwf,amp(147))
-    call iovxxx(w22 ,w50 ,w61 ,gal,amp(148))
-    call iovxxx(w22 ,w53 ,w61 ,gal,amp(149))
-    call iovxxx(w22 ,w56 ,w61 ,gal,amp(150))
-    call iovxxx(w22 ,w50 ,w62 ,gzl,amp(151))
-    call iovxxx(w22 ,w53 ,w62 ,gzl,amp(152))
-    call iovxxx(w22 ,w56 ,w62 ,gzl,amp(153))
-    call fvixxx(w144,w9  ,gal,fmass(1  ),fwidth(1  ),w167)
-    call jioxxx(w167,w7  ,gwf,wmass,wwidth,w168)
-    call iovxxx(w8  ,w6  ,w168,gwf,amp(154))
-    call fvixxx(w144,w14 ,gzl,fmass(1  ),fwidth(1  ),w169)
-    call jioxxx(w169,w7  ,gwf,wmass,wwidth,w170)
-    call iovxxx(w8  ,w6  ,w170,gwf,amp(155))
-    call fvixxx(w147,w9  ,gal,fmass(1  ),fwidth(1  ),w171)
-    call jioxxx(w171,w7  ,gwf,wmass,wwidth,w172)
-    call iovxxx(w8  ,w6  ,w172,gwf,amp(156))
-    call fvixxx(w147,w14 ,gzl,fmass(1  ),fwidth(1  ),w173)
-    call jioxxx(w173,w7  ,gwf,wmass,wwidth,w174)
-    call iovxxx(w8  ,w6  ,w174,gwf,amp(157))
-    call vvvxxx(w11 ,w145,w9  ,gwwa,amp(158))
-    call vvvxxx(w11 ,w145,w14 ,gwwz,amp(159))
-    call vvsxxx(w11 ,w145,w44 ,gwwh,amp(160))
-    call vvvxxx(w11 ,w148,w9  ,gwwa,amp(161))
-    call vvvxxx(w11 ,w148,w14 ,gwwz,amp(162))
-    call vvsxxx(w11 ,w148,w44 ,gwwh,amp(163))
-    call iovxxx(w8  ,w50 ,w145,gwf,amp(164))
-    call iovxxx(w8  ,w53 ,w145,gwf,amp(165))
-    call iovxxx(w8  ,w56 ,w145,gwf,amp(166))
-    call iovxxx(w8  ,w50 ,w148,gwf,amp(167))
-    call iovxxx(w8  ,w53 ,w148,gwf,amp(168))
-    call iovxxx(w8  ,w56 ,w148,gwf,amp(169))
-    call iovxxx(w46 ,w6  ,w145,gwf,amp(170))
-    call iovxxx(w48 ,w6  ,w145,gwf,amp(171))
-    call iovxxx(w46 ,w6  ,w148,gwf,amp(172))
-    call iovxxx(w48 ,w6  ,w148,gwf,amp(173))
-    call vvvxxx(w11 ,w151,w9  ,gwwa,amp(174))
-    call vvvxxx(w11 ,w151,w14 ,gwwz,amp(175))
-    call vvsxxx(w11 ,w151,w44 ,gwwh,amp(176))
-    call iovxxx(w5  ,w150,w51 ,gwf,amp(177))
-    call iovxxx(w5  ,w150,w54 ,gwf,amp(178))
-    call iovxxx(w5  ,w150,w57 ,gwf,amp(179))
-    call iovxxx(w46 ,w6  ,w151,gwf,amp(180))
-    call iovxxx(w48 ,w6  ,w151,gwf,amp(181))
-    call iovxxx(w144,w134,w11 ,gwf,amp(182))
-    call iovxxx(w147,w134,w11 ,gwf,amp(183))
-    call vvvxxx(w11 ,w131,w61 ,gwwa,amp(184))
-    call vvvxxx(w11 ,w132,w61 ,gwwa,amp(185))
-    call vvvxxx(w11 ,w133,w61 ,gwwa,amp(186))
-    call vvvxxx(w11 ,w131,w62 ,gwwz,amp(187))
-    call vvvxxx(w11 ,w132,w62 ,gwwz,amp(188))
-    call vvvxxx(w11 ,w133,w62 ,gwwz,amp(189))
-    call iovxxx(w46 ,w93 ,w10 ,gwf,amp(190))
-    call iovxxx(w48 ,w93 ,w10 ,gwf,amp(191))
-    call iovxxx(w46 ,w96 ,w10 ,gwf,amp(192))
-    call iovxxx(w48 ,w96 ,w10 ,gwf,amp(193))
-    call vvvxxx(w94 ,w10 ,w9  ,gwwa,amp(194))
-    call vvvxxx(w94 ,w10 ,w14 ,gwwz,amp(195))
-    call vvsxxx(w10 ,w94 ,w44 ,gwwh,amp(196))
-    call vvvxxx(w97 ,w10 ,w9  ,gwwa,amp(197))
-    call vvvxxx(w97 ,w10 ,w14 ,gwwz,amp(198))
-    call vvsxxx(w10 ,w97 ,w44 ,gwwh,amp(199))
-    call iovxxx(w99 ,w6  ,w131,gwf,amp(200))
-    call iovxxx(w99 ,w6  ,w132,gwf,amp(201))
-    call iovxxx(w99 ,w6  ,w133,gwf,amp(202))
-    call iovxxx(w22 ,w93 ,w9  ,gal,amp(203))
-    call iovxxx(w22 ,w93 ,w14 ,gzl,amp(204))
-    call iosxxx(w22 ,w93 ,w44 ,gchf(1,5  ),amp(205))
-    call iovxxx(w22 ,w96 ,w9  ,gal,amp(206))
-    call iovxxx(w22 ,w96 ,w14 ,gzl,amp(207))
-    call iosxxx(w22 ,w96 ,w44 ,gchf(1,5  ),amp(208))
-    call fvixxx(w136,w61 ,gal,fmass(1  ),fwidth(1  ),w175)
-    call jioxxx(w175,w7  ,gwf,wmass,wwidth,w176)
-    call iovxxx(w8  ,w6  ,w176,gwf,amp(209))
-    call fvixxx(w139,w61 ,gal,fmass(1  ),fwidth(1  ),w177)
-    call jioxxx(w177,w7  ,gwf,wmass,wwidth,w178)
-    call iovxxx(w8  ,w6  ,w178,gwf,amp(210))
-    call fvixxx(w136,w62 ,gzl,fmass(1  ),fwidth(1  ),w179)
-    call jioxxx(w179,w7  ,gwf,wmass,wwidth,w180)
-    call iovxxx(w8  ,w6  ,w180,gwf,amp(211))
-    call fvixxx(w139,w62 ,gzl,fmass(1  ),fwidth(1  ),w181)
-    call jioxxx(w181,w7  ,gwf,wmass,wwidth,w182)
-    call iovxxx(w8  ,w6  ,w182,gwf,amp(212))
-    call vvvxxx(w11 ,w135,w61 ,gwwa,amp(213))
-    call vvvxxx(w11 ,w135,w62 ,gwwz,amp(214))
-    call iovxxx(w5  ,w134,w94 ,gwf,amp(215))
-    call iovxxx(w5  ,w134,w97 ,gwf,amp(216))
-    call iovxxx(w99 ,w6  ,w135,gwf,amp(217))
-    call vvvxxx(w11 ,w137,w61 ,gwwa,amp(218))
-    call vvvxxx(w11 ,w140,w61 ,gwwa,amp(219))
-    call vvvxxx(w11 ,w137,w62 ,gwwz,amp(220))
-    call vvvxxx(w11 ,w140,w62 ,gwwz,amp(221))
-    call iovxxx(w8  ,w93 ,w137,gwf,amp(222))
-    call iovxxx(w8  ,w93 ,w140,gwf,amp(223))
-    call iovxxx(w8  ,w96 ,w137,gwf,amp(224))
-    call iovxxx(w8  ,w96 ,w140,gwf,amp(225))
-    call iovxxx(w99 ,w6  ,w137,gwf,amp(226))
-    call iovxxx(w99 ,w6  ,w140,gwf,amp(227))
-    call iovxxx(w136,w150,w11 ,gwf,amp(228))
-    call iovxxx(w139,w150,w11 ,gwf,amp(229))
-    call w3w3xx(w11 ,w9  ,w10 ,w61 ,gwwa,gwwa,wmass,wwidth,amp(230))
-    call w3w3xx(w11 ,w14 ,w10 ,w61 ,gwwz,gwwa,wmass,wwidth,amp(231))
-    call w3w3xx(w11 ,w62 ,w10 ,w9  ,gwwz,gwwa,wmass,wwidth,amp(232))
-    call w3w3xx(w11 ,w14 ,w10 ,w62 ,gwwz,gwwz,wmass,wwidth,amp(233))
+    if (include_signal == 1) then
+        call iovxxx(w30, w59, w61, gau, amp(49))
+        call iovxxx(w30, w59, w62, gzu, amp(50))
+    end if
+
+    if (include_background == 1) then
+        call iovxxx(w1, w13, w11, gwf, amp(1))
+        call iovxxx(w1, w16, w11, gwf, amp(2))
+        call vvvxxx(w11, w10, w17, gwwa, amp(3))
+        call vvvxxx(w11, w10, w18, gwwz, amp(4))
+        call vvvxxx(w11, w10, w19, gwwa, amp(5))
+        call vvvxxx(w11, w10, w20, gwwz, amp(6))
+        call iovxxx(w8, w21, w18, gzn, amp(7))
+        call iovxxx(w8, w21, w20, gzn, amp(8))
+        call iovxxx(w22, w6, w17, gal, amp(9))
+        call iovxxx(w22, w6, w18, gzl, amp(10))
+        call iovxxx(w22, w6, w19, gal, amp(11))
+        call iovxxx(w22, w6, w20, gzl, amp(12))
+        call iovxxx(w23, w7, w11, gwf, amp(13))
+        call iovxxx(w24, w7, w11, gwf, amp(14))
+        call iovxxx(w25, w7, w11, gwf, amp(15))
+        call iovxxx(w26, w7, w11, gwf, amp(16))
+        call iovxxx(w27, w7, w18, gzn, amp(17))
+        call iovxxx(w27, w7, w20, gzn, amp(18))
+        call iovxxx(w29, w28, w9, gau, amp(19))
+        call iovxxx(w29, w28, w14, gzu, amp(20))
+        call iovxxx(w30, w3, w31, gwf, amp(21))
+        call vvvxxx(w11, w10, w33, gwwa, amp(22))
+        call vvvxxx(w11, w10, w34, gwwz, amp(23))
+        call vvvxxx(w11, w10, w36, gwwa, amp(24))
+        call vvvxxx(w11, w10, w37, gwwz, amp(25))
+        call iovxxx(w8, w21, w34, gzn, amp(26))
+        call iovxxx(w8, w21, w37, gzn, amp(27))
+        call iovxxx(w22, w6, w33, gal, amp(28))
+        call iovxxx(w22, w6, w34, gzl, amp(29))
+        call iovxxx(w22, w6, w36, gal, amp(30))
+        call iovxxx(w22, w6, w37, gzl, amp(31))
+        call iovxxx(w38, w7, w11, gwf, amp(32))
+        call iovxxx(w39, w7, w11, gwf, amp(33))
+        call iovxxx(w40, w7, w11, gwf, amp(34))
+        call iovxxx(w41, w7, w11, gwf, amp(35))
+        call iovxxx(w27, w7, w34, gzn, amp(36))
+        call iovxxx(w27, w7, w37, gzn, amp(37))
+        call iovxxx(w1, w28, w42, gwf, amp(38))
+        call iovxxx(w1, w28, w43, gwf, amp(39))
+        call iovxxx(w1, w28, w45, gwf, amp(40))
+        call iovxxx(w1, w28, w47, gwf, amp(41))
+        call iovxxx(w1, w28, w49, gwf, amp(42))
+        call iovxxx(w52, w2, w10, gwf, amp(43))
+        call iovxxx(w55, w2, w10, gwf, amp(44))
+        call iovxxx(w58, w2, w10, gwf, amp(45))
+        call iovxxx(w32, w28, w11, gwf, amp(46))
+        call iovxxx(w35, w28, w11, gwf, amp(47))
+        call iovxxx(w4, w59, w60, gwf, amp(48))
+        call vvvxxx(w11, w10, w64, gwwa, amp(51))
+        call vvvxxx(w11, w10, w65, gwwz, amp(52))
+        call vvsxxx(w11, w10, w66, gwwh, amp(53))
+        call vvvxxx(w11, w10, w68, gwwa, amp(54))
+        call vvvxxx(w11, w10, w69, gwwz, amp(55))
+        call vvsxxx(w11, w10, w70, gwwh, amp(56))
+        call iovxxx(w71, w6, w10, gwf, amp(57))
+        call iovxxx(w72, w6, w10, gwf, amp(58))
+        call iovxxx(w73, w6, w10, gwf, amp(59))
+        call iovxxx(w74, w6, w10, gwf, amp(60))
+        call iovxxx(w8, w75, w10, gwf, amp(61))
+        call iovxxx(w8, w76, w10, gwf, amp(62))
+        call iovxxx(w8, w77, w10, gwf, amp(63))
+        call iovxxx(w8, w78, w10, gwf, amp(64))
+        call iovxxx(w8, w79, w10, gwf, amp(65))
+        call iovxxx(w8, w80, w10, gwf, amp(66))
+        call iovxxx(w8, w6, w82, gwf, amp(67))
+        call iovxxx(w8, w6, w84, gwf, amp(68))
+        call iovxxx(w8, w6, w86, gwf, amp(69))
+        call iovxxx(w8, w6, w88, gwf, amp(70))
+        call iovxxx(w5, w89, w11, gwf, amp(71))
+        call iovxxx(w5, w90, w11, gwf, amp(72))
+        call iovxxx(w4, w59, w91, gwf, amp(73))
+        call iovxxx(w4, w59, w92, gwf, amp(74))
+        call iovxxx(w95, w3, w10, gwf, amp(75))
+        call iovxxx(w98, w3, w10, gwf, amp(76))
+        call iovxxx(w4, w59, w100, gwf, amp(77))
+        call iovxxx(w63, w59, w11, gwf, amp(78))
+        call iovxxx(w67, w59, w11, gwf, amp(79))
+        call iovxxx(w4, w102, w11, gwf, amp(80))
+        call iovxxx(w4, w104, w11, gwf, amp(81))
+        call vvvxxx(w11, w10, w105, gwwa, amp(82))
+        call vvvxxx(w11, w10, w106, gwwz, amp(83))
+        call vvsxxx(w11, w10, w107, gwwh, amp(84))
+        call vvvxxx(w11, w10, w108, gwwa, amp(85))
+        call vvvxxx(w11, w10, w109, gwwz, amp(86))
+        call vvsxxx(w11, w10, w110, gwwh, amp(87))
+        call iovxxx(w111, w6, w10, gwf, amp(88))
+        call iovxxx(w112, w6, w10, gwf, amp(89))
+        call iovxxx(w113, w6, w10, gwf, amp(90))
+        call iovxxx(w114, w6, w10, gwf, amp(91))
+        call iovxxx(w8, w115, w10, gwf, amp(92))
+        call iovxxx(w8, w116, w10, gwf, amp(93))
+        call iovxxx(w8, w117, w10, gwf, amp(94))
+        call iovxxx(w8, w118, w10, gwf, amp(95))
+        call iovxxx(w8, w119, w10, gwf, amp(96))
+        call iovxxx(w8, w120, w10, gwf, amp(97))
+        call iovxxx(w8, w6, w122, gwf, amp(98))
+        call iovxxx(w8, w6, w124, gwf, amp(99))
+        call iovxxx(w8, w6, w126, gwf, amp(100))
+        call iovxxx(w8, w6, w128, gwf, amp(101))
+        call iovxxx(w5, w129, w11, gwf, amp(102))
+        call iovxxx(w5, w130, w11, gwf, amp(103))
+        call iovxxx(w29, w2, w131, gwf, amp(104))
+        call iovxxx(w29, w2, w132, gwf, amp(105))
+        call iovxxx(w29, w2, w133, gwf, amp(106))
+        call iovxxx(w29, w2, w135, gwf, amp(107))
+        call iovxxx(w1, w138, w11, gwf, amp(108))
+        call iovxxx(w1, w141, w11, gwf, amp(109))
+        call iovxxx(w30, w3, w142, gwf, amp(110))
+        call iovxxx(w30, w3, w143, gwf, amp(111))
+        call iovxxx(w4, w146, w11, gwf, amp(112))
+        call iovxxx(w4, w149, w11, gwf, amp(113))
+        call iovxxx(w30, w3, w151, gwf, amp(114))
+        call vvsxxx(w11, w10, w152, gwwh, amp(115))
+        call vvvxxx(w11, w10, w153, gwwz, amp(116))
+        call iovxxx(w154, w6, w10, gwf, amp(117))
+        call iovxxx(w155, w6, w10, gwf, amp(118))
+        call iovxxx(w156, w6, w10, gwf, amp(119))
+        call iovxxx(w157, w6, w10, gwf, amp(120))
+        call iovxxx(w158, w6, w10, gwf, amp(121))
+        call iovxxx(w159, w6, w10, gwf, amp(122))
+        call iovxxx(w8, w160, w10, gwf, amp(123))
+        call iovxxx(w8, w161, w10, gwf, amp(124))
+        call iovxxx(w8, w6, w163, gwf, amp(125))
+        call iovxxx(w5, w164, w11, gwf, amp(126))
+        call iovxxx(w5, w165, w11, gwf, amp(127))
+        call iovxxx(w5, w166, w11, gwf, amp(128))
+        call vvvxxx(w11, w142, w9, gwwa, amp(129))
+        call vvvxxx(w11, w142, w14, gwwz, amp(130))
+        call vvsxxx(w11, w142, w44, gwwh, amp(131))
+        call vvvxxx(w11, w143, w9, gwwa, amp(132))
+        call vvvxxx(w11, w143, w14, gwwz, amp(133))
+        call vvsxxx(w11, w143, w44, gwwh, amp(134))
+        call vvvxxx(w51, w10, w61, gwwa, amp(135))
+        call vvvxxx(w54, w10, w61, gwwa, amp(136))
+        call vvvxxx(w57, w10, w61, gwwa, amp(137))
+        call vvvxxx(w51, w10, w62, gwwz, amp(138))
+        call vvvxxx(w54, w10, w62, gwwz, amp(139))
+        call vvvxxx(w57, w10, w62, gwwz, amp(140))
+        call iovxxx(w99, w50, w10, gwf, amp(141))
+        call iovxxx(w99, w53, w10, gwf, amp(142))
+        call iovxxx(w99, w56, w10, gwf, amp(143))
+        call iovxxx(w46, w6, w142, gwf, amp(144))
+        call iovxxx(w48, w6, w142, gwf, amp(145))
+        call iovxxx(w46, w6, w143, gwf, amp(146))
+        call iovxxx(w48, w6, w143, gwf, amp(147))
+        call iovxxx(w22, w50, w61, gal, amp(148))
+        call iovxxx(w22, w53, w61, gal, amp(149))
+        call iovxxx(w22, w56, w61, gal, amp(150))
+        call iovxxx(w22, w50, w62, gzl, amp(151))
+        call iovxxx(w22, w53, w62, gzl, amp(152))
+        call iovxxx(w22, w56, w62, gzl, amp(153))
+        call iovxxx(w8, w6, w168, gwf, amp(154))
+        call iovxxx(w8, w6, w170, gwf, amp(155))
+        call iovxxx(w8, w6, w172, gwf, amp(156))
+        call iovxxx(w8, w6, w174, gwf, amp(157))
+        call vvvxxx(w11, w145, w9, gwwa, amp(158))
+        call vvvxxx(w11, w145, w14, gwwz, amp(159))
+        call vvsxxx(w11, w145, w44, gwwh, amp(160))
+        call vvvxxx(w11, w148, w9, gwwa, amp(161))
+        call vvvxxx(w11, w148, w14, gwwz, amp(162))
+        call vvsxxx(w11, w148, w44, gwwh, amp(163))
+        call iovxxx(w8, w50, w145, gwf, amp(164))
+        call iovxxx(w8, w53, w145, gwf, amp(165))
+        call iovxxx(w8, w56, w145, gwf, amp(166))
+        call iovxxx(w8, w50, w148, gwf, amp(167))
+        call iovxxx(w8, w53, w148, gwf, amp(168))
+        call iovxxx(w8, w56, w148, gwf, amp(169))
+        call iovxxx(w46, w6, w145, gwf, amp(170))
+        call iovxxx(w48, w6, w145, gwf, amp(171))
+        call iovxxx(w46, w6, w148, gwf, amp(172))
+        call iovxxx(w48, w6, w148, gwf, amp(173))
+        call vvvxxx(w11, w151, w9, gwwa, amp(174))
+        call vvvxxx(w11, w151, w14, gwwz, amp(175))
+        call vvsxxx(w11, w151, w44, gwwh, amp(176))
+        call iovxxx(w5, w150, w51, gwf, amp(177))
+        call iovxxx(w5, w150, w54, gwf, amp(178))
+        call iovxxx(w5, w150, w57, gwf, amp(179))
+        call iovxxx(w46, w6, w151, gwf, amp(180))
+        call iovxxx(w48, w6, w151, gwf, amp(181))
+        call iovxxx(w144, w134, w11, gwf, amp(182))
+        call iovxxx(w147, w134, w11, gwf, amp(183))
+        call vvvxxx(w11, w131, w61, gwwa, amp(184))
+        call vvvxxx(w11, w132, w61, gwwa, amp(185))
+        call vvvxxx(w11, w133, w61, gwwa, amp(186))
+        call vvvxxx(w11, w131, w62, gwwz, amp(187))
+        call vvvxxx(w11, w132, w62, gwwz, amp(188))
+        call vvvxxx(w11, w133, w62, gwwz, amp(189))
+        call iovxxx(w46, w93, w10, gwf, amp(190))
+        call iovxxx(w48, w93, w10, gwf, amp(191))
+        call iovxxx(w46, w96, w10, gwf, amp(192))
+        call iovxxx(w48, w96, w10, gwf, amp(193))
+        call vvvxxx(w94, w10, w9, gwwa, amp(194))
+        call vvvxxx(w94, w10, w14, gwwz, amp(195))
+        call vvsxxx(w10, w94, w44, gwwh, amp(196))
+        call vvvxxx(w97, w10, w9, gwwa, amp(197))
+        call vvvxxx(w97, w10, w14, gwwz, amp(198))
+        call vvsxxx(w10, w97, w44, gwwh, amp(199))
+        call iovxxx(w99, w6, w131, gwf, amp(200))
+        call iovxxx(w99, w6, w132, gwf, amp(201))
+        call iovxxx(w99, w6, w133, gwf, amp(202))
+        call iovxxx(w22, w93, w9, gal, amp(203))
+        call iovxxx(w22, w93, w14, gzl, amp(204))
+        call iosxxx(w22, w93, w44, gchf(1,5), amp(205))
+        call iovxxx(w22, w96, w9, gal, amp(206))
+        call iovxxx(w22, w96, w14, gzl, amp(207))
+        call iosxxx(w22, w96, w44, gchf(1,5), amp(208))
+        call iovxxx(w8, w6, w176, gwf, amp(209))
+        call iovxxx(w8, w6, w178, gwf, amp(210))
+        call iovxxx(w8, w6, w180, gwf, amp(211))
+        call iovxxx(w8, w6, w182, gwf, amp(212))
+        call vvvxxx(w11, w135, w61, gwwa, amp(213))
+        call vvvxxx(w11, w135, w62, gwwz, amp(214))
+        call iovxxx(w5, w134, w94, gwf, amp(215))
+        call iovxxx(w5, w134, w97, gwf, amp(216))
+        call iovxxx(w99, w6, w135, gwf, amp(217))
+        call vvvxxx(w11, w137, w61, gwwa, amp(218))
+        call vvvxxx(w11, w140, w61, gwwa, amp(219))
+        call vvvxxx(w11, w137, w62, gwwz, amp(220))
+        call vvvxxx(w11, w140, w62, gwwz, amp(221))
+        call iovxxx(w8, w93, w137, gwf, amp(222))
+        call iovxxx(w8, w93, w140, gwf, amp(223))
+        call iovxxx(w8, w96, w137, gwf, amp(224))
+        call iovxxx(w8, w96, w140, gwf, amp(225))
+        call iovxxx(w99, w6, w137, gwf, amp(226))
+        call iovxxx(w99, w6, w140, gwf, amp(227))
+        call iovxxx(w136, w150, w11, gwf, amp(228))
+        call iovxxx(w139, w150, w11, gwf, amp(229))
+        call w3w3xx(w11, w9, w10, w61, gwwa, gwwa, wmass, wwidth, amp(230))
+        call w3w3xx(w11, w14, w10, w61, gwwz, gwwa, wmass, wwidth, amp(231))
+        call w3w3xx(w11, w62, w10, w9, gwwz, gwwa, wmass, wwidth, amp(232))
+        call w3w3xx(w11, w14, w10, w62, gwwz, gwwz, wmass, wwidth, amp(233))
+    end if
+
     dd_bbemuvevm = 0.d0
     do i = 1, neigen
-        ztemp = (0.d0,0.d0)
+        ztemp = (0.d0, 0.d0)
         do j = 1, ngraphs
             ztemp = ztemp + eigen_vec(j,i)*amp(j)
         enddo
-        dd_bbemuvevm =dd_bbemuvevm+ztemp*eigen_val(i)*conjg(ztemp)
+        dd_bbemuvevm = dd_bbemuvevm + ztemp*eigen_val(i)*conjg(ztemp)
     enddo
-    !      call gaugecheck(amp,ztemp,eigen_vec,eigen_val,ngraphs,neigen)
+    !      call gaugecheck(amp,ztemp,eigen_vec,eigen_val, ngraphs, neigen)
 end function dd_bbemuvevm
