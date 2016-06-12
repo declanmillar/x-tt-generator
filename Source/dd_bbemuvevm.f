@@ -286,10 +286,10 @@ function sdd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
     ! begin code
     ! ----------
     sdd_bbemuvevm = 0d0
-    ntry=ntry+1
-    do ihel=1, ncomb
+    ntry = ntry + 1
+    do ihel = 1, ncomb
         if (goodhel(ihel) .or. ntry < 10) then
-            t=dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
+            t = dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1,ihel))
             sdd_bbemuvevm = sdd_bbemuvevm + t
             if (t > 0d0 .and. .not. goodhel(ihel)) then
                 goodhel(ihel)= .true.
@@ -311,7 +311,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     ! for process : d d~ -> b b~ e+ mu- ve vm~
 
     use modelling
-    use configuration, only: include_signal, include_background
+    use configuration, only: include_signal, include_background, include_x
 
     implicit none
 
@@ -326,7 +326,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     integer :: nhel(nexternal)
 
     ! local variables
-
+    real :: gZpq_tmp(2), gZpf_tmp(2)
     integer :: i,j
     real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
     complex*16 ztemp
@@ -609,6 +609,24 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     ! begin code
     ! ----------
 
+    ! initial state
+    ! if ((iq == 4) .or. (iq == 8)) then
+    !     do i = 1, 2
+    !         do j = 1, 5
+    !             gZpq(i,j) = gZpd(i,j)
+    !         end do
+    !     enddo
+    ! else if (iq == 12) then
+    !     do i = 1, 2
+    !         do j = 1, 5
+    !             gZpq(i,j) = gZpb(i,j)
+    !         end do
+    !     enddo
+    ! else
+    !     print*, "ERROR! Unsuitable initial quark."
+    !     stop
+    ! end if
+
     ! initalise amps
     do j = 1, ngraphs
         amp(j) = 0.d0
@@ -804,6 +822,18 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     if (include_signal == 1) then
         call iovxxx(w30, w59, w61, gau, amp(49))
         call iovxxx(w30, w59, w62, gzu, amp(50))
+        if (include_x == 1) then
+            do i = 1, 5
+              if (mass_zp(i) > 0) then
+                do j = 1, 2
+                  gZpq_tmp(j) = gZpd(j,i)
+                  gZpf_tmp(j) = gZpu(j,i)
+                end do
+                call jioxxx(w1, w2, gZpq_tmp, mass_zp(i), gamZp(i), w15)
+                call iovxxx(w13, w12, w15, gZpf_tmp, amp(233 + i))
+              end if
+            end do
+        end if
     end if
 
     if (include_background == 1) then
