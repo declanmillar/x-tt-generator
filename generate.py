@@ -63,6 +63,14 @@ if option.include_background == False and option.include_signal == False:
     sys.exit("ERROR! Signal and background both off.")
 if option.final_state < -1 or option.final_state > 3:
     sys.exit("ERROR! invalid final state id." % option.final_state)
+initial_states = 0
+if option.include_gg: initial_states += 1
+if option.include_qq: initial_states += 1
+if option.include_uu: initial_states += 1
+if option.include_dd: initial_states += 1
+if option.lhef and initial_states > 1:
+    sys.exit("ERROR! When outputting to LHEF, only one initial state can be active.")
+
 
 if not ("lxplus" in hostname or "cyan" in hostname):
     option.batch = False
@@ -162,9 +170,13 @@ elif option.final_state == 0:
 elif option.final_state == 1:
     final_state = "tt-bbllvv"
 elif option.final_state == 2:
+    final_state = "tt-blvbqq"
+elif option.final_state == 11:
     final_state = "bbtatavtvt"
-elif option.final_state == 3:
+elif option.final_state == 12:
     final_state = "bbemuvevm"
+
+
 
 filename = '%s_%s-%s%s%s%s_%sx%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options, option.itmx, npoints)
 

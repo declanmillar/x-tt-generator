@@ -78,19 +78,22 @@ program zprime
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
   write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
 
-  idbmup(1) = 2212
-  if (initial_state == 0) then
-    idbmup(2) = 2212
-  else
-    idbmup(2) = -2212
-  end if
-  do i = 1, 2
-    ebmup(i) = collider_energy/2
-    pdfgup(i) = 1
-    pdfsup(i) = 1
-  end do
+  ! LHEF file
+  ! idbmup(1) = 2212
+  ! if (initial_state == 0) then
+  !   idbmup(2) = 2212
+  ! else
+  !   idbmup(2) = -2212
+  ! end if
+  ! do i = 1, 2
+  !   ebmup(i) = collider_energy/2
+  !   pdfgup(i) = 1
+  !   pdfsup(i) = 1
+  ! end do
 
-  if (lhef_out == 1) call lhe_beam(idbmup, ebmup, pdfgup, pdfsup)
+  ! if (lhef_out == 1) call lhe_beam(idbmup, ebmup, pdfgup, pdfsup)
+
+  ! if (lhef_out == 1) call lhe_process(2, 1, 0, 0, xmaxup, lprup)
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
