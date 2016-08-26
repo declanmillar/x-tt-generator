@@ -1,5 +1,4 @@
 .__afs*
 *.root
 LSFJOB_*
-bbllnn*.sh
-tt*.sh
+*.sh
