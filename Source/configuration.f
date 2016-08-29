@@ -32,6 +32,7 @@ module configuration
   integer :: map_phase_space
   integer :: verbose
   real :: ecm_low, ecm_up
+  integer :: cut
 
   ! Derived config
   integer :: n_final
@@ -88,6 +89,7 @@ contains
     read(5,*) verbose
     read(5,*) ecm_low
     read(5,*) ecm_up
+    read(5,*) cut
 
   end subroutine read_config
 

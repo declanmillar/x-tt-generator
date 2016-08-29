@@ -40,6 +40,8 @@ parser.add_option("-R", "--use_rambo", default = False, action = "store_true", h
 parser.add_option("-M", "--map_phase_space", default = True, action = "store_false", help = "map phase space")
 parser.add_option("-O", "--phase_space_only", default = False, action = "store_true", help = "Set |M|^2 =    1")
 parser.add_option("-v", "--verbose", default = False, action = "store_true", help = "Run in verbose mode.")
+parser.add_option("-c", "--cut", default = False, action = "store_true", help = "Apply fiducial cuts.")
+
 (option, args) = parser.parse_args()
 hostname = socket.gethostname()
 
@@ -234,6 +236,7 @@ print >> config, '%i ! symmetrise' % option.symmetrise
 print >> config, '%i ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
+print >> config, '%i ! apply fiducial cuts' % option.cut
 
 try:
     with open('%s' % config_name,'w') as config_file:

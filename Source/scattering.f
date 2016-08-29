@@ -4,6 +4,7 @@ module scattering
 
   real :: sigma, sigma_pol(-1:1,-1:1,20), error_pol(-1:1,-1:1,20)
   real :: m3, m4, m5, m6, m7, m8, s
+
   real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
   public :: dsigma
 
@@ -83,6 +84,9 @@ function dsigma(x, wgt)
 
   ! rambo
   real :: xmass(100), prambo(4,100), wgtr
+
+  ! cuts
+  real :: eta, arg, pt, rpl
 
   ! arctan
   real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
@@ -537,7 +541,36 @@ function dsigma(x, wgt)
       qcol(1, i) = q(1, i)
     end do
 
-    ! parton CoM 4 -momenta
+    ! fiducial cuts
+    if (cut == 1) then
+      do i = 3, n_final
+
+        ! pT
+        pt = sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i))
+        if (pt < 25) then
+          dsigma = 0.d0
+          return
+        end if
+
+        ! eta
+        rps = q(3,i) / sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i) + q(3,i)*q(3,i))
+        if (rps < - 1.d0) rps = -1.d0
+        if (rps > + 1.d0) rps = +1.d0
+        rpl = dacos(rps)
+        arg = tan(rpl / 2.d0)
+        if (arg < 0.d0) arg = 1.d-9
+        eta = -dlog(arg)
+        print*, "eta (stefano) = ", eta
+        eta = atanh(q(3,i) / sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i) + q(3,i)*q(3,i)))
+        print*, "eta (declan) = ", eta
+        if (abs(eta) > 2.5) then
+          dsigma = 0.d0
+          return
+        end if
+      end do
+    end if
+
+    ! parton CoM 4-momenta
     p1(0) = q(4,1)
     p2(0) = q(4,2)
     p3(0) = q(4,3)
