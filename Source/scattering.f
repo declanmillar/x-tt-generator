@@ -545,24 +545,13 @@ function dsigma(x, wgt)
     if (cut == 1) then
       do i = 3, n_final
 
-        ! pT
         pt = sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i))
         if (pt < 25) then
           dsigma = 0.d0
           return
         end if
 
-        ! eta
-        rps = q(3,i) / sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i) + q(3,i)*q(3,i))
-        if (rps < - 1.d0) rps = -1.d0
-        if (rps > + 1.d0) rps = +1.d0
-        rpl = dacos(rps)
-        arg = tan(rpl / 2.d0)
-        if (arg < 0.d0) arg = 1.d-9
-        eta = -dlog(arg)
-        print*, "eta (stefano) = ", eta
         eta = atanh(q(3,i) / sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i) + q(3,i)*q(3,i)))
-        print*, "eta (declan) = ", eta
         if (abs(eta) > 2.5) then
           dsigma = 0.d0
           return
