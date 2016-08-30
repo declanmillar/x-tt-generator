@@ -122,6 +122,8 @@ if  option.include_background == False and option.map_phase_space == False:
     options += "_M"
 if option.ecm_low != 0 and option.ecm_up != 0:
     options += "_%s-%s" % (option.ecm_low, option.ecm_up)
+if option.cut:
+    options += "-fid"
 if len(option.tag) > 0:
     options += "_" + option.tag
 if option.final_state < 2:

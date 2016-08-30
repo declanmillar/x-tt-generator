@@ -545,13 +545,13 @@ function dsigma(x, wgt)
     if (cut == 1) then
       do i = 3, n_final
 
-        pt = sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i))
+        pt = sqrt(qcol(1,i)*qcol(1,i) + qcol(2,i)*qcol(2,i))
         if (pt < 25) then
           dsigma = 0.d0
           return
         end if
 
-        eta = atanh(q(3,i) / sqrt(q(1,i)*q(1,i) + q(2,i)*q(2,i) + q(3,i)*q(3,i)))
+        eta = atanh(qcol(3,i) / sqrt(qcol(1,i)*qcol(1,i) + qcol(2,i)*qcol(2,i) + qcol(3,i)*qcol(3,i)))
         if (abs(eta) > 2.5) then
           dsigma = 0.d0
           return
