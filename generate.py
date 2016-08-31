@@ -263,7 +263,7 @@ if option.batch:
         print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
     else:
         sys.exit("Hostname not recognised. No handler file created.")
-    print >> handler, 'rm -- "$0"'
+    # print >> handler, 'rm -- "$0"'
 
     try:
         with open('%s' % handler_name, 'w') as handler_file:
