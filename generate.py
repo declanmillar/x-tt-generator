@@ -251,7 +251,7 @@ if option.batch:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
         print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
-        print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
+        # print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
     elif "cyan" in hostname:
