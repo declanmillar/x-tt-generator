@@ -9,8 +9,8 @@ program zprime
   !  - Adapted MadGraph functions
   !  - HELAS subroutines
   !  - VEGAS Monte Carlo integration
-  !  - CTEQ6 and MRS99 PDF subroutines
-  !  - RootTuple for filling Ntuples
+  !  - MRS99, CTEQ6 and CT14 PDF subroutines
+  !  - RootTuple for writing n-tuples
 
   ! Authors: Declan Millar, Stefano Moretti.
 

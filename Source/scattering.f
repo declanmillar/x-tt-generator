@@ -4,7 +4,6 @@ module scattering
 
   real :: sigma, sigma_pol(-1:1,-1:1,20), error_pol(-1:1,-1:1,20)
   real :: m3, m4, m5, m6, m7, m8, s
-
   real, parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
   public :: dsigma
 
@@ -12,16 +11,16 @@ contains
 
 function dsigma(x, wgt)
 
-  ! Computes the fully differential cross section for
+  ! Computes the differential cross section for
 
-  ! pp -> ff,
-  ! pp -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~.
+  ! p p -> f f~,
+  ! p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~.
 
-  ! Uses adapted MadGraph functions.
-  ! Uses HELAS subroutines.
-  ! Uses VEGAS Monte Carlo integration.
-  ! Uses CTEQ6 and MRS99 PDF subroutines.
-  ! Uses RootTuple for filling ntuples.
+  ! Requires:
+  !   HELAS subroutines,
+  !   VEGAS Monte Carlo integration,
+  !   CTEQ6 and MRS99 PDF subroutines,
+  !   RootTuple for filling ntuples.
 
   ! Authors: Declan Millar, Stefano Moretti.
 
@@ -38,102 +37,102 @@ function dsigma(x, wgt)
   ! vegas arguments
   real :: x(100), wgt
 
-  ! external functions
-  real :: alfas
+  ! alphas
+  real :: alfas, a_s, gs, gs2
+
+  ! square matrix elements
   real :: sgg_tt, sqq_tt, sqq_ff
   real :: sgg_tt_bbeevv, sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
   real :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
   real :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
+  real :: check
+
+  ! pdfs
   real :: ctq6pdf, ct14pdf
 
-  real :: ecm, ecm_max, ecm_min
-  real :: hist
-  real :: gs, gs2
-  real :: gcol, qcm, pcm, qcm2
-  real :: pt356, pt478, phi356, phi478, ycol356, ycol478
-  real :: phi
+  ! energies
+  real :: shat, tau, ecm, ecm_max, ecm_min
+
+  ! weight
+  real :: weight
+
+  real :: qcm, pcm, qcm2
   real :: pq5, pq52, pq56, pq7, pq78
-  real :: qq
-  real :: resall
   real :: rl356, rl478, rl56, rl78, rpl356, rpl478
-  real :: rps356, rps, rps478
-  real :: rq, rq2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
-  real :: sf5, sf56, sf7, sf78
-  real :: shat
+  real :: rps, rps356, rps478
+
+  ! transfer invariant masses
+  real :: q, rq2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
+
+  ! boost
+  real :: gamma, vcol
+
+  ! angles
+  real :: phi
   real :: st, st5, st56, st7, st78
-  real :: tau
-  real :: vcol
-  real :: a_s
-  real :: arg356, arg478
-  real :: beta
-  real :: cf5, cf56, cf7, cf78
   real :: ct, ct5, ct56, ct7, ct78
+  real :: sf5, sf56, sf7, sf78
+  real :: cf5, cf56, cf7, cf78
 
   ! parton momentum fraction
-  real :: x1, x2, xx, xx1, xx2
+  real :: fx1(13), fx2(13), x1, x2, xx1, xx2, x1x2(2,2)
 
   ! structure functions
-  real :: d1, d2, dbar1, dbar2, u1, u2, ubar1, ubar2, str1, str2, &
-  chm1, chm2, btm1, btm2, glu1, glu2, ggd, dsea1, usea1, usea2, dsea2
+  real :: qq
+  real :: d1, u1, str1, chm1, btm1, glu1
+  real :: d2, u2, str2, chm2, btm2, glu2
+  real :: dbar1, ubar1, dbar2, ubar2
+  real :: dsea1, usea1, dsea2, usea2
 
   ! temporary dsigma
   real :: ddsigma
 
   ! temporary top mass and width
-  real :: rmt, gamt
+  real :: mt, gamt
 
   ! rambo
   real :: xmass(100), prambo(4,100), wgtr
 
   ! cuts
-  real :: eta, arg, pt, rpl
+  real :: eta, pt
 
   ! arctan
-  real :: xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
+  real :: xx, xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
 
   ! iterators
-  integer :: i, j, k, ix, nbin, ibin, jbin, imode, lam3, lam4, jps
+  integer :: i, j, ix, imode, lam3, lam4, jps
 
   ! phase space vectors.
-  real :: q356(4), q478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4), q(4,8)
-  real :: qcol(4,8), qcol56(4), qcol78(4), qcol356(4), qcol478(4)
+  real :: p(4,8), p356(4), p478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4)
+  real :: pcol(4,8), pcol56(4), pcol78(4), pcol356(4), pcol478(4)
 
   ! 4-momenta
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
   ! check phase space
   real :: delta_e, delta_x, delta_y, delta_z
+  real :: mass1, mass2, mass3, mass4, mass5, mass6, mass7, mass8
 
   ! invariant masses
-  real :: mass1, mass2, mass3, mass4, mass5, mass6, mass7, mass8
   real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
   real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
 
-  ! polarised square matrix elements q-qbar
-  real :: qcdpolqq(-1:1, -1:1), qcdpolgg(-1:1, -1:1)!, qcdpolbb(-1:1, -1:1)
-  real :: qfdpoluu1(-1:1, -1:1), qfdpoldd1(-1:1, -1:1), qfdpolbb1(-1:1, -1:1)
-  real :: pfx(-1:1, -1:1)
-  real :: pfxtot
-
-  ! polarised square matrix elements qbar-q
-  real :: qfdpoluu2(-1:1, -1:1), qfdpoldd2(-1:1, -1:1), qfdpolbb2(-1:1, -1:1)
-
   ! square matrix elements
-  real :: qfduu1 ,qfduu2, qfddd1, qfddd2, qcdqq, qcdgg, qcdbb
+  real :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
 
-  ! weight per polarisation
-  real :: weight(-1:1, -1:1, 20)
-
-  ! pdfs
-  real :: fx1(13), fx2(13), x1x2(2,2)
+  ! polarised
+  real :: qcdpolqq(-1:1, -1:1), qcdpolgg(-1:1, -1:1)
+  real :: qfdpoluu1(-1:1, -1:1), qfdpoldd1(-1:1, -1:1), qfdpolbb1(-1:1, -1:1)
+  real :: qfdpoluu2(-1:1, -1:1), qfdpoldd2(-1:1, -1:1), qfdpolbb2(-1:1, -1:1)
+  real :: weight_pol(-1:1, -1:1, 20), pfx(-1:1, -1:1), pfxtot
 
   ! internal random number seed
-  integer, parameter :: jseed  = 987654321
+  integer, parameter :: jseed = 987654321
 
-  double precision :: time1, time2, time3, time4
+  ! --- 
 
   ! store top parameters
-  rmt = fmass(ffinal)
+  mt = fmass(ffinal)
   gamt = fwidth(ffinal)
 
   ! limits
@@ -156,7 +155,7 @@ function dsigma(x, wgt)
   if (final_state < 0) then
     qq = ecm
   else
-    qq = 2.d0*rmt
+    qq = 2.d0*mt
   end if
   if (qq == 0.d0) then
     ! qq = 0! Setting to Ecm.
@@ -188,8 +187,8 @@ function dsigma(x, wgt)
     end do
     do i = 1, 4
       do j = 1, 8
-        q(i,j) = 0.d0
-        qcol(i,j) = 0.d0
+        p(i,j) = 0.d0
+        pcol(i,j) = 0.d0
       end do
     end do
 
@@ -291,14 +290,14 @@ function dsigma(x, wgt)
     end do
 
     pcm = ecm/2.d0
-    q(4,1) = pcm
-    q(3,1) = pcm
-    q(2,1) = 0.d0
-    q(1,1) = 0.d0
-    q(4,2) = pcm
-    q(3,2) = -pcm
-    q(2,2) = 0.d0
-    q(1,2) = 0.d0
+    p(4,1) = pcm
+    p(3,1) = pcm
+    p(2,1) = 0.d0
+    p(1,1) = 0.d0
+    p(4,2) = pcm
+    p(3,2) = -pcm
+    p(2,2) = 0.d0
+    p(1,2) = 0.d0
 
     if (final_state < 1) then
       if (use_rambo == 0) then
@@ -313,14 +312,14 @@ function dsigma(x, wgt)
         if (qcm2 < 0.d0) return
         qcm = sqrt(qcm2)
 
-        q(4,3) = sqrt(qcm2 + m3*m3)
-        q(3,3) = qcm*ct
-        q(2,3) = qcm*st*cos(phi)
-        q(1,3) = qcm*st*sin(phi)
-        q(4,4) = sqrt(qcm2 + m4*m4)
-        q(3,4) = -qcm*ct
-        q(2,4) = -qcm*st*cos(phi)
-        q(1,4) = -qcm*st*sin(phi)
+        p(4,3) = sqrt(qcm2 + m3*m3)
+        p(3,3) = qcm*ct
+        p(2,3) = qcm*st*cos(phi)
+        p(1,3) = qcm*st*sin(phi)
+        p(4,4) = sqrt(qcm2 + m4*m4)
+        p(3,4) = -qcm*ct
+        p(2,4) = -qcm*st*cos(phi)
+        p(1,4) = -qcm*st*sin(phi)
       else if (use_rambo == 1) then
         ! calculate 2->2 final state momenta in the parton CoM frame using RAMBO
         xmass(1) = m3
@@ -329,7 +328,7 @@ function dsigma(x, wgt)
         call rambo(seed, jps, ecm, xmass, prambo, wgtr)
         do i = 3, jps + 2
           do j = 1, 4
-            q(j, i) = prambo(j, i - 2)
+            p(j, i) = prambo(j, i - 2)
           end do
         end do
       end if
@@ -345,11 +344,11 @@ function dsigma(x, wgt)
           m356 = x(13)*(m356max - m356min) + m356min
         else
           ! flatten the integrand around the top propagator
-          xx356min = atan(((m356min)**2 - rmt**2)/rmt/gamt)
-          xx356max = atan(((m356max)**2 - rmt**2)/rmt/gamt)
+          xx356min = atan(((m356min)**2 - mt**2)/mt/gamt)
+          xx356max = atan(((m356max)**2 - mt**2)/mt/gamt)
           xx = x(13)*(xx356max - xx356min) + xx356min
-          rl356 = tan(xx)*rmt*gamt
-          m356_2 = (rmt**2 + rl356)
+          rl356 = tan(xx)*mt*gamt
+          m356_2 = (mt**2 + rl356)
           if (m356_2 < 0.d0) return
           m356 = sqrt(m356_2)
         end if
@@ -360,11 +359,11 @@ function dsigma(x, wgt)
           m478 = x(12)*(m478max - m478min) + m478min
         else
           ! flatten the integrand around the anti-top propagator
-          xx478min = atan(((m478min)**2 - rmt**2)/rmt/gamt)
-          xx478max = atan(((m478max)**2 - rmt**2)/rmt/gamt)
+          xx478min = atan(((m478min)**2 - mt**2)/mt/gamt)
+          xx478max = atan(((m478max)**2 - mt**2)/mt/gamt)
           xx = x(12)*(xx478max - xx478min) + xx478min
-          rl478 = tan(xx)*rmt*gamt
-          m478_2 = (rmt**2 + rl478)
+          rl478 = tan(xx)*mt*gamt
+          m478_2 = (mt**2 + rl478)
           if (m478_2 < 0.d0) return
           m478 = sqrt(m478_2)
         end if
@@ -422,17 +421,17 @@ function dsigma(x, wgt)
         ! two body decay of s-channel mediating boson
         rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
         if (rq2 < 0.d0) return
-        rq = sqrt(rq2)
+        q = sqrt(rq2)
 
-        q356(3) = rq*ct
-        q356(2) = rq*st*cos(phi)
-        q356(1) = rq*st*sin(phi)
-        q356(4) = sqrt(rq2 + m356*m356)
+        p356(3) = q*ct
+        p356(2) = q*st*cos(phi)
+        p356(1) = q*st*sin(phi)
+        p356(4) = sqrt(rq2 + m356*m356)
 
         do i = 1, 3
-          q478(i) =  - q356(i)
+          p478(i) =  - p356(i)
         end do
-        q478(4) = sqrt(rq2 + m478*m478)
+        p478(4) = sqrt(rq2 + m478*m478)
 
         ! two body decay of the top
         rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
@@ -444,13 +443,13 @@ function dsigma(x, wgt)
         q56(4) = sqrt(rq562 + m56*m56)
         pq56 = 0.d0
         do i = 1,3
-          pq56 = pq56 + q356(i)*q56(i)
+          pq56 = pq56 + p356(i)*q56(i)
         end do
-        p56(4) = (q356(4)*q56(4) + pq56)/m356
-        q(4,3) = q356(4) - p56(4)
+        p56(4) = (p356(4)*q56(4) + pq56)/m356
+        p(4,3) = p356(4) - p56(4)
         do i = 1,3
-          p56(i) = q56(i) + q356(i)*(p56(4) + q56(4))/(q356(4) + m356)
-          q(i,3) = q356(i) - p56(i)
+          p56(i) = q56(i) + p356(i)*(p56(4) + q56(4))/(p356(4) + m356)
+          p(i,3) = p356(i) - p56(i)
         end do
 
         ! two body decay of the anti-top
@@ -463,13 +462,13 @@ function dsigma(x, wgt)
         q78(4) = sqrt(rq782 + m78*m78)
         pq78 = 0.d0
         do i = 1, 3
-          pq78 = pq78 + q478(i)*q78(i)
+          pq78 = pq78 + p478(i)*q78(i)
         end do
-        p78(4) = (q478(4)*q78(4) + pq78)/m478
-        q(4,4) = q478(4) - p78(4)
+        p78(4) = (p478(4)*q78(4) + pq78)/m478
+        p(4,4) = p478(4) - p78(4)
         do i = 1, 3
-          p78(i) = q78(i) + q478(i)*(p78(4) + q78(4))/(q478(4) + m478)
-          q(i,4) = q478(i) - p78(i)
+          p78(i) = q78(i) + p478(i)*(p78(4) + q78(4))/(p478(4) + m478)
+          p(i,4) = p478(i) - p78(i)
         end do
 
         ! two body decay of the W+
@@ -484,11 +483,11 @@ function dsigma(x, wgt)
         do i = 1, 3
           pq5 = pq5 + p56(i)*q5(i)
         end do
-        q(4,5) = (p56(4)*q5(4) + pq5)/m56
-        q(4,6) = p56(4) - q(4,5)
+        p(4,5) = (p56(4)*q5(4) + pq5)/m56
+        p(4,6) = p56(4) - p(4,5)
         do i = 1,3
-          q(i,5) = q5(i) + p56(i)*(q(4,5) + q5(4))/(p56(4) + m56)
-          q(i,6) = p56(i) - q(i,5)
+          p(i,5) = q5(i) + p56(i)*(p(4,5) + q5(4))/(p56(4) + m56)
+          p(i,6) = p56(i) - p(i,5)
         end do
 
         ! two body decay of the W-
@@ -503,11 +502,11 @@ function dsigma(x, wgt)
         do i = 1, 3
           pq7 = pq7 + p78(i)*q7(i)
         end do
-        q(4,7) = (p78(4)*q7(4) + pq7)/m78
-        q(4,8) = p78(4) - q(4,7)
+        p(4,7) = (p78(4)*q7(4) + pq7)/m78
+        p(4,8) = p78(4) - p(4,7)
         do i = 1, 3
-          q(i,7) = q7(i) + p78(i)*(q(4,7) + q7(4))/(p78(4) + m78)
-          q(i,8) = p78(i) - q(i,7)
+          p(i,7) = q7(i) + p78(i)*(p(4,7) + q7(4))/(p78(4) + m78)
+          p(i,8) = p78(i) - p(i,7)
         end do
       else if (use_rambo == 1) then
         ! Calculate 2->6 final state momenta in the parton CoM using RAMBO
@@ -521,7 +520,7 @@ function dsigma(x, wgt)
         call rambo(seed, jps, ecm, xmass, prambo, wgtr)
         do i = 3, jps + 2
           do j = 1, 4
-            q(j,i) = prambo(j,i-2)
+            p(j,i) = prambo(j,i-2)
           end do
         end do
       end if
@@ -531,27 +530,27 @@ function dsigma(x, wgt)
     vcol = (x1 - x2)/(x1 + x2)
 
     ! gamma factor
-    gcol = (x1 + x2)/2.d0/sqrt(x1*x2)
+    gamma = (x1 + x2)/2.d0/sqrt(x1*x2)
 
     ! boost initial and final state momenta to the collider frame
     do i = 1, n_final
-      qcol(4, i) = gcol*(q(4, i) + vcol*q(3, i))
-      qcol(3, i) = gcol*(q(3, i) + vcol*q(4, i))
-      qcol(2, i) = q(2, i)
-      qcol(1, i) = q(1, i)
+      pcol(4, i) = gamma*(p(4, i) + vcol*p(3, i))
+      pcol(3, i) = gamma*(p(3, i) + vcol*p(4, i))
+      pcol(2, i) = p(2, i)
+      pcol(1, i) = p(1, i)
     end do
 
     ! fiducial cuts
     if (cut == 1) then
       do i = 3, n_final
 
-        pt = sqrt(qcol(1,i)*qcol(1,i) + qcol(2,i)*qcol(2,i))
+        pt = sqrt(pcol(1,i)*pcol(1,i) + pcol(2,i)*pcol(2,i))
         if (pt < 25) then
           dsigma = 0.d0
           return
         end if
 
-        eta = atanh(qcol(3,i) / sqrt(qcol(1,i)*qcol(1,i) + qcol(2,i)*qcol(2,i) + qcol(3,i)*qcol(3,i)))
+        eta = atanh(pcol(3,i) / sqrt(pcol(1,i)*pcol(1,i) + pcol(2,i)*pcol(2,i) + pcol(3,i)*pcol(3,i)))
         if (abs(eta) > 2.5) then
           dsigma = 0.d0
           return
@@ -560,23 +559,23 @@ function dsigma(x, wgt)
     end if
 
     ! parton CoM 4-momenta
-    p1(0) = q(4,1)
-    p2(0) = q(4,2)
-    p3(0) = q(4,3)
-    p4(0) = q(4,4)
-    p5(0) = q(4,5)
-    p6(0) = q(4,6)
-    p7(0) = q(4,7)
-    p8(0) = q(4,8)
+    p1(0) = p(4,1)
+    p2(0) = p(4,2)
+    p3(0) = p(4,3)
+    p4(0) = p(4,4)
+    p5(0) = p(4,5)
+    p6(0) = p(4,6)
+    p7(0) = p(4,7)
+    p8(0) = p(4,8)
     do i = 1, 3
-      p1(i) = q(i,1)
-      p2(i) = q(i,2)
-      p3(i) = q(i,3)
-      p4(i) = q(i,4)
-      p5(i) = q(i,5)
-      p6(i) = q(i,6)
-      p7(i) = q(i,7)
-      p8(i) = q(i,8)
+      p1(i) = p(i,1)
+      p2(i) = p(i,2)
+      p3(i) = p(i,3)
+      p4(i) = p(i,4)
+      p5(i) = p(i,5)
+      p6(i) = p(i,6)
+      p7(i) = p(i,7)
+      p8(i) = p(i,8)
     end do
 
     if (verbose == 1) then
@@ -685,12 +684,12 @@ function dsigma(x, wgt)
         qfdpoldd2(lam3,lam4) = 0.d0
         pfx(lam3,lam4) = 0.d0
         do i = 1, 20
-          weight(lam3,lam4,i) = 0.d0
+          weight_pol(lam3,lam4,i) = 0.d0
         end do
       end do
     end do
 
-    resall = 0
+    check = 0
     if (final_state <= 0) then
       do lam3 = -1, 1, 2
         do lam4 = -1, 1, 2
@@ -708,7 +707,7 @@ function dsigma(x, wgt)
             qfdpoldd1(lam3, lam4) = sqq_ff(4, ffinal, p1, p2, p3, p4, lam3, lam4)
             qfdpoldd2(lam3, lam4) = sqq_ff(4, ffinal, p2, p1, p3, p4, lam3, lam4)
           end if
-          resall = resall &
+          check = check &
           + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) &
           + qfdpoluu1(lam3,lam4) + qfdpoluu2(lam3,lam4) &
           + qfdpoldd1(lam3,lam4) + qfdpoldd2(lam3,lam4)
@@ -730,7 +729,7 @@ function dsigma(x, wgt)
         qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
         qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
       end if
-      resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
+      check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
     ! else if (final_state == 2) then
     !   if (include_gg == 1) then
@@ -747,7 +746,7 @@ function dsigma(x, wgt)
     !       qfddd1 = sdd_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
     !       qfddd2 = sdd_bbtatavtvt(p2, p1, p3, p4, p5, p7, p6, p8)
     !   end if
-    !   resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
+    !   check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
     else if (final_state == 12) then
       if (include_gg == 1) then
@@ -764,13 +763,13 @@ function dsigma(x, wgt)
           qfddd1 = sdd_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
           qfddd2 = sdd_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
       end if
-      resall = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
+      check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
     else
       stop "ERROR! Invalid final state."
     end if
 
     ! if all |M|^2 contributions zero skip
-    if (resall == 0.d0) return
+    if (check == 0.d0) return
 
     ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
     qcdqq = qcdqq*gs**4
@@ -857,11 +856,11 @@ function dsigma(x, wgt)
       if (use_rambo == 0) then
 
         ! phase space factor
-        ddsigma = ddsigma*rq*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+        ddsigma = ddsigma*q*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
 
         if (map_phase_space == 1) then
-          ddsigma = ddsigma*((m356*m356 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/rmt/gamt
-          ddsigma = ddsigma*((m478*m478 - rmt*rmt)**2 + rmt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/rmt/gamt
+          ddsigma = ddsigma*((m356*m356 - mt*mt)**2 + mt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/mt/gamt
+          ddsigma = ddsigma*((m478*m478 - mt*mt)**2 + mt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/mt/gamt
           ddsigma = ddsigma*((m56*m56 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx56max - xx56min)/(2.d0*m56)/wmass/wwidth
           ddsigma = ddsigma*((m78*m78 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx78max - xx78min)/(2.d0*m78)/wmass/wwidth
           ! nwa
@@ -883,7 +882,7 @@ function dsigma(x, wgt)
     ddsigma = ddsigma/real(symmetrise + 1)
 
     ! bin
-    hist = ddsigma*wgt
+    weight = ddsigma*wgt
 
     ! Compute polarised event weightings
     if (final_state < 1) then
@@ -891,7 +890,7 @@ function dsigma(x, wgt)
         do lam4 = -1, 1, 2
           sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + ddsigma*wgt*pfx(lam3,lam4)
           ! print*, pfx(lam3,lam4), sigma_pol(lam3,lam4,it)
-          weight(lam3,lam4,it) = ddsigma*wgt*pfx(lam3,lam4)
+          weight_pol(lam3,lam4,it) = ddsigma*wgt*pfx(lam3,lam4)
           error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) + sigma_pol(lam3,lam4,it)**2
         end do
       end do
@@ -902,52 +901,52 @@ function dsigma(x, wgt)
 
       ! Write final particle collider frame momenta to Ntuple
       if (final_state == -1) then
-        call rootaddparticle(11,  qcol(1,3), qcol(2,3), qcol(3,3), qcol(4,3))
-        call rootaddparticle(-11, qcol(1,4), qcol(2,4), qcol(3,4), qcol(4,4))
+        call rootaddparticle(11,  pcol(1,3), pcol(2,3), pcol(3,3), pcol(4,3))
+        call rootaddparticle(-11, pcol(1,4), pcol(2,4), pcol(3,4), pcol(4,4))
       else if (final_state == 0) then
-        call rootaddparticle(6,  qcol(1,3), qcol(2,3), qcol(3,3), qcol(4,3))
-        call rootaddparticle(-6, qcol(1,4), qcol(2,4), qcol(3,4), qcol(4,4))
+        call rootaddparticle(6,  pcol(1,3), pcol(2,3), pcol(3,3), pcol(4,3))
+        call rootaddparticle(-6, pcol(1,4), pcol(2,4), pcol(3,4), pcol(4,4))
       else if (final_state == 1) then
-        call rootaddparticle(5,   qcol(1,3), qcol(2,3), qcol(3,3), qcol(4,3))
-        call rootaddparticle(-5,  qcol(1,4), qcol(2,4), qcol(3,4), qcol(4,4))
-        call rootaddparticle(-11, qcol(1,5), qcol(2,5), qcol(3,5), qcol(4,5))
-        call rootaddparticle(12,  qcol(1,6), qcol(2,6), qcol(3,6), qcol(4,6))
-        call rootaddparticle(11,  qcol(1,7), qcol(2,7), qcol(3,7), qcol(4,7))
-        call rootaddparticle(-12, qcol(1,8), qcol(2,8), qcol(3,8), qcol(4,8))
+        call rootaddparticle(5,   pcol(1,3), pcol(2,3), pcol(3,3), pcol(4,3))
+        call rootaddparticle(-5,  pcol(1,4), pcol(2,4), pcol(3,4), pcol(4,4))
+        call rootaddparticle(-11, pcol(1,5), pcol(2,5), pcol(3,5), pcol(4,5))
+        call rootaddparticle(12,  pcol(1,6), pcol(2,6), pcol(3,6), pcol(4,6))
+        call rootaddparticle(11,  pcol(1,7), pcol(2,7), pcol(3,7), pcol(4,7))
+        call rootaddparticle(-12, pcol(1,8), pcol(2,8), pcol(3,8), pcol(4,8))
       end if
 
       if (final_state < 1) then
-        call rootadddouble(weight(-1,-1,it), "weightLL")
-        call rootadddouble(weight(-1, 1,it), "weightLR")
-        call rootadddouble(weight( 1,-1,it), "weightRL")
-        call rootadddouble(weight( 1, 1,it), "weightRR")
+        call rootadddouble(weight_pol(-1,-1,it), "weightLL")
+        call rootadddouble(weight_pol(-1, 1,it), "weightLR")
+        call rootadddouble(weight_pol( 1,-1,it), "weightRL")
+        call rootadddouble(weight_pol( 1, 1,it), "weightRR")
       end if
 
-      call rootaddevent(hist)
+      call rootaddevent(weight)
     end if
 
     if (lhef_out == 1) then
-      qcol56 = qcol(1:4,5) + qcol(1:4,6)
-      qcol78 = qcol(1:4,7) + qcol(1:4,8)
-      qcol356 = qcol56 + qcol(1:4,3)
-      qcol478 = qcol78 + qcol(1:4,4)
+      pcol56 = pcol(1:4,5) + pcol(1:4,6)
+      pcol78 = pcol(1:4,7) + pcol(1:4,8)
+      pcol356 = pcol56 + pcol(1:4,3)
+      pcol478 = pcol78 + pcol(1:4,4)
 
       if (include_gg == 1) then
-        call lhe_add_event(12, 1, hist, qq, 0.0078125, alfas(zmass, lambdaqcd4, nloops))
+        call lhe_add_event(12, 1, weight, qq, 0.0078125, alfas(zmass, lambdaqcd4, nloops))
 
         ! g g -> b b~ W+ W- -> b b~ e+ ve u~ d
-        call lhe_add_particle(-1,  21,  0,  0, 501, 502, qcol(1:4,1), 9.0, 9.0) ! 1
-        call lhe_add_particle(-1,  21,  0,  0, 503, 501, qcol(1:4,2), 9.0, 9.0) ! 2
-        call lhe_add_particle( 2,   6,  1,  2, 503,   0, qcol356    , 9.0, 9.0) ! 3
-        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, qcol478    , 9.0, 9.0) ! 4
-        call lhe_add_particle( 1,   5,  3,  3, 503,   0, qcol(1:4,3), 9.0, 9.0) ! 5
-        call lhe_add_particle( 2,  24,  3,  3,   0,   0, qcol56     , 9.0, 9.0) ! 6
-        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, qcol(1:4,5), 9.0, 9.0) ! 7
-        call lhe_add_particle( 1,   2,  6,  6,   0,   0, qcol(1:4,6), 9.0, 9.0) ! 8
-        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, qcol(1:4,4), 9.0, 9.0) ! 9
-        call lhe_add_particle( 2, -24,  4,  4,   0,   0, qcol78     , 9.0, 9.0) ! 10
-        call lhe_add_particle( 1,   4, 10, 10, 504,   0, qcol(1:4,7), 9.0, 9.0) ! 11
-        call lhe_add_particle( 1,  -3, 10, 10,   0, 504, qcol(1:4,8), 9.0, 9.0) ! 12
+        call lhe_add_particle(-1,  21,  0,  0, 501, 502, pcol(1:4,1), 9.0, 9.0) ! 1
+        call lhe_add_particle(-1,  21,  0,  0, 503, 501, pcol(1:4,2), 9.0, 9.0) ! 2
+        call lhe_add_particle( 2,   6,  1,  2, 503,   0, pcol356    , 9.0, 9.0) ! 3
+        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, pcol478    , 9.0, 9.0) ! 4
+        call lhe_add_particle( 1,   5,  3,  3, 503,   0, pcol(1:4,3), 9.0, 9.0) ! 5
+        call lhe_add_particle( 2,  24,  3,  3,   0,   0, pcol56     , 9.0, 9.0) ! 6
+        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, pcol(1:4,5), 9.0, 9.0) ! 7
+        call lhe_add_particle( 1,   2,  6,  6,   0,   0, pcol(1:4,6), 9.0, 9.0) ! 8
+        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, pcol(1:4,4), 9.0, 9.0) ! 9
+        call lhe_add_particle( 2, -24,  4,  4,   0,   0, pcol78     , 9.0, 9.0) ! 10
+        call lhe_add_particle( 1,   4, 10, 10, 504,   0, pcol(1:4,7), 9.0, 9.0) ! 11
+        call lhe_add_particle( 1,  -3, 10, 10,   0, 504, pcol(1:4,8), 9.0, 9.0) ! 12
 
         ! g g -> b b~ W+ W- -> b b~ e+ ve c~ s
         ! call lhe_add_particle(-1,  21,  0,  0, 501, 502) ! 1
@@ -1049,51 +1048,51 @@ function dsigma(x, wgt)
       end if
 
       if (include_qq == 1) then
-        ! q q -> b b~ W+ W- -> b b~ e+ ve u~ d
-        call lhe_add_particle(-1,   3,  0,  0, 501,   0, qcol(1:4,1), 9.0, 9.0) ! 1
-        call lhe_add_particle(-1,  -3,  0,  0,   0, 502, qcol(1:4,2), 9.0, 9.0) ! 2
-        call lhe_add_particle( 2,   6,  1,  2, 501,   0, qcol356    , 9.0, 9.0) ! 3
-        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, qcol478    , 9.0, 9.0) ! 4
-        call lhe_add_particle( 1,   5,  3,  3, 501,   0, qcol(1:4,3), 9.0, 9.0) ! 5
-        call lhe_add_particle( 2,  24,  3,  3,   0,   0, qcol56     , 9.0, 9.0) ! 6
-        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, qcol(1:4,5), 9.0, 9.0) ! 7
-        call lhe_add_particle( 1,   2,  6,  6,   0,   0, qcol(1:4,6), 9.0, 9.0) ! 8
-        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, qcol(1:4,4), 9.0, 9.0) ! 9
-        call lhe_add_particle( 2, -24,  4,  4,   0,   0, qcol78     , 9.0, 9.0) ! 10
-        call lhe_add_particle( 1,   4, 10, 10, 504,   0, qcol(1:4,7), 9.0, 9.0) ! 11
-        call lhe_add_particle( 1,  -3, 10, 10,   0, 504, qcol(1:4,8), 9.0, 9.0) ! 12
+        ! p p -> b b~ W+ W- -> b b~ e+ ve u~ d
+        call lhe_add_particle(-1,   3,  0,  0, 501,   0, pcol(1:4,1), 9.0, 9.0) ! 1
+        call lhe_add_particle(-1,  -3,  0,  0,   0, 502, pcol(1:4,2), 9.0, 9.0) ! 2
+        call lhe_add_particle( 2,   6,  1,  2, 501,   0, pcol356    , 9.0, 9.0) ! 3
+        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, pcol478    , 9.0, 9.0) ! 4
+        call lhe_add_particle( 1,   5,  3,  3, 501,   0, pcol(1:4,3), 9.0, 9.0) ! 5
+        call lhe_add_particle( 2,  24,  3,  3,   0,   0, pcol56     , 9.0, 9.0) ! 6
+        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, pcol(1:4,5), 9.0, 9.0) ! 7
+        call lhe_add_particle( 1,   2,  6,  6,   0,   0, pcol(1:4,6), 9.0, 9.0) ! 8
+        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, pcol(1:4,4), 9.0, 9.0) ! 9
+        call lhe_add_particle( 2, -24,  4,  4,   0,   0, pcol78     , 9.0, 9.0) ! 10
+        call lhe_add_particle( 1,   4, 10, 10, 504,   0, pcol(1:4,7), 9.0, 9.0) ! 11
+        call lhe_add_particle( 1,  -3, 10, 10,   0, 504, pcol(1:4,8), 9.0, 9.0) ! 12
       end if
 
       if (include_uu == 1) then
         ! u u -> b b~ W+ W- -> b b~ e+ ve u~ d
-        call lhe_add_particle(-1,   3,  0,  0, 501,   0, qcol(1:4,1), 9.0, 9.0) ! 1
-        call lhe_add_particle(-1,  -3,  0,  0,   0, 501, qcol(1:4,2), 9.0, 9.0) ! 2
-        call lhe_add_particle( 2,   6,  1,  2, 502,   0, qcol356    , 9.0, 9.0) ! 3
-        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, qcol478    , 9.0, 9.0) ! 4
-        call lhe_add_particle( 1,   5,  3,  3, 502,   0, qcol(1:4,3), 9.0, 9.0) ! 5
-        call lhe_add_particle( 2,  24,  3,  3,   0,   0, qcol56     , 9.0, 9.0) ! 6
-        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, qcol(1:4,5), 9.0, 9.0) ! 7
-        call lhe_add_particle( 1,   2,  6,  6,   0,   0, qcol(1:4,6), 9.0, 9.0) ! 8
-        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, qcol(1:4,4), 9.0, 9.0) ! 9
-        call lhe_add_particle( 2, -24,  4,  4,   0,   0, qcol78     , 9.0, 9.0) ! 10
-        call lhe_add_particle( 1,   4, 10, 10, 503,   0, qcol(1:4,7), 9.0, 9.0) ! 11
-        call lhe_add_particle( 1,  -3, 10, 10,   0, 503, qcol(1:4,8), 9.0, 9.0) ! 12
+        call lhe_add_particle(-1,   3,  0,  0, 501,   0, pcol(1:4,1), 9.0, 9.0) ! 1
+        call lhe_add_particle(-1,  -3,  0,  0,   0, 501, pcol(1:4,2), 9.0, 9.0) ! 2
+        call lhe_add_particle( 2,   6,  1,  2, 502,   0, pcol356    , 9.0, 9.0) ! 3
+        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, pcol478    , 9.0, 9.0) ! 4
+        call lhe_add_particle( 1,   5,  3,  3, 502,   0, pcol(1:4,3), 9.0, 9.0) ! 5
+        call lhe_add_particle( 2,  24,  3,  3,   0,   0, pcol56     , 9.0, 9.0) ! 6
+        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, pcol(1:4,5), 9.0, 9.0) ! 7
+        call lhe_add_particle( 1,   2,  6,  6,   0,   0, pcol(1:4,6), 9.0, 9.0) ! 8
+        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, pcol(1:4,4), 9.0, 9.0) ! 9
+        call lhe_add_particle( 2, -24,  4,  4,   0,   0, pcol78     , 9.0, 9.0) ! 10
+        call lhe_add_particle( 1,   4, 10, 10, 503,   0, pcol(1:4,7), 9.0, 9.0) ! 11
+        call lhe_add_particle( 1,  -3, 10, 10,   0, 503, pcol(1:4,8), 9.0, 9.0) ! 12
       end if
 
       if (include_dd == 1) then
         ! d d -> b b~ W+ W- -> b b~ e+ ve u~ d
-        call lhe_add_particle(-1,   4,  0,  0, 501,   0, qcol(1:4,1), 9.0, 9.0) ! 1
-        call lhe_add_particle(-1,  -4,  0,  0,   0, 501, qcol(1:4,2), 9.0, 9.0) ! 2
-        call lhe_add_particle( 2,   6,  1,  2, 502,   0, qcol356    , 9.0, 9.0) ! 3
-        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, qcol478    , 9.0, 9.0) ! 4
-        call lhe_add_particle( 1,   5,  3,  3, 502,   0, qcol(1:4,3), 9.0, 9.0) ! 5
-        call lhe_add_particle( 2,  24,  3,  3,   0,   0, qcol56     , 9.0, 9.0) ! 6
-        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, qcol(1:4,5), 9.0, 9.0) ! 7
-        call lhe_add_particle( 1,   2,  6,  6,   0,   0, qcol(1:4,6), 9.0, 9.0) ! 8
-        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, qcol(1:4,4), 9.0, 9.0) ! 9
-        call lhe_add_particle( 2, -24,  4,  4,   0,   0, qcol78     , 9.0, 9.0) ! 10
-        call lhe_add_particle( 1,   4, 10, 10, 503,   0, qcol(1:4,7), 9.0, 9.0) ! 11
-        call lhe_add_particle( 1,  -3, 10, 10,   0, 503, qcol(1:4,8), 9.0, 9.0) ! 12
+        call lhe_add_particle(-1,   4,  0,  0, 501,   0, pcol(1:4,1), 9.0, 9.0) ! 1
+        call lhe_add_particle(-1,  -4,  0,  0,   0, 501, pcol(1:4,2), 9.0, 9.0) ! 2
+        call lhe_add_particle( 2,   6,  1,  2, 502,   0, pcol356    , 9.0, 9.0) ! 3
+        call lhe_add_particle( 2,  -6,  1,  2,   0, 502, pcol478    , 9.0, 9.0) ! 4
+        call lhe_add_particle( 1,   5,  3,  3, 502,   0, pcol(1:4,3), 9.0, 9.0) ! 5
+        call lhe_add_particle( 2,  24,  3,  3,   0,   0, pcol56     , 9.0, 9.0) ! 6
+        call lhe_add_particle( 1,  -1,  6,  6,   0,   0, pcol(1:4,5), 9.0, 9.0) ! 7
+        call lhe_add_particle( 1,   2,  6,  6,   0,   0, pcol(1:4,6), 9.0, 9.0) ! 8
+        call lhe_add_particle( 1,  -5,  4,  4,   0, 502, pcol(1:4,4), 9.0, 9.0) ! 9
+        call lhe_add_particle( 2, -24,  4,  4,   0,   0, pcol78     , 9.0, 9.0) ! 10
+        call lhe_add_particle( 1,   4, 10, 10, 503,   0, pcol(1:4,7), 9.0, 9.0) ! 11
+        call lhe_add_particle( 1,  -3, 10, 10,   0, 503, pcol(1:4,8), 9.0, 9.0) ! 12
       end if
 
       ! g g -> b b~ W+ W-
