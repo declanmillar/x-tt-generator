@@ -26,8 +26,8 @@ parser.add_option("-X", "--include_x", default = True, action = "store_false", h
 parser.add_option("-f", "--final_state", default = "1", type = "int", action = "store", help = "set final state")
 parser.add_option("-E", "--collider_energy", default = 13, action = "store", help = "collider energy")
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions")
-parser.add_option("-S", "--include_signal", default = 1, const = 0, action = "store_const", help = "include tt signal")
-parser.add_option("-B", "--include_background", default = 1, const = 0, action = "store_const", help = "include background")
+parser.add_option("-S", "--include_signal", default = True, const = 0, action = "store_const", help = "include tt signal")
+parser.add_option("-B", "--include_background", default = False, const = 0, action = "store_const", help = "include background")
 parser.add_option("-i", "--interference", default = 2, type = "int", help = "specify interference")
 parser.add_option("-w", "--use_nwa", default = False, action = "store_true", help = "use Narrow Width Approximation")
 parser.add_option("-L", "--ecm_low", default = 0, type = "int", help = " Ecm lower limit")
@@ -64,6 +64,7 @@ if option.structure_function < 1 or option.structure_function > 11:
 if option.include_background == False and option.include_signal == False:
     sys.exit("ERROR! Signal and background both off.")
 if option.final_state < -1 or option.final_state > 3:
+
     sys.exit("ERROR! invalid final state id." % option.final_state)
 initial_states = 0
 if option.include_gg: initial_states += 1
