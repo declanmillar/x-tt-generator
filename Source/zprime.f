@@ -46,29 +46,29 @@ program zprime
   s = collider_energy*collider_energy
 
   ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
-  if (structure_function == 1) lambdaqcd4 = 0.326d0
-  if (structure_function == 2) lambdaqcd4 = 0.326d0
-  if (structure_function == 3) lambdaqcd4 = 0.326d0
-  if (structure_function == 4) lambdaqcd4 = 0.215d0
-  if (structure_function == 5) lambdaqcd4 = 0.300d0
-  if (structure_function == 6) lambdaqcd4 = 0.300d0
-  if (structure_function == 7) lambdaqcd4 = 0.300d0
-  if (structure_function == 8) lambdaqcd4 = 0.229d0
-  if (structure_function == 9) lambdaqcd4 = 0.383d0
+  if (ipdf == 1) lambdaqcd4 = 0.326d0
+  if (ipdf == 2) lambdaqcd4 = 0.326d0
+  if (ipdf == 3) lambdaqcd4 = 0.326d0
+  if (ipdf == 4) lambdaqcd4 = 0.215d0
+  if (ipdf == 5) lambdaqcd4 = 0.300d0
+  if (ipdf == 6) lambdaqcd4 = 0.300d0
+  if (ipdf == 7) lambdaqcd4 = 0.300d0
+  if (ipdf == 8) lambdaqcd4 = 0.229d0
+  if (ipdf == 9) lambdaqcd4 = 0.383d0
   ! ?
-  if (structure_function == 10) lambdaqcd4 = 0.326d0 !
-  if (structure_function == 11) lambdaqcd4 = 0.215d0 ! check this
+  if (ipdf == 10) lambdaqcd4 = 0.326d0 !
+  if (ipdf == 11) lambdaqcd4 = 0.215d0 ! check this
 
   ! initialise cteq grids.
-  if (structure_function <= 4) call setctq6(structure_function)
-  if (structure_function == 10) tablefile = "ct14ln.pds"
-  if (structure_function == 11) tablefile = "ct14ll.pds"
-  if (structure_function > 9) call setct14(tablefile)
+  if (ipdf <= 4) call setctq6(ipdf)
+  if (ipdf == 10) tablefile = "ct14ln.pds"
+  if (ipdf == 11) tablefile = "ct14ll.pds"
+  if (ipdf > 9) call setct14(tablefile)
 
   ! use appropriately evolved alphas.
-  if (structure_function <= 2) then
+  if (ipdf <= 2) then
     nloops = 2
-  else if (structure_function == 10) then
+  else if (ipdf == 10) then
     nloops = 2
   else
     nloops = 1
@@ -248,6 +248,7 @@ program zprime
 
   do i = 1, it
   	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
+    call rootadddouble(cnorm(i), "itweight")
   end do
 
   if (final_state == 0) then

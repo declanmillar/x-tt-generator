@@ -10,7 +10,7 @@ module configuration
   real :: collider_energy
   integer :: initial_state
   integer :: final_state
-  integer :: structure_function
+  integer :: ipdf
   character(50) :: model_name
   character(100) :: ntuple_file
   character(100) :: log_file
@@ -65,7 +65,7 @@ contains
     read(5,*) initial_state ! 0 = pp, 1 = ppbar
     read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
     read(5,*) model_name
-    read(5,*) structure_function
+    read(5,*) ipdf
     read(5,*) include_signal
     read(5,*) include_background
     read(5,*) include_gg
@@ -158,17 +158,17 @@ subroutine print_config
       write(log,*) 'Process:p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   end if
-  if (structure_function == 1) write(log,*) 'PDFs:CTEQ6m'
-  if (structure_function == 2) write(log,*) 'PDFs:CTEQ6d'
-  if (structure_function == 3) write(log,*) 'PDFs:CTEQ6l'
-  if (structure_function == 4) write(log,*) 'PDFs:CTEQ6l1'
-  if (structure_function == 5) write(log,*) 'PDFs:MRS99 (cor01)'
-  if (structure_function == 6) write(log,*) 'PDFs:MRS99 (cor02)'
-  if (structure_function == 7) write(log,*) 'PDFs:MRS99 (cor03)'
-  if (structure_function == 8) write(log,*) 'PDFs:MRS99 (cor04)'
-  if (structure_function == 9) write(log,*) 'PDFs:MRS99 (cor05)'
-  if (structure_function == 10) write(log,*) 'PDFs:CT14LN'
-  if (structure_function == 11) write(log,*) 'PDFs:CT14LL'
+  if (ipdf == 1) write(log,*) 'PDFs:CTEQ6m'
+  if (ipdf == 2) write(log,*) 'PDFs:CTEQ6d'
+  if (ipdf == 3) write(log,*) 'PDFs:CTEQ6l'
+  if (ipdf == 4) write(log,*) 'PDFs:CTEQ6l1'
+  if (ipdf == 5) write(log,*) 'PDFs:MRS99 (cor01)'
+  if (ipdf == 6) write(log,*) 'PDFs:MRS99 (cor02)'
+  if (ipdf == 7) write(log,*) 'PDFs:MRS99 (cor03)'
+  if (ipdf == 8) write(log,*) 'PDFs:MRS99 (cor04)'
+  if (ipdf == 9) write(log,*) 'PDFs:MRS99 (cor05)'
+  if (ipdf == 10) write(log,*) 'PDFs:CT14LN'
+  if (ipdf == 11) write(log,*) 'PDFs:CT14LL'
   if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
   if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
   write(log,*) 'Model:', model_name

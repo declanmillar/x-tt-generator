@@ -32,29 +32,29 @@ function dsigma(x, wgt)
   implicit none
 
   ! differential cross section
-  real :: dsigma
-
-  ! vegas arguments
-  real :: x(100), wgt
+  real :: dsigma, ddsigma, x(100), wgt, weight
 
   ! alphas
-  real :: alfas, a_s, gs, gs2
+  real :: alfas, gs4, gs2
 
   ! square matrix elements
+  real :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
   real :: sgg_tt, sqq_tt, sqq_ff
   real :: sgg_tt_bbeevv, sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
   real :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
   real :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
-  real :: check
 
   ! pdfs
-  real :: ctq6pdf, ct14pdf
+  real :: ctq6pdf, ct14pdf, qq
+  real :: fx1(13), fx2(13), x1, x2, xx1, xx2, x1x2(2,2)
+  real :: d1, u1, str1, chm1, btm1, glu1
+  real :: d2, u2, str2, chm2, btm2, glu2
+  real :: dbar1, ubar1, dbar2, ubar2
+  real :: dsea1, usea1, dsea2, usea2
+  integer :: ix
 
   ! energies
   real :: shat, tau, ecm, ecm_max, ecm_min
-
-  ! weight
-  real :: weight
 
   real :: qcm, pcm, qcm2
   real :: pq5, pq52, pq56, pq7, pq78
@@ -62,10 +62,10 @@ function dsigma(x, wgt)
   real :: rps, rps356, rps478
 
   ! transfer invariant masses
-  real :: q, rq2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
+  real :: q, q2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
 
   ! boost
-  real :: gamma, vcol
+  real :: gamma, v
 
   ! angles
   real :: phi
@@ -74,51 +74,28 @@ function dsigma(x, wgt)
   real :: sf5, sf56, sf7, sf78
   real :: cf5, cf56, cf7, cf78
 
-  ! parton momentum fraction
-  real :: fx1(13), fx2(13), x1, x2, xx1, xx2, x1x2(2,2)
-
-  ! structure functions
-  real :: qq
-  real :: d1, u1, str1, chm1, btm1, glu1
-  real :: d2, u2, str2, chm2, btm2, glu2
-  real :: dbar1, ubar1, dbar2, ubar2
-  real :: dsea1, usea1, dsea2, usea2
-
-  ! temporary dsigma
-  real :: ddsigma
-
   ! temporary top mass and width
   real :: mt, gamt
 
   ! rambo
   real :: xmass(100), prambo(4,100), wgtr
+  integer :: jps
 
-  ! cuts
+  ! for cuts
   real :: eta, pt
 
   ! arctan
-  real :: xx, xx356max, xx356min, xx478max, xx478min, xx56max, xx56min, xx78max, xx78min
-
-  ! iterators
-  integer :: i, j, ix, imode, lam3, lam4, jps
-
-  ! phase space vectors.
-  real :: p(4,8), p356(4), p478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4)
-  real :: pcol(4,8), pcol56(4), pcol78(4), pcol356(4), pcol478(4)
+  real :: at356, at356max, at356min, at56, at56max, at56min
+  real :: at478, at478max, at478min, at78, at78max, at78min
 
   ! 4-momenta
+  real :: p(4,8), p356(4), p478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4)
+  real :: pcol(4,8), pcol56(4), pcol78(4), pcol356(4), pcol478(4)
   real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
-  ! check phase space
-  real :: delta_e, delta_x, delta_y, delta_z
-  real :: mass1, mass2, mass3, mass4, mass5, mass6, mass7, mass8
-
   ! invariant masses
-  real :: m356, m356_2, m356max, m356min, m478, m478_2, m478max, m478min
-  real :: m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
-
-  ! square matrix elements
-  real :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
+  real :: m356, m356max, m356min, m478, m478max, m478min
+  real :: m356_2, m478_2, m56, m56_2, m56max, m56min, m78, m78_2, m78max, m78min
 
   ! polarised
   real :: qcdpolqq(-1:1, -1:1), qcdpolgg(-1:1, -1:1)
@@ -128,6 +105,9 @@ function dsigma(x, wgt)
 
   ! internal random number seed
   integer, parameter :: jseed = 987654321
+
+  ! temporary iterators
+  integer :: i, j, k
 
   ! --- 
 
@@ -158,7 +138,6 @@ function dsigma(x, wgt)
     qq = 2.d0*mt
   end if
   if (qq == 0.d0) then
-    ! qq = 0! Setting to Ecm.
     qq = ecm
   end if
 
@@ -193,7 +172,7 @@ function dsigma(x, wgt)
     end do
 
     ! Construct hadronic structure functions
-    if (structure_function <= 4) then
+    if (ipdf <= 4) then
       if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) return
       if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) return
       if ((qq <= 1.3d0) .or. (qq >= 1.d4)) return
@@ -216,14 +195,13 @@ function dsigma(x, wgt)
       btm2 = x2*ctq6pdf(5, x2, qq)
       glu2 = x2*ctq6pdf(0, x2, qq)
 
-    else if (structure_function > 4 .and. structure_function < 10) then
-      imode = structure_function - 4
+    else if (ipdf > 4 .and. ipdf < 10) then
       if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) return
       if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) return
-      if ((qq**2 <= 1.25d0) .or. (qq**2 >= 1.d7)) return
+      if ((qq*qq <= 1.25d0) .or. (qq*qq >= 1.d7)) return
 
-      call mrs99(x1, qq, imode, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-      call mrs99(x2, qq, imode, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+      call mrs99(x1, qq, ipdf-4, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+      call mrs99(x2, qq, ipdf-4, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
 
       u1 = u1 + usea1
       d1 = d1 + dsea1
@@ -233,7 +211,7 @@ function dsigma(x, wgt)
       dbar1 = dsea1
       ubar2 = usea2
       dbar2 = dsea2
-    else if (structure_function > 9) then
+    else if (ipdf > 9) then
       if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) return
       if ((x2 <= 1.d-9) .or. (x2 >= 1.d0)) return
       if ((qq <= 1.3d0) .or. (qq >= 1.d5)) return
@@ -321,7 +299,6 @@ function dsigma(x, wgt)
         p(2,4) = -qcm*st*cos(phi)
         p(1,4) = -qcm*st*sin(phi)
       else if (use_rambo == 1) then
-        ! calculate 2->2 final state momenta in the parton CoM frame using RAMBO
         xmass(1) = m3
         xmass(2) = m4
         jps = 2
@@ -335,7 +312,6 @@ function dsigma(x, wgt)
 
     else if (final_state > 0) then
       if (use_rambo == 0) then
-        ! calculate 2->6 final state momenta in the parton CoM frame manually
         phi = 2.d0*pi*ran(jseed)
 
         m356min = m3 + m5 + m6
@@ -343,12 +319,11 @@ function dsigma(x, wgt)
         if (map_phase_space == 0) then
           m356 = x(13)*(m356max - m356min) + m356min
         else
-          ! flatten the integrand around the top propagator
-          xx356min = atan(((m356min)**2 - mt**2)/mt/gamt)
-          xx356max = atan(((m356max)**2 - mt**2)/mt/gamt)
-          xx = x(13)*(xx356max - xx356min) + xx356min
-          rl356 = tan(xx)*mt*gamt
-          m356_2 = (mt**2 + rl356)
+          at356min = atan((m356min*m356min - mt*mt)/mt/gamt)
+          at356max = atan((m356max*m356max - mt*mt)/mt/gamt)
+          at356 = x(13)*(at356max - at356min) + at356min
+          rl356 = tan(at356)*mt*gamt
+          m356_2 = mt*mt + rl356
           if (m356_2 < 0.d0) return
           m356 = sqrt(m356_2)
         end if
@@ -358,12 +333,11 @@ function dsigma(x, wgt)
         if (map_phase_space == 0) then
           m478 = x(12)*(m478max - m478min) + m478min
         else
-          ! flatten the integrand around the anti-top propagator
-          xx478min = atan(((m478min)**2 - mt**2)/mt/gamt)
-          xx478max = atan(((m478max)**2 - mt**2)/mt/gamt)
-          xx = x(12)*(xx478max - xx478min) + xx478min
-          rl478 = tan(xx)*mt*gamt
-          m478_2 = (mt**2 + rl478)
+          at478min = atan((m478min*m478min - mt*mt)/mt/gamt)
+          at478max = atan((m478max*m478max - mt*mt)/mt/gamt)
+          at478 = x(12)*(at478max - at478min) + at478min
+          rl478 = tan(at478)*mt*gamt
+          m478_2 = mt*mt + rl478
           if (m478_2 < 0.d0) return
           m478 = sqrt(m478_2)
         end if
@@ -373,12 +347,11 @@ function dsigma(x, wgt)
         if (map_phase_space == 0) then
           m56 = x(11)*(m56max - m56min) + m56min
         else
-          ! flatten the integrand around the W+ propagator
-          xx56min = atan(((m56min)**2 - wmass**2)/wmass/wwidth)
-          xx56max = atan(((m56max)**2 - wmass**2)/wmass/wwidth)
-          xx = x(11)*(xx56max - xx56min) + xx56min
-          rl56 = tan(xx)*wmass*wwidth
-          m56_2 = (wmass**2 + rl56)
+          at56min = atan((m56min*m56min - wmass*wmass)/wmass/wwidth)
+          at56max = atan((m56max*m56max - wmass*wmass)/wmass/wwidth)
+          at56 = x(11)*(at56max - at56min) + at56min
+          rl56 = tan(at56)*wmass*wwidth
+          m56_2 = wmass*wmass + rl56
           if (m56_2 < 0.d0) return
           m56 = sqrt(m56_2)
         end if
@@ -388,12 +361,11 @@ function dsigma(x, wgt)
         if (map_phase_space == 0) then
           m78 = x(10)*(m78max - m78min) + m78min
         else
-          ! flatten the integrand around the W- propagator
-          xx78min = atan(((m78min)**2 - wmass**2)/wmass/wwidth)
-          xx78max = atan(((m78max)**2 - wmass**2)/wmass/wwidth)
-          xx = x(10)*(xx78max - xx78min) + xx78min
-          rl78 = tan(xx)*wmass*wwidth
-          m78_2 = (wmass**2 + rl78)
+          at78min = atan((m78min*m78min - wmass*wmass)/wmass/wwidth)
+          at78max = atan((m78max*m78max - wmass*wmass)/wmass/wwidth)
+          at78 = x(10)*(at78max - at78min) + at78min
+          rl78 = tan(at78)*wmass*wwidth
+          m78_2 = wmass*wmass + rl78
           if (m78_2 < 0.d0) return
           m78 = sqrt(m78_2)
         end if
@@ -419,19 +391,19 @@ function dsigma(x, wgt)
         sf7 = sin(x(1))
 
         ! two body decay of s-channel mediating boson
-        rq2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
-        if (rq2 < 0.d0) return
-        q = sqrt(rq2)
+        q2 = ((ecm*ecm - m356*m356 - m478*m478)**2 - (2.d0*m356*m478)**2)/(4.d0*ecm*ecm)
+        if (q2 < 0.d0) return
+        q = sqrt(q2)
 
         p356(3) = q*ct
         p356(2) = q*st*cos(phi)
         p356(1) = q*st*sin(phi)
-        p356(4) = sqrt(rq2 + m356*m356)
+        p356(4) = sqrt(q2 + m356*m356)
 
         do i = 1, 3
           p478(i) =  - p356(i)
         end do
-        p478(4) = sqrt(rq2 + m478*m478)
+        p478(4) = sqrt(q2 + m478*m478)
 
         ! two body decay of the top
         rq562 = ((m356*m356 - m3*m3 - m56*m56)**2 - (2.d0*m3*m56)**2)/(4.d0*m356*m356)
@@ -509,7 +481,6 @@ function dsigma(x, wgt)
           p(i,8) = p78(i) - p(i,7)
         end do
       else if (use_rambo == 1) then
-        ! Calculate 2->6 final state momenta in the parton CoM using RAMBO
         xmass(1) = m3
         xmass(2) = m4
         xmass(3) = m5
@@ -527,17 +498,17 @@ function dsigma(x, wgt)
     end if
 
     ! velocity of tt system in collider frame
-    vcol = (x1 - x2)/(x1 + x2)
+    v = (x1 - x2)/(x1 + x2)
 
     ! gamma factor
     gamma = (x1 + x2)/2.d0/sqrt(x1*x2)
 
     ! boost initial and final state momenta to the collider frame
     do i = 1, n_final
-      pcol(4, i) = gamma*(p(4, i) + vcol*p(3, i))
-      pcol(3, i) = gamma*(p(3, i) + vcol*p(4, i))
-      pcol(2, i) = p(2, i)
-      pcol(1, i) = p(1, i)
+      pcol(4,i) = gamma*(p(4,i) + v*p(3,i))
+      pcol(3,i) = gamma*(p(3,i) + v*p(4,i))
+      pcol(2,i) = p(2,i)
+      pcol(1,i) = p(1,i)
     end do
 
     ! fiducial cuts
@@ -550,7 +521,7 @@ function dsigma(x, wgt)
           return
         end if
 
-        eta = atanh(pcol(3,i) / sqrt(pcol(1,i)*pcol(1,i) + pcol(2,i)*pcol(2,i) + pcol(3,i)*pcol(3,i)))
+        eta = atanh(pcol(3,i)/sqrt(pcol(1,i)*pcol(1,i) + pcol(2,i)*pcol(2,i) + pcol(3,i)*pcol(3,i)))
         if (abs(eta) > 2.5) then
           dsigma = 0.d0
           return
@@ -577,68 +548,33 @@ function dsigma(x, wgt)
       p7(i) = p(i,7)
       p8(i) = p(i,8)
     end do
-
     if (verbose == 1) then
-      if (final_state <= 0) then
-        print*, "2->2 kinematics"
-        print*, "p1  = ", p1
-        print*, "p2  = ", p2
-        print*, "p3  = ", p3
-        print*, "p4  = ", p4
-        delta_e = p1(0) + p2(0) - p3(0) - p4(0)
-        delta_x = p1(1) + p2(1) - p3(1) - p4(1)
-        delta_y = p1(2) + p2(2) - p3(2) - p4(2)
-        delta_z = p1(3) + p2(3) - p3(3) - p4(3)
-        print*, "delta_E  = ", delta_e
-        print*, "delta_Px = ", delta_x
-        print*, "delta_Py = ", delta_y
-        print*, "delta_Pz = ", delta_z
-        mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-        mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-        mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-        mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-        print*, "m1 = ", mass1
-        print*, "m2 = ", mass2
-        print*, "m3 = ", mass3, m3
-        print*, "m4 = ", mass4, m4
-
-      else if (final_state > 0) then
-        print*, "2->6 kinematics:"
-        print*, "p1  = ", p1
-        print*, "p2  = ", p2
-        print*, "p3  = ", p3
-        print*, "p4  = ", p4
-        print*, "p5  = ", p5
-        print*, "p6  = ", p6
-        print*, "p7  = ", p7
-        print*, "p8  = ", p8
-        ! check conservation of 4-momentum.
-        delta_e = p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
-        delta_x = p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
-        delta_y = p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
-        delta_z = p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
-        print*, "delta_E  = ", delta_e
-        print*, "delta_Px = ", delta_x
-        print*, "delta_Py = ", delta_y
-        print*, "delta_Pz = ", delta_z
-        ! check invarient mass.
-        mass1 = sqrt(abs(p1(0)**2 - p1(1)**2 - p1(2)**2 - p1(3)**2))
-        mass2 = sqrt(abs(p2(0)**2 - p2(1)**2 - p2(2)**2 - p2(3)**2))
-        mass3 = sqrt(abs(p3(0)**2 - p3(1)**2 - p3(2)**2 - p3(3)**2))
-        mass4 = sqrt(abs(p4(0)**2 - p4(1)**2 - p4(2)**2 - p4(3)**2))
-        mass5 = sqrt(abs(p5(0)**2 - p5(1)**2 - p5(2)**2 - p5(3)**2))
-        mass6 = sqrt(abs(p6(0)**2 - p6(1)**2 - p6(2)**2 - p6(3)**2))
-        mass7 = sqrt(abs(p7(0)**2 - p7(1)**2 - p7(2)**2 - p7(3)**2))
-        mass8 = sqrt(abs(p8(0)**2 - p8(1)**2 - p8(2)**2 - p8(3)**2))
-        print*, "m1 = ", mass1
-        print*, "m2 = ", mass2
-        print*, "m3 = ", mass3
-        print*, "m4 = ", mass4
-        print*, "m5 = ", mass5
-        print*, "m6 = ", mass6
-        print*, "m7 = ", mass7
-        print*, "m8 = ", mass8
-      end if
+      print*, "Check 4-momenta:"
+      print*, "p1 = ", p1
+      print*, "p2 = ", p2
+      print*, "p3 = ", p3
+      print*, "p4 = ", p4
+      print*, "p5 = ", p5
+      print*, "p6 = ", p6
+      print*, "p7 = ", p7
+      print*, "p8 = ", p8
+      print*, ""
+      print*, "Check conservation of 4-momentum:"
+      print*, "Delta E  = ", p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
+      print*, "Delta Px = ", p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
+      print*, "Delta Py = ", p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
+      print*, "Delta Pz = ", p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
+      print*, ""
+      print*, "Check invariant masses:"
+      print*, "m1 = ", sqrt(abs(p1(0)*p1(0) - p1(1)*p1(1) - p1(2)*p1(2) - p1(3)*p1(3)))
+      print*, "m2 = ", sqrt(abs(p2(0)*p2(0) - p2(1)*p2(1) - p2(2)*p2(2) - p2(3)*p2(3)))
+      print*, "m3 = ", sqrt(abs(p3(0)*p3(0) - p3(1)*p3(1) - p3(2)*p3(2) - p3(3)*p3(3)))
+      print*, "m4 = ", sqrt(abs(p4(0)*p4(0) - p4(1)*p4(1) - p4(2)*p4(2) - p4(3)*p4(3)))
+      print*, "m5 = ", sqrt(abs(p5(0)*p5(0) - p5(1)*p5(1) - p5(2)*p5(2) - p5(3)*p5(3)))
+      print*, "m6 = ", sqrt(abs(p6(0)*p6(0) - p6(1)*p6(1) - p6(2)*p6(2) - p6(3)*p6(3)))
+      print*, "m7 = ", sqrt(abs(p7(0)*p7(0) - p7(1)*p7(1) - p7(2)*p7(2) - p7(3)*p7(3)))
+      print*, "m8 = ", sqrt(abs(p8(0)*p8(0) - p8(1)*p8(1) - p8(2)*p8(2) - p8(3)*p8(3)))
+      print*, ""
     end if
 
     if (phase_space_only == 1) then
@@ -649,12 +585,12 @@ function dsigma(x, wgt)
         pfxtot = 0.5/x2
       end if
       if (final_state <= 0) then
-        do lam3 = -1, 1, 2
-          do lam4 = -1, 1, 2
+        do i = -1, 1, 2
+          do j = -1, 1, 2
             if (ix == 1) then
-              pfx(lam3,lam4) = 0.5/x1/(pfxtot + pfxtot)
+              pfx(i,j) = 0.5/x1/(pfxtot + pfxtot)
             else if (ix == 2) then
-              pfx(lam3,lam4) = 0.5/x2/(pfxtot + pfxtot)
+              pfx(i,j) = 0.5/x2/(pfxtot + pfxtot)
             end if
           end do
         end do
@@ -663,9 +599,8 @@ function dsigma(x, wgt)
     end if
 
     ! Calculate QCD coupling
-    a_s = alfas(qq, lambdaqcd4, nloops)
-    gs2 = 4.d0*pi*a_s
-    gs = sqrt(gs2)
+    gs2 = 4.d0*pi*alfas(qq, lambdaqcd4, nloops)
+    gs4 = gs2*gs2
 
     ! initilise
     qcdqq = 0.d0
@@ -674,43 +609,38 @@ function dsigma(x, wgt)
     qfddd1 = 0.d0
     qfduu2 = 0.d0
     qfddd2 = 0.d0
-    do lam3 = -1, 1
-      do lam4 = -1, 1
-        qcdpolqq(lam3,lam4) = 0.d0
-        qcdpolgg(lam3,lam4) = 0.d0
-        qfdpoluu1(lam3,lam4) = 0.d0
-        qfdpoldd1(lam3,lam4) = 0.d0
-        qfdpoluu2(lam3,lam4) = 0.d0
-        qfdpoldd2(lam3,lam4) = 0.d0
-        pfx(lam3,lam4) = 0.d0
-        do i = 1, 20
-          weight_pol(lam3,lam4,i) = 0.d0
+    do i = -1, 1
+      do j = -1, 1
+        qcdpolqq(i,j) = 0.d0
+        qcdpolgg(i,j) = 0.d0
+        qfdpoluu1(i,j) = 0.d0
+        qfdpoldd1(i,j) = 0.d0
+        qfdpoluu2(i,j) = 0.d0
+        qfdpoldd2(i,j) = 0.d0
+        pfx(i,j) = 0.d0
+        do k = 1, 20
+          weight_pol(i,j,k) = 0.d0
         end do
       end do
     end do
 
-    check = 0
     if (final_state <= 0) then
-      do lam3 = -1, 1, 2
-        do lam4 = -1, 1, 2
+      do i = -1, 1, 2
+        do j = -1, 1, 2
           if (include_gg == 1) then
-            qcdpolgg(lam3,lam4) = sgg_tt(p1, p2, p3, p4, lam3, lam4)*gs**4
+            qcdpolgg(i,j) = sgg_tt(p1, p2, p3, p4, i, j)*gs4
           end if
           if (include_qq == 1) then
-            qcdpolqq(lam3,lam4) = sqq_tt(3, p1, p2, p3, p4, lam3, lam4)*gs**4
+            qcdpolqq(i,j) = sqq_tt(3, p1, p2, p3, p4, i, j)*gs4
           end if
           if (include_uu == 1) then
-            qfdpoluu1(lam3, lam4) = sqq_ff(3, ffinal, p1, p2, p3, p4, lam3, lam4)
-            qfdpoluu2(lam3, lam4) = sqq_ff(3, ffinal, p2, p1, p3, p4, lam3, lam4)
+            qfdpoluu1(i, j) = sqq_ff(3, ffinal, p1, p2, p3, p4, i, j)
+            qfdpoluu2(i, j) = sqq_ff(3, ffinal, p2, p1, p3, p4, i, j)
           end if
           if (include_dd == 1) then
-            qfdpoldd1(lam3, lam4) = sqq_ff(4, ffinal, p1, p2, p3, p4, lam3, lam4)
-            qfdpoldd2(lam3, lam4) = sqq_ff(4, ffinal, p2, p1, p3, p4, lam3, lam4)
+            qfdpoldd1(i, j) = sqq_ff(4, ffinal, p1, p2, p3, p4, i, j)
+            qfdpoldd2(i, j) = sqq_ff(4, ffinal, p2, p1, p3, p4, i, j)
           end if
-          check = check &
-          + qcdpolgg(lam3,lam4) + qcdpolqq(lam3,lam4) &
-          + qfdpoluu1(lam3,lam4) + qfdpoluu2(lam3,lam4) &
-          + qfdpoldd1(lam3,lam4) + qfdpoldd2(lam3,lam4)
         end do
       end do
 
@@ -729,7 +659,6 @@ function dsigma(x, wgt)
         qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
         qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
       end if
-      check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
     ! else if (final_state == 2) then
     !   if (include_gg == 1) then
@@ -746,7 +675,6 @@ function dsigma(x, wgt)
     !       qfddd1 = sdd_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
     !       qfddd2 = sdd_bbtatavtvt(p2, p1, p3, p4, p5, p7, p6, p8)
     !   end if
-    !   check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
 
     else if (final_state == 12) then
       if (include_gg == 1) then
@@ -763,40 +691,36 @@ function dsigma(x, wgt)
           qfddd1 = sdd_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
           qfddd2 = sdd_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
       end if
-      check = qcdqq + qcdgg + qfduu1 + qfddd1 + qfduu2 + qfddd2
     else
       stop "ERROR! Invalid final state."
     end if
 
-    ! if all |M|^2 contributions zero skip
-    if (check == 0.d0) return
-
     ! multiple qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence.)
-    qcdqq = qcdqq*gs**4
-    qcdgg = qcdgg*gs**4
+    qcdqq = qcdqq*gs4
+    qcdgg = qcdgg*gs4
 
     pfxtot = 0.d0
     if (final_state <= 0) then
       ! Summing over 2to2 |m|^2 with pdfs of all initial partons
-      do lam3 = -1, 1, 2
-        do lam4 = -1, 1, 2
-                    pfx(lam3,lam4) = qcdpolgg(lam3,lam4) *fx1(13)*fx2(13) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 1)*fx2( 7) &
-           + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 2)*fx2( 8) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 3)*fx2( 9) &
-           + (qcdpolqq(lam3,lam4) + qfdpoluu1(lam3,lam4))*fx1( 4)*fx2(10) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd1(lam3,lam4))*fx1( 5)*fx2(11) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 7)*fx2( 1) &
-           + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1( 8)*fx2( 2) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1( 9)*fx2( 3) &
-           + (qcdpolqq(lam3,lam4) + qfdpoluu2(lam3,lam4))*fx1(10)*fx2( 4) &
-           + (qcdpolqq(lam3,lam4) + qfdpoldd2(lam3,lam4))*fx1(11)*fx2( 5)
+      do i = -1, 1, 2
+        do j = -1, 1, 2
+                    pfx(i,j) = qcdpolgg(i,j) *fx1(13)*fx2(13) &
+           + (qcdpolqq(i,j) + qfdpoldd1(i,j))*fx1( 1)*fx2( 7) &
+           + (qcdpolqq(i,j) + qfdpoluu1(i,j))*fx1( 2)*fx2( 8) &
+           + (qcdpolqq(i,j) + qfdpoldd1(i,j))*fx1( 3)*fx2( 9) &
+           + (qcdpolqq(i,j) + qfdpoluu1(i,j))*fx1( 4)*fx2(10) &
+           + (qcdpolqq(i,j) + qfdpoldd1(i,j))*fx1( 5)*fx2(11) &
+           + (qcdpolqq(i,j) + qfdpoldd2(i,j))*fx1( 7)*fx2( 1) &
+           + (qcdpolqq(i,j) + qfdpoluu2(i,j))*fx1( 8)*fx2( 2) &
+           + (qcdpolqq(i,j) + qfdpoldd2(i,j))*fx1( 9)*fx2( 3) &
+           + (qcdpolqq(i,j) + qfdpoluu2(i,j))*fx1(10)*fx2( 4) &
+           + (qcdpolqq(i,j) + qfdpoldd2(i,j))*fx1(11)*fx2( 5)
           if (ix == 1) then
-            pfx(lam3,lam4) = pfx(lam3,lam4)/x1
+            pfx(i,j) = pfx(i,j)/x1
           else if (ix == 2) then
-            pfx(lam3,lam4) = pfx(lam3,lam4)/x2
+            pfx(i,j) = pfx(i,j)/x2
           end if
-          pfxtot = pfxtot + pfx(lam3,lam4)
+          pfxtot = pfxtot + pfx(i,j)
         end do
       end do
     else if (final_state > 0) then
@@ -823,9 +747,9 @@ function dsigma(x, wgt)
 
     if (final_state < 1) then
       ! weight for distributions
-      do lam3 = -1, 1, 2
-        do lam4 = -1, 1, 2
-          pfx(lam3,lam4) = pfx(lam3,lam4)/(pfxtot)
+      do i = -1, 1, 2
+        do j = -1, 1, 2
+          pfx(i,j) = pfx(i,j)/(pfxtot)
         end do
       end do
     end if
@@ -840,58 +764,52 @@ function dsigma(x, wgt)
     ! apply unit converstion
     ddsigma = ddsigma*unit_conv
 
-    ! multiply by phase space volume and flux factor and azimuthal integration
+    ! multiply by phase space factor, azimuthal integration and flux factor
     if (final_state <= 0) then
-      if (use_rambo == 0) then
-        ! 2-body phase space factor + azimuthal integration
-        ddsigma = ddsigma*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
-      else if (use_rambo == 1) then
+      if (use_rambo == 1) then
         ddsigma = ddsigma*wgtr
+      else
+        ! ddsigma = ddsigma*qcm/(2.d0*pcm)*2.d0**(4 - 3*(2))*2.d0*pi
+        ddsigma = ddsigma*qcm*pi/ecm/2
       end if
-
-      ! flux factor
-      ddsigma = ddsigma/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+      ! ddsigma = ddsigma/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(2))
+      ddsigma = ddsigma/ecm/ecm/pi/pi/8
 
     else if (final_state > 0) then
-      if (use_rambo == 0) then
-
-        ! phase space factor
-        ddsigma = ddsigma*q*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
-
+      if (use_rambo == 1) then
+        ddsigma = ddsigma*wgtr
+      else
+        ! ddsigma = ddsigma*q*rq56*rq78*rq5*rq7/ecm*256.d0*2.d0**(4 - 3*(6))*2.d0*pi
+        ddsigma = ddsigma*q*rq56*rq78*rq5*rq7*pi/ecm/32
         if (map_phase_space == 1) then
-          ddsigma = ddsigma*((m356*m356 - mt*mt)**2 + mt**2*gamt**2)*(xx356max - xx356min)/(2.d0*m356)/mt/gamt
-          ddsigma = ddsigma*((m478*m478 - mt*mt)**2 + mt**2*gamt**2)*(xx478max - xx478min)/(2.d0*m478)/mt/gamt
-          ddsigma = ddsigma*((m56*m56 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx56max - xx56min)/(2.d0*m56)/wmass/wwidth
-          ddsigma = ddsigma*((m78*m78 - wmass*wmass)**2 + wmass**2*wwidth**2)*(xx78max - xx78min)/(2.d0*m78)/wmass/wwidth
-          ! nwa
-          ddsigma = ddsigma*gamt/gamma_t*gamt/gamma_t
+          ddsigma = ddsigma*((m356*m356 - mt*mt)**2 + mt*mt*gamt*gamt)*(at356max - at356min)/m356/mt/gamt/2.d0
+          ddsigma = ddsigma*((m478*m478 - mt*mt)**2 + mt*mt*gamt*gamt)*(at478max - at478min)/m478/mt/gamt/2.d0
+          ddsigma = ddsigma*((m56*m56 - wmass*wmass)**2 + wmass*wmass*wwidth*wwidth)*(at56max - at56min)/m56/wmass/wwidth/2.d0
+          ddsigma = ddsigma*((m78*m78 - wmass*wmass)**2 + wmass*wmass*wwidth*wwidth)*(at78max - at78min)/m78/wmass/wwidth/2.d0
+          ddsigma = ddsigma*gamt/gamma_t*gamt/gamma_t ! nwa
         else
           ddsigma = ddsigma*(m356max - m356min)
           ddsigma = ddsigma*(m478max - m478min)
           ddsigma = ddsigma*(m56max - m56min)
           ddsigma = ddsigma*(m78max - m78min)
         end if
-      else if (use_rambo == 1) then
-        ddsigma = ddsigma*wgtr
       end if
 
-      ! flux factor
-      ddsigma = ddsigma/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+      ! ddsigma = ddsigma/2.d0/ecm/ecm*(2.d0*pi)**(4 - 3*(6))
+      ddsigma = ddsigma/ecm/ecm/pi**14/32768
     end if
 
     ddsigma = ddsigma/real(symmetrise + 1)
 
-    ! bin
     weight = ddsigma*wgt
 
     ! Compute polarised event weightings
     if (final_state < 1) then
-      do lam3 = -1, 1, 2
-        do lam4 = -1, 1, 2
-          sigma_pol(lam3,lam4,it) = sigma_pol(lam3,lam4,it) + ddsigma*wgt*pfx(lam3,lam4)
-          ! print*, pfx(lam3,lam4), sigma_pol(lam3,lam4,it)
-          weight_pol(lam3,lam4,it) = ddsigma*wgt*pfx(lam3,lam4)
-          error_pol(lam3,lam4,it) = error_pol(lam3,lam4,it) + sigma_pol(lam3,lam4,it)**2
+      do i = -1, 1, 2
+        do j = -1, 1, 2
+          sigma_pol(i,j,it) = sigma_pol(i,j,it) + ddsigma*wgt*pfx(i,j)
+          weight_pol(i,j,it) = ddsigma*wgt*pfx(i,j)
+          error_pol(i,j,it) = error_pol(i,j,it) + sigma_pol(i,j,it)**2
         end do
       end do
     end if
