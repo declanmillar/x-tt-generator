@@ -248,7 +248,6 @@ program zprime
 
   do i = 1, it
   	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
-    call rootadddouble(cnorm(i), "itweight")
   end do
 
   if (final_state == 0) then
