@@ -2,3 +2,5 @@
 *.root
 LSFJOB_*
 *.sh*
+.DS_Store
+
