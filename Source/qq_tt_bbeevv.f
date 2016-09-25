@@ -332,8 +332,8 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   complex*16 w11(6), w12(6), w13(6), w14(6), w15(6)
   real :: gAq(2)
   real :: gZq(2)
-  real :: gZpq(2,5)
-  real :: gZpq_tmp(2), gZpf_tmp(2)
+  real :: gxq(2,5)
+  real :: gxq_tmp(2), gxf_tmp(2)
 
   ! initial state
 
@@ -343,7 +343,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
       gAq(i) = gAu(i)
       gZq(i) = gZu(i)
       do j = 1, 5
-        gZpq(i,j) = gZpu(i,j)
+        gxq(i,j) = gxu(i,j)
       end do
     enddo
 
@@ -353,7 +353,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
       gAq(i) = gAd(i)
       gZq(i) = gZd(i)
       do j = 1, 5
-        gZpq(i,j) = gZpd(i,j)
+        gxq(i,j) = gxd(i,j)
       end do
     enddo
 
@@ -363,7 +363,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
       gAq(i) = gAu(i)
       gZq(i) = gZu(i)
       do j = 1, 5
-        gZpq(i,j) = gZpt(i,j)
+        gxq(i,j) = gxt(i,j)
       end do
     enddo
 
@@ -373,7 +373,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
       gAq(i) = gAd(i)
       gZq(i) = gZd(i)
       do j = 1, 5
-        gZpq(i,j) = gZpb(i,j)
+        gxq(i,j) = gxb(i,j)
       end do
     enddo
   end if
@@ -422,15 +422,15 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! Z' diagrams
   if (include_x == 1) then
     do i = 1, 5
-      ! print*, mass_zp(i), gamZp(i)
-      if (mass_zp(i) > 0) then
+      ! print*, xmass(i), xwidth(i)
+      if (xmass(i) > 0) then
         do j = 1, 2
-          ! print*, gZpq(i,j)
-          gZpq_tmp(j) = gZpq(j,i)
-          gZpf_tmp(j) = gZpt(j,i)
+          ! print*, gxq(i,j)
+          gxq_tmp(j) = gxq(j,i)
+          gxf_tmp(j) = gxt(j,i)
         end do
-        call jioxxx(w1, w2, gZpq_tmp, mass_zp(i), gamZp(i), w15)
-        call iovxxx(w13, w12, w15, gZpf_tmp, amp(2+i))
+        call jioxxx(w1, w2, gxq_tmp, xmass(i), xwidth(i), w15)
+        call iovxxx(w13, w12, w15, gxf_tmp, amp(2+i))
       end if
     end do
   end if

@@ -42,15 +42,15 @@ module modelling
   real :: cotw
 
   ! zprime parameters
-  real :: mass_zp(5), gamZp(5)
-  real :: paramZp(5)
+  real :: xmass(5), xwidth(5)
+  real :: xparam(5)
   real :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
-  real :: gZpd(2,5),gZpu(2,5),gZpl(2,5),gZpn(2,5),gZpb(2,5), gZpt(2,5), gZpl3(2,5), gZpn3(2,5)
+  real :: gxd(2,5),gxu(2,5),gxl(2,5),gxn(2,5),gxb(2,5), gxt(2,5), gxl3(2,5), gxn3(2,5)
   integer :: manual_width(5)
 
   ! model parameters
   integer :: model_type
-  real :: xparam, sin2phiparam
+  real :: paramx, paramsin2phi
 
   ! methods
   public :: initialise_model
@@ -154,10 +154,10 @@ subroutine initialise_zprimes
   open(unit = mdl, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
   read(mdl,*) model_type
   if (model_type == 0) then
-    read(mdl,*) mass_zp
-    read(mdl,*) gamZp
+    read(mdl,*) xmass
+    read(mdl,*) xwidth
     read(mdl,*) gp
-    read(mdl,*) paramZp
+    read(mdl,*) xparam
     read(mdl,*) gV_u
     read(mdl,*) gA_u
     read(mdl,*) gV_d
@@ -167,17 +167,17 @@ subroutine initialise_zprimes
     read(mdl,*) gV_nu
     read(mdl,*) gA_nu
   else if (model_type == 1) then
-    read(mdl,*) xparam
-    read(mdl,*) sin2phiparam
+    read(mdl,*) paramx
+    read(mdl,*) paramsin2phi
   else
     print*, "Error: invalid model type! Must be 0-1."
   end if
   close(mdl)
 
   if (model_type == 0) then
-    ! If gamZp is negative, the function widthZp is used.
+    ! If xwidth is negative, the function widthZp is used.
     do i = 1, 5
-      if ((mass_zp(i) > 0.d0) .and. (gamzp(i) < 0.d0)) then
+      if ((xmass(i) > 0.d0) .and. (xwidth(i) < 0.d0)) then
         manual_width(i) = 0
       else
         manual_width(i) = 1
@@ -205,8 +205,8 @@ subroutine reset_zprimes
   integer :: i, j
 
   do i = 1, 5
-    mass_zp(i) = 0
-    gamZp(i) = 0
+    xmass(i) = 0
+    xwidth(i) = 0
     gV_u(i) = 0
     gV_d(i) = 0
     gV_l(i) = 0
@@ -216,14 +216,14 @@ subroutine reset_zprimes
     gA_l(i) = 0
     gA_nu(i) = 0
     do j = 1, 2
-      gZpd(j,i) = 0
-      gZpu(j,i) = 0
-      gZpl(j,i) = 0
-      gZpn(j,i) = 0
-      gZpb(j,i) = 0
-      gZpt(j,i) = 0
-      gZpl3(j,i) = 0
-      gZpn3(j,i) = 0
+      gxd(j,i) = 0
+      gxu(j,i) = 0
+      gxl(j,i) = 0
+      gxn(j,i) = 0
+      gxb(j,i) = 0
+      gxt(j,i) = 0
+      gxl3(j,i) = 0
+      gxn3(j,i) = 0
     end do
   end do
 
@@ -238,8 +238,8 @@ subroutine initialise_non_universal
 
 !   x = 56
 !   sin2phi = 0.1
-  x = xparam
-  sin2phi = sin2phiparam
+  x = paramx
+  sin2phi = paramsin2phi
 
   e = sqrt(4.d0*pi*a_em)
   st = sqrt(s2w)
@@ -247,30 +247,30 @@ subroutine initialise_non_universal
   sp = sqrt(sin2phi)
   cp = sqrt(1.d0 - sin2phi)
   m0 = e*vev/2/st
-  mass_zp(1) = sqrt(m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp))
+  xmass(1) = sqrt(m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp))
 
   ! leptons
-  gZpl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
-  gZpn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
-  gZpl3(1,1) = gZpl(1,1) - e/2/st/sp/cp
-  gZpn3(1,1) = gZpn(1,1) + e/2/st/sp/cp
+  gxl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
+  gxn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
+  gxl3(1,1) = gxl(1,1) - e/2/st/sp/cp
+  gxn3(1,1) = gxn(1,1) + e/2/st/sp/cp
 
   ! quarks
-  gZpu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
-  gZpd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
-  gZpt(1,1) = gZpu(1,1) + e/2/st/sp/cp
-  gZpb(1,1) = gZpd(1,1) - e/2/st/sp/cp
+  gxu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
+  gxd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
+  gxt(1,1) = gxu(1,1) + e/2/st/sp/cp
+  gxb(1,1) = gxd(1,1) - e/2/st/sp/cp
 
   ! right handed couplings
-  gZpl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
-  gZpn(2,1) = 0
-  gZpl3(2,1) = gZpl(2,1)
-  gZpn3(2,1) = gZpn(2,1)
+  gxl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
+  gxn(2,1) = 0
+  gxl3(2,1) = gxl(2,1)
+  gxn3(2,1) = gxn(2,1)
 
-  gZpu(2,1) = gZpl(2,1)*2/3
-  gZpd(2,1) = gZpl(2,1)*1/3
-  gZpt(2,1) = gzpu(2,1)
-  gZpb(2,1) = gZpd(2,1)
+  gxu(2,1) = gxl(2,1)*2/3
+  gxd(2,1) = gxl(2,1)*1/3
+  gxt(2,1) = gxu(2,1)
+  gxb(2,1) = gxd(2,1)
 
   manual_width(1) = 0
   do i = 2, 5
@@ -290,22 +290,22 @@ subroutine convert_zprime_couplings
 
 
   do i = 1, 5
-      gZpd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
-      gZpd(2,i) = gp(i)*(gv_d(i) - ga_d(i))/2.d0
-      gZpu(1,i) = gp(i)*(gv_u(i) + ga_u(i))/2.d0
-      gZpu(2,i) = gp(i)*(gv_u(i) - ga_u(i))/2.d0
-      gZpl(1,i) = gp(i)*(gv_l(i) + ga_l(i))/2.d0
-      gZpl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
-      gZpn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
-      gZpn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
-      gZpb(1,i) = gZpd(1,i)
-      gZpb(2,i) = gZpd(2,i)
-      gZpt(1,i) = gZpu(1,i)
-      gZpt(2,i) = gZpu(2,i)
-      gZpl3(1,i) = gZpl(1,i)
-      gZpl3(2,i) = gZpl(2,i)
-      gZpn3(1,i) = gZpn(1,i)
-      gZpn3(2,i) = gZpn(2,i)
+      gxd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
+      gxd(2,i) = gp(i)*(gv_d(i) - ga_d(i))/2.d0
+      gxu(1,i) = gp(i)*(gv_u(i) + ga_u(i))/2.d0
+      gxu(2,i) = gp(i)*(gv_u(i) - ga_u(i))/2.d0
+      gxl(1,i) = gp(i)*(gv_l(i) + ga_l(i))/2.d0
+      gxl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
+      gxn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
+      gxn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
+      gxb(1,i) = gxd(1,i)
+      gxb(2,i) = gxd(2,i)
+      gxt(1,i) = gxu(1,i)
+      gxt(2,i) = gxu(2,i)
+      gxl3(1,i) = gxl(1,i)
+      gxl3(2,i) = gxl(2,i)
+      gxn3(1,i) = gxn(1,i)
+      gxn3(2,i) = gxn(2,i)
   enddo
 
 
@@ -319,7 +319,7 @@ subroutine width_zprimes
   implicit none
 
   integer :: i, n
-  real :: mq, ml, mzp
+  real :: mq, ml, mx
   real :: gv, ga
   real :: width, widthqq, widthll, widthqq_tmp, widthll_tmp
   real :: widthzh, widthww, fzh
@@ -346,35 +346,35 @@ subroutine width_zprimes
 
   do n = 1, 5
     width = 0.d0
-    mzp = mass_zp(n)
+    mx = xmass(n)
     if (manual_width(n) == 0) then
-      a_s = alfas(mzp, lambdaQCD4, nloops)
+      a_s = alfas(mx, lambdaQCD4, nloops)
       ! quarks
       widthqq = 0.d0
       do i = 1, 6
         widthqq_tmp = 0.d0
         mq = qmass(i)
-        if (mass_zp(n) > 2.d0*mq) then
+        if (xmass(n) > 2.d0*mq) then
 
           if (i == 1 .or. i == 3) then
-            gv = gzpu(1,n) + gzpu(2,n)
-            ga = gzpu(1,n) - gzpu(2,n)
+            gv = gxu(1,n) + gxu(2,n)
+            ga = gxu(1,n) - gxu(2,n)
           else if (i == 2 .or. i == 4) then
-            gv = gzpd(1,n) + gzpd(2,n)
-            ga = gzpd(1,n) - gzpd(2,n)
+            gv = gxd(1,n) + gxd(2,n)
+            ga = gxd(1,n) - gxd(2,n)
           else if (i == 5) then
-            gv = gzpt(1,n) + gzpt(2,n)
-            ga = gzpt(1,n) - gzpt(2,n)
+            gv = gxt(1,n) + gxt(2,n)
+            ga = gxt(1,n) - gxt(2,n)
           else if (i == 6) then
-            gv = gzpb(1,n) + gzpb(2,n)
-            ga = gzpb(1,n) - gzpb(2,n)
+            gv = gxb(1,n) + gxb(2,n)
+            ga = gxb(1,n) - gxb(2,n)
           end if
 
           ! with QCD kfactor
-          widthqq_tmp = 3.d0/48.d0/pi*mzp &
-                      *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
-                      *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
-                      + ga**2*(1.d0 - 4.d0*mq**2/mzp**2)) &
+          widthqq_tmp = 3.d0/48.d0/pi*mx &
+                      *sqrt(1.d0 - 4.d0*mq*mq/mx*mx) &
+                      *(gv*gv*(1.d0 + 2.d0*mq*mq/mx*mx) &
+                      + ga*ga*(1.d0 - 4.d0*mq*mq/mx*mx)) &
                       *(1.d0 + 1.045d0*a_s/pi)
 
           widthqq = widthqq + widthqq_tmp
@@ -388,26 +388,26 @@ subroutine width_zprimes
         widthll_tmp = 0.d0
         ml = lmass(i)
 
-        if (mzp > 2.d0*ml) then
+        if (mx > 2.d0*ml) then
 
           if (i == 1 .or. i == 3) then
-            gv = gzpl(1,n) + gzpl(2,n)
-            ga = gzpl(1,n) - gzpl(2,n)
+            gv = gxl(1,n) + gxl(2,n)
+            ga = gxl(1,n) - gxl(2,n)
           else if (i == 2 .or. i == 4) then
-            gv = gzpn(1,n) + gzpn(2,n)
-            ga = gzpn(1,n) - gzpn(2,n)
+            gv = gxn(1,n) + gxn(2,n)
+            ga = gxn(1,n) - gxn(2,n)
           else if (i == 5) then
-            gv = gzpl3(1,n) + gzpl3(2,n)
-            ga = gzpl3(1,n) - gzpl3(2,n)
+            gv = gxl3(1,n) + gxl3(2,n)
+            ga = gxl3(1,n) - gxl3(2,n)
           else if (i == 6) then
-            gv = gzpn3(1,n) + gzpn3(2,n)
-            ga = gzpn3(1,n) - gzpn3(2,n)
+            gv = gxn3(1,n) + gxn3(2,n)
+            ga = gxn3(1,n) - gxn3(2,n)
           end if
 
-          widthll_tmp = 1.d0/48.d0/pi*mzp &
-                        *sqrt(1.d0 - 4.d0*mq**2/mzp**2) &
-                        *(gv**2*(1.d0 + 2.d0*mq**2/mzp**2) &
-                        + ga**2*(1.d0 - 4.d0*mq**2/mzp**2))
+          widthll_tmp = 1.d0/48.d0/pi*mx &
+                        *sqrt(1.d0 - 4.d0*mq*mq/mx*mx) &
+                        *(gv*gv*(1.d0 + 2.d0*mq*mq/mx*mx) &
+                        + ga*ga*(1.d0 - 4.d0*mq*mq/mx*mx))
 
           widthll = widthll + widthll_tmp
         end if
@@ -421,12 +421,12 @@ subroutine width_zprimes
 
       if (z_mixing == 1) then
         print*, "I am being run."
-        widthww = 1/(48.d0*pi)*e*e*cotw*cotw*stmix*mzp*sqrt(1 - 4*wmass*wmass/mzp/mzp) &
-                  *(0.25*(mzp/wmass)**4 + 4*mzp*mzp/wmass/wmass - 17 - 12*wmass*wmass/mzp/mzp)
+        widthww = 1/(48.d0*pi)*e*e*cotw*cotw*stmix*mx*sqrt(1 - 4*wmass*wmass/mx/mx) &
+                  *(0.25*(mx/wmass)**4 + 4*mx*mx/wmass/wmass - 17 - 12*wmass*wmass/mx/mx)
 
-        fzh = -gz*mzp/zmass*ctmix*stmix/(ctmix*ctmix + mzp*mzp/zmass/zmass*stmix*stmix)**(3/2)
+        fzh = -gz*mx/zmass*ctmix*stmix/(ctmix*ctmix + mx*mx/zmass/zmass*stmix*stmix)**(3/2)
 
-        ez = (mzp*mzp + zmass*zmass - hmass*hmass)/(2*mzp)
+        ez = (mx*mx + zmass*zmass - hmass*hmass)/(2*mx)
 
         pz = sqrt(ez*ez + zmass*zmass)
 
@@ -438,7 +438,7 @@ subroutine width_zprimes
         print*, 'Gamma(Zp(', n, ')->qq)=', widthww,' [GeV]'
       end if
 
-      gamZp(n) = width
+      xwidth(n) = width
     end if
   end do
   return
@@ -446,7 +446,7 @@ end subroutine width_zprimes
 
 
 
-function width_zprime_ssm(rm_Zp)
+function width_zprime_ssm(mx)
 
   ! Calculates the width of a Z' in the SSM.
 
@@ -454,7 +454,7 @@ function width_zprime_ssm(rm_Zp)
 
   ! implicit to explicit variable dump
   real :: width_zprime_ssm
-  real :: rm_zp
+  real :: mx
   real :: ctw
   real :: e
   real :: eq
@@ -463,58 +463,57 @@ function width_zprime_ssm(rm_Zp)
   real :: gf
   integer :: i
   real :: pi
-  real :: mq, rmt
+  real :: mq, mt
   real :: t3q
   real :: temp, temp1, temp2
   real :: alfas, a_s
 
 
-  rmt=fmass(11)
-  gamt=fwidth(11)
+  mt = fmass(11)
+  gamt = fwidth(11)
 
   ! couplings.
-  pi=dacos(-1.d0)
-  ctw=sqrt(1.d0-s2w)
-  e=sqrt(4.d0*pi*a_em)
-  gweak=e/sqrt(s2w)
-  a_s=alfas(rm_Zp,lambdaqcd4,nloops)
-  GF=1.16639D-5
+  pi = dacos(-1.d0)
+  ctw = sqrt(1.d0 - s2w)
+  e = sqrt(4.d0*pi*a_em)
+  gweak = e/sqrt(s2w)
+  a_s = alfas(mx, lambdaqcd4, nloops)
+  gf = 1.16639d-5
   ! renormalise e.
-  e=sqrt(s2w*8.d0*zmass*zmass*ctw*ctw*GF/sqrt(2.d0))
-  ! Zp width.
-  width_zprime_ssm=0.d0
-  do i=1,6
-    mq=0.d0
-    if(i == 6)mq=rmt
+  e = sqrt(s2w*8.d0*zmass*zmass*ctw*ctw*GF/sqrt(2.d0))
+  ! Z' width.
+  width_zprime_ssm = 0.d0
+  do i = 1,6
+    mq = 0.d0
+    if(i == 6)mq=mt
     if((i == 2) .OR. (i == 4) .OR. (i == 6)) then
-
-    ! Quarks
-    ! u-quark.
-      t3q=+1.d0/2.d0
-      eq=+2.d0/3.d0
+      ! Quarks
+      ! u-quark.
+      t3q = +1.d0/2.d0
+      eq = +2.d0/3.d0
     else if((i == 1) .OR. (i == 3) .OR. (i == 5)) then
-    ! d-quark.
-      t3q=-1.d0/2.d0
-      eq=-1.d0/3.d0
+      ! d-quark.
+      t3q = -1.d0/2.d0
+      eq = -1.d0/3.d0
     end if
-    if(rm_Zp <= 2.d0*mq)goto 123
-    width_zprime_ssm=width_zprime_ssm+3.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
-    *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*mq**2/rm_Zp**2) &
-    +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*mq**2/rm_Zp**2)) &
-    *(1.d0+1.045d0*a_s/pi)
-  !        cr=-eq*s2w
-  !        cl=t3q-eq*s2w
-  !        gv=cl+cr
-  !        ga=cl-cr
-  !        width_zprime_ssm=width_zprime_ssm+3.d0*e**2/12.d0/pi*rm_Zp/16.d0/s2w/ctw**2
-  !     &               *sqrt(1.d0-4.d0*mq**2/rm_Zp**2)
-  !     &               *(4.d0*gv**2*(1.d0+2.d0*mq**2/rm_Zp**2)
-  !     &                +4.d0*ga**2*(1.d0-4.d0*mq**2/rm_Zp**2))
-  !     &               *(1.d0+1.045d0*a_s/pi)
-    123 continue
+    if(mx >= 2.d0*mq) then
+      width_zprime_ssm = width_zprime_ssm + 3.d0*zmass**2*mx*GF/24.d0/pi/sqrt(2.d0) &
+      *sqrt(1.d0-4.d0*mq*mq/mx*mx) &
+      *((2.d0*t3q)**2 &
+      *(1.d0-4.d0*mq*mq/mx*mx) &
+      +(2.d0*t3q-4.d0*eq*s2w)**2 &
+      *(1.d0+2.d0*mq*mq/mx*mx)) &
+      *(1.d0+1.045d0*a_s/pi)
+      !    cr=-eq*s2w
+      !    cl= t3q-eq*s2w
+      !    gv=cl+cr
+      !    ga=cl-cr
+      !    width_zprime_ssm=width_zprime_ssm+3.d0*e**2/12.d0/pi*mx/16.d0/s2w/ctw**2
+      ! &               *sqrt(1.d0-4.d0*mq*mq/mx*mx)
+      ! &               *(4.d0*gv*gv*(1.d0+2.d0*mq*mq/mx*mx)
+      ! &                +4.d0*ga*ga*(1.d0-4.d0*mq*mq/mx*mx))
+      ! &               *(1.d0+1.045d0*a_s/pi)
+    end if
   end do
 
   !       print *,'Z'' width due to quarks: ',width_zprime_ssm,' [GeV]'
@@ -535,48 +534,42 @@ function width_zprime_ssm(rm_Zp)
       t3q=-1.d0/2.d0
       eq=-1.d0
     end if
-    width_zprime_ssm=width_zprime_ssm+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
+    width_zprime_ssm=width_zprime_ssm+1.d0*zmass**2*mx*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*mq*mq/mx*mx) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*mq**2/rm_Zp**2) &
+    *(1.d0-4.d0*mq*mq/mx*mx) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*mq**2/rm_Zp**2))
+    *(1.d0+2.d0*mq*mq/mx*mx))
   !        cr=-eq*s2w
-  !        cl=t3q-eq*s2w
+  !        cl= t3q-eq*s2w
   !        gv=cl+cr
   !        ga=cl-cr
-  !        width_zprime_ssm=width_zprime_ssm+1.d0*e**2/12.d0/pi*rm_Zp/16.d0/s2w/ctw**2
-  !     &               *sqrt(1.d0-4.d0*mq**2/rm_Zp**2)
-  !     &               *(4.d0*gv**2*(1.d0+2.d0*mq**2/rm_Zp**2)
-  !     &                +4.d0*ga**2*(1.d0-4.d0*mq**2/rm_Zp**2))
+  !        width_zprime_ssm=width_zprime_ssm+1.d0*e**2/12.d0/pi*mx/16.d0/s2w/ctw**2
+  !     &               *sqrt(1.d0-4.d0*mq*mq/mx*mx)
+  !     &               *(4.d0*gv*gv*(1.d0+2.d0*mq*mq/mx*mx)
+  !     &                +4.d0*ga*ga*(1.d0-4.d0*mq*mq/mx*mx))
 
-    temp=temp+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
+    temp= temp+1.d0*zmass**2*mx*GF/24.d0/pi/sqrt(2.d0) &
+    *sqrt(1.d0-4.d0*mq*mq/mx*mx) &
     *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*mq**2/rm_Zp**2) &
+    *(1.d0-4.d0*mq*mq/mx*mx) &
     +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*mq**2/rm_Zp**2))
+    *(1.d0+2.d0*mq*mq/mx*mx))
     if((i == 2) .OR. (i == 4) .OR. (i == 6)) &
-    temp1=temp1+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
-    *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*mq**2/rm_Zp**2) &
-    +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*mq**2/rm_Zp**2))
+      temp1= temp1+1.d0*zmass**2*mx*GF/24.d0/pi/sqrt(2.d0) &
+      *sqrt(1.d0-4.d0*mq*mq/mx*mx) &
+      *((2.d0*t3q)**2 &
+      *(1.d0-4.d0*mq*mq/mx*mx) &
+      +(2.d0*t3q-4.d0*eq*s2w)**2 &
+      *(1.d0+2.d0*mq*mq/mx*mx))
     if((i == 1) .OR. (i == 3) .OR. (i == 5)) &
-    temp2=temp2+1.d0*zmass**2*rm_Zp*GF/24.d0/pi/sqrt(2.d0) &
-    *sqrt(1.d0-4.d0*mq**2/rm_Zp**2) &
-    *((2.d0*t3q)**2 &
-    *(1.d0-4.d0*mq**2/rm_Zp**2) &
-    +(2.d0*t3q-4.d0*eq*s2w)**2 &
-    *(1.d0+2.d0*mq**2/rm_Zp**2))
-
+      temp2= temp2+1.d0*zmass**2*mx*GF/24.d0/pi/sqrt(2.d0) &
+      *sqrt(1.d0-4.d0*mq*mq/mx*mx) &
+      *((2.d0*t3q)**2 &
+      *(1.d0-4.d0*mq*mq/mx*mx) &
+      +(2.d0*t3q-4.d0*eq*s2w)**2 &
+      *(1.d0+2.d0*mq*mq/mx*mx))
   end do
-
-!         print *,'Z'' width due to quarks+leptons:',width_zprime_ssm,' [GeV]'
-  !       print *,'(so that due to leptons are:',temp,' [GeV])'
-  !       print *,'(of which due to e/mu/tau:',temp2,' [GeV])'
-  !       print *,'(of which due to their neutrinos are:',temp1,' [GeV])'
   return
 end function width_zprime_ssm
 
@@ -596,27 +589,27 @@ subroutine print_model
   write(log,*) 'Gamma_h:', hwidth
   if (include_x == 1) then
     do i = 1, 5
-      if (mass_zp(i) > 0) then
+      if (xmass(i) > 0) then
         write(log,*) "Z' no.:", i
-        write(log,*) "m_Z':", mass_zp(i), "[GeV]"
-        write(log,*) "Gamma_Z':", gamzp(i), "[GeV]"
-        write(log,*) "Gamma_Z'/m_Z':", gamzp(i)/mass_zp(i)
-        write(log,*) "gLu:", gZpu(1,i)
-        write(log,*) "gRu:", gZpu(2,i)
-        write(log,*) "gLd:", gZpd(1,i)
-        write(log,*) "gRd:", gZpd(2,i)
-        write(log,*) "gLl:", gZpl(1,i)
-        write(log,*) "gRl:", gZpl(2,i)
-        write(log,*) "gLn:", gZpn(1,i)
-        write(log,*) "gRn:", gZpn(2,i)
-        write(log,*) "gLt:", gZpt(1,i)
-        write(log,*) "gRt:", gZpt(2,i)
-        write(log,*) "gLb:", gZpb(1,i)
-        write(log,*) "gRb:", gZpb(2,i)
-        write(log,*) "gLl3:", gZpl3(1,i)
-        write(log,*) "gRl3:", gZpl3(2,i)
-        write(log,*) "gLn3:", gZpn3(1,i)
-        write(log,*) "gRn3:", gZpn3(2,i)
+        write(log,*) "m_Z':", xmass(i), "[GeV]"
+        write(log,*) "Gamma_Z':", xwidth(i), "[GeV]"
+        write(log,*) "Gamma_Z'/m_Z':", xwidth(i)/xmass(i)
+        write(log,*) "gLu:", gxu(1,i)
+        write(log,*) "gRu:", gxu(2,i)
+        write(log,*) "gLd:", gxd(1,i)
+        write(log,*) "gRd:", gxd(2,i)
+        write(log,*) "gLl:", gxl(1,i)
+        write(log,*) "gRl:", gxl(2,i)
+        write(log,*) "gLn:", gxn(1,i)
+        write(log,*) "gRn:", gxn(2,i)
+        write(log,*) "gLt:", gxt(1,i)
+        write(log,*) "gRt:", gxt(2,i)
+        write(log,*) "gLb:", gxb(1,i)
+        write(log,*) "gRb:", gxb(2,i)
+        write(log,*) "gLl3:", gxl3(1,i)
+        write(log,*) "gRl3:", gxl3(2,i)
+        write(log,*) "gLn3:", gxn3(1,i)
+        write(log,*) "gRn3:", gxn3(2,i)
       end if
     end do
     print*, '------'

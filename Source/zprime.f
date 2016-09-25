@@ -27,23 +27,21 @@ program zprime
   real :: chi2_sigma, error_sigma, stantot
   real :: alfas
   integer :: ndimensions, lam3, lam4, i, j, k, today(3), now(3)
-  double precision :: start_time, finish_time
-  integer idbmup(2) ! ID of beam particle 1 and 2 according to the PDG
-  real ebmup(2) ! energy in GeV of beam particles 1 and 2
-  integer pdfgup(2) ! author group for beam 1 and 2 according to Cernlib PDFlib
-  integer pdfsup(2) ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
+  double precision :: start_time, finish_time, runtime
   character(40) tablefile
+  integer :: idbm1, idbm2, pdfg(2), pdfs(2)
+  real :: ebm(2)
 
   call cpu_time(start_time)
   call read_config
   call modify_config
 
   if (ntuple_out == 1) call rootinit(ntuple_file)
-  if (lhef_out == 1) call lhe_init(lhe_file)
+  if (lhef_out == 1) call lhe_open(lhe_file)
   open(unit = log, file = log_file, status = "replace", action = "write")
   call print_config
 
-  s = collider_energy*collider_energy
+  s = sqrts*sqrts
 
   ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
   if (ipdf == 1) lambdaqcd4 = 0.326d0
@@ -77,23 +75,6 @@ program zprime
   write(log,*) 'Loops:', nloops
   write(log,*) 'lambdaQCD^4:', lambdaqcd4
   write(log,*) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
-
-  ! LHEF file
-  ! idbmup(1) = 2212
-  ! if (initial_state == 0) then
-  !   idbmup(2) = 2212
-  ! else
-  !   idbmup(2) = -2212
-  ! end if
-  ! do i = 1, 2
-  !   ebmup(i) = collider_energy/2
-  !   pdfgup(i) = 1
-  !   pdfsup(i) = 1
-  ! end do
-
-  ! if (lhef_out == 1) call lhe_beam(idbmup, ebmup, pdfgup, pdfsup)
-
-  ! if (lhef_out == 1) call lhe_process(2, 1, 0, 0, xmaxup, lprup)
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
@@ -285,14 +266,36 @@ program zprime
   end if
   write(log,*) "VEGAS points:", npoints
   if (ntuple_out == 1) call rootclose
-  if (lhef_out == 1) call lhe_close
   write(log,*) 'Author:Declan Millar'
   call idate(today)     ! today(1):day, (2):month, (3):year
   call itime(now)       ! now(1):hour, (2):minute, (3):second
   write(log,*) 'Date:', today(3), today(2), today(1)
   write(log,*) 'Time:', now(1), now(2), now(3)
   call cpu_time(finish_time)
-  write(log,*), "Run-time:", finish_time - start_time
+  runtime = finish_time - start_time
+  write(log,*), "Run-time:", runtime
+
+  if (lhef_out == 1) then
+    call lhe_footer()
+    call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
+
+    idbm1 = 2212
+    if (initial_state == 0) then
+      idbm2 = 2212
+    else
+      idbm2 = -2212
+    end if
+    do i = 1, 2
+      ebm(i) = sqrts/2
+      pdfg(i) = 1
+      pdfs(i) = 1
+    end do
+
+    call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+    call lhe_process(sigma, error_sigma, 1.d0, 81)
+    call lhe_close
+  end if
+
   close(log)
   stop
 end program zprime

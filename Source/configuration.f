@@ -7,7 +7,7 @@ module configuration
   ! Config
   integer :: ntuple_out
   integer :: lhef_out
-  real :: collider_energy
+  real :: sqrts
   integer :: initial_state
   integer :: final_state
   integer :: ipdf
@@ -78,7 +78,7 @@ contains
     read(5,*) phase_space_only
     read(5,*) interference
     read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
-    read(5,*) collider_energy
+    read(5,*) sqrts
     read(5,*) seed
     read(5,*) itmx
     read(5,*) ncall
@@ -191,7 +191,7 @@ subroutine print_config
   if (use_rambo == 1) write(log,*) 'RAMBO:ON'
   if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
   write(log,*) 'Seed:', seed
-  write(log,*) 'Collider energy:', collider_energy
+  write(log,*) 'Collider energy:', sqrts
   if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
   if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
   if (lhef_out == 1) write(log,*) "Events written to:", lhe_file

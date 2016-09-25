@@ -93,8 +93,8 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   complex*16 w5(6), w6(6), w7(6)
   real :: gAq(2), gAf(2)
   real :: gZq(2), gZf(2)
-  real :: gZpq(2,5), gZpf(2,5)
-  real :: gZpq_tmp(2), gZpf_tmp(2)
+  real :: gxq(2,5), gxf(2,5)
+  real :: gxq_tmp(2), gxf_tmp(2)
 
   ! select only specified helicities
   if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then
@@ -112,7 +112,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAq(i) = gAu(i)
       gZq(i) = gZu(i)
       do j = 1, 5
-        gZpq(i,j) = gZpu(i,j)
+        gxq(i,j) = gxu(i,j)
       end do
     enddo
 
@@ -122,7 +122,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAq(i) = gAd(i)
       gZq(i) = gZd(i)
       do j = 1, 5
-        gZpq(i,j) = gZpd(i,j)
+        gxq(i,j) = gxd(i,j)
       end do
     enddo
 
@@ -132,7 +132,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAq(i) = gAu(i)
       gZq(i) = gZu(i)
       do j = 1, 5
-        gZpq(i,j) = gZpt(i,j)
+        gxq(i,j) = gxt(i,j)
       end do
     enddo
 
@@ -142,7 +142,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAq(i) = gAd(i)
       gZq(i) = gZd(i)
       do j = 1, 5
-        gZpq(i,j) = gZpb(i,j)
+        gxq(i,j) = gxb(i,j)
       end do
     enddo
   end if
@@ -153,7 +153,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAu(i)
       gZf(i) = gZu(i)
       do j = 1, 5
-        gZpf(i,j) = gZpu(i,j)
+        gxf(i,j) = gxu(i,j)
       end do
     enddo
 
@@ -163,7 +163,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAd(i)
       gZf(i) = gZd(i)
       do j = 1, 5
-        gZpf(i,j) = gZpd(i,j)
+        gxf(i,j) = gxd(i,j)
       end do
     enddo
 
@@ -173,7 +173,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAd(i)
       gZf(i) = gZd(i)
       do j = 1, 5
-        gZpf(i,j) = gZpt(i,j)
+        gxf(i,j) = gxt(i,j)
       end do
     enddo
 
@@ -183,7 +183,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAd(i)
       gZf(i) = gZd(i)
       do j = 1, 5
-        gZpf(i,j) = gZpb(i,j)
+        gxf(i,j) = gxb(i,j)
       end do
     enddo
   end if
@@ -194,7 +194,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAl(i)
       gZf(i) = gZl(i)
       do j = 1, 5
-        gZpf(i,j) = gZpl(i,j)
+        gxf(i,j) = gxl(i,j)
       end do
     enddo
 
@@ -204,7 +204,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = 0
       gZf(i) = gZn(i)
       do j = 1, 5
-        gZpf(i,j) = gZpn(i,j)
+        gxf(i,j) = gxn(i,j)
       end do
     enddo
 
@@ -214,7 +214,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = gAl(i)
       gZf(i) = gZl(i)
       do j = 1, 5
-        gZpf(i,j) = gZpl3(i,j)
+        gxf(i,j) = gxl3(i,j)
       end do
     enddo
 
@@ -224,7 +224,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
       gAf(i) = 0
       gZf(i) = gZn(i)
       do j = 1, 5
-        gZpf(i,j) = gZpn3(i,j)
+        gxf(i,j) = gxn3(i,j)
       end do
     enddo
   end if
@@ -252,13 +252,13 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   ! Z' diagrams
   if (include_x == 1) then
     do i = 1, 5
-      if (mass_zp(i) > 0) then
+      if (xmass(i) > 0) then
         do j = 1, 2
-          gZpq_tmp(j) = gZpq(j,i)
-          gZpf_tmp(j) = gZpf(j,i)
+          gxq_tmp(j) = gxq(j,i)
+          gxf_tmp(j) = gxf(j,i)
         end do
-        call jioxxx(w1, w2, gZpq_tmp, mass_zp(i), gamZp(i), w7)
-        call iovxxx(w4, w3, w7, gZpf_tmp, amp(2+i))
+        call jioxxx(w1, w2, gxq_tmp, xmass(i), xwidth(i), w7)
+        call iovxxx(w4, w3, w7, gxf_tmp, amp(2+i))
       end if
     end do
   end if
