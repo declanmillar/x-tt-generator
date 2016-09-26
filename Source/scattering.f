@@ -659,38 +659,6 @@ function dsigma(x, wgt)
         qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
         qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
       end if
-
-    ! else if (final_state == 2) then
-    !   if (include_gg == 1) then
-    !       qcdgg = sgg_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
-    !   end if
-    !   if (include_qq == 1) then
-    !       qcdqq = sqq_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
-    !   end if
-    !   if (include_uu == 1) then
-    !       qfduu1 = suu_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
-    !       qfduu2 = suu_bbtatavtvt(p2, p1, p3, p4, p5, p7, p6, p8)
-    !   end if
-    !   if (include_dd == 1) then
-    !       qfddd1 = sdd_bbtatavtvt(p1, p2, p3, p4, p5, p7, p6, p8)
-    !       qfddd2 = sdd_bbtatavtvt(p2, p1, p3, p4, p5, p7, p6, p8)
-    !   end if
-
-    else if (final_state == 12) then
-      if (include_gg == 1) then
-          qcdgg = sgg_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-      end if
-      if (include_qq == 1) then
-          qcdqq = sqq_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-      end if
-      if (include_uu == 1) then
-          qfduu1 = suu_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-          qfduu2 = suu_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
-      end if
-      if (include_dd == 1) then
-          qfddd1 = sdd_bbemuvevm(p1, p2, p3, p4, p5, p7, p6, p8)
-          qfddd2 = sdd_bbemuvevm(p2, p1, p3, p4, p5, p7, p6, p8)
-      end if
     else
       stop "ERROR! Invalid final state."
     end if
