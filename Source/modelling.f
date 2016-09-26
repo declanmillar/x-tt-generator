@@ -143,7 +143,7 @@ subroutine initialise_zprimes
 
   call reset_zprimes
 
-  ! Extract model_name filename (Remove white space.)
+  ! Extract model name from filename (Remove white space.)
   imodel_name = len(model_name)
   do while(model_name(imodel_name:imodel_name) == '')
     imodel_name = imodel_name - 1
@@ -193,8 +193,8 @@ subroutine initialise_zprimes
   ! Calculate benchmark widths
   call width_zprimes
 
-  ! igw=0 ! don't include w width effects
-  ! call topwid(fmass(11),wmass,fmass(12),wwidth,igw,fwidth(11))
+  ! igw = 0 ! don't include w width effects
+  ! call topwid(fmass(11), wmass, fmass(12), wwidth, igw, fwidth(11))
   ! call printconstants
   return
 
@@ -235,8 +235,6 @@ subroutine initialise_non_universal
 
   call reset_zprimes
 
-!   x = 56
-!   sin2phi = 0.1
   x = paramx
   sin2phi = paramsin2phi
 
@@ -282,31 +280,30 @@ end subroutine initialise_non_universal
 
 subroutine convert_zprime_couplings
 
-  ! input: vector and axial Zp couplings to up and down quarks
+  ! input: vector and axial Z' couplings to up and down quarks
   ! output: left and right chiral couplings to up and down quarks
 
   integer i
 
 
   do i = 1, 5
-      gxd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
-      gxd(2,i) = gp(i)*(gv_d(i) - ga_d(i))/2.d0
-      gxu(1,i) = gp(i)*(gv_u(i) + ga_u(i))/2.d0
-      gxu(2,i) = gp(i)*(gv_u(i) - ga_u(i))/2.d0
-      gxl(1,i) = gp(i)*(gv_l(i) + ga_l(i))/2.d0
-      gxl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
-      gxn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
-      gxn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
-      gxb(1,i) = gxd(1,i)
-      gxb(2,i) = gxd(2,i)
-      gxt(1,i) = gxu(1,i)
-      gxt(2,i) = gxu(2,i)
-      gxl3(1,i) = gxl(1,i)
-      gxl3(2,i) = gxl(2,i)
-      gxn3(1,i) = gxn(1,i)
-      gxn3(2,i) = gxn(2,i)
+    gxd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
+    gxd(2,i) = gp(i)*(gv_d(i) - ga_d(i))/2.d0
+    gxu(1,i) = gp(i)*(gv_u(i) + ga_u(i))/2.d0
+    gxu(2,i) = gp(i)*(gv_u(i) - ga_u(i))/2.d0
+    gxl(1,i) = gp(i)*(gv_l(i) + ga_l(i))/2.d0
+    gxl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
+    gxn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
+    gxn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
+    gxb(1,i) = gxd(1,i)
+    gxb(2,i) = gxd(2,i)
+    gxt(1,i) = gxu(1,i)
+    gxt(2,i) = gxu(2,i)
+    gxl3(1,i) = gxl(1,i)
+    gxl3(2,i) = gxl(2,i)
+    gxn3(1,i) = gxn(1,i)
+    gxn3(2,i) = gxn(2,i)
   enddo
-
 
   return
 end subroutine convert_zprime_couplings

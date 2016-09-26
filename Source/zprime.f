@@ -53,7 +53,6 @@ program zprime
   if (ipdf == 7) lambdaqcd4 = 0.300d0
   if (ipdf == 8) lambdaqcd4 = 0.229d0
   if (ipdf == 9) lambdaqcd4 = 0.383d0
-  ! ?
   if (ipdf == 10) lambdaqcd4 = 0.326d0 !
   if (ipdf == 11) lambdaqcd4 = 0.215d0 ! check this
 
@@ -228,7 +227,7 @@ program zprime
   end do
 
   do i = 1, it
-  	write(log,*) "Iteration weighting:", i, ":", cnorm(i)
+    write(log,*) "Iteration weighting:", i, ":", cnorm(i)
   end do
 
   if (final_state == 0) then

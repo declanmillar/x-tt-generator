@@ -20,7 +20,7 @@ function dsigma(x, wgt)
   !   HELAS subroutines,
   !   VEGAS Monte Carlo integration,
   !   CTEQ6 and MRS99 PDF subroutines,
-  !   RootTuple for filling ntuples.
+  !   RootTuple for filling n-tuples.
 
   ! Authors: Declan Millar, Stefano Moretti.
 

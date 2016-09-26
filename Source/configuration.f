@@ -42,6 +42,7 @@ module configuration
   real :: lambdaqcd4
   integer :: z_mixing
   real :: s2mix
+  integer :: pid
 
   ! constants
   real, parameter :: pi = 3.14159265358979323846d0
