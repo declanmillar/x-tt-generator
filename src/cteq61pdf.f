@@ -161,7 +161,7 @@
             Print *, 'Invalid Iset number in SetCtq6 :', Iset
             Stop
         Endif
-        Open(IU, File='pdfs/'//Tablefile, Status='OLD', Err=100)
+        Open(IU, File='PDFs/'//Tablefile, Status='OLD', Err=100)
         21 Call ReadTbl (IU)
         Close (IU)
         Isetold=Iset

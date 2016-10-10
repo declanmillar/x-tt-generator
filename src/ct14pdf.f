@@ -146,7 +146,7 @@
     save
 
     IU= NextUn14()
-    Open(IU, File='pdfs/'//Tablefile, Status='OLD', Err=100)
+    Open(IU, File='PDFs/'//Tablefile, Status='OLD', Err=100)
     Call Readpds0 (IU)
     Close (IU)
     Isetch=1; ipdsset=1
