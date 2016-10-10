@@ -21,6 +21,10 @@ LIB = Library
 # Output directory
 OUT = Binary
 
+ROOTLIBS = -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer
+
+FLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
+
 # Compiler
 # ifeq ($(UNAME_S),Linux)
 # 	F = ifort
@@ -33,21 +37,17 @@ F = gfortran
 
 # Flags
 ifeq ($(UNAME_S),Linux)
-	# add roottuple libraries qmulpc007
-	# FFLAGS = -g -real_size 64 -double_size 64 -free -module $(LIB)
-	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-	LFLAGS = -LLibrary -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.28/x86_64-slc6-gcc48-opt/root/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
+	FFLAGS = $(FLAGS)
+	LFLAGS = -L$(LIB) -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/lib $(ROOTLIBS)
 endif
 ifeq ($(HOSTNAME),cyan03)
-	# add roottuple libraries qmulpc007
-	# FFLAGS = -g -real_size 64 -double_size 64 -free -module $(LIB)
-	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-	LFLAGS = -LLibrary -lRootTuple -L/local/software/cern/root_v5.34.14/lib -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic -lTreePlayer
+	FFLAGS = $(FLAGS)
+	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
 endif
 ifeq ($(UNAME_S),Darwin)
 	# add roottuple libraries os x
-	FFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal -fmax-errors=0
-	LFLAGS = -LLibrary -lRootTuple -L/usr/local/Cellar/root/5.34.36/lib/root -lGui -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer
+	FFLAGS = $(FLAGS)
+	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
 endif
 
 # Compile all files ending in .f in SRC

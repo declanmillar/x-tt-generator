@@ -272,7 +272,7 @@ program zprime
   write(log,*) 'Time:', now(1), now(2), now(3)
   call cpu_time(finish_time)
   runtime = finish_time - start_time
-  write(log,*), "Run-time:", runtime
+  write(log,*) "Run-time:", runtime
 
   if (lhef_out == 1) then
     call lhe_footer()
