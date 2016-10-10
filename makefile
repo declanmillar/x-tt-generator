@@ -3,7 +3,7 @@
 
 F = gfortran
 SRC = Source
-LIB = ./Library
+LIB = Library
 OUT = Binary
 BIN = zprime
 OBJ = rambo.o vegas.o cteq61pdf.o ct14pdf.o mrs99.o configuration.o lhef.o modelling.o scattering.o alpha_EWNG.o helas.o gg_tt.o qq_tt.o qq_ff.o gg_tt_bbeevv.o qq_tt_bbeevv_qcd.o qq_tt_bbeevv.o gg_bbemuvevm.o qq_bbemuvevm.o uu_bbemuvevm.o dd_bbemuvevm.o rangen.o zprime.o
