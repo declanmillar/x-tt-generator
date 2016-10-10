@@ -16,7 +16,7 @@ CFLAGS = -g -ffree-form -fdefault-real-8 -fdefault-double-8 -std=gnu -J$(LIB) -f
 OS := $(shell uname)
 HOST := $(shell hostname)
 ifeq ($(OS),Linux)
-	LFLAGS = -L$(LIB) -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/lib $(ROOTLIBS)
+	LFLAGS = -L$(LIB) -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc49-opt/root/lib $(ROOTLIBS)
 endif
 ifeq ($(HOST),cyan03)
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
