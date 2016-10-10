@@ -254,14 +254,14 @@ if option.batch:
         print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
         # print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
+        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     elif "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
         print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/Binary/%s < %s' % (run_directory, executable, config_name)
+        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     else:
         sys.exit("Hostname not recognised. No handler file created.")
     # print >> handler, 'rm -- "$0"'
@@ -282,4 +282,4 @@ else:
     if "lxplus" in hostname:
         subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
         subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
-    subprocess.call("./Binary/%s < %s" % (executable, config_name), shell = True)
+    subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
