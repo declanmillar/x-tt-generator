@@ -240,17 +240,17 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   call oxxxxx(p3, fmass(jf), nhel(3),  1, w3)
   call ixxxxx(p4, fmass(jf), nhel(4), -1, w4)
 
-  if (include_a == 1) then
+  if (include_a) then
     call jioxxx(w1, w2, gAq, amass, awidth, w5)
     call iovxxx(w4, w3, w5, gAf, amp(1))
   end if
-  if (include_z == 1) then
+  if (include_z) then
     call jioxxx(w1, w2, gZq, zmass, zwidth, w6)
     call iovxxx(w4, w3, w6, gZf, amp(2))
   end if
 
   ! Z' diagrams
-  if (include_x == 1) then
+  if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
         do j = 1, 2

@@ -269,12 +269,12 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   /7h  nd = i2 &
   /12h  (xl, xu) = (t14,1h(f4.1,3h , f4.1,2h )))
 
-  201 format(21h Integration by VEGAS &
-  /18h  Iteration number i2 &
-  /14h   Integral = f14.8 &
+  201 format(21h integration by VEGAS &
+  /18h  iteration number i2 &
+  /14h   integral = f14.8 &
   /13h   std dev = f10.4 &
-  /20h  Accumulated results &
-  /14h   Integral = f14.8 &
+  /20h  accumulated results &
+  /14h   integral = f14.8 &
   /13h   std dev  = f10.4 &
   /24h   chi^2 per iteration = f10.4)
 

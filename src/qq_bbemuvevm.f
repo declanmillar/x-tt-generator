@@ -416,7 +416,7 @@ function qq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     call fvixxx(w4, w11, gwf, fmass(11), fwidth(11), w30)
 
 
-    if (include_background == 1) then
+    if (include_background) then
         call jioxxx(w4 , w3 , gg, zero, zero, w9)
         call jioxxx(w5 , w7 , gwf,wmass,wwidth,w10 )
         call fvixxx(w1 , w10, gwf,fmass(4  ),fwidth(4  ),w12 )
@@ -467,11 +467,11 @@ function qq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     end if
 
     ! amplitudes
-    if (include_signal == 1) then
+    if (include_signal) then
         call iovxxx(w30, w29, w28, gg, amp(20))
     end if
 
-    if (include_background == 1) then
+    if (include_background) then
         call iovxxx(w12, w13, w9 , gg, amp(1))
         call vvvxxx(w11, w10, w15, gwwa, amp(2))
         call vvvxxx(w11, w10, w16, gwwz, amp(3))

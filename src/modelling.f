@@ -113,7 +113,7 @@ subroutine initialise_standard_model
   fwidth(9)  = tauwidth
   fwidth(10) = nutauwidth
 
-  if (use_NWA == 1) then
+  if (use_NWA) then
     fwidth(11) = 1.d-5
   else
     fwidth(11) = twidth
@@ -454,7 +454,7 @@ subroutine print_model
   write(log,*) 'Gamma_W:', wwidth
   write(log,*) 'm_h:', hmass
   write(log,*) 'Gamma_h:', hwidth
-  if (include_x == 1) then
+  if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
         write(log,*) "Z' no.:", i

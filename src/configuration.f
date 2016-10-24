@@ -4,9 +4,9 @@ module configuration
 
   implicit none
 
-  ! Config
-  integer :: ntuple_out
-  integer :: lhef_out
+  ! config
+  logical :: ntuple_out
+  logical :: lhef_out
   real :: sqrts
   integer :: initial_state
   integer :: final_state
@@ -15,26 +15,26 @@ module configuration
   character(100) :: ntuple_file
   character(100) :: log_file
   character(100) :: lhe_file
-  integer :: include_signal
-  integer :: include_background
-  integer :: include_gg
-  integer :: include_qq
-  integer :: include_uu
-  integer :: include_dd
-  integer :: include_a
-  integer :: include_z
-  integer :: include_x
+  logical :: include_signal
+  logical :: include_background
+  logical :: include_gg
+  logical :: include_qq
+  logical :: include_uu
+  logical :: include_dd
+  logical :: include_a
+  logical :: include_z
+  logical :: include_x
   integer :: interference
-  integer :: use_nwa
-  integer :: symmetrise
-  integer :: phase_space_only
-  integer :: use_rambo
-  integer :: map_phase_space
-  integer :: verbose
-  real :: ecm_low, ecm_up
-  integer :: cut
+  logical :: use_nwa
+  logical :: symmetrise
 
-  ! Derived config
+  logical :: use_rambo
+  logical :: map_phase_space
+  logical :: verbose
+  real :: ecm_low, ecm_up
+  logical :: cut
+
+  ! derived config
   integer :: n_final
   integer :: tops_decay
   integer :: ffinal
@@ -48,7 +48,7 @@ module configuration
   real, parameter :: pi = 3.14159265358979323846d0
   integer, parameter :: log = 10
 
-  ! Methods
+  ! methods
   public :: read_config
   public :: modify_config
   public :: print_config
@@ -76,7 +76,6 @@ contains
     read(5,*) include_a
     read(5,*) include_z
     read(5,*) include_x
-    read(5,*) phase_space_only
     read(5,*) interference
     read(5,*) use_nwa ! 0:actual top widths,1: tops in nwa
     read(5,*) sqrts
@@ -97,28 +96,6 @@ contains
   subroutine modify_config
 
     integer :: i
-
-    i = len(log_file)
-    do while(log_file(i:i) == '')
-      i = i - 1
-    end do
-    log_file = log_file(1:i)
-    print*, "Log:    ", log_file
-
-    i = len(lhe_file)
-    do while(lhe_file(i:i) == '')
-      i = i - 1
-    end do
-    lhe_file = lhe_file(1:i)
-    print*, "LHEF:   ", lhe_file
-
-    i = len(ntuple_file)
-    do while(ntuple_file(i:i) == '')
-      i = i - 1
-    end do
-    ntuple_file = ntuple_file(1:i)
-    print*, "Ntuple: ", ntuple_file
-
 
     if (final_state <= 0) then
       n_final = 4
@@ -159,44 +136,47 @@ subroutine print_config
       write(log,*) 'Process:p p~ -> t t~ -> b b W+ W- -> b b l+ l- nu nu~'
     end if
   end if
-  if (ipdf == 1) write(log,*) 'PDFs:CTEQ6m'
-  if (ipdf == 2) write(log,*) 'PDFs:CTEQ6d'
-  if (ipdf == 3) write(log,*) 'PDFs:CTEQ6l'
-  if (ipdf == 4) write(log,*) 'PDFs:CTEQ6l1'
-  if (ipdf == 5) write(log,*) 'PDFs:MRS99 (cor01)'
-  if (ipdf == 6) write(log,*) 'PDFs:MRS99 (cor02)'
-  if (ipdf == 7) write(log,*) 'PDFs:MRS99 (cor03)'
-  if (ipdf == 8) write(log,*) 'PDFs:MRS99 (cor04)'
-  if (ipdf == 9) write(log,*) 'PDFs:MRS99 (cor05)'
-  if (ipdf == 10) write(log,*) 'PDFs:CT14LN'
-  if (ipdf == 11) write(log,*) 'PDFs:CT14LL'
-  if ((final_state >= 1) .and. (use_nwa == 1)) write(log,*) 'NWA:ON'
-  if ((final_state >= 1) .and. (use_nwa == 0)) write(log,*) 'NWA:OFF'
+  if (ipdf == 1) write(log,*) 'PDFs: CTEQ6m'
+  if (ipdf == 2) write(log,*) 'PDFs: CTEQ6d'
+  if (ipdf == 3) write(log,*) 'PDFs: CTEQ6l'
+  if (ipdf == 4) write(log,*) 'PDFs: CTEQ6l1'
+  if (ipdf == 5) write(log,*) 'PDFs: MRS99 (cor01)'
+  if (ipdf == 6) write(log,*) 'PDFs: MRS99 (cor02)'
+  if (ipdf == 7) write(log,*) 'PDFs: MRS99 (cor03)'
+  if (ipdf == 8) write(log,*) 'PDFs: MRS99 (cor04)'
+  if (ipdf == 9) write(log,*) 'PDFs: MRS99 (cor05)'
+  if (ipdf == 10) write(log,*) 'PDFs: CT14LN'
+  if (ipdf == 11) write(log,*) 'PDFs: CT14LL'
+  if (final_state >= 1 .and. use_nwa) write(log,*) 'NWA:ON'
+  if (final_state >= 1 .and. .not. use_nwa) write(log,*) 'NWA:OFF'
   write(log,*) 'Model:', model_name
-  if (include_a == 1) write(log,*) 'photon:ON '
-  if (include_a == 0) write(log,*) 'photon:OFF'
-  if (include_z == 1) write(log,*) 'Z boson:ON '
-  if (include_z == 0) write(log,*) 'Z boson:OFF'
-  if (include_x == 1) write(log,*) 'BSM:ON '
-  if (include_x == 0) write(log,*) 'BSM:OFF'
+  if (include_a) write(log,*) 'photon:ON '
+  if (.not. include_a) write(log,*) 'photon:OFF'
+  if (include_z) write(log,*) 'Z boson:ON '
+  if (.not. include_z) write(log,*) 'Z boson:OFF'
+  if (include_x) write(log,*) 'BSM:ON '
+  if (.not. include_x) write(log,*) 'BSM:OFF'
   write(log,*) "include_gg: ", include_gg
   write(log,*) "include_qq: ", include_qq
   write(log,*) "include_uu: ", include_uu
   write(log,*) "include_dd: ", include_dd
-  if (interference == 0) write(log,*) "Interference:none"
-  if (interference == 1) write(log,*) "Interference:(gamma + Z) + (Z')"
-  if (interference == 2) write(log,*) "Interference:(gamma + Z + Z')"
-  if (interference == 3) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z)"
-  if (interference == 4) write(log,*) "Interference:(gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (symmetrise == 0) write(log,*) 'Not symmetrising integration: x1<->x2!'
-  if (use_rambo == 1) write(log,*) 'RAMBO:ON'
-  if (map_phase_space == 0) write(log,*) "Phase space mapping:ON"
-  write(log,*) 'Seed:', seed
-  write(log,*) 'Collider energy:', sqrts
-  if (ecm_low > 0) write(log,*) "E_CM low         :", ecm_low
-  if (ecm_up > 0) write(log,*) "E_CM up             ", ecm_up
-  if (lhef_out == 1) write(log,*) "Events written to:", lhe_file
-  if (ntuple_out == 1) write(log,*) "Events written to:", ntuple_file
+  write(log,*) "include_a: ", include_a
+  write(log,*) "include_z: ", include_z
+  write(log,*) "include_x: ", include_x
+  if (interference == 0) write(log,*) "Interference: none"
+  if (interference == 1) write(log,*) "Interference: (gamma + Z) + (Z')"
+  if (interference == 2) write(log,*) "Interference: (gamma + Z + Z')"
+  if (interference == 3) write(log,*) "Interference: (gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) write(log,*) "Interference: (gamma + Z + Z') - (gamma) - (Z) - (Z')"
+  if (symmetrise) write(log,*) 'Symmetrising integration: x1<->x2!'
+  if (use_rambo) write(log,*) 'RAMBO: ON'
+  write(log,*) "map_phase_space: ", map_phase_space
+  write(log,*) 'seed:', seed
+  write(log,*) 'collider energy:', sqrts
+  if (ecm_low > 0) write(log,*) "E_cm low         :", ecm_low
+  if (ecm_up > 0) write(log,*) "E_cm up             ", ecm_up
+  if (lhef_out) write(log,*) "Events written to:", lhe_file
+  if (ntuple_out) write(log,*) "Events written to:", ntuple_file
 end subroutine print_config
 
 end module configuration

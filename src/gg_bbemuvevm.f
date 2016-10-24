@@ -593,7 +593,7 @@ function gg_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     call fvoxxx(w11, w1, gg, fmass(11), fwidth(11), w55)
     call jggxxx(w1, w2, g, w94)
 
-    if (include_background == 1) then
+    if (include_background) then
         call fvixxx(w4, w1, gg, fmass(12), fwidth(12), w14)
         call fvixxx(w14, w2, gg, fmass(12), fwidth(12), w15)
         call jioxxx(w15, w3, gad,amass,awidth, w16)
@@ -705,13 +705,13 @@ function gg_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     end if
 
     ! amplitudes
-    if (include_signal == 1) then
+    if (include_signal) then
         call iovxxx(w12, w13, w1, gg, amp(1))
         call iovxxx(w12, w55, w2, gg, amp(40))
         call iovxxx(w12, w11, w94, gg, amp(79))
     end if
 
-    if (include_background == 1) then
+    if (include_background) then
         call iovxxx(w7, w17, w10, gwf, amp(2))
         call iovxxx(w7, w19, w10, gwf, amp(3))
         call vvvxxx(w9, w10, w16, gwwa, amp(4))

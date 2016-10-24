@@ -405,14 +405,14 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! t~ coupled to b~ and W vector current
   call fvixxx(w4, w11, gWf, fmass(11), fwidth(11), w13)
 
-  if (include_a == 1) then
+  if (include_a) then
     ! A coupled to qq~ vector current
     call jioxxx(w1, w2, gAq, amass, amass, w9)
     ! A diagram
     call iovxxx(w13, w12, w9, gAu, amp(1))
   end if
 
-  if (include_z == 1) then
+  if (include_z) then
     ! Z coupled to qq~ vector current
     call jioxxx(w1, w2, gZq, zmass, zwidth, w14)
     ! Z diagram
@@ -420,7 +420,7 @@ function qq_tt_bbeevv(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   end if
 
   ! Z' diagrams
-  if (include_x == 1) then
+  if (include_x) then
     do i = 1, 5
       ! print*, xmass(i), xwidth(i)
       if (xmass(i) > 0) then

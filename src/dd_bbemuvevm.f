@@ -648,7 +648,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     call jioxxx(w5, w7, gwf, wmass, wwidth, w10)
     call jioxxx(w8, w6, gwf, wmass, wwidth, w11)
 
-    if (include_background == 1) then
+    if (include_background) then
         call jioxxx(w4, w3, gad, amass, awidth, w9)
         call fvoxxx(w2, w9, gad, fmass(4), fwidth(4), w12)
         call fvoxxx(w12, w10, gwf, fmass(3), fwidth(3), w13)
@@ -819,10 +819,10 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
         call jioxxx(w181, w7, gwf, wmass, wwidth, w182)
     end if
 
-    if (include_signal == 1) then
+    if (include_signal) then
         call iovxxx(w30, w59, w61, gau, amp(49))
         call iovxxx(w30, w59, w62, gzu, amp(50))
-        if (include_x == 1) then
+        if (include_x) then
             do i = 1, 5
               if (xmass(i) > 0) then
                 do j = 1, 2
@@ -836,7 +836,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
         end if
     end if
 
-    if (include_background == 1) then
+    if (include_background) then
         call iovxxx(w1, w13, w11, gwf, amp(1))
         call iovxxx(w1, w16, w11, gwf, amp(2))
         call vvvxxx(w11, w10, w17, gwwa, amp(3))
