@@ -38,7 +38,7 @@ parser.add_option("-U", "--ecm_up", default = 0, type = "int", help = "Ecm upper
 parser.add_option("-F", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed")
 
 parser.add_option("-N", "--vegas_iterations", default = 5, type = "int", help = "number of VEGAS iterations")
-parser.add_option("-n", "--vegas_points", default = 1e7, type = "int", help = "number of VEGAS points")
+parser.add_option("-n", "--vegas_points", default = 10000000, type = "int", help = "number of VEGAS points")
 
 parser.add_option("-S", "--symmetrise", default = True, action = "store_false", help = "symmetrise phase space x1<->x2")
 parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for phase space")
@@ -130,6 +130,7 @@ if option.include_background:
     map_phase_space = False
 
 npoints = str(option.vegas_points)
+print npoints
 if "000000" in npoints:
     npoints = "M".join(npoints.rsplit("000000", 1))
 if "000" in npoints:
@@ -177,8 +178,6 @@ elif option.final_state == 11:
     final_state = "bbtatavtvt"
 elif option.final_state == 12:
     final_state = "bbemuvevm"
-
-
 
 filename = '%s_%s-%s%s%s%s_%sx%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options, option.vegas_iterations, npoints)
 

@@ -3,7 +3,7 @@ module lhef
   implicit none
 
   integer, parameter :: lhe = 20
-  integer, parameter :: npr = 1 ! the number of different user subprocesses (I fix at 1)
+  integer, parameter :: npr = 1 ! the number of different user sub-processes (I fix at 1)
 
   ! subroutines
   public :: lhe_open

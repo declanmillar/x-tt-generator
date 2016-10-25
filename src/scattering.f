@@ -110,7 +110,7 @@ function dsigma(x, wgt)
   ! temporary iterators
   integer :: i, j, k
 
-  ! --- 
+  ! ---
 
   ! store top parameters
   mt = fmass(ffinal)

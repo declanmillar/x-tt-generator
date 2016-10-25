@@ -259,7 +259,7 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   if(it < itmx .AND. acc*abs(avgi) < sd) go to 9
   200 format(18h VEGAS parameters &
   /8h  ndim = i3 &
-  /9h  ncall = f8.1 &
+  /9h  ncall = f10.1 &
   /6h  it = i2 &
   /8h  itmx = i2 &
   /7h  acc = f5.1 &
@@ -272,7 +272,7 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   201 format(21h integration by VEGAS &
   /18h  iteration number i2 &
   /14h   integral = f14.8 &
-  /13h   std dev = f10.4 &
+  /13h   std dev  = f10.4 &
   /20h  accumulated results &
   /14h   integral = f14.8 &
   /13h   std dev  = f10.4 &

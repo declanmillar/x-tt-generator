@@ -81,9 +81,9 @@ program zprime
     nloops = 1
   end if
 
-  write(log, *) 'Loops:', nloops
-  write(log, *) 'lambdaQCD^4:', lambdaqcd4
-  write(log, *) 'alpha_s(m_Z):', alfas(zmass, lambdaqcd4, nloops)
+  write(log, *) 'loops: ', nloops
+  write(log, *) 'lambda_QCD^4: ', lambdaqcd4
+  write(log, *) 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
 
   ! initialise madgraph - masses and coupling constants of particles
   call initialise_model
