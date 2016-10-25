@@ -27,8 +27,8 @@ parser.add_option("-d", "--include_dd", default = False, action = "store_true", 
 parser.add_option("-A", "--include_a", default = True, action = "store_false", help = "include photon mediated interaction")
 parser.add_option("-Z", "--include_z", default = True, action = "store_false", help = "include Z boson mediated interaction")
 parser.add_option("-X", "--include_x", default = True, action = "store_false", help = "include Z' boson mediated interactions")
-parser.add_option("-s", "--include_signal", default = True, const = 0, action = "store_const", help = "include tt signal")
-parser.add_option("-b", "--include_background", default = False, const = 0, action = "store_const", help = "include tt background")
+parser.add_option("-s", "--include_signal", default = True, action = "store_false", help = "include tt signal")
+parser.add_option("-b", "--include_background", default = False, action = "store_true", help = "include tt background")
 
 parser.add_option("-P", "--structure_function", default = 4, type = "int", help = "structure_functions")
 parser.add_option("-I", "--interference", default = 2, type = "int", help = "specify interference")
@@ -130,7 +130,6 @@ if option.include_background:
     map_phase_space = False
 
 npoints = str(option.vegas_points)
-print npoints
 if "000000" in npoints:
     npoints = "M".join(npoints.rsplit("000000", 1))
 if "000" in npoints:
@@ -139,10 +138,10 @@ if "000" in npoints:
 energy_collider = "_" + str(option.collider_energy) if option.collider_energy != 13 else ""
 
 initial_partons = ""
-if option.include_qq:
-    initial_partons += "qq"
 if option.include_gg:
     initial_partons += "gg"
+if option.include_qq:
+    initial_partons += "qq"
 if option.include_uu:
     initial_partons += "uu"
 if option.include_dd:
