@@ -86,9 +86,13 @@ subroutine lhe_add_particle(id, ist, moth1, moth2, icol1, icol2, p, vtim, spin)
   real :: p(4) ! lab frame momentum
   real :: vtim ! invariant lifetime cτ (distance from production to decay) in mm
   real :: spin ! cosine of the angle between the spin-vector of particle I and the 3-momentum of the decaying particle, specified in the lab frame
+  real :: m
+
+  m = mass(p)
+  if (m < 1.d0) m = 0.d0
 
   write(lhe, "(i8, i5,  i5,    i5,    i5,    i5, es18.10, es18.10, es18.10, es18.10, es18.10, f3.0, f3.0)") &
-               id, ist, moth1, moth2, icol1, icol2, p, mass(p), vtim, spin
+               id, ist, moth1, moth2, icol1, icol2, p, m, vtim, spin
 end subroutine lhe_add_particle
 
 subroutine lhe_end_event

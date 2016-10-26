@@ -9,7 +9,7 @@ module modelling
   real :: gal(2), gau(2), gad(2), gwf(2)
   real :: gZn(2), gZl(2), gZu(2), gZd(2), g1(2)
   real :: gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh
-  complex*16 :: gchf(2, 12)
+  complex * 16 :: gchf(2, 12)
   real :: gg(2), g
 
   ! fermion masses and widths
@@ -44,7 +44,7 @@ module modelling
   ! zprime parameters
   real :: xmass(5), xwidth(5)
   real :: xparam(5)
-  real :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_nu(5), ga_nu(5)
+  real :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_v(5), ga_v(5)
   real :: gxd(2,5),gxu(2,5),gxl(2,5),gxn(2,5),gxb(2,5), gxt(2,5), gxl3(2,5), gxn3(2,5)
   integer :: manual_width(5)
 
@@ -151,30 +151,29 @@ subroutine initialise_zprimes
 
   ! read model file
   open(unit = mdl, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
-  read(mdl,*) model_type
+  read(mdl, *) model_type
   if (model_type == 0) then
-    read(mdl,*) xmass
-    read(mdl,*) xwidth
-    read(mdl,*) gp
-    read(mdl,*) xparam
-    read(mdl,*) gV_u
-    read(mdl,*) gA_u
-    read(mdl,*) gV_d
-    read(mdl,*) gA_d
-    read(mdl,*) gV_l
-    read(mdl,*) gA_l
-    read(mdl,*) gV_nu
-    read(mdl,*) gA_nu
+    read(mdl, *) xmass
+    read(mdl, *) xwidth
+    read(mdl, *) gp
+    read(mdl, *) xparam
+    read(mdl, *) gV_u
+    read(mdl, *) gA_u
+    read(mdl, *) gV_d
+    read(mdl, *) gA_d
+    read(mdl, *) gV_l
+    read(mdl, *) gA_l
+    read(mdl, *) gV_v
+    read(mdl, *) gA_v
   else if (model_type == 1) then
-    read(mdl,*) paramx
-    read(mdl,*) paramsin2phi
+    read(mdl, *) paramx
+    read(mdl, *) paramsin2phi
   else
     print*, "Error: invalid model type! Must be 0-1."
   end if
   close(mdl)
 
   if (model_type == 0) then
-    ! If xwidth is negative, the function widthZp is used.
     do i = 1, 5
       if ((xmass(i) > 0.d0) .and. (xwidth(i) < 0.d0)) then
         manual_width(i) = 0
@@ -209,11 +208,11 @@ subroutine reset_zprimes
     gV_u(i) = 0
     gV_d(i) = 0
     gV_l(i) = 0
-    gV_nu(i) = 0
+    gV_v(i) = 0
     gA_u(i) = 0
     gA_d(i) = 0
     gA_l(i) = 0
-    gA_nu(i) = 0
+    gA_v(i) = 0
     do j = 1, 2
       gxd(j,i) = 0
       gxu(j,i) = 0
@@ -238,34 +237,34 @@ subroutine initialise_non_universal
   x = paramx
   sin2phi = paramsin2phi
 
-  e = sqrt(4.d0*pi*a_em)
+  e = sqrt(4.d0 * pi * a_em)
   st = sqrt(s2w)
   ct = sqrt(1.d0 - s2w)
   sp = sqrt(sin2phi)
   cp = sqrt(1.d0 - sin2phi)
-  m0 = e*vev/2/st
-  xmass(1) = sqrt(m0*m0*(x/sp/sp/cp/cp + sp*sp/cp/cp))
+  m0 = e * vev / 2 / st
+  xmass(1) = sqrt(m0 * m0 * (x / sp / sp / cp / cp + sp * sp / cp / cp))
 
   ! leptons
-  gxl(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st))
-  gxn(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct))
-  gxl3(1,1) = gxl(1,1) - e/2/st/sp/cp
-  gxn3(1,1) = gxn(1,1) + e/2/st/sp/cp
+  gxl(1,1) = e / 2 / st * (sp / cp + sp * sp * sp * cp / (x * ct * ct) * (1 - 2 * st * st))
+  gxn(1,1) = e / 2 / st * (-sp / cp - sp * sp * sp * cp / (x * ct * ct))
+  gxl3(1,1) = gxl(1,1) - e / 2 / st / sp / cp
+  gxn3(1,1) = gxn(1,1) + e / 2 / st / sp / cp
 
   ! quarks
-  gxu(1,1) = e/2/st*(-sp/cp - sp*sp*sp*cp/(x*ct*ct)*(1 - 4*st*st/3))
-  gxd(1,1) = e/2/st*(sp/cp + sp*sp*sp*cp/(x*ct*ct)*(1 - 2*st*st/3))
-  gxt(1,1) = gxu(1,1) + e/2/st/sp/cp
-  gxb(1,1) = gxd(1,1) - e/2/st/sp/cp
+  gxu(1,1) = e / 2 / st * (-sp / cp - sp * sp * sp * cp / (x * ct * ct) * (1 - 4 * st * st / 3))
+  gxd(1,1) = e / 2 / st * (sp / cp + sp * sp * sp * cp / (x * ct * ct) * (1 - 2 * st * st / 3))
+  gxt(1,1) = gxu(1,1) + e / 2 / st / sp / cp
+  gxb(1,1) = gxd(1,1) - e / 2 / st / sp / cp
 
   ! right handed couplings
-  gxl(2,1) = e/2*st*2*st*st*sp*sp*sp*cp/x/ct/ct
+  gxl(2,1) = e / 2 * st * 2 * st * st * sp * sp * sp * cp / x / ct / ct
   gxn(2,1) = 0
   gxl3(2,1) = gxl(2,1)
   gxn3(2,1) = gxn(2,1)
 
-  gxu(2,1) = gxl(2,1)*2/3
-  gxd(2,1) = gxl(2,1)*1/3
+  gxu(2,1) = gxl(2,1) * 2 / 3
+  gxd(2,1) = gxl(2,1) * 1 / 3
   gxt(2,1) = gxu(2,1)
   gxb(2,1) = gxd(2,1)
 
@@ -285,16 +284,16 @@ subroutine convert_zprime_couplings
 
   integer i
 
-
+  print*, "converting Z' couplings ..."
   do i = 1, 5
-    gxd(1,i) = gp(i)*(gv_d(i) + ga_d(i))/2.d0
-    gxd(2,i) = gp(i)*(gv_d(i) - ga_d(i))/2.d0
-    gxu(1,i) = gp(i)*(gv_u(i) + ga_u(i))/2.d0
-    gxu(2,i) = gp(i)*(gv_u(i) - ga_u(i))/2.d0
-    gxl(1,i) = gp(i)*(gv_l(i) + ga_l(i))/2.d0
-    gxl(2,i) = gp(i)*(gv_l(i) - ga_l(i))/2.d0
-    gxn(1,i) = gp(i)*(gv_nu(i) + ga_nu(i))/2.d0
-    gxn(2,i) = gp(i)*(gv_nu(i) - ga_nu(i))/2.d0
+    gxd(1,i) = gp(i) * (gv_d(i) + ga_d(i)) / 2.d0
+    gxd(2,i) = gp(i) * (gv_d(i) - ga_d(i)) / 2.d0
+    gxu(1,i) = gp(i) * (gv_u(i) + ga_u(i)) / 2.d0
+    gxu(2,i) = gp(i) * (gv_u(i) - ga_u(i)) / 2.d0
+    gxl(1,i) = gp(i) * (gv_l(i) + ga_l(i)) / 2.d0
+    gxl(2,i) = gp(i) * (gv_l(i) - ga_l(i)) / 2.d0
+    gxn(1,i) = gp(i) * (gv_v(i) + ga_v(i)) / 2.d0
+    gxn(2,i) = gp(i) * (gv_v(i) - ga_v(i)) / 2.d0
     gxb(1,i) = gxd(1,i)
     gxb(2,i) = gxd(2,i)
     gxt(1,i) = gxu(1,i)
@@ -325,7 +324,10 @@ subroutine width_zprimes
   real :: stmix, ctmix
   real :: ez, pz
 
-  e = sqrt(4.d0*pi*a_em)
+  ! couplings.
+  pi = dacos(-1.d0)
+
+  e = sqrt(4.d0 * pi * a_em)
 
   st = sqrt(s2w)
   ct = sqrt(1.d0 - s2w)
@@ -333,12 +335,8 @@ subroutine width_zprimes
   stmix = sqrt(s2mix)
   ctmix = sqrt(1.d0 - s2mix)
 
-  cotw = ct/st
-  gz = e/ct/st
-
-
-  ! couplings.
-  pi = dacos(-1.d0)
+  cotw = ct / st
+  gz = e / ct / st
 
   do n = 1, 5
     width = 0.d0
@@ -350,7 +348,7 @@ subroutine width_zprimes
       do i = 1, 6
         widthqq_tmp = 0.d0
         mq = qmass(i)
-        if (xmass(n) > 2.d0*mq) then
+        if (xmass(n) > 2.d0 * mq) then
 
           if (i == 1 .or. i == 3) then
             gv = gxu(1,n) + gxu(2,n)
@@ -367,11 +365,9 @@ subroutine width_zprimes
           end if
 
           ! with QCD kfactor
-          widthqq_tmp = 3.d0/48.d0/pi*mx &
-                      *sqrt(1.d0 - 4.d0*mq*mq/mx*mx) &
-                      *(gv*gv*(1.d0 + 2.d0*mq*mq/mx*mx) &
-                      + ga*ga*(1.d0 - 4.d0*mq*mq/mx*mx)) &
-                      *(1.d0 + 1.045d0*a_s/pi)
+          widthqq_tmp = 3.d0 / 48.d0 / pi * mx * sqrt(1.d0 - 4.d0 * mq * mq / mx / mx) &
+                        * (gv * gv * (1.d0 + 2.d0 * mq * mq / mx / mx) + ga * ga * (1.d0 - 4.d0 * mq * mq / mx / mx)) &
+                        * (1.d0 + 1.045d0 * a_s / pi)
 
           widthqq = widthqq + widthqq_tmp
 
@@ -384,7 +380,7 @@ subroutine width_zprimes
         widthll_tmp = 0.d0
         ml = lmass(i)
 
-        if (mx > 2.d0*ml) then
+        if (mx > 2.d0 * ml) then
 
           if (i == 1 .or. i == 3) then
             gv = gxl(1,n) + gxl(2,n)
@@ -400,10 +396,8 @@ subroutine width_zprimes
             ga = gxn3(1,n) - gxn3(2,n)
           end if
 
-          widthll_tmp = 1.d0/48.d0/pi*mx &
-                        *sqrt(1.d0 - 4.d0*mq*mq/mx*mx) &
-                        *(gv*gv*(1.d0 + 2.d0*mq*mq/mx*mx) &
-                        + ga*ga*(1.d0 - 4.d0*mq*mq/mx*mx))
+          widthll_tmp = 1.d0 / 48.d0 / pi * mx * sqrt(1.d0 - 4.d0 * mq * mq / mx / mx) &
+                        * (gv * gv * (1.d0 + 2.d0 * mq * mq / mx / mx) + ga * ga * (1.d0 - 4.d0 * mq * mq / mx / mx))
 
           widthll = widthll + widthll_tmp
         end if
@@ -411,27 +405,27 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-      print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
-      print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
-      print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
+      ! print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
+      ! print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+      ! print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
 
       if (z_mixing == 1) then
         print*, "I am being run."
-        widthww = 1/(48.d0*pi)*e*e*cotw*cotw*stmix*mx*sqrt(1 - 4*wmass*wmass/mx/mx) &
-                  *(0.25*(mx/wmass)**4 + 4*mx*mx/wmass/wmass - 17 - 12*wmass*wmass/mx/mx)
+        widthww = 1 / (48.d0 * pi) * e * e * cotw * cotw * stmix * mx * sqrt(1 - 4 * wmass * wmass / mx / mx) &
+                  * (0.25 * (mx / wmass)**4 + 4 * mx * mx / wmass / wmass - 17 - 12 * wmass * wmass / mx / mx)
 
-        fzh = -gz*mx/zmass*ctmix*stmix/(ctmix*ctmix + mx*mx/zmass/zmass*stmix*stmix)**(3/2)
+        fzh = -gz * mx / zmass * ctmix * stmix / (ctmix * ctmix + mx * mx / zmass / zmass * stmix * stmix)**(3 / 2)
 
-        ez = (mx*mx + zmass*zmass - hmass*hmass)/(2*mx)
+        ez = (mx * mx + zmass * zmass - hmass * hmass) / (2 * mx)
 
-        pz = sqrt(ez*ez + zmass*zmass)
+        pz = sqrt(ez * ez + zmass * zmass)
 
-        widthzh = 1/(24.d0*pi)*fzh*fzh*pz*(ez*ez/zmass/zmass + 2)
+        widthzh = 1 / (24.d0 * pi) * fzh * fzh * pz * (ez * ez / zmass / zmass + 2)
 
         width = width + widthww + widthzh
 
-        print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
-        print*, 'Gamma(Zp(', n, ')->qq)=', widthww,' [GeV]'
+        ! print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
+        ! print*, 'Gamma(Zp(', n, ')->qq)=', widthww,' [GeV]'
       end if
 
       xwidth(n) = width
@@ -444,42 +438,42 @@ subroutine print_model
 
   integer :: i
 
-  write(log,*) 'm_b:', fmass(12)
-  write(log,*) 'Gamma_b:', fwidth(12)
-  write(log,*) 'm_t:', fmass(11)
-  write(log,*) 'Gamma_t:', fwidth(11)
-  write(log,*) 'm_Z:', zmass
-  write(log,*) 'Gamma_Z:', zwidth
-  write(log,*) 'm_W:', wmass
-  write(log,*) 'Gamma_W:', wwidth
-  write(log,*) 'm_h:', hmass
-  write(log,*) 'Gamma_h:', hwidth
+  write(log, *) 'm_b:', fmass(12)
+  write(log, *) 'Gamma_b:', fwidth(12)
+  write(log, *) 'm_t:', fmass(11)
+  write(log, *) 'Gamma_t:', fwidth(11)
+  write(log, *) 'm_Z:', zmass
+  write(log, *) 'Gamma_Z:', zwidth
+  write(log, *) 'm_W:', wmass
+  write(log, *) 'Gamma_W:', wwidth
+  write(log, *) 'm_h:', hmass
+  write(log, *) 'Gamma_h:', hwidth
   if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
-        write(log,*) "Z' no.:", i
-        write(log,*) "m_Z':", xmass(i), "[GeV]"
-        write(log,*) "Gamma_Z':", xwidth(i), "[GeV]"
-        write(log,*) "Gamma_Z'/m_Z':", xwidth(i)/xmass(i)
-        write(log,*) "gLu:", gxu(1,i)
-        write(log,*) "gRu:", gxu(2,i)
-        write(log,*) "gLd:", gxd(1,i)
-        write(log,*) "gRd:", gxd(2,i)
-        write(log,*) "gLl:", gxl(1,i)
-        write(log,*) "gRl:", gxl(2,i)
-        write(log,*) "gLn:", gxn(1,i)
-        write(log,*) "gRn:", gxn(2,i)
-        write(log,*) "gLt:", gxt(1,i)
-        write(log,*) "gRt:", gxt(2,i)
-        write(log,*) "gLb:", gxb(1,i)
-        write(log,*) "gRb:", gxb(2,i)
-        write(log,*) "gLl3:", gxl3(1,i)
-        write(log,*) "gRl3:", gxl3(2,i)
-        write(log,*) "gLn3:", gxn3(1,i)
-        write(log,*) "gRn3:", gxn3(2,i)
+        write(log, *) "Z' no.:", i
+        write(log, *) "m_Z':", xmass(i), "[GeV]"
+        write(log, *) "Gamma_Z':", xwidth(i), "[GeV]"
+        write(log, *) "Gamma_Z' / m_Z':", xwidth(i) / xmass(i)
+        write(log, *) "gLu:", gxu(1,i)
+        write(log, *) "gRu:", gxu(2,i)
+        write(log, *) "gLd:", gxd(1,i)
+        write(log, *) "gRd:", gxd(2,i)
+        write(log, *) "gLl:", gxl(1,i)
+        write(log, *) "gRl:", gxl(2,i)
+        write(log, *) "gLn:", gxn(1,i)
+        write(log, *) "gRn:", gxn(2,i)
+        write(log, *) "gLt:", gxt(1,i)
+        write(log, *) "gRt:", gxt(2,i)
+        write(log, *) "gLb:", gxb(1,i)
+        write(log, *) "gRb:", gxb(2,i)
+        write(log, *) "gLl3:", gxl3(1,i)
+        write(log, *) "gRl3:", gxl3(2,i)
+        write(log, *) "gLn3:", gxn3(1,i)
+        write(log, *) "gRn3:", gxn3(2,i)
       end if
     end do
-    print*, '------'
+    write(log, *) "------"
   end if
 end subroutine print_model
 

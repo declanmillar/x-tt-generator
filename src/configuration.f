@@ -55,6 +55,7 @@ module configuration
 contains
 
 subroutine read_config
+  print*, "reading config ..."
   read(5,*) ntuple_out
   read(5,*) lhef_out
   read(5,"(a)") ntuple_file
@@ -93,6 +94,8 @@ subroutine modify_config
 
   integer :: i
 
+  print*, "interpreting config ..."
+
   if (final_state <= 0) then
     n_final = 4
   else
@@ -114,6 +117,7 @@ subroutine modify_config
 end subroutine modify_config
 
 subroutine print_config
+  print*, "printing config to logfile ..."
   if (lhef_out) write(log,*) "Events written to:", lhe_file
   if (ntuple_out) write(log,*) "Events written to:", ntuple_file
   if (initial_state == 0) then

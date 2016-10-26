@@ -1,18 +1,18 @@
 program zprime
 
-  ! Calculates the cross section, asymmetries, and generates events for
+  ! calculates the cross section, asymmetries, and generates events for
   !   p p -> f f~
   !   p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
-
+  !
   ! requirements
   !   HELAS subroutines
   !   VEGAS Monte Carlo integration
   !   CT10, CTEQ6 and MRS99 PDF subroutines
   !   RootTuple for filling n-tuples
-
+  !
   ! authors
   !   Declan Millar <declan.millar@cern.ch>
-  !   Stefano Moretti
+  !   Stefano Moretti <s.moretti@soton.ac.uk>
 
   use configuration
   use modelling
@@ -32,6 +32,8 @@ program zprime
   integer :: idbm1, idbm2, pdfg(2), pdfs(2)
   real :: ebm(2)
 
+  print*, "starting program zprime ..."
+
   call cpu_time(start_time)
   call read_config
   call modify_config
@@ -40,20 +42,21 @@ program zprime
   print*, "log:     ", trim(log_file)
   open(unit = log, file = log_file, status = "replace", action = "write")
 
-
   if (ntuple_out) then
     print*, "n-tuple: ", trim(ntuple_file)
+    print*, "initiating n-tuple ..."
     call rootinit(ntuple_file)
   end if
   if (lhef_out) then
-    print*, "LHEF:    ", trim(lhe_file)
+    print*, "lhe:    ", trim(lhe_file)
+    print*, "opening lhe file ..."
     call lhe_open(lhe_file)
   end if
-
 
   s = sqrts * sqrts
 
   ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
+  print*, "setting lambdaqcd based on PDF set ..."
   if (ipdf ==  1) lambdaqcd4 = 0.326d0
   if (ipdf ==  2) lambdaqcd4 = 0.326d0
   if (ipdf ==  3) lambdaqcd4 = 0.326d0
@@ -72,7 +75,7 @@ program zprime
   if (ipdf == 11) tablefile = "ct14ll.pds"
   if (ipdf > 9) call setct14(tablefile)
 
-  ! use appropriately evolved alphas.
+  print*, "using appropriately evolved alphas ..."
   if (ipdf <= 2) then
     nloops = 2
   else if (ipdf == 10) then
@@ -85,9 +88,10 @@ program zprime
   write(log, *) 'lambda_QCD^4: ', lambdaqcd4
   write(log, *) 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
 
-  ! initialise madgraph - masses and coupling constants of particles
+  print*, "initialising masses and coupling constants ..."
   call initialise_model
 
+  print*,"setting external particle masses ..."
   if (final_state <= 0) then
     m3 = fmass(ffinal)
     m4 = fmass(ffinal)
@@ -118,7 +122,7 @@ program zprime
     m8 = fmass(6)
   end if
 
-  ! VEGAS parameters
+  print*, "setting VEGAS integration limits ..."
   if (use_rambo) then
     ! integrates on
     !   x(2) = (x1 - tau) / (1 - tau),
@@ -216,15 +220,17 @@ program zprime
   end if
 
   ! integrate using VEGAS
+  print*, "integrating using VEGAS ..."
   call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
 
   if (sigma == 0.d0) then
-    print*, "ERROR! Cross section = 0. Stopping."
+    print*, "ERROR: Cross section = 0. Stopping."
     stop
   else
     write(log, *) "Cross section:", sigma, ":", error_sigma, ":[pb]"
   end if
 
+  print*, "calculating iteration weightings ..."
   stantot = 0.d0
   do i = 1, it
     stantot = stantot + 1.d0 / standdevl(i) / standdevl(i)
@@ -237,7 +243,7 @@ program zprime
   end do
 
   do i = 1, it
-    write(log, *) "Iteration weighting:", i, ":", cnorm(i)
+    write(log, *) "iteration weighting:", i, ":", cnorm(i)
   end do
 
   if (final_state == 0) then
@@ -273,21 +279,21 @@ program zprime
     write(log, *) "APV:", apv, ":", error_apv
 
   end if
-  write(log, *) "VEGAS points:", npoints
-  if (ntuple_out) call rootclose
-  write(log, *) 'Author:Declan Millar'
+  write(log, *) "VEGAS points: ", npoints
+
+  if (ntuple_out) then
+    print*, "closing n-tuple ..."
+    call rootclose
+  end if
+
   call idate(today)     ! today(1):day, (2):month, (3):year
   call itime(now)       ! now(1):hour, (2):minute, (3):second
-  write(log, *) 'Date:', today(3), today(2), today(1)
-  write(log, *) 'Time:', now(1), now(2), now(3)
   call cpu_time(finish_time)
   runtime = finish_time - start_time
-  write(log, *) "Run-time:", runtime
+  write(log, *) "runtime: ", runtime
 
   if (lhef_out) then
-    call lhe_footer()
-    call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
-
+    print*, "calculating lhe beam info ..."
     idbm1 = 2212
     if (initial_state == 0) then
       idbm2 = 2212
@@ -300,11 +306,23 @@ program zprime
       pdfs(i) = 1
     end do
 
+    print*, "printing lhe footer ..."
+    call lhe_footer()
+    print*, "printing lhe header ..."
+    call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
+    print*, "printing lhe beam info ..."
     call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+    print*, "printing lhe process info ..."
     call lhe_process(sigma, error_sigma, 1.d0, 81)
+    print*, "closing lhe file ..."
     call lhe_close
   end if
 
+  write(log, *) 'author: Declan Millar'
+  write(log, *) 'date: ', today(3), today(2), today(1)
+  write(log, *) 'time: ', now(1), now(2), now(3)
+  write(log, *) "runtime: ", runtime
   close(log)
+  print*, "zprime program completed in", runtime, "seconds"
   stop
 end program zprime

@@ -112,6 +112,8 @@ function dsigma(x, wgt)
 
   ! ---
 
+  if (verbose) print*, "--- begin dsigma ---"
+
   ! store top parameters
   mt = fmass(ffinal)
   gamt = fwidth(ffinal)
@@ -851,7 +853,7 @@ function dsigma(x, wgt)
         call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.0, 9.0) ! W-
         call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.0, 9.0) ! b~
         call lhe_add_particle(-11,  1,  6,  6,   0,   0, pcol(1:4,5), 0.0, 9.0) ! e+
-        call lhe_add_particle(-12,  1,  6,  6,   0,   0, pcol(1:4,6), 0.0, 9.0) ! ve
+        call lhe_add_particle( 12,  1,  6,  6,   0,   0, pcol(1:4,6), 0.0, 9.0) ! ve
         call lhe_add_particle(  1,  1, 10, 10, 104,   0, pcol(1:4,7), 0.0, 9.0) ! u~
         call lhe_add_particle( -2,  1, 10, 10,   0, 104, pcol(1:4,8), 0.0, 9.0) ! d
       else if (include_qq) then
@@ -861,14 +863,14 @@ function dsigma(x, wgt)
         call lhe_add_particle( -2, -1,  0,  0,   0, 102, pcol(1:4,2), 0.0, 9.0) ! u~
         call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    , 0.0, 9.0) ! t
         call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.0, 9.0) ! t~
-        call lhe_add_particle( 24,  2,  3,  3,   0,   0, pcol56     , 0.0, 9.0) ! W+
-        call lhe_add_particle(  5,  1,  3,  3, 101,   0, pcol(1:4,3), 0.0, 9.0) ! b
-        call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.0, 9.0) ! W-
-        call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.0, 9.0) ! b~
-        call lhe_add_particle( -1,  1,  6,  6,   0,   0, pcol(1:4,5), 0.0, 9.0) ! e+
-        call lhe_add_particle(  2,  1,  6,  6,   0,   0, pcol(1:4,6), 0.0, 9.0) ! ve
-        call lhe_add_particle(  1,  1, 10, 10, 103,   0, pcol(1:4,7), 0.0, 9.0) ! u~
-        call lhe_add_particle( -2,  1, 10, 10,   0, 103, pcol(1:4,8), 0.0, 9.0) ! d
+        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.0, 9.0) ! W+
+        call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3), 0.0, 9.0) ! b
+        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.0, 9.0) ! W-
+        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.0, 9.0) ! b~
+        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.0, 9.0) ! e+
+        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.0, 9.0) ! ve
+        call lhe_add_particle( 11,  1,  7,  0,   0,   0, pcol(1:4,7), 0.0, 9.0) ! e-
+        call lhe_add_particle(-12,  1,  7,  0,   0,   0, pcol(1:4,8), 0.0, 9.0) ! ve~
       else if (include_uu) then
         ! u u~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve u~ d
         call lhe_add_event(12, 83, weight, qq, a_em, a_s)
@@ -908,6 +910,7 @@ function dsigma(x, wgt)
     if (verbose) print*, "Event", npoints, "complete."
     dsigma = dsigma + ddsigma
   end do
+  if (verbose) print*, "--- end dsigma ---"
   return
 end function dsigma
 
