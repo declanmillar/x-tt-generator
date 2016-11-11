@@ -7,7 +7,6 @@ function alfas(mu,lam,nloop)
     ! matching achieved using renorm group eqn. approximately
     ! above mu=mb,mu=mt
 
-    use kinds
     use modelling, only: cmass, bmass, tmass
 
     implicit none

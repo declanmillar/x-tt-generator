@@ -364,7 +364,7 @@ contains
   end subroutine luxury_state_integer
   elemental subroutine luxury_state_real (s, consumption)
     type(tao_random_state), intent(inout) :: s
-    real*8, intent(in) :: consumption
+    real(kind=default), intent(in) :: consumption
     call luxury_state_integer (s, int (consumption * size (s%buffer)))
   end subroutine luxury_state_real
   subroutine luxury_static ()
@@ -381,7 +381,7 @@ contains
     call luxury_stateless (size (s_buffer), s_buffer_end, s_last, consumption)
   end subroutine luxury_static_integer
   subroutine luxury_static_real (consumption)
-    real*8, intent(in) :: consumption
+    real(kind=default), intent(in) :: consumption
     if (s_virginal) then
        call tao_random_seed ()
     end if
@@ -536,8 +536,8 @@ contains
     integer(kind=tao_i32), dimension(:), intent(inout) :: state, buffer
     integer, intent(in) :: buffer_end
     integer, intent(inout) :: last
-    real*8, intent(out) :: r
-    real*8, parameter :: NORM = 1.0_default / M
+    real(kind=default), intent(out) :: r
+    real(kind=default), parameter :: NORM = 1.0_default / M
     last = last + 1
     if (last > buffer_end) then
        call generate (buffer, state)
@@ -585,9 +585,9 @@ contains
     integer(kind=tao_i32), dimension(:), intent(inout) :: state, buffer
     integer, intent(in) :: buffer_end
     integer, intent(inout) :: last
-    real*8, dimension(:), intent(out) :: v
+    real(kind=default), dimension(:), intent(out) :: v
     integer, optional, intent(in) :: num
-    real*8, parameter :: NORM = 1.0_default / M
+    real(kind=default), parameter :: NORM = 1.0_default / M
     integer :: nu, done, todo, chunk
     if (present (num)) then
        nu = num
@@ -622,7 +622,7 @@ contains
   end subroutine integer_state
   elemental subroutine real_state (s, r)
     type(tao_random_state), intent(inout) :: s
-    real*8, intent(out) :: r
+    real(kind=default), intent(out) :: r
     call real_stateless (s%state%x, s%buffer, s%buffer_end, s%last, r)
   end subroutine real_state
   pure subroutine integer_array_state (s, v, num)
@@ -634,7 +634,7 @@ contains
   end subroutine integer_array_state
   pure subroutine real_array_state (s, v, num)
     type(tao_random_state), intent(inout) :: s
-    real*8, dimension(:), intent(out) :: v
+    real(kind=default), dimension(:), intent(out) :: v
     integer, optional, intent(in) :: num
     call real_array_stateless &
            (s%state%x, s%buffer, s%buffer_end, s%last, v, num)
@@ -647,7 +647,7 @@ contains
     call integer_stateless (s_state, s_buffer, s_buffer_end, s_last, r)
   end subroutine integer_static
   subroutine real_static (r)
-    real*8, intent(out) :: r
+    real(kind=default), intent(out) :: r
     if (s_virginal) then
        call tao_random_seed ()
     end if
@@ -663,7 +663,7 @@ contains
          (s_state, s_buffer, s_buffer_end, s_last, v, num)
   end subroutine integer_array_static
   subroutine real_array_static (v, num)
-    real*8, dimension(:), intent(out) :: v
+    real(kind=default), dimension(:), intent(out) :: v
     integer, optional, intent(in) :: num
     if (s_virginal) then
        call tao_random_seed ()

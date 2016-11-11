@@ -29,18 +29,18 @@ module products
        "$Id: products.nw 314 2010-04-17 20:32:33Z ohl $"
 contains
   pure function dot (p, q) result (pq)
-    real*8, dimension(0:), intent(in) :: p, q
-    real*8 :: pq
+    real(kind=default), dimension(0:), intent(in) :: p, q
+    real(kind=default) :: pq
     pq = p(0)*q(0) - dot_product (p(1:), q(1:))
   end function dot
   pure function sp (p, q) result (sppq)
-    real*8, dimension(0:), intent(in) :: p, q
+    real(kind=default), dimension(0:), intent(in) :: p, q
     complex(kind=default) :: sppq
     sppq = cmplx (p(2), p(3), kind=default) * sqrt ((q(0)-q(1))/(p(0)-p(1))) &
          - cmplx (q(2), q(3), kind=default) * sqrt ((p(0)-p(1))/(q(0)-q(1)))
   end function sp
   pure function spc (p, q) result (spcpq)
-    real*8, dimension(0:), intent(in) :: p, q
+    real(kind=default), dimension(0:), intent(in) :: p, q
     complex(kind=default) :: spcpq
     spcpq = conjg (sp (p, q))
   end function spc

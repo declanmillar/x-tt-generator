@@ -30,8 +30,8 @@ module vamp_stat
        "$Id: vamp_stat.nw 314 2010-04-17 20:32:33Z ohl $"
 contains
   pure function average (x) result (a)
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: a
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: a
     integer :: n
     n = size (x)
     if (n == 0) then
@@ -41,8 +41,8 @@ contains
     end if
   end function average
   pure function standard_deviation (x) result (s)
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: s
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: s
     integer :: n
     n = size (x)
     if (n < 2) then
@@ -53,14 +53,14 @@ contains
     end if
   end function standard_deviation
   pure function value_spread (x) result (s)
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: s
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: s
     s = maxval(x) - minval(x)
   end function value_spread
   pure function standard_deviation_percent (x) result (s)
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: s
-    real*8 :: abs_avg
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: s
+    real(kind=default) :: abs_avg
     abs_avg = abs (average (x))
     if (abs_avg <= tiny (abs_avg)) then
        s = huge (s)
@@ -69,9 +69,9 @@ contains
     end if
   end function standard_deviation_percent
   pure function value_spread_percent (x) result (s)
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: s
-    real*8 :: abs_avg
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: s
+    real(kind=default) :: abs_avg
     abs_avg = abs (average (x))
     if (abs_avg <= tiny (abs_avg)) then
        s = huge (s)

@@ -29,15 +29,15 @@ module specfun
   character(len=*), public, parameter :: SPECFUN_RCS_ID = &
        "$Id: specfun.nw 314 2010-04-17 20:32:33Z ohl $"
   !WK:
-  real*8, public, parameter :: &
+  real(kind=default), public, parameter :: &
        PI = 3.1415926535897932384626433832795028841972_default
 contains
   pure function gamma (x) result (g)
-    real*8, intent(in) :: x
-    real*8 :: g
+    real(kind=default), intent(in) :: x
+    real(kind=default) :: g
     integer :: i
-    real*8 :: u, f, alpha, b0, b1, b2
-    real*8, dimension(0:15), parameter :: &
+    real(kind=default) :: u, f, alpha, b0, b1, b2
+    real(kind=default), dimension(0:15), parameter :: &
          c = (/ 3.65738772508338244_default, &
                 1.95754345666126827_default, &
                 0.33829711382616039_default, &

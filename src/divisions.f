@@ -21,6 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module divisions
+
   use kinds
   use exceptions
   use vamp_stat
@@ -83,15 +84,15 @@ module divisions
   type, public :: division_t
   !   private
   !!! Avoiding a g95 bug 
-     real*8, dimension(:), pointer :: x => null ()
-     real*8, dimension(:), pointer :: integral => null ()
-     real*8, dimension(:), pointer &
+     real(kind=default), dimension(:), pointer :: x => null ()
+     real(kind=default), dimension(:), pointer :: integral => null ()
+     real(kind=default), dimension(:), pointer &
                                         :: variance => null ()
   !                                      public :: variance => null ()
-  !  real*8, dimension(:), pointer :: efficiency => null ()
-     real*8 :: x_min, x_max
-     real*8 :: x_min_true, x_max_true
-     real*8 :: dx, dxg
+  !  real(kind=default), dimension(:), pointer :: efficiency => null ()
+     real(kind=default) :: x_min, x_max
+     real(kind=default) :: x_min_true, x_max_true
+     real(kind=default) :: dx, dxg
      integer :: ng = 0
      logical :: stratified = .true.
   end type division_t
@@ -99,8 +100,8 @@ module divisions
      private
      logical :: stratified
      integer :: ng, num_div
-     real*8 :: x_min, x_max, x_min_true, x_max_true
-     real*8 :: &
+     real(kind=default) :: x_min, x_max, x_min_true, x_max_true
+     real(kind=default) :: &
           spread_f_p, stddev_f_p, spread_p, stddev_p, spread_m, stddev_m
   end type div_history
   integer, parameter, private :: MAGIC_DIVISION = 11111111
@@ -112,8 +113,8 @@ contains
   elemental subroutine create_division &
        (d, x_min, x_max, x_min_true, x_max_true)
     type(division_t), intent(out) :: d
-    real*8, intent(in) :: x_min, x_max
-    real*8, intent(in), optional :: x_min_true, x_max_true
+    real(kind=default), intent(in) :: x_min, x_max
+    real(kind=default), intent(in), optional :: x_min_true, x_max_true
     allocate (d%x(0:1), d%integral(1), d%variance(1))
   ! allocate (d%efficiency(1))
     d%x(0) = 0.0
@@ -155,7 +156,7 @@ contains
     integer, intent(in) :: max_num_div
     integer, intent(in), optional :: ng
     logical, intent(in), optional :: use_variance
-    real*8, dimension(:), allocatable :: old_x, m
+    real(kind=default), dimension(:), allocatable :: old_x, m
     integer :: num_div, equ_per_adap
     if (present (ng)) then
        if (max_num_div > 1) then
@@ -215,12 +216,12 @@ contains
 
   elemental subroutine inject_division (d, r, cell, x, x_mid, idx, wgt)
     type(division_t), intent(in) :: d
-    real*8, intent(in) :: r
+    real(kind=default), intent(in) :: r
     integer, intent(in) :: cell
-    real*8, intent(out) :: x, x_mid
+    real(kind=default), intent(out) :: x, x_mid
     integer, intent(out) :: idx
-    real*8, intent(out) :: wgt
-    real*8 :: delta_x, xi
+    real(kind=default), intent(out) :: wgt
+    real(kind=default) :: delta_x, xi
     integer :: i
     xi = (cell - r) * d%dxg + 1.0
     i = max (min (int (xi), ubound (d%x, dim=1)), 1)
@@ -233,10 +234,10 @@ contains
 
   elemental subroutine inject_division_short (d, r, x, idx, wgt)
     type(division_t), intent(in) :: d
-    real*8, intent(in) :: r
+    real(kind=default), intent(in) :: r
     integer, intent(out) :: idx
-    real*8, intent(out) :: x, wgt
-    real*8 :: delta_x, xi
+    real(kind=default), intent(out) :: x, wgt
+    real(kind=default) :: delta_x, xi
     integer :: i
     xi = r * ubound (d%x, dim=1) + 1.0
     i = max (min (int (xi), ubound (d%x, dim=1)), 1)
@@ -249,7 +250,7 @@ contains
   elemental subroutine record_integral (d, i, f)
     type(division_t), intent(inout) :: d
     integer, intent(in) :: i
-    real*8, intent(in) :: f
+    real(kind=default), intent(in) :: f
     d%integral(i) = d%integral(i) + f
     if (.not. d%stratified) then 
        d%variance(i) = d%variance(i) + f*f
@@ -259,7 +260,7 @@ contains
   elemental subroutine record_variance (d, i, var_f)
     type(division_t), intent(inout) :: d
     integer, intent(in) :: i
-    real*8, intent(in) :: var_f
+    real(kind=default), intent(in) :: var_f
     if (d%stratified) then 
        d%variance(i) = d%variance(i) + var_f
     end if
@@ -277,10 +278,10 @@ contains
     d%x = rebin (rebinning_weights (d%variance), d%x, size (d%variance))
   end subroutine refine_division
   pure function rebinning_weights (d) result (m)
-    real*8, dimension(:), intent(in) :: d
-    real*8, dimension(size(d)) :: m
-    real*8, dimension(size(d)) :: smooth_d
-    real*8, parameter :: ALPHA = 1.5
+    real(kind=default), dimension(:), intent(in) :: d
+    real(kind=default), dimension(size(d)) :: m
+    real(kind=default), dimension(size(d)) :: smooth_d
+    real(kind=default), parameter :: ALPHA = 1.5
     integer :: nd
     if (any (d /= d)) then
        m = 1.0
@@ -309,12 +310,12 @@ contains
     end if
   end function rebinning_weights
   pure function rebin (m, x, num_div) result (x_new)
-    real*8, dimension(:), intent(in) :: m
-    real*8, dimension(0:), intent(in) :: x
+    real(kind=default), dimension(:), intent(in) :: m
+    real(kind=default), dimension(0:), intent(in) :: x
     integer, intent(in) :: num_div
-    real*8, dimension(0:num_div) :: x_new
+    real(kind=default), dimension(0:num_div) :: x_new
     integer :: i, k
-    real*8 :: step, delta
+    real(kind=default) :: step, delta
     step = sum (m) / num_div
     k = 0
     delta = 0.0
@@ -334,9 +335,9 @@ contains
   end function rebin
   elemental function probability (d, x) result (p)
     type(division_t), intent(in) :: d
-    real*8, intent(in) :: x
-    real*8 :: p
-    real*8 :: xi
+    real(kind=default), intent(in) :: x
+    real(kind=default) :: p
+    real(kind=default) :: xi
     integer :: hi, mid, lo
     xi = (x - d%x_min) / d%dx
     if ((xi >= 0) .and. (xi <= 1)) then
@@ -360,7 +361,7 @@ contains
   end function probability
   elemental function quadrupole_division (d) result (q)
     type(division_t), intent(in) :: d
-    real*8 :: q
+    real(kind=default) :: q
     !!!   q = value_spread_percent (rebinning_weights (d%variance))
     q = standard_deviation_percent (rebinning_weights (d%variance))
   end function quadrupole_division
@@ -374,8 +375,8 @@ contains
     integer, dimension(size(ds)) :: n0, n1
     integer, dimension(0:size(ds)) :: n, ds_ng
     integer :: i, j, num_div, num_forks, nx
-    real*8, dimension(:), allocatable :: d_x, d_integral, d_variance
-  ! real*8, dimension(:), allocatable :: d_efficiency
+    real(kind=default), dimension(:), allocatable :: d_x, d_integral, d_variance
+  ! real(kind=default), dimension(:), allocatable :: d_efficiency
     num_div = ubound (d%x, dim=1)
     num_forks = size (ds)
     if (d%ng == 1) then
@@ -454,8 +455,8 @@ contains
     integer, dimension(size(ds)) :: n0, n1
     integer, dimension(0:size(ds)) :: n, ds_ng
     integer :: i, j, num_div, num_forks, nx
-    real*8, dimension(:), allocatable :: d_x, d_integral, d_variance
-  ! real*8, dimension(:), allocatable :: d_efficiency
+    real(kind=default), dimension(:), allocatable :: d_x, d_integral, d_variance
+  ! real(kind=default), dimension(:), allocatable :: d_efficiency
     num_div = ubound (d%x, dim=1)
     num_forks = size (ds)
     if (d%ng == 1) then
@@ -496,8 +497,8 @@ contains
     end if
   end subroutine join_division
   pure subroutine subdivide (x, x0)
-    real*8, dimension(0:), intent(inout) :: x
-    real*8, dimension(0:), intent(in) :: x0
+    real(kind=default), dimension(0:), intent(inout) :: x
+    real(kind=default), dimension(0:), intent(in) :: x0
     integer :: i, n, n0
     n0 = ubound (x0, dim=1)
     n = ubound (x, dim=1) / n0
@@ -507,8 +508,8 @@ contains
     end do
   end subroutine subdivide
   pure subroutine distribute (x, x0)
-    real*8, dimension(:), intent(inout) :: x
-    real*8, dimension(:), intent(in) :: x0
+    real(kind=default), dimension(:), intent(inout) :: x
+    real(kind=default), dimension(:), intent(in) :: x0
     integer :: i, n
     n = ubound (x, dim=1) / ubound (x0, dim=1)
     do i = 1, n
@@ -516,8 +517,8 @@ contains
     end do
   end subroutine distribute
   pure subroutine collect (x0, x)
-    real*8, dimension(:), intent(inout) :: x0
-    real*8, dimension(:), intent(in) :: x
+    real(kind=default), dimension(:), intent(inout) :: x0
+    real(kind=default), dimension(:), intent(in) :: x
     integer :: i, n, n0
     n0 = ubound (x0, dim=1)
     n = ubound (x, dim=1) / n0
@@ -569,7 +570,7 @@ contains
   end subroutine dump_division
   elemental function inside_division (d, x) result (theta)
     type(division_t), intent(in) :: d
-    real*8, intent(in) :: x
+    real(kind=default), intent(in) :: x
     logical :: theta
     theta = (x >= d%x_min_true) .and. (x <= d%x_max_true)
   end function inside_division
@@ -580,7 +581,7 @@ contains
   end function stratified_division
   elemental function volume_division (d) result (vol)
     type(division_t), intent(in) :: d
-    real*8 :: vol
+    real(kind=default) :: vol
     vol = d%dx
   end function volume_division
   elemental function rigid_division (d) result (n)
@@ -596,7 +597,7 @@ contains
   elemental function summarize_division (d) result (s)
     type(division_t), intent(in) :: d
     type(div_history) :: s
-    real*8, dimension(:), allocatable :: p, m
+    real(kind=default), dimension(:), allocatable :: p, m
     allocate (p(ubound(d%x,dim=1)), m(ubound(d%x,dim=1)))
     p = probabilities (d%x)
     m = rebinning_weights (d%variance)
@@ -616,8 +617,8 @@ contains
     deallocate (p, m)
   end function summarize_division
   pure function probabilities (x) result (p)
-    real*8, dimension(0:), intent(in) :: x
-    real*8, dimension(ubound(x,dim=1)) :: p
+    real(kind=default), dimension(0:), intent(in) :: x
+    real(kind=default), dimension(ubound(x,dim=1)) :: p
     integer :: num_div
     num_div = ubound (x, dim=1)
     p = 1.0 / (x(1:num_div) - x(0:num_div-1))
@@ -873,7 +874,7 @@ contains
   pure subroutine marshal_division (d, ibuf, dbuf)
     type(division_t), intent(in) :: d
     integer, dimension(:), intent(inout) :: ibuf
-    real*8, dimension(:), intent(inout) :: dbuf
+    real(kind=default), dimension(:), intent(inout) :: dbuf
     integer :: num_div
     num_div = ubound (d%x, dim=1)
     ibuf(1) = d%ng
@@ -904,7 +905,7 @@ contains
   pure subroutine unmarshal_division (d, ibuf, dbuf)
     type(division_t), intent(inout) :: d
     integer, dimension(:), intent(in) :: ibuf
-    real*8, dimension(:), intent(in) :: dbuf
+    real(kind=default), dimension(:), intent(in) :: dbuf
     integer :: num_div
     d%ng = ibuf(1)
     num_div = ibuf(2)
@@ -934,7 +935,7 @@ contains
   pure subroutine marshal_div_history (h, ibuf, dbuf)
     type(div_history), intent(in) :: h
     integer, dimension(:), intent(inout) :: ibuf
-    real*8, dimension(:), intent(inout) :: dbuf
+    real(kind=default), dimension(:), intent(inout) :: dbuf
     ibuf(1) = h%ng
     ibuf(2) = h%num_div
     if (h%stratified) then
@@ -962,7 +963,7 @@ contains
   pure subroutine unmarshal_div_history (h, ibuf, dbuf)
     type(div_history), intent(inout) :: h
     integer, dimension(:), intent(in) :: ibuf
-    real*8, dimension(:), intent(in) :: dbuf
+    real(kind=default), dimension(:), intent(in) :: dbuf
     h%ng = ibuf(1)
     h%num_div = ibuf(2)
     h%stratified = ibuf(3) /= 0

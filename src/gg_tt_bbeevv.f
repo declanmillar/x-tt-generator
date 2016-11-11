@@ -314,7 +314,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
   ! constants
   integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 8
-  real, parameter :: zero = 0.d0
+  real*8, parameter :: zero = 0.d0
 
   ! arguments
   real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
@@ -329,6 +329,11 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   complex*16 w6(6), w7(6), w8(6), w9(6), w10(6)
   complex*16 w11(6), w12(6), w13(6), w14(6), w15(6)
 
+  ! initialise amplitudes
+  do i = 1, ngraphs
+    amp(i) = 0.d0
+  enddo
+
   ! color data
   data eigen_val(1) /7.2916666666666588e-02/
   data eigen_vec(1, 1) /7.0710678118654768e-01/
@@ -340,7 +345,6 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   data eigen_vec(3, 2) /8.1649658092772603e-01/
 
   ! wavefunctions
-  print*, "bork"
   call vxxxxx(p1, zero, nhel(1), -1, w1)
   call vxxxxx(p2, zero, nhel(2), -1, w2)
   call oxxxxx(p3, fmass(12), nhel(3), 1, w3)
@@ -351,7 +355,6 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   call ixxxxx(p8, zero, nhel(8), -1, w8)
 
   ! currents
-  print*, "bork 2"
   call jioxxx(w5, w7, gwf, wmass, wwidth, w9)
   call jioxxx(w8, w6, gwf, wmass, wwidth, w10)
   call fvoxxx(w3, w9, gwf, fmass(11), fwidth(11), w11)

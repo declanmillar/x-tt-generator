@@ -111,26 +111,12 @@ program zprime
         m7 = 0.d0
         m8 = 0.d0
     else if (final_state == 1) then
-        m3 = bmass
-        m4 = bmass
-        m5 = emass
-        m6 = nuemass
-        m7 = emass
-        m8 = nuemass
-    else if (final_state == 2) then
         m3 = fmass(12)
         m4 = fmass(12)
-        m5 = emass
-        m6 = nuemass
-        m7 = emass
-        m8 = nuemass
-    else if (final_state == 3) then
-        m3 = fmass(12)
-        m4 = fmass(12)
-        m5 = fmass(1)
-        m6 = fmass(5)
-        m7 = fmass(2)
-        m8 = fmass(6)
+        m5 = 0.d0
+        m6 = 0.d0
+        m7 = 0.d0
+        m8 = 0.d0
     end if
 
     use_vamp = .true.
@@ -286,7 +272,7 @@ program zprime
         call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
         call handle_exception (exc)
         call clear_exception (exc)
-        print*, "initial sampling of VAMP grid..."
+        print*, "initial sampling of VAMP grid with ", ncall / 10, " points"
         call vamp_sample_grid (rng, grid, dsigma, NO_DATA, 6, error_sigma, chi2_sigma, exc = exc)
         call handle_exception (exc)
         call clear_exception (exc)
@@ -294,7 +280,7 @@ program zprime
         call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
         call handle_exception (exc)
         call clear_exception (exc)
-        print*, "initial sampling of VAMP grid..."
+        print*, "full sampling of VAMP grid with ", ncall, " points"
         call vamp_sample_grid (rng, grid, dsigma, NO_DATA, 4, error_sigma, chi2_sigma, exc = exc)
         call handle_exception (exc)
         print *, "integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"

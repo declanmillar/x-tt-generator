@@ -93,7 +93,7 @@ contains
     lhs = 0
   end subroutine create_integer_array_pointer
   pure subroutine create_real_array_pointer (lhs, n, lb)
-    real*8, dimension(:), pointer :: lhs
+    real(kind=default), dimension(:), pointer :: lhs
     integer, intent(in) :: n
     integer, intent(in), optional :: lb
     if (associated (lhs)) then
@@ -137,7 +137,7 @@ contains
     lhs = 0
   end subroutine create_integer_array2_pointer
   pure subroutine create_real_array2_pointer (lhs, n, lb)
-    real*8, dimension(:,:), pointer :: lhs
+    real(kind=default), dimension(:,:), pointer :: lhs
     integer, dimension(:), intent(in) :: n
     integer, dimension(:), intent(in), optional :: lb
     if (associated (lhs)) then
@@ -166,8 +166,8 @@ contains
     lhs = rhs
   end subroutine copy_integer_array_pointer
   pure subroutine copy_real_array_pointer (lhs, rhs, lb)
-    real*8, dimension(:), pointer :: lhs
-    real*8, dimension(:), intent(in) :: rhs
+    real(kind=default), dimension(:), pointer :: lhs
+    real(kind=default), dimension(:), intent(in) :: rhs
     integer, intent(in), optional :: lb
     call create_real_array_pointer (lhs, size (rhs), lb)
     lhs = rhs
@@ -181,8 +181,8 @@ contains
     lhs = rhs
   end subroutine copy_integer_array2_pointer
   pure subroutine copy_real_array2_pointer (lhs, rhs, lb)
-    real*8, dimension(:,:), pointer :: lhs
-    real*8, dimension(:,:), intent(in) :: rhs
+    real(kind=default), dimension(:,:), pointer :: lhs
+    real(kind=default), dimension(:,:), intent(in) :: rhs
     integer, dimension(:), intent(in), optional :: lb
     call create_real_array2_pointer &
          (lhs, (/ size (rhs, dim=1), size (rhs, dim=2) /), lb)
@@ -196,14 +196,14 @@ contains
     b = tmp
   end subroutine swap_integer
   elemental subroutine swap_real (a, b)
-    real*8, intent(inout) :: a, b
-    real*8 :: tmp
+    real(kind=default), intent(inout) :: a, b
+    real(kind=default) :: tmp
     tmp = a
     a = b
     b = tmp
   end subroutine swap_real
   pure subroutine sort_real (key, reverse)
-    real*8, dimension(:), intent(inout) :: key
+    real(kind=default), dimension(:), intent(inout) :: key
     logical, intent(in), optional :: reverse
     logical :: rev
     integer :: i, j
@@ -224,8 +224,8 @@ contains
     end do
   end subroutine sort_real
   pure subroutine sort_real_and_real_array (key, table, reverse)
-    real*8, dimension(:), intent(inout) :: key
-    real*8, dimension(:,:), intent(inout) :: table
+    real(kind=default), dimension(:), intent(inout) :: key
+    real(kind=default), dimension(:,:), intent(inout) :: table
     logical, intent(in), optional :: reverse
     logical :: rev
     integer :: i, j
@@ -247,7 +247,7 @@ contains
     end do
   end subroutine sort_real_and_real_array
   pure subroutine sort_real_and_integer (key, table, reverse)
-    real*8, dimension(:), intent(inout) :: key
+    real(kind=default), dimension(:), intent(inout) :: key
     integer, dimension(:), intent(inout) :: table
     logical, intent(in), optional :: reverse
     logical :: rev
@@ -270,8 +270,8 @@ contains
     end do
   end subroutine sort_real_and_integer
   pure function outer_product (x, y) result (xy)
-    real*8, dimension(:), intent(in) :: x, y
-    real*8, dimension(size(x),size(y)) :: xy
+    real(kind=default), dimension(:), intent(in) :: x, y
+    real(kind=default), dimension(size(x),size(y)) :: xy
     xy = spread (x, dim=2, ncopies=size(y)) &
            * spread (y, dim=1, ncopies=size(x))
   end function outer_product

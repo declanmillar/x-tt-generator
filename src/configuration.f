@@ -1,6 +1,5 @@
 module configuration
 
-  use kinds
   use integration, only: seed, itmx, ncall, acc
 
   implicit none

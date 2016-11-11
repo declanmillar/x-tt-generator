@@ -34,11 +34,11 @@ module linalg
        "$Id: linalg.nw 314 2010-04-17 20:32:33Z ohl $"
 contains
   pure subroutine lu_decompose (a, pivots, eps, l, u)
-    real*8, dimension(:,:), intent(inout) :: a
+    real(kind=default), dimension(:,:), intent(inout) :: a
     integer, dimension(:), intent(out), optional :: pivots
-    real*8, intent(out), optional :: eps
-    real*8, dimension(:,:), intent(out), optional :: l, u
-    real*8, dimension(size(a,dim=1)) :: vv
+    real(kind=default), intent(out), optional :: eps
+    real(kind=default), dimension(:,:), intent(out), optional :: l, u
+    real(kind=default), dimension(size(a,dim=1)) :: vv
     integer, dimension(size(a,dim=1)) :: p
     integer :: j, pivot
     if (present (eps)) then
@@ -94,9 +94,9 @@ contains
     end if
   end subroutine lu_decompose
   pure subroutine determinant (a, det)
-    real*8, dimension(:,:), intent(in) :: a
-    real*8, intent(out) :: det
-    real*8, dimension(size(a,dim=1),size(a,dim=2)) :: lu
+    real(kind=default), dimension(:,:), intent(in) :: a
+    real(kind=default), intent(out) :: det
+    real(kind=default), dimension(size(a,dim=1),size(a,dim=2)) :: lu
     integer :: i
     lu = a
     call lu_decompose (lu, eps = det)
@@ -105,12 +105,12 @@ contains
     end do
   end subroutine determinant
   pure subroutine diagonalize_real_symmetric (a, eval, evec, num_rot)
-    real*8, dimension(:,:), intent(in) :: a
-    real*8, dimension(:), intent(out) :: eval
-    real*8, dimension(:,:), intent(out) :: evec
+    real(kind=default), dimension(:,:), intent(in) :: a
+    real(kind=default), dimension(:), intent(out) :: eval
+    real(kind=default), dimension(:,:), intent(out) :: evec
     integer, intent(out), optional :: num_rot
-    real*8, dimension(size(a,dim=1),size(a,dim=2)) :: aa
-    real*8 :: off_diagonal_norm, threshold, &
+    real(kind=default), dimension(size(a,dim=1),size(a,dim=2)) :: aa
+    real(kind=default) :: off_diagonal_norm, threshold, &
          c, g, h, s, t, tau, cot_2phi
     logical, dimension(size(eval),size(eval)) :: upper_triangle
     integer, dimension(size(eval)) :: one_to_ndim
@@ -175,15 +175,15 @@ contains
   !!! print *, "linalg::diagonalize_real_symmetric: exceeded sweep count"
   end subroutine diagonalize_real_symmetric
   pure subroutine jacobi_rotation (s, tau, vp, vq)
-    real*8, intent(in) :: s, tau
-    real*8, dimension(:), intent(inout) :: vp, vq
-    real*8, dimension(size(vp)) :: vp_tmp
+    real(kind=default), intent(in) :: s, tau
+    real(kind=default), dimension(:), intent(inout) :: vp, vq
+    real(kind=default), dimension(size(vp)) :: vp_tmp
     vp_tmp = vp
     vp = vp - s * (vq     + tau * vp)
     vq = vq + s * (vp_tmp - tau * vq)
   end subroutine jacobi_rotation
   pure subroutine unit (u)
-    real*8, dimension(:,:), intent(out) :: u
+    real(kind=default), dimension(:,:), intent(out) :: u
     integer :: i
     u = 0.0
     do i = 1, min (size (u, dim = 1), size (u, dim = 2))
@@ -191,8 +191,8 @@ contains
     end do
   end subroutine unit
   pure function diag (a) result (d)
-    real*8, dimension(:,:), intent(in) :: a
-    real*8, dimension(min(size(a,dim=1),size(a,dim=2))) :: d
+    real(kind=default), dimension(:,:), intent(in) :: a
+    real(kind=default), dimension(min(size(a,dim=1),size(a,dim=2))) :: d
     integer :: i
     do i = 1, min (size (a, dim = 1), size (a, dim = 2))
        d(i) = a(i,i)

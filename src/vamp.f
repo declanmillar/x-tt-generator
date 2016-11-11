@@ -27,17 +27,17 @@ module vamp_grid_type
   type, public :: vamp_grid
      ! private !: forced by \texttt{use} association in interface
      type(division_t), dimension(:), pointer :: div => null ()
-     real*8, dimension(:,:), pointer :: map => null ()
-     real*8, dimension(:), pointer :: mu_x => null ()
-     real*8, dimension(:), pointer :: sum_mu_x => null ()
-     real*8, dimension(:,:), pointer :: mu_xx => null ()
-     real*8, dimension(:,:), pointer :: sum_mu_xx => null ()
-     real*8, dimension(2) :: mu
-     real*8, dimension(2) :: mu_plus, mu_minus
-     real*8 :: sum_integral, sum_weights, sum_chi2
-     real*8 :: calls, dv2g, jacobi
-     real*8 :: f_min, f_max
-     real*8 :: mu_gi, sum_mu_gi
+     real(kind=default), dimension(:,:), pointer :: map => null ()
+     real(kind=default), dimension(:), pointer :: mu_x => null ()
+     real(kind=default), dimension(:), pointer :: sum_mu_x => null ()
+     real(kind=default), dimension(:,:), pointer :: mu_xx => null ()
+     real(kind=default), dimension(:,:), pointer :: sum_mu_xx => null ()
+     real(kind=default), dimension(2) :: mu
+     real(kind=default), dimension(2) :: mu_plus, mu_minus
+     real(kind=default) :: sum_integral, sum_weights, sum_chi2
+     real(kind=default) :: calls, dv2g, jacobi
+     real(kind=default) :: f_min, f_max
+     real(kind=default) :: mu_gi, sum_mu_gi
      integer, dimension(:), pointer :: num_div => null ()
      integer :: num_calls, calls_per_cell
      logical :: stratified = .true.
@@ -379,7 +379,7 @@ module vamp_rest
 
   type, public :: vamp_history
      private
-     real*8 :: &
+     real(kind=default) :: &
           integral, std_dev, avg_integral, avg_std_dev, avg_chi2, f_min, f_max
      integer :: calls
      logical :: stratified
@@ -388,13 +388,13 @@ module vamp_rest
   end type vamp_history
   type, public :: vamp_grids
      !!! private !: \emph{used by \texttt{vampi}}
-     real*8, dimension(:), pointer :: weights => null ()
+     real(kind=default), dimension(:), pointer :: weights => null ()
      type(vamp_grid), dimension(:), pointer :: grids => null ()
      integer, dimension(:), pointer :: num_calls => null ()
-     real*8 :: sum_chi2, sum_integral, sum_weights
+     real(kind=default) :: sum_chi2, sum_integral, sum_weights
   end type vamp_grids
   integer, private, parameter :: NUM_DIV_DEFAULT = 20
-  real*8, private, parameter :: QUAD_POWER = 0.5_default
+  real(kind=default), private, parameter :: QUAD_POWER = 0.5_default
   integer, private, parameter :: BUFFER_SIZE = 50
   character(len=*), parameter, private :: &
        descr_fmt =         "(1x,a)", &
@@ -411,14 +411,14 @@ contains
        (g, domain, num_calls, num_div, &
         stratified, quadrupole, covariance, map, exc)
     type(vamp_grid), intent(inout) :: g
-    real*8, dimension(:,:), intent(in) :: domain
+    real(kind=default), dimension(:,:), intent(in) :: domain
     integer, intent(in) :: num_calls
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole, covariance
-    real*8, dimension(:,:), intent(in), optional :: map
+    real(kind=default), dimension(:,:), intent(in), optional :: map
     type(exception), intent(inout), optional :: exc
     character(len=*), parameter :: FN = "vamp_create_grid"
-    real*8, dimension(size(domain,dim=2)) :: &
+    real(kind=default), dimension(size(domain,dim=2)) :: &
          x_min, x_max, x_min_true, x_max_true
     integer :: ndim
     ndim = size (domain, dim=2)
@@ -452,10 +452,10 @@ contains
          (g, num_calls, num_div, stratified, quadrupole, covariance, exc)
   end subroutine vamp_create_grid
   pure subroutine map_domain (map, true_xmin, true_xmax, xmin, xmax)
-    real*8, dimension(:,:), intent(in) :: map
-    real*8, dimension(:), intent(in) :: true_xmin, true_xmax
-    real*8, dimension(:), intent(out) :: xmin, xmax
-    real*8, dimension(2**size(xmin),size(xmin)) :: corners
+    real(kind=default), dimension(:,:), intent(in) :: map
+    real(kind=default), dimension(:), intent(in) :: true_xmin, true_xmax
+    real(kind=default), dimension(:), intent(out) :: xmin, xmax
+    real(kind=default), dimension(2**size(xmin),size(xmin)) :: corners
     integer, dimension(size(xmin)) :: zero_to_n
     integer :: j, ndim, perm
     ndim = size (xmin)
@@ -614,7 +614,7 @@ contains
   end function vamp_rigid_divisions
   pure function vamp_get_covariance (g) result (cov)
     type(vamp_grid), intent(in) :: g
-    real*8, dimension(size(g%div),size(g%div)) :: cov
+    real(kind=default), dimension(size(g%div),size(g%div)) :: cov
     if (associated (g%mu_x)) then
        if (abs (g%sum_weights) <= tiny (cov(1,1))) then
           where (g%sum_mu_xx == 0.0_default)
@@ -639,7 +639,7 @@ contains
   end subroutine vamp_nullify_covariance
   elemental function vamp_get_variance (g) result (v)
     type(vamp_grid), intent(in) :: g
-    real*8 :: v
+    real(kind=default) :: v
     if (abs (g%sum_weights) <= tiny (v)) then
        if (g%sum_mu_gi == 0.0_default) then
           v = 0.0
@@ -661,7 +661,7 @@ contains
       type(vamp_grid), intent(inout) :: g
       class(vamp_data_t), intent(in) :: data
       integer, intent(in), optional :: channel
-      real*8, dimension(:), intent(in), optional :: weights
+      real(kind=default), dimension(:), intent(in), optional :: weights
       type(vamp_grid), dimension(:), intent(in), optional :: grids
       type(exception), intent(inout), optional :: exc
       interface
@@ -669,27 +669,27 @@ contains
            use kinds
            use vamp_grid_type !NODEP!
            import vamp_data_t
-           real*8, dimension(:), intent(in) :: xi
+           real(kind=default), dimension(:), intent(in) :: xi
            class(vamp_data_t), intent(in) :: data
-           real*8, dimension(:), intent(in), optional :: weights
+           real(kind=default), dimension(:), intent(in), optional :: weights
            integer, intent(in), optional :: channel
            type(vamp_grid), dimension(:), intent(in), optional :: grids
-           real*8 :: f
+           real(kind=default) :: f
          end function func
       end interface
       character(len=*), parameter :: FN = "vamp_sample_grid0"
       logical, intent(in), optional :: negative_weights
-      real*8, parameter :: &
+      real(kind=default), parameter :: &
            eps =  tiny (1._default) / epsilon (1._default)
       character(len=6) :: buffer
       integer :: j, k
       integer, dimension(size(g%div)) :: cell
-      real*8 :: wgt, f, f2
-      real*8 :: sum_f, sum_f2, var_f
-      real*8 :: sum_f_plus, sum_f2_plus, var_f_plus
-      real*8 :: sum_f_minus, sum_f2_minus, var_f_minus
-      real*8, dimension(size(g%div)):: x, x_mid, wgts
-      real*8, dimension(size(g%div)):: r
+      real(kind=default) :: wgt, f, f2
+      real(kind=default) :: sum_f, sum_f2, var_f
+      real(kind=default) :: sum_f_plus, sum_f2_plus, var_f_plus
+      real(kind=default) :: sum_f_minus, sum_f2_minus, var_f_minus
+      real(kind=default), dimension(size(g%div)):: x, x_mid, wgts
+      real(kind=default), dimension(size(g%div)):: r
       integer, dimension(size(g%div)) :: ia
       integer :: ndim
       logical :: neg_w
@@ -864,8 +864,8 @@ contains
 
   pure function vamp_probability (g, x) result (p)
     type(vamp_grid), intent(in) :: g
-    real*8, dimension(:), intent(in) :: x
-    real*8 :: p
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default) :: p
     p = product (probability (g%div, x))
   end function vamp_probability
   subroutine vamp_apply_equivalences (g, eq)
@@ -873,7 +873,7 @@ contains
     type(vamp_equivalences_t), intent(in) :: eq
     integer :: n_ch, n_dim, nb, i, ch, ch_src, dim, dim_src
     integer, dimension(:,:), allocatable :: n_bin
-    real*8, dimension(:,:,:), allocatable :: var_tmp
+    real(kind=default), dimension(:,:,:), allocatable :: var_tmp
     n_ch = size (g%grids)
     if (n_ch == 0)  return
     n_dim = size (g%grids(1)%div)
@@ -918,7 +918,7 @@ contains
   pure subroutine vamp_refine_grid (g, exc)
     type(vamp_grid), intent(inout) :: g
     type(exception), intent(inout), optional :: exc
-    real*8, dimension(size(g%div)) :: quad
+    real(kind=default), dimension(size(g%div)) :: quad
     integer :: ndim
     if (g%quadrupole) then
        ndim = size (g%div)
@@ -947,10 +947,10 @@ contains
     type(vamp_grid), intent(inout) :: g
     class(vamp_data_t), intent(in) :: data
     integer, intent(in) :: iterations
-    real*8, intent(out), optional :: integral, std_dev, avg_chi2
-    real*8, intent(in), optional :: accuracy
+    real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
+    real(kind=default), intent(in), optional :: accuracy
     integer, intent(in), optional :: channel
-    real*8, dimension(:), intent(in), optional :: weights
+    real(kind=default), dimension(:), intent(in), optional :: weights
     type(vamp_grid), dimension(:), intent(in), optional :: grids
     type(exception), intent(inout), optional :: exc
     type(vamp_history), dimension(:), intent(inout), optional :: history
@@ -959,16 +959,16 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     character(len=*), parameter :: FN = "vamp_sample_grid"
-    real*8 :: local_integral, local_std_dev, local_avg_chi2
+    real(kind=default) :: local_integral, local_std_dev, local_avg_chi2
     integer :: iteration, ndim
     ndim = size (g%div)
     iterate: do iteration = 1, iterations
@@ -1009,8 +1009,8 @@ contains
        (g, iteration, integral, std_dev, avg_chi2)
     type(vamp_grid), intent(in) :: g
     integer, intent(in) :: iteration
-    real*8, intent(out) :: integral, std_dev, avg_chi2
-    real*8, parameter :: eps = 1000 * epsilon (1._default)
+    real(kind=default), intent(out) :: integral, std_dev, avg_chi2
+    real(kind=default), parameter :: eps = 1000 * epsilon (1._default)
     if (g%sum_weights>0) then
        integral = g%sum_integral / g%sum_weights
        std_dev = sqrt (1.0 / g%sum_weights)
@@ -1241,10 +1241,10 @@ contains
     type(vamp_grid), intent(inout) :: g
     class(vamp_data_t), intent(in) :: data
     integer, intent(in) :: iterations
-    real*8, intent(out), optional :: integral, std_dev, avg_chi2
-    real*8, intent(in), optional :: accuracy
+    real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
+    real(kind=default), intent(in), optional :: accuracy
     integer, intent(in), optional :: channel
-    real*8, dimension(:), intent(in), optional :: weights
+    real(kind=default), dimension(:), intent(in), optional :: weights
     type(vamp_grid), dimension(:), intent(in), optional :: grids
     type(exception), intent(inout), optional :: exc
     type(vamp_history), dimension(:), intent(inout), optional :: history
@@ -1253,16 +1253,16 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     character(len=*), parameter :: FN = "vamp_sample_grid_parallel"
-    real*8 :: local_integral, local_std_dev, local_avg_chi2
+    real(kind=default) :: local_integral, local_std_dev, local_avg_chi2
     type(exception), dimension(size(rng)) :: excs
     type(vamp_grid), dimension(:), allocatable :: gs, gx
     !hpf$ processors p(number_of_processors())
@@ -1397,7 +1397,7 @@ contains
   pure subroutine vamp_get_history_single (h, g, integral, std_dev, avg_chi2)
     type(vamp_history), intent(inout) :: h
     type(vamp_grid), intent(in) :: g
-    real*8, intent(in) :: integral, std_dev, avg_chi2
+    real(kind=default), intent(in) :: integral, std_dev, avg_chi2
     h%calls = g%calls
     h%stratified = g%all_stratified
     h%integral = g%mu(1)
@@ -1572,8 +1572,8 @@ contains
   function vamp_multi_channel &
        (func, data, phi, ihp, jacobian, x, weights, channel, grids) result (w_x)
     class(vamp_data_t), intent(in) :: data
-    real*8, dimension(:), intent(in) :: x
-    real*8, dimension(:), intent(in) :: weights
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default), dimension(:), intent(in) :: weights
     integer, intent(in) :: channel
     type(vamp_grid), dimension(:), intent(in) :: grids
     interface
@@ -1581,28 +1581,28 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     interface
        pure function phi (xi, channel) result (x)
          use kinds
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
-         real*8, dimension(size(xi)) :: x
+         real(kind=default), dimension(size(xi)) :: x
        end function phi
     end interface
     interface
        pure function ihp (x, channel) result (xi)
          use kinds
-         real*8, dimension(:), intent(in) :: x
+         real(kind=default), dimension(:), intent(in) :: x
          integer, intent(in) :: channel
-         real*8, dimension(size(x)) :: xi
+         real(kind=default), dimension(size(x)) :: xi
        end function ihp
     end interface
     interface
@@ -1610,16 +1610,16 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: x
+         real(kind=default), dimension(:), intent(in) :: x
          class(vamp_data_t), intent(in) :: data
          integer, intent(in) :: channel
-         real*8 :: j
+         real(kind=default) :: j
        end function jacobian
     end interface
-    real*8 :: w_x
+    real(kind=default) :: w_x
     integer :: i
-    real*8, dimension(size(x)) :: phi_x
-    real*8, dimension(size(weights)) :: g_phi_x, g_pi_x
+    real(kind=default), dimension(size(x)) :: phi_x
+    real(kind=default), dimension(size(weights)) :: g_phi_x, g_pi_x
     phi_x = phi (x, channel)
     do i = 1, size (weights)
        if (i == channel) then
@@ -1637,28 +1637,28 @@ contains
   function vamp_multi_channel0 &
        (func, data, phi, jacobian, x, weights, channel) result (w_x)
     class(vamp_data_t), intent(in) :: data
-    real*8, dimension(:), intent(in) :: x
-    real*8, dimension(:), intent(in) :: weights
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default), dimension(:), intent(in) :: weights
     integer, intent(in) :: channel
     interface
        function func (xi, data, weights, channel, grids) result (f)
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     interface
        pure function phi (xi, channel) result (x)
          use kinds
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
-         real*8, dimension(size(xi)) :: x
+         real(kind=default), dimension(size(xi)) :: x
        end function phi
     end interface
     interface
@@ -1666,15 +1666,15 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: x
+         real(kind=default), dimension(:), intent(in) :: x
          class(vamp_data_t), intent(in) :: data
          integer, intent(in) :: channel
-         real*8 :: j
+         real(kind=default) :: j
        end function jacobian
     end interface
-    real*8 :: w_x
-    real*8, dimension(size(x)) :: x_prime
-    real*8, dimension(size(weights)) :: g_phi_x
+    real(kind=default) :: w_x
+    real(kind=default), dimension(size(x)) :: x_prime
+    real(kind=default), dimension(size(weights)) :: g_phi_x
     integer :: i
     x_prime = phi (x, channel)
     do i = 1, size (weights)
@@ -1684,24 +1684,24 @@ contains
   end function vamp_multi_channel0
   pure subroutine vamp_jacobian (phi, channel, x, region, jacobian, delta_x)
     integer, intent(in) :: channel
-    real*8, dimension(:), intent(in) :: x
-    real*8, dimension(:,:), intent(in) :: region
-    real*8, intent(out) :: jacobian
-    real*8, intent(in), optional :: delta_x
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default), dimension(:,:), intent(in) :: region
+    real(kind=default), intent(out) :: jacobian
+    real(kind=default), intent(in), optional :: delta_x
     interface
        pure function phi (xi, channel) result (x)
          use kinds
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
-         real*8, dimension(size(xi)) :: x
+         real(kind=default), dimension(size(xi)) :: x
        end function phi
     end interface
-    real*8, dimension(size(x)) :: x_min, x_max
-    real*8, dimension(size(x)) :: x_plus, x_minus
-    real*8, dimension(size(x),size(x)) :: d_phi
-    real*8, parameter :: &
+    real(kind=default), dimension(size(x)) :: x_min, x_max
+    real(kind=default), dimension(size(x)) :: x_plus, x_minus
+    real(kind=default), dimension(size(x),size(x)) :: d_phi
+    real(kind=default), parameter :: &
          dx_default = 10.0_default**(-precision(jacobian)/3)
-    real*8 :: dx
+    real(kind=default) :: dx
     integer :: j
     if (present (delta_x)) then
        dx = delta_x
@@ -1729,33 +1729,33 @@ contains
     integer, intent(in) :: n
     class(vamp_data_t), intent(in) :: data
     integer, intent(in) :: channel
-    real*8, dimension(:,:), intent(in) :: region
-    real*8, intent(out) :: delta
-    real*8, dimension(:), intent(out), optional :: x_delta
+    real(kind=default), dimension(:,:), intent(in) :: region
+    real(kind=default), intent(out) :: delta
+    real(kind=default), dimension(:), intent(out), optional :: x_delta
     interface
        function func (xi, data, weights, channel, grids) result (f)
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     interface
        pure function phi (xi, channel) result (x)
          use kinds
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
-         real*8, dimension(size(xi)) :: x
+         real(kind=default), dimension(size(xi)) :: x
        end function phi
     end interface
-    real*8, dimension(size(region,dim=2)) :: x, r
-    real*8 :: jac, d
-    real*8, dimension(0) :: wgts
+    real(kind=default), dimension(size(region,dim=2)) :: x, r
+    real(kind=default) :: jac, d
+    real(kind=default), dimension(0) :: wgts
     integer :: i
     delta = 0.0
     do i = 1, max (1, n)
@@ -1776,10 +1776,10 @@ contains
        (g, domain, num_calls, weights, maps, num_div, &
         stratified, quadrupole, exc)
     type(vamp_grids), intent(inout) :: g
-    real*8, dimension(:,:), intent(in) :: domain
+    real(kind=default), dimension(:,:), intent(in) :: domain
     integer, intent(in) :: num_calls
-    real*8, dimension(:), intent(in) :: weights
-    real*8, dimension(:,:,:), intent(in), optional :: maps
+    real(kind=default), dimension(:), intent(in) :: weights
+    real(kind=default), dimension(:,:,:), intent(in), optional :: maps
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole
     type(exception), intent(inout), optional :: exc
@@ -1832,7 +1832,7 @@ contains
   pure subroutine vamp_update_weights &
        (g, weights, num_calls, num_div, stratified, quadrupole, exc)
     type(vamp_grids), intent(inout) :: g
-    real*8, dimension(:), intent(in) :: weights
+    real(kind=default), dimension(:), intent(in) :: weights
     integer, intent(in), optional :: num_calls
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole
@@ -1895,8 +1895,8 @@ contains
       type(vamp_grids), intent(inout) :: g
       class(vamp_data_t), intent(in) :: data
       integer, intent(in) :: iterations
-      real*8, intent(out), optional :: integral, std_dev, avg_chi2
-      real*8, intent(in), optional :: accuracy
+      real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
+      real(kind=default), intent(in), optional :: accuracy
       type(vamp_history), dimension(:), intent(inout), optional :: history
       type(vamp_history), dimension(:,:), intent(inout), optional :: histories
       type(exception), intent(inout), optional :: exc
@@ -1907,20 +1907,20 @@ contains
            use kinds
            use vamp_grid_type !NODEP!
            import vamp_data_t
-           real*8, dimension(:), intent(in) :: xi
+           real(kind=default), dimension(:), intent(in) :: xi
            class(vamp_data_t), intent(in) :: data
-           real*8, dimension(:), intent(in), optional :: weights
+           real(kind=default), dimension(:), intent(in), optional :: weights
            integer, intent(in), optional :: channel
            type(vamp_grid), dimension(:), intent(in), optional :: grids
-           real*8 :: f
+           real(kind=default) :: f
          end function func
       end interface
       integer :: ch, iteration
       logical :: neg_w
       type(exception), dimension(size(g%grids)) :: excs
       logical, dimension(size(g%grids)) :: active
-      real*8, dimension(size(g%grids)) :: weights, integrals, std_devs
-      real*8 :: local_integral, local_std_dev, local_avg_chi2
+      real(kind=default), dimension(size(g%grids)) :: weights, integrals, std_devs
+      real(kind=default) :: local_integral, local_std_dev, local_avg_chi2
       character(len=*), parameter :: FN = "vamp_sample_grids"
       integrals = 0
       std_devs = 0
@@ -2008,10 +2008,10 @@ contains
 
   pure subroutine vamp_reduce_channels (g, integrals, std_devs, active)
     type(vamp_grids), intent(inout) :: g
-    real*8, dimension(:), intent(in) :: integrals, std_devs
+    real(kind=default), dimension(:), intent(in) :: integrals, std_devs
     logical, dimension(:), intent(in) :: active
-    real*8 :: this_integral, this_weight, total_calls
-    real*8 :: total_variance
+    real(kind=default) :: this_integral, this_weight, total_calls
+    real(kind=default) :: total_variance
     if (.not.any(active)) return
     total_calls = sum (g%num_calls, mask=active)
     if (total_calls > 0) then
@@ -2033,8 +2033,8 @@ contains
        (g, iteration, integral, std_dev, avg_chi2)
     type(vamp_grids), intent(in) :: g
     integer, intent(in) :: iteration
-    real*8, intent(out) :: integral, std_dev, avg_chi2
-    real*8, parameter :: eps = 1000 * epsilon (1._default)
+    real(kind=default), intent(out) :: integral, std_dev, avg_chi2
+    real(kind=default), parameter :: eps = 1000 * epsilon (1._default)
     if (g%sum_weights>0) then
        integral = g%sum_integral / g%sum_weights
        std_dev = sqrt (1.0 / g%sum_weights)
@@ -2050,9 +2050,9 @@ contains
   end subroutine vamp_average_iterations_grids
   pure subroutine vamp_refine_weights (g, power)
     type(vamp_grids), intent(inout) :: g
-    real*8, intent(in), optional :: power
-    real*8 :: local_power 
-    real*8, parameter :: DEFAULT_POWER = 0.5_default
+    real(kind=default), intent(in), optional :: power
+    real(kind=default) :: local_power 
+    real(kind=default), parameter :: DEFAULT_POWER = 0.5_default
     if (present (power)) then
        local_power = power
     else
@@ -2064,7 +2064,7 @@ contains
   pure subroutine vamp_get_history_multi (h, g, integral, std_dev, avg_chi2)
     type(vamp_history), intent(inout) :: h
     type(vamp_grids), intent(in) :: g
-    real*8, intent(in) :: integral, std_dev, avg_chi2
+    real(kind=default), intent(in) :: integral, std_dev, avg_chi2
     h%calls = sum (g%grids%calls)
     h%stratified = all (g%grids%all_stratified)
     h%integral = 0.0
@@ -2082,7 +2082,7 @@ contains
     end if
   end subroutine vamp_get_history_multi
   function vamp_sum_channels (x, weights, func, data, grids) result (g)
-    real*8, dimension(:), intent(in) :: x, weights
+    real(kind=default), dimension(:), intent(in) :: x, weights
     class(vamp_data_t), intent(in) :: data
     type(vamp_grid), dimension(:), intent(in), optional :: grids
     interface
@@ -2090,15 +2090,15 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
-    real*8 :: g
+    real(kind=default) :: g
     integer :: ch
     g = 0.0
     do ch = 1, size (weights)
@@ -2106,11 +2106,11 @@ contains
     end do
   end function vamp_sum_channels
   subroutine more_pancake_than_cigar (eval, yes_or_no)
-    real*8, dimension(:), intent(in) :: eval
+    real(kind=default), dimension(:), intent(in) :: eval
     logical, intent(out) :: yes_or_no
     integer, parameter :: N_CL = 2
-    real*8, dimension(size(eval)) :: evals
-    real*8, dimension(N_CL) :: cluster_pos
+    real(kind=default), dimension(size(eval)) :: evals
+    real(kind=default), dimension(N_CL) :: cluster_pos
     integer, dimension(N_CL,2) :: clusters
     evals = eval
     call sort (evals)
@@ -2129,16 +2129,16 @@ contains
     end if
   end subroutine more_pancake_than_cigar
   subroutine select_rotation_axis (cov, r, pancake, cigar)
-    real*8, dimension(:,:), intent(in) :: cov
-    real*8, dimension(:,:), intent(out) :: r
+    real(kind=default), dimension(:,:), intent(in) :: cov
+    real(kind=default), dimension(:,:), intent(out) :: r
     integer, intent(in), optional :: pancake, cigar
     integer :: num_pancake, num_cigar
     logical :: like_pancake
-    real*8, dimension(size(cov,dim=1),size(cov,dim=2)) :: evecs
-    real*8, dimension(size(cov,dim=1)) :: evals, abs_evec
+    real(kind=default), dimension(size(cov,dim=1),size(cov,dim=2)) :: evecs
+    real(kind=default), dimension(size(cov,dim=1)) :: evals, abs_evec
     integer :: iv
     integer, dimension(2) :: i
-    real*8 :: cos_theta, sin_theta, norm
+    real(kind=default) :: cos_theta, sin_theta, norm
     if (present (pancake)) then
        num_pancake = pancake
     else
@@ -2181,11 +2181,11 @@ contains
     r(i(2),i) =  (/   sin_theta,   cos_theta /)
   end subroutine select_rotation_axis
   subroutine select_subspace_explicit (cov, r, subspace)
-    real*8, dimension(:,:), intent(in) :: cov
-    real*8, dimension(:,:), intent(out) :: r
+    real(kind=default), dimension(:,:), intent(in) :: cov
+    real(kind=default), dimension(:,:), intent(out) :: r
     integer, dimension(:), intent(in) :: subspace
-    real*8, dimension(size(subspace)) :: eval_sub
-    real*8, dimension(size(subspace),size(subspace)) :: &
+    real(kind=default), dimension(size(subspace)) :: eval_sub
+    real(kind=default), dimension(size(subspace),size(subspace)) :: &
          cov_sub, evec_sub
     cov_sub = cov(subspace,subspace)
     call diagonalize_real_symmetric (cov_sub, eval_sub, evec_sub)
@@ -2193,14 +2193,14 @@ contains
     r(subspace,subspace) = evec_sub
   end subroutine select_subspace_explicit
   subroutine select_subspace_guess (cov, r, ndim, pancake, cigar)
-    real*8, dimension(:,:), intent(in) :: cov
-    real*8, dimension(:,:), intent(out) :: r
+    real(kind=default), dimension(:,:), intent(in) :: cov
+    real(kind=default), dimension(:,:), intent(out) :: r
     integer, intent(in) :: ndim
     integer, intent(in), optional :: pancake, cigar
     integer :: num_pancake, num_cigar
     logical :: like_pancake
-    real*8, dimension(size(cov,dim=1),size(cov,dim=2)) :: evecs
-    real*8, dimension(size(cov,dim=1)) :: evals, abs_evec
+    real(kind=default), dimension(size(cov,dim=1),size(cov,dim=2)) :: evecs
+    real(kind=default), dimension(size(cov,dim=1)) :: evals, abs_evec
     integer :: iv, i
     integer, dimension(ndim) :: subspace
     if (present (pancake)) then
@@ -2237,10 +2237,10 @@ contains
     call select_subspace_explicit (cov, r, subspace)
   end subroutine select_subspace_guess
   subroutine vamp_print_covariance (cov)
-    real*8, dimension(:,:), intent(in) :: cov
-    real*8, dimension(size(cov,dim=1)) :: &
+    real(kind=default), dimension(:,:), intent(in) :: cov
+    real(kind=default), dimension(size(cov,dim=1)) :: &
          evals, abs_evals, tmp
-    real*8, dimension(size(cov,dim=1),size(cov,dim=2)) :: &
+    real(kind=default), dimension(size(cov,dim=1),size(cov,dim=2)) :: &
          evecs, abs_evecs
     integer, dimension(size(cov,dim=1)) :: idx
     integer :: i, i_max, j
@@ -2271,13 +2271,13 @@ contains
     print "(1X,A78)", repeat ("-", 78)
   end subroutine vamp_print_covariance
   subroutine condense (x, cluster_pos, clusters, linear)
-    real*8, dimension(:), intent(in) :: x
-    real*8, dimension(:), intent(out) :: cluster_pos
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default), dimension(:), intent(out) :: cluster_pos
     integer, dimension(:,:), intent(out) :: clusters
     logical, intent(in), optional :: linear
     logical :: linear_metric
-    real*8, dimension(size(x)) :: cl_pos
-    real*8 :: wgt0, wgt1
+    real(kind=default), dimension(size(x)) :: cl_pos
+    real(kind=default) :: wgt0, wgt1
     integer :: cl_num
     integer, dimension(size(x),2) :: cl
     integer :: i, gap
@@ -2306,9 +2306,9 @@ contains
     clusters = cl(1:cl_num,:)
   end subroutine condense
   function condense_action (positions, clusters) result (s)
-    real*8, dimension(:), intent(in) :: positions
+    real(kind=default), dimension(:), intent(in) :: positions
     integer, dimension(:,:), intent(in) :: clusters
-    real*8 :: s
+    real(kind=default) :: s
     integer :: i
     integer, parameter :: POWER = 2
     s = 0
@@ -2320,13 +2320,13 @@ contains
   subroutine vamp_next_event_single &
        (x, rng, g, func, data, &
         weight, channel, weights, grids, exc)
-    real*8, dimension(:), intent(out) :: x
+    real(kind=default), dimension(:), intent(out) :: x
     type(tao_random_state), intent(inout) :: rng
     type(vamp_grid), intent(inout) :: g
-    real*8, intent(out), optional :: weight
+    real(kind=default), intent(out), optional :: weight
     class(vamp_data_t), intent(in) :: data
     integer, intent(in), optional :: channel
-    real*8, dimension(:), intent(in), optional :: weights
+    real(kind=default), dimension(:), intent(in), optional :: weights
     type(vamp_grid), dimension(:), intent(in), optional :: grids
     type(exception), intent(inout), optional :: exc
     interface
@@ -2334,20 +2334,20 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     character(len=*), parameter :: FN = "vamp_next_event_single"
-    real*8, dimension(size(g%div)):: wgts
-    real*8, dimension(size(g%div)):: r
+    real(kind=default), dimension(size(g%div)):: wgts
+    real(kind=default), dimension(size(g%div)):: r
     integer, dimension(size(g%div)):: ia
-    real*8 :: f, wgt
-    real*8 :: r0
+    real(kind=default) :: f, wgt
+    real(kind=default) :: r0
     rejection: do
        call tao_random_number (rng, r)
        call inject_division_short (g%div, real(r, kind=default), x, ia, wgts)
@@ -2384,12 +2384,12 @@ contains
   end subroutine vamp_next_event_single
   subroutine vamp_next_event_multi &
        (x, rng, g, func, data, phi, weight, excess, positive, exc)
-    real*8, dimension(:), intent(out) :: x
+    real(kind=default), dimension(:), intent(out) :: x
     type(tao_random_state), intent(inout) :: rng
     type(vamp_grids), intent(inout) :: g
     class(vamp_data_t), intent(in) :: data
-    real*8, intent(out), optional :: weight
-    real*8, intent(out), optional :: excess
+    real(kind=default), intent(out), optional :: weight
+    real(kind=default), intent(out), optional :: excess
     logical, intent(out), optional :: positive
     type(exception), intent(inout), optional :: exc
     interface
@@ -2397,26 +2397,26 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     interface
        pure function phi (xi, channel) result (x)
          use kinds
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
-         real*8, dimension(size(xi)) :: x
+         real(kind=default), dimension(size(xi)) :: x
        end function phi
     end interface
     character(len=*), parameter :: FN = "vamp_next_event_multi"
-    real*8, dimension(size(x)) :: xi
-    real*8 :: r, wgt
-    real*8, dimension(size(g%weights)) :: weights
+    real(kind=default), dimension(size(x)) :: xi
+    real(kind=default) :: r, wgt
+    real(kind=default), dimension(size(g%weights)) :: weights
     integer :: channel
     if (any (g%grids%f_max > 0)) then
        weights = g%weights * g%grids%f_max
@@ -2475,12 +2475,12 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     call vamp_sample_grid &
@@ -2502,17 +2502,17 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     integer :: ch
     logical, dimension(size(g%grids)) :: active
-    real*8, dimension(size(g%grids)) :: weights
+    real(kind=default), dimension(size(g%grids)) :: weights
     active = (g%num_calls >= 2)
     where (active)
        weights = g%num_calls
@@ -2537,10 +2537,10 @@ contains
     type(vamp_grid), intent(inout) :: g
     class(vamp_data_t), intent(in) :: data
     integer, dimension(:,:), intent(in) :: calls
-    real*8, intent(out), optional :: integral, std_dev, avg_chi2
+    real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole
-    real*8, intent(in), optional :: accuracy
+    real(kind=default), intent(in), optional :: accuracy
     type(exception), intent(inout), optional :: exc
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
@@ -2548,12 +2548,12 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     character(len=*), parameter :: FN = "vamp_integrate_grid"
@@ -2582,15 +2582,15 @@ contains
         integral, std_dev, avg_chi2, num_div, &
         stratified, quadrupole, accuracy, map, covariance, exc, history)
     type(tao_random_state), intent(inout) :: rng
-    real*8, dimension(:,:), intent(in) :: region
+    real(kind=default), dimension(:,:), intent(in) :: region
     class(vamp_data_t), intent(in) :: data
     integer, dimension(:,:), intent(in) :: calls
-    real*8, intent(out), optional :: integral, std_dev, avg_chi2
+    real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole
-    real*8, intent(in), optional :: accuracy
-    real*8, dimension(:,:), intent(in), optional :: map
-    real*8, dimension(:,:), intent(out), optional :: covariance
+    real(kind=default), intent(in), optional :: accuracy
+    real(kind=default), dimension(:,:), intent(in), optional :: map
+    real(kind=default), dimension(:,:), intent(out), optional :: covariance
     type(exception), intent(inout), optional :: exc
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
@@ -2598,12 +2598,12 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
     character(len=*), parameter :: FN = "vamp_integrate_region"
@@ -2625,13 +2625,13 @@ contains
         num_div, stratified, quadrupole, accuracy, pancake, cigar, &
         exc, history)
     type(tao_random_state), intent(inout) :: rng
-    real*8, dimension(:,:), intent(in) :: region
+    real(kind=default), dimension(:,:), intent(in) :: region
     class(vamp_data_t), intent(in) :: data
     integer, dimension(:,:,:), intent(in) :: calls
-    real*8, intent(out), optional :: integral, std_dev, avg_chi2
+    real(kind=default), intent(out), optional :: integral, std_dev, avg_chi2
     integer, dimension(:), intent(in), optional :: num_div
     logical, intent(in), optional :: stratified, quadrupole
-    real*8, intent(in), optional :: accuracy
+    real(kind=default), intent(in), optional :: accuracy
     integer, intent(in), optional :: pancake, cigar
     type(exception), intent(inout), optional :: exc
     type(vamp_history), dimension(:), intent(inout), optional :: history
@@ -2640,16 +2640,16 @@ contains
          use kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
-         real*8, dimension(:), intent(in) :: xi
+         real(kind=default), dimension(:), intent(in) :: xi
          class(vamp_data_t), intent(in) :: data
-         real*8, dimension(:), intent(in), optional :: weights
+         real(kind=default), dimension(:), intent(in), optional :: weights
          integer, intent(in), optional :: channel
          type(vamp_grid), dimension(:), intent(in), optional :: grids
-         real*8 :: f
+         real(kind=default) :: f
        end function func
     end interface
-    real*8, dimension(size(region,dim=2)) :: eval
-    real*8, dimension(size(region,dim=2),size(region,dim=2)) :: evec
+    real(kind=default), dimension(size(region,dim=2)) :: eval
+    real(kind=default), dimension(size(region,dim=2),size(region,dim=2)) :: evec
     type(vamp_grid) :: g
     integer :: step, last_step, it
     it = 1
@@ -3246,7 +3246,7 @@ contains
   pure subroutine vamp_marshal_grid (g, ibuf, dbuf)
     type(vamp_grid), intent(in) :: g
     integer, dimension(:), intent(inout) :: ibuf
-    real*8, dimension(:), intent(inout) :: dbuf
+    real(kind=default), dimension(:), intent(inout) :: dbuf
     integer :: i, iwords, dwords, iidx, didx, ndim
     ndim = size (g%div)
     ibuf(1) = g%num_calls
@@ -3338,7 +3338,7 @@ contains
   pure subroutine vamp_unmarshal_grid (g, ibuf, dbuf)
     type(vamp_grid), intent(inout) :: g
     integer, dimension(:), intent(in) :: ibuf
-    real*8, dimension(:), intent(in) :: dbuf
+    real(kind=default), dimension(:), intent(in) :: dbuf
     integer :: i, iwords, dwords, iidx, didx, ndim
     g%num_calls = ibuf(1)
     g%calls_per_cell = ibuf(2)
@@ -3420,7 +3420,7 @@ contains
   pure subroutine vamp_marshal_history (h, ibuf, dbuf)
     type(vamp_history), intent(in) :: h
     integer, dimension(:), intent(inout) :: ibuf
-    real*8, dimension(:), intent(inout) :: dbuf
+    real(kind=default), dimension(:), intent(inout) :: dbuf
     integer :: j, ndim, iidx, didx, iwords, dwords
     if (h%verbose .and. (associated (h%div))) then
        ndim = size (h%div)
@@ -3474,7 +3474,7 @@ contains
   pure subroutine vamp_unmarshal_history (h, ibuf, dbuf)
     type(vamp_history), intent(inout) :: h
     integer, dimension(:), intent(in) :: ibuf
-    real*8, dimension(:), intent(in) :: dbuf
+    real(kind=default), dimension(:), intent(in) :: dbuf
     integer :: j, ndim, iidx, didx, iwords, dwords
     ndim = ibuf(1)
     h%calls = ibuf(2)
