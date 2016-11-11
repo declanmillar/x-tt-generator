@@ -12,7 +12,7 @@ OBJ = vamp_kinds.o exceptions.o vamp_stat.o utils.o divisions.o histograms.o iso
 # gg_bbtatavtvt.o qq_bbtatavtvt.o uu_bbtatavtvt.o dd_bbtatavtvt.o
 
 ROOTLIBS = -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer
-CFLAGS = -g -ffree-form -std=gnu -J$(LIB) -ffpe-trap=invalid,zero,overflow,underflow,denormal 
+CFLAGS = -J$(LIB) -ffree-form -ffpe-trap=invalid,zero,overflow,underflow,denormal 
 # -fdefault-real-8 -fdefault-double-8 -fmax-errors=0
 
 OS := $(shell uname)
