@@ -5,15 +5,17 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
   ! for the point in phase space p1, p2, p3, p4, lam3, lam4
   ! for process: q q~  -> A, Z, Z' -> t t~
 
+  use kinds
+
   implicit none
 
   ! functions
-  real :: sqq_ff
-  real :: qq_ff
+  real*8 :: sqq_ff
+  real*8 :: qq_ff
 
   ! arguments
   integer :: iq, jf
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
 
   ! constants
@@ -21,7 +23,7 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
 
   ! local variables
   integer :: nhel(nexternal,ncomb),ntry
-  real :: t
+  real*8 :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -69,20 +71,21 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1),nhel(2)
   ! for process: q q~  -> A, Z, Z' -> t t~
 
+  use kinds
   use configuration, only: include_a, include_z, include_x, interference
   use modelling
 
   implicit none
 
   ! functions
-  real :: qq_ff
+  real*8 :: qq_ff
 
   ! local constants
   integer, parameter :: ngraphs = 7 ,nexternal = 4
 
   ! arguments
   integer :: iq, jf, lam3,lam4
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
@@ -91,10 +94,10 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   complex*16 amp(ngraphs)
   complex*16 w1(6), w2(6), w3(6), w4(6)
   complex*16 w5(6), w6(6), w7(6)
-  real :: gAq(2), gAf(2)
-  real :: gZq(2), gZf(2)
-  real :: gxq(2,5), gxf(2,5)
-  real :: gxq_tmp(2), gxf_tmp(2)
+  real*8 :: gAq(2), gAf(2)
+  real*8 :: gZq(2), gZf(2)
+  real*8 :: gxq(2,5), gxf(2,5)
+  real*8 :: gxq_tmp(2), gxf_tmp(2)
 
   ! select only specified helicities
   if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then

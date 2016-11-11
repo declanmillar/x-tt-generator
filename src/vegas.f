@@ -1,16 +1,18 @@
 module integration
 
+  use kinds
+
   ! store information from vegas
 
   integer :: ncall, itmx, ndev, nprn ! if nprn < 0 no print-out
-  real :: xl(100), xu(100), acc
+  real*8 :: xl(100), xu(100), acc
   integer :: it, ndo
-  real :: si, swgt, schi, xi(50, 100)
-  real :: alph
+  real*8 :: si, swgt, schi, xi(50, 100)
+  real*8 :: alph
   integer :: ndmx, mds
-  real :: resl(20),standdevl(20)
+  real*8 :: resl(20),standdevl(20)
   integer :: seed
-  real :: cnorm(20)
+  real*8 :: cnorm(20)
   integer :: npoints
 
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &
@@ -27,6 +29,7 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   ! - by g.p. lepage    sept 1976/(rev)aug 1979
   ! - algorithm described in j comp phys 27,192(1978)
 
+  use kinds
   use integration
 
   implicit double precision(a-h,o-z)

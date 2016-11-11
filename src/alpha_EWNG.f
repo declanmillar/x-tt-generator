@@ -7,14 +7,15 @@ function alfas(mu,lam,nloop)
     ! matching achieved using renorm group eqn. approximately
     ! above mu=mb,mu=mt
 
+    use kinds
     use modelling, only: cmass, bmass, tmass
 
     implicit none
 
     integer :: nloop
-    real :: mu,lam,mc,mb,mt
-    real :: b4,b4p,b5,b5p,b6,b6p,one,two
-    real :: alfas,atinv,abinv,atinv1,abinv1,asinv,xqc,xqb,xqt,xb,xt
+    real*8 :: mu,lam,mc,mb,mt
+    real*8 :: b4,b4p,b5,b5p,b6,b6p,one,two
+    real*8 :: alfas,atinv,abinv,atinv1,abinv1,asinv,xqc,xqb,xqt,xb,xt
     parameter(one=1.d0,two=2.d0)
     parameter(b4=1.326291192d0,b5=1.220187897d0,b6=1.114084601d0)
     parameter(b4p=0.490197225d0,b5p=0.401347248d0,b6p=0.295573466d0)

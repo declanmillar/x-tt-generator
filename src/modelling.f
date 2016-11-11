@@ -1,56 +1,57 @@
 module modelling
 
+  use kinds
   use configuration
 
   implicit none
 
   ! SM couplings
-  real :: gw, gwwa, gwwZ
-  real :: gal(2), gau(2), gad(2), gwf(2)
-  real :: gZn(2), gZl(2), gZu(2), gZd(2), g1(2)
-  real :: gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh
-  complex * 16 :: gchf(2, 12)
-  real :: gg(2), g
+  real*8 :: gw, gwwa, gwwZ
+  real*8 :: gal(2), gau(2), gad(2), gwf(2)
+  real*8 :: gZn(2), gZl(2), gZu(2), gZd(2), g1(2)
+  real*8 :: gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh
+  complex*16 :: gchf(2, 12)
+  real*8 :: gg(2), g
 
   ! fermion masses and widths
-  real :: fmass(12), fwidth(12), qmass(6), lmass(6)
+  real*8 :: fmass(12), fwidth(12), qmass(6), lmass(6)
 
   ! quark masses
-  real, parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0 ! 173
-  real, parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
+  real*8, parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0 ! 173
+  real*8, parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
 
   ! leptons masses
-  real, parameter :: emass = 0.d0, mumass = 0.d0, taumass = 1.78d0
-  real, parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
+  real*8, parameter :: emass = 0.d0, mumass = 0.d0, taumass = 1.78d0
+  real*8, parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
 
   ! quark widths
-  real, parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.55d0
-  real, parameter :: dwidth = 0.d0,  swidth = 0.d0, bwidth = 0.d0
+  real*8, parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.55d0
+  real*8, parameter :: dwidth = 0.d0,  swidth = 0.d0, bwidth = 0.d0
 
   ! lepton widths
-  real, parameter :: ewidth = 0.d0,   muwidth = 0.d0, tauwidth = 0.d0
-  real, parameter :: nuewidth = 0.d0, numuwidth = 0.d0, nutauwidth = 0.d0
+  real*8, parameter :: ewidth = 0.d0,   muwidth = 0.d0, tauwidth = 0.d0
+  real*8, parameter :: nuewidth = 0.d0, numuwidth = 0.d0, nutauwidth = 0.d0
 
   ! SM boson masses
-  real, parameter :: wmass = 80.4d0, zmass = 91.19d0, wwidth = 2.08d0, zwidth = 2.5d0
-  real, parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 0.31278d-2
+  real*8, parameter :: wmass = 80.4d0, zmass = 91.19d0, wwidth = 2.08d0, zwidth = 2.5d0
+  real*8, parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 0.31278d-2
 
-  real :: Gamma_t = twidth
+  real*8 :: Gamma_t = twidth
 
   ! Other SM parameters
-  real, parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
-  real :: cotw
+  real*8, parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
+  real*8 :: cotw
 
   ! zprime parameters
-  real :: xmass(5), xwidth(5)
-  real :: xparam(5)
-  real :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_v(5), ga_v(5)
-  real :: gxd(2,5),gxu(2,5),gxl(2,5),gxn(2,5),gxb(2,5), gxt(2,5), gxl3(2,5), gxn3(2,5)
+  real*8 :: xmass(5), xwidth(5)
+  real*8 :: xparam(5)
+  real*8 :: gp(5), gV_d(5), gA_d(5), gV_u(5), gA_u(5), ga_l(5), gv_l(5), gv_v(5), ga_v(5)
+  real*8 :: gxd(2,5),gxu(2,5),gxl(2,5),gxn(2,5),gxb(2,5), gxt(2,5), gxl3(2,5), gxn3(2,5)
   integer :: manual_width(5)
 
   ! model parameters
   integer :: model_type
-  real :: paramx, paramsin2phi
+  real*8 :: paramx, paramsin2phi
 
   ! methods
   public :: initialise_model
@@ -230,7 +231,7 @@ end subroutine reset_zprimes
 subroutine initialise_non_universal
 
   integer :: i, j
-  real :: x, sin2phi, e, st, ct, sp, cp, m0
+  real*8 :: x, sin2phi, e, st, ct, sp, cp, m0
 
   call reset_zprimes
 
@@ -314,15 +315,15 @@ subroutine width_zprimes
   implicit none
 
   integer :: i, n
-  real :: mq, ml, mx
-  real :: gv, ga
-  real :: width, widthqq, widthll, widthqq_tmp, widthll_tmp
-  real :: widthzh, widthww, fzh
-  real :: pi
-  real :: a_s, alfas
-  real :: e, st, ct, cotw, gz
-  real :: stmix, ctmix
-  real :: ez, pz
+  real*8 :: mq, ml, mx
+  real*8 :: gv, ga
+  real*8 :: width, widthqq, widthll, widthqq_tmp, widthll_tmp
+  real*8 :: widthzh, widthww, fzh
+  real*8 :: pi
+  real*8 :: a_s, alfas
+  real*8 :: e, st, ct, cotw, gz
+  real*8 :: stmix, ctmix
+  real*8 :: ez, pz
 
   ! couplings.
   pi = dacos(-1.d0)

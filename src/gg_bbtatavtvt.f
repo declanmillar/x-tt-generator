@@ -18,13 +18,13 @@ function sgg_bbbtatavtvt(p1, p2, p3, p4, p5, p6, p7, p8)
 
     ! arguments
 
-    real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
 
     ! local variables
 
     integer :: nhel(nexternal,ncomb),ntry
-    real :: t
-    real :: gg_bbbtatavtvt
+    real*8 :: t
+    real*8 :: gg_bbbtatavtvt
     integer :: ihel
     logical :: goodhel(ncomb)
     data goodhel/ncomb* .false. /
@@ -318,24 +318,24 @@ function gg_bbbtatavtvt(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
     implicit none
 
-    real :: gg_bbbtatavtvt
+    real*8 :: gg_bbbtatavtvt
 
     ! constants
 
     integer ::    ngraphs,    neigen,    nexternal
     parameter (ngraphs=273,neigen=  2,nexternal=8)
-    real ::     zero
+    real*8 ::     zero
     parameter (zero=0d0)
 
     ! arguments
 
-    real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
     integer :: nhel(nexternal)
 
     ! local variables
 
     integer :: i,j
-    real :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
+    real*8 :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
     complex*16 ztemp
     complex*16 amp(ngraphs)
     complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)

@@ -326,7 +326,7 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     integer :: nhel(nexternal)
 
     ! local variables
-    real :: gxq_tmp(2), gxf_tmp(2)
+    real*8 :: gxq_tmp(2), gxf_tmp(2)
     integer :: i,j
     real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
     complex*16 ztemp

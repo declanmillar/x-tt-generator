@@ -5,22 +5,24 @@ function sqq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   ! for the point in phase space p1, p2, p3, p4, ...
   ! for process: q q~ -> b b~ e+ e- v v~
 
+  use kinds
+
   implicit none
 
   ! functions
-  real :: sqq_tt_bbeevv_qcd
-  real :: qq_tt_bbeevv_qcd
+  real*8 :: sqq_tt_bbeevv_qcd
+  real*8 :: qq_tt_bbeevv_qcd
 
   ! constants
   integer, parameter :: nexternal = 8, ncomb = 256
 
   ! arguments
   integer :: iq
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
   ! local variables
   integer :: nhel(nexternal, ncomb), ntry
-  real :: t
+  real*8 :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -306,23 +308,24 @@ function qq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! and helicity nhel(1), nhel(2), ...
   ! for process : q q~ t t~ -> b b~ ta+ ta- vt vt~
 
+  use kinds
   use modelling
 
   implicit none
 
   ! constants
-  real qq_tt_bbeevv_qcd
+  real*8 ::  qq_tt_bbeevv_qcd
   integer :: iq
   integer, parameter :: ngraphs = 1, neigen = 1, nexternal = 8
-  real, parameter :: zero = 0d0
+  real*8, parameter :: zero = 0d0
 
   ! arguments
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
+  real*8 :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
   complex*16 ztemp
   complex*16 amp(ngraphs)
   complex*16 w1(6), w2(6), w3(6), w4(6), w5(6)

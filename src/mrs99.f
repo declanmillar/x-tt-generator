@@ -1,4 +1,5 @@
     subroutine mrs99(x,q,mode,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
 !****************************************************************C
 !       C
 !     This is a package for the new **corrected** MRST parton    C
@@ -78,9 +79,10 @@
     end subroutine mrs99
 
     subroutine mrs991(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -164,9 +166,10 @@
     end subroutine mrs991
 
     subroutine mrs992(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -250,9 +253,10 @@
     end subroutine mrs992
 
     subroutine mrs993(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -337,9 +341,10 @@
 
 
     subroutine mrs994(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -423,9 +428,10 @@
     end subroutine mrs994
 
     subroutine mrs995(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -510,9 +516,10 @@
 
 
     subroutine mrs996(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -596,9 +603,10 @@
     end subroutine mrs996
 
     subroutine mrs997(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -684,9 +692,10 @@
 
 
     subroutine mrs998(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -770,9 +779,10 @@
     end subroutine mrs998
 
     subroutine mrs999(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -858,9 +868,10 @@
 
 
     subroutine mrs9910(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -944,9 +955,10 @@
     end subroutine mrs9910
 
     subroutine mrs9911(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -1031,9 +1043,10 @@
 
 
     subroutine mrs9912(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
+    use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &

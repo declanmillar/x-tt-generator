@@ -8,19 +8,19 @@ function sqq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8)
     implicit none
 
     ! functions
-    real :: sqq_bbeevv
-    real :: qq_bbeevv
+    real*8 :: sqq_bbeevv
+    real*8 :: qq_bbeevv
 
     ! constants
     integer, parameter :: nexternal = 8, ncomb = 256
 
     ! arguments
     integer :: iq
-    real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+    real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
     ! local variables
     integer :: nhel(nexternal, ncomb), ntry
-    real :: t
+    real*8 :: t
     integer :: ihel
     logical :: goodhel(ncomb)
     data goodhel /ncomb*.false./
@@ -308,7 +308,7 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
     implicit none
 
-    real :: qq_bbeevv
+    real*8 :: qq_bbeevv
 
     ! constants
     integer :: iq
@@ -316,12 +316,12 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     real, parameter :: zero = 0.d0
 
     ! arguments
-    real :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
     integer :: nhel(nexternal)
 
     ! local variables
     integer :: i,j
-    real :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
+    real*8 :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
     complex*16 ztemp
     complex*16 amp(ngraphs)
     complex*16 w1(6)  , w2(6)  , w3(6)  , w4(6)  , w5(6)
@@ -407,10 +407,10 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     complex*16 w401(6), w402(6), w403(6), w404(6), w405(6)
     complex*16 w406(6), w407(6), w408(6), w409(6), w410(6)
     complex*16 w411(6)
-    real :: gAq(2),gAf(2) ! coupling of a to q, t
-    real :: gZq(2),gZf(2) ! coupling of z to q, t
-    real :: gZpq(2,5),gZpf(2,5) ! coupling of z to q, t
-    real :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
+    real*8 :: gAq(2),gAf(2) ! coupling of a to q, t
+    real*8 :: gZq(2),gZf(2) ! coupling of z to q, t
+    real*8 :: gZpq(2,5),gZpf(2,5) ! coupling of z to q, t
+    real*8 :: gZpq_tmp(2),gZpf_tmp(2) ! necessary to pass 2d arrays
 
     ! color data
     data eigen_val(1  )/       5.8100000000000011e+02 /

@@ -5,23 +5,25 @@ function sgg_tt(p1, p2, p3, p4, lam3, lam4)
   ! for the point in phase space p1, p2, p3, p4, lam3, lam4
   ! for process: g g -> t t~
 
+  use kinds
+
   implicit none
 
   ! functions
-  real :: sgg_tt
-  real :: gg_tt
+  real*8 :: sgg_tt
+  real*8 :: gg_tt
 
   ! constants
   integer, parameter :: nexternal = 4, ncomb = 16
 
   ! arguments
   integer :: iq
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
 
   ! variables
   integer :: nhel(nexternal, ncomb), ntry
-  real :: t
+  real*8 :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -66,12 +68,13 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: g g -> t t~
 
+  use kinds
   use modelling, only: gg, g, fmass, fwidth
 
   implicit none
 
   ! functions
-  real :: gg_tt
+  real*8 :: gg_tt
 
   ! constants
   integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 4
@@ -79,13 +82,13 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
 
   ! arguments
   integer :: iq
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+  real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
   complex*16 ztemp
   complex*16 amp(ngraphs)
   complex*16 w1(6), w2(6), w3(6), w4(6), w5(6), w6(6), w7(6)

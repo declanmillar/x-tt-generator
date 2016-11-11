@@ -11,7 +11,7 @@ parser.add_option("-t", "--tag", default = "", type = "string", help = "add a na
 parser.add_option("-B", "--batch", default = True, action = "store_false", help = "run in batch mode")
 parser.add_option("-w", "--walltime", default = "60:00:00", action = "store", help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue", default = "8nh", action = "store", help = "lxbatch queue'")
-parser.add_option("-D", "--debug", default = False, action = "store_true", help = "run in debug mode.")
+parser.add_option("-v", "--verbose", default = False, action = "store_true", help = "run in verbose mode.")
 
 parser.add_option("-T", "--ntuple", default = True, action = "store_false", help = "write events to ROOT ntuple")
 parser.add_option("-H", "--lhef", default = False, action = "store_true", help = "write events to lhef file")
@@ -230,7 +230,7 @@ print >> config, '-1.d0 ! acc'
 print >> config, '%r ! use rambo' % option.use_rambo
 print >> config, '%r ! map phase space' % option.map_phase_space
 print >> config, '%r ! symmetrise' % option.symmetrise
-print >> config, '%r ! verbose mode' % option.debug
+print >> config, '%r ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
 print >> config, '%r ! apply fiducial cuts' % option.cut

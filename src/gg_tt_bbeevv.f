@@ -7,19 +7,19 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
   implicit none
 
   ! functions
-  real :: sgg_tt_bbeevv
-  real :: gg_tt_bbeevv
+  real*8 :: sgg_tt_bbeevv
+  real*8 :: gg_tt_bbeevv
 
   ! constants
   integer, parameter :: nexternal = 8, ncomb = 256
 
   ! arguments
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
   ! local variables
   integer :: i, j
   integer :: nhel(nexternal, ncomb), ntry
-  real :: t
+  real*8 :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -289,12 +289,12 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
     if (goodhel(ihel) .or. ntry < 10) then
       t = gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel(1, ihel))
       sgg_tt_bbeevv = sgg_tt_bbeevv + t
-      if (t > 0d0 .and. .not. goodhel(ihel)) then
+      if (t > 0.d0 .and. .not. goodhel(ihel)) then
           goodhel(ihel)= .true.
       endif
     end if
   enddo
-  sgg_tt_bbeevv = sgg_tt_bbeevv/4d0
+  sgg_tt_bbeevv = sgg_tt_bbeevv / 4.d0
   ! if (sgg_tt_bbeevv == 0.d0) return
 end function sgg_tt_bbeevv
 
@@ -310,19 +310,19 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
   implicit none
 
-  real :: gg_tt_bbeevv
+  real*8 :: gg_tt_bbeevv
 
   ! constants
   integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 8
   real, parameter :: zero = 0.d0
 
   ! arguments
-  real :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+  real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
   complex*16 ztemp
   complex*16 amp(ngraphs)
   complex*16 w1(6), w2(6), w3(6), w4(6), w5(6)
@@ -340,6 +340,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   data eigen_vec(3, 2) /8.1649658092772603e-01/
 
   ! wavefunctions
+  print*, "bork"
   call vxxxxx(p1, zero, nhel(1), -1, w1)
   call vxxxxx(p2, zero, nhel(2), -1, w2)
   call oxxxxx(p3, fmass(12), nhel(3), 1, w3)
@@ -350,6 +351,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   call ixxxxx(p8, zero, nhel(8), -1, w8)
 
   ! currents
+  print*, "bork 2"
   call jioxxx(w5, w7, gwf, wmass, wwidth, w9)
   call jioxxx(w8, w6, gwf, wmass, wwidth, w10)
   call fvoxxx(w3, w9, gwf, fmass(11), fwidth(11), w11)
