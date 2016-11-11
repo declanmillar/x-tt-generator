@@ -167,8 +167,8 @@ program zprime
         print*, "setting VEGAS integration limits ..."
         if (use_rambo) then
             ! integrates on
-            !   x(2) = (x1 - tau) / (1 - tau),
-            !   x(1) = (ecm - ecm_min) / (ecm_max - ecm_min)
+            !     x(2) = (x1 - tau) / (1 - tau),
+            !     x(1) = (ecm - ecm_min) / (ecm_max - ecm_min)
             ndimensions = 2
             do i = 2, 1, -1
                 xl(i) = 0.d0
@@ -177,9 +177,9 @@ program zprime
         else
             if (final_state <= 0) then
                 ! integrates on
-                !   x(3) = (x1 - tau) / (1 - tau)
-                !   x(2) = (ecm - ecm_min) / (ecm_max - ecm_min)
-                !   x(1) = cos(theta3_cm)
+                !     x(3) = (x1 - tau) / (1 - tau)
+                !     x(2) = (ecm - ecm_min) / (ecm_max - ecm_min)
+                !     x(1) = cos(theta3_cm)
                 ndimensions = 3
 
                 ! limits:
@@ -194,33 +194,33 @@ program zprime
 
             else if (final_state > 0) then
                 ! integrates on
-                !   x(15) = (x1 - tau) / (1 - tau)
-                !   x(14) = (ecm - ecm_min) / (ecm_max - ecm_min),
-                !   x(13) = (xx356 - xx356min) / (xx356max - xx356min),
-                !     where xx356 = arctg((m356**2 - m3**2) / m3 / gamt),
-                !     or x(13) = (m356 - m356min) / (m356max - m356min),
-                !     where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
-                !   x(12) = (xx478 - xx478min) / (xx478max - xx478min)
-                !     where xx478 = arctg((m478**2 - m3**2) / m3 / gamt),
-                !     or x(12) = (m478 - m478min) / (m478max - m478min),
-                !     where m478min = m4 + m7 + m8, m478max = ecm_max - m356
-                !   x(11) = (xx56 - xx56min) / (xx56max - xx56min),
-                !     where xx56 = arctg((m56**2 - rm_w**2) / rm_w / gamw),
-                !     or x(11) = (m56 - m56min) / (m56max - m56min),
-                !     where m56min = m5 + m6, m56max = m356 - m3
-                !   x(10) = (xx78 - xx78min) / (xx78max - xx78min),
-                !     where xx78 = arctg((m78**2 - rm_w**2) / rm_w / gamw),
-                !     or x(10) = (m78 - m78min) / (m78max - m78min),
-                !     where m78min = m7 + m8, m78max = m478 - m4
-                !   x(9) = cos(theta_cm_356) <--> -cos(theta_cm_478),
-                !   x(8) = cos(theta56_cm_356),
-                !   x(7) = cos(theta78_cm_478),
-                !   x(6) = cos(theta5_cm_56),
-                !   x(5) = cos(theta7_cm_78),
-                !   x(4) = fi56_cm_356,
-                !   x(3) = fi78_cm_478,
-                !   x(2) = fi5_cm_56,
-                !   x(1) = fi8_cm_78
+                !     x(15) = (x1 - tau) / (1 - tau)
+                !     x(14) = (ecm - ecm_min) / (ecm_max - ecm_min),
+                !     x(13) = (xx356 - xx356min) / (xx356max - xx356min),
+                !       where xx356 = arctg((m356**2 - m3**2) / m3 / gamt),
+                !       or x(13) = (m356 - m356min) / (m356max - m356min),
+                !       where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
+                !     x(12) = (xx478 - xx478min) / (xx478max - xx478min)
+                !       where xx478 = arctg((m478**2 - m3**2) / m3 / gamt),
+                !       or x(12) = (m478 - m478min) / (m478max - m478min),
+                !       where m478min = m4 + m7 + m8, m478max = ecm_max - m356
+                !     x(11) = (xx56 - xx56min) / (xx56max - xx56min),
+                !       where xx56 = arctg((m56**2 - rm_w**2) / rm_w / gamw),
+                !       or x(11) = (m56 - m56min) / (m56max - m56min),
+                !       where m56min = m5 + m6, m56max = m356 - m3
+                !     x(10) = (xx78 - xx78min) / (xx78max - xx78min),
+                !       where xx78 = arctg((m78**2 - rm_w**2) / rm_w / gamw),
+                !       or x(10) = (m78 - m78min) / (m78max - m78min),
+                !       where m78min = m7 + m8, m78max = m478 - m4
+                !     x(9) = cos(theta_cm_356) <--> -cos(theta_cm_478),
+                !     x(8) = cos(theta56_cm_356),
+                !     x(7) = cos(theta78_cm_478),
+                !     x(6) = cos(theta5_cm_56),
+                !     x(5) = cos(theta7_cm_78),
+                !     x(4) = fi56_cm_356,
+                !     x(3) = fi78_cm_478,
+                !     x(2) = fi5_cm_56,
+                !     x(1) = fi8_cm_78
                 ndimensions = 15
 
                 ! set integration limits:
@@ -273,15 +273,16 @@ program zprime
         call handle_exception (exc)
         call clear_exception (exc)
         print*, "initial sampling of VAMP grid with ", ncall / 10, " points"
-        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, 6, error_sigma, chi2_sigma, exc = exc)
+        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
         call handle_exception (exc)
+        print *, "preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
         call clear_exception (exc)
         print*, "discarding first integral..."
         call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
         call handle_exception (exc)
         call clear_exception (exc)
         print*, "full sampling of VAMP grid with ", ncall, " points"
-        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, 4, error_sigma, chi2_sigma, exc = exc)
+        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
         call handle_exception (exc)
         print *, "integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
 

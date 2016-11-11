@@ -922,6 +922,7 @@ function dsigma(x, data, weights, channel, grids)
         npoints = npoints + 1
         if (verbose) print*, "event", npoints, "complete."
         dsigma = dsigma + ddsigma
+        ! print*, "dsigma = ", dsigma
     end do
     if (verbose) print*, "--- end dsigma ---"
     return
