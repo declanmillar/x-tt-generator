@@ -1,13 +1,13 @@
 module configuration
 
-  use integration, only: seed, itmx, ncall, acc
+  use kinds
 
   implicit none
 
   ! provide config
   logical :: ntuple_out
   logical :: lhef_out
-  real*8 :: sqrts
+  real(kind=default) :: sqrts
   integer :: initial_state
   integer :: final_state
   integer :: ipdf
@@ -30,17 +30,20 @@ module configuration
   logical :: use_rambo
   logical :: map_phase_space
   logical :: verbose
-  real*8 :: ecm_low, ecm_up
+  real(kind=default) :: ecm_low, ecm_up
   logical :: cut
+  integer :: seed
+  integer :: ncall
+  integer :: itmx
 
   ! derived config
   integer :: n_final
   integer :: tops_decay
   integer :: ffinal
   integer :: nloops
-  real*8 :: lambdaqcd4
+  real(kind=default) :: lambdaqcd4
   integer :: z_mixing
-  real*8 :: s2mix
+  real(kind=default) :: s2mix
   integer :: pid
 
   ! constants
@@ -80,7 +83,7 @@ subroutine read_config
   read(5,*) seed
   read(5,*) itmx
   read(5,*) ncall
-  read(5,*) acc
+  ! read(5,*) acc
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) symmetrise

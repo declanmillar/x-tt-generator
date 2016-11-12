@@ -5,14 +5,14 @@ module integration
   ! store information from vegas
 
   integer :: ncall, itmx, ndev, nprn ! if nprn < 0 no print-out
-  real*8 :: xl(100), xu(100), acc
+  real(kind=default) :: xl(100), xu(100), acc
   integer :: it, ndo
-  real*8 :: si, swgt, schi, xi(50, 100)
-  real*8 :: alph
+  real(kind=default) :: si, swgt, schi, xi(50, 100)
+  real(kind=default) :: alph
   integer :: ndmx, mds
-  real*8 :: resl(20),standdevl(20)
+  real(kind=default) :: resl(20),standdevl(20)
   integer :: seed
-  real*8 :: cnorm(20)
+  real(kind=default) :: cnorm(20)
   integer :: npoints
 
   data ncall/1000/,itmx/10/,nprn/0/,acc/1.d-2/, &

@@ -21,7 +21,7 @@ module lhef
 contains
 
 function mass(p)
-  real*8 :: mass, p(4)
+  real(kind=default) :: mass, p(4)
   mass = sqrt(abs(p(4)*p(4) - p(1)*p(1) - p(2)*p(2) - p(3)*p(3)))
 end function mass
 
@@ -32,7 +32,7 @@ end subroutine lhe_open
 
 subroutine lhe_header(year, month, day, hour, minute, second, runtime)
   integer :: year, month, day, hour, minute, second
-  real*8 ::  runtime
+  real(kind=default) ::  runtime
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") '# File generated with zprime-top-generator'
@@ -48,7 +48,7 @@ end subroutine lhe_header
 
 subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
   integer :: idbm1, idbm2 ! ID of beam particle 1 and 2 according to the PDG
-  real*8 :: ebm1, ebm2 ! energy in GeV of beam particles 1 and 2
+  real(kind=default) :: ebm1, ebm2 ! energy in GeV of beam particles 1 and 2
   integer :: pdfg1, pdfg2 ! author group for beam 1 and 2 according to Cernlib PDFlib
   integer :: pdfs1, pdfs2 ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
   integer :: idwt ! master switch dictating how the event weights (XWGTUP) are interpreted
@@ -59,9 +59,9 @@ subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
 end subroutine lhe_beam
 
 subroutine lhe_process(xsec, xerr, xmax, lpr)
-  real*8 :: xsec ! the cross section for process j in pb this entry is mandatory for idwt=±2.
-  real*8 :: xerr ! the statistical error associated with the cross section of process j in pb
-  real*8 :: xmax ! the maximum xwgt for process j
+  real(kind=default) :: xsec ! the cross section for process j in pb this entry is mandatory for idwt=±2.
+  real(kind=default) :: xerr ! the statistical error associated with the cross section of process j in pb
+  real(kind=default) :: xmax ! the maximum xwgt for process j
   integer :: lpr ! a list of all user process IDs that can appear in idpr of hepe for this run
 
   write(lhe, "(ES14.6, ES14.6, ES14.6, I5)") xsec, xerr, xmax, lpr
@@ -71,10 +71,10 @@ end subroutine lhe_process
 subroutine lhe_add_event(n, idpr, xwgt, scal, aqed, aqcd)
   integer :: n ! number of particle entries in this event
   integer :: idpr ! ID of the process for this event
-  real*8 :: xwgt ! event weight
-  real*8 :: scal ! scale of the event in GeV, as used for calculation of PDFs
-  real*8 :: aqed ! the QED coupling αQED used for this event (e.g. 1/128)
-  real*8 :: aqcd ! the QCD coupling αQCD used for this event
+  real(kind=default) :: xwgt ! event weight
+  real(kind=default) :: scal ! scale of the event in GeV, as used for calculation of PDFs
+  real(kind=default) :: aqed ! the QED coupling αQED used for this event (e.g. 1/128)
+  real(kind=default) :: aqcd ! the QCD coupling αQCD used for this event
 
   write(lhe, "(a)") "<event>"
   write(lhe, "(i6, i6, es14.6, es14.6, es14.6, es14.6)") n, idpr, xwgt, scal, aqed, aqcd
@@ -85,10 +85,10 @@ subroutine lhe_add_particle(id, ist, moth1, moth2, icol1, icol2, p, vtim, spin)
   integer :: ist ! status code
   integer :: moth1, moth2 ! index of first and last mother
   integer :: icol1, icol2 ! 1(2) is the integer tag for the (anti) color flow line passing through the color of the particle
-  real*8 :: p(4) ! lab frame momentum
-  real*8 :: vtim ! invariant lifetime cτ (distance from production to decay) in mm
-  real*8 :: spin ! cosine of the angle between the spin-vector of particle I and the 3-momentum of the decaying particle, specified in the lab frame
-  real*8 :: m
+  real(kind=default) :: p(4) ! lab frame momentum
+  real(kind=default) :: vtim ! invariant lifetime cτ (distance from production to decay) in mm
+  real(kind=default) :: spin ! cosine of the angle between the spin-vector of particle I and the 3-momentum of the decaying particle, specified in the lab frame
+  real(kind=default) :: m
 
   m = mass(p)
   if (m < 1.d0) m = 0.d0

@@ -82,7 +82,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -169,7 +169,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -256,7 +256,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -344,7 +344,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -431,7 +431,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -519,7 +519,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -606,7 +606,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -695,7 +695,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -782,7 +782,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -871,7 +871,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -958,7 +958,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &
@@ -1046,7 +1046,7 @@
     use kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
-    real*8 :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
+    real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
     data xx/1d-5,2d-5,4d-5,6d-5,8d-5, &
     &             1d-4,2d-4,4d-4,6d-4,8d-4, &
     &             1d-3,2d-3,4d-3,6d-3,8d-3, &

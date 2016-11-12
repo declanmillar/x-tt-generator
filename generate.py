@@ -226,7 +226,7 @@ print >> config, '%i.d3 ! ecm_col' % option.collider_energy
 print >> config, '%i ! iseed' % seed
 print >> config, '%i ! vegas_iterations' % option.vegas_iterations
 print >> config, '%i ! ncall' % option.vegas_points
-print >> config, '-1.d0 ! acc'
+# print >> config, '-1.d0 ! acc'
 print >> config, '%r ! use rambo' % option.use_rambo
 print >> config, '%r ! map phase space' % option.map_phase_space
 print >> config, '%r ! symmetrise' % option.symmetrise

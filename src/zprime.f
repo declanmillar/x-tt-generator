@@ -14,33 +14,33 @@ program zprime
     !   Declan Millar <declan.millar@cern.ch>
     !   Stefano Moretti <s.moretti@soton.ac.uk>
 
+    use kinds
     use configuration
     use modelling
     use scattering
-    use integration
     use lhef
-    use kinds
     use exceptions
     use tao_random_numbers
     use vamp
 
     implicit none
 
-    real*8 :: sigma_pol_tot(-1:1, -1:1), error_pol_tot(-1:1, -1:1)
-    real*8 :: all, error_all, al, error_al, apv, error_apv
-    real*8 :: chi2_sigma, error_sigma, stantot
-    real*8 :: alfas
+    real(kind=default) :: sigma_pol_tot(-1:1, -1:1), error_pol_tot(-1:1, -1:1)
+    real(kind=default) :: all, error_all, al, error_al, apv, error_apv
+    real(kind=default) :: chi2_sigma, error_sigma, stantot
+    real(kind=default) :: alfas
     integer :: ndimensions, lam3, lam4, i, j, today(3), now(3)
     double precision :: start_time, finish_time, runtime
     character(40) tablefile
     integer :: idbm1, idbm2, pdfg(2), pdfs(2)
-    real*8 :: ebm(2)
+    real(kind=default) :: ebm(2)
 
     logical :: use_vamp
+    real(kind=default), dimension(15) :: x
     type(exception) :: exc
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
-    real*8, dimension(2,15) :: domain
+    real(kind=default), dimension(2,15) :: domain
     integer, dimension(2,2) :: calls
 
     print*, "starting program zprime ..."
@@ -119,240 +119,248 @@ program zprime
         m8 = 0.d0
     end if
 
-    use_vamp = .true.
-    if (use_vamp) then
-        print*, "setting VAMP integration limits ..."
-        if (use_rambo) then
-            ndimensions = 2
+    ! use_vamp = .true.
+    ! if (use_vamp) then
+    print*, "setting VAMP integration limits ..."
+    if (use_rambo) then
+        ndimensions = 2
 
-            do i = 2, 1, -1
+        do i = 2, 1, -1
+            domain(1, i) = 0.d0
+            domain(2, i) = 1.d0
+        end do
+    else
+        if (final_state <= 0) then
+            ndimensions = 3
+
+            do i = 3, 2, -1
                 domain(1, i) = 0.d0
                 domain(2, i) = 1.d0
             end do
-        else
-            if (final_state <= 0) then
-                ndimensions = 3
-
-                do i = 3, 2, -1
-                    domain(1, i) = 0.d0
-                    domain(2, i) = 1.d0
-                end do
-                do i = 1, 1
-                    domain(1, i) = -1.d0
-                    domain(2, i) = 1.d0
-                end do
-
-            else if (final_state > 0) then
-                ndimensions = 15
-
-                do i = 15, 14, -1
-                    domain(1, i) = 0.d0
-                    domain(2, i) = 1.d0
-                end do
-                do i = 13, 10, -1
-                    domain(1, i) = 0.d0
-                    domain(2, i) = 1.d0
-                end do
-                do i = 9, 5, -1
-                    domain(1, i) = -1.d0
-                    domain(2, i) = 1.d0
-                end do
-                do i = 4, 1, -1
-                    domain(1, i) = 0.d0
-                    domain(2, i) = 2.d0 * pi
-                end do
-            end if
-        end if
-    else
-        print*, "setting VEGAS integration limits ..."
-        if (use_rambo) then
-            ! integrates on
-            !     x(2) = (x1 - tau) / (1 - tau),
-            !     x(1) = (ecm - ecm_min) / (ecm_max - ecm_min)
-            ndimensions = 2
-            do i = 2, 1, -1
-                xl(i) = 0.d0
-                xu(i) = 1.d0
+            do i = 1, 1
+                domain(1, i) = -1.d0
+                domain(2, i) = 1.d0
             end do
-        else
-            if (final_state <= 0) then
-                ! integrates on
-                !     x(3) = (x1 - tau) / (1 - tau)
-                !     x(2) = (ecm - ecm_min) / (ecm_max - ecm_min)
-                !     x(1) = cos(theta3_cm)
-                ndimensions = 3
 
-                ! limits:
-                do i = 3, 2, -1
-                    xl(i) = 0.d0
-                    xu(i) = 1.d0
-                end do
-                do i = 1, 1
-                    xl(i) = -1.d0
-                    xu(i) = 1.d0
-                end do
+        else if (final_state > 0) then
+            ndimensions = 15
 
-            else if (final_state > 0) then
-                ! integrates on
-                !     x(15) = (x1 - tau) / (1 - tau)
-                !     x(14) = (ecm - ecm_min) / (ecm_max - ecm_min),
-                !     x(13) = (xx356 - xx356min) / (xx356max - xx356min),
-                !       where xx356 = arctg((m356**2 - m3**2) / m3 / gamt),
-                !       or x(13) = (m356 - m356min) / (m356max - m356min),
-                !       where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
-                !     x(12) = (xx478 - xx478min) / (xx478max - xx478min)
-                !       where xx478 = arctg((m478**2 - m3**2) / m3 / gamt),
-                !       or x(12) = (m478 - m478min) / (m478max - m478min),
-                !       where m478min = m4 + m7 + m8, m478max = ecm_max - m356
-                !     x(11) = (xx56 - xx56min) / (xx56max - xx56min),
-                !       where xx56 = arctg((m56**2 - rm_w**2) / rm_w / gamw),
-                !       or x(11) = (m56 - m56min) / (m56max - m56min),
-                !       where m56min = m5 + m6, m56max = m356 - m3
-                !     x(10) = (xx78 - xx78min) / (xx78max - xx78min),
-                !       where xx78 = arctg((m78**2 - rm_w**2) / rm_w / gamw),
-                !       or x(10) = (m78 - m78min) / (m78max - m78min),
-                !       where m78min = m7 + m8, m78max = m478 - m4
-                !     x(9) = cos(theta_cm_356) <--> -cos(theta_cm_478),
-                !     x(8) = cos(theta56_cm_356),
-                !     x(7) = cos(theta78_cm_478),
-                !     x(6) = cos(theta5_cm_56),
-                !     x(5) = cos(theta7_cm_78),
-                !     x(4) = fi56_cm_356,
-                !     x(3) = fi78_cm_478,
-                !     x(2) = fi5_cm_56,
-                !     x(1) = fi8_cm_78
-                ndimensions = 15
-
-                ! set integration limits:
-                do i = 15, 14, -1
-                    xl(i) = 0.d0
-                    xu(i) = 1.d0
-                end do
-                do i = 13, 10, -1
-                    xl(i) = 0.d0
-                    xu(i) = 1.d0
-                end do
-                do i = 9, 5, -1
-                    xl(i) = -1.d0
-                    xu(i) = 1.d0
-                end do
-                do i = 4, 1, -1
-                    xl(i) = 0.d0
-                    xu(i) = 2.d0 * pi
-                end do
-            end if
+            do i = 15, 14, -1
+                domain(1, i) = 0.d0
+                domain(2, i) = 1.d0
+            end do
+            do i = 13, 10, -1
+                domain(1, i) = 0.d0
+                domain(2, i) = 1.d0
+            end do
+            do i = 9, 5, -1
+                domain(1, i) = -1.d0
+                domain(2, i) = 1.d0
+            end do
+            do i = 4, 1, -1
+                domain(1, i) = 0.d0
+                domain(2, i) = 2.d0 * pi
+            end do
         end if
     end if
+    ! else
+    !     print*, "setting VEGAS integration limits ..."
+    !     if (use_rambo) then
+    !         ! integrates on
+    !         !     x(2) = (x1 - tau) / (1 - tau),
+    !         !     x(1) = (ecm - ecm_min) / (ecm_max - ecm_min)
+    !         ndimensions = 2
+    !         do i = 2, 1, -1
+    !             xl(i) = 0.d0
+    !             xu(i) = 1.d0
+    !         end do
+    !     else
+    !         if (final_state <= 0) then
+    !             ! integrates on
+    !             !     x(3) = (x1 - tau) / (1 - tau)
+    !             !     x(2) = (ecm - ecm_min) / (ecm_max - ecm_min)
+    !             !     x(1) = cos(theta3_cm)
+    !             ndimensions = 3
+
+    !             ! limits:
+    !             do i = 3, 2, -1
+    !                 xl(i) = 0.d0
+    !                 xu(i) = 1.d0
+    !             end do
+    !             do i = 1, 1
+    !                 xl(i) = -1.d0
+    !                 xu(i) = 1.d0
+    !             end do
+
+    !         else if (final_state > 0) then
+    !             ! integrates on
+    !             !     x(15) = (x1 - tau) / (1 - tau)
+    !             !     x(14) = (ecm - ecm_min) / (ecm_max - ecm_min),
+    !             !     x(13) = (xx356 - xx356min) / (xx356max - xx356min),
+    !             !       where xx356 = arctg((m356**2 - m3**2) / m3 / gamt),
+    !             !       or x(13) = (m356 - m356min) / (m356max - m356min),
+    !             !       where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
+    !             !     x(12) = (xx478 - xx478min) / (xx478max - xx478min)
+    !             !       where xx478 = arctg((m478**2 - m3**2) / m3 / gamt),
+    !             !       or x(12) = (m478 - m478min) / (m478max - m478min),
+    !             !       where m478min = m4 + m7 + m8, m478max = ecm_max - m356
+    !             !     x(11) = (xx56 - xx56min) / (xx56max - xx56min),
+    !             !       where xx56 = arctg((m56**2 - rm_w**2) / rm_w / gamw),
+    !             !       or x(11) = (m56 - m56min) / (m56max - m56min),
+    !             !       where m56min = m5 + m6, m56max = m356 - m3
+    !             !     x(10) = (xx78 - xx78min) / (xx78max - xx78min),
+    !             !       where xx78 = arctg((m78**2 - rm_w**2) / rm_w / gamw),
+    !             !       or x(10) = (m78 - m78min) / (m78max - m78min),
+    !             !       where m78min = m7 + m8, m78max = m478 - m4
+    !             !     x(9) = cos(theta_cm_356) <--> -cos(theta_cm_478),
+    !             !     x(8) = cos(theta56_cm_356),
+    !             !     x(7) = cos(theta78_cm_478),
+    !             !     x(6) = cos(theta5_cm_56),
+    !             !     x(5) = cos(theta7_cm_78),
+    !             !     x(4) = fi56_cm_356,
+    !             !     x(3) = fi78_cm_478,
+    !             !     x(2) = fi5_cm_56,
+    !             !     x(1) = fi8_cm_78
+    !             ndimensions = 15
+
+    !             ! set integration limits:
+    !             do i = 15, 14, -1
+    !                 xl(i) = 0.d0
+    !                 xu(i) = 1.d0
+    !             end do
+    !             do i = 13, 10, -1
+    !                 xl(i) = 0.d0
+    !                 xu(i) = 1.d0
+    !             end do
+    !             do i = 9, 5, -1
+    !                 xl(i) = -1.d0
+    !                 xu(i) = 1.d0
+    !             end do
+    !             do i = 4, 1, -1
+    !                 xl(i) = 0.d0
+    !                 xu(i) = 2.d0 * pi
+    !             end do
+    !         end if
+    !     end if
+    ! end if
 
     ! reset counter
-    npoints = 0
+    ! npoints = 0
 
     ! reset
-    if (final_state <= 0) then
-        do i = 1, 20
-            resl(i) = 0.d0
-            standdevl(i) = 0.d0
-            cnorm(i) = 0.d0
-            do lam3 = -1, +1, 2
-                do lam4 = -1, +1, 2
-                    sigma_pol(lam3, lam4, i) = 0.d0
-                    error_pol(lam3, lam4, i) = 0.d0
-                end do
-            end do
-        end do
-    end if
+    ! if (final_state <= 0) then
+    !     do i = 1, 20
+    !         resl(i) = 0.d0
+    !         standdevl(i) = 0.d0
+    !         cnorm(i) = 0.d0
+    !         do lam3 = -1, +1, 2
+    !             do lam4 = -1, +1, 2
+    !                 sigma_pol(lam3, lam4, i) = 0.d0
+    !                 error_pol(lam3, lam4, i) = 0.d0
+    !             end do
+    !         end do
+    !     end do
+    ! end if
 
-    ! integrate using VEGAS
+    ! if (use_vamp) then
+    event_mode = .false.
+    print*, "integrating using VAMP ..."
+    call tao_random_create (rng, seed = 0)
 
-    if (use_vamp) then
-        print*, "integrating using VAMP ..."
-        call tao_random_create (rng, seed = 0)
-        call clear_exception (exc)
-        print*, "creating VAMP grid..."
-        call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
-        call handle_exception (exc)
-        call clear_exception (exc)
-        print*, "initial sampling of VAMP grid with ", ncall / 10, " points"
-        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
-        call handle_exception (exc)
-        print *, "preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
-        call clear_exception (exc)
-        print*, "discarding first integral..."
-        call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
-        call handle_exception (exc)
-        call clear_exception (exc)
-        print*, "full sampling of VAMP grid with ", ncall, " points"
-        call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
-        call handle_exception (exc)
-        print *, "integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+    print*, "creating VAMP grid..."
+    call clear_exception (exc)
+    call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
+    call handle_exception (exc)
 
-        ! alternative method
-        ! calls(:,1) = (/ 6, ncall / 10 /) 
-        ! calls(:,2) = (/ 4, ncall /) 
-        ! call clear_exception(exc)
-        ! call vamp_integrate(rng, domain, dsigma, calls, sigma, error_sigma, chi2_sigma, exc = exc)
-        ! call handle_exception(exc)
-    else
-        print*, "integrating using VEGAS ..."
-        call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
-    end if
+    print*, "initial sampling of VAMP grid with ...", ncall / 10, " points"
+    call clear_exception (exc)
+    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call handle_exception (exc)
+    print *, "preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    print*, "discarding first integral ..."
+    call clear_exception (exc)
+    call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
+    call handle_exception (exc)
+
+    print*, "full sampling of VAMP grid with ...", ncall, " points"
+    call clear_exception (exc)
+    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call handle_exception (exc)
+    print *, "integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    ! alternative method
+    ! calls(:,1) = (/ 6, ncall / 10 /) 
+    ! calls(:,2) = (/ 4, ncall /) 
+    ! call clear_exception(exc)
+    ! call vamp_integrate(rng, domain, dsigma, calls, sigma, error_sigma, chi2_sigma, exc = exc)
+    ! call handle_exception(exc)
+    ! else
+    !     print*, "integrating using VEGAS ..."
+    !     call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
+    ! end if
 
     if (sigma == 0.d0) then
         print*, "ERROR: Cross section = 0. Stopping."
         stop
-    else
-        write(log, *) "Cross section:", sigma, ":", error_sigma, ":[pb]"
     end if
 
-    print*, "calculating iteration weightings ..."
-    stantot = 0.d0
-    do i = 1, it
-        stantot = stantot + 1.d0 / standdevl(i) / standdevl(i)
-    end do
-    do i = 1, it
-        standdevl(i) = standdevl(i) * standdevl(i) * stantot
-    end do
-    do i = 1, it
-        cnorm(i) = resl(i) * standdevl(i)
-    end do
+    event_mode = .true.
+    print*, "generating...", ncall, " events"
+    call clear_exception (exc)
+    call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA)!, NO_DATA, weight, channel, weights, grids, exc)
+    call handle_exception (exc)
 
-    do i = 1, it
-        write(log, *) "iteration weighting:", i, ":", cnorm(i)
-    end do
 
-    if (final_state == 0) then
-        do lam3 = -1, 1, 2
-            do lam4 = -1, 1, 2
-              sigma_pol_tot(lam3, lam4) = 0.d0
-              error_pol_tot(lam3, lam4) = 0.d0
-              do i = 1,  it
-                  sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) * sigma / cnorm(i)
-                  error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) * error_sigma / cnorm(i)
-                  sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) + sigma_pol(lam3, lam4, i)
-                  error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) + error_pol(lam3, lam4, i)
-              end do
-              if (sigma_pol_tot(lam3, lam4) == 0) then
-                  error_pol_tot(lam3, lam4) = 0
-              else
-                  error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) / sigma_pol_tot(lam3, lam4)
-              end if
-            end do
-        end do
+    ! print*, "calculating iteration weightings ..."
+    ! stantot = 0.d0
+    ! do i = 1, it
+    !     stantot = stantot + 1.d0 / standdevl(i) / standdevl(i)
+    ! end do
+    ! do i = 1, it
+    !     standdevl(i) = standdevl(i) * standdevl(i) * stantot
+    ! end do
+    ! do i = 1, it
+    !     cnorm(i) = resl(i) * standdevl(i)
+    ! end do
 
-        all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / sigma
-        error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / 4.d0 * all
+    ! do i = 1, it
+    !     write(log, *) "iteration weighting:", i, ":", cnorm(i)
+    ! end do
 
-        al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) / sigma
-        error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) / 4.d0 * al
+    ! if (final_state == 0) then
+    !     do lam3 = -1, 1, 2
+    !         do lam4 = -1, 1, 2
+    !           sigma_pol_tot(lam3, lam4) = 0.d0
+    !           error_pol_tot(lam3, lam4) = 0.d0
+    !           do i = 1,  it
+    !               sigma_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) * sigma / cnorm(i)
+    !               error_pol(lam3, lam4, i) = sigma_pol(lam3, lam4, i) * error_sigma / cnorm(i)
+    !               sigma_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) + sigma_pol(lam3, lam4, i)
+    !               error_pol_tot(lam3, lam4) = sigma_pol_tot(lam3, lam4) + error_pol(lam3, lam4, i)
+    !           end do
+    !           if (sigma_pol_tot(lam3, lam4) == 0) then
+    !               error_pol_tot(lam3, lam4) = 0
+    !           else
+    !               error_pol_tot(lam3, lam4) = error_pol_tot(lam3, lam4) / sigma_pol_tot(lam3, lam4)
+    !           end if
+    !         end do
+    !     end do
 
-        apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) / sigma / 2.d0
-        error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) / 2.d0 * apv
+    !     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / sigma
+    !     error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / 4.d0 * all
 
-        write(log, *) "ALL:", all, ":", error_all
-        write(log, *) "AL:", al, ":", error_al
-        write(log, *) "APV:", apv, ":", error_apv
-    end if
-    write(log, *) "VEGAS points: ", npoints
+    !     al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) / sigma
+    !     error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) / 4.d0 * al
+
+    !     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) / sigma / 2.d0
+    !     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) / 2.d0 * apv
+
+    !     write(log, *) "ALL:", all, ":", error_all
+    !     write(log, *) "AL:", al, ":", error_al
+    !     write(log, *) "APV:", apv, ":", error_apv
+    ! end if
+    ! write(log, *) "VEGAS points: ", npoints
 
     if (ntuple_out) then
         print*, "closing n-tuple ..."

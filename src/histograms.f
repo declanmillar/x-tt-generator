@@ -56,24 +56,24 @@ module histograms
   type, public :: histogram
      private
      integer :: n_bins
-     real*8 :: x_min, x_max
-     real*8, dimension(:), pointer :: bins => null ()
-     real*8, dimension(:), pointer :: bins2 => null ()
-     real*8, dimension(:), pointer :: bins3 => null ()
+     real(kind=default) :: x_min, x_max
+     real(kind=default), dimension(:), pointer :: bins => null ()
+     real(kind=default), dimension(:), pointer :: bins2 => null ()
+     real(kind=default), dimension(:), pointer :: bins3 => null ()
   end type histogram
   type, public :: histogram2
      private
      integer, dimension(2) :: n_bins
-     real*8, dimension(2) :: x_min, x_max
-     real*8, dimension(:,:), pointer :: bins => null ()
-     real*8, dimension(:,:), pointer :: bins2 => null ()
+     real(kind=default), dimension(2) :: x_min, x_max
+     real(kind=default), dimension(:,:), pointer :: bins => null ()
+     real(kind=default), dimension(:,:), pointer :: bins2 => null ()
   end type histogram2
   character(len=*), public, parameter :: HISTOGRAMS_RCS_ID = &
        "$Id: histograms.nw 314 2010-04-17 20:32:33Z ohl $"
 contains
   elemental subroutine create_histogram1 (h, x_min, x_max, nb)
     type(histogram), intent(out) :: h
-    real*8, intent(in) :: x_min, x_max
+    real(kind=default), intent(in) :: x_min, x_max
     integer, intent(in), optional :: nb
     if (present (nb)) then
        h%n_bins = nb
@@ -90,7 +90,7 @@ contains
   end subroutine create_histogram1
   pure subroutine create_histogram2 (h, x_min, x_max, nb)
     type(histogram2), intent(out) :: h
-    real*8, dimension(:), intent(in) :: x_min, x_max
+    real(kind=default), dimension(:), intent(in) :: x_min, x_max
     integer, intent(in), dimension(:), optional :: nb
     if (present (nb)) then
        h%n_bins = nb
@@ -106,9 +106,9 @@ contains
   end subroutine create_histogram2
   elemental subroutine fill_histogram1 (h, x, weight, excess)
     type(histogram), intent(inout) :: h
-    real*8, intent(in) :: x
-    real*8, intent(in), optional :: weight
-    real*8, intent(in), optional :: excess
+    real(kind=default), intent(in) :: x
+    real(kind=default), intent(in), optional :: weight
+    real(kind=default), intent(in), optional :: excess
     integer :: i
     if (x < h%x_min) then
        i = 0
@@ -129,14 +129,14 @@ contains
   end subroutine fill_histogram1
   elemental subroutine fill_histogram2s (h, x1, x2, weight)
     type(histogram2), intent(inout) :: h
-    real*8, intent(in) :: x1, x2
-    real*8, intent(in), optional :: weight
+    real(kind=default), intent(in) :: x1, x2
+    real(kind=default), intent(in), optional :: weight
     call fill_histogram2v (h, (/ x1, x2 /), weight)
   end subroutine fill_histogram2s
   pure subroutine fill_histogram2v (h, x, weight)
     type(histogram2), intent(inout) :: h
-    real*8, dimension(:), intent(in) :: x
-    real*8, intent(in), optional :: weight
+    real(kind=default), dimension(:), intent(in) :: x
+    real(kind=default), intent(in), optional :: weight
     integer, dimension(2) :: i
     i = 1 + h%n_bins * (x - h%x_min) / (h%x_max - h%x_min)
     i = min (max (i, 0), h%n_bins + 1)
@@ -251,13 +251,13 @@ contains
   elemental function midpoint1 (h, bin) result (x)
     type(histogram), intent(in) :: h
     integer, intent(in) :: bin
-    real*8 :: x
+    real(kind=default) :: x
     x = h%x_min + (h%x_max - h%x_min) * (bin - 0.5) / h%n_bins
   end function midpoint1
   elemental function midpoint2 (h, bin, d) result (x)
     type(histogram2), intent(in) :: h
     integer, intent(in) :: bin, d
-    real*8 :: x
+    real(kind=default) :: x
     x = h%x_min(d) + (h%x_max(d) - h%x_min(d)) * (bin - 0.5) / h%n_bins(d)
   end function midpoint2
   subroutine write_histogram2 (h, name, over)

@@ -1,4 +1,5 @@
     subroutine rambo(iseed,n,et,xm,p,wt)
+    use kinds
 !------------------------------------------------------
 
 !                       rambo
@@ -16,7 +17,7 @@
 !    wt = weight of the event
 
 !------------------------------------------------------
-    implicit real*8(a-h,o-z)
+    implicit real(kind=default)(a-h,o-z)
     dimension xm(100),p(4,100),q(4,100),z(100),r(4), &
     b(3),p2(100),xm2(100),e(100),v(100),iwarn(5)
     data acc/1.d-14/,itmax/6/,ibegin/0/,iwarn/5*0/
@@ -170,6 +171,7 @@
     end subroutine rambo
 
     function random(seed)
+    use kinds
 !     -----------------
 ! ref.: k. park and k.w. miller, comm. of the acm 31 (1988) p.1192
 ! use seed = 1 as first value.
@@ -187,9 +189,10 @@
     end function random
 
     function rn(dummy)
+    use kinds
     integer :: dummy,seed
     common/mag/ seed
-    real*8 :: rn,random
+    real(kind=default) :: rn,random
     rn=random(seed)
     return
     end function rn
