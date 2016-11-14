@@ -96,6 +96,9 @@ subroutine modify_config
 
   integer :: i
 
+  print*, "log:     ", trim(log_file)
+  open(unit = log, file = log_file, status = "replace", action = "write")
+
   print*, "config: interpreting ..."
 
   if (final_state <= 0) then

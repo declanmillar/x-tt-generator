@@ -49,15 +49,10 @@ program generator
 
     ! ---
 
-    print*, "initialisation: program starting ..."
-
     call cpu_time(start_time)
     call read_config
     call modify_config
     call print_config
-
-    print*, "log:     ", trim(log_file)
-    open(unit = log, file = log_file, status = "replace", action = "write")
 
     s = sqrts * sqrts
 
