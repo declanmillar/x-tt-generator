@@ -31,9 +31,9 @@ module configuration
   logical :: map_phase_space
   logical :: verbose
   real(kind=default) :: ecm_low, ecm_up
-  logical :: cut
   integer :: seed
   integer :: ncall
+  integer :: nevents
   integer :: itmx
 
   ! derived config
@@ -47,7 +47,7 @@ module configuration
   integer :: pid
 
   ! constants
-  real, parameter :: pi = 3.14159265358979323846d0
+  real(kind=default), parameter :: pi = 3.14159265358979323846d0
   integer, parameter :: log = 10
 
   ! methods
@@ -58,7 +58,7 @@ module configuration
 contains
 
 subroutine read_config
-  print*, "reading config ..."
+  print*, "config: reading ..."
   read(5,*) ntuple_out
   read(5,*) lhef_out
   read(5,"(a)") ntuple_file
@@ -83,21 +83,20 @@ subroutine read_config
   read(5,*) seed
   read(5,*) itmx
   read(5,*) ncall
-  ! read(5,*) acc
+  read(5,*) nevents
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) symmetrise
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up
-  read(5,*) cut
 end subroutine read_config
 
 subroutine modify_config
 
   integer :: i
 
-  print*, "interpreting config ..."
+  print*, "config: interpreting ..."
 
   if (final_state <= 0) then
     n_final = 4
@@ -120,9 +119,9 @@ subroutine modify_config
 end subroutine modify_config
 
 subroutine print_config
-  print*, "printing config to logfile ..."
-  if (lhef_out) write(log,*) "Events written to:", lhe_file
-  if (ntuple_out) write(log,*) "Events written to:", ntuple_file
+  print*, "config: printing to logfile ..."
+  if (lhef_out) write(log,*) "events written to:", lhe_file
+  if (ntuple_out) write(log,*) "events written to:", ntuple_file
   if (initial_state == 0) then
     if (final_state == -1) then
       write(log,*) "process: p p -> l+ l-"
@@ -140,7 +139,11 @@ subroutine print_config
       write(log,*) 'process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
     end if
   end if
-  if (symmetrise) write(log,*) 'symmetrising integration: x1 <-> x2!'
+  write(log,*) "preliminary vamp calls: ", ncall / 10
+  write(log,*) "preliminary vamp iterations: ", itmx + 1
+  write(log,*) "vamp calls: ", ncall
+  write(log,*) "vamp iterations: ", itmx - 1
+  write(log,*) "symmetrise parton momentum fraction: ", symmetrise
   write(log,*) "map phase space: ", map_phase_space
   write(log,*) 'random number seed: ', seed
   write(log,*) 'collider energy: ', sqrts

@@ -1,13 +1,12 @@
-program zprime
-
+program generator
     ! calculates the cross section, asymmetries, and generates events for
     !   p p -> f f~
     !   p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
     !
-    ! requirements
-    !   HELAS subroutines
-    !   VEGAS Monte Carlo integration
-    !   CT10, CTEQ6 and MRS99 PDF subroutines
+    ! uses
+    !   HELAS for probability amplitudes
+    !   VAMP for Monte Carlo integration and event generation
+    !   CT10, CTEQ6 and MRS99 for PDFs
     !   RootTuple for filling n-tuples
     !
     ! authors
@@ -29,21 +28,28 @@ program zprime
     real(kind=default) :: all, error_all, al, error_al, apv, error_apv
     real(kind=default) :: chi2_sigma, error_sigma, stantot
     real(kind=default) :: alfas
-    integer :: ndimensions, lam3, lam4, i, j, today(3), now(3)
-    double precision :: start_time, finish_time, runtime
+    integer :: lam3, lam4, i, j
+
+    integer :: today(3), now(3)
+    real(kind = default) :: start_time, finish_time, runtime
+    real(kind = default) :: event_start, event_finish, event_time
+
     character(40) tablefile
     integer :: idbm1, idbm2, pdfg(2), pdfs(2)
     real(kind=default) :: ebm(2)
 
-    logical :: use_vamp
+    ! VAMP
+    integer :: ndimensions
     real(kind=default), dimension(15) :: x
     type(exception) :: exc
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
     real(kind=default), dimension(2,15) :: domain
-    integer, dimension(2,2) :: calls
+    real(kind=default) event
 
-    print*, "starting program zprime ..."
+    ! ---
+
+    print*, "initialisation: program starting ..."
 
     call cpu_time(start_time)
     call read_config
@@ -53,21 +59,10 @@ program zprime
     print*, "log:     ", trim(log_file)
     open(unit = log, file = log_file, status = "replace", action = "write")
 
-    if (ntuple_out) then
-        print*, "n-tuple: ", trim(ntuple_file)
-        print*, "initiating n-tuple ..."
-        call rootinit(ntuple_file)
-    end if
-    if (lhef_out) then
-        print*, "lhe:    ", trim(lhe_file)
-        print*, "opening lhe file ..."
-        call lhe_open(lhe_file)
-    end if
-
     s = sqrts * sqrts
 
     ! pdfs are intrinsically linked to the value of lamda_qcd; alpha_qcd
-    print*, "setting lambdaqcd based on PDF set ..."
+    print*, "initialisation: setting lambdaqcd based on PDF set ..."
     if (ipdf ==  1) lambdaqcd4 = 0.326d0
     if (ipdf ==  2) lambdaqcd4 = 0.326d0
     if (ipdf ==  3) lambdaqcd4 = 0.326d0
@@ -86,7 +81,7 @@ program zprime
     if (ipdf == 11) tablefile = "ct14ll.pds"
     if (ipdf > 9) call setct14(tablefile)
 
-    print*, "using appropriately evolved alphas ..."
+    print*, "initialisation: using appropriately evolved alphas ..."
     if (ipdf <= 2) then
         nloops = 2
     else if (ipdf == 10) then
@@ -99,10 +94,10 @@ program zprime
     write(log, *) 'lambda_QCD^4: ', lambdaqcd4
     write(log, *) 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
 
-    print*, "initialising masses and coupling constants ..."
+    print*, "initialisation: masses and coupling constants ..."
     call initialise_model
 
-    print*,"setting external particle masses ..."
+    print*,"initialisation: setting external particle masses ..."
     if (final_state <= 0) then
         m3 = fmass(ffinal)
         m4 = fmass(ffinal)
@@ -119,9 +114,7 @@ program zprime
         m8 = 0.d0
     end if
 
-    ! use_vamp = .true.
-    ! if (use_vamp) then
-    print*, "setting VAMP integration limits ..."
+    print*, "integration: setting VAMP limits ..."
     if (use_rambo) then
         ndimensions = 2
 
@@ -163,89 +156,6 @@ program zprime
             end do
         end if
     end if
-    ! else
-    !     print*, "setting VEGAS integration limits ..."
-    !     if (use_rambo) then
-    !         ! integrates on
-    !         !     x(2) = (x1 - tau) / (1 - tau),
-    !         !     x(1) = (ecm - ecm_min) / (ecm_max - ecm_min)
-    !         ndimensions = 2
-    !         do i = 2, 1, -1
-    !             xl(i) = 0.d0
-    !             xu(i) = 1.d0
-    !         end do
-    !     else
-    !         if (final_state <= 0) then
-    !             ! integrates on
-    !             !     x(3) = (x1 - tau) / (1 - tau)
-    !             !     x(2) = (ecm - ecm_min) / (ecm_max - ecm_min)
-    !             !     x(1) = cos(theta3_cm)
-    !             ndimensions = 3
-
-    !             ! limits:
-    !             do i = 3, 2, -1
-    !                 xl(i) = 0.d0
-    !                 xu(i) = 1.d0
-    !             end do
-    !             do i = 1, 1
-    !                 xl(i) = -1.d0
-    !                 xu(i) = 1.d0
-    !             end do
-
-    !         else if (final_state > 0) then
-    !             ! integrates on
-    !             !     x(15) = (x1 - tau) / (1 - tau)
-    !             !     x(14) = (ecm - ecm_min) / (ecm_max - ecm_min),
-    !             !     x(13) = (xx356 - xx356min) / (xx356max - xx356min),
-    !             !       where xx356 = arctg((m356**2 - m3**2) / m3 / gamt),
-    !             !       or x(13) = (m356 - m356min) / (m356max - m356min),
-    !             !       where m356min = m3 + m5 + m6, m356max = ecm_max - m4 - m7 - m8
-    !             !     x(12) = (xx478 - xx478min) / (xx478max - xx478min)
-    !             !       where xx478 = arctg((m478**2 - m3**2) / m3 / gamt),
-    !             !       or x(12) = (m478 - m478min) / (m478max - m478min),
-    !             !       where m478min = m4 + m7 + m8, m478max = ecm_max - m356
-    !             !     x(11) = (xx56 - xx56min) / (xx56max - xx56min),
-    !             !       where xx56 = arctg((m56**2 - rm_w**2) / rm_w / gamw),
-    !             !       or x(11) = (m56 - m56min) / (m56max - m56min),
-    !             !       where m56min = m5 + m6, m56max = m356 - m3
-    !             !     x(10) = (xx78 - xx78min) / (xx78max - xx78min),
-    !             !       where xx78 = arctg((m78**2 - rm_w**2) / rm_w / gamw),
-    !             !       or x(10) = (m78 - m78min) / (m78max - m78min),
-    !             !       where m78min = m7 + m8, m78max = m478 - m4
-    !             !     x(9) = cos(theta_cm_356) <--> -cos(theta_cm_478),
-    !             !     x(8) = cos(theta56_cm_356),
-    !             !     x(7) = cos(theta78_cm_478),
-    !             !     x(6) = cos(theta5_cm_56),
-    !             !     x(5) = cos(theta7_cm_78),
-    !             !     x(4) = fi56_cm_356,
-    !             !     x(3) = fi78_cm_478,
-    !             !     x(2) = fi5_cm_56,
-    !             !     x(1) = fi8_cm_78
-    !             ndimensions = 15
-
-    !             ! set integration limits:
-    !             do i = 15, 14, -1
-    !                 xl(i) = 0.d0
-    !                 xu(i) = 1.d0
-    !             end do
-    !             do i = 13, 10, -1
-    !                 xl(i) = 0.d0
-    !                 xu(i) = 1.d0
-    !             end do
-    !             do i = 9, 5, -1
-    !                 xl(i) = -1.d0
-    !                 xu(i) = 1.d0
-    !             end do
-    !             do i = 4, 1, -1
-    !                 xl(i) = 0.d0
-    !                 xu(i) = 2.d0 * pi
-    !             end do
-    !         end if
-    !     end if
-    ! end if
-
-    ! reset counter
-    ! npoints = 0
 
     ! reset
     ! if (final_state <= 0) then
@@ -262,53 +172,88 @@ program zprime
     !     end do
     ! end if
 
-    ! if (use_vamp) then
-    event_mode = .false.
-    print*, "integrating using VAMP ..."
+    record_events = .false.
+    print*, "integration: integrating using VAMP ..."
     call tao_random_create (rng, seed = 0)
 
-    print*, "creating VAMP grid..."
+    print*, "integration: creating VAMP grid..."
     call clear_exception (exc)
     call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
     call handle_exception (exc)
 
-    print*, "initial sampling of VAMP grid with ...", ncall / 10, " points"
+    print*, "integration: initial sampling of VAMP grid with ", ncall / 10, " points and ", itmx + 1, "iterations ..."
     call clear_exception (exc)
     call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
     call handle_exception (exc)
-    print *, "preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+    print *, "integration: preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
 
-    print*, "discarding first integral ..."
+    print*, "integration: discarding preliminary integral ..."
     call clear_exception (exc)
     call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
     call handle_exception (exc)
 
-    print*, "full sampling of VAMP grid with ...", ncall, " points"
+    print*, "integration: full sampling of VAMP grid with ...", ncall, " points and ", itmx - 1, "iterations ..."
     call clear_exception (exc)
     call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
     call handle_exception (exc)
-    print *, "integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
-
-    ! alternative method
-    ! calls(:,1) = (/ 6, ncall / 10 /) 
-    ! calls(:,2) = (/ 4, ncall /) 
-    ! call clear_exception(exc)
-    ! call vamp_integrate(rng, domain, dsigma, calls, sigma, error_sigma, chi2_sigma, exc = exc)
-    ! call handle_exception(exc)
-    ! else
-    !     print*, "integrating using VEGAS ..."
-    !     call vegas(ndimensions, dsigma, sigma, error_sigma, chi2_sigma)
-    ! end if
+    print *, "integration: integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
 
     if (sigma == 0.d0) then
-        print*, "ERROR: Cross section = 0. Stopping."
+        print*, "integration: integration: integral = 0. Stopping."
         stop
     end if
 
-    event_mode = .true.
-    print*, "generating...", ncall, " events"
+    if (ntuple_out) then
+        print*, "n-tuple: ", trim(ntuple_file)
+        print*, "initiating n-tuple ..."
+        call rootinit(ntuple_file)
+    end if
+
+    if (lhef_out) then
+        print*, "lhe:    ", trim(lhe_file)
+        print*, "lhe: opening file ..."
+        call lhe_open(lhe_file)
+        print*, "lhe: calculating lhe beam info ..."
+        idbm1 = 2212
+        if (initial_state == 0) then
+            idbm2 = 2212
+        else
+            idbm2 = -2212
+        end if
+        do i = 1, 2
+            ebm(i) = sqrts / 2
+            pdfg(i) = 1
+            pdfs(i) = 1
+        end do
+
+        print*, "lhe: printing header ..."
+        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
+        print*, "lhe: printing beam info ..."
+        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+        print*, "lhe: printing process info ..."
+        call lhe_process(sigma, error_sigma, 1.d0, 81)
+    end if
+
+    symmetrise = .false.
+
+    print*, "generating single event ..."
     call clear_exception (exc)
-    call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA)!, NO_DATA, weight, channel, weights, grids, exc)
+    call cpu_time(event_start)
+    call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
+    call cpu_time(event_finish)
+    call handle_exception (exc)
+    event_time = event_finish - event_start
+    print*, "event time (secs): ", event_time
+
+
+    print*, "generating", nevents, " events ...  (ETA:", nevents * event_time, "secs)"
+    call clear_exception (exc)
+    do i = 1, nevents
+        call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
+        record_events = .true.
+        event = dsigma(x, NO_DATA)
+        record_events = .false. 
+    end do
     call handle_exception (exc)
 
 
@@ -362,40 +307,21 @@ program zprime
     ! end if
     ! write(log, *) "VEGAS points: ", npoints
 
-    if (ntuple_out) then
-        print*, "closing n-tuple ..."
-        call rootclose
-    end if
-
-    call idate(today)     ! today(1):day, (2):month, (3):year
-    call itime(now)       ! now(1):hour, (2):minute, (3):second
+    call idate(today)
+    call itime(now)
     call cpu_time(finish_time)
     runtime = finish_time - start_time
     write(log, *) "runtime: ", runtime
 
-    if (lhef_out) then
-        print*, "calculating lhe beam info ..."
-        idbm1 = 2212
-        if (initial_state == 0) then
-            idbm2 = 2212
-        else
-            idbm2 = -2212
-        end if
-        do i = 1, 2
-            ebm(i) = sqrts / 2
-            pdfg(i) = 1
-            pdfs(i) = 1
-        end do
+    if (ntuple_out) then
+        print*, "n-tuple: closing ..."
+        call rootclose
+    end if
 
-        print*, "printing lhe footer ..."
+    if (lhef_out) then
+        print*, "lhe: printing footer ..."
         call lhe_footer()
-        print*, "printing lhe header ..."
-        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
-        print*, "printing lhe beam info ..."
-        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
-        print*, "printing lhe process info ..."
-        call lhe_process(sigma, error_sigma, 1.d0, 81)
-        print*, "closing lhe file ..."
+        print*, "lhe: closing file ..."
         call lhe_close
     end if
 
@@ -404,6 +330,6 @@ program zprime
     write(log, *) 'time: ', now(1), now(2), now(3)
     write(log, *) "runtime: ", runtime
     close(log)
-    print*, "zprime program completed in", runtime, "seconds"
+    print*, "runtime: ", runtime, "seconds"
     stop
-end program zprime
+end program generator

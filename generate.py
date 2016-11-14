@@ -37,8 +37,9 @@ parser.add_option("-L", "--ecm_low", default = 0, type = "int", help = " Ecm low
 parser.add_option("-U", "--ecm_up", default = 0, type = "int", help = "Ecm upper limit")
 parser.add_option("-F", "--fixed_seed", default = False, action = "store_true", help = "use fixed seed")
 
-parser.add_option("-N", "--vegas_iterations", default = 5, type = "int", help = "number of VEGAS iterations")
-parser.add_option("-n", "--vegas_points", default = 10000000, type = "int", help = "number of VEGAS points")
+parser.add_option("-N", "--iterations", default = 5, type = "int", help = "number of VAMP iterations")
+parser.add_option("-n", "--ncall", default = 10000000, type = "int", help = "number of call to VAMP")
+parser.add_option("-e", "--nevents", default = 1000000, type = "int", help = "number of events")
 
 parser.add_option("-S", "--symmetrise", default = True, action = "store_false", help = "symmetrise phase space x1<->x2")
 parser.add_option("-R", "--use_rambo", default = False, action = "store_true", help = "use RAMBO for phase space")
@@ -52,7 +53,7 @@ if os.path.isfile("Models/%s.mdl" % option.model) is False:
     sys.exit("NOPE! %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
 if option.collider_energy < 0:
     sys.exit("NOPE! Collider energy must be positive definite.\n" % usage)
-if option.vegas_points < 2:
+if option.ncall < 2:
     sys.exit("NOPE! Must have at least 2 VEGAS points.\n%s" % usage)
 if option.ecm_low < 0 or option.ecm_up < 0:
     sys.exit("NOPE! Ecm bounds must be positive definite")
@@ -100,7 +101,7 @@ if option.final_state < 1:
 seed = 12345 if option.fixed_seed else random.randint(0, 100000)
 
 # Strings
-executable = "zprime"
+executable = "generator"
 options = ""
 if option.initial_state == 1:
     options += "_ppbar"
@@ -128,12 +129,6 @@ if option.final_state < 2:
     option.include_background = False
 if option.include_background:
     map_phase_space = False
-
-npoints = str(option.vegas_points)
-if "000000" in npoints:
-    npoints = "M".join(npoints.rsplit("000000", 1))
-if "000" in npoints:
-    npoints = "k".join(npoints.rsplit("000", 1))
 
 energy_collider = "_" + str(option.collider_energy) if option.collider_energy != 13 else ""
 
@@ -178,7 +173,7 @@ elif option.final_state == 11:
 elif option.final_state == 12:
     final_state = "bbemuvevm"
 
-filename = '%s_%s-%s%s%s%s_%sx%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options, option.vegas_iterations, npoints)
+filename = '%s_%s-%s%s%s%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options)
 
 # Logfile
 run_directory = "."
@@ -224,16 +219,16 @@ print >> config, '%i ! interference' % option.interference
 print >> config, '%r ! use_nwa' % option.use_nwa
 print >> config, '%i.d3 ! ecm_col' % option.collider_energy
 print >> config, '%i ! iseed' % seed
-print >> config, '%i ! vegas_iterations' % option.vegas_iterations
-print >> config, '%i ! ncall' % option.vegas_points
-# print >> config, '-1.d0 ! acc'
+print >> config, '%i ! iterations' % option.iterations
+print >> config, '%i ! ncall' % option.ncall
+print >> config, '%i ! nevents' % option.nevents
 print >> config, '%r ! use rambo' % option.use_rambo
 print >> config, '%r ! map phase space' % option.map_phase_space
 print >> config, '%r ! symmetrise' % option.symmetrise
 print >> config, '%r ! verbose mode' % option.verbose
 print >> config, '%f ! ecm_low' % (option.ecm_low*1000)
 print >> config, '%f ! ecm_up' % (option.ecm_up*1000)
-print >> config, '%r ! apply fiducial cuts' % option.cut
+
 
 try:
     with open('%s' % config_name,'w') as config_file:

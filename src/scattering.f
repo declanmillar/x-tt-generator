@@ -7,7 +7,7 @@ module scattering
     real(kind=default) :: sigma, sigma_pol(-1:1, -1:1, 20), error_pol(-1:1, -1:1, 20)
     real(kind=default) :: m3, m4, m5, m6, m7, m8, s
     real(kind=default), parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
-    logical :: event_mode
+    logical :: record_events
     public :: dsigma
 
 contains
@@ -35,13 +35,14 @@ function dsigma(x, data, weights, channel, grids)
 
     implicit none
 
-    ! differential cross section
+    real(kind=default) :: dsigma
     real(kind=default), dimension(:), intent(in) :: x
+    class(vamp_data_t), intent(in) :: data
     real(kind=default), dimension(:), intent(in), optional :: weights
     integer, intent(in), optional :: channel
-    real(kind=default) :: dsigma, ddsigma, weight ! x(100), weights, weight
-    class(vamp_data_t), intent(in) :: data
     type(vamp_grid), dimension(:), intent(in), optional :: grids
+
+    real(kind=default) ddsigma ! weight, x(100), weights, weight
 
     ! alphas
     real(kind=default) :: alfas, gs4, gs2, a_s
@@ -110,7 +111,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: qcdpolqq(-1:1, -1:1), qcdpolgg(-1:1, -1:1)
     real(kind=default) :: qfdpoluu1(-1:1, -1:1), qfdpoldd1(-1:1, -1:1), qfdpolbb1(-1:1, -1:1)
     real(kind=default) :: qfdpoluu2(-1:1, -1:1), qfdpoldd2(-1:1, -1:1), qfdpolbb2(-1:1, -1:1)
-    real(kind=default) :: weight_pol(-1:1, -1:1, 20), pfx(-1:1, -1:1), pfxtot
+    real(kind=default) :: weight_pol(-1:1, -1:1, 20), dsigmapol(-1:1, -1:1)
 
     ! internal random number seed
     integer, parameter :: jseed = 987654321
@@ -536,24 +537,6 @@ function dsigma(x, data, weights, channel, grids)
             pcol(1,i) = p(1,i)
         end do
 
-        ! fiducial cuts
-        if (cut) then
-            do i = 3, n_final
-
-                pt = sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i))
-                if (pt < 25) then
-                    dsigma = 0.d0
-                    return
-                end if
-
-                eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
-                if (abs(eta) > 2.5) then
-                    dsigma = 0.d0
-                    return
-                end if
-            end do
-        end if
-
         ! parton CoM 4-momenta
         p1(0) = p(4, 1)
         p2(0) = p(4, 2)
@@ -605,17 +588,17 @@ function dsigma(x, data, weights, channel, grids)
         if (.not. include_gg .and. .not. include_qq .and. .not. include_uu .and. .not. include_dd) then
             if (verbose) print*, "setting |M|^2 = 1 and skipping matrix element calculation ..."
             if (ix == 1) then
-                pfxtot = 0.5 / x1
+                ddsigma = 0.5 / x1
             else if (ix == 2) then
-                pfxtot = 0.5 / x2
+                ddsigma = 0.5 / x2
             end if
             if (final_state <= 0) then
                 do i = -1, 1, 2
                     do j = -1, 1, 2
                       if (ix == 1) then
-                          pfx(i,j) = 0.5 / x1 / (pfxtot + pfxtot)
+                          dsigmapol(i,j) = 0.5 / x1 / (2 * ddsigma)
                       else if (ix == 2) then
-                          pfx(i,j) = 0.5 / x2 / (pfxtot + pfxtot)
+                          dsigmapol(i,j) = 0.5 / x2 / (2 * ddsigma)
                       end if
                     end do
                 end do
@@ -642,7 +625,7 @@ function dsigma(x, data, weights, channel, grids)
                 qfdpoldd1(i, j) = 0.d0
                 qfdpoluu2(i, j) = 0.d0
                 qfdpoldd2(i, j) = 0.d0
-                pfx(i,j) = 0.d0
+                dsigmapol(i,j) = 0.d0
                 do k = 1, 20
                     weight_pol(i, j, k) = 0.d0
                 end do
@@ -695,12 +678,12 @@ function dsigma(x, data, weights, channel, grids)
         qcdqq = qcdqq * gs4
         qcdgg = qcdgg * gs4
 
-        pfxtot = 0.d0
+        ddsigma = 0.d0
         if (final_state <= 0) then
-            ! Summing over 2to2 |m|^2 with pdfs of all initial partons
+            if (verbose) print*, "Summing over 2->2 |m|^2 with pdfs of all initial partons ..."
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                             pfx(i,j) = qcdpolgg(i,j)   * fx1(13) * fx2(13) &
+                             dsigmapol(i,j) = qcdpolgg(i,j)   * fx1(13) * fx2(13) &
                      + (qcdpolqq(i,j) + qfdpoldd1(i,j)) * fx1( 1) * fx2( 7) &
                      + (qcdpolqq(i,j) + qfdpoluu1(i,j)) * fx1( 2) * fx2( 8) &
                      + (qcdpolqq(i,j) + qfdpoldd1(i,j)) * fx1( 3) * fx2( 9) &
@@ -712,16 +695,16 @@ function dsigma(x, data, weights, channel, grids)
                      + (qcdpolqq(i,j) + qfdpoluu2(i,j)) * fx1(10) * fx2( 4) &
                      + (qcdpolqq(i,j) + qfdpoldd2(i,j)) * fx1(11) * fx2( 5)
                     if (ix == 1) then
-                        pfx(i, j) = pfx(i, j) / x1
+                        dsigmapol(i, j) = dsigmapol(i, j) / x1
                     else if (ix == 2) then
-                        pfx(i, j) = pfx(i, j) / x2
+                        dsigmapol(i, j) = dsigmapol(i, j) / x2
                     end if
-                    pfxtot = pfxtot + pfx(i,j)
+                    ddsigma = ddsigma + dsigmapol(i,j)
                 end do
             end do
         else if (final_state > 0) then
-            ! sum over 2->6 |m|^2 with PDFs of all initial partons"
-            pfxtot = fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
+            if (verbose) print*, "summing over 2->6 |m|^2 with PDFs of all initial partons ..."
+            ddsigma = fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
                    + fx1( 2) * fx2( 8) * (qcdqq + qfduu1) &
                    + fx1( 3) * fx2( 9) * (qcdqq + qfddd1) &
                    + fx1( 4) * fx2(10) * (qcdqq + qfduu1) &
@@ -733,42 +716,39 @@ function dsigma(x, data, weights, channel, grids)
                    + fx1(11) * fx2( 5) * (qcdqq + qfddd2) &
                    + fx1(13) * fx2(13) * qcdgg
             if (ix == 1) then
-                pfxtot = (pfxtot)/x1
+                ddsigma = (ddsigma) / x1
             else if (ix  ==  2) then
-                pfxtot = (pfxtot)/x2
+                ddsigma = (ddsigma) / x2
             end if
         end if
 
-        if (pfxtot == 0.d0) return
+        if (ddsigma == 0.d0) return
 
         if (final_state < 1) then
-            ! weight for distributions
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                    pfx(i,j) = pfx(i, j) / pfxtot
+                    dsigmapol(i,j) = dsigmapol(i, j) / ddsigma
                 end do
             end do
         end if
 
         666 continue
 
-        if (verbose) print*, "multipling by jacobian from dx1 dx2 -> dx(2) dx(3)..."
-        pfxtot = pfxtot * (1.d0 - tau) * 2.d0 * ecm / s * (ecm_max - ecm_min)
+        if (verbose) print*, "multipling by jacobian from dx1 dx2 -> dx(2) dx(3) ..."
+        ddsigma = ddsigma * (1.d0 - tau) * 2.d0 * ecm / s * (ecm_max - ecm_min)
 
-        ddsigma = pfxtot
-
-        if (verbose) print*, "applying unit converstion"
+        if (verbose) print*, "applying unit conversion ..."
         ddsigma = ddsigma * unit_conv
 
-        if (verbose) print*, "multiply by phase space factor, azimuthal integration and flux factor..."
+        if (verbose) print*, "multiply by phase space factor, azimuthal integration and flux factor ..."
         if (final_state <= 0) then
             if (use_rambo) then
                 ddsigma = ddsigma * wgtr
             else
-                ! ddsigma = ddsigma * qcm / (2.d0 * pcm) * 2.d0**(4 - 3 * (2)) * 2.d0 * pi
+                ! ddsigma = ddsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * 2.d0 * pi
                 ddsigma = ddsigma * qcm * pi / ecm / 2.d0
             end if
-            ! ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi)**(4 - 3 * (2))
+            ! ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi) ** (4 - 3 * 2)
             ddsigma = ddsigma / ecm / ecm / pi / pi / 8.d0
 
         else if (final_state > 0) then
@@ -796,34 +776,30 @@ function dsigma(x, data, weights, channel, grids)
             end if
 
             ! ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi)**(4 - 3 * (6))
-            ddsigma = ddsigma / ecm / ecm / pi**14 / 32768
+            ddsigma = ddsigma / ecm / ecm / pi ** 14 / 32768
         end if
 
         if (symmetrise) ddsigma = ddsigma / 2
-
-        ! if (verbose) print*, "multiply by integration weight ", weights(1) 
-        ! weight = ddsigma * weights(1)
 
         ! if (final_state < 1) then
         !     ! Compute polarised event weightings
         !     do i = -1, 1, 2
         !         do j = -1, 1, 2
-        !             sigma_pol(i, j, it) = sigma_pol(i, j, it) + ddsigma * weights(1) * pfx(i, j)
-        !             weight_pol(i, j, it) = ddsigma * weights(1) * pfx(i, j)
+        !             sigma_pol(i, j, it) = sigma_pol(i, j, it) + ddsigma * weights(1) * dsigmapol(i, j)
+        !             weight_pol(i, j, it) = ddsigma * weights(1) * dsigmapol(i, j)
         !             error_pol(i, j, it) = error_pol(i, j, it) + sigma_pol(i, j, it)**2
         !         end do
         !     end do
         ! end if
 
-        if (event_mode) then
+        if (record_events) then
             if (ntuple_out) then
                 if (verbose) print*, "write final particle collider frame momenta to n-tuple..."
-                ! call rootaddint(it, "iteration")
 
                 if (final_state == -1) then
                     call rootaddparticle(11,  pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
                     call rootaddparticle(-11, pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
-                    
+
                 else if (final_state == 0) then
                     call rootaddparticle(6,   pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
                     call rootaddparticle(-6,  pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
@@ -843,7 +819,7 @@ function dsigma(x, data, weights, channel, grids)
                 !     call rootadddouble(weight_pol( 1,  1, it), "weightRR")
                 ! end if
 
-                call rootaddevent(weight)
+                call rootaddevent(1.d0)
             end if
 
             ! if (lhef_out) then
@@ -921,10 +897,7 @@ function dsigma(x, data, weights, channel, grids)
             ! end if
         end if
 
-        ! npoints = npoints + 1
-        ! if (verbose) print*, "event", npoints, "complete."
         dsigma = dsigma + ddsigma
-        ! print*, "dsigma = ", dsigma
     end do
     if (verbose) print*, "--- end dsigma ---"
     return
