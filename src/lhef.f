@@ -33,6 +33,7 @@ end subroutine lhe_open
 subroutine lhe_header(year, month, day, hour, minute, second, runtime)
   integer :: year, month, day, hour, minute, second
   real(kind=default) ::  runtime
+  print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") '# File generated with zprime-top-generator'
@@ -52,7 +53,7 @@ subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
   integer :: pdfg1, pdfg2 ! author group for beam 1 and 2 according to Cernlib PDFlib
   integer :: pdfs1, pdfs2 ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
   integer :: idwt ! master switch dictating how the event weights (XWGTUP) are interpreted
-
+  print*, "lhe: printing beam info ..."
   write(lhe, "(a)") "<init>"
   write(lhe, "(i8,    i8,    eS14.6, eS14.6, i5,    i5,    i5,    i5,    i5,   i5)") &
                idbm1, idbm2, ebm1,   ebm2,   pdfg1, pdfg1, pdfs1, pdfs2, idwt, npr
@@ -63,7 +64,7 @@ subroutine lhe_process(xsec, xerr, xmax, lpr)
   real(kind=default) :: xerr ! the statistical error associated with the cross section of process j in pb
   real(kind=default) :: xmax ! the maximum xwgt for process j
   integer :: lpr ! a list of all user process IDs that can appear in idpr of hepe for this run
-
+  print*, "lhe: printing process info ..."
   write(lhe, "(ES14.6, ES14.6, ES14.6, I5)") xsec, xerr, xmax, lpr
   write(lhe, "(a)") "</init>"
 end subroutine lhe_process

@@ -37,7 +37,7 @@ module configuration
   integer :: itmx
 
   ! derived config
-  integer :: n_final
+  integer :: nfinal
   integer :: tops_decay
   integer :: ffinal
   integer :: nloops
@@ -102,9 +102,9 @@ subroutine modify_config
   print*, "config: interpreting ..."
 
   if (final_state <= 0) then
-    n_final = 4
+    nfinal = 4
   else
-    n_final = 8
+    nfinal = 8
   end if
 
   if (final_state == -1) then
@@ -122,7 +122,9 @@ subroutine modify_config
 end subroutine modify_config
 
 subroutine print_config
+  
   print*, "config: printing to logfile ..."
+
   if (lhef_out) write(log,*) "events written to:", lhe_file
   if (ntuple_out) write(log,*) "events written to:", ntuple_file
   if (initial_state == 0) then

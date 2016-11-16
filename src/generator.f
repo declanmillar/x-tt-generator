@@ -152,6 +152,78 @@ program generator
         end if
     end if
 
+    record_events = .false.
+    print*, "integration: integrating using VAMP ..."
+    call tao_random_create (rng, seed = 0)
+
+    print*, "integration: creating VAMP grid..."
+    call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
+
+    print*, "integration: initial sampling of VAMP grid with ", ncall / 10, " points and ", itmx + 1, "iterations ..."
+    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    print *, "integration: preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    print*, "integration: discarding preliminary integral ..."
+    call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
+
+    print*, "integration: full sampling of VAMP grid with ...", ncall, " points and ", itmx - 1, "iterations ..."
+    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    print *, "integration: integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    if (sigma == 0.d0) then
+        print*, "integration: integration: integral = 0. Stopping."
+        stop
+    else
+        write(log,*) "cross section: ", sigma
+        write(log,*) "uncertainty: ", error_sigma
+        write(log,*) "chi^2: ", chi2_sigma
+    end if
+
+
+    if (ntuple_out) then
+        print*, "n-tuple: ", trim(ntuple_file)
+        print*, "initiating n-tuple ..."
+        call rootinit(ntuple_file)
+    end if
+
+if (lhef_out) then
+        print*, "lhe: calculating beam info ..."
+        idbm1 = 2212
+        if (initial_state == 0) then
+            idbm2 = 2212
+        else
+            idbm2 = -2212
+        end if
+        do i = 1, 2
+            ebm(i) = sqrts / 2
+            pdfg(i) = 1
+            pdfs(i) = 1
+        end do
+
+        call lhe_open(lhe_file)
+        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
+        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+        call lhe_process(sigma, error_sigma, 1.d0, 81)
+    end if
+
+    symmetrise = .false.
+
+    print*, "generating single event ..."
+    call cpu_time(event_start)
+    call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
+    call cpu_time(event_finish)
+    event_time = event_finish - event_start
+    print*, "event time: ", event_time, " [secs]"
+
+    print*, "generating", nevents, " events ...  (estimate:", nevents * event_time, "[secs])"
+    do i = 1, nevents
+        call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
+        record_events = .true.
+        event = dsigma(x, NO_DATA)
+        record_events = .false. 
+        print*, "event", i, "complete"
+    end do
+
     ! reset
     ! if (final_state <= 0) then
     !     do i = 1, 20
@@ -166,92 +238,7 @@ program generator
     !         end do
     !     end do
     ! end if
-
-    record_events = .false.
-    print*, "integration: integrating using VAMP ..."
-    call tao_random_create (rng, seed = 0)
-
-    print*, "integration: creating VAMP grid..."
-    call clear_exception (exc)
-    call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
-    call handle_exception (exc)
-
-    print*, "integration: initial sampling of VAMP grid with ", ncall / 10, " points and ", itmx + 1, "iterations ..."
-    call clear_exception (exc)
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
-    call handle_exception (exc)
-    print *, "integration: preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
-
-    print*, "integration: discarding preliminary integral ..."
-    call clear_exception (exc)
-    call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
-    call handle_exception (exc)
-
-    print*, "integration: full sampling of VAMP grid with ...", ncall, " points and ", itmx - 1, "iterations ..."
-    call clear_exception (exc)
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
-    call handle_exception (exc)
-    print *, "integration: integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
-
-    if (sigma == 0.d0) then
-        print*, "integration: integration: integral = 0. Stopping."
-        stop
-    end if
-
-    if (ntuple_out) then
-        print*, "n-tuple: ", trim(ntuple_file)
-        print*, "initiating n-tuple ..."
-        call rootinit(ntuple_file)
-    end if
-
-    if (lhef_out) then
-        print*, "lhe:    ", trim(lhe_file)
-        print*, "lhe: opening file ..."
-        call lhe_open(lhe_file)
-        print*, "lhe: calculating lhe beam info ..."
-        idbm1 = 2212
-        if (initial_state == 0) then
-            idbm2 = 2212
-        else
-            idbm2 = -2212
-        end if
-        do i = 1, 2
-            ebm(i) = sqrts / 2
-            pdfg(i) = 1
-            pdfs(i) = 1
-        end do
-
-        print*, "lhe: printing header ..."
-        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
-        print*, "lhe: printing beam info ..."
-        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
-        print*, "lhe: printing process info ..."
-        call lhe_process(sigma, error_sigma, 1.d0, 81)
-    end if
-
-    symmetrise = .false.
-
-    print*, "generating single event ..."
-    call clear_exception (exc)
-    call cpu_time(event_start)
-    call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
-    call cpu_time(event_finish)
-    call handle_exception (exc)
-    event_time = event_finish - event_start
-    print*, "event time (secs): ", event_time
-
-
-    print*, "generating", nevents, " events ...  (ETA:", nevents * event_time, "secs)"
-    call clear_exception (exc)
-    do i = 1, nevents
-        call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
-        record_events = .true.
-        event = dsigma(x, NO_DATA)
-        record_events = .false. 
-    end do
-    call handle_exception (exc)
-
-
+    !
     ! print*, "calculating iteration weightings ..."
     ! stantot = 0.d0
     ! do i = 1, it
@@ -263,11 +250,11 @@ program generator
     ! do i = 1, it
     !     cnorm(i) = resl(i) * standdevl(i)
     ! end do
-
+    !
     ! do i = 1, it
     !     write(log, *) "iteration weighting:", i, ":", cnorm(i)
     ! end do
-
+    !
     ! if (final_state == 0) then
     !     do lam3 = -1, 1, 2
     !         do lam4 = -1, 1, 2
@@ -286,16 +273,16 @@ program generator
     !           end if
     !         end do
     !     end do
-
+    !
     !     all = (sigma_pol_tot(+1, +1) - sigma_pol_tot(+1, -1) - sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / sigma
     !     error_all = (sigma_pol_tot(+1, +1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(-1, -1)) / 4.d0 * all
-
+    !
     !     al = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) - sigma_pol_tot(+1, +1)) / sigma
     !     error_al = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, -1) + sigma_pol_tot(-1, +1) + sigma_pol_tot(+1, +1)) / 4.d0 * al
-
+    !
     !     apv = (sigma_pol_tot(-1, -1) - sigma_pol_tot(+1, +1)) / sigma / 2.d0
     !     error_apv = (sigma_pol_tot(-1, -1) + sigma_pol_tot(+1, +1)) / 2.d0 * apv
-
+    !
     !     write(log, *) "ALL:", all, ":", error_all
     !     write(log, *) "AL:", al, ":", error_al
     !     write(log, *) "APV:", apv, ":", error_apv

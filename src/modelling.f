@@ -66,6 +66,8 @@ contains
 
 subroutine initialise_model
 
+  print*, "modelling: initialising model ..."
+
   call initialise_standard_model
   call initialise_zprimes
   call print_model
@@ -75,6 +77,8 @@ end subroutine initialise_model
 subroutine initialise_standard_model
 
   integer i
+
+  print*, "modelling: initialising standard model ..."
 
   fmass(1)  = emass
   fmass(2)  = nuemass
@@ -142,6 +146,8 @@ subroutine initialise_zprimes
   integer :: imodel_name, i
   integer, parameter :: mdl = 30
 
+  print*, "modelling: initialising Z' parameters ..."
+
   call reset_zprimes
 
   ! Extract model name from filename (Remove white space.)
@@ -170,7 +176,7 @@ subroutine initialise_zprimes
     read(mdl, *) paramx
     read(mdl, *) paramsin2phi
   else
-    print*, "Error: invalid model type! Must be 0-1."
+    print*, "error: invalid model type"
   end if
   close(mdl)
 
@@ -201,7 +207,10 @@ subroutine initialise_zprimes
 end subroutine initialise_zprimes
 
 subroutine reset_zprimes
+
   integer :: i, j
+
+  print*, "modelling: resetting Z' parameters"
 
   do i = 1, 5
     xmass(i) = 0
@@ -232,6 +241,8 @@ subroutine initialise_non_universal
 
   integer :: i, j
   real(kind=default) :: x, sin2phi, e, st, ct, sp, cp, m0
+
+  print*, "modelling: initialising non-universal model ..."
 
   call reset_zprimes
 
@@ -285,7 +296,7 @@ subroutine convert_zprime_couplings
 
   integer i
 
-  print*, "converting Z' couplings ..."
+  print*, "modelling: converting couplings ..."
   do i = 1, 5
     gxd(1,i) = gp(i) * (gv_d(i) + ga_d(i)) / 2.d0
     gxd(2,i) = gp(i) * (gv_d(i) - ga_d(i)) / 2.d0
@@ -310,8 +321,6 @@ end subroutine convert_zprime_couplings
 
 subroutine width_zprimes
 
-  ! calculates Z' width contributions from decay to fermions
-
   implicit none
 
   integer :: i, n
@@ -324,6 +333,8 @@ subroutine width_zprimes
   real(kind=default) :: e, st, ct, cotw, gz
   real(kind=default) :: stmix, ctmix
   real(kind=default) :: ez, pz
+
+  print*, "modelling: calculating Z' -> ff widths ..."
 
   ! couplings.
   pi = dacos(-1.d0)
@@ -406,12 +417,12 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-      ! print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
       ! print*, 'Gamma(Zp(', n, ')->qq)=', widthqq,' [GeV]'
       ! print*, 'Gamma(Zp(', n, ')->ll)=', widthll,' [GeV]'
+      ! print*, 'Gamma(Zp(', n, ')->ff)=', width,' [GeV]'
 
       if (z_mixing == 1) then
-        print*, "I am being run."
+        print*, "modelling: calculating Z' mixing ..."
         widthww = 1 / (48.d0 * pi) * e * e * cotw * cotw * stmix * mx * sqrt(1 - 4 * wmass * wmass / mx / mx) &
                   * (0.25 * (mx / wmass)**4 + 4 * mx * mx / wmass / wmass - 17 - 12 * wmass * wmass / mx / mx)
 
@@ -438,6 +449,8 @@ end subroutine width_zprimes
 subroutine print_model
 
   integer :: i
+
+  print*, "modelling: printing model parameters ..."
 
   write(log, *) 'm_b:', fmass(12)
   write(log, *) 'Gamma_b:', fwidth(12)
@@ -474,7 +487,6 @@ subroutine print_model
         write(log, *) "gRn3:", gxn3(2,i)
       end if
     end do
-    write(log, *) "------"
   end if
 end subroutine print_model
 

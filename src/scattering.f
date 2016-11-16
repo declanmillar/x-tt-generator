@@ -14,19 +14,19 @@ contains
 
 function dsigma(x, data, weights, channel, grids)
 
-    ! computes the differential cross section for
-    !   p p -> f f~
-    !   p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
+    ! computes the differential cross section for:
+    !     p p -> f f~
+    !     p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
 
-    ! requirements
-    !   HELAS subroutines
-    !   VEGAS Monte Carlo integration
-    !   CT10, CTEQ6 and MRS99 PDF subroutines
-    !   RootTuple for filling n-tuples
+    ! requirements:
+    !     HELAS subroutines
+    !     VEGAS Monte Carlo integration
+    !     CT10, CTEQ6 and MRS99 PDF subroutines
+    !     RootTuple for filling n-tuples
 
-    ! authors
-    !   Declan Millar <declan.millar@cern.ch>
-    !   Stefano Moretti
+    ! authors:
+    !     Declan Millar <declan.millar@cern.ch>
+    !     Stefano Moretti
 
     use configuration
     use modelling
@@ -42,7 +42,7 @@ function dsigma(x, data, weights, channel, grids)
     integer, intent(in), optional :: channel
     type(vamp_grid), dimension(:), intent(in), optional :: grids
 
-    real(kind=default) ddsigma ! weight, x(100), weights, weight
+    real(kind=default) ddsigma
 
     ! alphas
     real(kind=default) :: alfas, gs4, gs2, a_s
@@ -121,7 +121,7 @@ function dsigma(x, data, weights, channel, grids)
 
     ! ---
 
-    if (verbose) print*, "--- begin dsigma ---"
+    if (verbose) print*, "dsigma: begin"
 
     ! store top parameters
     mt = fmass(ffinal)
@@ -523,21 +523,17 @@ function dsigma(x, data, weights, channel, grids)
             end if
         end if
 
-        ! velocity of tt system in collider frame
+        if (verbose) print*, "kinematics: boost initial and final state momenta to the collider frame ..."
         v = (x1 - x2) / (x1 + x2)
-
-        ! gamma factor
         gamma = (x1 + x2) / 2.d0 / sqrt(x1 * x2)
-
-        ! boost initial and final state momenta to the collider frame
-        do i = 1, n_final
+        do i = 1, nfinal
             pcol(4,i) = gamma * (p(4,i) + v * p(3,i))
             pcol(3,i) = gamma * (p(3,i) + v * p(4,i))
             pcol(2,i) = p(2,i)
             pcol(1,i) = p(1,i)
         end do
 
-        ! parton CoM 4-momenta
+        if (verbose) print*, "kinematics: copying parton CoM 4-momenta for MadGraph..."
         p1(0) = p(4, 1)
         p2(0) = p(4, 2)
         p3(0) = p(4, 3)
@@ -556,8 +552,9 @@ function dsigma(x, data, weights, channel, grids)
             p7(i) = p(i, 7)
             p8(i) = p(i, 8)
         end do
+
         if (verbose) then
-            print*, "Check 4-momenta:"
+            print*, "kinematics: checking ..."
             print*, "p1 = ", p1
             print*, "p2 = ", p2
             print*, "p3 = ", p3
@@ -566,14 +563,10 @@ function dsigma(x, data, weights, channel, grids)
             print*, "p6 = ", p6
             print*, "p7 = ", p7
             print*, "p8 = ", p8
-            print*, ""
-            print*, "Check conservation of 4-momentum:"
             print*, "Delta E  = ", p1(0) + p2(0) - p3(0) - p4(0) - p5(0) - p6(0) - p7(0) - p8(0)
             print*, "Delta Px = ", p1(1) + p2(1) - p3(1) - p4(1) - p5(1) - p6(1) - p7(1) - p8(1)
             print*, "Delta Py = ", p1(2) + p2(2) - p3(2) - p4(2) - p5(2) - p6(2) - p7(2) - p8(2)
             print*, "Delta Pz = ", p1(3) + p2(3) - p3(3) - p4(3) - p5(3) - p6(3) - p7(3) - p8(3)
-            print*, ""
-            print*, "Check invariant masses:"
             print*, "m1 = ", sqrt(abs(p1(0) * p1(0) - p1(1) * p1(1) - p1(2) * p1(2) - p1(3) * p1(3)))
             print*, "m2 = ", sqrt(abs(p2(0) * p2(0) - p2(1) * p2(1) - p2(2) * p2(2) - p2(3) * p2(3)))
             print*, "m3 = ", sqrt(abs(p3(0) * p3(0) - p3(1) * p3(1) - p3(2) * p3(2) - p3(3) * p3(3)))
@@ -582,11 +575,10 @@ function dsigma(x, data, weights, channel, grids)
             print*, "m6 = ", sqrt(abs(p6(0) * p6(0) - p6(1) * p6(1) - p6(2) * p6(2) - p6(3) * p6(3)))
             print*, "m7 = ", sqrt(abs(p7(0) * p7(0) - p7(1) * p7(1) - p7(2) * p7(2) - p7(3) * p7(3)))
             print*, "m8 = ", sqrt(abs(p8(0) * p8(0) - p8(1) * p8(1) - p8(2) * p8(2) - p8(3) * p8(3)))
-            print*, ""
         end if
 
         if (.not. include_gg .and. .not. include_qq .and. .not. include_uu .and. .not. include_dd) then
-            if (verbose) print*, "setting |M|^2 = 1 and skipping matrix element calculation ..."
+            if (verbose) print*, "matrix elements: setting |M|^2 = 1 and skipping ..."
             if (ix == 1) then
                 ddsigma = 0.5 / x1
             else if (ix == 2) then
@@ -606,11 +598,11 @@ function dsigma(x, data, weights, channel, grids)
             go to 666
         end if
 
-        if (verbose) print*,  "calculate QCD coupling..."
+        if (verbose) print*,  "matrix elements: calculate QCD coupling ..."
         gs2 = 4.d0 * pi * alfas(qq, lambdaqcd4, nloops)
         gs4 = gs2 * gs2
 
-        if (verbose) print*, "initialise matrix elements..."
+        if (verbose) print*, "matrix elements: initialising ..."
         qcdqq = 0.d0
         qcdgg = 0.d0
         qfduu1 = 0.d0
@@ -633,7 +625,7 @@ function dsigma(x, data, weights, channel, grids)
         end do
 
         if (final_state <= 0) then
-            if (verbose) print*, "calculating 2->2 matrix elements"
+            if (verbose) print*, "matrix elements: calculating 2 -> 2 ..."
             do i = -1, 1, 2
                 do j = -1, 1, 2
                     if (include_gg) then
@@ -654,9 +646,8 @@ function dsigma(x, data, weights, channel, grids)
             end do
 
         else if (final_state == 1) then
-            if (verbose) print*, "calculating 2->6 matrix elements"
+            if (verbose) print*, "matrix elements: calculating 2 -> 6 ..."
             if (include_gg) then
-                if (verbose) print*, "calculating 2->6 gg matrix elements"
                 qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
             end if
             if (include_qq) then
@@ -671,29 +662,30 @@ function dsigma(x, data, weights, channel, grids)
                 qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
             end if
         else
-            stop "ERROR! Invalid final state."
+            stop "error: invalid final state"
         end if
 
-        if (verbose) print*, "multiply qcd |m|^2 by g_s^4 (madgraph gs is set to one due to scale dependence)"
+        if (verbose) print*, "matrix elements: multiply qcd |m|^2 by g_s^4 ..."
+        ! madgraph gs is set to one due to its scale dependence
         qcdqq = qcdqq * gs4
         qcdgg = qcdgg * gs4
 
         ddsigma = 0.d0
         if (final_state <= 0) then
-            if (verbose) print*, "Summing over 2->2 |m|^2 with pdfs of all initial partons ..."
+            if (verbose) print*, "scattering: summing over 2->2 |m|^2 with pdfs of initial partons ..."
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                             dsigmapol(i,j) = qcdpolgg(i,j)   * fx1(13) * fx2(13) &
-                     + (qcdpolqq(i,j) + qfdpoldd1(i,j)) * fx1( 1) * fx2( 7) &
-                     + (qcdpolqq(i,j) + qfdpoluu1(i,j)) * fx1( 2) * fx2( 8) &
-                     + (qcdpolqq(i,j) + qfdpoldd1(i,j)) * fx1( 3) * fx2( 9) &
-                     + (qcdpolqq(i,j) + qfdpoluu1(i,j)) * fx1( 4) * fx2(10) &
-                     + (qcdpolqq(i,j) + qfdpoldd1(i,j)) * fx1( 5) * fx2(11) &
-                     + (qcdpolqq(i,j) + qfdpoldd2(i,j)) * fx1( 7) * fx2( 1) &
-                     + (qcdpolqq(i,j) + qfdpoluu2(i,j)) * fx1( 8) * fx2( 2) &
-                     + (qcdpolqq(i,j) + qfdpoldd2(i,j)) * fx1( 9) * fx2( 3) &
-                     + (qcdpolqq(i,j) + qfdpoluu2(i,j)) * fx1(10) * fx2( 4) &
-                     + (qcdpolqq(i,j) + qfdpoldd2(i,j)) * fx1(11) * fx2( 5)
+                    dsigmapol(i,j) = fx1(13) * fx2(13) * qcdpolgg(i,j) &
+                                   + fx1( 1) * fx2( 7) * (qcdpolqq(i,j) + qfdpoldd1(i,j)) &
+                                   + fx1( 2) * fx2( 8) * (qcdpolqq(i,j) + qfdpoluu1(i,j)) &
+                                   + fx1( 3) * fx2( 9) * (qcdpolqq(i,j) + qfdpoldd1(i,j)) &
+                                   + fx1( 4) * fx2(10) * (qcdpolqq(i,j) + qfdpoluu1(i,j)) &
+                                   + fx1( 5) * fx2(11) * (qcdpolqq(i,j) + qfdpoldd1(i,j)) &
+                                   + fx1( 7) * fx2( 1) * (qcdpolqq(i,j) + qfdpoldd2(i,j)) &
+                                   + fx1( 8) * fx2( 2) * (qcdpolqq(i,j) + qfdpoluu2(i,j)) &
+                                   + fx1( 9) * fx2( 3) * (qcdpolqq(i,j) + qfdpoldd2(i,j)) &
+                                   + fx1(10) * fx2( 4) * (qcdpolqq(i,j) + qfdpoluu2(i,j)) &
+                                   + fx1(11) * fx2( 5) * (qcdpolqq(i,j) + qfdpoldd2(i,j))
                     if (ix == 1) then
                         dsigmapol(i, j) = dsigmapol(i, j) / x1
                     else if (ix == 2) then
@@ -703,22 +695,22 @@ function dsigma(x, data, weights, channel, grids)
                 end do
             end do
         else if (final_state > 0) then
-            if (verbose) print*, "summing over 2->6 |m|^2 with PDFs of all initial partons ..."
-            ddsigma = fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
-                   + fx1( 2) * fx2( 8) * (qcdqq + qfduu1) &
-                   + fx1( 3) * fx2( 9) * (qcdqq + qfddd1) &
-                   + fx1( 4) * fx2(10) * (qcdqq + qfduu1) &
-                   + fx1( 5) * fx2(11) * (qcdqq + qfddd1) &
-                   + fx1( 7) * fx2( 1) * (qcdqq + qfddd2) &
-                   + fx1( 8) * fx2( 2) * (qcdqq + qfduu2) &
-                   + fx1( 9) * fx2( 3) * (qcdqq + qfddd2) &
-                   + fx1(10) * fx2( 4) * (qcdqq + qfduu2) &
-                   + fx1(11) * fx2( 5) * (qcdqq + qfddd2) &
-                   + fx1(13) * fx2(13) * qcdgg
+            if (verbose) print*, "scattering: summing over 2->6 |m|^2 with PDFs of initial partons ..."
+            ddsigma = fx1(13) * fx2(13) * qcdgg &
+                    + fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
+                    + fx1( 2) * fx2( 8) * (qcdqq + qfduu1) &
+                    + fx1( 3) * fx2( 9) * (qcdqq + qfddd1) &
+                    + fx1( 4) * fx2(10) * (qcdqq + qfduu1) &
+                    + fx1( 5) * fx2(11) * (qcdqq + qfddd1) &
+                    + fx1( 7) * fx2( 1) * (qcdqq + qfddd2) &
+                    + fx1( 8) * fx2( 2) * (qcdqq + qfduu2) &
+                    + fx1( 9) * fx2( 3) * (qcdqq + qfddd2) &
+                    + fx1(10) * fx2( 4) * (qcdqq + qfduu2) &
+                    + fx1(11) * fx2( 5) * (qcdqq + qfddd2)
             if (ix == 1) then
-                ddsigma = (ddsigma) / x1
+                ddsigma = ddsigma / x1
             else if (ix  ==  2) then
-                ddsigma = (ddsigma) / x2
+                ddsigma = ddsigma / x2
             end if
         end if
 
@@ -727,36 +719,33 @@ function dsigma(x, data, weights, channel, grids)
         if (final_state < 1) then
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                    dsigmapol(i,j) = dsigmapol(i, j) / ddsigma
+                    dsigmapol(i, j) = dsigmapol(i, j) / ddsigma
                 end do
             end do
         end if
 
         666 continue
 
-        if (verbose) print*, "multipling by jacobian from dx1 dx2 -> dx(2) dx(3) ..."
+        if (verbose) print*, "scattering: multiplying by Jacobian for dx1 dx2 -> dx(2) dx(3) ..."
         ddsigma = ddsigma * (1.d0 - tau) * 2.d0 * ecm / s * (ecm_max - ecm_min)
 
-        if (verbose) print*, "applying unit conversion ..."
+        if (verbose) print*, "scattering: applying unit conversion ..."
         ddsigma = ddsigma * unit_conv
 
-        if (verbose) print*, "multiply by phase space factor, azimuthal integration and flux factor ..."
+        if (verbose) print*, "scattering: multiply by phase space, azimuthal integration and flux factors ..."
         if (final_state <= 0) then
             if (use_rambo) then
                 ddsigma = ddsigma * wgtr
             else
-                ! ddsigma = ddsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * 2.d0 * pi
-                ddsigma = ddsigma * qcm * pi / ecm / 2.d0
+                ddsigma = ddsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * 2.d0 * pi
             end if
-            ! ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi) ** (4 - 3 * 2)
-            ddsigma = ddsigma / ecm / ecm / pi / pi / 8.d0
+            ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi) ** (4 - 3 * 2)
 
         else if (final_state > 0) then
             if (use_rambo) then
                 ddsigma = ddsigma * wgtr
             else
-                ! ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7/ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
-                ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7 * pi / ecm / 32.d0
+                ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7/ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
                 if (map_phase_space) then
                     ddsigma = ddsigma * ((m356 * m356 - mt * mt)**2 + mt * mt * gamt * gamt) &
                                       * (at356max - at356min) / m356 / mt / gamt / 2.d0
@@ -775,8 +764,7 @@ function dsigma(x, data, weights, channel, grids)
                 end if
             end if
 
-            ! ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi)**(4 - 3 * (6))
-            ddsigma = ddsigma / ecm / ecm / pi ** 14 / 32768
+            ddsigma = ddsigma / 2.d0 / ecm / ecm * (2.d0 * pi)**(4 - 3 * (6))
         end if
 
         if (symmetrise) ddsigma = ddsigma / 2
@@ -794,7 +782,7 @@ function dsigma(x, data, weights, channel, grids)
 
         if (record_events) then
             if (ntuple_out) then
-                if (verbose) print*, "write final particle collider frame momenta to n-tuple..."
+                if (verbose) print*, "scattering: write final particle collider frame momenta to n-tuple..."
 
                 if (final_state == -1) then
                     call rootaddparticle(11,  pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
@@ -803,6 +791,7 @@ function dsigma(x, data, weights, channel, grids)
                 else if (final_state == 0) then
                     call rootaddparticle(6,   pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
                     call rootaddparticle(-6,  pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
+
                 else if (final_state == 1) then
                     call rootaddparticle(5,   pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
                     call rootaddparticle(-5,  pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
@@ -822,84 +811,180 @@ function dsigma(x, data, weights, channel, grids)
                 call rootaddevent(1.d0)
             end if
 
-            ! if (lhef_out) then
-            !     if (verbose) print*, "writing final particle collider frame momenta to lhef..."
-            !     pcol56 = pcol(1:4, 5) + pcol(1:4, 6)
-            !     pcol78 = pcol(1:4, 7) + pcol(1:4, 8)
-            !     pcol356 = pcol56 + pcol(1:4, 3)
-            !     pcol478 = pcol78 + pcol(1:4, 4)
+            if (lhef_out) then
+                if (verbose) print*, "scattering: writing final particle collider frame momenta ..."
+                pcol56 = pcol(1:4, 5) + pcol(1:4, 6)
+                pcol78 = pcol(1:4, 7) + pcol(1:4, 8)
+                pcol356 = pcol56 + pcol(1:4, 3)
+                pcol478 = pcol78 + pcol(1:4, 4)
 
-            !     a_s = alfas(zmass, lambdaqcd4, nloops)
+                a_s = alfas(zmass, lambdaqcd4, nloops)
+                 
+                if (final_state == 1) then
+                    if (include_gg) then
 
-            !     if (include_gg) then
-            !         ! g g -> t t~ -> b W+ b~ W- -> b b~ e+ ve u~ d
-            !         call lhe_add_event(12, 81, weight, qq, a_em, a_s)
-            !         call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1), 0.d0, 9.d0) ! g
-            !         call lhe_add_particle( 21, -1,  0,  0, 103, 101, pcol(1:4,2), 0.d0, 9.d0) ! g
-            !         call lhe_add_particle(  6,  2,  1,  2, 103,   0, pcol356    , 0.d0, 9.d0) ! t
-            !         call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! t~
-            !         call lhe_add_particle( 24,  2,  3,  3,   0,   0, pcol56     , 0.d0, 9.d0) ! W+
-            !         call lhe_add_particle(  5,  1,  3,  3, 103,   0, pcol(1:4,3), 0.d0, 9.d0) ! b
-            !         call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.d0, 9.d0) ! W-
-            !         call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! b~
-            !         call lhe_add_particle(-11,  1,  6,  6,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! e+
-            !         call lhe_add_particle( 12,  1,  6,  6,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! ve
-            !         call lhe_add_particle(  1,  1, 10, 10, 104,   0, pcol(1:4,7), 0.d0, 9.d0) ! u~
-            !         call lhe_add_particle( -2,  1, 10, 10,   0, 104, pcol(1:4,8), 0.d0, 9.d0) ! d
-            !     else if (include_qq) then
-            !         ! q q~ -> t t~ -> b  W+ b~ W- -> b b~ e+ ve u~ d
-            !         call lhe_add_event(12, 82, weight, qq, a_em, a_s)
-            !         call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! u
-            !         call lhe_add_particle( -2, -1,  0,  0,   0, 102, pcol(1:4,2), 0.d0, 9.d0) ! u~
-            !         call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    , 0.d0, 9.d0) ! t
-            !         call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! t~
-            !         call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! W+
-            !         call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3), 0.d0, 9.d0) ! b
-            !         call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! W-
-            !         call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! b~
-            !         call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! e+
-            !         call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! ve
-            !         call lhe_add_particle( 11,  1,  7,  0,   0,   0, pcol(1:4,7), 0.d0, 9.d0) ! e-
-            !         call lhe_add_particle(-12,  1,  7,  0,   0,   0, pcol(1:4,8), 0.d0, 9.d0) ! ve~
-            !     else if (include_uu) then
-            !         ! u u~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve u~ d
-            !         call lhe_add_event(12, 83, weight, qq, a_em, a_s)
-            !         call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! u
-            !         call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! u~
-            !         call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! t
-            !         call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! t~
-            !         call lhe_add_particle( 24,  2,  3,  3,   0,   0, pcol56     , 0.d0, 9.d0) ! W+
-            !         call lhe_add_particle(  5,  1,  3,  3, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! b
-            !         call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.d0, 9.d0) ! W-
-            !         call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! b~
-            !         call lhe_add_particle( -1,  1,  6,  6,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! e+
-            !         call lhe_add_particle(  2,  1,  6,  6,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! ve
-            !         call lhe_add_particle(  1,  1, 10, 10, 103,   0, pcol(1:4,7), 0.d0, 9.d0) ! u~
-            !         call lhe_add_particle( -2,  1, 10, 10,   0, 103, pcol(1:4,8), 0.d0, 9.d0) ! d
-            !     else if (include_dd) then
-            !         ! d d~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve u~ d
-            !         call lhe_add_event(12, 84, weight, qq, a_em, a_s)
-            !         call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! d
-            !         call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! d~
-            !         call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! t
-            !         call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! t~
-            !         call lhe_add_particle( 24,  2,  3,  3,   0,   0, pcol56     , 0.d0, 9.d0) ! W+
-            !         call lhe_add_particle(  5,  1,  3,  3, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! b
-            !         call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.d0, 9.d0) ! W-
-            !         call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! b~
-            !         call lhe_add_particle( -1,  1,  6,  6,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! e+
-            !         call lhe_add_particle(  2,  1,  6,  6,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! ve
-            !         call lhe_add_particle(  1,  1, 10, 10, 103,   0, pcol(1:4,7), 0.d0, 9.d0) ! u~
-            !         call lhe_add_particle( -2,  1, 10, 10,   0, 103, pcol(1:4,8), 0.d0, 9.d0) ! d
-            !     end if
+                        if (verbose) print*, "lhe: g g -> t t~ -> b W+ b~ W- -> b b~ e+ ve e- ve~"
 
-            !     call lhe_end_event
-            ! end if
+                        call lhe_add_event(12, 11, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1), 0.d0, 9.d0) ! 1:  g
+                        call lhe_add_particle( 21, -1,  0,  0, 103, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  g
+                        call lhe_add_particle(  6,  2,  1,  2, 103,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  3,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  3, 103,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  4,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  4,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  6,  6,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  6,  6,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle( 11,  1, 10, 10,   0,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: e-
+                        call lhe_add_particle(-12,  1, 10, 10,   0,   0, pcol(1:4,8), 0.d0, 9.d0) ! 12: ve~
+
+                    else if (include_qq) then
+
+                        if (verbose) print*, "lhe:  q q~ -> t t~ -> b  W+ b~ W- -> b b~ e+ ve e- ve~"
+
+                        call lhe_add_event(12, 12, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  u
+                        call lhe_add_particle( -2, -1,  0,  0,   0, 102, pcol(1:4,2), 0.d0, 9.d0) ! 2:  u~
+                        call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle( 11,  1,  7,  0,   0,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: e-
+                        call lhe_add_particle(-12,  1,  7,  0,   0,   0, pcol(1:4,8), 0.d0, 9.d0) ! 12: ve~
+
+                    else if (include_uu) then
+
+                        if (verbose) print*, "lhe: u u~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve e- ve~"
+
+                        call lhe_add_event(12, 13, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  u
+                        call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  u~
+                        call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle( 11,  1,  7,  0,   0,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: e-
+                        call lhe_add_particle(-12,  1,  7,  0,   0,   0, pcol(1:4,8), 0.d0, 9.d0) ! 12: ve~
+
+                    else if (include_dd) then
+
+                        if (verbose) print*, "lhe: d d~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve e- ve~"
+
+                        call lhe_add_event(12, 14, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  d
+                        call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  d~
+                        call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle( 11,  1,  7,  0,   0,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: e-
+                        call lhe_add_particle(-12,  1,  7,  0,   0,   0, pcol(1:4,8), 0.d0, 9.d0) ! 12: ve~
+
+                    end if
+                else if (final_state == 2) then
+                    if (include_gg) then
+
+                        if (verbose) print*, "lhe: g g -> t t~ -> b W+ b~ W- -> b b~ e+ ve u~ d"
+
+                        call lhe_add_event(12, 21, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1), 0.d0, 9.d0) ! 1:  g
+                        call lhe_add_particle( 21, -1,  0,  0, 103, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  g
+                        call lhe_add_particle(  6,  2,  1,  2, 103,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 103,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle(  1,  1,  7,  0, 104,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: u~
+                        call lhe_add_particle( -2,  1,  7,  0,   0, 104, pcol(1:4,8), 0.d0, 9.d0) ! 12: d
+
+                    else if (include_qq) then
+
+                        if (verbose) print*, "lhe:  q q~ -> t t~ -> b  W+ b~ W- -> b b~ e+ ve u~ d"
+
+                        call lhe_add_event(12, 22, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  u
+                        call lhe_add_particle( -2, -1,  0,  0,   0, 102, pcol(1:4,2), 0.d0, 9.d0) ! 2:  u~
+                        call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle(-11,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle( 12,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle( 11,  1,  7,  0, 103,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: u~
+                        call lhe_add_particle(-12,  1,  7,  0,   0, 103, pcol(1:4,8), 0.d0, 9.d0) ! 12: d
+
+                    else if (include_uu) then
+
+                        if (verbose) print*, "lhe: u u~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve u~ d"
+
+                        call lhe_add_event(12, 23, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  u
+                        call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  u~
+                        call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle( -1,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle(  2,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle(  1,  1,  7,  0, 103,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: u~
+                        call lhe_add_particle( -2,  1,  7,  0,   0, 103, pcol(1:4,8), 0.d0, 9.d0) ! 12: d
+
+                    else if (include_dd) then
+
+                        if (verbose) print*, "lhe: d d~ -> t t~ -> b b~ W+ W- -> b b~ e+ ve u~ d"
+
+                        call lhe_add_event(12, 24, 1.d0, qq, a_em, a_s)
+
+                        call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1), 0.d0, 9.d0) ! 1:  d
+                        call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2), 0.d0, 9.d0) ! 2:  d~
+                        call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    , 0.d0, 9.d0) ! 3:  t
+                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    , 0.d0, 9.d0) ! 4:  t~
+                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     , 0.d0, 9.d0) ! 5:  W+
+                        call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3), 0.d0, 9.d0) ! 6:  b
+                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     , 0.d0, 9.d0) ! 7:  W-
+                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4), 0.d0, 9.d0) ! 8:  b~
+                        call lhe_add_particle( -1,  1,  5,  0,   0,   0, pcol(1:4,5), 0.d0, 9.d0) ! 9:  e+
+                        call lhe_add_particle(  2,  1,  5,  0,   0,   0, pcol(1:4,6), 0.d0, 9.d0) ! 10: ve
+                        call lhe_add_particle(  1,  1,  7,  0, 103,   0, pcol(1:4,7), 0.d0, 9.d0) ! 11: u~
+                        call lhe_add_particle( -2,  1,  7,  0,   0, 103, pcol(1:4,8), 0.d0, 9.d0) ! 12: d
+
+                    end if
+                end if
+
+                call lhe_end_event
+            end if
         end if
-
+        if (verbose) print*, "ddsigma: ", ddsigma
         dsigma = dsigma + ddsigma
     end do
-    if (verbose) print*, "--- end dsigma ---"
+    if (verbose) print*, "dsigma: ", dsigma
     return
 end function dsigma
 
