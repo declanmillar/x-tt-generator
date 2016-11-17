@@ -55,7 +55,7 @@ parser.add_option("-U", "--energy_up",          default = 0,         type = int,
 # strings
 parser.add_option("-t", "--tag",                default = "",                            help = "add a name tag to output files")
 parser.add_option("-w", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
-parser.add_option("-Q", "--queue",              default = "8nw",                         help = "lxbatch queue'")
+parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
 
 (option, args) = parser.parse_args()
