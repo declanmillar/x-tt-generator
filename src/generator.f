@@ -14,6 +14,7 @@ program generator
     !   Stefano Moretti <s.moretti@soton.ac.uk>
 
     use kinds
+    use progress
     use configuration
     use modelling
     use scattering
@@ -221,7 +222,7 @@ if (lhef_out) then
         record_events = .true.
         event = dsigma(x, NO_DATA)
         record_events = .false. 
-        print*, "event", i, "complete"
+        call ProgressPercentage(i, nevents, 50)
     end do
 
     ! reset
