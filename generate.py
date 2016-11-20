@@ -5,7 +5,7 @@
 #     generates a config file
 #     runs generator using it 
 #     can run locally 
-#     or submit to the lxplus/iridis batch system
+#     or submit to the lxplus/iridis/qmul batch system
 # author: 
 #     Declan Millar <declan.millar@cern.ch>
 
@@ -222,6 +222,9 @@ elif "lxplus" in hostname:
 elif "cyan" in hostname:
     run_directory = "/home/dam1g09/zprime-top-generator"
     data_directory = "/scratch/dam1g09/zprime"
+elif "heppc" in hostname:
+    run_directory = "/users/millar/zprime-top-generator"
+    data_directory = "/data/millar/zprime"
 else:
     exit("error: unknown host")
 
@@ -291,6 +294,12 @@ if option.batch:
         # print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
         # print >> handler, "cd %s" % run_directory
         # print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+    elif "heppc" in hostname:
+        print "h_rt = %s" % option.walltime
+        print >> handler, "#!/bin/bash"
+        print >> handler, "source /users/millar/.bash_profile"
+        print >> handler, "cd %s" % run_directory
+        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     else:
         sys.exit("error: hostname not recognised")
     print >> handler, 'rm -- "$0"'
@@ -306,10 +315,11 @@ if option.batch:
     print "Submitting batch job."
     if "lxplus" in hostname: subprocess.call('bsub -q %s %s/%s.sh' % (option.queue, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
+    elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     else: print "error: hostname not recognised"
 
 else:
-    if "lxplus" in hostname:
-        subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
-        subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
+    # if "lxplus" in hostname:
+        # subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
+        # subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
     subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
