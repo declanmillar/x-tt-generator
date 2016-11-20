@@ -1,5 +1,6 @@
-# Fortran makefile for zprime-top-generator
-# Author: Declan Millar <declan.millar@cern.ch>
+# fortran makefile for zprime-top-generator
+# needs RootTuple libraries
+# author: Declan Millar <declan.millar@cern.ch>
 
 F = gfortran
 SRC = src
@@ -9,11 +10,9 @@ BIN = generator
 
 OBJ = vamp_kinds.o progress.o exceptions.o vamp_stat.o utils.o divisions.o histograms.o iso_fortran_env_stub.o linalg.o products.o specfun.o tao52_random_numbers.o tao_random_numbers.o vamp.o rambo.o cteq61pdf.o ct14pdf.o mrs99.o configuration.o lhef.o modelling.o scattering.o alpha_EWNG.o helas.o gg_tt.o qq_tt.o qq_ff.o gg_tt_bbeevv.o qq_tt_bbeevv_qcd.o qq_tt_bbeevv.o gg_bbemuvevm.o qq_bbemuvevm.o uu_bbemuvevm.o dd_bbemuvevm.o rangen.o generator.o
 
-# gg_bbtatavtvt.o qq_bbtatavtvt.o uu_bbtatavtvt.o dd_bbtatavtvt.o
 
-ROOTLIBS = -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer -std=c++11 -lstdc++
+ROOTLIBS = -lGui -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lpthread -lm -ldl -lTreePlayer -std=c++11 -lstdc++ --enable-libstdcxx-pch
 CFLAGS = -J$(LIB) -ffree-form -ffpe-trap=invalid,zero,overflow,underflow,denormal 
-# -fdefault-real-8 -fdefault-double-8 -fmax-errors=0
 
 OS := $(shell uname)
 HOST := $(shell hostname)
