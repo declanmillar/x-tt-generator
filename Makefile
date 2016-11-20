@@ -24,7 +24,7 @@ ifneq (,$(findstring lxplus,$(HOST)))
 else ifneq (,$(findstring cyan,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
 else ifneq (,$(findstring heppc,$(HOST)))
-	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root
+	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root $(ROOTLIBS)
 else ifneq (,$(findstring Sunder,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
 else
