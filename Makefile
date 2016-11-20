@@ -25,10 +25,11 @@ else ifeq ($(HOST),cyan03)
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
 else ifeq ($(HOST),heppc404)
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root $(ROOTLIBS)
-else ifeq ($(OS),Darwin)
+else ifeq ($(HOST),Sunder)
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
 else
-
+test:
+	$(info *** I do not know where to find the ROOT libraries! ***)
 endif
 
 # Compile all files ending in .f in SRC
