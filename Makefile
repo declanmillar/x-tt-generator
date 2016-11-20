@@ -19,13 +19,13 @@ OS := $(shell uname)
 HOST := $(shell hostname)
 # ifeq ($(HOST),Linux)
 
-ifneq (,$(findstring heppc,$(HOST)))
+ifneq (,$(findstring lxplus,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc49-opt/root/lib $(ROOTLIBS)
-else ifeq ($(HOST),cyan03)
+else ifneq (,$(findstring cyan,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
-else ifeq ($(HOST),heppc404)
+else ifneq (,$(findstring heppc,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root $(ROOTLIBS)
-else ifeq ($(HOST),Sunder)
+else ifneq (,$(findstring Sunder,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
 else
 test:
