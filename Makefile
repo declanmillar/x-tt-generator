@@ -23,6 +23,9 @@ endif
 ifeq ($(HOST),cyan03)
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
 endif
+ifeq ($(HOST),heppc404)
+	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root $(ROOTLIBS)
+endif
 ifeq ($(OS),Darwin)
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
 endif
