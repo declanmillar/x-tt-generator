@@ -283,10 +283,14 @@ if option.batch:
     elif "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
-        print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
-        print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
+        print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+        # print >> handler, "#!/bin/bash"
+        # print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
+        # print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
+        # print >> handler, "cd %s" % run_directory
+        # print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     else:
         sys.exit("error: hostname not recognised")
     print >> handler, 'rm -- "$0"'
