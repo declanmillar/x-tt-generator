@@ -17,17 +17,18 @@ CFLAGS = -J$(LIB) -ffree-form -ffpe-trap=invalid,zero,overflow,underflow,denorma
 
 OS := $(shell uname)
 HOST := $(shell hostname)
-ifeq ($(OS),Linux)
+# ifeq ($(HOST),Linux)
+
+ifneq (,$(findstring heppc,$(HOST)))
 	LFLAGS = -L$(LIB) -lRootTuple -L/afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc49-opt/root/lib $(ROOTLIBS)
-endif
-ifeq ($(HOST),cyan03)
+else ifeq ($(HOST),cyan03)
 	LFLAGS = -L$(LIB) -lRootTuple -L/local/software/cern/root_v6.06.06/lib $(ROOTLIBS)
-endif
-ifeq ($(HOST),heppc404)
+else ifeq ($(HOST),heppc404)
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/lib/root $(ROOTLIBS)
-endif
-ifeq ($(OS),Darwin)
+else ifeq ($(OS),Darwin)
 	LFLAGS = -L$(LIB) -lRootTuple -L/usr/local/Cellar/root6/6.06.08/lib/root $(ROOTLIBS)
+else
+
 endif
 
 # Compile all files ending in .f in SRC
