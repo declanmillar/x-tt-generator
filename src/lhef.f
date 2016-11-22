@@ -31,21 +31,12 @@ subroutine lhe_open(lhe_file)
   open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
 end subroutine lhe_open
 
-subroutine lhe_header() ! year, month, day, hour, minute, second, runtime)
-  ! integer :: year, month, day, hour, minute, second
-  real(kind=default) ::  runtime
+subroutine lhe_header()
   print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") '# File generated with zprime-top-generator'
-  ! write(lhe, "(a,              i4.4,   a, i2.2,  a,   i2.2, a,   i2.2,   a,   i2.2, a,   i2.2)") &
-              ! '# Completed: ', year, "-", month, "-", day , " ", hour, ":", minute, ":", second
-  ! write(lhe, "(a,             eS13.6,  a)") &
-              ! '# Run time =', runtime, " [sec]"
   write(lhe, "(a)") '-->'
-  ! write(lhe,*) "<header>"
-  ! write(lhe,*) "<!-- individually designed XML tags, in fancy XML style -->"
-  ! write(lhe,*) "</header>"
 end subroutine lhe_header
 
 subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
