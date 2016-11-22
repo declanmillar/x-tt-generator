@@ -1,4 +1,5 @@
 program generator
+
     ! calculates the cross section, asymmetries, and generates events for
     !   p p -> f f~
     !   p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
@@ -36,7 +37,7 @@ program generator
     real(kind = default) :: event_start, event_finish, event_time
 
     character(40) tablefile
-    integer :: idbm1, idbm2, pdfg(2), pdfs(2)
+    integer :: idbm(2), pdfg(2), pdfs(2)
     real(kind=default) :: ebm(2)
 
     ! VAMP
@@ -189,11 +190,11 @@ program generator
 
     if (lhef_out) then
         print*, "lhe: calculating beam info ..."
-        idbm1 = 2212
+        idbm(1) = 2212
         if (initial_state == 0) then
-            idbm2 = 2212
+            idbm(2) = 2212
         else
-            idbm2 = -2212
+            idbm(2) = -2212
         end if
         do i = 1, 2
             ebm(i) = sqrts / 2
@@ -203,20 +204,20 @@ program generator
 
         call lhe_open(lhe_file)
         call lhe_header()
-        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+        call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
         call lhe_process(sigma, error_sigma, 1.d0, 81)
     end if
 
     symmetrise = .false.
 
-    print*, "generating single event ..."
+    print*, "vamp: generating single event ..."
     call cpu_time(event_start)
     call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
     call cpu_time(event_finish)
     event_time = event_finish - event_start
     print*, "event time: ", event_time, " [secs]"
 
-    print*, "generating", nevents, " events ...  (estimate:", nevents * event_time, "[secs])"
+    print*, "vamp: generating", nevents, " events ...  (estimate:", nevents * event_time, "[secs])"
     do i = 1, nevents
         call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
         record_events = .true.
