@@ -187,7 +187,7 @@ program generator
         call rootinit(ntuple_file)
     end if
 
-if (lhef_out) then
+    if (lhef_out) then
         print*, "lhe: calculating beam info ..."
         idbm1 = 2212
         if (initial_state == 0) then
@@ -202,7 +202,7 @@ if (lhef_out) then
         end do
 
         call lhe_open(lhe_file)
-        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
+        call lhe_header() ! today(3), today(2), today(1), now(1), now(2), now(3), runtime)
         call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
         call lhe_process(sigma, error_sigma, 1.d0, 81)
     end if
