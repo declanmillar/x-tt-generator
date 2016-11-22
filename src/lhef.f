@@ -36,6 +36,7 @@ subroutine lhe_header(year, month, day, hour, minute, second, runtime)
   real(kind=default) ::  runtime
   print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
+  print*, "lhe: here ..."
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") '# File generated with zprime-top-generator'
   write(lhe, "(a,              i4.4,   a, i2.2,  a,   i2.2, a,   i2.2,   a,   i2.2, a,   i2.2)") &
