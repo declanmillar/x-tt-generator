@@ -27,7 +27,8 @@ end function mass
 
 subroutine lhe_open(lhe_file)
   character(*) lhe_file
-  open(unit = lhe, file = lhe_file, status = "replace", action = "write")
+  print*, "lhe: opening lhe file ", trim(lhe_file), " ..." 
+  open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
 end subroutine lhe_open
 
 subroutine lhe_header(year, month, day, hour, minute, second, runtime)
