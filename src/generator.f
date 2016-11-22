@@ -154,6 +154,7 @@ program generator
         end if
     end if
 
+    ! cut = .false.
     record_events = .false.
     print*, "integration: integrating using VAMP ..."
     call tao_random_create (rng, seed = 0)
@@ -209,6 +210,7 @@ program generator
     end if
 
     symmetrise = .false.
+    ! cut = .true.
 
     print*, "vamp: generating single event ..."
     call cpu_time(event_start)
