@@ -45,8 +45,8 @@ parser.add_option("-f", "--final_state",        default = 1,         type = int,
 parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
 parser.add_option("-N", "--iterations",         default = 5,         type = int,         help = "number of VAMP iterations")
 parser.add_option("-n", "--ncall",              default = 10000000,  type = int,         help = "number of VAMP calls")
-parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
-parser.add_option("-P", "--pdf",                default = 4,         type = int,         help = "structure_functions")
+parser.add_option("-e", "--nevents",            default = 1000000,   type = int,         help = "number of events")
+parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
 parser.add_option("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
 parser.add_option("-L", "--energy_low",         default = 0,         type = int,         help = "Ecm lower limit")
@@ -130,42 +130,61 @@ executable = "generator"
 options = ""
 
 if option.initial_state == 1:
-    options += "_ppbar"
+    options += ".ppbar"
 
-if option.pdf != 4:
-    options += "_pdf%s" % option.pdf
+pdf = ""
+if option.pdf ==  1:
+    pdf = "CTEQ6m"
+if option.pdf ==  2:
+    pdf = "CTEQ6d"
+if option.pdf ==  3:
+    pdf = "CTEQ6l"
+if option.pdf ==  4:
+    pdf = "CTEQ6l1"
+if option.pdf ==  5:
+    pdf = "MRS9901"
+if option.pdf ==  6:
+    pdf = "MRS9902"
+if option.pdf ==  7:
+    pdf = "MRS9903"
+if option.pdf ==  8:
+    pdf = "MRS9904"
+if option.pdf ==  9:
+    pdf = "MRS9905"
+if option.pdf == 10:
+    pdf = "CT14LN"
+if option.pdf == 11:
+    pdf = "CT14LL"
 
 if option.interference != 2:
-    options += "_int%i" % option.interference
+    options += ".int%i" % option.interference
 
 if option.use_nwa:
-    options += "_nwa"
+    options += ".nwa"
 
 if option.fixed_seed:
-    options += "_fixed-seed"
+    options += ".fixed-seed"
 
 if not option.symmetrise:
-    options += "_unsymmetrised"
+    options += ".unsymmetrised"
 
 if option.use_rambo:
-    options += "_rambo"
+    options += ".rambo"
 
 if option.include_background == False and option.flatten_integrand == False:
-    options += "_unmapped"
+    options += ".unmapped"
 
 if option.energy_low != 0 or option.energy_up != 0:
-    options += "_%s-%s" % (option.energy_low, option.energy_up)
+    options += ".%s-%s" % (option.energy_low, option.energy_up)
 
 if len(option.tag) > 0:
-    options += "_" + option.tag
+    options += "." + option.tag
 
 if option.final_state < 2:
     option.include_background = False
 
 if option.include_background:
     flatten_integrand = False
-
-energy_collider = "_" + str(option.energy) if option.energy != 13 else ""
 
 initial_partons = ""
 if option.include_gg:
@@ -176,7 +195,7 @@ if option.include_dd:
     initial_partons += "dd"
 if option.include_uu:
     initial_partons += "uu"
-
+initial_partons += "-"
 
 intermediates = ""
 if option.final_state < 2:
@@ -190,7 +209,7 @@ else:
     if option.include_background == False and option.include_signal == True:
         intermediates += "tt"
     if option.include_background == True and option.include_signal == False:
-        intermediates += "_bkg-only"
+        intermediates += ".bkg-only"
 
 if len(intermediates) > 0:
     intermediates = intermediates + "-"
@@ -209,26 +228,31 @@ elif option.final_state == 11:
 elif option.final_state == 12:
     final_state = "bbemuvevm"
 
-filename = '%s_%s-%s%s%s%s' % (option.model, initial_partons, intermediates, final_state, energy_collider, options)
+process = initial_partons + intermediates + final_state
 
-# logfile
-run_directory = "."
+filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
+
+home_directory = "."
 data_directory = "."
 if "Sunder" in hostname:
-    data_directory = "/Users/declan/Data/zprime"
+    home_directory = "/Users/declan/Code/"
+    data_directory = "/Users/declan/Data/"
 elif "lxplus" in hostname:
-    run_directory = "/afs/cern.ch/user/d/demillar/zprime-top-generator"
-    data_directory = "/afs/cern.ch/work/d/demillar/zprime"
+    home_directory = "/afs/cern.ch/user/d/demillar/"
+    data_directory = "/afs/cern.ch/work/d/demillar/"
 elif "cyan" in hostname:
-    run_directory = "/home/dam1g09/zprime-top-generator"
-    data_directory = "/scratch/dam1g09/zprime"
+    home_directory = "/home/dam1g09/"
+    data_directory = "/scratch/dam1g09/"
 elif "heppc" in hostname:
-    run_directory = "/users/millar/zprime-top-generator"
-    data_directory = "/data/millar/zprime"
+    home_directory = "/users/millar/"
+    data_directory = "/data/millar/"
 else:
     exit("error: unknown host")
+run_directory = home_directory + "zprime-top-generator"
+data_directory = data_directory + "zprime"
 
 if os.path.isdir(data_directory) is False:
+    sys.exit("error: specified run directory '%s' does not exist" % run_directory)
     sys.exit("error: specified data directory '%s' does not exist" % data_directory)
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
@@ -280,7 +304,9 @@ except IOERROR:
 if option.batch:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
-        print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH"
+        print "walltime = %s" % option.walltime
+        print >> handler, "#!/bin/bash"
+        print >> handler, "source /afs/cern.ch/cern/d/demillar/.bash_profile"
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     elif "cyan" in hostname:
@@ -289,11 +315,6 @@ if option.batch:
         print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
-        # print >> handler, "#!/bin/bash"
-        # print >> handler, "module load gcc/4.8.1; source /local/software/cern/root_v5.34.14/bin/thisroot.sh"
-        # print >> handler, "export LD_LIBRARY_PATH=/home/dam1g09/.RootTuple:$LD_LIBRARY_PATH"
-        # print >> handler, "cd %s" % run_directory
-        # print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     elif "heppc" in hostname:
         print "h_rt = %s" % option.walltime
         print >> handler, "#!/bin/bash"
@@ -302,7 +323,6 @@ if option.batch:
         print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
     else:
         sys.exit("error: hostname not recognised")
-    print >> handler, 'rm -- "$0"'
 
     try:
         with open('%s' % handler_name, 'w') as handler_file:
@@ -312,14 +332,11 @@ if option.batch:
         sys.exit("error: Cannot write handler file.")
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
-    print "Submitting batch job."
+    print "submitting batch job ..."
     if "lxplus" in hostname: subprocess.call('bsub -q %s %s/%s.sh' % (option.queue, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
-    else: print "error: hostname not recognised"
-
+    else: 
+        print "error: hostname not recognised"
 else:
-    # if "lxplus" in hostname:
-        # subprocess.call("source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh", shell = True)
-        # subprocess.call("export LD_LIBRARY_PATH=/afs/cern.ch/user/d/demillar/.RootTuple:$LD_LIBRARY_PATH", shell = True)
     subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
