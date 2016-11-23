@@ -209,6 +209,9 @@ program generator
         call lhe_process(sigma, error_sigma, 1.d0, 81)
     end if
 
+    ! print*, "vamp: warming up grid ..."
+    ! call vamp_warmup_grid(rng, grid, dsigma, NO_DATA, itmx, exc = exc)
+
     symmetrise = .false.
     ! cut = .true.
 
