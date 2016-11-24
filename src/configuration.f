@@ -35,6 +35,7 @@ module configuration
   integer :: ncall
   integer :: nevents
   integer :: itmx
+  logical :: batch
   ! logical :: cut
 
   ! derived config
@@ -91,7 +92,7 @@ subroutine read_config
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up
-  ! read(5,*) cut
+  read(5,*) batch
 end subroutine read_config
 
 subroutine modify_config

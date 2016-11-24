@@ -42,6 +42,7 @@ program generator
 
     ! VAMP
     integer :: ndimensions
+    type(vamp_data_t) :: data
     real(kind=default), dimension(15) :: x
     type(exception) :: exc
     type(tao_random_state) :: rng
@@ -160,18 +161,20 @@ program generator
     call tao_random_create (rng, seed = 0)
 
     print*, "integration: creating VAMP grid..."
-    call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
+    call vamp_create_grid(grid, domain, num_calls = ncall / 10, exc = exc) 
 
     print*, "integration: initial sampling of VAMP grid with ", ncall / 10, " points and ", itmx + 1, "iterations ..."
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
     print *, "integration: preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
 
     print*, "integration: discarding preliminary integral ..."
-    call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
+    call vamp_discard_integral(grid, num_calls = ncall, exc = exc)
 
     print*, "integration: full sampling of VAMP grid with ...", ncall, " points and ", itmx - 1, "iterations ..."
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
     print *, "integration: integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    call vamp_sample_grid0(rng, grid, dsigma, NO_DATA, exc = exc)
 
     if (sigma == 0.d0) then
         print*, "integration: integration: integral = 0. Stopping."
@@ -209,11 +212,7 @@ program generator
         call lhe_process(sigma, error_sigma, 1.d0, 81)
     end if
 
-    ! print*, "vamp: warming up grid ..."
-    ! call vamp_warmup_grid(rng, grid, dsigma, NO_DATA, itmx, exc = exc)
-
     symmetrise = .false.
-    ! cut = .true.
 
     print*, "vamp: generating single event ..."
     call cpu_time(event_start)
@@ -228,7 +227,7 @@ program generator
         record_events = .true.
         event = dsigma(x, NO_DATA)
         record_events = .false. 
-        call ProgressPercentage(i, nevents, 50)
+        if (.not. batch) call ProgressPercentage(i, nevents, 50)
     end do
 
     ! reset
