@@ -42,7 +42,6 @@ program generator
 
     ! VAMP
     integer :: ndimensions
-    type(vamp_data_t) :: data
     real(kind=default), dimension(15) :: x
     type(exception) :: exc
     type(tao_random_state) :: rng
