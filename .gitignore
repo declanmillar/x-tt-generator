@@ -2,4 +2,5 @@
 *.root
 LSFJOB_*
 *.sh*
+*.so
 .DS_Store
