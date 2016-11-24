@@ -35,6 +35,8 @@ module configuration
   integer :: ncall
   integer :: nevents
   integer :: itmx
+  logical :: batch
+  ! logical :: cut
 
   ! derived config
   integer :: nfinal
@@ -90,6 +92,7 @@ subroutine read_config
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up
+  read(5,*) batch
 end subroutine read_config
 
 subroutine modify_config
@@ -180,6 +183,7 @@ subroutine print_config
   if (ipdf ==  9) write(log,*) 'PDFs: MRS99 (cor05)'
   if (ipdf == 10) write(log,*) 'PDFs: CT14LN'
   if (ipdf == 11) write(log,*) 'PDFs: CT14LL'
+  ! if (cut) write(log,*) 'applying fiducial cuts to events'
 end subroutine print_config
 
 end module configuration

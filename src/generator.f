@@ -1,4 +1,5 @@
 program generator
+
     ! calculates the cross section, asymmetries, and generates events for
     !   p p -> f f~
     !   p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~
@@ -36,11 +37,12 @@ program generator
     real(kind = default) :: event_start, event_finish, event_time
 
     character(40) tablefile
-    integer :: idbm1, idbm2, pdfg(2), pdfs(2)
+    integer :: idbm(2), pdfg(2), pdfs(2)
     real(kind=default) :: ebm(2)
 
     ! VAMP
     integer :: ndimensions
+    type(vamp_data_t) :: data
     real(kind=default), dimension(15) :: x
     type(exception) :: exc
     type(tao_random_state) :: rng
@@ -153,23 +155,26 @@ program generator
         end if
     end if
 
+    ! cut = .false.
     record_events = .false.
     print*, "integration: integrating using VAMP ..."
     call tao_random_create (rng, seed = 0)
 
     print*, "integration: creating VAMP grid..."
-    call vamp_create_grid (grid, domain, num_calls = ncall / 10, exc = exc) 
+    call vamp_create_grid(grid, domain, num_calls = ncall / 10, exc = exc) 
 
     print*, "integration: initial sampling of VAMP grid with ", ncall / 10, " points and ", itmx + 1, "iterations ..."
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error_sigma, chi2_sigma, exc = exc)
     print *, "integration: preliminary integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
 
     print*, "integration: discarding preliminary integral ..."
-    call vamp_discard_integral (grid, num_calls = ncall, exc = exc)
+    call vamp_discard_integral(grid, num_calls = ncall, exc = exc)
 
     print*, "integration: full sampling of VAMP grid with ...", ncall, " points and ", itmx - 1, "iterations ..."
-    call vamp_sample_grid (rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error_sigma, chi2_sigma, exc = exc)
     print *, "integration: integral = ", sigma, "+/-", error_sigma, " (chi^2 = ", chi2_sigma, ")"
+
+    call vamp_sample_grid0(rng, grid, dsigma, NO_DATA, exc = exc)
 
     if (sigma == 0.d0) then
         print*, "integration: integration: integral = 0. Stopping."
@@ -187,13 +192,13 @@ program generator
         call rootinit(ntuple_file)
     end if
 
-if (lhef_out) then
+    if (lhef_out) then
         print*, "lhe: calculating beam info ..."
-        idbm1 = 2212
+        idbm(1) = 2212
         if (initial_state == 0) then
-            idbm2 = 2212
+            idbm(2) = 2212
         else
-            idbm2 = -2212
+            idbm(2) = -2212
         end if
         do i = 1, 2
             ebm(i) = sqrts / 2
@@ -202,27 +207,27 @@ if (lhef_out) then
         end do
 
         call lhe_open(lhe_file)
-        call lhe_header(today(3), today(2), today(1), now(1), now(2), now(3), runtime)
-        call lhe_beam(idbm1, idbm2, ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
+        call lhe_header()
+        call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(2), pdfs(2), 2)
         call lhe_process(sigma, error_sigma, 1.d0, 81)
     end if
 
     symmetrise = .false.
 
-    print*, "generating single event ..."
+    print*, "vamp: generating single event ..."
     call cpu_time(event_start)
     call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
     call cpu_time(event_finish)
     event_time = event_finish - event_start
     print*, "event time: ", event_time, " [secs]"
 
-    print*, "generating", nevents, " events ...  (estimate:", nevents * event_time, "[secs])"
+    print*, "vamp: generating", nevents, " events ...  (estimate:", nevents * event_time, "[secs])"
     do i = 1, nevents
         call vamp_next_event_single(x, rng, grid, dsigma, NO_DATA, exc = exc)
         record_events = .true.
         event = dsigma(x, NO_DATA)
         record_events = .false. 
-        call ProgressPercentage(i, nevents, 50)
+        if (.not. batch) call ProgressPercentage(i, nevents, 50)
     end do
 
     ! reset

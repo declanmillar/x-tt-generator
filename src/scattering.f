@@ -533,6 +533,24 @@ function dsigma(x, data, weights, channel, grids)
             pcol(1,i) = p(1,i)
         end do
 
+        ! fiducial cuts
+        ! if (cut) then
+        !   do i = 3, nfinal
+
+        !     pt = sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i))
+        !     if (pt < 25) then
+        !       dsigma = 0.d0
+        !       return
+        !     end if
+
+        !     eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
+        !     if (abs(eta) > 2.5) then
+        !       dsigma = 0.d0
+        !       return
+        !     end if
+        !   end do
+        ! end if
+
         if (verbose) print*, "kinematics: copying parton CoM 4-momenta for MadGraph..."
         p1(0) = p(4, 1)
         p2(0) = p(4, 2)
