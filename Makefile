@@ -13,7 +13,7 @@ OBJ = vamp_kinds.o progress.o exceptions.o vamp_stat.o utils.o divisions.o histo
 FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal 
 LFLAGS = -L$(LIB) -lRootTuple $(shell root-config --libs)
 
-$(LIB)/%.o: $(SRC)/%.f03
+$(LIB)/%.o: $(SRC)/%.f08
 	$(F) $(FFLAGS) -c -o  $@ $<
 
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
