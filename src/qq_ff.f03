@@ -10,12 +10,12 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
   implicit none
 
   ! functions
-  real*8 :: sqq_ff
-  real*8 :: qq_ff
+  real(kind=default) :: sqq_ff
+  real(kind=default) :: qq_ff
 
   ! arguments
   integer :: iq, jf
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
 
   ! constants
@@ -23,7 +23,7 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
 
   ! local variables
   integer :: nhel(nexternal,ncomb),ntry
-  real*8 :: t
+  real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -78,26 +78,26 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   implicit none
 
   ! functions
-  real*8 :: qq_ff
+  real(kind=default) :: qq_ff
 
   ! local constants
   integer, parameter :: ngraphs = 7 ,nexternal = 4
 
   ! arguments
   integer :: iq, jf, lam3,lam4
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  complex*16 amp_tmp, amp_tmp2
-  complex*16 amp(ngraphs)
-  complex*16 w1(6), w2(6), w3(6), w4(6)
-  complex*16 w5(6), w6(6), w7(6)
-  real*8 :: gAq(2), gAf(2)
-  real*8 :: gZq(2), gZf(2)
-  real*8 :: gxq(2,5), gxf(2,5)
-  real*8 :: gxq_tmp(2), gxf_tmp(2)
+  complex(kind=complex) amp_tmp, amp_tmp2
+  complex(kind=complex) amp(ngraphs)
+  complex(kind=complex) w1(6), w2(6), w3(6), w4(6)
+  complex(kind=complex) w5(6), w6(6), w7(6)
+  real(kind=default) :: gAq(2), gAf(2)
+  real(kind=default) :: gZq(2), gZf(2)
+  real(kind=default) :: gxq(2,5), gxf(2,5)
+  real(kind=default) :: gxq_tmp(2), gxf_tmp(2)
 
   ! select only specified helicities
   if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then

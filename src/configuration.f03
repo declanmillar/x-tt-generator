@@ -43,7 +43,6 @@ module configuration
   integer :: tops_decay
   integer :: ffinal
   integer :: nloops
-  real(kind=default) :: lambdaqcd4
   integer :: z_mixing
   real(kind=default) :: s2mix
   integer :: pid

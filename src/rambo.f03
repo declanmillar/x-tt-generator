@@ -30,10 +30,10 @@
     po2log=dlog(twopi/4.d0)
     z(2)=po2log
     do 101 k=3,100
-        z(k)=z(k-1)+po2log-2.d0*dlog(dfloat(k-2))
+        z(k)=z(k-1)+po2log-2.d0*dlog(real(k-2,kind=default))
     101 END DO
     do 102 k=3,100
-        z(k)=(z(k)-dlog(dfloat(k-1)))
+        z(k)=(z(k)-dlog(real(k-1,kind=default)))
     102 END DO
 
 ! check on the number of particles
@@ -56,11 +56,11 @@
 
 ! generate n massless momenta in infinite phase space
     201 do 202 i=1,n
-        c=2.d0*ran(iseed)-1.d0
+        c=2.d0*ran2(iseed)-1.d0
         s=dsqrt(dabs(1.d0-c*c))
-        f=twopi*ran(iseed)
+        f=twopi*ran2(iseed)
         999 continue
-        arg=ran(iseed)*ran(iseed)
+        arg=ran2(iseed)*ran2(iseed)
         if(arg <= 0.d0)go to 999
         q(4,i)=-dlog(arg)
         q(3,i)=q(4,i)*c
@@ -72,10 +72,11 @@
     do 203 i=1,4
         r(i)=0.d0
     203 END DO
-    do 204 i=1,n
-        do 204 k=1,4
+    do i=1,n
+        do k=1,4
             r(k)=r(k)+q(k,i)
-    204 END DO
+        end do
+    end do
     rmas=dsqrt(dabs(r(4)**2-r(3)**2-r(2)**2-r(1)**2))
     if(rmas == 0.d0)goto 201
     do 205 k=1,3

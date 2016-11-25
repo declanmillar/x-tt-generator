@@ -6,24 +6,25 @@ function sgg_tt(p1, p2, p3, p4, lam3, lam4)
   ! for process: g g -> t t~
 
   use kinds
+  use helas
 
   implicit none
 
   ! functions
-  real*8 :: sgg_tt
-  real*8 :: gg_tt
+  real(kind=default) :: sgg_tt
+  real(kind=default) :: gg_tt
 
   ! constants
   integer, parameter :: nexternal = 4, ncomb = 16
 
   ! arguments
   integer :: iq
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
 
   ! variables
   integer :: nhel(nexternal, ncomb), ntry
-  real*8 :: t
+  real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -69,29 +70,30 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
   ! for process: g g -> t t~
 
   use kinds
+  use helas
   use modelling, only: gg, g, fmass, fwidth
 
   implicit none
 
   ! functions
-  real*8 :: gg_tt
+  real(kind=default) :: gg_tt
 
   ! constants
   integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 4
-  real, parameter :: zero = 0d0
+  real(kind=default), parameter :: zero = 0d0
 
   ! arguments
   integer :: iq
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3)
   integer :: lam3, lam4
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-  complex*16 ztemp
-  complex*16 amp(ngraphs)
-  complex*16 w1(6), w2(6), w3(6), w4(6), w5(6), w6(6), w7(6)
+  real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+  complex(kind=complex) ztemp
+  complex(kind=complex) amp(ngraphs)
+  complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6), w6(6), w7(6)
 
   ! color data
   data eigen_val(1) /7.2916666666666588e-02/

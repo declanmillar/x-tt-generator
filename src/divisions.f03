@@ -21,7 +21,6 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module divisions
-
   use kinds
   use exceptions
   use vamp_stat

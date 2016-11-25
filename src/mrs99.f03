@@ -104,28 +104,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor01.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -191,28 +194,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor02.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -278,28 +284,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor03.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -366,28 +375,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor04.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -453,28 +465,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor05.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -541,28 +556,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor06.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -628,28 +646,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor07.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -717,28 +738,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor08.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -804,28 +828,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor09.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -893,28 +920,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor10.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -980,28 +1010,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor11.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin
@@ -1068,28 +1101,31 @@
     q2save=qsq
     if(init /= 0) goto 10
     open(unit=1,file='cor12.dat',status='old')
-    do 20 n=1,nx-1
-        do 20 m=1,nq
+    do n=1,nx-1
+        do m=1,nq
             read(1,50)f(1,n,m),f(2,n,m),f(3,n,m),f(4,n,m), &
             f(5,n,m),f(7,n,m),f(6,n,m),f(8,n,m)
         ! notation: 1=uval 2=val 3=glue 4=usea 5=chm 6=str 7=btm 8=dsea
             do 25 i=1,np
                 f(i,n,m)=f(i,n,m)/(1d0-xx(n))**n0(i)
             25 END DO
-    20 END DO
-    do 31 j=1,ntenth-1
+        END DO
+    end do
+    do j=1,ntenth-1
         xx(j)=log10(xx(j)/xx(ntenth))+xx(ntenth)
-        do 31 i=1,8
-            if(i == 5 .OR. i == 7) goto 31
+        do i=1,8
+            if(i == 5 .OR. i == 7) continue
             do 30 k=1,nq
                 f(i,j,k)=log10(f(i,j,k)/f(i,ntenth,k))+f(i,ntenth,k)
             30 END DO
-    31 END DO
+        END DO
+    end do
     50 format(8f10.5)
-    do 40 i=1,np
-        do 40 m=1,nq
+    do i=1,np
+        do m=1,nq
             f(i,nx,m)=0d0
-    40 END DO
+        END DO
+    end do
     init=1
     10 continue
     if(x < xmin) x=xmin

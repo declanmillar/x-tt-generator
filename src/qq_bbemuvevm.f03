@@ -7,20 +7,23 @@ function sqq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
 
     ! for process : q q~  -> b b~ e+ mu- ve vm~
 
+    use kinds
+    use helas
+
     implicit none
 
-    real*8 :: sqq_bbemuvevm
+    real(kind=default) :: sqq_bbemuvevm
 
     ! constants
     integer, parameter :: nexternal = 8, ncomb = 256
 
     ! arguments
-    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real(kind=default) :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
 
     ! local variables
     integer :: nhel(nexternal, ncomb), ntry
-    real*8 :: t
-    real*8 :: qq_bbemuvevm
+    real(kind=default) :: t
+    real(kind=default) :: qq_bbemuvevm
     integer :: ihel
     logical :: goodhel(ncomb)
     data goodhel/ncomb* .FALSE. /
@@ -309,38 +312,40 @@ function qq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
     ! for process : u u~  -> b b~ e+ mu- ve vm~
 
+    use kinds
+    use helas
     use modelling
     use configuration, only: include_signal, include_background
 
     implicit none
 
-    real*8 :: qq_bbemuvevm
+    real(kind=default) :: qq_bbemuvevm
 
     ! constants
     integer, parameter :: ngraphs = 44, neigen = 1, nexternal = 8
-    real*8, parameter :: zero = 0d0
+    real(kind=default), parameter :: zero = 0d0
 
     ! arguments
-    real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+    real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
     integer :: nhel(nexternal)
 
     ! variables
     integer :: i, j
-    real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-    complex*16 ztemp
-    complex*16 amp(ngraphs)
-    complex*16 w1(6) ,  w2(6) ,  w3(6) ,  w4(6) ,  w5(6)
-    complex*16 w6(6) ,  w7(6) ,  w8(6) ,  w9(6) ,  w10(6)
-    complex*16 w11(6),  w12(6),  w13(6),  w14(6),  w15(6)
-    complex*16 w16(6),  w17(6),  w18(6),  w19(6),  w20(6)
-    complex*16 w21(6),  w22(6),  w23(6),  w24(6),  w25(6)
-    complex*16 w26(6),  w27(6),  w28(6),  w29(6),  w30(6)
-    complex*16 w31(6),  w32(6),  w33(6),  w34(6),  w35(6)
-    complex*16 w36(6),  w37(6),  w38(6),  w39(6),  w40(6)
-    complex*16 w41(6),  w42(6),  w43(6),  w44(6),  w45(6)
-    complex*16 w46(6),  w47(6),  w48(6),  w49(6),  w50(6)
-    complex*16 w51(6),  w52(6),  w53(6),  w54(6),  w55(6)
-    complex*16 w56(6),  w57(6),  w58(6),  w59(6)
+    real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+    complex(kind=complex) ztemp
+    complex(kind=complex) amp(ngraphs)
+    complex(kind=complex) w1(6) ,  w2(6) ,  w3(6) ,  w4(6) ,  w5(6)
+    complex(kind=complex) w6(6) ,  w7(6) ,  w8(6) ,  w9(6) ,  w10(6)
+    complex(kind=complex) w11(6),  w12(6),  w13(6),  w14(6),  w15(6)
+    complex(kind=complex) w16(6),  w17(6),  w18(6),  w19(6),  w20(6)
+    complex(kind=complex) w21(6),  w22(6),  w23(6),  w24(6),  w25(6)
+    complex(kind=complex) w26(6),  w27(6),  w28(6),  w29(6),  w30(6)
+    complex(kind=complex) w31(6),  w32(6),  w33(6),  w34(6),  w35(6)
+    complex(kind=complex) w36(6),  w37(6),  w38(6),  w39(6),  w40(6)
+    complex(kind=complex) w41(6),  w42(6),  w43(6),  w44(6),  w45(6)
+    complex(kind=complex) w46(6),  w47(6),  w48(6),  w49(6),  w50(6)
+    complex(kind=complex) w51(6),  w52(6),  w53(6),  w54(6),  w55(6)
+    complex(kind=complex) w56(6),  w57(6),  w58(6),  w59(6)
 
     ! color data
     data eigen_val(1) /9.7777777777777768e+00/

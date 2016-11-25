@@ -1,16 +1,110 @@
 module scattering
 
     use kinds
+    use configuration
+    use modelling
 
     implicit none
 
-    real(kind=default) :: sigma, sigma_pol(-1:1, -1:1, 20), error_pol(-1:1, -1:1, 20)
-    real(kind=default) :: m3, m4, m5, m6, m7, m8, s
-    real(kind=default), parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
-    logical :: record_events
-    public :: dsigma
+    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits
+
+    real(kind=default) :: sigma_pol(-1:1, -1:1, 20), error_pol(-1:1, -1:1, 20)
+    real(kind=default), private :: m3, m4, m5, m6, m7, m8
+    real(kind=default), private :: s, ecm_max, ecm_min
+    real(kind=default), parameter, public :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
+    logical, public :: record_events
+
+    ! temporary top mass and width
+    real(kind=default) :: mt, gamt
 
 contains
+
+
+subroutine initialise_pdfs
+
+    character(40) tablefile
+    real(kind=default) :: alfas
+
+    print*, "initialisation: setting lambda_QCD based on PDF set ..."
+    if (ipdf ==  1) lambdaqcd4 = 0.326d0
+    if (ipdf ==  2) lambdaqcd4 = 0.326d0
+    if (ipdf ==  3) lambdaqcd4 = 0.326d0
+    if (ipdf ==  4) lambdaqcd4 = 0.215d0
+    if (ipdf ==  5) lambdaqcd4 = 0.300d0
+    if (ipdf ==  6) lambdaqcd4 = 0.300d0
+    if (ipdf ==  7) lambdaqcd4 = 0.300d0
+    if (ipdf ==  8) lambdaqcd4 = 0.229d0
+    if (ipdf ==  9) lambdaqcd4 = 0.383d0
+    if (ipdf == 10) lambdaqcd4 = 0.326d0
+    if (ipdf == 11) lambdaqcd4 = 0.215d0
+    write(log, *) 'lambda_QCD^4: ', lambdaqcd4
+
+    print*, "initialisation: opening pdf tables ..."
+    if (ipdf <=  4) call setctq6(ipdf)
+    if (ipdf == 10) tablefile = "ct14ln.pds"
+    if (ipdf == 11) tablefile = "ct14ll.pds"
+    if (ipdf >= 10) call setct14(tablefile)
+
+    print*, "initialisation: using appropriately evolved alphas ..."
+    if (ipdf <= 2 .or. ipdf == 10) then
+        nloops = 2
+    else
+        nloops = 1
+    end if
+    write(log, *) 'loops: ', nloops
+    write(log, *) 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
+
+end subroutine initialise_pdfs
+
+subroutine initialise_masses
+
+    print*, "initialisation: setting external particle masses ..."
+    if (final_state <= 0) then
+        m3 = fmass(ffinal)
+        m4 = fmass(ffinal)
+    else if (final_state == 1) then
+        m3 = fmass(12)
+        m4 = fmass(12)
+    end if
+    m5 = 0.d0
+    m6 = 0.d0
+    m7 = 0.d0
+    m8 = 0.d0
+
+    ! store top parameters
+    mt = fmass(ffinal)
+    gamt = fwidth(ffinal)
+
+end subroutine initialise_masses
+
+subroutine set_energy_limits
+    print*, "initialisation: setting energy limits ..."
+    if (ecm_up == 0.d0) then
+        ecm_max = sqrts
+    else
+        ecm_max = ecm_up
+    end if
+    if (ecm_low == 0.d0) then
+        ecm_min = m3 + m4 + m5 + m6 + m7 + m8
+    else
+        ecm_min = ecm_low
+    end if
+    print*, "initialisation: ecm_max = ", ecm_max
+    print*, "initialisation: ecm_min = ", ecm_min
+end subroutine set_energy_limits
+
+
+subroutine initialise_s
+
+    print*, "initialisation: setting s ..."
+
+    s = sqrts * sqrts
+
+    print*, "initialisation: s = ", s
+
+end subroutine initialise_s
+
+
 
 function dsigma(x, data, weights, channel, grids)
 
@@ -20,7 +114,7 @@ function dsigma(x, data, weights, channel, grids)
 
     ! requirements:
     !     HELAS subroutines
-    !     VEGAS Monte Carlo integration
+    !     VAMP Monte Carlo integration
     !     CT10, CTEQ6 and MRS99 PDF subroutines
     !     RootTuple for filling n-tuples
 
@@ -29,7 +123,6 @@ function dsigma(x, data, weights, channel, grids)
     !     Stefano Moretti
 
     use configuration
-    use modelling
     use lhef
     use vamp, only: vamp_data_t, vamp_grid
 
@@ -64,7 +157,7 @@ function dsigma(x, data, weights, channel, grids)
     integer :: ix, ixmax
 
     ! energies
-    real(kind=default) :: shat, tau, ecm, ecm_max, ecm_min
+    real(kind=default) :: shat, tau, ecm
 
     real(kind=default) :: qcm, pcm, qcm2
     real(kind=default) :: pq5, pq52, pq56, pq7, pq78
@@ -83,9 +176,6 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: ct, ct5, ct56, ct7, ct78
     real(kind=default) :: sf5, sf56, sf7, sf78
     real(kind=default) :: cf5, cf56, cf7, cf78
-
-    ! temporary top mass and width
-    real(kind=default) :: mt, gamt
 
     ! rambo
     real(kind=default) :: rmass(100), prambo(4,100), wgtr
@@ -114,6 +204,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: weight_pol(-1:1, -1:1, 20), dsigmapol(-1:1, -1:1)
 
     ! internal random number seed
+    real(kind=default) :: ran2
     integer, parameter :: jseed = 987654321
 
     ! temporary iterators
@@ -122,22 +213,6 @@ function dsigma(x, data, weights, channel, grids)
     ! ---
 
     if (verbose) print*, "dsigma: begin"
-
-    ! store top parameters
-    mt = fmass(ffinal)
-    gamt = fwidth(ffinal)
-
-    ! limits
-    if (ecm_up == 0.d0) then
-        ecm_max = sqrts
-    else
-        ecm_max = ecm_up
-    end if
-    if (ecm_low == 0.d0) then
-        ecm_min = m3 + m4 + m5 + m6 + m7 + m8
-    else
-        ecm_min = ecm_low
-    end if
 
     if (use_rambo) then
         ecm = x(1) * (ecm_max - ecm_min) + ecm_min
@@ -170,13 +245,13 @@ function dsigma(x, data, weights, channel, grids)
     x1x2(2, 2) = xx1
 
     ! symmetrise phase space with x1 <-> x2
-    dsigma = 0.d0
     if (symmetrise) then
         ixmax = 2
     else
         ixmax = 1
     end if
 
+    dsigma = 0.d0
     do ix = 1, ixmax
         ddsigma = 0.d0
         x1 = x1x2(ix, 1)
@@ -317,7 +392,7 @@ function dsigma(x, data, weights, channel, grids)
             else
                 ! Calculate 2->2 final state momenta in the parton CoM frame manually
 
-                phi = 2.d0 * pi * ran(jseed)
+                phi = 2.d0 * pi * ran2(jseed)
                 ct = x(1)
                 st = sqrt(1.d0 - ct * ct)
 
@@ -352,7 +427,7 @@ function dsigma(x, data, weights, channel, grids)
                     end do
                 end do
             else
-                phi = 2.d0 * pi * ran(jseed)
+                phi = 2.d0 * pi * ran2(jseed)
 
                 m356min = m3 + m5 + m6
                 m356max = ecm - m4 - m7 - m8
@@ -532,24 +607,6 @@ function dsigma(x, data, weights, channel, grids)
             pcol(2,i) = p(2,i)
             pcol(1,i) = p(1,i)
         end do
-
-        ! fiducial cuts
-        ! if (cut) then
-        !   do i = 3, nfinal
-
-        !     pt = sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i))
-        !     if (pt < 25) then
-        !       dsigma = 0.d0
-        !       return
-        !     end if
-
-        !     eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
-        !     if (abs(eta) > 2.5) then
-        !       dsigma = 0.d0
-        !       return
-        !     end if
-        !   end do
-        ! end if
 
         if (verbose) print*, "kinematics: copying parton CoM 4-momenta for MadGraph..."
         p1(0) = p(4, 1)

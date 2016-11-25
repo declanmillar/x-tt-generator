@@ -4,22 +4,25 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
   ! for the point in phase space p1, p2, p3, p4, ...
   ! for process: g g -> t t~ -> b b~ ta+ ta- vt vt~
 
+  use kinds
+  use helas
+
   implicit none
 
   ! functions
-  real*8 :: sgg_tt_bbeevv
-  real*8 :: gg_tt_bbeevv
+  real(kind=default) :: sgg_tt_bbeevv
+  real(kind=default) :: gg_tt_bbeevv
 
   ! constants
   integer, parameter :: nexternal = 8, ncomb = 256
 
   ! arguments
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
   ! local variables
   integer :: i, j
   integer :: nhel(nexternal, ncomb), ntry
-  real*8 :: t
+  real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -306,28 +309,30 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   ! and helicity nhel(1), nhel(2), ...
   ! for process : g g  -> t t~ -> b b~ ta+ ta- vt vt~
 
+  use kinds
+  use helas
   use modelling
 
   implicit none
 
-  real*8 :: gg_tt_bbeevv
+  real(kind=default) :: gg_tt_bbeevv
 
   ! constants
   integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 8
-  real*8, parameter :: zero = 0.d0
+  real(kind=default), parameter :: zero = 0.d0
 
   ! arguments
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-  complex*16 ztemp
-  complex*16 amp(ngraphs)
-  complex*16 w1(6), w2(6), w3(6), w4(6), w5(6)
-  complex*16 w6(6), w7(6), w8(6), w9(6), w10(6)
-  complex*16 w11(6), w12(6), w13(6), w14(6), w15(6)
+  real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+  complex(kind=complex) ztemp
+  complex(kind=complex) amp(ngraphs)
+  complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6)
+  complex(kind=complex) w6(6), w7(6), w8(6), w9(6), w10(6)
+  complex(kind=complex) w11(6), w12(6), w13(6), w14(6), w15(6)
 
   ! initialise amplitudes
   do i = 1, ngraphs
@@ -335,14 +340,14 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   enddo
 
   ! color data
-  data eigen_val(1) /7.2916666666666588e-02/
-  data eigen_vec(1, 1) /7.0710678118654768e-01/
-  data eigen_vec(2, 1) /7.0710678118654735e-01/
-  data eigen_vec(3, 1) /0.0000000000000000e+00/
-  data eigen_val(2) /2.8125000000000000e-01/
-  data eigen_vec(1, 2) /-4.0824829046386313e-01/
-  data eigen_vec(2, 2) /4.0824829046386285e-01/
-  data eigen_vec(3, 2) /8.1649658092772603e-01/
+  eigen_val(1) = 7.2916666666666588e-02
+  eigen_vec(1, 1) = 7.0710678118654768e-01
+  eigen_vec(2, 1) = 7.0710678118654735e-01
+  eigen_vec(3, 1) = 0.0000000000000000e+00
+  eigen_val(2) = 2.8125000000000000e-01
+  eigen_vec(1, 2) = -4.0824829046386313e-01
+  eigen_vec(2, 2) = 4.0824829046386285e-01
+  eigen_vec(3, 2) = 8.1649658092772603e-01
 
   ! wavefunctions
   call vxxxxx(p1, zero, nhel(1), -1, w1)

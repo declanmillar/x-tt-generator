@@ -7,21 +7,24 @@ function sdd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
 
     ! for process : d d~  -> b b~ e+ mu- ve vm~
 
+    use kinds
+    use helas
+
     implicit none
 
-    real*8 :: sdd_bbemuvevm
+    real(kind=default) :: sdd_bbemuvevm
 
     ! constants
     integer, parameter :: nexternal = 8, ncomb = 256
 
     ! arguments
-    real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), &
+    real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), &
               p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
     ! local variables
     integer :: nhel(nexternal, ncomb), ntry
-    real*8 :: t
-    real*8 :: dd_bbemuvevm
+    real(kind=default) :: t
+    real(kind=default) :: dd_bbemuvevm
     integer :: ihel
     logical :: goodhel(ncomb)
     data goodhel/ncomb* .false. /
@@ -310,64 +313,66 @@ function dd_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
     ! for process : d d~ -> b b~ e+ mu- ve vm~
 
+    use kinds
+    use helas
     use modelling
     use configuration, only: include_signal, include_background, include_x
 
     implicit none
 
-    real*8 :: dd_bbemuvevm
+    real(kind=default) :: dd_bbemuvevm
 
     ! constants
     integer, parameter :: ngraphs = 233, neigen = 1, nexternal = 8
-    real*8, parameter :: zero = 0d0
+    real(kind=default), parameter :: zero = 0d0
 
     ! arguments
-    real*8 :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
+    real(kind=default) :: p1(0:3),p2(0:3),p3(0:3),p4(0:3),p5(0:3),p6(0:3),p7(0:3),p8(0:3)
     integer :: nhel(nexternal)
 
     ! local variables
-    real*8 :: gxq_tmp(2), gxf_tmp(2)
+    real(kind=default) :: gxq_tmp(2), gxf_tmp(2)
     integer :: i,j
-    real*8 :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-    complex*16 ztemp
-    complex*16 amp(ngraphs)
-    complex*16 w1(6),  w2(6),  w3(6),  w4(6),  w5(6)
-    complex*16 w6(6),  w7(6),  w8(6),  w9(6),  w10(6)
-    complex*16 w11(6),  w12(6),  w13(6),  w14(6),  w15(6)
-    complex*16 w16(6),  w17(6),  w18(6),  w19(6),  w20(6)
-    complex*16 w21(6),  w22(6),  w23(6),  w24(6),  w25(6)
-    complex*16 w26(6),  w27(6),  w28(6),  w29(6),  w30(6)
-    complex*16 w31(6),  w32(6),  w33(6),  w34(6),  w35(6)
-    complex*16 w36(6),  w37(6),  w38(6),  w39(6),  w40(6)
-    complex*16 w41(6),  w42(6),  w43(6),  w44(6),  w45(6)
-    complex*16 w46(6),  w47(6),  w48(6),  w49(6),  w50(6)
-    complex*16 w51(6),  w52(6),  w53(6),  w54(6),  w55(6)
-    complex*16 w56(6),  w57(6),  w58(6),  w59(6),  w60(6)
-    complex*16 w61(6),  w62(6),  w63(6),  w64(6),  w65(6)
-    complex*16 w66(6),  w67(6),  w68(6),  w69(6),  w70(6)
-    complex*16 w71(6),  w72(6),  w73(6),  w74(6),  w75(6)
-    complex*16 w76(6),  w77(6),  w78(6),  w79(6),  w80(6)
-    complex*16 w81(6),  w82(6),  w83(6),  w84(6),  w85(6)
-    complex*16 w86(6),  w87(6),  w88(6),  w89(6),  w90(6)
-    complex*16 w91(6),  w92(6),  w93(6),  w94(6),  w95(6)
-    complex*16 w96(6),  w97(6),  w98(6),  w99(6),  w100(6)
-    complex*16 w101(6), w102(6), w103(6), w104(6), w105(6)
-    complex*16 w106(6), w107(6), w108(6), w109(6), w110(6)
-    complex*16 w111(6), w112(6), w113(6), w114(6), w115(6)
-    complex*16 w116(6), w117(6), w118(6), w119(6), w120(6)
-    complex*16 w121(6), w122(6), w123(6), w124(6), w125(6)
-    complex*16 w126(6), w127(6), w128(6), w129(6), w130(6)
-    complex*16 w131(6), w132(6), w133(6), w134(6), w135(6)
-    complex*16 w136(6), w137(6), w138(6), w139(6), w140(6)
-    complex*16 w141(6), w142(6), w143(6), w144(6), w145(6)
-    complex*16 w146(6), w147(6), w148(6), w149(6), w150(6)
-    complex*16 w151(6), w152(6), w153(6), w154(6), w155(6)
-    complex*16 w156(6), w157(6), w158(6), w159(6), w160(6)
-    complex*16 w161(6), w162(6), w163(6), w164(6), w165(6)
-    complex*16 w166(6), w167(6), w168(6), w169(6), w170(6)
-    complex*16 w171(6), w172(6), w173(6), w174(6), w175(6)
-    complex*16 w176(6), w177(6), w178(6), w179(6), w180(6)
-    complex*16 w181(6), w182(6)
+    real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+    complex(kind=complex) ztemp
+    complex(kind=complex) amp(ngraphs)
+    complex(kind=complex) w1(6),  w2(6),  w3(6),  w4(6),  w5(6)
+    complex(kind=complex) w6(6),  w7(6),  w8(6),  w9(6),  w10(6)
+    complex(kind=complex) w11(6),  w12(6),  w13(6),  w14(6),  w15(6)
+    complex(kind=complex) w16(6),  w17(6),  w18(6),  w19(6),  w20(6)
+    complex(kind=complex) w21(6),  w22(6),  w23(6),  w24(6),  w25(6)
+    complex(kind=complex) w26(6),  w27(6),  w28(6),  w29(6),  w30(6)
+    complex(kind=complex) w31(6),  w32(6),  w33(6),  w34(6),  w35(6)
+    complex(kind=complex) w36(6),  w37(6),  w38(6),  w39(6),  w40(6)
+    complex(kind=complex) w41(6),  w42(6),  w43(6),  w44(6),  w45(6)
+    complex(kind=complex) w46(6),  w47(6),  w48(6),  w49(6),  w50(6)
+    complex(kind=complex) w51(6),  w52(6),  w53(6),  w54(6),  w55(6)
+    complex(kind=complex) w56(6),  w57(6),  w58(6),  w59(6),  w60(6)
+    complex(kind=complex) w61(6),  w62(6),  w63(6),  w64(6),  w65(6)
+    complex(kind=complex) w66(6),  w67(6),  w68(6),  w69(6),  w70(6)
+    complex(kind=complex) w71(6),  w72(6),  w73(6),  w74(6),  w75(6)
+    complex(kind=complex) w76(6),  w77(6),  w78(6),  w79(6),  w80(6)
+    complex(kind=complex) w81(6),  w82(6),  w83(6),  w84(6),  w85(6)
+    complex(kind=complex) w86(6),  w87(6),  w88(6),  w89(6),  w90(6)
+    complex(kind=complex) w91(6),  w92(6),  w93(6),  w94(6),  w95(6)
+    complex(kind=complex) w96(6),  w97(6),  w98(6),  w99(6),  w100(6)
+    complex(kind=complex) w101(6), w102(6), w103(6), w104(6), w105(6)
+    complex(kind=complex) w106(6), w107(6), w108(6), w109(6), w110(6)
+    complex(kind=complex) w111(6), w112(6), w113(6), w114(6), w115(6)
+    complex(kind=complex) w116(6), w117(6), w118(6), w119(6), w120(6)
+    complex(kind=complex) w121(6), w122(6), w123(6), w124(6), w125(6)
+    complex(kind=complex) w126(6), w127(6), w128(6), w129(6), w130(6)
+    complex(kind=complex) w131(6), w132(6), w133(6), w134(6), w135(6)
+    complex(kind=complex) w136(6), w137(6), w138(6), w139(6), w140(6)
+    complex(kind=complex) w141(6), w142(6), w143(6), w144(6), w145(6)
+    complex(kind=complex) w146(6), w147(6), w148(6), w149(6), w150(6)
+    complex(kind=complex) w151(6), w152(6), w153(6), w154(6), w155(6)
+    complex(kind=complex) w156(6), w157(6), w158(6), w159(6), w160(6)
+    complex(kind=complex) w161(6), w162(6), w163(6), w164(6), w165(6)
+    complex(kind=complex) w166(6), w167(6), w168(6), w169(6), w170(6)
+    complex(kind=complex) w171(6), w172(6), w173(6), w174(6), w175(6)
+    complex(kind=complex) w176(6), w177(6), w178(6), w179(6), w180(6)
+    complex(kind=complex) w181(6), w182(6)
 
     ! color data
     data eigen_val(1) / 2.3299999999999997e+02 /

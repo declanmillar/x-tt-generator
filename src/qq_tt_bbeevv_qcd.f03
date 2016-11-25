@@ -10,19 +10,19 @@ function sqq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8)
   implicit none
 
   ! functions
-  real*8 :: sqq_tt_bbeevv_qcd
-  real*8 :: qq_tt_bbeevv_qcd
+  real(kind=default) :: sqq_tt_bbeevv_qcd
+  real(kind=default) :: qq_tt_bbeevv_qcd
 
   ! constants
   integer, parameter :: nexternal = 8, ncomb = 256
 
   ! arguments
   integer :: iq
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
 
   ! local variables
   integer :: nhel(nexternal, ncomb), ntry
-  real*8 :: t
+  real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
   data goodhel /ncomb*.false./
@@ -314,23 +314,23 @@ function qq_tt_bbeevv_qcd(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
   implicit none
 
   ! constants
-  real*8 ::  qq_tt_bbeevv_qcd
+  real(kind=default) ::  qq_tt_bbeevv_qcd
   integer :: iq
   integer, parameter :: ngraphs = 1, neigen = 1, nexternal = 8
-  real*8, parameter :: zero = 0d0
+  real(kind=default), parameter :: zero = 0d0
 
   ! arguments
-  real*8 :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
   integer :: nhel(nexternal)
 
   ! local variables
   integer :: i, j
-  real*8 :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
-  complex*16 ztemp
-  complex*16 amp(ngraphs)
-  complex*16 w1(6), w2(6), w3(6), w4(6), w5(6)
-  complex*16 w6(6), w7(6), w8(6), w9(6), w10(6)
-  complex*16 w11(6), w12(6), w13(6)
+  real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs,neigen)
+  complex(kind=complex) ztemp
+  complex(kind=complex) amp(ngraphs)
+  complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6)
+  complex(kind=complex) w6(6), w7(6), w8(6), w9(6), w10(6)
+  complex(kind=complex) w11(6), w12(6), w13(6)
 
   ! color data
   data eigen_val(1  ) /2.2222222222222221e-01/

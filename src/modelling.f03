@@ -1,16 +1,19 @@
 module modelling
 
   use kinds
+  use helas
   use configuration
 
   implicit none
+
+  real(kind=default), public :: lambdaqcd4
 
   ! SM couplings
   real(kind=default) :: gw, gwwa, gwwZ
   real(kind=default) :: gal(2), gau(2), gad(2), gwf(2)
   real(kind=default) :: gZn(2), gZl(2), gZu(2), gZd(2), g1(2)
   real(kind=default) :: gwwh, gZZh, ghhh, gwwhh, gZZhh, ghhhh
-  complex*16 :: gchf(2, 12)
+  complex(kind=complex) :: gchf(2, 12)
   real(kind=default) :: gg(2), g
 
   ! fermion masses and widths
@@ -354,7 +357,7 @@ subroutine width_zprimes
     width = 0.d0
     mx = xmass(n)
     if (manual_width(n) == 0) then
-      a_s = alfas(mx, lambdaQCD4, nloops)
+      a_s = alfas(mx, lambdaqcd4, nloops)
       ! quarks
       widthqq = 0.d0
       do i = 1, 6

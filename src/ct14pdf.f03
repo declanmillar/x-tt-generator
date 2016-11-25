@@ -142,8 +142,10 @@
     Implicit Double Precision (A-H,O-Z)
     Character Tablefile*40
     Common /Setchange/ Isetch, ipdsset, ipdsformat
-    data ipdsset, ipdsformat/0,0/
     save
+    ipdsset = 0
+    ipdsformat = 0
+
 
     IU= NextUn14()
     Open(IU, File='PDFs/'//Tablefile, Status='OLD', Err=100)

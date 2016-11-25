@@ -278,8 +278,7 @@ module vamp_rest
   ! private :: condense_action
   public :: condense_action
   public :: vamp_next_event
-  public :: vamp_next_event_single, vamp_next_event_multi
-  ! private :: vamp_next_event_single, vamp_next_event_multi
+  private :: vamp_next_event_single, vamp_next_event_multi
   public :: vamp_warmup_grid, vamp_warmup_grids
   public :: vamp_integrate
   private :: vamp_integrate_grid, vamp_integrate_region
