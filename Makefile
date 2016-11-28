@@ -2,7 +2,13 @@
 # requires: RootTuple
 # author: Declan Millar <declan.millar@cern.ch>
 
-F = gfortran
+HOSTNAME := $(shell hostname)
+ifneq (,$(findstring lxplus, $(HOSTNAME)))
+    F = ifort
+else
+    F = gfortran
+endif
+
 SRC = src
 LIB = lib
 OUT = bin

@@ -150,6 +150,7 @@ subroutine print_config
   write(log,*) "preliminary vamp iterations: ", itmx + 1
   write(log,*) "vamp calls: ", ncall
   write(log,*) "vamp iterations: ", itmx - 1
+  write(log,*) "number of events: ", nevents
   write(log,*) "symmetrise parton momentum fraction: ", symmetrise
   write(log,*) "map phase space: ", map_phase_space
   write(log,*) 'random number seed: ', seed
