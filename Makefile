@@ -24,7 +24,7 @@ endif
 
 LFLAGS = -L$(LIB) -lRootTuple $(shell root-config --libs)
 
-$(LIB)/%.o: $(SRC)/%.f08
+$(LIB)/%.o: $(SRC)/%.f%
 	$(F) $(FFLAGS) -c -o $@ $<
 
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
