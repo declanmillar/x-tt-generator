@@ -17,6 +17,7 @@ import sys
 import random
 import glob
 import socket
+import time
 
 parser = optparse.OptionParser()
 
@@ -38,14 +39,14 @@ parser.add_option("-x", "--symmetrise",         default = True,  action = "store
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
-parser.add_option("-S", "--fixed_seed",         default = False, action = "store_true",  help = "use fixed seed")
+parser.add_option("-S", "--fixed_seed",         default = False, action = "store_true",  help = "use fixed seed 12345")
 
 # integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
 parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
 parser.add_option("-N", "--iterations",         default = 5,         type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--ncall",              default = 10000000,  type = int,         help = "number of VAMP calls")
-parser.add_option("-e", "--nevents",            default = 1000000,   type = int,         help = "number of events")
+parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
 parser.add_option("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
@@ -230,7 +231,9 @@ elif option.final_state == 12:
 
 process = initial_partons + intermediates + final_state
 
-filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
+# now = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, now)
 
 home_directory = "."
 data_directory = "."
