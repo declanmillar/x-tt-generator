@@ -2,12 +2,12 @@
 # requires: RootTuple
 # author: Declan Millar <declan.millar@cern.ch>
 
-HOSTNAME := $(shell hostname)
-ifneq (,$(findstring lxplus, $(HOSTNAME)))
-    F = ifort
-else
-    F = gfortran
-endif
+# HOSTNAME := $(shell hostname)
+# ifneq (,$(findstring lxplus, $(HOSTNAME)))
+    # F = ifort
+# else
+F = gfortran
+# endif
 
 SRC = src
 LIB = lib
