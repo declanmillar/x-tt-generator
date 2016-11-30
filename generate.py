@@ -233,7 +233,7 @@ process = initial_partons + intermediates + final_state
 
 # now = time.strftime("%Y-%m-%d_%H-%M-%S")
 
-filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, now)
+filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, str(option.nevents)) #, now)
 
 home_directory = "."
 data_directory = "."
