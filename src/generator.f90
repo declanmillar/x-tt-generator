@@ -32,15 +32,15 @@ program generator
 
     ! time keeping
     integer, dimension(8) :: now
-    real(kind = default) :: start_time, finish_time, runtime
-    real(kind = default) :: event_start, event_finish, event_time
+    integer :: start_time, end_time, runtime
+    integer :: integrate_start, integrate_end
+    integer :: event_start, event_end
 
     ! lhe
     integer :: idbm(2), pdfg(2), pdfs(2)
     real(kind=default) :: ebm(2)
 
     ! VAMP
-    integer :: start_ticks
     real(kind = default) event
     integer :: ndimensions
     real(kind = default), dimension(:), allocatable :: x
@@ -58,7 +58,10 @@ program generator
 
     ! ---
 
-    call cpu_time(start_time)
+    call date_and_time(values = now)
+    write(log, *) 'date: ', now(1), now(2), now(3)
+    write(log, *) 'time: ', now(5), now(6), now(7)
+
     call read_config
     call modify_config
     call print_config
@@ -122,20 +125,14 @@ program generator
 
     print*, "integration: integrating using VAMP ..."
     call tao_random_create (rng, 0)
-    call system_clock (start_ticks) 
-    call tao_random_seed (rng, start_ticks)
-
+    call system_clock (integrate_start) 
+    call tao_random_seed (rng, integrate_start)
     call vamp_create_history (history)
 
     print*, "integration: creating VAMP grid with", ncall / 10, "calls ..."
     call clear_exception(exc)
     call vamp_create_grid(grid, domain, num_calls = ncall / 10, exc = exc) 
     call handle_exception(exc)
-
-    ! print*, "integration: warm up VAMP grid with", itmx + 1, "iterations ..."
-    ! call clear_exception(exc)
-    ! call vamp_warmup_grid(rng, grid, dsigma, NO_DATA, itmx + 1, exc = exc)
-    ! call handle_exception(exc)
 
     print*, "integration: initial sampling of VAMP grid with", itmx + 1, "iterations ..."
     call clear_exception(exc)
@@ -151,13 +148,19 @@ program generator
     call clear_exception(exc)
     call vamp_sample_grid(rng, grid, dsigma, itmx - 1, sigma, error, chi2, exc = exc, history = history(itmx + 2:))
     call handle_exception(exc)
-    call vamp_print_history (history, "full")
-    print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"  
 
-    print*, "integration: sampling grid 0 ..."
-    call clear_exception(exc)
-    call vamp_sample_grid0(rng, grid, dsigma, NO_DATA, exc = exc)
-    call handle_exception(exc)
+    ! print*, "integration: refining grid ..."
+    ! call clear_exception(exc)
+    ! call vamp_sample_grid0(rng, grid, dsigma, NO_DATA, exc = exc, history = history(2 * itmx + 1:))
+    ! call handle_exception(exc)
+
+    print*, "integration: printing history ..."
+    call vamp_print_history(history, "history")
+    call vamp_delete_history(history)
+
+    print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+    call system_clock(integrate_end)
+    print *, "integration: time = ", integrate_end - integrate_start
 
     if (sigma == 0.d0) then
         print*, "integration: integration: integral = 0. Stopping."
@@ -167,7 +170,6 @@ program generator
         write(log,*) "uncertainty: ", error
         write(log,*) "chi^2: ", chi2
     end if
-
 
     if (ntuple_out) then
         print*, "n-tuple: ", trim(ntuple_file)
@@ -195,10 +197,8 @@ program generator
         call lhe_process(sigma, error, 1.d0, 81)
     end if
 
-    symmetrise = .false.
-
-    ! reset
     if (final_state <= 0) then
+        print*, "initialisation: reset polarised arrays ..."
         do j = -1, +1, 2
             do k = -1, +1, 2
                 sigma_pol(j, k) = 0.d0
@@ -207,7 +207,10 @@ program generator
         end do
     end if
 
+    symmetrise = .false.
+
     print*, "vamp: generating", nevents, " events ..."
+    call system_clock(event_start)
     if (.not. batch) call set_total(nevents)
     do i = 1, nevents
         call clear_exception (exc)
@@ -218,8 +221,11 @@ program generator
         record_events = .false. 
         if (.not. batch) call progress_percentage(i)
     end do
+    call system_clock(event_end)
+    print *, "integration: time = ", event_end - event_start
 
     if (final_state <= 0) then
+        print *, "finalisation: calculating asymmetries for polarized final state"
         do j = -1, 1, 2
             do k = -1, 1, 2
                 sigma_pol(j, k) = sigma_pol(j, k) * sigma
@@ -241,10 +247,6 @@ program generator
         write(log, *) "APV:", apv, ":", error_apv
     end if
 
-    call date_and_time(values = now)
-    call cpu_time(finish_time)
-    runtime = finish_time - start_time
-    write(log, *) "runtime: ", runtime
 
     if (ntuple_out) then
         print*, "n-tuple: closing ..."
@@ -258,10 +260,10 @@ program generator
         call lhe_close
     end if
 
-    write(log, *) 'author: Declan Millar'
-    write(log, *) 'date: ', now(1), now(2), now(3)
-    write(log, *) 'time: ', now(5), now(6), now(7)
+    call system_clock(end_time)
+    runtime = end_time - start_time
     write(log, *) "runtime: ", runtime
+    write(log, *) 'author: Declan Millar'
     close(log)
     print*, "runtime: ", runtime, "seconds"
     stop
