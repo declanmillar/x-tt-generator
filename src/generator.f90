@@ -20,9 +20,10 @@ program generator
     use modelling
     use scattering
     use lhef
+    use mpi90
     use exceptions
     use tao_random_numbers
-    use vamp
+    use vampi
 
     implicit none
 
@@ -39,6 +40,7 @@ program generator
     real(kind=default) :: ebm(2)
 
     ! VAMP
+    integer :: start_ticks
     real(kind = default) event
     integer :: ndimensions
     real(kind = default), dimension(:), allocatable :: x
@@ -47,7 +49,10 @@ program generator
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
     type(vamp_data_t) :: data
-    integer, dimension(2,2) :: calls 
+    integer, dimension(2,2) :: calls
+    type(vamp_history), dimension(10) :: history
+    real(kind=default), parameter :: acceptable = 4
+    integer :: failures
 
     real(kind = default) :: all, error_all, al, error_al, apv, error_apv
 
@@ -112,8 +117,15 @@ program generator
     end if
 
     record_events = .false.
+    print*, "integration: initialising MPI ..."
+    call mpi90_init
+
     print*, "integration: integrating using VAMP ..."
-    call tao_random_create (rng, seed = seed)
+    call tao_random_create (rng, 0)
+    call system_clock (start_ticks) 
+    call tao_random_seed (rng, start_ticks)
+
+    call vamp_create_history (history)
 
     print*, "integration: creating VAMP grid with", ncall / 10, "calls ..."
     call clear_exception(exc)
@@ -127,9 +139,9 @@ program generator
 
     print*, "integration: initial sampling of VAMP grid with", itmx + 1, "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx + 1, sigma, error, chi2, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, itmx + 1, exc = exc, history = history)
     call handle_exception(exc)
-    print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"  
+    call vamp_print_history (history, "preliminary")
 
     print*, "integration: discarding preliminary integral with", ncall, "calls ..."
     call clear_exception(exc)
@@ -138,8 +150,9 @@ program generator
 
     print*, "integration: full sampling of VAMP grid with ", itmx - 1, "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, NO_DATA, itmx - 1, sigma, error, chi2, exc = exc)
+    call vamp_sample_grid(rng, grid, dsigma, itmx - 1, sigma, error, chi2, exc = exc, history = history(itmx + 2:))
     call handle_exception(exc)
+    call vamp_print_history (history, "full")
     print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"  
 
     print*, "integration: sampling grid 0 ..."
@@ -199,7 +212,7 @@ program generator
     if (.not. batch) call set_total(nevents)
     do i = 1, nevents
         call clear_exception (exc)
-        call vamp_next_event(x, rng, grid, dsigma, NO_DATA, exc = exc)
+        call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
         event = dsigma(x, NO_DATA)
