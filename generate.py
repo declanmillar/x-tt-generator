@@ -45,7 +45,7 @@ parser.add_option("-S", "--fixed_seed",         default = False, action = "store
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
 parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
 parser.add_option("-N", "--iterations",         default = 5,         type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-n", "--ncall",              default = 10000000,  type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
