@@ -141,7 +141,6 @@ program generator
     call clear_exception(exc)
     call vamp_sample_grid(rng, grid, dsigma, itmx + 1, exc = exc, history = history)
     call handle_exception(exc)
-    call vamp_print_history (history, "preliminary")
 
     print*, "integration: discarding preliminary integral with", ncall, "calls ..."
     call clear_exception(exc)
