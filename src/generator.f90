@@ -7,7 +7,7 @@ program generator
     ! uses
     !   HELAS for probability amplitudes
     !   VAMP for Monte Carlo integration and event generation
-    !   CTEQ6, CT10 for PDFs
+    !   MRS99, CTEQ6, CT10 for PDFs
     !   RootTuple for filling n-tuples
     !
     ! authors
@@ -28,7 +28,8 @@ program generator
     implicit none
 
     real(kind = default) :: sigma, error, chi2
-    integer :: i, j, k
+    real(kind = default) :: all, error_all, al, error_al, apv, error_apv
+    integer :: i, j
 
     ! time keeping
     integer, dimension(8) :: now
@@ -49,14 +50,8 @@ program generator
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
     type(vamp_data_t) :: data
-    integer, dimension(2,2) :: calls
+    integer, dimension(2, 2) :: calls
     type(vamp_history), dimension(10) :: history
-    real(kind=default), parameter :: acceptable = 4
-    integer :: failures
-
-    real(kind = default) :: all, error_all, al, error_al, apv, error_apv
-
-    ! ---
 
     call date_and_time(values = now)
     write(log, *) 'date: ', now(1), now(2), now(3)
@@ -70,7 +65,6 @@ program generator
     call initialise_masses
     call initialise_s
     call set_energy_limits
-
 
     if (use_rambo) then
         ndimensions = 2
@@ -102,7 +96,6 @@ program generator
                 domain(1, i) = -1.d0
                 domain(2, i) = 1.d0
             end do
-
         else if (final_state > 0) then
             do i = 15, 10, -1
                 domain(1, i) = 0.d0
@@ -124,35 +117,38 @@ program generator
     call mpi90_init
 
     print*, "integration: integrating using VAMP ..."
-    call tao_random_create (rng, 0)
-    call system_clock (integrate_start) 
-    call tao_random_seed (rng, integrate_start)
-    call vamp_create_history (history)
+    call tao_random_create(rng, 0)
+    call system_clock(integrate_start) 
+    call tao_random_seed(rng, integrate_start)
+    call vamp_create_history(history)
 
-    print*, "integration: creating VAMP grid with", ncall / 10, "calls ..."
+    calls(:, 1) = (/6, ncall / 10 /)
+    calls(:, 2) = (/4, ncall /)
+
+    print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
     call clear_exception(exc)
-    call vamp_create_grid(grid, domain, num_calls = ncall / 10, exc = exc) 
+    call vamp_create_grid(grid, domain, num_calls = calls(2, 1), exc = exc) 
     call handle_exception(exc)
 
-    print*, "integration: initial sampling of VAMP grid with", itmx + 1, "iterations ..."
+    print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, itmx + 1, exc = exc, history = history)
+    call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), exc = exc, history = history)
     call handle_exception(exc)
 
-    print*, "integration: discarding preliminary integral with", ncall, "calls ..."
+    print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
     call clear_exception(exc)
-    call vamp_discard_integral(grid, num_calls = ncall, exc = exc)
+    call vamp_discard_integral(grid, num_calls = calls(2, 2), exc = exc)
     call handle_exception(exc)
 
-    print*, "integration: full sampling of VAMP grid with ", itmx - 1, "iterations ..."
+    print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, itmx - 1, sigma, error, chi2, exc = exc, history = history(itmx + 2:))
+    call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, exc = exc, history = history(calls(1, 1) + 1:))
     call handle_exception(exc)
 
-    ! print*, "integration: refining grid ..."
-    ! call clear_exception(exc)
-    ! call vamp_sample_grid0(rng, grid, dsigma, NO_DATA, exc = exc, history = history(2 * itmx + 1:))
-    ! call handle_exception(exc)
+    print*, "integration: refining grid ..."
+    call clear_exception(exc)
+    call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
+    call handle_exception(exc)
 
     print*, "integration: printing history ..."
     call vamp_print_history(history, "history")
@@ -199,10 +195,10 @@ program generator
 
     if (final_state <= 0) then
         print*, "initialisation: reset polarised arrays ..."
-        do j = -1, +1, 2
-            do k = -1, +1, 2
-                sigma_pol(j, k) = 0.d0
-                error_pol(j, k) = 0.d0
+        do i = -1, +1, 2
+            do j = -1, +1, 2
+                sigma_pol(i, j) = 0.d0
+                error_pol(i, j) = 0.d0
             end do
         end do
     end if
@@ -226,10 +222,10 @@ program generator
 
     if (final_state <= 0) then
         print *, "finalisation: calculating asymmetries for polarized final state"
-        do j = -1, 1, 2
-            do k = -1, 1, 2
-                sigma_pol(j, k) = sigma_pol(j, k) * sigma
-                error_pol(j, k) = sigma_pol(j, k) * error
+        do i = -1, 1, 2
+            do j = -1, 1, 2
+                sigma_pol(i, j) = sigma_pol(i, j) * sigma
+                error_pol(i, j) = sigma_pol(i, j) * error
             end do
         end do
     
@@ -246,7 +242,6 @@ program generator
         write(log, *) "AL:", al, ":", error_al
         write(log, *) "APV:", apv, ":", error_apv
     end if
-
 
     if (ntuple_out) then
         print*, "n-tuple: closing ..."
