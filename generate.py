@@ -308,7 +308,6 @@ except IOERROR:
 if option.batch:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
-        print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /afs/cern.ch/cern/d/demillar/.bash_profile"
         print >> handler, "cd %s" % run_directory
@@ -337,7 +336,7 @@ if option.batch:
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
     print "submitting batch job ..."
-    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s.2.log %s/%s.sh' % (option.queue, run_directory, filename, filename), shell = True)
+    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s.2.log %s/%s.sh' % (option.queue, filename, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     else: 
