@@ -213,7 +213,7 @@ program generator
     call system_clock(event_start)
     if (.not. batch) call set_total(nevents)
     do i = 1, nevents
-        call clear_exception (exc)
+        call clear_exception(exc)
         call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
