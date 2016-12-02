@@ -311,13 +311,13 @@ if option.batch:
         print >> handler, "#!/bin/bash"
         print >> handler, "source /afs/cern.ch/cern/d/demillar/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+        print >> handler, "%s/bin/%s < %s/%s" % (run_directory, executable, config_name, filename)
     elif "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+        print >> handler, '%s/bin/%s < %s > %s/%s.log2' % (run_directory, executable, config_name, data_directory, filename)
     elif "heppc" in hostname:
         print "h_rt = %s" % option.walltime
         print >> handler, "#!/bin/bash"
@@ -336,7 +336,7 @@ if option.batch:
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
     print "submitting batch job ..."
-    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s.2.log %s/%s.sh' % (option.queue, filename, run_directory, filename), shell = True)
+    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s/%s.log2 %s/%s.sh' % (option.queue, data_directory, filename, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     else: 
