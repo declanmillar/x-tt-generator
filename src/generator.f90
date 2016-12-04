@@ -12,7 +12,7 @@ program generator
     !
     ! authors
     !   Declan Millar <declan.millar@cern.ch>
-    !   Stefano Moretti <s.moretti@soton.ac.uk>
+    !   Stefano Moretti 
 
     use kinds
     use progress
@@ -45,7 +45,7 @@ program generator
     real(kind = default) event
     integer :: ndimensions
     real(kind = default), dimension(:), allocatable :: x
-    real(kind = default), dimension(:,:), allocatable :: domain
+    real(kind = default), dimension(:, :), allocatable :: domain
     type(exception) :: exc
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
@@ -54,8 +54,8 @@ program generator
     type(vamp_history), dimension(10) :: history
 
     call date_and_time(values = now)
-    write(log, *) 'date: ', now(1), now(2), now(3)
-    write(log, *) 'time: ', now(5), now(6), now(7)
+    print*, 'date: ', now(1), now(2), now(3)
+    print*, 'time: ', now(5), now(6), now(7)
 
     call read_config
     call modify_config
@@ -145,10 +145,10 @@ program generator
     call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, exc = exc, history = history(calls(1, 1) + 1:))
     call handle_exception(exc)
 
-    print*, "integration: refining grid ..."
-    call clear_exception(exc)
-    call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
-    call handle_exception(exc)
+    ! print*, "integration: refining grid ..."
+    ! call clear_exception(exc)
+    ! call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
+    ! call handle_exception(exc)
 
     print*, "integration: printing history ..."
     call vamp_print_history(history, "history")
@@ -158,35 +158,39 @@ program generator
     call system_clock(integrate_end)
     print *, "integration: time = ", integrate_end - integrate_start
 
-    if (sigma == 0.d0) then
-        print*, "integration: integration: integral = 0. Stopping."
-        stop
+    if (sigma <= 0) stop
+
+    print*, "process: calculating beam info ..."
+    idbm(1) = 2212
+    if (initial_state == 0) then
+        idbm(2) = 2212
     else
-        write(log,*) "cross section: ", sigma
-        write(log,*) "uncertainty: ", error
-        write(log,*) "chi^2: ", chi2
+        idbm(2) = -2212
     end if
+    do i = 1, 2
+        ebm(i) = sqrts / 2
+        pdfg(i) = 1
+        pdfs(i) = 1
+    end do
 
     if (ntuple_out) then
         print*, "n-tuple: ", trim(ntuple_file)
         print*, "initiating n-tuple ..."
         call rootinit(ntuple_file)
+        call rootaddprocessdouble(idbm(1), "idbm1")
+        call rootaddprocessdouble(idbm(2), "idbm2")
+        call rootaddprocessdouble(ebm(1), "ebm1")
+        call rootaddprocessdouble(ebm(2), "ebm2")
+        call rootaddprocessdouble(pdfg(1), "pdfg1")
+        call rootaddprocessdouble(pdfg(2), "pdfg2")
+        call rootaddprocessdouble(pdfs(1), "pdfs1")
+        call rootaddprocessdouble(pdfs(2), "pdfs2")
+        call rootaddprocessdouble(sigma, "cross_section")
+        call rootaddprocessdouble(error, "cross_section_uncertainty")
+        call rootaddprocessdouble(chi2, "vamp_chi2")
     end if
 
     if (lhef_out) then
-        print*, "lhe: calculating beam info ..."
-        idbm(1) = 2212
-        if (initial_state == 0) then
-            idbm(2) = 2212
-        else
-            idbm(2) = -2212
-        end if
-        do i = 1, 2
-            ebm(i) = sqrts / 2
-            pdfg(i) = 1
-            pdfs(i) = 1
-        end do
-
         call lhe_open(lhe_file)
         call lhe_header()
         call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), 2)
@@ -218,7 +222,7 @@ program generator
         if (.not. batch) call progress_percentage(i)
     end do
     call system_clock(event_end)
-    print *, "integration: time = ", event_end - event_start
+    print *, "event generation: time = ", event_end - event_start
 
     if (final_state <= 0) then
         print *, "finalisation: calculating asymmetries for polarized final state"
@@ -238,9 +242,9 @@ program generator
         apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
         error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
     
-        write(log, *) "ALL:", all, ":", error_all
-        write(log, *) "AL:", al, ":", error_al
-        write(log, *) "APV:", apv, ":", error_apv
+        print*, "ALL:", all, ":", error_all
+        print*, "AL:", al, ":", error_al
+        print*, "APV:", apv, ":", error_apv
     end if
 
     if (ntuple_out) then
@@ -257,9 +261,6 @@ program generator
 
     call system_clock(end_time)
     runtime = end_time - start_time
-    write(log, *) "runtime: ", runtime
-    write(log, *) 'author: Declan Millar'
-    close(log)
-    print*, "runtime: ", runtime, "seconds"
+    print*, "runtime: ", runtime
     stop
 end program generator

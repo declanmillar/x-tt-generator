@@ -89,18 +89,16 @@ end subroutine initialise_masses
 
 subroutine set_energy_limits
     print*, "initialisation: setting energy limits ..."
-    if (ecm_up == 0.d0) then
-        ecm_max = sqrts
-    else
-        ecm_max = ecm_up
-    end if
-    if (ecm_low == 0.d0) then
-        ecm_min = m3 + m4 + m5 + m6 + m7 + m8
-    else
+    ecm_min = m3 + m4 + m5 + m6 + m7 + m8
+    ecm_max = sqrts
+    if (ecm_low > ecm_min) then
         ecm_min = ecm_low
     end if
-    print*, "initialisation: ecm_max = ", ecm_max
+    if (ecm_up > 0) then
+        ecm_max = ecm_up
+    end if
     print*, "initialisation: ecm_min = ", ecm_min
+    print*, "initialisation: ecm_max = ", ecm_max
 end subroutine set_energy_limits
 
 
@@ -214,9 +212,10 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: weight_pol(-1:1, -1:1), dsigmapol(-1:1, -1:1)
 
     real(kind=default) :: random
+    integer :: seed
 
     ! temporary iterators
-    integer :: i, j, k
+    integer :: i, j
 
     ! ---
 
@@ -274,7 +273,7 @@ function dsigma(x, data, weights, channel, grids)
             end do
         end do
 
-        ! construct hadronic structure functions
+        if (verbose) print*, "constructing hadronic structure functions ..."
         if (ipdf <= 4) then
             if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) return
             if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) return
@@ -315,9 +314,18 @@ function dsigma(x, data, weights, channel, grids)
             ubar2 = usea2
             dbar2 = dsea2
         else if (ipdf > 9) then
-            if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) return
-            if ((x2 <= 1.d-9) .or. (x2 >= 1.d0)) return
-            if ((qq <= 1.3d0) .or. (qq >= 1.d5)) return
+            if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) then
+                if (verbose) print*, "invalid x1"
+                return
+            end if
+            if ((x2 <= 1.d-9) .or. (x2 >= 1.d0)) then
+                if (verbose) print*, "invalid x2"
+                return
+            end if
+            if ((qq <= 1.3d0) .or. (qq >= 1.d5)) then
+                if (verbose) print*, "invalid qq"
+                return
+            end if
 
             ! *x for compatibility with MRS which return xf(x)
             u1 = x1 * ct14pdf(1, x1, qq)
@@ -380,6 +388,10 @@ function dsigma(x, data, weights, channel, grids)
         p(2,2) = 0.d0
         p(1,2) = 0.d0
 
+        if (use_rambo) then
+            call system_clock(seed) 
+        end if
+
         if (final_state < 1) then
             if (use_rambo) then
                 rmass(1) = m3
@@ -400,7 +412,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! magnitude of 3 momentum for products in general two body decay
                 qcm2 = ((ecm * ecm - m3 * m3 - m4 * m4)**2 - (2.d0 * m3 * m4)**2) / (4.d0 * ecm * ecm)
-                if (qcm2 < 0.d0) return
+                if (qcm2 < 0.d0) then
+                    if (verbose) print*, "invalid qcm2"
+                    return
+                end if
                 qcm = sqrt(qcm2)
 
                 p(4,3) = sqrt(qcm2 + m3 * m3)
@@ -439,7 +454,10 @@ function dsigma(x, data, weights, channel, grids)
                     at356 = x(13) * (at356max - at356min) + at356min
                     rl356 = tan(at356) * mt * gamt
                     m356_2 = mt * mt + rl356
-                    if (m356_2 < 0.d0) return
+                    if (m356_2 < 0.d0) then
+                        if (verbose) print*, "invalid"
+                        return
+                    end if
                     m356 = sqrt(m356_2)
                 else
                     m356 = x(13) * (m356max - m356min) + m356min
@@ -453,7 +471,10 @@ function dsigma(x, data, weights, channel, grids)
                     at478 = x(12) * (at478max - at478min) + at478min
                     rl478 = tan(at478) * mt * gamt
                     m478_2 = mt * mt + rl478
-                    if (m478_2 < 0.d0) return
+                    if (m478_2 < 0.d0) then
+                        if (verbose) print*, "invalid"
+                        return
+                    end if
                     m478 = sqrt(m478_2)
                 else 
                     m478 = x(12) * (m478max - m478min) + m478min
@@ -467,7 +488,10 @@ function dsigma(x, data, weights, channel, grids)
                     at56 = x(11) * (at56max - at56min) + at56min
                     rl56 = tan(at56) * wmass * wwidth
                     m56_2 = wmass * wmass + rl56
-                    if (m56_2 < 0.d0) return
+                    if (m56_2 < 0.d0) then
+                        if (verbose) print*, "invalid"
+                        return
+                    end if
                     m56 = sqrt(m56_2)
                 else
                     m56 = x(11) * (m56max - m56min) + m56min
@@ -481,7 +505,10 @@ function dsigma(x, data, weights, channel, grids)
                     at78 = x(10) * (at78max - at78min) + at78min
                     rl78 = tan(at78) * wmass * wwidth
                     m78_2 = wmass * wmass + rl78
-                    if (m78_2 < 0.d0) return
+                    if (m78_2 < 0.d0) then
+                        if (verbose) print*, "invalid"
+                        return
+                    end if
                     m78 = sqrt(m78_2)
                 else
                     m78 = x(10)*(m78max - m78min) + m78min
@@ -509,7 +536,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! two body decay of s-channel mediating boson
                 q2 = ((ecm * ecm - m356 * m356 - m478 * m478)**2 - (2.d0 * m356 * m478)**2) / (4.d0 * ecm * ecm)
-                if (q2 < 0.d0) return
+                if (q2 < 0.d0) then
+                    if (verbose) print*, "invalid"
+                    return
+                end if
                 q = sqrt(q2)
 
                 p356(3) = q * ct
@@ -524,7 +554,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! two body decay of the top
                 rq562 = ((m356 * m356 - m3 * m3 - m56 * m56)**2 - (2.d0 * m3 * m56)**2) / (4.d0 * m356 * m356)
-                if (rq562 < 0.d0) return
+                if (rq562 < 0.d0) then
+                    if (verbose) print*, "invalid"
+                    return
+                end if
                 rq56 = sqrt(rq562)
                 q56(3) = rq56 * st56 * cf56
                 q56(2) = rq56 * st56 * sf56
@@ -543,7 +576,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! two body decay of the anti-top
                 rq782 = ((m478 * m478 - m4 * m4 - m78 * m78)**2 - (2.d0 * m4 * m78)**2) / (4.d0 * m478 * m478)
-                if (rq782 < 0.d0) return
+                if (rq782 < 0.d0) then
+                    if (verbose) print*, "invalid"
+                    return
+                end if
                 rq78 = sqrt(rq782)
                 q78(3) = rq78 * st78 * cf78
                 q78(2) = rq78 * st78 * sf78
@@ -562,7 +598,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! two body decay of the W+
                 rq52 = ((m56 * m56 - m5 * m5 - m6 * m6)**2 - (2.d0 * m5 * m6)**2) / (4.d0 * m56 * m56)
-                if (rq52 < 0.d0) return
+                if (rq52 < 0.d0) then
+                    if (verbose) print*, "invalid"
+                    return
+                end if
                 rq5 = sqrt(rq52)
                 q5(3) = rq5 * st5 * cf5
                 q5(2) = rq5 * st5 * sf5
@@ -581,7 +620,10 @@ function dsigma(x, data, weights, channel, grids)
 
                 ! two body decay of the W-
                 rq72 = ((m78 * m78 - m7 * m7 - m8 * m8)**2 - (2.d0 * m7 * m8)**2) / (4.d0 * m78 * m78)
-                if (rq72 < 0.d0) return
+                if (rq72 < 0.d0) then
+                    if (verbose) print*, "invalid"
+                    return
+                end if
                 rq7 = sqrt(rq72)
                 q7(3) = rq7 * st7 * cf7
                 q7(2) = rq7 * st7 * sf7

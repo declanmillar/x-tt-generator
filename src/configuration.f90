@@ -31,7 +31,6 @@ module configuration
   logical :: map_phase_space
   logical :: verbose
   real(kind=default) :: ecm_low, ecm_up
-  integer :: seed
   integer :: ncall
   integer :: nevents
   integer :: itmx
@@ -49,7 +48,6 @@ module configuration
 
   ! constants
   real(kind=default), parameter :: pi = 3.14159265358979323846d0
-  integer, parameter :: log = 10
 
   ! methods
   public :: read_config
@@ -81,7 +79,6 @@ subroutine read_config
   read(5,*) interference
   read(5,*) use_nwa ! 0 = actual top widths, 1 = tops in NWA
   read(5,*) sqrts
-  read(5,*) seed
   read(5,*) itmx
   read(5,*) ncall
   read(5,*) nevents
@@ -97,9 +94,6 @@ end subroutine read_config
 subroutine modify_config
 
   integer :: i
-
-  print*, "log:     ", trim(log_file)
-  open(unit = log, file = log_file, status = "replace", action = "write")
 
   print*, "config: interpreting ..."
 
@@ -125,65 +119,64 @@ end subroutine modify_config
 
 subroutine print_config
   
-  print*, "config: printing to logfile ..."
+  print*, "config: printing ..."
 
-  if (lhef_out) write(log,*) "events written to:", lhe_file
-  if (ntuple_out) write(log,*) "events written to:", ntuple_file
+  if (lhef_out) print*, "events written to:", lhe_file
+  if (ntuple_out) print*, "events written to:", ntuple_file
   if (initial_state == 0) then
     if (final_state == -1) then
-      write(log,*) "process: p p -> l+ l-"
+      print*, "process: p p -> l+ l-"
     else if (final_state == 0) then
-      write(log,*) 'process: p p -> t t~'
+      print*, 'process: p p -> t t~'
     else if (final_state == 1) then
-      write(log,*) 'process: p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
+      print*, 'process: p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      write(log,*) 'process: p p~ -> l+ l-'
+      print*, 'process: p p~ -> l+ l-'
     else if (final_state == 0) then
-      write(log,*) 'process: p p~ -> t t~'
+      print*, 'process: p p~ -> t t~'
     else if (final_state == 1) then
-      write(log,*) 'process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
+      print*, 'process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
     end if
   end if
-  write(log,*) "preliminary vamp calls: ", ncall / 10
-  write(log,*) "preliminary vamp iterations: ", itmx + 1
-  write(log,*) "vamp calls: ", ncall
-  write(log,*) "vamp iterations: ", itmx - 1
-  write(log,*) "number of events: ", nevents
-  write(log,*) "symmetrise parton momentum fraction: ", symmetrise
-  write(log,*) "map phase space: ", map_phase_space
-  write(log,*) 'random number seed: ', seed
-  write(log,*) 'collider energy: ', sqrts
-  write(log,*) "E_cm low: ", ecm_low
-  write(log,*) "E_cm up:  ", ecm_up
-  write(log,*) 'NWA: ', use_nwa
-  write(log,*) 'RAMBO: ', use_rambo
-  write(log,*) 'model: ', model_name
-  write(log,*) "include gg: ", include_gg
-  write(log,*) "include qq: ", include_qq
-  write(log,*) "include uu: ", include_uu
-  write(log,*) "include dd: ", include_dd
-  write(log,*) "include a: ", include_a
-  write(log,*) "include z: ", include_z
-  write(log,*) "include x: ", include_x
-  if (interference == 0) write(log,*) "interference: (gamma) + (Z) + (Z')"
-  if (interference == 1) write(log,*) "interference: (gamma + Z) + (Z')"
-  if (interference == 2) write(log,*) "interference: (gamma + Z + Z')"
-  if (interference == 3) write(log,*) "interference: (gamma + Z + Z') - (gamma) - (Z)"
-  if (interference == 4) write(log,*) "interference: (gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (ipdf ==  1) write(log,*) 'PDFs: CTEQ6m'
-  if (ipdf ==  2) write(log,*) 'PDFs: CTEQ6d'
-  if (ipdf ==  3) write(log,*) 'PDFs: CTEQ6l'
-  if (ipdf ==  4) write(log,*) 'PDFs: CTEQ6l1'
-  if (ipdf ==  5) write(log,*) 'PDFs: MRS99 (cor01)'
-  if (ipdf ==  6) write(log,*) 'PDFs: MRS99 (cor02)'
-  if (ipdf ==  7) write(log,*) 'PDFs: MRS99 (cor03)'
-  if (ipdf ==  8) write(log,*) 'PDFs: MRS99 (cor04)'
-  if (ipdf ==  9) write(log,*) 'PDFs: MRS99 (cor05)'
-  if (ipdf == 10) write(log,*) 'PDFs: CT14LN'
-  if (ipdf == 11) write(log,*) 'PDFs: CT14LL'
-  ! if (cut) write(log,*) 'applying fiducial cuts to events'
+  print*, "preliminary vamp calls: ", ncall / 10
+  print*, "preliminary vamp iterations: ", itmx + 1
+  print*, "vamp calls: ", ncall
+  print*, "vamp iterations: ", itmx - 1
+  print*, "number of events: ", nevents
+  print*, "symmetrise parton momentum fraction: ", symmetrise
+  print*, "map phase space: ", map_phase_space
+  print*, 'collider energy: ', sqrts
+  print*, "E_cm low: ", ecm_low
+  print*, "E_cm up:  ", ecm_up
+  print*, 'NWA: ', use_nwa
+  print*, 'RAMBO: ', use_rambo
+  print*, 'model: ', model_name
+  print*, "include gg: ", include_gg
+  print*, "include qq: ", include_qq
+  print*, "include uu: ", include_uu
+  print*, "include dd: ", include_dd
+  print*, "include a: ", include_a
+  print*, "include z: ", include_z
+  print*, "include x: ", include_x
+  if (interference == 0) print*, "interference: (gamma) + (Z) + (Z')"
+  if (interference == 1) print*, "interference: (gamma + Z) + (Z')"
+  if (interference == 2) print*, "interference: (gamma + Z + Z')"
+  if (interference == 3) print*, "interference: (gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) print*, "interference: (gamma + Z + Z') - (gamma) - (Z) - (Z')"
+  if (ipdf ==  1) print*, 'PDFs: CTEQ6m'
+  if (ipdf ==  2) print*, 'PDFs: CTEQ6d'
+  if (ipdf ==  3) print*, 'PDFs: CTEQ6l'
+  if (ipdf ==  4) print*, 'PDFs: CTEQ6l1'
+  if (ipdf ==  5) print*, 'PDFs: MRS99 (cor01)'
+  if (ipdf ==  6) print*, 'PDFs: MRS99 (cor02)'
+  if (ipdf ==  7) print*, 'PDFs: MRS99 (cor03)'
+  if (ipdf ==  8) print*, 'PDFs: MRS99 (cor04)'
+  if (ipdf ==  9) print*, 'PDFs: MRS99 (cor05)'
+  if (ipdf == 10) print*, 'PDFs: CT14LN'
+  if (ipdf == 11) print*, 'PDFs: CT14LL'
+  ! if (cut) print*, 'applying fiducial cuts to events'
 end subroutine print_config
 
 end module configuration

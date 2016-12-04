@@ -39,7 +39,6 @@ parser.add_option("-x", "--symmetrise",         default = True,  action = "store
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
-parser.add_option("-S", "--fixed_seed",         default = False, action = "store_true",  help = "use fixed seed 12345")
 
 # integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
@@ -125,8 +124,6 @@ if option.use_rambo or option.include_background:
 if option.final_state < 1:
     option.use_nwa = False
 
-seed = 12345 if option.fixed_seed else random.randint(0, 100000)
-
 executable = "generator"
 options = ""
 
@@ -162,9 +159,6 @@ if option.interference != 2:
 
 if option.use_nwa:
     options += ".nwa"
-
-if option.fixed_seed:
-    options += ".fixed-seed"
 
 if not option.symmetrise:
     options += ".unsymmetrised"
@@ -231,8 +225,6 @@ elif option.final_state == 12:
 
 process = initial_partons + intermediates + final_state
 
-# now = time.strftime("%Y-%m-%d_%H-%M-%S")
-
 filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, str(option.nevents)) #, now)
 
 home_directory = "."
@@ -286,7 +278,6 @@ print >> config, '%r    ! include x'          % option.include_x
 print >> config, '%i    ! interference'       % option.interference
 print >> config, '%r    ! use nwa'            % option.use_nwa
 print >> config, '%i.d3 ! energy'             % option.energy
-print >> config, '%i    ! iseed'              % seed
 print >> config, '%i    ! iterations'         % option.iterations
 print >> config, '%i    ! ncall'              % option.ncall
 print >> config, '%i    ! nevents'            % option.nevents
@@ -336,10 +327,11 @@ if option.batch:
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
     print "submitting batch job ..."
-    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s/%s.log2 %s/%s.sh' % (option.queue, data_directory, filename, run_directory, filename), shell = True)
+    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s.sh' % (option.queue, logfile, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     else: 
         print "error: hostname not recognised"
 else:
+    # subprocess.call("./bin/%s < %s > %s" % (executable, config_name, logfile), shell = True)
     subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
