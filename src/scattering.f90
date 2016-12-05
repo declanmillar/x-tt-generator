@@ -38,7 +38,7 @@ subroutine initialise_pdfs
     if (ipdf ==  9) lambdaqcd4 = 0.383d0
     if (ipdf == 10) lambdaqcd4 = 0.326d0
     if (ipdf == 11) lambdaqcd4 = 0.215d0
-    write(log, *) 'lambda_QCD^4: ', lambdaqcd4
+    print*, 'lambda_QCD^4: ', lambdaqcd4
 
     print*, "initialisation: opening pdf tables ..."
     if (ipdf <=  4) call setctq6(ipdf)
@@ -52,8 +52,8 @@ subroutine initialise_pdfs
     else
         nloops = 1
     end if
-    write(log, *) 'loops: ', nloops
-    write(log, *) 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
+    print*, 'loops: ', nloops
+    print*, 'alpha_s(m_Z): ', alfas(zmass, lambdaqcd4, nloops)
 
     ! scale for the pdfs
     if (final_state >= 0) then
