@@ -455,39 +455,39 @@ subroutine print_model
 
   print*, "modelling: printing model parameters ..."
 
-  write(log, *) 'm_b:', fmass(12)
-  write(log, *) 'Gamma_b:', fwidth(12)
-  write(log, *) 'm_t:', fmass(11)
-  write(log, *) 'Gamma_t:', fwidth(11)
-  write(log, *) 'm_Z:', zmass
-  write(log, *) 'Gamma_Z:', zwidth
-  write(log, *) 'm_W:', wmass
-  write(log, *) 'Gamma_W:', wwidth
-  write(log, *) 'm_h:', hmass
-  write(log, *) 'Gamma_h:', hwidth
+  print*, 'm_b:', fmass(12)
+  print*, 'Gamma_b:', fwidth(12)
+  print*, 'm_t:', fmass(11)
+  print*, 'Gamma_t:', fwidth(11)
+  print*, 'm_Z:', zmass
+  print*, 'Gamma_Z:', zwidth
+  print*, 'm_W:', wmass
+  print*, 'Gamma_W:', wwidth
+  print*, 'm_h:', hmass
+  print*, 'Gamma_h:', hwidth
   if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
-        write(log, *) "Z' no.:", i
-        write(log, *) "m_Z':", xmass(i), "[GeV]"
-        write(log, *) "Gamma_Z':", xwidth(i), "[GeV]"
-        write(log, *) "Gamma_Z' / m_Z':", xwidth(i) / xmass(i)
-        write(log, *) "gLu:", gxu(1,i)
-        write(log, *) "gRu:", gxu(2,i)
-        write(log, *) "gLd:", gxd(1,i)
-        write(log, *) "gRd:", gxd(2,i)
-        write(log, *) "gLl:", gxl(1,i)
-        write(log, *) "gRl:", gxl(2,i)
-        write(log, *) "gLn:", gxn(1,i)
-        write(log, *) "gRn:", gxn(2,i)
-        write(log, *) "gLt:", gxt(1,i)
-        write(log, *) "gRt:", gxt(2,i)
-        write(log, *) "gLb:", gxb(1,i)
-        write(log, *) "gRb:", gxb(2,i)
-        write(log, *) "gLl3:", gxl3(1,i)
-        write(log, *) "gRl3:", gxl3(2,i)
-        write(log, *) "gLn3:", gxn3(1,i)
-        write(log, *) "gRn3:", gxn3(2,i)
+        print*, "Z' no.:", i
+        print*, "m_Z':", xmass(i), "[GeV]"
+        print*, "Gamma_Z':", xwidth(i), "[GeV]"
+        print*, "Gamma_Z' / m_Z':", xwidth(i) / xmass(i)
+        print*, "gLu:", gxu(1,i)
+        print*, "gRu:", gxu(2,i)
+        print*, "gLd:", gxd(1,i)
+        print*, "gRd:", gxd(2,i)
+        print*, "gLl:", gxl(1,i)
+        print*, "gRl:", gxl(2,i)
+        print*, "gLn:", gxn(1,i)
+        print*, "gRn:", gxn(2,i)
+        print*, "gLt:", gxt(1,i)
+        print*, "gRt:", gxt(2,i)
+        print*, "gLb:", gxb(1,i)
+        print*, "gRb:", gxb(2,i)
+        print*, "gLl3:", gxl3(1,i)
+        print*, "gRl3:", gxl3(2,i)
+        print*, "gLn3:", gxn3(1,i)
+        print*, "gRn3:", gxn3(2,i)
       end if
     end do
   end if
