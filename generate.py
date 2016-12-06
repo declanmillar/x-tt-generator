@@ -302,7 +302,7 @@ if option.batch:
         print >> handler, "#!/bin/bash"
         print >> handler, "source /afs/cern.ch/user/d/demillar/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, "%s/bin/%s < %s/%s" % (run_directory, executable, config_name)
+        print >> handler, "%s/bin/%s < %s" % (run_directory, executable, config_name)
     elif "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
