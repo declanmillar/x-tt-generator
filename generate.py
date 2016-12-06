@@ -300,15 +300,15 @@ if option.batch:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
         print >> handler, "#!/bin/bash"
-        print >> handler, "source /afs/cern.ch/cern/d/demillar/.bash_profile"
+        print >> handler, "source /afs/cern.ch/user/d/demillar/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, "%s/bin/%s < %s/%s" % (run_directory, executable, config_name, filename)
+        print >> handler, "%s/bin/%s < %s/%s" % (run_directory, executable, config_name)
     elif "cyan" in hostname:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s > %s/%s.log2' % (run_directory, executable, config_name, data_directory, filename)
+        print >> handler, '%s/bin/%s < %s > %s/%s.log' % (run_directory, executable, config_name, data_directory, filename)
     elif "heppc" in hostname:
         print "h_rt = %s" % option.walltime
         print >> handler, "#!/bin/bash"
