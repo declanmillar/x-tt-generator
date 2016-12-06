@@ -145,10 +145,10 @@ program generator
     call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, exc = exc, history = history(calls(1, 1) + 1:))
     call handle_exception(exc)
 
-    ! print*, "integration: refining grid ..."
-    ! call clear_exception(exc)
-    ! call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
-    ! call handle_exception(exc)
+    print*, "integration: refining grid ..."
+    call clear_exception(exc)
+    call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
+    call handle_exception(exc)
 
     print*, "integration: printing history ..."
     call vamp_print_history(history, "history")
@@ -217,8 +217,10 @@ program generator
         call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
+        symmetrise = .true.
         event = dsigma(x, NO_DATA)
-        record_events = .false. 
+        record_events = .false.
+        symmetrise = .false.
         if (.not. batch) call progress_percentage(i)
     end do
     call system_clock(event_end)

@@ -190,7 +190,7 @@ function dsigma(x, data, weights, channel, grids)
     integer :: jps
 
     ! for cuts
-    real(kind=default) :: eta, pt
+    real(kind=default) :: arg, eps, rpl, eta, pt
 
     ! arctan
     real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min
@@ -652,6 +652,25 @@ function dsigma(x, data, weights, channel, grids)
             pcol(1,i) = p(1,i)
         end do
 
+        if (verbose) print*, "kinematics: cuts in pseudorapidity"
+        if (final_state <= 0) then
+            rps = p(3,3) / sqrt(p(1,3) * p(1,3) + p(2,3) * p(2,3) + p(3,3) * p(3,3))
+        else if (final_state > 0)then
+            rps = (p(3,3) + p(3,5) + p(3,6)) &
+                / sqrt((p(1,3) + p(1,5) + p(1,6))**2 &
+                     + (p(2,3) + p(2,5) + p(2,6))**2 &
+                     + (p(3,3) + p(3,5) + p(3,6))**2)
+        end if
+        if (rps < -1.d0) rps = -1.d0
+        if (rps > +1.d0) rps = +1.d0
+        rpl = acos(rps)
+        arg = tan(rpl / 2.d0)
+        if (arg <= 0.d0) arg = 1.d-9
+        eta = -log(arg)
+        if (abs(eta) > 100.d0) then
+            dsigma = 0.d0
+            return
+        end if
         if (verbose) print*, "kinematics: copying parton CoM 4-momenta for MadGraph..."
         p1(0) = p(4, 1)
         p2(0) = p(4, 2)

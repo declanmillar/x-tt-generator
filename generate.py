@@ -333,5 +333,5 @@ if option.batch:
     else: 
         print "error: hostname not recognised"
 else:
-    # subprocess.call("./bin/%s < %s > %s" % (executable, config_name, logfile), shell = True)
-    subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
+    subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+    # subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)
