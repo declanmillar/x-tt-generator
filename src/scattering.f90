@@ -3,6 +3,7 @@ module scattering
     use kinds
     use configuration
     use modelling
+    use tt_bbeevv
 
     implicit none
 
@@ -151,7 +152,7 @@ function dsigma(x, data, weights, channel, grids)
     ! square matrix elements
     real(kind=default) :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
     real(kind=default) :: sgg_tt, sqq_tt, sqq_ff
-    real(kind=default) :: sgg_tt_bbeevv, sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
+    real(kind=default) :: sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
     real(kind=default) :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
     real(kind=default) :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
 
@@ -656,15 +657,9 @@ function dsigma(x, data, weights, channel, grids)
             if (verbose) print*, "kinematics: applying fiducial cuts ..."
             do i = 3, nfinal
                 pt = sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i))
-                if (pt < 25) then
-                    dsigma = 0.d0
-                    return
-                end if
+                if (pt < 25) return
                 eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
-                if (abs(eta) > 2.5) then
-                    dsigma = 0.d0
-                    return
-                end if
+                if (abs(eta) > 2.5) return
             end do
         end if
 

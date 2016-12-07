@@ -1,23 +1,28 @@
-function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
+module tt_bbeevv
+
+  use kinds
+
+  implicit none
+
+  real(kind=default), public :: sgg_tt_bbeevv
+  real(kind=default), private :: gg_tt_bbeevv
+
+contains
+
+function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, channel)
 
   ! returns amplitude squared summed/avg over colors and helicities
   ! for the point in phase space p1, p2, p3, p4, ...
   ! for process: g g -> t t~ -> b b~ ta+ ta- vt vt~
 
-  use kinds
-  use helas
-
   implicit none
-
-  ! functions
-  real(kind=default) :: sgg_tt_bbeevv
-  real(kind=default) :: gg_tt_bbeevv
 
   ! constants
   integer, parameter :: nexternal = 8, ncomb = 256
 
   ! arguments
   real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+  integer, intent(in), optional :: channel
 
   ! local variables
   integer :: i, j
@@ -25,7 +30,7 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
   real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
-  data goodhel /ncomb*.false./
+  data goodhel /ncomb * .false./
   data ntry /0/
 
   ! possible helicity combinations
@@ -298,88 +303,86 @@ function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8)
     end if
   enddo
   sgg_tt_bbeevv = sgg_tt_bbeevv / 4.d0
-  ! if (sgg_tt_bbeevv == 0.d0) return
 end function sgg_tt_bbeevv
 
 
-function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
+function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
 
-  ! returns amplitude squared summed/avg over colors
-  ! for the point in phase space p1, p2, p3, p4, ...
-  ! and helicity nhel(1), nhel(2), ...
-  ! for process : g g  -> t t~ -> b b~ ta+ ta- vt vt~
+    ! returns amplitude squared summed/avg over colors
+    ! for the point in phase space p1, p2, p3, p4, ...
+    ! and helicity nhel(1), nhel(2), ...
+    ! for process : g g  -> t t~ -> b b~ ta+ ta- vt vt~
 
-  use kinds
-  use helas
-  use modelling
+    use helas
+    use modelling
 
-  implicit none
+    implicit none
 
-  real(kind=default) :: gg_tt_bbeevv
+    ! constants
+    integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 8
+    real(kind=default), parameter :: zero = 0.d0
 
-  ! constants
-  integer, parameter :: ngraphs = 3, neigen = 2, nexternal = 8
-  real(kind=default), parameter :: zero = 0.d0
+    ! arguments
+    real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
+    integer :: nhel(nexternal)
+    integer, intent(in), optional :: channel
 
-  ! arguments
-  real(kind=default) :: p1(0:3), p2(0:3), p3(0:3), p4(0:3), p5(0:3), p6(0:3), p7(0:3), p8(0:3)
-  integer :: nhel(nexternal)
+    ! local variables
+    integer :: i, j
+    real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
+    complex(kind=complex) ztemp
+    complex(kind=complex) amp(ngraphs)
+    complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6)
+    complex(kind=complex) w6(6), w7(6), w8(6), w9(6), w10(6)
+    complex(kind=complex) w11(6), w12(6), w13(6), w14(6), w15(6)
 
-  ! local variables
-  integer :: i, j
-  real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-  complex(kind=complex) ztemp
-  complex(kind=complex) amp(ngraphs)
-  complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6)
-  complex(kind=complex) w6(6), w7(6), w8(6), w9(6), w10(6)
-  complex(kind=complex) w11(6), w12(6), w13(6), w14(6), w15(6)
-
-  ! initialise amplitudes
-  do i = 1, ngraphs
-    amp(i) = 0.d0
-  enddo
-
-  ! color data
-  eigen_val(1) = 7.2916666666666588e-02
-  eigen_vec(1, 1) = 7.0710678118654768e-01
-  eigen_vec(2, 1) = 7.0710678118654735e-01
-  eigen_vec(3, 1) = 0.0000000000000000e+00
-  eigen_val(2) = 2.8125000000000000e-01
-  eigen_vec(1, 2) = -4.0824829046386313e-01
-  eigen_vec(2, 2) = 4.0824829046386285e-01
-  eigen_vec(3, 2) = 8.1649658092772603e-01
-
-  ! wavefunctions
-  call vxxxxx(p1, zero, nhel(1), -1, w1)
-  call vxxxxx(p2, zero, nhel(2), -1, w2)
-  call oxxxxx(p3, fmass(12), nhel(3), 1, w3)
-  call ixxxxx(p4, fmass(12), nhel(4), -1, w4)
-  call ixxxxx(p5, zero, nhel(5), -1, w5)
-  call oxxxxx(p6, zero, nhel(6), 1, w6)
-  call oxxxxx(p7, zero, nhel(7), 1, w7)
-  call ixxxxx(p8, zero, nhel(8), -1, w8)
-
-  ! currents
-  call jioxxx(w5, w7, gwf, wmass, wwidth, w9)
-  call jioxxx(w8, w6, gwf, wmass, wwidth, w10)
-  call fvoxxx(w3, w9, gwf, fmass(11), fwidth(11), w11)
-  call fvixxx(w4, w10, gwf, fmass(11), fwidth(11), w12)
-  call fvoxxx(w11, w2, gg, fmass(11), fwidth(11), w13)
-  call fvoxxx(w11, w1, gg, fmass(11), fwidth(11), w14)
-  call jggxxx(w1, w2, g, w15)
-
-  ! amplitudes
-  call iovxxx(w12, w13, w1, gg, amp(1))
-  call iovxxx(w12, w14, w2, gg, amp(2))
-  call iovxxx(w12, w11, w15, gg, amp(3))
-
-  gg_tt_bbeevv = 0.d0
-  do i = 1, neigen
-    ztemp = (0.d0, 0.d0)
-    do j = 1, ngraphs
-      ztemp = ztemp + eigen_vec(j,i)*amp(j)
+    ! initialise amplitudes
+    do i = 1, ngraphs
+      amp(i) = 0.d0
     enddo
-    gg_tt_bbeevv = gg_tt_bbeevv + ztemp*eigen_val(i)*conjg(ztemp)
-  enddo
-  ! call gaugecheck(amp, ztemp, eigen_vec, eigen_val, ngraphs, neigen)
+
+    ! color data
+    eigen_val(1) = 7.2916666666666588e-02
+    eigen_vec(1, 1) = 7.0710678118654768e-01
+    eigen_vec(2, 1) = 7.0710678118654735e-01
+    eigen_vec(3, 1) = 0.0000000000000000e+00
+    eigen_val(2) = 2.8125000000000000e-01
+    eigen_vec(1, 2) = -4.0824829046386313e-01
+    eigen_vec(2, 2) = 4.0824829046386285e-01
+    eigen_vec(3, 2) = 8.1649658092772603e-01
+
+    ! wavefunctions
+    call vxxxxx(p1, zero, nhel(1), -1, w1)
+    call vxxxxx(p2, zero, nhel(2), -1, w2)
+    call oxxxxx(p3, fmass(12), nhel(3), 1, w3)
+    call ixxxxx(p4, fmass(12), nhel(4), -1, w4)
+    call ixxxxx(p5, zero, nhel(5), -1, w5)
+    call oxxxxx(p6, zero, nhel(6), 1, w6)
+    call oxxxxx(p7, zero, nhel(7), 1, w7)
+    call ixxxxx(p8, zero, nhel(8), -1, w8)
+
+    ! currents
+    call jioxxx(w5, w7, gwf, wmass, wwidth, w9)
+    call jioxxx(w8, w6, gwf, wmass, wwidth, w10)
+    call fvoxxx(w3, w9, gwf, fmass(11), fwidth(11), w11)
+    call fvixxx(w4, w10, gwf, fmass(11), fwidth(11), w12)
+    call fvoxxx(w11, w2, gg, fmass(11), fwidth(11), w13)
+    call fvoxxx(w11, w1, gg, fmass(11), fwidth(11), w14)
+    call jggxxx(w1, w2, g, w15)
+
+    ! amplitudes
+    call iovxxx(w12, w13, w1, gg, amp(1))
+    call iovxxx(w12, w14, w2, gg, amp(2))
+    call iovxxx(w12, w11, w15, gg, amp(3))
+
+    gg_tt_bbeevv = 0.d0
+    do i = 1, neigen
+        ztemp = (0.d0, 0.d0)
+        do j = 1, ngraphs
+            ztemp = ztemp + eigen_vec(j,i) * amp(j)
+        enddo
+        gg_tt_bbeevv = gg_tt_bbeevv + ztemp * eigen_val(i) * conjg(ztemp)
+    enddo
 end function gg_tt_bbeevv
+
+end module tt_bbeevv
