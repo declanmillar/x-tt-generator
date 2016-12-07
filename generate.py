@@ -57,7 +57,7 @@ parser.add_option("-t", "--tag",                default = "",                   
 parser.add_option("-w", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
-parser.add_option("-c", "--cut",                default = "true",                        help = "apply fiducial cuts")
+parser.add_option("-c", "--cut",                default = True, action = "store_false",  help = "apply fiducial cuts")
 
 (option, args) = parser.parse_args()
 
