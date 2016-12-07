@@ -35,7 +35,7 @@ module configuration
   integer :: nevents
   integer :: itmx
   logical :: batch
-  ! logical :: cut
+  logical :: cut
 
   ! derived config
   integer :: nfinal
@@ -145,6 +145,7 @@ subroutine print_config
   print*, "vamp calls: ", ncall
   print*, "vamp iterations: ", itmx - 1
   print*, "number of events: ", nevents
+  print*, "apply fiducial cuts: ", cut
   print*, "symmetrise parton momentum fraction: ", symmetrise
   print*, "map phase space: ", map_phase_space
   print*, 'collider energy: ', sqrts

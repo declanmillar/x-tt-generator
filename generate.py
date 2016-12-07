@@ -57,6 +57,7 @@ parser.add_option("-t", "--tag",                default = "",                   
 parser.add_option("-w", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
+parser.add_option("-c", "--cut",                default = "true",                        help = "apply fiducial cuts")
 
 (option, args) = parser.parse_args()
 
@@ -159,6 +160,9 @@ if option.interference != 2:
 
 if option.use_nwa:
     options += ".nwa"
+
+if not option.cut:
+    options += ".nocut"
 
 if not option.symmetrise:
     options += ".unsymmetrised"
@@ -288,6 +292,8 @@ print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up
 print >> config, '%r    ! batch mode'         % option.batch
+print >> config, '%i.d3 ! energy up'          % option.energy_up
+print >> config, '%r    ! fiducial cuts'      % option.cut
 
 try:
     with open('%s' % config_name,'w') as config_file:
