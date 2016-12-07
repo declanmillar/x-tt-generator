@@ -292,7 +292,6 @@ print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up
 print >> config, '%r    ! batch mode'         % option.batch
-print >> config, '%i.d3 ! energy up'          % option.energy_up
 print >> config, '%r    ! fiducial cuts'      % option.cut
 
 try:
