@@ -89,6 +89,7 @@ subroutine read_config
   read(5,*) ecm_low
   read(5,*) ecm_up
   read(5,*) batch
+  read(5,*) cut
 end subroutine read_config
 
 subroutine modify_config
@@ -177,7 +178,6 @@ subroutine print_config
   if (ipdf ==  9) print*, 'PDFs: MRS99 (cor05)'
   if (ipdf == 10) print*, 'PDFs: CT14LN'
   if (ipdf == 11) print*, 'PDFs: CT14LL'
-  ! if (cut) print*, 'applying fiducial cuts to events'
 end subroutine print_config
 
 end module configuration
