@@ -214,8 +214,6 @@ program generator
         end do
     end if
 
-    ! symmetrise = .false.
-
     print*, "vamp: generating", nevents, " events ..."
     call cpu_time(event_start)
     if (.not. batch) call set_total(nevents)
@@ -224,11 +222,10 @@ program generator
         call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
-        ! symmetrise = .true.
+        symmetrise = .true.
         event = dsigma(x, no_data)
-        print*, "event", i, "weight = ", event 
         record_events = .false.
-        ! symmetrise = .false.
+        symmetrise = .false.
         if (.not. batch) call progress_percentage(i)
     end do
     call cpu_time(event_end)

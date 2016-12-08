@@ -35,7 +35,7 @@ parser.add_option("-Z", "--include_z",          default = True,  action = "store
 parser.add_option("-X", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
 parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
 parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
-parser.add_option("-x", "--symmetrise",         default = True,  action = "store_false", help = "symmetrise phase space around x1<->x2")
+parser.add_option("-x", "--symmetrise",         default = False, action = "store_true", help = "symmetrise phase space around x1<->x2")
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
@@ -44,7 +44,7 @@ parser.add_option("-W", "--use_nwa",            default = False, action = "store
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
 parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
 parser.add_option("-N", "--iterations",         default = 5,         type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-n", "--ncall",              default = 2000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
@@ -164,8 +164,8 @@ if option.use_nwa:
 if not option.cut:
     options += ".nocut"
 
-if not option.symmetrise:
-    options += ".unsymmetrised"
+if option.symmetrise:
+    options += ".symmetrised"
 
 if option.use_rambo:
     options += ".rambo"
