@@ -74,7 +74,7 @@ program generator
         if (final_state <= 0) then
             ndimensions = 3
         else if (final_state > 0) then
-            ndimensions = 15
+            ndimensions = 16
         end if
     end if
 
@@ -100,7 +100,7 @@ program generator
                 domain(2, i) = 1.d0
             end do
         else if (final_state > 0) then
-            do i = 15, 10, -1
+            do i = 16, 10, -1
                 domain(1, i) = 0.d0
                 domain(2, i) = 1.d0
             end do
@@ -225,15 +225,7 @@ program generator
         call handle_exception(exc)
         record_events = .true.
         ! symmetrise = .true.
-        print*, "external"
-        do j = 1, 15
-            print*, "x", j, " = ", x(j)
-        end do
         event = dsigma(x, no_data)
-        print*, "external 2"
-        do j = 1, 15
-            print*, "x", j, " = ", x(j)
-        end do
         print*, "event", i, "weight = ", event 
         record_events = .false.
         ! symmetrise = .false.

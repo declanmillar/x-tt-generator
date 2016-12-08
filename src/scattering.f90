@@ -210,7 +210,6 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: qfdpoluu2(-1:1, -1:1), qfdpoldd2(-1:1, -1:1), qfdpolbb2(-1:1, -1:1)
     real(kind=default) :: weight_pol(-1:1, -1:1), dsigmapol(-1:1, -1:1)
 
-    real(kind=default) :: random
     integer :: seed
 
     ! temporary iterators
@@ -219,8 +218,6 @@ function dsigma(x, data, weights, channel, grids)
     ! ---
 
     if (verbose) print*, "dsigma: begin"
-
-    call random_number(random)
 
     if (use_rambo) then
         ecm = x(1) * (ecm_max - ecm_min) + ecm_min
@@ -405,7 +402,7 @@ function dsigma(x, data, weights, channel, grids)
             else
                 ! Calculate 2->2 final state momenta in the parton CoM frame manually
 
-                phi = 2.d0 * pi * random
+                phi = 2.d0 * pi * x(16)
                 ct = x(1)
                 st = sqrt(1.d0 - ct * ct)
 
@@ -443,7 +440,7 @@ function dsigma(x, data, weights, channel, grids)
                     end do
                 end do
             else
-                phi = 2.d0 * pi * random
+                phi = 2.d0 * pi * x(16)
 
                 m356min = m3 + m5 + m6
                 m356max = ecm - m4 - m7 - m8
