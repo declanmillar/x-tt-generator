@@ -33,9 +33,10 @@ program generator
 
     ! time keeping
     integer, dimension(8) :: now
-    integer :: start_time, end_time, runtime
-    integer :: integrate_start, integrate_end
-    integer :: event_start, event_end
+    real(kind = default) :: start_time, end_time, runtime
+    real(kind = default) :: integrate_start, integrate_end
+    real(kind = default) :: event_start, event_end
+    integer :: ticks, num_proc, proc_id
 
     ! lhe
     integer :: idbm(2), pdfg(2), pdfs(2)
@@ -51,8 +52,9 @@ program generator
     type(vamp_grid) :: grid
     type(vamp_data_t) :: data
     integer, dimension(2, 2) :: calls
-    type(vamp_history), dimension(10) :: history
+    type(vamp_history), dimension(:), allocatable :: history
 
+    call cpu_time(start_time) 
     call date_and_time(values = now)
     print*, 'date: ', now(1), now(2), now(3)
     print*, 'time: ', now(5), now(6), now(7)
@@ -79,6 +81,7 @@ program generator
     print*, "integration: allocating domain with", ndimensions, "dimensions ..."
     allocate(x(ndimensions))
     allocate(domain(2, ndimensions))
+    allocate(history(2 * itmx))
 
     print*, "integration: setting VAMP limits ..."
     if (use_rambo) then
@@ -114,35 +117,40 @@ program generator
 
     record_events = .false.
     print*, "integration: initialising MPI ..."
-    call mpi90_init
+    call mpi90_init()
+    call mpi90_size(num_proc)
+    call mpi90_rank(proc_id)
 
     print*, "integration: integrating using VAMP ..."
+    call system_clock(ticks)
     call tao_random_create(rng, 0)
-    call system_clock(integrate_start) 
-    call tao_random_seed(rng, integrate_start)
+    call tao_random_seed(rng, ticks + proc_id)
     call vamp_create_history(history)
 
     calls(:, 1) = (/6, ncall / 10 /)
     calls(:, 2) = (/4, ncall /)
 
+    call cpu_time(integrate_start) 
+
     print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
-    call clear_exception(exc)
-    call vamp_create_grid(grid, domain, num_calls = calls(2, 1), exc = exc) 
-    call handle_exception(exc)
+    call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
 
     print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), exc = exc, history = history)
+    call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), history = history, exc = exc)
     call handle_exception(exc)
 
     print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
-    call clear_exception(exc)
-    call vamp_discard_integral(grid, num_calls = calls(2, 2), exc = exc)
-    call handle_exception(exc)
+    call vamp_discard_integral(grid, num_calls = calls(2, 2))
+
+    ! print*, "integration: warm up VAMP grid with ", calls(1, 2), "iterations ..."
+    ! call clear_exception(exc)
+    ! call vamp_warmup_grid(rng, grid, dsigma, calls(1, 2), history = history(calls(1, 1) + 1:), exc = exc)
+    ! call handle_exception(exc)
 
     print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
     call clear_exception(exc)
-    call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, exc = exc, history = history(calls(1, 1) + 1:))
+    call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, history = history(calls(1, 1) + 1:), exc = exc)
     call handle_exception(exc)
 
     print*, "integration: refining grid ..."
@@ -150,15 +158,14 @@ program generator
     call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
     call handle_exception(exc)
 
+    print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+    call cpu_time(integrate_end)
+    print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
+    if (sigma <= 0) stop
+
     print*, "integration: printing history ..."
     call vamp_print_history(history, "history")
     call vamp_delete_history(history)
-
-    print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-    call system_clock(integrate_end)
-    print *, "integration: time = ", integrate_end - integrate_start
-
-    if (sigma <= 0) stop
 
     print*, "process: calculating beam info ..."
     idbm(1) = 2212
@@ -207,24 +214,35 @@ program generator
         end do
     end if
 
-    symmetrise = .false.
+    ! symmetrise = .false.
 
     print*, "vamp: generating", nevents, " events ..."
-    call system_clock(event_start)
+    call cpu_time(event_start)
     if (.not. batch) call set_total(nevents)
     do i = 1, nevents
         call clear_exception(exc)
         call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
-        symmetrise = .true.
-        event = dsigma(x, NO_DATA)
+        ! symmetrise = .true.
+        print*, "external"
+        do j = 1, 15
+            print*, "x", j, " = ", x(j)
+        end do
+        event = dsigma(x, no_data)
+        print*, "external 2"
+        do j = 1, 15
+            print*, "x", j, " = ", x(j)
+        end do
+        print*, "event", i, "weight = ", event 
         record_events = .false.
-        symmetrise = .false.
+        ! symmetrise = .false.
         if (.not. batch) call progress_percentage(i)
     end do
-    call system_clock(event_end)
-    print *, "event generation: time = ", event_end - event_start
+    call cpu_time(event_end)
+    print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"
+
+    call vamp_delete_grid(grid)
 
     if (final_state <= 0) then
         print *, "finalisation: calculating asymmetries for polarized final state"
@@ -261,8 +279,8 @@ program generator
         call lhe_close
     end if
 
-    call system_clock(end_time)
+    call cpu_time(end_time)
     runtime = end_time - start_time
-    print*, "runtime: ", runtime
+    print*, "runtime: ", runtime / 60, "[mins]"
     stop
 end program generator

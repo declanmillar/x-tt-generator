@@ -2317,6 +2317,8 @@ contains
                                              :clusters(i,2))) ** POWER
     end do
   end function condense_action
+
+  ! Declan's version
   subroutine vamp_next_event_single &
        (x, rng, g, func, data, &
         weight, channel, weights, grids, exc)
@@ -2346,8 +2348,9 @@ contains
     real(kind=default), dimension(size(g%div)):: wgts
     real(kind=default), dimension(size(g%div)):: r
     integer, dimension(size(g%div)):: ia
-    real(kind=default) :: f, wgt
-    real(kind=default) :: r0
+    real(kind=default) :: f, wgt, f2
+    real(kind=default) :: y
+    integer :: i
     rejection: do
        call tao_random_number (rng, r)
        call inject_division_short (g%div, real(r, kind=default), x, ia, wgts)
@@ -2375,13 +2378,92 @@ contains
              call raise_exception (exc, EXC_WARN, FN, "weight > 1")
              exit rejection
           end if
-          call tao_random_number (rng, r0)
-          if (r0 * g%f_max <= f) then
+          call tao_random_number (rng, y)
+          ! print*, "y = ", y
+          ! print*, "fmax = ", g%f_max
+          if (f > y * g%f_max) then
+             print*, "y = ", y
+             print*, "fmax = ", g%f_max
+             print*, "f = ", f
+             f2 = func (x, no_data, weights, channel, grids)
+             print*, "f2 = ", f2
+             ! do i = 1, 15
+             !   print*, "x", i, " = ", x(i)
+             ! end do
              exit rejection
           end if
        end if
+      ! print*, "guess i'm rejected"
     end do rejection
   end subroutine vamp_next_event_single
+
+  ! original
+  ! subroutine vamp_next_event_single &
+  !      (x, rng, g, func, data, &
+  !       weight, channel, weights, grids, exc)
+  !   real(kind=default), dimension(:), intent(out) :: x
+  !   type(tao_random_state), intent(inout) :: rng
+  !   type(vamp_grid), intent(inout) :: g
+  !   real(kind=default), intent(out), optional :: weight
+  !   class(vamp_data_t), intent(in) :: data
+  !   integer, intent(in), optional :: channel
+  !   real(kind=default), dimension(:), intent(in), optional :: weights
+  !   type(vamp_grid), dimension(:), intent(in), optional :: grids
+  !   type(exception), intent(inout), optional :: exc
+  !   interface
+  !      function func (xi, data, weights, channel, grids) result (f)
+  !        use kinds
+  !        use vamp_grid_type !NODEP!
+  !        import vamp_data_t
+  !        real(kind=default), dimension(:), intent(in) :: xi
+  !        class(vamp_data_t), intent(in) :: data
+  !        real(kind=default), dimension(:), intent(in), optional :: weights
+  !        integer, intent(in), optional :: channel
+  !        type(vamp_grid), dimension(:), intent(in), optional :: grids
+  !        real(kind=default) :: f
+  !      end function func
+  !   end interface
+  !   character(len=*), parameter :: FN = "vamp_next_event_single"
+  !   real(kind=default), dimension(size(g%div)):: wgts
+  !   real(kind=default), dimension(size(g%div)):: r
+  !   integer, dimension(size(g%div)):: ia
+  !   real(kind=default) :: f, wgt
+  !   real(kind=default) :: r0
+  !   rejection: do
+  !      call tao_random_number (rng, r)
+  !      call inject_division_short (g%div, real(r, kind=default), x, ia, wgts)
+  !      wgt = g%jacobi * product (wgts)
+  !      wgt = g%calls * wgt !: the calling procedure will divide by \#calls
+  !      if (associated (g%map)) then
+  !         x = matmul (g%map, x)
+  !      end if
+  !      if (associated (g%map)) then
+  !         if (all (inside_division (g%div, x))) then
+  !            f = wgt * func (x, data, weights, channel, grids)
+  !         else
+  !            f = 0.0
+  !         end if
+  !      else
+  !         f = wgt * func (x, data, weights, channel, grids)
+  !      end if
+  !      ! call record_efficiency (g%div, ia, f/g%f_max)
+  !      if (present (weight)) then
+  !         weight = f
+  !         exit rejection
+  !      else
+  !         if (f > g%f_max) then
+  !            g%f_max = f
+  !            call raise_exception (exc, EXC_WARN, FN, "weight > 1")
+  !            exit rejection
+  !         end if
+  !         call tao_random_number (rng, r0)
+  !         if (r0 * g%f_max <= f) then
+  !            exit rejection
+  !         end if
+  !      end if
+  !   end do rejection
+  ! end subroutine vamp_next_event_single
+
   subroutine vamp_next_event_multi &
        (x, rng, g, func, data, phi, weight, excess, positive, exc)
     real(kind=default), dimension(:), intent(out) :: x

@@ -137,14 +137,12 @@ function dsigma(x, data, weights, channel, grids)
 
     implicit none
 
-    real(kind=default) :: dsigma
+    real(kind=default) :: dsigma, ddsigma
     real(kind=default), dimension(:), intent(in) :: x
     class(vamp_data_t), intent(in) :: data
     real(kind=default), dimension(:), intent(in), optional :: weights
     integer, intent(in), optional :: channel
     type(vamp_grid), dimension(:), intent(in), optional :: grids
-
-    real(kind=default) ddsigma
 
     ! alphas
     real(kind=default) :: alfas, gs4, gs2, a_s
@@ -152,7 +150,7 @@ function dsigma(x, data, weights, channel, grids)
     ! square matrix elements
     real(kind=default) :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
     real(kind=default) :: sgg_tt, sqq_tt, sqq_ff
-    real(kind=default) :: sqq_tt_bbeevv_qcd, sqq_tt_bbeevv
+    real(kind=default) :: sqq_tt_bbeevv_ew
     real(kind=default) :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
     real(kind=default) :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
 
@@ -191,7 +189,7 @@ function dsigma(x, data, weights, channel, grids)
     integer :: jps
 
     ! for cuts
-    real(kind=default) :: arg, eps, rpl, eta, pt
+    real(kind=default) :: eta, pt
 
     ! arctan
     real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min
@@ -779,15 +777,15 @@ function dsigma(x, data, weights, channel, grids)
                 qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
             end if
             if (include_qq) then
-                qcdqq = sqq_tt_bbeevv_qcd(3, p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdqq = sqq_tt_bbeevv(3, p1, p2, p3, p4, p5, p7, p6, p8)
             end if
             if (include_uu) then
-                qfduu1 = sqq_tt_bbeevv(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-                qfduu2 = sqq_tt_bbeevv(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+                qfduu1 = sqq_tt_bbeevv_ew(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+                qfduu2 = sqq_tt_bbeevv_ew(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
             end if
             if (include_dd) then
-                qfddd1 = sqq_tt_bbeevv(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-                qfddd2 = sqq_tt_bbeevv(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+                qfddd1 = sqq_tt_bbeevv_ew(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+                qfddd2 = sqq_tt_bbeevv_ew(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
             end if
         else
             stop "error: invalid final state"
