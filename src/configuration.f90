@@ -27,6 +27,7 @@ module configuration
   integer :: interference
   logical :: use_nwa
   logical :: symmetrise
+  logical :: symxgen
   logical :: use_rambo
   logical :: map_phase_space
   logical :: verbose
@@ -85,6 +86,7 @@ subroutine read_config
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) symmetrise
+  read(5,*) symxgen
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up

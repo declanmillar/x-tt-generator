@@ -222,10 +222,10 @@ program generator
         call vamp_next_event(x, rng, grid, dsigma, exc = exc)
         call handle_exception(exc)
         record_events = .true.
-        symmetrise = .true.
+        if (symxgen) symmetrise = .true.
         event = dsigma(x, no_data)
         record_events = .false.
-        symmetrise = .false.
+        if (symxgen) symmetrise = .false.
         if (.not. batch) call progress_percentage(i)
     end do
     call cpu_time(event_end)
