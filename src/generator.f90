@@ -33,7 +33,7 @@ program generator
 
     ! time keeping
     integer, dimension(8) :: now
-    real(kind = default) :: start_time, end_time, runtime
+    real(kind = default) :: start_time, end_time
     real(kind = default) :: integrate_start, integrate_end
     real(kind = default) :: event_start, event_end
     integer :: ticks, num_proc, proc_id
@@ -269,7 +269,6 @@ program generator
     end if
 
     call cpu_time(end_time)
-    runtime = end_time - start_time
-    print*, "runtime: ", runtime / 60, "[mins]"
+    print*, "runtime: ", end_time - start_time / 60, "[mins]"
     stop
 end program generator
