@@ -150,7 +150,6 @@ function dsigma(x, data, weights, channel, grids)
     ! square matrix elements
     real(kind=default) :: qfduu1, qfduu2, qfddd1, qfddd2, qcdqq, qcdgg
     real(kind=default) :: sgg_tt, sqq_tt, sqq_ff
-    real(kind=default) :: sqq_tt_bbeevv_ew
     real(kind=default) :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
     real(kind=default) :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
 
