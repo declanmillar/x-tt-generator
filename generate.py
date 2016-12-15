@@ -22,10 +22,11 @@ import time
 parser = optparse.OptionParser()
 
 # boolean
+parser.add_option("-D", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid if present.")
 parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
 parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
 parser.add_option("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_option("-H", "--lhef",               default = False,  action = "store_true", help = "write events to lhe file")
+parser.add_option("-H", "--lhef",               default = False, action = "store_true",  help = "write events to lhe file")
 parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
 parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
 parser.add_option("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
@@ -36,7 +37,6 @@ parser.add_option("-X", "--include_x",          default = True,  action = "store
 parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
 parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
 parser.add_option("-x", "--symmetrise",         default = False, action = "store_true",  help = "symmetrise phase space around x1<->x2 in integral")
-parser.add_option("-y", "--symxgen",            default = False, action = "store_true",  help = "symmetrise phase space around x1<->x2 in event generation")
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
@@ -168,9 +168,6 @@ if option.cut:
 if option.symmetrise:
     options += ".symmetrised"
 
-if option.symxgen:
-    options += ".symxgen"
-
 if option.use_rambo:
     options += ".rambo"
 
@@ -263,13 +260,23 @@ logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.root" % (data_directory, filename)
 lhe_file = "%s/%s.lhe" % (data_directory, filename)
+grid_file = "%s/%s.grid" % (data_directory, filename)
+
+if os.path.isfile(grid_file): 
+    new_grid = False
+else:
+    new_grid = True
+if option.overwrite:
+    new_grid = True
 
 config = StringIO.StringIO()
 print >> config, '%r    ! ntuple'             % option.ntuple
 print >> config, '%r    ! lhef'               % option.lhef
+print >> config, '%r    ! new_grid'           % new_grid
 print >> config, '%s'                         % ntuple_file
 print >> config, '%s'                         % lhe_file
 print >> config, '%s'                         % logfile
+print >> config, '%s'                         % grid_file
 print >> config, '%i    ! initial state'      % option.initial_state
 print >> config, '%i    ! final state'        % option.final_state
 print >> config, '%s    ! model'              % option.model
@@ -292,7 +299,6 @@ print >> config, '%i    ! nevents'            % option.nevents
 print >> config, '%r    ! use rambo'          % option.use_rambo
 print >> config, '%r    ! map phase space'    % option.flatten_integrand
 print >> config, '%r    ! symmetrise'         % option.symmetrise
-print >> config, '%r    ! symxgen'            % option.symxgen
 print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up

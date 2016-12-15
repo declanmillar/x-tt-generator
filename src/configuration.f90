@@ -7,6 +7,7 @@ module configuration
   ! provide config
   logical :: ntuple_out
   logical :: lhef_out
+  logical :: new_grid
   real(kind=default) :: sqrts
   integer :: initial_state
   integer :: final_state
@@ -15,6 +16,7 @@ module configuration
   character(100) :: ntuple_file
   character(100) :: log_file
   character(100) :: lhe_file
+  character(100) :: grid_file
   logical :: include_signal
   logical :: include_background
   logical :: include_gg
@@ -27,7 +29,6 @@ module configuration
   integer :: interference
   logical :: use_nwa
   logical :: symmetrise
-  logical :: symxgen
   logical :: use_rambo
   logical :: map_phase_space
   logical :: verbose
@@ -61,9 +62,11 @@ subroutine read_config
   print*, "config: reading ..."
   read(5,*) ntuple_out
   read(5,*) lhef_out
+  read(5,*) new_grid
   read(5,"(a)") ntuple_file
   read(5,"(a)") lhe_file
   read(5,"(a)") log_file
+  read(5,"(a)") grid_file
   read(5,*) initial_state ! 0 = pp, 1 = ppbar
   read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
   read(5,*) model_name
@@ -86,7 +89,6 @@ subroutine read_config
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) symmetrise
-  read(5,*) symxgen
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up
@@ -126,6 +128,12 @@ subroutine print_config
 
   if (lhef_out) print*, "events written to:", lhe_file
   if (ntuple_out) print*, "events written to:", ntuple_file
+  if (new_grid) then 
+    print*, "grid written to:", grid_file
+  else
+    print*, "grid read from:", grid_file
+  end if
+
   if (initial_state == 0) then
     if (final_state == -1) then
       print*, "process: p p -> l+ l-"
