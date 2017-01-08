@@ -50,9 +50,12 @@ program generator
     type(exception) :: exc
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
+    type(vamp_grids) :: grids
     type(vamp_data_t) :: data
     integer, dimension(2, 2) :: calls
     type(vamp_history), dimension(:), allocatable :: history
+    type(vamp_history), dimension(:, :), allocatable :: histories
+    real(kind=default), dimension(3) :: weights
 
     call cpu_time(start_time) 
     call date_and_time(values = now)
@@ -92,6 +95,8 @@ program generator
     print*, "integration: allocating x with", ndimensions, "dimensions ..."
     allocate(x(ndimensions))
 
+    multichannel = .true.
+
     if (new_grid) then
         print*, "vamp: integrating using VAMP ..."
         record_events = .false.
@@ -99,6 +104,7 @@ program generator
         print*, "integration: allocating domain with", ndimensions, "dimensions ..."
         allocate(domain(2, ndimensions))
         allocate(history(2 * itmx))
+        allocate(histories(2 * itmx, size(weights)))
 
         print*, "integration: setting VAMP limits ..."
         if (use_rambo) then
@@ -136,49 +142,100 @@ program generator
         calls(:, 2) = (/itmx, ncall /)
 
         call cpu_time(integrate_start) 
-        call vamp_create_history(history)
 
-        print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
-        call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
+        if (multichannel) then
 
-        print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
-        call clear_exception(exc)
-        call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), history = history, exc = exc)
-        call handle_exception(exc)
+            call vamp_create_history(history)
+            call vamp_create_history(histories)
 
-        print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
-        call vamp_discard_integral(grid, num_calls = calls(2, 2))
+            print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
 
-        ! print*, "integration: warm up VAMP grid with ", calls(1, 2), "iterations ..."
-        ! call clear_exception(exc)
-        ! call vamp_warmup_grid(rng, grid, dsigma, calls(1, 2), history = history(calls(1, 1) + 1:), exc = exc)
-        ! call handle_exception(exc)
+            weights = 1
+            call vamp_create_grids(grids, domain, calls(2, 1), weights) 
 
-        print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
-        call clear_exception(exc)
-        call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, history = history(calls(1, 1) + 1:), exc = exc)
-        call handle_exception(exc)
+            print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
+            call clear_exception(exc)
+            call vamp_sample_grids(rng, grids, dsigma, calls(1, 1), history = history, histories = histories, exc = exc)
+            call handle_exception(exc)
 
-        print*, "integration: refining grid ..."
-        call clear_exception(exc)
-        call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
-        call handle_exception(exc)
+            print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
+            call vamp_discard_integrals(grids, num_calls = calls(2, 2))
 
-        print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-        call cpu_time(integrate_end)
-        print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
-        if (sigma <= 0) stop
+            print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
+            call clear_exception(exc)
+            call vamp_sample_grids(rng, grids, dsigma, calls(1, 2), sigma, error, chi2, &
+                                  history = history(calls(1, 1) + 1:), histories = histories, exc = exc)
+            call handle_exception(exc)
 
-        print*, "integration: printing history ..."
-        call vamp_print_history(history, "history")
-        call vamp_delete_history(history)
+            ! print*, "integration: refining grid ..."
+            ! call clear_exception(exc)
+            ! call vamp_sample_grids0(rng, grid, dsigma, no_data, exc = exc)
+            ! call handle_exception(exc)
 
-        print*, "saving vamp grid to ", grid_file
-        call vamp_write_grid(grid, grid_file)
-    else 
-        print*, "reading vamp grid from ", grid_file
-        call vamp_read_grid(grid, grid_file)
-        
+             print *, "integration: complete"
+
+            print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+            call cpu_time(integrate_end)
+            print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
+            if (sigma <= 0) stop
+
+            print*, "integration: printing history ..."
+            call vamp_print_history(history, "history")
+            call vamp_delete_history(history)
+
+            print*, "saving vamp grid to ", grid_file
+            ! call vamp_write_grids(grids, grid_file)
+
+        else 
+            call vamp_create_history(history)
+
+            print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
+            call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
+
+            print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
+            call clear_exception(exc)
+            call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), history = history, exc = exc)
+            call handle_exception(exc)
+
+            print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
+            call vamp_discard_integral(grid, num_calls = calls(2, 2))
+
+            ! print*, "integration: warm up VAMP grid with ", calls(1, 2), "iterations ..."
+            ! call clear_exception(exc)
+            ! call vamp_warmup_grid(rng, grid, dsigma, calls(1, 2), history = history(calls(1, 1) + 1:), exc = exc)
+            ! call handle_exception(exc)
+
+            print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
+            call clear_exception(exc)
+            call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, &
+                                  history = history(calls(1, 1) + 1:), exc = exc)
+            call handle_exception(exc)
+
+            print*, "integration: refining grid ..."
+            call clear_exception(exc)
+            call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
+            call handle_exception(exc)
+
+            print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+            call cpu_time(integrate_end)
+            print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
+            if (sigma <= 0) stop
+
+            print*, "integration: printing history ..."
+            call vamp_print_history(history, "history")
+            call vamp_delete_history(history)
+
+            print*, "saving vamp grid to ", grid_file
+            ! call vamp_write_grid(grid, grid_file)
+        end if
+    else
+        if (multichannel) then
+            print*, "reading vamp grids from ", grid_file
+            call vamp_read_grids(grids, grid_file)
+        else
+            print*, "reading vamp grid from ", grid_file
+            call vamp_read_grid(grid, grid_file)
+        end if
     end if
 
     if (nevents > 0) then
@@ -236,7 +293,11 @@ program generator
         if (.not. batch) call set_total(nevents)
         do i = 1, nevents
             call clear_exception(exc)
-            call vamp_next_event(x, rng, grid, dsigma, exc = exc)
+            if (multichannel) then
+                call vamp_next_event(x, rng, grids, dsigma, phi)
+            else
+                call vamp_next_event(x, rng, grid, dsigma, exc = exc)
+            end if
             call handle_exception(exc)
             record_events = .true.
             event = dsigma(x, no_data)

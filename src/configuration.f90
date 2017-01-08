@@ -28,6 +28,7 @@ module configuration
   logical :: include_x
   integer :: interference
   logical :: use_nwa
+  logical :: multichannel
   logical :: symmetrise
   logical :: use_rambo
   logical :: map_phase_space
@@ -88,6 +89,7 @@ subroutine read_config
   read(5,*) nevents
   read(5,*) use_rambo
   read(5,*) map_phase_space
+  read(5,*) multichannel
   read(5,*) symmetrise
   read(5,*) verbose
   read(5,*) ecm_low
@@ -157,6 +159,7 @@ subroutine print_config
   print*, "vamp iterations: ", itmx - 1
   print*, "number of events: ", nevents
   print*, "apply fiducial cuts: ", cut
+  print*, "multichannel: ", multichannel
   print*, "symmetrise parton momentum fraction: ", symmetrise
   print*, "map phase space: ", map_phase_space
   print*, 'collider energy: ', sqrts

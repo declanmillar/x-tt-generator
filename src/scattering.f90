@@ -7,7 +7,7 @@ module scattering
 
     implicit none
 
-    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits
+    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
 
     real(kind=default) :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
     real(kind=default), private :: m3, m4, m5, m6, m7, m8
@@ -21,6 +21,45 @@ module scattering
 
 contains
 
+
+! pure function phi (xi, channel) result (x)
+    
+!     use coordinates
+
+!     real(kind=default), dimension(:), intent(in) :: xi
+!     integer, intent(in) :: channel
+!     real(kind=default), dimension(size(xi)) :: x
+!     x = xi
+! end function phi
+
+pure function phi (xi, channel) result (x)
+    
+    use coordinates
+
+    real(kind=default), dimension(:), intent(in) :: xi
+    integer, intent(in) :: channel
+    real(kind=default), dimension(size(xi)) :: x
+    real(kind=default) :: r
+    real(kind=default), dimension(0) :: dummy
+    integer :: n
+    n = size(x)
+    if (channel == 1) then
+       x = xi
+    else if (channel == 2) then
+       r = (xi(1) + 1) / 2 * sqrt (2.0_default)
+       x(1:2) = spherical_cos_to_cartesian (r, PI * xi(2), dummy)
+       x(3:) = xi(3:)
+    else if (channel < n) then
+       r = (xi(1) + 1) / 2 * sqrt (real (channel, kind=default))
+       x(1:channel) = spherical_cos_to_cartesian (r, PI * xi(2), xi(3:channel))
+       x(channel+1:) = xi(channel+1:)
+    else if (channel == n) then
+       r = (xi(1) + 1) / 2 * sqrt (real (channel, kind=default))
+       x = spherical_cos_to_cartesian (r, PI * xi(2), xi(3:))
+    else
+       x = 0
+    end if
+end function phi
 
 subroutine initialise_pdfs
 
@@ -770,18 +809,18 @@ function dsigma(x, data, weights, channel, grids)
         else if (final_state == 1) then
             if (verbose) print*, "matrix elements: calculating 2 -> 6 ..."
             if (include_gg) then
-                qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
+                qcdgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8, channel)
             end if
             if (include_qq) then
                 qcdqq = sqq_tt_bbeevv(3, p1, p2, p3, p4, p5, p7, p6, p8)
             end if
             if (include_uu) then
-                qfduu1 = sqq_tt_bbeevv_ew(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-                qfduu2 = sqq_tt_bbeevv_ew(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+                qfduu1 = sqq_tt_bbeevv_ew(3, 11, p1, p2, p3, p4, p5, p7, p6, p8, channel)
+                qfduu2 = sqq_tt_bbeevv_ew(3, 11, p2, p1, p3, p4, p5, p7, p6, p8, channel)
             end if
             if (include_dd) then
-                qfddd1 = sqq_tt_bbeevv_ew(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
-                qfddd2 = sqq_tt_bbeevv_ew(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
+                qfddd1 = sqq_tt_bbeevv_ew(4, 11, p1, p2, p3, p4, p5, p7, p6, p8, channel)
+                qfddd2 = sqq_tt_bbeevv_ew(4, 11, p2, p1, p3, p4, p5, p7, p6, p8, channel)
             end if
         else
             stop "error: invalid final state"

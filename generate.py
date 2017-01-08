@@ -36,6 +36,7 @@ parser.add_option("-Z", "--include_z",          default = True,  action = "store
 parser.add_option("-X", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
 parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
 parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
+parser.add_option("-M", "--multi_channel",      default = False, action = "store_true",  help = "use multichannel integration")
 parser.add_option("-x", "--symmetrise",         default = False, action = "store_true",  help = "symmetrise phase space around x1<->x2 in integral")
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
@@ -44,8 +45,8 @@ parser.add_option("-W", "--use_nwa",            default = False, action = "store
 # integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
 parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
-parser.add_option("-N", "--iterations",         default = 5,         type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--ncall",              default = 2000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-N", "--iterations",         default = 10,        type = int,         help = "number of VAMP iterations")
+parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
@@ -165,6 +166,9 @@ if option.use_nwa:
 if option.cut:
     options += ".cut"
 
+if option.multichannel:
+    options += ".multi"
+
 if option.symmetrise:
     options += ".symmetrised"
 
@@ -231,6 +235,7 @@ elif option.final_state == 12:
 process = initial_partons + intermediates + final_state
 
 filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, str(option.nevents)) #, now)
+# filename2 = '%s.%s.%sTeV.%s' % (process, option.model, str(option.energy), pdf)
 
 home_directory = "."
 data_directory = "."
@@ -298,6 +303,7 @@ print >> config, '%i    ! ncall'              % option.ncall
 print >> config, '%i    ! nevents'            % option.nevents
 print >> config, '%r    ! use rambo'          % option.use_rambo
 print >> config, '%r    ! map phase space'    % option.flatten_integrand
+print >> config, '%r    ! multichannel'       % option.multichannel
 print >> config, '%r    ! symmetrise'         % option.symmetrise
 print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
