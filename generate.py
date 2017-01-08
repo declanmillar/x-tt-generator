@@ -36,7 +36,7 @@ parser.add_option("-Z", "--include_z",          default = True,  action = "store
 parser.add_option("-X", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
 parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
 parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
-parser.add_option("-M", "--multi_channel",      default = False, action = "store_true",  help = "use multichannel integration")
+parser.add_option("-M", "--multichannel",       default = False, action = "store_true",  help = "use multichannel integration")
 parser.add_option("-x", "--symmetrise",         default = False, action = "store_true",  help = "symmetrise phase space around x1<->x2 in integral")
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")

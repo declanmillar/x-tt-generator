@@ -95,8 +95,6 @@ program generator
     print*, "integration: allocating x with", ndimensions, "dimensions ..."
     allocate(x(ndimensions))
 
-    multichannel = .true.
-
     if (new_grid) then
         print*, "vamp: integrating using VAMP ..."
         record_events = .false.
