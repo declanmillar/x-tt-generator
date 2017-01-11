@@ -1216,7 +1216,7 @@ function qq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     end do
     atot2 = atot2 + amp_tmp * conjg(amp_tmp)
 
-    if (present(channel)) then
+    if (present(channel) .and. channel > 0) then
         asum2 = 0.d0
         do i = 1, ngraphs
           asum2 = asum2 + amp(i) * conjg(amp(i))

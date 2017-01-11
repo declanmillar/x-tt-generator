@@ -134,61 +134,39 @@ if option.initial_state == 1:
     options += ".ppbar"
 
 pdf = ""
-if option.pdf ==  1:
-    pdf = "CTEQ6m"
-if option.pdf ==  2:
-    pdf = "CTEQ6d"
-if option.pdf ==  3:
-    pdf = "CTEQ6l"
-if option.pdf ==  4:
-    pdf = "CTEQ6l1"
-if option.pdf ==  5:
-    pdf = "MRS9901"
-if option.pdf ==  6:
-    pdf = "MRS9902"
-if option.pdf ==  7:
-    pdf = "MRS9903"
-if option.pdf ==  8:
-    pdf = "MRS9904"
-if option.pdf ==  9:
-    pdf = "MRS9905"
-if option.pdf == 10:
-    pdf = "CT14LN"
-if option.pdf == 11:
-    pdf = "CT14LL"
+if option.pdf ==  1: pdf = "CTEQ6m"
+if option.pdf ==  2: pdf = "CTEQ6d"
+if option.pdf ==  3: pdf = "CTEQ6l"
+if option.pdf ==  4: pdf = "CTEQ6l1"
+if option.pdf ==  5: pdf = "MRS9901"
+if option.pdf ==  6: pdf = "MRS9902"
+if option.pdf ==  7: pdf = "MRS9903"
+if option.pdf ==  8: pdf = "MRS9904"
+if option.pdf ==  9: pdf = "MRS9905"
+if option.pdf == 10: pdf = "CT14LN"
+if option.pdf == 11: pdf = "CT14LL"
 
-if option.interference != 2:
-    options += ".int%i" % option.interference
+if option.interference != 2: options += ".int%i" % option.interference
 
-if option.use_nwa:
-    options += ".nwa"
+if option.use_nwa: options += ".nwa"
 
-if option.cut:
-    options += ".cut"
+if option.multichannel: options += ".multi"
 
-if option.multichannel:
-    options += ".multi"
+if option.cut: options += ".cut"
 
-if option.symmetrise:
-    options += ".symmetrised"
+if option.symmetrise: options += ".symmetrised"
 
-if option.use_rambo:
-    options += ".rambo"
+if option.use_rambo: options += ".rambo"
 
-if option.include_background == False and option.flatten_integrand == False:
-    options += ".unmapped"
+if option.include_background == False and option.flatten_integrand == False: options += ".unmapped"
 
-if option.energy_low != 0 or option.energy_up != 0:
-    options += ".%s-%s" % (option.energy_low, option.energy_up)
+if option.energy_low != 0 or option.energy_up != 0: options += ".%s-%s" % (option.energy_low, option.energy_up)
 
-if len(option.tag) > 0:
-    options += "." + option.tag
+if len(option.tag) > 0: options += "." + option.tag
 
-if option.final_state < 2:
-    option.include_background = False
+if option.final_state < 2: option.include_background = False
 
-if option.include_background:
-    flatten_integrand = False
+if option.include_background: flatten_integrand = False
 
 initial_partons = ""
 if option.include_gg:
@@ -234,8 +212,7 @@ elif option.final_state == 12:
 
 process = initial_partons + intermediates + final_state
 
-filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options) #, str(option.nevents)) #, now)
-# filename2 = '%s.%s.%sTeV.%s' % (process, option.model, str(option.energy), pdf)
+filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
 
 home_directory = "."
 data_directory = "."
@@ -260,12 +237,17 @@ if os.path.isdir(data_directory) is False:
     sys.exit("error: specified run directory '%s' does not exist" % run_directory)
     sys.exit("error: specified data directory '%s' does not exist" % data_directory)
 
+if option.multichannel:
+    grid = "grids"
+else:
+    grid = "grid"
+
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.root" % (data_directory, filename)
 lhe_file = "%s/%s.lhe" % (data_directory, filename)
-grid_file = "%s/%s.grid" % (data_directory, filename)
+grid_file = "%s/%s.%s" % (data_directory, filename, grid)
 
 if os.path.isfile(grid_file): 
     new_grid = False
@@ -356,4 +338,3 @@ if option.batch:
         print "error: hostname not recognised"
 else:
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
-    # subprocess.call("./bin/%s < %s" % (executable, config_name), shell = True)

@@ -7,7 +7,7 @@ module scattering
 
     implicit none
 
-    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
+    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits
 
     real(kind=default) :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
     real(kind=default), private :: m3, m4, m5, m6, m7, m8
@@ -23,43 +23,11 @@ contains
 
 
 ! pure function phi (xi, channel) result (x)
-    
-!     use coordinates
-
 !     real(kind=default), dimension(:), intent(in) :: xi
 !     integer, intent(in) :: channel
 !     real(kind=default), dimension(size(xi)) :: x
 !     x = xi
 ! end function phi
-
-pure function phi (xi, channel) result (x)
-    
-    use coordinates
-
-    real(kind=default), dimension(:), intent(in) :: xi
-    integer, intent(in) :: channel
-    real(kind=default), dimension(size(xi)) :: x
-    real(kind=default) :: r
-    real(kind=default), dimension(0) :: dummy
-    integer :: n
-    n = size(x)
-    if (channel == 1) then
-       x = xi
-    else if (channel == 2) then
-       r = (xi(1) + 1) / 2 * sqrt (2.0_default)
-       x(1:2) = spherical_cos_to_cartesian (r, PI * xi(2), dummy)
-       x(3:) = xi(3:)
-    else if (channel < n) then
-       r = (xi(1) + 1) / 2 * sqrt (real (channel, kind=default))
-       x(1:channel) = spherical_cos_to_cartesian (r, PI * xi(2), xi(3:channel))
-       x(channel+1:) = xi(channel+1:)
-    else if (channel == n) then
-       r = (xi(1) + 1) / 2 * sqrt (real (channel, kind=default))
-       x = spherical_cos_to_cartesian (r, PI * xi(2), xi(3:))
-    else
-       x = 0
-    end if
-end function phi
 
 subroutine initialise_pdfs
 

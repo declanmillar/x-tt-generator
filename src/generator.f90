@@ -24,10 +24,12 @@ program generator
     use exceptions
     use tao_random_numbers
     use vampi
+    ! use vamp_tests0
+    use vamp_test0_functions
 
     implicit none
 
-    real(kind = default) :: sigma, error, chi2
+    real(kind = default) :: sigma, error, chi2, integral, standard_dev, weight
     real(kind = default) :: all, error_all, al, error_al, apv, error_apv
     integer :: i, j
 
@@ -52,10 +54,10 @@ program generator
     type(vamp_grid) :: grid
     type(vamp_grids) :: grids
     type(vamp_data_t) :: data
-    integer, dimension(2, 2) :: calls
+    integer, dimension(2, 3) :: calls
     type(vamp_history), dimension(:), allocatable :: history
     type(vamp_history), dimension(:, :), allocatable :: histories
-    real(kind=default), dimension(3) :: weights
+    real(kind=default), dimension(:), allocatable :: weights
 
     call cpu_time(start_time) 
     call date_and_time(values = now)
@@ -100,9 +102,10 @@ program generator
         record_events = .false.
         
         print*, "integration: allocating domain with", ndimensions, "dimensions ..."
+        allocate(weights(2))
         allocate(domain(2, ndimensions))
-        allocate(history(2 * itmx))
-        allocate(histories(2 * itmx, size(weights)))
+        allocate(history(3 * itmx))
+        allocate(histories(3 * itmx, size(weights)))
 
         print*, "integration: setting VAMP limits ..."
         if (use_rambo) then
@@ -137,7 +140,8 @@ program generator
         end if
 
         calls(:, 1) = (/itmx, ncall / 10 /)
-        calls(:, 2) = (/itmx, ncall /)
+        calls(:, 2) = (/itmx, ncall / 10 /)
+        calls(:, 3) = (/itmx, ncall /)
 
         call cpu_time(integrate_start) 
 
@@ -154,35 +158,47 @@ program generator
             print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
             call vamp_sample_grids(rng, grids, dsigma, calls(1, 1), history = history, histories = histories, exc = exc)
-            call handle_exception(exc)
-
-            print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
-            call vamp_discard_integrals(grids, num_calls = calls(2, 2))
-
-            print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
             call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, dsigma, calls(1, 2), sigma, error, chi2, &
-                                  history = history(calls(1, 1) + 1:), histories = histories, exc = exc)
-            call handle_exception(exc)
 
-            ! print*, "integration: refining grid ..."
-            ! call clear_exception(exc)
-            ! call vamp_sample_grids0(rng, grid, dsigma, no_data, exc = exc)
-            ! call handle_exception(exc)
-
-             print *, "integration: complete"
+            print*, "integration: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
+            do i = 1, calls(1, 2)
+               call clear_exception(exc)
+               call vamp_sample_grids(rng, grids, dsigma, 1, &
+                                      sigma, error, chi2, &
+                                      history = history(calls(1, 1) + i:), &
+                                      histories = histories(calls(1, 1) + i:, :), &
+                                      exc = exc)
+               call handle_exception(exc)
+               call clear_exception(exc)
+               call vamp_refine_weights(grids)
+               call handle_exception(exc)
+            end do
 
             print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+            if (sigma <= 0) stop
+
+            print*, "integration: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
+            call vamp_discard_integrals(grids, calls(2, 3))
+
+            print*, "integration: warming up grid with ", calls(1, 2), "iterations ..."
+            call clear_exception(exc)
+            call vamp_warmup_grids(rng, grids, dsigma, calls(1, 3), &
+                                   history = history(calls(1, 1) + calls(1, 2) + 1:), &
+                                   histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
+            call clear_exception(exc)
+
             call cpu_time(integrate_end)
             print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
-            if (sigma <= 0) stop
+            print *, "integration: complete"
 
             print*, "integration: printing history ..."
             call vamp_print_history(history, "history")
+            call vamp_print_history(histories, "histories")
             call vamp_delete_history(history)
+            call vamp_delete_history(histories)
 
             print*, "saving vamp grid to ", grid_file
-            ! call vamp_write_grids(grids, grid_file)
+            call vamp_write_grids(grids, grid_file)
 
         else 
             call vamp_create_history(history)
@@ -198,11 +214,6 @@ program generator
             print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
             call vamp_discard_integral(grid, num_calls = calls(2, 2))
 
-            ! print*, "integration: warm up VAMP grid with ", calls(1, 2), "iterations ..."
-            ! call clear_exception(exc)
-            ! call vamp_warmup_grid(rng, grid, dsigma, calls(1, 2), history = history(calls(1, 1) + 1:), exc = exc)
-            ! call handle_exception(exc)
-
             print*, "integration: full sampling of VAMP grid with ", calls(1, 2), "iterations ..."
             call clear_exception(exc)
             call vamp_sample_grid(rng, grid, dsigma, calls(1, 2), sigma, error, chi2, &
@@ -214,7 +225,7 @@ program generator
             call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
             call handle_exception(exc)
 
-            print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
+            print *, "integration: integral = ", sigma, "+/-", error !, " (chi^2 = ", chi2, ")"
             call cpu_time(integrate_end)
             print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
             if (sigma <= 0) stop
@@ -224,7 +235,7 @@ program generator
             call vamp_delete_history(history)
 
             print*, "saving vamp grid to ", grid_file
-            ! call vamp_write_grid(grid, grid_file)
+            call vamp_write_grid(grid, grid_file)
         end if
     else
         if (multichannel) then
@@ -238,6 +249,7 @@ program generator
 
     if (nevents > 0) then
         print*, "process: calculating beam info ..."
+
         idbm(1) = 2212
         if (initial_state == 0) then
             idbm(2) = 2212
@@ -249,6 +261,19 @@ program generator
             pdfg(i) = 1
             pdfs(i) = 1
         end do
+
+        integral = 0.0
+        standard_dev = 0.0
+        print*, "vamp: calculating integral with", nevents, " weighted events ..."
+        do i = 1, calls(2, 3)
+           call clear_exception (exc)
+           call vamp_next_event(x, rng, grids, dsigma, phi, weight = weight, exc = exc)
+           call handle_exception (exc)
+           integral = integral + weight
+           standard_dev = standard_dev + weight**2
+        end do
+
+        print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
         if (ntuple_out) then
             print*, "n-tuple: ", trim(ntuple_file)
@@ -262,9 +287,8 @@ program generator
             call rootaddprocessdouble(pdfg(2), "pdfg2")
             call rootaddprocessdouble(pdfs(1), "pdfs1")
             call rootaddprocessdouble(pdfs(2), "pdfs2")
-            call rootaddprocessdouble(sigma, "cross_section")
-            call rootaddprocessdouble(error, "cross_section_uncertainty")
-            call rootaddprocessdouble(chi2, "vamp_chi2")
+            call rootaddprocessdouble(integral, "cross_section")
+            call rootaddprocessdouble(sqrt(standard_dev), "cross_section_uncertainty")
         end if
 
         if (lhef_out) then
@@ -284,15 +308,13 @@ program generator
             end do
         end if
 
-        symmetrise = .false.
-
-        print*, "vamp: generating", nevents, " events ..."
+        print*, "vamp: generating", nevents, " unweighted events ..."
         call cpu_time(event_start)
         if (.not. batch) call set_total(nevents)
         do i = 1, nevents
             call clear_exception(exc)
             if (multichannel) then
-                call vamp_next_event(x, rng, grids, dsigma, phi)
+                call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
             else
                 call vamp_next_event(x, rng, grid, dsigma, exc = exc)
             end if
@@ -304,8 +326,6 @@ program generator
         end do
         call cpu_time(event_end)
         print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"
-
-        call vamp_delete_grid(grid)
 
         if (final_state <= 0) then
             print *, "finalisation: calculating asymmetries for polarized final state"
@@ -343,6 +363,14 @@ program generator
         end if
     else
         print*, "skipping event generation"
+    end if
+
+    if (multichannel) then
+        ! print *, "deleting grids ..."
+        ! call vamp_delete_grids(grids)
+    else
+        print *, "deleting grid ..."
+        call vamp_delete_grid(grid)
     end if
 
     call cpu_time(end_time)
