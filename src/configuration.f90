@@ -39,6 +39,7 @@ module configuration
   integer :: itmx
   logical :: batch
   logical :: cut
+  logical :: unweighted = .false.
 
   ! derived config
   integer :: nfinal

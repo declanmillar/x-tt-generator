@@ -114,6 +114,7 @@ contains
     g_x = gamma / (atan ((x_max - x0) / gamma) - atan ((x_min - x0) / gamma)) &
            * (x_max - x_min) / ((x - x0)**2 + gamma**2)
   end function g0
+
   pure function phi (xi, channel) result (x)
     real(kind=default), dimension(:), intent(in) :: xi
     integer, intent(in) :: channel
@@ -145,6 +146,39 @@ contains
        x = 0
     end if
   end function phi
+
+  ! pure function phi (xi, channel) result (x)
+  !   real(kind=default), dimension(:), intent(in) :: xi
+  !   integer, intent(in) :: channel
+  !   real(kind=default), dimension(size(xi)) :: x
+  !   integer, dimension(size(xi)) :: p
+  !   integer :: j, ch, np, nch, nd, channels
+  !   np = size (x0, dim = 1)
+  !   nch = size (x0, dim = 2)
+  !   nd = size (x0, dim = 3)
+  !   channels = nch * np**nd
+  !   if (channel >= 1 .and. channel <= channels) then
+  !      ch = channel - 1
+  !      do j = 1, size (x)
+  !         p(j) = 1 + modulo (ch, np)
+  !         ch = ch / np
+  !      end do
+  !      ch = ch + 1
+  !      do j = 1, size (xi)
+  !         if (all (gamma(:,ch,j) > 0)) then
+  !            x(j) = psi (xi(j), x_min(j), x_max(j), &
+  !                        x0(p(j),ch,j), gamma(p(j),ch,j))
+  !         else
+  !            x = xi
+  !         end if
+  !      end do
+  !   else if (channel == channels + 1) then
+  !      x = xi
+  !   else
+  !      x = 0
+  !   end if
+  ! end function phi
+
   pure recursive function g (x, data, channel) result (g_x)
     real(kind=default), dimension(:), intent(in) :: x
     class(vamp_data_t), intent(in) :: data

@@ -25,7 +25,7 @@ program generator
     use tao_random_numbers
     use vampi
     ! use vamp_tests0
-    use vamp_test0_functions
+    ! use vamp_test0_functions
 
     implicit none
 
@@ -102,7 +102,7 @@ program generator
         record_events = .false.
         
         print*, "integration: allocating domain with", ndimensions, "dimensions ..."
-        allocate(weights(2))
+        allocate(weights(3))
         allocate(domain(2, ndimensions))
         allocate(history(3 * itmx))
         allocate(histories(3 * itmx, size(weights)))
@@ -140,7 +140,7 @@ program generator
         end if
 
         calls(:, 1) = (/itmx, ncall / 10 /)
-        calls(:, 2) = (/itmx, ncall / 10 /)
+        calls(:, 2) = (/itmx, ncall /)
         calls(:, 3) = (/itmx, ncall /)
 
         call cpu_time(integrate_start) 
@@ -159,6 +159,9 @@ program generator
             call clear_exception(exc)
             call vamp_sample_grids(rng, grids, dsigma, calls(1, 1), history = history, histories = histories, exc = exc)
             call clear_exception(exc)
+
+            print*, "integration: discarding integral and re-sampling grid with ", calls(2, 2), "calls ..."
+            call vamp_discard_integrals(grids, calls(2, 2))
 
             print*, "integration: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
             do i = 1, calls(1, 2)
@@ -180,7 +183,7 @@ program generator
             print*, "integration: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
             call vamp_discard_integrals(grids, calls(2, 3))
 
-            print*, "integration: warming up grid with ", calls(1, 2), "iterations ..."
+            print*, "integration: warming up grid with ", calls(1, 3), "iterations ..."
             call clear_exception(exc)
             call vamp_warmup_grids(rng, grids, dsigma, calls(1, 3), &
                                    history = history(calls(1, 1) + calls(1, 2) + 1:), &
@@ -262,23 +265,40 @@ program generator
             pdfs(i) = 1
         end do
 
+        if (ntuple_out) then
+            print*, "n-tuple: ", trim(ntuple_file)
+            print*, "initiating n-tuple ..."
+            call rootinit(ntuple_file)
+        end if
+
         integral = 0.0
         standard_dev = 0.0
-        print*, "vamp: calculating integral with", nevents, " weighted events ..."
+        print*, "vamp: calculating integral with", calls(2, 3), " weighted events ..."
+        if (.not. batch) call set_total(calls(2, 3))
         do i = 1, calls(2, 3)
-           call clear_exception (exc)
-           call vamp_next_event(x, rng, grids, dsigma, phi, weight = weight, exc = exc)
-           call handle_exception (exc)
-           integral = integral + weight
-           standard_dev = standard_dev + weight**2
+            call clear_exception (exc)
+            if (multichannel) then
+               call vamp_next_event(x, rng, grids, dsigma, phi, weight = weight, exc = exc)
+            else
+               call vamp_next_event(x, rng, grid, dsigma, weight = weight, exc = exc)
+            end if
+
+            call handle_exception (exc)
+            integral = integral + weight
+            standard_dev = standard_dev + weight**2
+
+            if (.not. unweighted) then
+                record_events = .true.
+                event = dsigma(x, no_data)
+                record_events = .false.
+            end if
+
+            if (.not. batch) call progress_percentage(i)
         end do
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
         if (ntuple_out) then
-            print*, "n-tuple: ", trim(ntuple_file)
-            print*, "initiating n-tuple ..."
-            call rootinit(ntuple_file)
             call rootaddprocessdouble(idbm(1), "idbm1")
             call rootaddprocessdouble(idbm(2), "idbm2")
             call rootaddprocessdouble(ebm(1), "ebm1")
@@ -308,24 +328,26 @@ program generator
             end do
         end if
 
-        print*, "vamp: generating", nevents, " unweighted events ..."
-        call cpu_time(event_start)
-        if (.not. batch) call set_total(nevents)
-        do i = 1, nevents
-            call clear_exception(exc)
-            if (multichannel) then
-                call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
-            else
-                call vamp_next_event(x, rng, grid, dsigma, exc = exc)
-            end if
-            call handle_exception(exc)
-            record_events = .true.
-            event = dsigma(x, no_data)
-            record_events = .false.
-            if (.not. batch) call progress_percentage(i)
-        end do
-        call cpu_time(event_end)
-        print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"
+        if (unweighted) then
+            print*, "vamp: generating", nevents, " unweighted events ..."
+            call cpu_time(event_start)
+            if (.not. batch) call set_total(nevents)
+            do i = 1, nevents
+                call clear_exception(exc)
+                if (multichannel) then
+                    call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
+                else
+                    call vamp_next_event(x, rng, grid, dsigma, exc = exc)
+                end if
+                call handle_exception(exc)
+                record_events = .true.
+                event = dsigma(x, no_data)
+                record_events = .false.
+                if (.not. batch) call progress_percentage(i)
+            end do
+            call cpu_time(event_end)
+            print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"
+        end if
 
         if (final_state <= 0) then
             print *, "finalisation: calculating asymmetries for polarized final state"
