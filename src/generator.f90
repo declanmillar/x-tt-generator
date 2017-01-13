@@ -273,25 +273,21 @@ program generator
 
         integral = 0.0
         standard_dev = 0.0
-        print*, "vamp: calculating integral with", calls(2, 3), " weighted events ..."
-        if (.not. batch) call set_total(calls(2, 3))
-        do i = 1, calls(2, 3)
+        print*, "vamp: calculating integral with", nevents, " weighted events ..."
+
+        if (.not. batch) call set_total(nevents)
+        do i = 1, nevents
+            if (.not. unweighted) record_events = .true.
             call clear_exception (exc)
             if (multichannel) then
-               call vamp_next_event(x, rng, grids, dsigma, phi, weight = weight, exc = exc)
+               call vamp_next_event(x, rng, grids, dsigma, phi, weight, exc = exc)
             else
-               call vamp_next_event(x, rng, grid, dsigma, weight = weight, exc = exc)
+               call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
             end if
-
             call handle_exception (exc)
+            call rootaddevent(weight)
             integral = integral + weight
             standard_dev = standard_dev + weight**2
-
-            if (.not. unweighted) then
-                record_events = .true.
-                event = dsigma(x, no_data)
-                record_events = .false.
-            end if
 
             if (.not. batch) call progress_percentage(i)
         end do
@@ -342,6 +338,7 @@ program generator
                 call handle_exception(exc)
                 record_events = .true.
                 event = dsigma(x, no_data)
+                call rootaddevent(1.d0)
                 record_events = .false.
                 if (.not. batch) call progress_percentage(i)
             end do

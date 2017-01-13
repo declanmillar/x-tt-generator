@@ -41,6 +41,7 @@ parser.add_option("-x", "--symmetrise",         default = False, action = "store
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
+parser.add_option("--unweighted",               default = True,  action = "store_false", help = "unweighted events")
 
 # integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
@@ -283,6 +284,7 @@ print >> config, '%i.d3 ! energy'             % option.energy
 print >> config, '%i    ! iterations'         % option.iterations
 print >> config, '%i    ! ncall'              % option.ncall
 print >> config, '%i    ! nevents'            % option.nevents
+print >> config, '%r    ! unweighted'         % option.unweighted
 print >> config, '%r    ! use rambo'          % option.use_rambo
 print >> config, '%r    ! map phase space'    % option.flatten_integrand
 print >> config, '%r    ! multichannel'       % option.multichannel

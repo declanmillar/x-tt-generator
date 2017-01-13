@@ -966,12 +966,6 @@ function dsigma(x, data, weights, channel, grids)
                     call rootadddouble(weight_pol( 1, -1), "weightRL")
                     call rootadddouble(weight_pol( 1,  1), "weightRR")
                 end if
-
-                if (unweighted) then
-                    call rootaddevent(1.d0)
-                else 
-                    call rootaddevent(ddsigma)
-                end if
             end if
 
             if (lhef_out) then

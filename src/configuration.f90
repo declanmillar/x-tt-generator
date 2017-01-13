@@ -39,7 +39,7 @@ module configuration
   integer :: itmx
   logical :: batch
   logical :: cut
-  logical :: unweighted = .false.
+  logical :: unweighted
 
   ! derived config
   integer :: nfinal
@@ -88,6 +88,7 @@ subroutine read_config
   read(5,*) itmx
   read(5,*) ncall
   read(5,*) nevents
+  read(5,*) unweighted
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) multichannel
@@ -159,6 +160,7 @@ subroutine print_config
   print*, "vamp calls: ", ncall
   print*, "vamp iterations: ", itmx - 1
   print*, "number of events: ", nevents
+  print*, "unweighted events: ", unweighted
   print*, "apply fiducial cuts: ", cut
   print*, "multichannel: ", multichannel
   print*, "symmetrise parton momentum fraction: ", symmetrise
