@@ -285,7 +285,7 @@ program generator
                call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
             end if
             call handle_exception (exc)
-            call rootaddevent(weight)
+            if (.not. unweighted) call rootaddevent(weight)
             integral = integral + weight
             standard_dev = standard_dev + weight**2
 

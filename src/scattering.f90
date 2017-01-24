@@ -4,6 +4,7 @@ module scattering
     use configuration
     use modelling
     use tt_bbeevv
+    use vampi
 
     implicit none
 
@@ -19,6 +20,11 @@ module scattering
     ! temporary top mass and width
     real(kind=default) :: mt, gamt
 
+    public :: phi !, dsigma_lorentz
+    ! private :: psi
+    real(kind=default), dimension(:), allocatable, private :: c, x_min, x_max
+    real(kind=default), dimension(:,:,:), allocatable, public :: x0, gamma
+
 contains
 
 pure function phi (xi, channel) result (x)
@@ -27,6 +33,40 @@ pure function phi (xi, channel) result (x)
     real(kind=default), dimension(size(xi)) :: x
     x = xi
 end function phi
+
+! function dsigma_lorentz (x, data, weights, channel, grids) result (f_x)
+!     real(kind=default), dimension(:), intent(in) :: x
+!     class(vamp_data_t), intent(in) :: data
+!     real(kind=default), dimension(:), intent(in), optional :: weights
+!     integer, intent(in), optional :: channel
+!     type(vamp_grid), dimension(:), intent(in), optional :: grids
+!     real(kind=default) :: f_x
+!     real(kind=default) :: fi_x
+!     integer :: i, j
+!     f_x = 0.0
+!     do i = 1, size (c)
+!        fi_x = 1.0
+!        do j = 1, size (x)
+!           if (all (gamma(:,i,j) > 0)) then
+!              fi_x = fi_x * dsigma (x(j), x_min(j), x_max(j), &
+!                                x0(:,i,j), gamma(:,i,j))
+!           else
+!              fi_x = fi_x / (x_max(j) - x_min(j))
+!           end if
+!        end do
+!        f_x = f_x + c(i) * fi_x
+!     end do
+!     f_x = f_x / sum (c)
+! end function dsigma_lorentz
+
+! pure function psi (xi, x_min, x_max, x0, gamma) result (x)
+!     real(kind=default), intent(in) :: xi, x_min, x_max, x0, gamma
+!     real(kind=default) :: x
+!     x = x0 + gamma &
+!          * tan (((xi - x_min) * atan ((x_max - x0) / gamma) &
+!                    - (x_max - xi) * atan ((x0 - x_min) / gamma)) &
+!                  / (x_max - x_min))
+! end function psi
 
 ! pure function phi (xi, channel) result (x)
 !     real(kind=default), dimension(:), intent(in) :: xi
@@ -58,7 +98,7 @@ end function phi
 !     else
 !        x = 0
 !     end if
-!   end function phi
+! end function phi
 
 subroutine initialise_pdfs
 

@@ -2382,6 +2382,7 @@ contains
        end if
     end do rejection
   end subroutine vamp_next_event_single
+
   subroutine vamp_next_event_multi &
        (x, rng, g, func, data, phi, weight, excess, positive, exc)
     real(kind=default), dimension(:), intent(out) :: x
@@ -2462,6 +2463,7 @@ contains
     end do rejection
     x = phi (xi, channel)
   end subroutine vamp_next_event_multi
+  
   subroutine vamp_warmup_grid &
        (rng, g, func, data, iterations, exc, history)
     type(tao_random_state), intent(inout) :: rng

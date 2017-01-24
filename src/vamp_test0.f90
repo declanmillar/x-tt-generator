@@ -32,6 +32,7 @@ module vamp_test0_functions
   real(kind=default), dimension(:), allocatable, private :: c, x_min, x_max
   real(kind=default), dimension(:,:,:), allocatable, public :: x0, gamma
 contains
+
   pure function f0 (x, x_min, x_max, x0, g) result (f_x)
     real(kind=default), intent(in) :: x, x_min, x_max
     real(kind=default), dimension(:), intent(in) :: x0, g
@@ -49,6 +50,7 @@ contains
     end do
     f_x = amp * conjg (amp) / norm
   end function f0
+
   pure function f_norm (x_min, x_max, x0p, gp, x0q, gq) &
        result (norm)
     real(kind=default), intent(in) :: x_min, x_max, x0p, gp, x0q, gq
@@ -60,6 +62,7 @@ contains
                    / cmplx (x0p - x0q, - gp - gq, kind=default), &
                  kind=default)
   end function f_norm
+
   pure function f (x, data, weights, channel, grids) result (f_x)
     real(kind=default), dimension(:), intent(in) :: x
     class(vamp_data_t), intent(in) :: data
@@ -84,9 +87,11 @@ contains
     end do
     f_x = f_x / sum (c)
   end function f
+
   subroutine delete_sample ()
     deallocate (c, x_min, x_max, x0, gamma)
   end subroutine delete_sample
+
   subroutine create_sample (num_poles, weights, region)
     integer, intent(in) :: num_poles
     real(kind=default), dimension(:), intent(in) :: weights
@@ -100,6 +105,7 @@ contains
     x_max = region(2,:)
     c = weights
   end subroutine create_sample
+
   pure function psi (xi, x_min, x_max, x0, gamma) result (x)
     real(kind=default), intent(in) :: xi, x_min, x_max, x0, gamma
     real(kind=default) :: x
@@ -108,6 +114,7 @@ contains
                    - (x_max - xi) * atan ((x0 - x_min) / gamma)) &
                  / (x_max - x_min))
   end function psi
+  
   pure function g0 (x, x_min, x_max, x0, gamma) result (g_x)
     real(kind=default), intent(in) :: x, x_min, x_max, x0, gamma
     real(kind=default) :: g_x
