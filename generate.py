@@ -41,7 +41,7 @@ parser.add_option("-x", "--symmetrise",         default = False, action = "store
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
-parser.add_option("--unweighted",               default = True,  action = "store_false", help = "unweighted events")
+parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
 
 # integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
@@ -57,7 +57,7 @@ parser.add_option("-U", "--energy_up",          default = 0,         type = int,
 
 # strings
 parser.add_option("-t", "--tag",                default = "",                            help = "add a name tag to output files")
-parser.add_option("-w", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
+parser.add_option("-k", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
 parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply fiducial cuts")
@@ -93,6 +93,7 @@ if option.include_background == False and option.include_signal == False:
 
 if option.final_state < -1 or option.final_state > 3:
     sys.exit("error: invalid final state id" % option.final_state)
+
 
 initial_states = 0
 if option.include_gg: initial_states += 1
@@ -156,6 +157,8 @@ if option.multichannel: options += ".multi"
 if option.cut: options += ".cut"
 
 if option.symmetrise: options += ".symmetrised"
+
+# if not option.unweighted: options += ".weighted"
 
 if option.use_rambo: options += ".rambo"
 
@@ -243,11 +246,17 @@ if option.multichannel:
 else:
     grid = "grid"
 
+if option.unweighted:
+    weight = "unweighted"
+else:
+    weight = "weighted"
+
+
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
-ntuple_file = "%s/%s.root" % (data_directory, filename)
-lhe_file = "%s/%s.lhe" % (data_directory, filename)
+ntuple_file = "%s/%s.%s.root" % (data_directory, filename, weight)
+lhe_file = "%s/%s.%s.lhe" % (data_directory, filename, weight)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)
 
 if os.path.isfile(grid_file): 

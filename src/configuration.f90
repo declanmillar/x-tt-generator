@@ -156,9 +156,8 @@ subroutine print_config
     end if
   end if
   print*, "preliminary vamp calls: ", ncall / 10
-  print*, "preliminary vamp iterations: ", itmx + 1
   print*, "vamp calls: ", ncall
-  print*, "vamp iterations: ", itmx - 1
+  print*, "vamp iterations: ", itmx
   print*, "number of events: ", nevents
   print*, "unweighted events: ", unweighted
   print*, "apply fiducial cuts: ", cut
