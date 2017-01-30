@@ -251,10 +251,14 @@ if option.unweighted:
 else:
     weight = "weighted"
 
+# energy_domain = ""
+# if option.energy_low != 0 or option.energy_up != 0: energy_domain += ".%s-%s" % (option.energy_low, option.energy_up)
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
+# ntuple_file = "%s/%s.%s.%s.root" % (data_directory, filename, energy_domain, weight)
+# lhe_file = "%s/%s.%s.%s.lhe" % (data_directory, filename, energy_domain, weight)
 ntuple_file = "%s/%s.%s.root" % (data_directory, filename, weight)
 lhe_file = "%s/%s.%s.lhe" % (data_directory, filename, weight)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)

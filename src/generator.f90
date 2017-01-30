@@ -287,10 +287,12 @@ program generator
             call handle_exception (exc)
             if (.not. unweighted) call rootaddevent(weight)
             integral = integral + weight
-            standard_dev = standard_dev + weight**2
-
+            standard_dev = standard_dev + weight * weight
             if (.not. batch) call progress_percentage(i)
         end do
+
+        integral = integral / nevents
+        standard_dev = standard_dev / nevents
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
