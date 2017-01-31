@@ -292,7 +292,7 @@ program generator
         end do
 
         integral = integral / nevents
-        standard_dev = standard_dev / nevents
+        standard_dev = standard_dev / nevents / nevents
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 

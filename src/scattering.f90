@@ -945,7 +945,7 @@ function dsigma(x, data, weights, channel, grids)
             if (use_rambo) then
                 ddsigma = ddsigma * wgtr
             else
-                ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7/ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
+                ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
                 if (map_phase_space) then
                     ddsigma = ddsigma * ((m356 * m356 - mt * mt)**2 + mt * mt * gamt * gamt) &
                                       * (at356max - at356min) / m356 / mt / gamt / 2.d0
