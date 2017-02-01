@@ -275,8 +275,8 @@ program generator
         standard_dev = 0.0
         print*, "vamp: calculating integral with", nevents, " weighted events ..."
 
-        if (.not. batch) call set_total(nevents)
-        do i = 1, nevents
+        if (.not. batch) call set_total( ncall)
+        do i = 1,  ncall
             if (.not. unweighted) record_events = .true.
             call clear_exception (exc)
             if (multichannel) then
@@ -291,8 +291,8 @@ program generator
             if (.not. batch) call progress_percentage(i)
         end do
 
-        integral = integral / nevents
-        standard_dev = standard_dev / nevents / nevents
+        integral = integral /  ncall
+        standard_dev = standard_dev /  ncall /  ncall
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
