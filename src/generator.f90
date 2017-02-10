@@ -58,6 +58,7 @@ program generator
     type(vamp_history), dimension(:), allocatable :: history
     type(vamp_history), dimension(:, :), allocatable :: histories
     real(kind=default), dimension(:), allocatable :: weights
+    integer :: nweighted
 
     call cpu_time(start_time) 
     call date_and_time(values = now)
@@ -273,10 +274,16 @@ program generator
 
         integral = 0.0
         standard_dev = 0.0
-        print*, "vamp: calculating integral with", nevents, " weighted events ..."
+        if (unweighted) then
+            nweighted = ncall
+        else
+            nweighted = nevents
+        end if
 
-        if (.not. batch) call set_total( ncall)
-        do i = 1,  ncall
+        print*, "vamp: calculating integral with", nweighted, " weighted events ..."
+
+        if (.not. batch) call set_total(nweighted)
+        do i = 1,  nweighted
             if (.not. unweighted) record_events = .true.
             call clear_exception (exc)
             if (multichannel) then
@@ -291,8 +298,8 @@ program generator
             if (.not. batch) call progress_percentage(i)
         end do
 
-        integral = integral /  ncall
-        standard_dev = standard_dev /  ncall /  ncall
+        integral = integral /  nweighted
+        standard_dev = standard_dev /  nweighted /  nweighted
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
