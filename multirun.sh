@@ -13,8 +13,8 @@
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-chi-3 -d
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-eta-3 -u
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-eta-3 -d
-# ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-phi-3 -u
-# ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-phi-3 -d
+# ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-3 -u
+# ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-3 -d
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-3 -u
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-3 -d
 # ./generate.py -w -Q 1nd -L 2 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-3 -u
@@ -40,8 +40,8 @@
 ./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-chi-4 -d -t 20x2M
 ./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-eta-4 -u -t 20x2M
 ./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-eta-4 -d -t 20x2M
-./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-phi-4 -u -t 20x2M
-./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-phi-4 -d -t 20x2M
+./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-4 -u -t 20x2M
+./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-4 -d -t 20x2M
 
 ./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -u -t 20x2M
 ./generate.py -w -Q 1nd -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -d -t 20x2M
