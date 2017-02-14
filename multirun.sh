@@ -1,4 +1,4 @@
-./generate.py -w -Q 1nd -L 2 -U 5 -n 2000000 -g
+./generate.py -w -Q 1nd -L 2 -U 5 -n 2000000 -g 
 ./generate.py -w -Q 1nd -L 2 -U 5 -n 2000000 -q
 ./generate.py -w -Q 1nd -L 2 -U 5 -n 2000000 -u
 ./generate.py -w -Q 1nd -L 2 -U 5 -n 2000000 -d
