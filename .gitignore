@@ -1,6 +1,6 @@
 .__afs*
 *.root
 LSFJOB_*
-*.sh*
+*-tt-*.sh*
 *.so
 .DS_Store
