@@ -43,18 +43,28 @@
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-4 -u -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m E6-psi-4 -d -t 20x2M
 
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -u -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -d -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -u -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-R-4 -d -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-LR-4 -u -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-LR-4 -d -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-Y-4 -u -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-Y-4 -d -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-Y-4 -u -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-Y-4 -d -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-BL-4 -u -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GLR-BL-4 -d -t 20x2M
 
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-T3L-4 -u -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-T3L-4 -d -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-SM-4 -u -t 20x2M
-./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-SM-4 -d -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-T3L-4 -u -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-T3L-4 -d -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-SM-4 -u -t 20x2M
+# ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-SM-4 -d -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-Q-4 -u -t 20x2M
 # ./generate.py -w -L 3 -U 5 -N 20 -n 2000000 -e 1000000 -m GSM-Q-4 -d -t 20x2M
+
+
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GLR-R-4 -u -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GLR-R-4 -d -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GLR-Y-4 -u -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GLR-Y-4 -d -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GSM-T3L-4 -u -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GSM-T3L-4 -d -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GSM-SM-4 -u -t 10x1M -Q 1nd
+./generate.py -w -L 3 -U 5 -N 10 -n 1000000 -e 1000000 -m GSM-SM-4 -d -t 10x1M -Q 1nd
