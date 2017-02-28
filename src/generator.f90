@@ -260,8 +260,8 @@ program generator
         end if
         do i = 1, 2
             ebm(i) = sqrts / 2
-            pdfg(i) = 1
-            pdfs(i) = 1
+            pdfg(i) = pdf_group
+            pdfs(i) = pdf_set
         end do
 
         if (ntuple_out) then

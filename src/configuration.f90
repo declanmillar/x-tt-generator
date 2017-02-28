@@ -49,6 +49,8 @@ module configuration
   integer :: z_mixing
   real(kind=default) :: s2mix
   integer :: pid
+  integer :: pdf_group
+  integer :: pdf_set
 
   ! constants
   real(kind=default), parameter :: pi = 3.14159265358979323846d0
@@ -124,6 +126,45 @@ subroutine modify_config
     tops_decay = 1
   end if
 
+  ! from http://lhapdf.hepforge.org/pdfsets.html
+  ! https://arxiv.org/pdf/hep-ph/9907231.pdf
+  ! www.hep.phy.cam.ac.uk/theory/webber/MCatNLO/pdflib_doc.ps.gz
+
+  if      (ipdf ==  1) then ! PDF: CTEQ6M
+    pdf_group = 0
+    pdf_set = 10000
+  else if (ipdf ==  2) then ! PDF: CTEQ6D
+    pdf_group = 0
+    pdf_set = 10000
+  else if (ipdf ==  3) then ! PDF: CTEQ6L
+    pdf_group = 0
+    pdf_set = 10000
+  else if (ipdf ==  4) then ! PDF: CTEQ6L1
+    pdf_group = 0
+    pdf_set = 10042
+  else if (ipdf ==  5) then ! PDF: MRS99 (cor01)
+    pdf_group = 3
+    pdf_set = 78
+  else if (ipdf ==  6) then ! PDF: MRS99 (cor02)
+    pdf_group = 3
+    pdf_set = 79
+  else if (ipdf ==  7) then ! PDF: MRS99 (cor03)
+    pdf_group = 3
+    pdf_set = 80
+  else if (ipdf ==  8) then ! PDF: MRS99 (cor04)
+    pdf_group = 3
+    pdf_set = 81
+  else if (ipdf ==  9) then ! PDF: MRS99 (cor05)
+    pdf_group = 3
+    pdf_set = 82
+  else if (ipdf == 10) then ! PDF: CT14LN
+    pdf_group = 0 
+    pdf_set = 13200
+  else if (ipdf == 11) then ! PDF: CT14LL
+    pdf_group = 0 
+    pdf_set = 13205
+  end if
+
 end subroutine modify_config
 
 subroutine print_config
@@ -182,17 +223,17 @@ subroutine print_config
   if (interference == 2) print*, "interference: (gamma + Z) + (Z')"
   if (interference == 3) print*, "interference: (gamma + Z + Z') - (gamma) - (Z)"
   if (interference == 4) print*, "interference: (gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (ipdf ==  1) print*, "PDFs: CTEQ6m"
-  if (ipdf ==  2) print*, "PDFs: CTEQ6d"
-  if (ipdf ==  3) print*, "PDFs: CTEQ6l"
-  if (ipdf ==  4) print*, "PDFs: CTEQ6l1"
-  if (ipdf ==  5) print*, "PDFs: MRS99 (cor01)"
-  if (ipdf ==  6) print*, "PDFs: MRS99 (cor02)"
-  if (ipdf ==  7) print*, "PDFs: MRS99 (cor03)"
-  if (ipdf ==  8) print*, "PDFs: MRS99 (cor04)"
-  if (ipdf ==  9) print*, "PDFs: MRS99 (cor05)"
-  if (ipdf == 10) print*, "PDFs: CT14LN"
-  if (ipdf == 11) print*, "PDFs: CT14LL"
+  if (ipdf ==  1) print*, "PDF: CTEQ6M"
+  if (ipdf ==  2) print*, "PDF: CTEQ6D"
+  if (ipdf ==  3) print*, "PDF: CTEQ6L"
+  if (ipdf ==  4) print*, "PDF: CTEQ6L1"
+  if (ipdf ==  5) print*, "PDF: MRST 99 (g up)"
+  if (ipdf ==  6) print*, "PDF: MRST 99 (g down)"
+  if (ipdf ==  7) print*, "PDF: MRST 99 (g up)"
+  if (ipdf ==  8) print*, "PDF: MRST 99 (g up)"
+  if (ipdf ==  9) print*, "PDF: MRST 99 (g up)"
+  if (ipdf == 10) print*, "PDF: CT14LN"
+  if (ipdf == 11) print*, "PDF: CT14LL"
 end subroutine print_config
 
 end module configuration
