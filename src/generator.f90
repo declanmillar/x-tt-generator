@@ -24,8 +24,6 @@ program generator
     use exceptions
     use tao_random_numbers
     use vampi
-    ! use vamp_tests0
-    ! use vamp_test0_functions
 
     implicit none
 
@@ -320,7 +318,7 @@ program generator
             call lhe_open(lhe_file)
             call lhe_header()
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), 2)
-            call lhe_process(sigma, error, 1.d0, 81)
+            call lhe_process(integral, sqrt(standard_dev), 1.d0, 81)
         end if
 
         if (final_state <= 0) then

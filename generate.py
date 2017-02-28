@@ -50,7 +50,7 @@ parser.add_option("-N", "--iterations",         default = 10,        type = int,
 parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
-parser.add_option("-I", "--interference",       default = 2,         type = int,         help = "specify interference")
+parser.add_option("-I", "--interference",       default = 1,         type = int,         help = "specify interference")
 parser.add_option("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
 parser.add_option("-L", "--energy_low",         default = 0,         type = int,         help = "Ecm lower limit")
 parser.add_option("-U", "--energy_up",          default = 0,         type = int,         help = "Ecm upper limit")
@@ -148,7 +148,7 @@ if option.pdf ==  9: pdf = "MRS9905"
 if option.pdf == 10: pdf = "CT14LN"
 if option.pdf == 11: pdf = "CT14LL"
 
-if option.interference != 2: options += ".int%i" % option.interference
+if option.interference != 1: options += ".int%i" % option.interference
 
 if option.use_nwa: options += ".nwa"
 

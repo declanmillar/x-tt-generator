@@ -20,7 +20,7 @@ module modelling
   real(kind=default) :: fmass(12), fwidth(12), qmass(6), lmass(6)
 
   ! quark masses
-  real(kind=default), parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0 ! 173
+  real(kind=default), parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0
   real(kind=default), parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
 
   ! leptons masses
@@ -28,7 +28,7 @@ module modelling
   real(kind=default), parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
 
   ! quark widths
-  real(kind=default), parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.55d0
+  real(kind=default), parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.3d0 ! 1.55d0
   real(kind=default), parameter :: dwidth = 0.d0,  swidth = 0.d0, bwidth = 0.d0
 
   ! lepton widths

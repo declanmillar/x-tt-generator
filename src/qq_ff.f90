@@ -277,6 +277,13 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     end do
 
   else if (interference == 1) then
+    ! |A + Z + Z' + ...|^2
+    do i = 1, ngraphs
+      amp_tmp = amp_tmp + amp(i)
+    end do
+    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp)
+
+  else if (interference == 2) then
     ! |A + Z|^2 + |Z'|^2 + ...
     do i = 1, 2
       amp_tmp = amp_tmp + amp(i)
@@ -285,13 +292,6 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
     do i = 3, ngraphs
       qq_ff = qq_ff + amp(i)*conjg(amp(i))
     end do
-
-  else if (interference == 2) then
-    ! |A + Z + Z' + ...|^2
-    do i = 1, ngraphs
-      amp_tmp = amp_tmp + amp(i)
-    end do
-    qq_ff = qq_ff + amp_tmp*conjg(amp_tmp)
 
   else if (interference == 3) then
     ! |A + Z + Z' + ...|^2 - |A + Z|^2

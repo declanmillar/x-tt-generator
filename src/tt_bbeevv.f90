@@ -1201,16 +1201,6 @@ function qq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     qq_tt_bbeevv_ew = atot2
 
   else if (interference == 1) then
-    do i = 1, 2
-      amp_tmp = amp_tmp + amp(i)
-    end do
-    atot2 = atot2 + amp_tmp * conjg(amp_tmp)
-    do i = 3, ngraphs
-      atot2 = atot2 + amp(i) * conjg(amp(i))
-    end do
-    qq_tt_bbeevv_ew = atot2
-
-  else if (interference == 2) then
     do i = 1, ngraphs
       amp_tmp = amp_tmp + amp(i)
     end do
@@ -1230,6 +1220,16 @@ function qq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     else
         qq_tt_bbeevv_ew = atot2
     end if
+
+    else if (interference == 2) then
+        do i = 1, 2
+          amp_tmp = amp_tmp + amp(i)
+        end do
+        atot2 = atot2 + amp_tmp * conjg(amp_tmp)
+        do i = 3, ngraphs
+          atot2 = atot2 + amp(i) * conjg(amp(i))
+        end do
+        qq_tt_bbeevv_ew = atot2
 
   else if (interference == 3) then
     do i = 1, ngraphs

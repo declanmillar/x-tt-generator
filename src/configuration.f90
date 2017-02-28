@@ -142,17 +142,17 @@ subroutine print_config
     if (final_state == -1) then
       print*, "process: p p -> l+ l-"
     else if (final_state == 0) then
-      print*, 'process: p p -> t t~'
+      print*, "process: p p -> t t~"
     else if (final_state == 1) then
-      print*, 'process: p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
+      print*, "process: p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
     end if
   else if (initial_state == 1) then
     if (final_state == -1) then
-      print*, 'process: p p~ -> l+ l-'
+      print*, "process: p p~ -> l+ l-"
     else if (final_state == 0) then
-      print*, 'process: p p~ -> t t~'
+      print*, "process: p p~ -> t t~"
     else if (final_state == 1) then
-      print*, 'process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~'
+      print*, "process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
     end if
   end if
   print*, "preliminary vamp calls: ", ncall / 10
@@ -164,12 +164,12 @@ subroutine print_config
   print*, "multichannel: ", multichannel
   print*, "symmetrise parton momentum fraction: ", symmetrise
   print*, "map phase space: ", map_phase_space
-  print*, 'collider energy: ', sqrts
+  print*, "collider energy: ", sqrts
   print*, "E_cm low: ", ecm_low
   print*, "E_cm up:  ", ecm_up
-  print*, 'NWA: ', use_nwa
-  print*, 'RAMBO: ', use_rambo
-  print*, 'model: ', model_name
+  print*, "NWA: ", use_nwa
+  print*, "RAMBO: ", use_rambo
+  print*, "model: ", model_name
   print*, "include gg: ", include_gg
   print*, "include qq: ", include_qq
   print*, "include uu: ", include_uu
@@ -178,21 +178,21 @@ subroutine print_config
   print*, "include z: ", include_z
   print*, "include x: ", include_x
   if (interference == 0) print*, "interference: (gamma) + (Z) + (Z')"
-  if (interference == 1) print*, "interference: (gamma + Z) + (Z')"
-  if (interference == 2) print*, "interference: (gamma + Z + Z')"
+  if (interference == 1) print*, "interference: (gamma + Z + Z')"
+  if (interference == 2) print*, "interference: (gamma + Z) + (Z')"
   if (interference == 3) print*, "interference: (gamma + Z + Z') - (gamma) - (Z)"
   if (interference == 4) print*, "interference: (gamma + Z + Z') - (gamma) - (Z) - (Z')"
-  if (ipdf ==  1) print*, 'PDFs: CTEQ6m'
-  if (ipdf ==  2) print*, 'PDFs: CTEQ6d'
-  if (ipdf ==  3) print*, 'PDFs: CTEQ6l'
-  if (ipdf ==  4) print*, 'PDFs: CTEQ6l1'
-  if (ipdf ==  5) print*, 'PDFs: MRS99 (cor01)'
-  if (ipdf ==  6) print*, 'PDFs: MRS99 (cor02)'
-  if (ipdf ==  7) print*, 'PDFs: MRS99 (cor03)'
-  if (ipdf ==  8) print*, 'PDFs: MRS99 (cor04)'
-  if (ipdf ==  9) print*, 'PDFs: MRS99 (cor05)'
-  if (ipdf == 10) print*, 'PDFs: CT14LN'
-  if (ipdf == 11) print*, 'PDFs: CT14LL'
+  if (ipdf ==  1) print*, "PDFs: CTEQ6m"
+  if (ipdf ==  2) print*, "PDFs: CTEQ6d"
+  if (ipdf ==  3) print*, "PDFs: CTEQ6l"
+  if (ipdf ==  4) print*, "PDFs: CTEQ6l1"
+  if (ipdf ==  5) print*, "PDFs: MRS99 (cor01)"
+  if (ipdf ==  6) print*, "PDFs: MRS99 (cor02)"
+  if (ipdf ==  7) print*, "PDFs: MRS99 (cor03)"
+  if (ipdf ==  8) print*, "PDFs: MRS99 (cor04)"
+  if (ipdf ==  9) print*, "PDFs: MRS99 (cor05)"
+  if (ipdf == 10) print*, "PDFs: CT14LN"
+  if (ipdf == 11) print*, "PDFs: CT14LL"
 end subroutine print_config
 
 end module configuration
