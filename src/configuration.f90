@@ -49,6 +49,7 @@ module configuration
   integer :: z_mixing
   real(kind=default) :: s2mix
   integer :: pid
+  integer :: idw
   integer :: pdf_group
   integer :: pdf_set
 
@@ -163,6 +164,12 @@ subroutine modify_config
   else if (ipdf == 11) then ! PDF: CT14LL
     pdf_group = 0 
     pdf_set = 13205
+  end if
+
+  if (unweighted) then
+    idw = 3
+  else
+    idw = 2
   end if
 
 end subroutine modify_config
