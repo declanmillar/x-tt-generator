@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# python run script for the generator:
-#     generates a config file
-#     runs generator using it 
-#     can run locally 
-#     or submit to the lxplus/iridis/qmul batch system
-# author: 
-#     Declan Millar <declan.millar@cern.ch>
+# python run script for the generator
+# generates a config file, runs generator using it 
+# locally or submit to the lxplus/iridis/qmul batch system
+# declan.millar@cern.ch
 
 import os
 import StringIO
@@ -20,8 +17,6 @@ import socket
 import time
 
 parser = optparse.OptionParser()
-
-# boolean
 parser.add_option("-D", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid if present.")
 parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
 parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
@@ -29,8 +24,8 @@ parser.add_option("-T", "--ntuple",             default = True,  action = "store
 parser.add_option("-H", "--lhef",               default = False, action = "store_true",  help = "write events to lhe file")
 parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
 parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
-parser.add_option("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
 parser.add_option("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
+parser.add_option("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
 parser.add_option("-A", "--include_a",          default = True,  action = "store_false", help = "include photon mediated interaction")
 parser.add_option("-Z", "--include_z",          default = True,  action = "store_false", help = "include Z boson mediated interaction")
 parser.add_option("-X", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
@@ -42,10 +37,8 @@ parser.add_option("-R", "--use_rambo",          default = False, action = "store
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
 parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
-
-# integers
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = ppbar")
+parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
 parser.add_option("-N", "--iterations",         default = 10,        type = int,         help = "number of VAMP iterations")
 parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
@@ -54,46 +47,23 @@ parser.add_option("-I", "--interference",       default = 1,         type = int,
 parser.add_option("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
 parser.add_option("-L", "--energy_low",         default = 0,         type = int,         help = "Ecm lower limit")
 parser.add_option("-U", "--energy_up",          default = 0,         type = int,         help = "Ecm upper limit")
-
-# strings
 parser.add_option("-t", "--tag",                default = "",                            help = "add a name tag to output files")
 parser.add_option("-k", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
 parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply fiducial cuts")
-
 (option, args) = parser.parse_args()
 
-if os.path.isfile("Models/%s.mdl" % option.model) is False:
-    sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
-
-if option.energy < 0:
-    sys.exit("error: collider energy must be positive definite\n" % usage)
-
-if option.ncall < 2:
-    sys.exit("error: must have at least 2 VEGAS points\n%s" % usage)
-
-if option.energy_low < 0 or option.energy_up < 0:
-    sys.exit("error: energy bounds must be positive definite")
-
-if option.energy_low > option.energy or option.energy_up > option.energy:
-    sys.exit("error: energy bounds cannot exceed collider energy")
-
-if (option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= option.energy_low):
-    sys.exit("error: energy upper bound must be greater than lower bound")
-
-if option.interference < 0 or option.interference > 4:
-    sys.exit("error: interference must be 0 - 4")
-
-if option.pdf < 1 or option.pdf > 11:
-    sys.exit("error: pdf id must be 1 - 11")
-
-if option.include_background == False and option.include_signal == False:
-    sys.exit("error: signal and background both off")
-
-if option.final_state < -1 or option.final_state > 3:
-    sys.exit("error: invalid final state id" % option.final_state)
-
+if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
+if option.energy < 0: sys.exit("error: collider energy must be positive definite\n" % usage)
+if option.ncall < 2: sys.exit("error: must have at least 2 VEGAS points\n%s" % usage)
+if option.energy_low < 0 or option.energy_up < 0: sys.exit("error: energy bounds must be positive definite")
+if option.energy_low > option.energy or option.energy_up > option.energy: sys.exit("error: energy bounds cannot exceed collider energy")
+if (option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= option.energy_low): sys.exit("error: energy upper bound must be greater than lower bound")
+if option.interference < 0 or option.interference > 4: sys.exit("error: interference must be 0 - 4")
+if option.pdf < 1 or option.pdf > 11: sys.exit("error: pdf id must be 1 - 11")
+if option.include_background == False and option.include_signal == False: sys.exit("error: signal and background both off")
+if option.final_state < -1 or option.final_state > 3: sys.exit("error: invalid final state id" % option.final_state)
 
 initial_states = 0
 if option.include_gg: initial_states += 1
@@ -101,8 +71,7 @@ if option.include_qq: initial_states += 1
 if option.include_dd: initial_states += 1
 if option.include_uu: initial_states += 1
 
-if option.lhef and initial_states > 1:
-    sys.exit("error: currently when outputting to LHEF, only one initial state can be active.")
+if option.lhef and initial_states > 1: sys.exit("error: currently when outputting to LHEF, only one initial state can be active.")
 
 hostname = socket.gethostname()
 if not ("lxplus" in hostname or "cyan" in hostname):
@@ -149,27 +118,15 @@ if option.pdf == 10: pdf = "CT14LN"
 if option.pdf == 11: pdf = "CT14LL"
 
 if option.interference != 1: options += ".int%i" % option.interference
-
 if option.use_nwa: options += ".nwa"
-
 if option.multichannel: options += ".multi"
-
 if option.cut: options += ".cut"
-
 if option.symmetrise: options += ".symmetrised"
-
-# if not option.unweighted: options += ".weighted"
-
 if option.use_rambo: options += ".rambo"
-
 if option.include_background == False and option.flatten_integrand == False: options += ".unmapped"
-
 if option.energy_low != 0 or option.energy_up != 0: options += ".%s-%s" % (option.energy_low, option.energy_up)
-
 if len(option.tag) > 0: options += "." + option.tag
-
 if option.final_state < 2: option.include_background = False
-
 if option.include_background: flatten_integrand = False
 
 initial_partons = ""
@@ -185,12 +142,9 @@ initial_partons += "-"
 
 intermediates = ""
 if option.final_state < 2:
-    if option.include_a:
-        intermediates += "A"
-    if option.include_z:
-        intermediates += "Z"
-    if option.include_x:
-        intermediates += "X"
+    if option.include_a: intermediates += "A"
+    if option.include_z: intermediates += "Z"
+    if option.include_x: intermediates += "X"
 else:
     if option.include_background == False and option.include_signal == True:
         intermediates += "tt"
@@ -201,18 +155,12 @@ if len(intermediates) > 0:
     intermediates = intermediates + "-"
 
 final_state = ""
-if option.final_state == -1:
-    final_state = "ll"
-elif option.final_state == 0:
-    final_state = "tt"
-elif option.final_state == 1:
-    final_state = "tt-bbllvv"
-elif option.final_state == 2:
-    final_state = "tt-blvbqq"
-elif option.final_state == 11:
-    final_state = "bbtatavtvt"
-elif option.final_state == 12:
-    final_state = "bbemuvevm"
+if   option.final_state == -1: final_state = "ll"
+elif option.final_state == 0:  final_state = "tt"
+elif option.final_state == 1:  final_state = "tt-bbllvv"
+elif option.final_state == 2:  final_state = "tt-blvbqq"
+elif option.final_state == 11: final_state = "bbtatavtvt"
+elif option.final_state == 12: final_state = "bbemuvevm"
 
 process = initial_partons + intermediates + final_state
 
@@ -251,14 +199,9 @@ if option.unweighted:
 else:
     weight = "weighted"
 
-# energy_domain = ""
-# if option.energy_low != 0 or option.energy_up != 0: energy_domain += ".%s-%s" % (option.energy_low, option.energy_up)
-
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
-# ntuple_file = "%s/%s.%s.%s.root" % (data_directory, filename, energy_domain, weight)
-# lhe_file = "%s/%s.%s.%s.lhe" % (data_directory, filename, energy_domain, weight)
 ntuple_file = "%s/%s.%s.root" % (data_directory, filename, weight)
 lhe_file = "%s/%s.%s.lhe" % (data_directory, filename, weight)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)

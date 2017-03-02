@@ -348,9 +348,18 @@ function dsigma(x, data, weights, channel, grids)
 
         if (verbose) print*, "constructing hadronic structure functions ..."
         if (ipdf <= 4) then
-            if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) return
-            if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) return
-            if ((qq <= 1.3d0) .or. (qq >= 1.d4)) return
+            if ((x1 <= 1.d-6) .or. (x1 >= 1.d0)) then
+                if (verbose) print*, "invalid x1"
+                return
+            end if
+            if ((x2 <= 1.d-6) .or. (x2 >= 1.d0)) then
+                if (verbose) print*, "invalid x2"
+                return
+            end if
+            if ((qq <= 1.3d0) .or. (qq >= 1.d4)) then
+                if (verbose) print*, "invalid qq"
+                return
+            end if
 
             ! *x for compatibility with MRS which return xf(x)
             u1 = x1 * ctq6pdf(1, x1, qq)

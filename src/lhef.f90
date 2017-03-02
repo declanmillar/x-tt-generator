@@ -1,6 +1,7 @@
 module lhef
 
   use kinds
+  use configuration, only: verbose
 
   implicit none
 
@@ -35,7 +36,7 @@ subroutine lhe_header()
   print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
-  write(lhe, "(a)") '# File generated with zprime-top-generator'
+  write(lhe, "(a)") 'File generated with zprime-top-generator'
   write(lhe, "(a)") '-->'
 end subroutine lhe_header
 
@@ -47,7 +48,7 @@ subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
   integer :: idwt ! master switch dictating how the event weights (XWGTUP) are interpreted
   print*, "lhe: printing beam info ..."
   write(lhe, "(a)") "<init>"
-  write(lhe, "(i8,    i8,    eS14.6, eS14.6, i5,    i5,    i5,    i5,    i5,   i5)") &
+  write(lhe, "(i8,    i8,    eS14.6, eS14.6, i5,    i5,    i6,    i6,    i5,   i5)") &
                idbm1, idbm2, ebm1,   ebm2,   pdfg1, pdfg1, pdfs1, pdfs2, idwt, npr
 end subroutine lhe_beam
 
@@ -68,7 +69,7 @@ subroutine lhe_add_event(n, idpr, xwgt, scal, aqed, aqcd)
   real(kind=default) :: scal ! scale of the event in GeV, as used for calculation of PDFs
   real(kind=default) :: aqed ! the QED coupling αQED used for this event (e.g. 1/128)
   real(kind=default) :: aqcd ! the QCD coupling αQCD used for this event
-
+  if (verbose) print*, "lhe: printing event info ..."
   write(lhe, "(a)") "<event>"
   write(lhe, "(i6, i6, es14.6, es14.6, es14.6, es14.6)") n, idpr, xwgt, scal, aqed, aqcd
 end subroutine lhe_add_event

@@ -7,7 +7,7 @@ program generator
     ! uses
     !   HELAS for probability amplitudes
     !   VAMP for Monte Carlo integration and event generation
-    !   MRS99, CTEQ6, CT10 for PDFs
+    !   MRS99, CTEQ6, CT14 PDFs
     !   RootTuple for filling n-tuples
     !
     ! authors
@@ -279,7 +279,6 @@ program generator
         end if
 
         print*, "vamp: calculating integral with", nweighted, " weighted events ..."
-
         if (.not. batch) call set_total(nweighted)
         do i = 1,  nweighted
             if (.not. unweighted) record_events = .true.
@@ -296,8 +295,8 @@ program generator
             if (.not. batch) call progress_percentage(i)
         end do
 
-        integral = integral /  nweighted
-        standard_dev = standard_dev /  nweighted /  nweighted
+        integral = integral / nweighted
+        standard_dev = standard_dev / nweighted / nweighted
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
@@ -345,7 +344,7 @@ program generator
                 call handle_exception(exc)
                 record_events = .true.
                 event = dsigma(x, no_data)
-                call rootaddevent(1.d0)
+                if (ntuple_out) call rootaddevent(1.d0)
                 record_events = .false.
                 if (.not. batch) call progress_percentage(i)
             end do

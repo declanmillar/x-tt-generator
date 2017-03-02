@@ -24,8 +24,7 @@ subroutine progress_percentage(x)
 
     ratio = x / real(n)
     c = ratio * w
-
-    print*, "progress: ", int(ratio * 100), "%";
+    write(*,"(a11, i3, a1)") "progress: ", int(ratio * 100), "%";
 end subroutine progress_percentage
 
 subroutine progress_bar(x)

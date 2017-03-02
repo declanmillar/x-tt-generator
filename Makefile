@@ -20,7 +20,7 @@ OBJ = vamp_kinds.o mpi90.o constants.o specfun.o coordinates.o progress.o except
 # ifneq (,$(findstring lxplus, $(HOSTNAME)))
     # FFLAGS = -warn all
 # else
-FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal 
+FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
 # endif
 
 LFLAGS = -L$(LIB) -lRootTuple $(shell root-config --libs)
