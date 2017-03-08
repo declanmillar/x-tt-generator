@@ -60,8 +60,8 @@ program generator
 
     call cpu_time(start_time) 
     call date_and_time(values = now)
-    print*, 'date: ', now(1), now(2), now(3)
-    print*, 'time: ', now(5), now(6), now(7)
+    write(*,"(a7,     i4,      a1, i2.2,     a1,  i2.2,     a1,  i2.2,     a1,  i2.2,     a1,  i2.2)") &
+            "time: ", now(1), "-", now(2), "-", now(3), " ", now(5), ":", now(6), ":", now(7)
 
     call read_config
     call modify_config
@@ -317,7 +317,7 @@ program generator
             call lhe_open(lhe_file)
             call lhe_header()
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
-            call lhe_process(integral, sqrt(standard_dev), 1.d0, 81)
+            call lhe_process(integral, sqrt(standard_dev), 1.d0, 999)
         end if
 
         if (final_state <= 0) then

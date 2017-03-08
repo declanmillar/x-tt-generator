@@ -21,7 +21,7 @@ parser.add_option("-D", "--overwrite",          default = False, action = "store
 parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
 parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
 parser.add_option("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_option("-H", "--lhef",               default = False, action = "store_true",  help = "write events to lhe file")
+parser.add_option("-H", "--lhef",               default = True, action = "store_true",  help = "write events to lhe file")
 parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
 parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
 parser.add_option("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
@@ -203,7 +203,7 @@ config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
 ntuple_file = "%s/%s.%s.root" % (data_directory, filename, weight)
-lhe_file = "%s/%s.%s.lhe" % (data_directory, filename, weight)
+lhe_file = "%s/%s.%s.lhef" % (data_directory, filename, weight)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)
 
 if os.path.isfile(grid_file): 
@@ -254,7 +254,7 @@ print >> config, '%r    ! fiducial cuts'      % option.cut
 try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        print " config:  %s" % config_name
+        print " config: %s" % config_name
 except IOERROR:
     sys.exit("error: Cannot write to %s" % config_name)
 

@@ -175,15 +175,15 @@ subroutine modify_config
 end subroutine modify_config
 
 subroutine print_config
-  
+
   print*, "config: printing ..."
 
-  if (lhef_out) print*, "events written to:", lhe_file
-  if (ntuple_out) print*, "events written to:", ntuple_file
+  if (lhef_out) print*, "output: ", lhe_file
+  if (ntuple_out) print*, "output: ", ntuple_file
   if (new_grid) then 
-    print*, "grid written to:", grid_file
+    print*, "output: ", grid_file
   else
-    print*, "grid read from:", grid_file
+    print*, "input:  ", grid_file
   end if
 
   if (initial_state == 0) then
@@ -203,18 +203,17 @@ subroutine print_config
       print*, "process: p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
     end if
   end if
-  print*, "preliminary vamp calls: ", ncall / 10
-  print*, "vamp calls: ", ncall
-  print*, "vamp iterations: ", itmx
+  print*, "VAMP iterations: ", itmx
+  print*, "VAMP calls: ", ncall
   print*, "number of events: ", nevents
   print*, "unweighted events: ", unweighted
-  print*, "apply fiducial cuts: ", cut
+  print*, "apply detector cuts: ", cut
   print*, "multichannel: ", multichannel
   print*, "symmetrise parton momentum fraction: ", symmetrise
   print*, "map phase space: ", map_phase_space
   print*, "collider energy: ", sqrts
-  print*, "E_cm low: ", ecm_low
-  print*, "E_cm up:  ", ecm_up
+  if (Ecm_low .ne. 0) print*, "Ecm low: ", ecm_low
+  if (Ecm_up .ne. 0) print*, "Ecm up:  ", ecm_up
   print*, "NWA: ", use_nwa
   print*, "RAMBO: ", use_rambo
   print*, "model: ", model_name
@@ -222,9 +221,9 @@ subroutine print_config
   print*, "include qq: ", include_qq
   print*, "include uu: ", include_uu
   print*, "include dd: ", include_dd
-  print*, "include a: ", include_a
-  print*, "include z: ", include_z
-  print*, "include x: ", include_x
+  print*, "include A:  ", include_a
+  print*, "include Z:  ", include_z
+  print*, "include Z': ", include_x
   if (interference == 0) print*, "interference: (gamma) + (Z) + (Z')"
   if (interference == 1) print*, "interference: (gamma + Z + Z')"
   if (interference == 2) print*, "interference: (gamma + Z) + (Z')"

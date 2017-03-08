@@ -74,15 +74,18 @@ subroutine lhe_add_event(n, idpr, xwgt, scal, aqed, aqcd)
   write(lhe, "(i6, i6, es14.6, es14.6, es14.6, es14.6)") n, idpr, xwgt, scal, aqed, aqcd
 end subroutine lhe_add_event
 
-subroutine lhe_add_particle(id, ist, moth1, moth2, icol1, icol2, p, vtim, spin)
+subroutine lhe_add_particle(id, ist, moth1, moth2, icol1, icol2, p)
   integer :: id ! particle ID according to Particle Data Group convention
   integer :: ist ! status code
   integer :: moth1, moth2 ! index of first and last mother
   integer :: icol1, icol2 ! 1(2) is the integer tag for the (anti) color flow line passing through the color of the particle
   real(kind=default) :: p(4) ! lab frame momentum
-  real(kind=default) :: vtim ! invariant lifetime cτ (distance from production to decay) in mm
+  real(kind=default) :: vtim ! invariant lifetime ctau (distance from production to decay) in mm
   real(kind=default) :: spin ! cosine of the angle between the spin-vector of particle I and the 3-momentum of the decaying particle, specified in the lab frame
   real(kind=default) :: m
+
+  vtim = 0.0
+  spin = 9.0
 
   m = mass(p)
   if (m < 1.d0) m = 0.d0

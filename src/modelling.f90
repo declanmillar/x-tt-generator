@@ -149,9 +149,9 @@ subroutine initialise_zprimes
   integer :: imodel_name, i
   integer, parameter :: mdl = 30
 
-  print*, "modelling: initialising Z' parameters ..."
-
   call reset_zprimes
+
+  print*, "modelling: initialising Z' parameters ..."
 
   ! Extract model name from filename (Remove white space.)
   imodel_name = len(model_name)
@@ -420,9 +420,9 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-      write(*,"(a21,i1,a10,f7.2,a6)") " modelling: width Z'(", n, ") -> qq = ", widthqq, " [GeV]"
-      write(*,"(a21,i1,a10,f7.2,a6)") " modelling: width Z'(", n, ") -> ll = ", widthll, " [GeV]"
-      write(*,"(a21,i1,a10,f7.2,a6)") " modelling: width Z'(", n, ") -> ff = ", width, " [GeV]"
+      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> qq = ", widthqq, " [GeV]"
+      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> ll = ", widthll, " [GeV]"
+      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> ff = ", width, " [GeV]"
 
       if (z_mixing == 1) then
         print*, "modelling: calculating Z' mixing ..."
