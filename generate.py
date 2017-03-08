@@ -21,7 +21,7 @@ parser.add_option("-D", "--overwrite",          default = False, action = "store
 parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
 parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
 parser.add_option("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_option("-H", "--lhef",               default = True, action = "store_true",  help = "write events to lhe file")
+parser.add_option("-H", "--lhef",               default = True,  action = "store_true",  help = "write events to lhe file")
 parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
 parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
 parser.add_option("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
@@ -51,7 +51,7 @@ parser.add_option("-t", "--tag",                default = "",                   
 parser.add_option("-k", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
-parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply fiducial cuts")
+parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply detector cuts")
 (option, args) = parser.parse_args()
 
 if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
@@ -249,7 +249,7 @@ print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up
 print >> config, '%r    ! batch mode'         % option.batch
-print >> config, '%r    ! fiducial cuts'      % option.cut
+print >> config, '%r    ! detector cuts'      % option.cut
 
 try:
     with open('%s' % config_name,'w') as config_file:
