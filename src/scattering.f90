@@ -1071,9 +1071,9 @@ function dsigma(x, data, weights, channel, grids)
                         end if
 
                         call lhe_add_particle(-i,       1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
-                        call lhe_add_particle( 12,      1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
+                        call lhe_add_particle( i + 1,   1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
                         call lhe_add_particle( j,       1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: e-,  mu-, ta-
-                        call lhe_add_particle(-12,      1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
+                        call lhe_add_particle(-j - 1,   1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
 
                         call lhe_end_event
                     end do
