@@ -34,7 +34,7 @@ program generator
     ! time keeping
     integer, dimension(8) :: now
     real(kind = default) :: start_time, end_time
-    real(kind = default) :: integrate_start, integrate_end
+    real(kind = default) :: integrate_start, integrate_end, prelim_start, prelim_end
     real(kind = default) :: event_start, event_end
     integer :: ticks, num_proc, proc_id
 
@@ -208,10 +208,13 @@ program generator
             print*, "integration: creating VAMP grid with", calls(2, 1), "calls ..."
             call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
 
+            call cpu_time(prelim_start)
             print*, "integration: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
             call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), history = history, exc = exc)
             call handle_exception(exc)
+            call cpu_time(prelim_end)
+            print *, "integration: preliminary time = ", (prelim_end - prelim_start) / 60, "[mins]"
 
             print*, "integration: discarding preliminary integral with", calls(2, 2), "calls ..."
             call vamp_discard_integral(grid, num_calls = calls(2, 2))
@@ -297,6 +300,10 @@ program generator
 
         integral = integral / nweighted
         standard_dev = standard_dev / nweighted / nweighted
+
+        ! dilepton full!!!
+        integral = integral * 9
+        standard_dev = standard_dev * 9
 
         print *, "integration: integral = ", integral, "+/-", sqrt(standard_dev)
 
