@@ -1083,6 +1083,7 @@ function dsigma(x, data, weights, channel, grids)
         if (verbose) print*, "ddsigma: ", ddsigma
         dsigma = dsigma + ddsigma
     end do
+    dsigma = dsigma * 9
     if (verbose) print*, "dsigma: ", dsigma
     return
 end function dsigma
