@@ -738,9 +738,9 @@ function dsigma(x, data, weights, channel, grids)
             if (verbose) print*, "kinematics: applying detector cuts ..."
             do i = 3, nfinal
                 pt = sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i))
-                if (pt < 25) return
+                if (pt < 25.0) return
                 eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
-                if (abs(eta) > 2.5) return
+                if (abs(eta) > 3.0) return
             end do
         end if
 
