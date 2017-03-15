@@ -244,10 +244,10 @@ program generator
         end if
     else
         if (multichannel) then
-            print*, "reading vamp grids from ", grid_file
+            print*, "reading vamp grids from ", trim(grid_file)
             call vamp_read_grids(grids, grid_file)
         else
-            print*, "reading vamp grid from ", grid_file
+            print*, "reading vamp grid from ", trim(grid_file)
             call vamp_read_grid(grid, grid_file)
         end if
     end if
@@ -295,7 +295,7 @@ program generator
             if (.not. unweighted) call rootaddevent(weight)
             integral = integral + weight
             standard_dev = standard_dev + weight * weight
-            if (.not. batch) call progress_percentage(i)
+            if (.not. batch) call progress_bar(i)
         end do
 
         integral = integral / nweighted
@@ -353,7 +353,7 @@ program generator
                 event = dsigma(x, no_data)
                 if (ntuple_out) call rootaddevent(1.d0)
                 record_events = .false.
-                if (.not. batch) call progress_percentage(i)
+                if (.not. batch) call progress_bar(i)
             end do
             call cpu_time(event_end)
             print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"

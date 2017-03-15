@@ -24,21 +24,37 @@ subroutine progress_percentage(x)
 
     ratio = x / real(n)
     c = ratio * w
-    write(*,"(a11, i3, a1)") "progress: ", int(ratio * 100), "%";
+
+    write(*,"(1a1, a11, i3, a1)", advance = "no") char(13), "progress: ", int(ratio * 100), "%"
+    if (x == n) then
+        print*, ""
+    else 
+        write(*,"(1a1)", advance = "no") char(13)
+    end if
 end subroutine progress_percentage
 
 subroutine progress_bar(x)
-    integer :: x
-    ! if ((x .ne. n) .and. (mod(x, (n / 100 + 1)) .ne. 0)) return
+    integer :: x, c, i
+    real(kind=default) :: ratio
 
-    ! float ratio = x / (float) n;
-    ! unsigned int c = ratio * w;
+    if ((x .ne. n) .and. (mod(x, (n / 100 + 1)) .ne. 0)) return
 
-    ! std::cout << "progress: " << std::setw(3) << (int)(ratio * 100) << '%' << '[';
-    ! for (unsigned int i = 0; i < c; i++) std::cout << '=';
-    ! for (unsigned int i = c; i < w; i++) std::cout << ' ';
-    ! if (x == n) std::cout << '\n' << std::flush;
-    ! else std::cout << ']' << '\r' << std::flush;ma
+    ratio = x / real(n)
+    c = ratio * w
+
+    write(*,"(a2)", advance = "no") "["
+    do i = 0, c - 1
+        write(*,"(a1)", advance = "no") "#"
+    end do
+    do i = c, w -1
+        write(*,"(a1)", advance = "no") "-"
+    end do
+    write(*,"(a3, i3, a2)", advance = "no") "] (", int(ratio * 100), "%)"
+    if (x == n) then
+        print*, ""
+    else
+        write(*,"(1a1)", advance = "no") char(13)
+    end if
 end subroutine progress_bar
 
 end module progress
