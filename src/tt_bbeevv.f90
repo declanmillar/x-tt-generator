@@ -339,7 +339,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     complex(kind=complex) :: w1(6), w2(6), w3(6), w4(6), w5(6)
     complex(kind=complex) :: w6(6), w7(6), w8(6), w9(6), w10(6)
     complex(kind=complex) :: w11(6), w12(6), w13(6), w14(6), w15(6)
-    real(kind=default) :: atot2
+    real(kind=default) :: atot2, asum2
 
     ! initialise amplitudes
     do i = 1, ngraphs
@@ -380,6 +380,8 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     call iovxxx(w12, w14, w2, gg, amp(2))
     call iovxxx(w12, w11, w15, gg, amp(3))
 
+    ! old
+
     atot2 = 0.d0
     do i = 1, neigen
         atmp = (0.d0, 0.d0)
@@ -390,6 +392,41 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     enddo
 
     gg_tt_bbeevv = atot2
+
+
+    ! new
+
+    atot2 = 0.d0
+    do i = 1, neigen
+        atmp = (0.d0, 0.d0)
+        do j = 1, ngraphs
+            atmp = atmp + eigen_vec(j,i) * amp(j)
+        enddo
+        atot2 = atot2 + atmp * eigen_val(i) * conjg(atmp)
+    enddo
+
+    if (present(channel) .and. channel > 0) then
+
+        asum2 = 0.d0
+        do i = 1, neigen
+            atmp = (0.d0, 0.d0)
+            do j = 1, ngraphs
+                atmp = eigen_vec(j,i) * amp(j)
+                asum2 = asum2 + atmp * eigen_val(i) * conjg(atmp)
+            enddo
+        enddo
+
+        if (asum2 > 0) then
+            do i = 1, neigen
+                atmp = eigen_vec(channel,i) * amp(channel)
+                gg_tt_bbeevv = atmp * eigen_val(i) * conjg(atmp) * atot2 / asum2
+            end do
+        else
+            gg_tt_bbeevv = 0
+        end if
+    else
+        gg_tt_bbeevv = atot2
+    end if
 
 end function gg_tt_bbeevv
 
