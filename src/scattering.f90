@@ -293,8 +293,8 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: eta, pt
 
     ! arctan
-    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min
-    real(kind=default) :: at478, at478max, at478min, at78, at78max, at78min
+    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min, at34min
+    real(kind=default) :: at478, at478max, at478min, at78, at78max, at78min, at34max
 
     ! 4-momenta
     real(kind=default) :: p(4,8), p356(4), p478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4)
@@ -320,12 +320,20 @@ function dsigma(x, data, weights, channel, grids)
 
     if (verbose) print*, "dsigma: begin"
 
-
-
-    if (use_rambo) then
-        ecm = x(1) * (ecm_max - ecm_min) + ecm_min
-    else 
-        ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
+    if (channel == 3) then
+        at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
+        at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
+        if (use_rambo) then
+            ecm = x(1) * (at34max - at34min) + at34min
+        else 
+            ecm = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
+        end if
+    else
+        if (use_rambo) then
+            ecm = x(1) * (ecm_max - ecm_min) + ecm_min
+        else 
+            ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
+        end if
     end if
 
     shat = ecm * ecm
@@ -983,6 +991,8 @@ function dsigma(x, data, weights, channel, grids)
             else
                 ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
                 if (map_phase_space) then
+                    if (channel == 3) ddsigma = ddsigma*((ecm*ecm - xmass(1)*xmass(1))**2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
+                                      * (at34max - at34min) / ecm / xmass(1) / xwidth(1) / 2.d0
                     ddsigma = ddsigma * ((m356 * m356 - mt * mt)**2 + mt * mt * gamt * gamt) &
                                       * (at356max - at356min) / m356 / mt / gamt / 2.d0
                     ddsigma = ddsigma * ((m478 * m478 - mt * mt)**2 + mt * mt * gamt * gamt) &
