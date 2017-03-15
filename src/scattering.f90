@@ -1,3 +1,27 @@
+! x(16)=phi
+! x(15)=(x1-tau)/(1-tau),
+! x(14)=(ecm-rm3-rm4-rm5-rm6-rm7-rm8)/(ecm_max-rm3-rm4-rm5-rm6-rm7-rm8),
+
+
+! x(13)=(at356-at356min)/(at356max-at356min),
+! where at356=arctg((rm356**2-rmt**2)/rmt/gamt),
+! x(12)=(at478-at478min)/(at478max-at478min),
+! where at478=arctg((rm478**2-rmt**2)/rmt/gamt),
+! x(11)=(at56-at56min)/(at56max-at56min),
+! where at56=arctg((rm56**2-rmW**2)/rmW/gamW),
+! x(10)=(at78-at78min)/(at78max-at78min),
+! where at78=arctg((rm78**2-rmW**2)/rmW/gamW),
+
+! x(9)=cos(theta_cm_356)=-cos(theta_cm_478),
+! x(8)=cos(theta56_cm_356),
+! x(7)=cos(theta78_cm_478),
+! x(6)=cos(theta5_cm_56),
+! x(5)=cos(theta7_cm_78),
+! x(4)=phi56_cm_356,
+! x(3)=phi78_cm_478,
+! x(2)=phi5_cm_56,
+! x(1)=phi8_cm_78;
+
 module scattering
 
     use kinds
@@ -296,11 +320,14 @@ function dsigma(x, data, weights, channel, grids)
 
     if (verbose) print*, "dsigma: begin"
 
+
+
     if (use_rambo) then
         ecm = x(1) * (ecm_max - ecm_min) + ecm_min
     else 
         ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
     end if
+
     shat = ecm * ecm
     tau = shat / s
 
