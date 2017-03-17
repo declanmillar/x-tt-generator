@@ -203,7 +203,6 @@ function dsigma(x, data, weights, channel, grids)
 
     real(kind=default) :: qcm, pcm, qcm2
     real(kind=default) :: pq5, pq52, pq56, pq7, pq78
-    real(kind=default) :: rl356, rl478, rl56, rl78, rpl356, rpl478
     real(kind=default) :: rps, rps356, rps478
 
     ! transfer invariant masses
@@ -227,7 +226,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: eta, pt
 
     ! arctan
-    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min, at34min
+    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min, at34min, at34
     real(kind=default) :: at478, at478max, at478min, at78, at78max, at78min, at34max
 
     ! 4-momenta
@@ -254,23 +253,50 @@ function dsigma(x, data, weights, channel, grids)
 
     if (verbose) print*, "dsigma: begin"
 
-    if (channel == 3) then
-        at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
-        at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
-        if (use_rambo) then
-            ecm = x(1) * (at34max - at34min) + at34min
-        else 
-            ecm = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
+    if (present(channel) .and. (include_dd .or. include_uu) .and. (channel == 2 .or. channel == 3)) then
+        if (channel == 2) then
+            if (verbose) print*, "dsigma: flattening Breit Wigner" 
+            at34min = atan((ecm_min * ecm_min - zmass * zmass) / zmass / zwidth)
+            at34max = atan((ecm_max * ecm_max - zmass * zmass) / zmass / zwidth)
+            if (use_rambo) then
+                at34 = x(1) * (at34max - at34min) + at34min
+            else 
+                at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
+            end if
+            shat = zmass * zmass + tan(at34) * zmass * zwidth
+            if (shat < 0.d0) then
+                if (verbose) print*, "invalid"
+                return
+            end if
+            ecm = sqrt(shat)
+        else if (channel == 3) then
+            if (verbose) print*, "dsigma: flattening Breit Wigner" 
+            at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
+            at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / xmass(1) / xwidth(1))
+            if (use_rambo) then
+                at34 = x(1) * (at34max - at34min) + at34min
+            else 
+                at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
+            end if
+            shat = xmass(1) * xmass(1) + tan(at34) * xmass(1) * xwidth(1)
+            if (shat < 0.d0) then
+                if (verbose) print*, "invalid"
+                return
+            end if
+            ecm = sqrt(shat)
         end if
     else
+        if (verbose) print*, "dsigma: not flattening Breit Wigner" 
         if (use_rambo) then
             ecm = x(1) * (ecm_max - ecm_min) + ecm_min
         else 
             ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
         end if
+        shat = ecm * ecm
     end if
 
-    shat = ecm * ecm
+    if (verbose) print*, "dsigma: ecm calculated" 
+    
     tau = shat / s
 
     if (qq == 0.d0) qq = ecm
@@ -503,8 +529,7 @@ function dsigma(x, data, weights, channel, grids)
                     at356min = atan((m356min * m356min - mt * mt) / mt / gamt)
                     at356max = atan((m356max * m356max - mt * mt) / mt / gamt)
                     at356 = x(13) * (at356max - at356min) + at356min
-                    rl356 = tan(at356) * mt * gamt
-                    m356_2 = mt * mt + rl356
+                    m356_2 = mt * mt + tan(at356) * mt * gamt
                     if (m356_2 < 0.d0) then
                         if (verbose) print*, "invalid"
                         return
@@ -520,8 +545,7 @@ function dsigma(x, data, weights, channel, grids)
                     at478min = atan((m478min * m478min - mt * mt) / mt / gamt)
                     at478max = atan((m478max * m478max - mt * mt) / mt / gamt)
                     at478 = x(12) * (at478max - at478min) + at478min
-                    rl478 = tan(at478) * mt * gamt
-                    m478_2 = mt * mt + rl478
+                    m478_2 = mt * mt + tan(at478) * mt * gamt
                     if (m478_2 < 0.d0) then
                         if (verbose) print*, "invalid"
                         return
@@ -537,8 +561,7 @@ function dsigma(x, data, weights, channel, grids)
                     at56min = atan((m56min * m56min - wmass * wmass) / wmass / wwidth)
                     at56max = atan((m56max * m56max - wmass * wmass) / wmass / wwidth)
                     at56 = x(11) * (at56max - at56min) + at56min
-                    rl56 = tan(at56) * wmass * wwidth
-                    m56_2 = wmass * wmass + rl56
+                    m56_2 = wmass * wmass + tan(at56) * wmass * wwidth
                     if (m56_2 < 0.d0) then
                         if (verbose) print*, "invalid"
                         return
@@ -554,8 +577,7 @@ function dsigma(x, data, weights, channel, grids)
                     at78min = atan((m78min*m78min - wmass * wmass) / wmass / wwidth)
                     at78max = atan((m78max * m78max - wmass * wmass) / wmass / wwidth)
                     at78 = x(10) * (at78max - at78min) + at78min
-                    rl78 = tan(at78) * wmass * wwidth
-                    m78_2 = wmass * wmass + rl78
+                    m78_2 = wmass * wmass + tan(at78) * wmass * wwidth
                     if (m78_2 < 0.d0) then
                         if (verbose) print*, "invalid"
                         return
@@ -925,8 +947,16 @@ function dsigma(x, data, weights, channel, grids)
             else
                 ddsigma = ddsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0**(4 - 3 * (6)) * 2.d0 * pi
                 if (map_phase_space) then
-                    if (channel == 3) ddsigma = ddsigma*((ecm*ecm - xmass(1)*xmass(1))**2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
-                                      * (at34max - at34min) / ecm / xmass(1) / xwidth(1) / 2.d0
+                    if (present(channel) .and. (include_dd .or. include_uu)) then
+
+                        if (channel == 2) then
+                            ddsigma = ddsigma * ((ecm*ecm - zmass*zmass)**2 + zmass*zmass*zwidth*zwidth) &
+                                              * (at34max - at34min) / ecm / zmass / zwidth / 2.d0
+                        else if (channel == 3) then
+                            ddsigma = ddsigma * ((ecm*ecm - xmass(1)*xmass(1))**2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
+                                              * (at34max - at34min) / ecm / xmass(1) / xwidth(1) / 2.d0
+                        end if
+                    end if
                     ddsigma = ddsigma * ((m356 * m356 - mt * mt)**2 + mt * mt * gamt * gamt) &
                                       * (at356max - at356min) / m356 / mt / gamt / 2.d0
                     ddsigma = ddsigma * ((m478 * m478 - mt * mt)**2 + mt * mt * gamt * gamt) &
