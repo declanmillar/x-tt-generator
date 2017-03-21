@@ -86,7 +86,7 @@ program generator
     if (use_rambo) then
         ndimensions = 2
     else
-        if (final_state <= 0) then
+        if (final_state < 1) then
             ndimensions = 3
         else if (final_state > 0) then
             ndimensions = 16
@@ -113,7 +113,7 @@ program generator
                 domain(2, i) = 1.d0
             end do
         else
-            if (final_state <= 0) then
+            if (final_state < 1) then
                 do i = 3, 2, -1
                     domain(1, i) = 0.d0
                     domain(2, i) = 1.d0
@@ -164,7 +164,7 @@ program generator
             call vamp_print_history (histories, "multi")
 
             print *, "integration: integral = ", sigma, "+/-", error, " [pb]"
-            if (sigma <= 0) stop
+            if (sigma < 1) stop
 
             print*, "integration: discarding integral and re-sampling grid with ", calls(2, 2), "calls ..."
             call vamp_discard_integrals(grids, calls(2, 2))
@@ -184,7 +184,7 @@ program generator
             end do
 
             print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if (sigma <= 0) stop
+            if (sigma < 1) stop
 
             print*, "integration: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
             call vamp_discard_integrals(grids, calls(2, 3))
@@ -200,7 +200,7 @@ program generator
             call clear_exception(exc)
 
             print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if (sigma <= 0) stop
+            if (sigma < 1) stop
 
             call cpu_time(integrate_end)
             print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
@@ -242,7 +242,7 @@ program generator
             print *, "integration: integral = ", sigma, "+/-", error !, " (chi^2 = ", chi2, ")"
             call cpu_time(integrate_end)
             print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
-            if (sigma <= 0) stop
+            if (sigma < 1) stop
 
             print*, "integration: refining grid ..."
             call clear_exception(exc)
@@ -341,7 +341,7 @@ program generator
             call lhe_process(integral, sqrt(standard_dev), 1.d0, 9999)
         end if
 
-        if (final_state <= 0) then
+        if (final_state < 1) then
             print*, "initialisation: reset polarised arrays ..."
             do i = -1, +1, 2
                 do j = -1, +1, 2
@@ -373,7 +373,7 @@ program generator
             print *, "event generation: time = ", (event_end - event_start) / 60, "[mins]"
         end if
 
-        if (final_state <= 0) then
+        if (final_state < 1) then
             print *, "finalisation: calculating asymmetries for polarized final state"
             do i = -1, 1, 2
                 do j = -1, 1, 2
