@@ -315,11 +315,6 @@ function dsigma(x, data, weights, channel, grids)
     x1x2(2, 2) = xx1
 
     ! symmetrise phase space with x1 <-> x2
-    if (symmetrise) then
-        ixmax = 2
-    else
-        ixmax = 1
-    end if
 
     dsigma = 0.d0
     do ix = 1, ixmax

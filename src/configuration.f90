@@ -29,7 +29,6 @@ module configuration
   integer :: interference
   logical :: use_nwa
   logical :: multichannel
-  logical :: symmetrise
   logical :: use_rambo
   logical :: map_phase_space
   logical :: verbose
@@ -95,7 +94,6 @@ subroutine read_config
   read(5,*) use_rambo
   read(5,*) map_phase_space
   read(5,*) multichannel
-  read(5,*) symmetrise
   read(5,*) verbose
   read(5,*) ecm_low
   read(5,*) ecm_up
@@ -209,7 +207,6 @@ subroutine print_config
   print*, "unweighted events: ", unweighted
   print*, "apply detector cuts: ", cut
   print*, "multichannel: ", multichannel
-  print*, "symmetrise parton momentum fraction: ", symmetrise
   print*, "map phase space: ", map_phase_space
   print*, "collider energy: ", sqrts
   if (Ecm_low .ne. 0) print*, "Ecm low: ", ecm_low

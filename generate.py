@@ -32,7 +32,6 @@ parser.add_option("-X", "--include_x",          default = True,  action = "store
 parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
 parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
 parser.add_option("-M", "--multichannel",       default = False, action = "store_true",  help = "use multichannel integration")
-parser.add_option("-x", "--symmetrise",         default = False, action = "store_true",  help = "symmetrise phase space around x1<->x2 in integral")
 parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
 parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
@@ -121,7 +120,6 @@ if option.interference != 1: options += ".int%i" % option.interference
 if option.use_nwa: options += ".nwa"
 if option.multichannel: options += ".multi"
 if option.cut: options += ".cut"
-if option.symmetrise: options += ".symmetrised"
 if option.use_rambo: options += ".rambo"
 if option.include_background == False and option.flatten_integrand == False: options += ".unmapped"
 if option.energy_low != 0 or option.energy_up != 0: options += ".%s-%s" % (option.energy_low, option.energy_up)
@@ -249,7 +247,6 @@ print >> config, '%r    ! unweighted'         % option.unweighted
 print >> config, '%r    ! use rambo'          % option.use_rambo
 print >> config, '%r    ! map phase space'    % option.flatten_integrand
 print >> config, '%r    ! multichannel'       % option.multichannel
-print >> config, '%r    ! symmetrise'         % option.symmetrise
 print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up
