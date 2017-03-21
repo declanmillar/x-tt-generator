@@ -64,7 +64,7 @@ module configuration
 contains
 
 subroutine read_config
-  print*, "config: reading ..."
+  if (verbose) print*, "config: reading ..."
   read(5,*) ntuple_out
   read(5,*) lhef_out
   read(5,*) new_grid
@@ -107,7 +107,7 @@ subroutine modify_config
 
   integer :: i
 
-  print*, "config: interpreting ..."
+  if (verbose) print*, "config: interpreting ..."
 
   if (final_state <= 0) then
     nfinal = 4
@@ -176,14 +176,14 @@ end subroutine modify_config
 
 subroutine print_config
 
-  print*, "config: printing ..."
+  if (verbose) print*, "config: printing ..."
 
-  if (lhef_out) print*, "output: ", lhe_file
-  if (ntuple_out) print*, "output: ", ntuple_file
+  if (lhef_out) print*, "output: ", trim(lhe_file)
+  if (ntuple_out) print*, "output: ", trim(ntuple_file)
   if (new_grid) then 
-    print*, "output: ", grid_file
+    print*, "output: ", trim(grid_file)
   else
-    print*, "input:  ", grid_file
+    print*, "input:  ", trim(grid_file)
   end if
 
   if (initial_state == 0) then
@@ -217,13 +217,13 @@ subroutine print_config
   print*, "NWA: ", use_nwa
   print*, "RAMBO: ", use_rambo
   print*, "model: ", model_name
-  print*, "include gg: ", include_gg
-  print*, "include qq: ", include_qq
-  print*, "include uu: ", include_uu
-  print*, "include dd: ", include_dd
-  print*, "include A:  ", include_a
-  print*, "include Z:  ", include_z
-  print*, "include Z': ", include_x
+  print*, "include gg:   ", include_gg
+  print*, "include qq:   ", include_qq
+  print*, "include uu:   ", include_uu
+  print*, "include dd:   ", include_dd
+  print*, "include A:    ", include_a
+  print*, "include Z:    ", include_z
+  print*, "include Z':   ", include_x
   if (interference == 0) print*, "interference: (gamma) + (Z) + (Z')"
   if (interference == 1) print*, "interference: (gamma + Z + Z')"
   if (interference == 2) print*, "interference: (gamma + Z) + (Z')"

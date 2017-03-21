@@ -63,13 +63,13 @@ subroutine initialise_pdfs
     character(40) tablefile
     real(kind=default) :: alfas
 
-    print*, "initialisation: opening pdf tables ..."
+    if (verbose) print*, "scattering: opening pdf tables ..."
     if (ipdf <=  4) call setctq6(ipdf)
     if (ipdf == 10) tablefile = "ct14ln.pds"
     if (ipdf == 11) tablefile = "ct14ll.pds"
     if (ipdf >= 10) call setct14(tablefile)
 
-    print*, "initialisation: setting lambda_QCD based on PDF set ..."
+    if (verbose) print*, "scattering: setting lambda_QCD based on PDF set ..."
     if (ipdf ==  1) lambdaqcd4 = 0.326d0
     if (ipdf ==  2) lambdaqcd4 = 0.326d0
     if (ipdf ==  3) lambdaqcd4 = 0.326d0
@@ -82,7 +82,7 @@ subroutine initialise_pdfs
     if (ipdf == 10) lambdaqcd4 = 0.326d0
     if (ipdf == 11) lambdaqcd4 = 0.215d0
 
-    print*, "initialisation: using appropriately evolved alphas ..."
+    if (verbose) print*, "scattering: using appropriately evolved alphas ..."
     if (ipdf <= 2 .or. ipdf == 10) then
         nloops = 2
     else
@@ -105,7 +105,7 @@ end subroutine initialise_pdfs
 
 subroutine initialise_masses
 
-    print*, "initialisation: setting external particle masses ..."
+    if (verbose) print*, "scattering: setting external particle masses ..."
     if (final_state <= 0) then
         m3 = fmass(ffinal)
         m4 = fmass(ffinal)
@@ -125,7 +125,7 @@ subroutine initialise_masses
 end subroutine initialise_masses
 
 subroutine set_energy_limits
-    print*, "initialisation: setting energy limits ..."
+    if (verbose) print*, "scattering: setting energy limits ..."
     ecm_min = m3 + m4 + m5 + m6 + m7 + m8
     ecm_max = sqrts
     if (ecm_low > ecm_min) then
@@ -134,18 +134,18 @@ subroutine set_energy_limits
     if (ecm_up > 0) then
         ecm_max = ecm_up
     end if
-    print*, "initialisation: ecm_min = ", ecm_min
-    print*, "initialisation: ecm_max = ", ecm_max
+    if (verbose) print*, "scattering: ecm_min = ", ecm_min
+    if (verbose) print*, "scattering: ecm_max = ", ecm_max
 end subroutine set_energy_limits
 
 
 subroutine initialise_s
 
-    print*, "initialisation: setting s ..."
+    if (verbose) print*, "scattering: setting s ..."
 
     s = sqrts * sqrts
 
-    print*, "initialisation: s = ", s
+    if (verbose) print*, "scattering: s = ", s
 
 end subroutine initialise_s
 
@@ -245,6 +245,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: weight_pol(-1:1, -1:1), dsigmapol(-1:1, -1:1)
 
     integer :: seed
+    real(kind=default) :: random
 
     ! temporary iterators
     integer :: i, j
@@ -327,7 +328,6 @@ function dsigma(x, data, weights, channel, grids)
         x2 = x1x2(ix, 2)
 
         ! initialisation
-        ddsigma = 0.d0
         do i = 1, 100
             rmass(i) = 0.d0
             do j = 1, 4
@@ -423,7 +423,7 @@ function dsigma(x, data, weights, channel, grids)
             glu2 = x2 * ct14pdf(0, x2, qq)
         end if
 
-        ! initialise pdfs
+        if (verbose) print*, "initialising pdfs..."
         fx1(1) = d1
         fx1(2) = u1
         fx1(3) = str1
@@ -455,6 +455,7 @@ function dsigma(x, data, weights, channel, grids)
             fx2(i) = fx2(i) / x2
         end do
 
+        if (verbose) print*, "setting incoming 4-momenta ..."
         pcm = ecm / 2.d0
         p(4,1) = pcm
         p(3,1) = pcm
@@ -466,6 +467,7 @@ function dsigma(x, data, weights, channel, grids)
         p(1,2) = 0.d0
 
         if (use_rambo) then
+            if (verbose) print*, "setting RAMBO random number seed ..."
             call system_clock(seed) 
         end if
 
@@ -482,8 +484,8 @@ function dsigma(x, data, weights, channel, grids)
                 end do
             else
                 ! Calculate 2->2 final state momenta in the parton CoM frame manually
-
-                phi = 2.d0 * pi * x(16)
+                call random_number(random)
+                phi = 2.d0 * pi * random
                 ct = x(1)
                 st = sqrt(1.d0 - ct * ct)
 
@@ -725,6 +727,8 @@ function dsigma(x, data, weights, channel, grids)
             pcol(1,i) = p(1,i)
         end do
 
+        ! if (present(channel)) print*, "channel", channel
+
         if (cut) then
             if (verbose) print*, "kinematics: applying detector cuts ..."
             do i = 3, nfinal
@@ -782,17 +786,17 @@ function dsigma(x, data, weights, channel, grids)
         if (.not. include_gg .and. .not. include_qq .and. .not. include_uu .and. .not. include_dd) then
             if (verbose) print*, "matrix elements: setting |M|^2 = 1 and skipping ..."
             if (ix == 1) then
-                ddsigma = 0.5 / x1
+                ddsigma = 1.d0 / x1
             else if (ix == 2) then
-                ddsigma = 0.5 / x2
+                ddsigma = 1.d0 / x2
             end if
             if (final_state <= 0) then
                 do i = -1, 1, 2
                     do j = -1, 1, 2
                       if (ix == 1) then
-                          dsigmapol(i,j) = 0.5 / x1 / (2 * ddsigma)
+                          dsigmapol(i,j) = 0.25d0 / x1 / ddsigma
                       else if (ix == 2) then
-                          dsigmapol(i,j) = 0.5 / x2 / (2 * ddsigma)
+                          dsigmapol(i,j) = 0.25d0 / x2 / ddsigma
                       end if
                     end do
                 end do
@@ -803,6 +807,7 @@ function dsigma(x, data, weights, channel, grids)
         if (verbose) print*,  "matrix elements: calculate QCD coupling ..."
         gs2 = 4.d0 * pi * alfas(qq, lambdaqcd4, nloops)
         gs4 = gs2 * gs2
+        ! print*, "gs4 = ", gs4
 
         if (verbose) print*, "matrix elements: initialising ..."
         qcdqq = 0.d0
@@ -896,17 +901,18 @@ function dsigma(x, data, weights, channel, grids)
             end do
         else if (final_state > 0) then
             if (verbose) print*, "scattering: summing over 2->6 |m|^2 with PDFs of initial partons ..."
-            ddsigma = fx1(13) * fx2(13) * qcdgg &
-                    + fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
-                    + fx1( 2) * fx2( 8) * (qcdqq + qfduu1) &
-                    + fx1( 3) * fx2( 9) * (qcdqq + qfddd1) &
-                    + fx1( 4) * fx2(10) * (qcdqq + qfduu1) &
-                    + fx1( 5) * fx2(11) * (qcdqq + qfddd1) &
-                    + fx1( 7) * fx2( 1) * (qcdqq + qfddd2) &
-                    + fx1( 8) * fx2( 2) * (qcdqq + qfduu2) &
-                    + fx1( 9) * fx2( 3) * (qcdqq + qfddd2) &
-                    + fx1(10) * fx2( 4) * (qcdqq + qfduu2) &
-                    + fx1(11) * fx2( 5) * (qcdqq + qfddd2)
+            ! ddsigma = fx1(13) * fx2(13) * qcdgg &
+            !         + fx1( 1) * fx2( 7) * (qcdqq + qfddd1) &
+            !         + fx1( 2) * fx2( 8) * (qcdqq + qfduu1) &
+            !         + fx1( 3) * fx2( 9) * (qcdqq + qfddd1) &
+            !         + fx1( 4) * fx2(10) * (qcdqq + qfduu1) &
+            !         + fx1( 5) * fx2(11) * (qcdqq + qfddd1) &
+            !         + fx1( 7) * fx2( 1) * (qcdqq + qfddd2) &
+            !         + fx1( 8) * fx2( 2) * (qcdqq + qfduu2) &
+            !         + fx1( 9) * fx2( 3) * (qcdqq + qfddd2) &
+            !         + fx1(10) * fx2( 4) * (qcdqq + qfduu2) &
+            !         + fx1(11) * fx2( 5) * (qcdqq + qfddd2)
+            ddsigma = qcdqq
             if (ix == 1) then
                 ddsigma = ddsigma / x1
             else if (ix  ==  2) then

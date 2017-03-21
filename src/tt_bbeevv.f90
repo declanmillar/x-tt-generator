@@ -334,7 +334,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     ! local variables
     integer :: i, j
     real(kind=default) :: eigen_val(neigen), eigen_vec(ngraphs, neigen)
-    complex(kind=complex) :: atmp
+    complex(kind=complex) :: atmp, atmp2
     complex(kind=complex) :: amp(ngraphs)
     complex(kind=complex) :: w1(6), w2(6), w3(6), w4(6), w5(6)
     complex(kind=complex) :: w6(6), w7(6), w8(6), w9(6), w10(6)
@@ -380,22 +380,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     call iovxxx(w12, w14, w2, gg, amp(2))
     call iovxxx(w12, w11, w15, gg, amp(3))
 
-    ! old
-
-    atot2 = 0.d0
-    do i = 1, neigen
-        atmp = (0.d0, 0.d0)
-        do j = 1, ngraphs
-            atmp = atmp + eigen_vec(j,i) * amp(j)
-        enddo
-        atot2 = atot2 + atmp * eigen_val(i) * conjg(atmp)
-    enddo
-
-    gg_tt_bbeevv = atot2
-
-
     ! new
-
     atot2 = 0.d0
     do i = 1, neigen
         atmp = (0.d0, 0.d0)
@@ -407,20 +392,22 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
 
     if (present(channel) .and. channel > 0) then
 
-        asum2 = 0.d0
-        do i = 1, neigen
-            atmp = (0.d0, 0.d0)
-            do j = 1, ngraphs
-                atmp = eigen_vec(j,i) * amp(j)
-                asum2 = asum2 + atmp * eigen_val(i) * conjg(atmp)
-            enddo
-        enddo
+        asum2 = 1.d0
+        ! do i = 1, neigen
+        !     atmp = (0.d0, 0.d0)
+        !     do j = 1, ngraphs
+        !         atmp = eigen_vec(j,i) * amp(j)
+        !         asum2 = asum2 + atmp * eigen_val(i) * conjg(atmp)
+        !     enddo
+        ! enddo
 
         if (asum2 > 0) then
+            atmp2 = 0.d0
             do i = 1, neigen
-                atmp = eigen_vec(channel,i) * amp(channel)
-                gg_tt_bbeevv = atmp * eigen_val(i) * conjg(atmp) * atot2 / asum2
+                atmp = eigen_vec(channel, i) * amp(channel)
+                atmp2 = atmp2 + atmp * eigen_val(i) * conjg(atmp) ! * atot2 / asum2
             end do
+            gg_tt_bbeevv = atmp2
         else
             gg_tt_bbeevv = 0
         end if
@@ -722,7 +709,7 @@ function sqq_tt_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8)
             endif
         end if
     enddo
-    sqq_tt_bbeevv = sqq_tt_bbeevv/4d0
+    sqq_tt_bbeevv = sqq_tt_bbeevv / 4.d0
 end function sqq_tt_bbeevv
 
 
@@ -785,7 +772,7 @@ function qq_tt_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     do i = 1, neigen
         ztemp = (0.d0, 0.d0)
         do j = 1, ngraphs
-            ztemp = ztemp + eigen_vec(j,i)*amp(j)
+            ztemp = ztemp + eigen_vec(j,i) * amp(j)
         enddo
         qq_tt_bbeevv = qq_tt_bbeevv + ztemp*eigen_val(i) * conjg(ztemp)
     enddo

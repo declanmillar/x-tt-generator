@@ -162,7 +162,12 @@ elif option.final_state == 2:  final_state = "tt-blvbqq"
 elif option.final_state == 11: final_state = "bbtatavtvt"
 elif option.final_state == 12: final_state = "bbemuvevm"
 
-process = initial_partons + intermediates + final_state
+if initial_partons == "-" and option.final_state > 0:
+    process = "2-6-phase-space"
+elif initial_partons == "-" and option.final_state < 1:
+    process = "2-2-phase-space"
+else:
+    process = initial_partons + intermediates + final_state
 
 filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
 
