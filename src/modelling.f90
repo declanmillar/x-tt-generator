@@ -19,6 +19,8 @@ module modelling
   ! fermion masses and widths
   real(kind=default) :: fmass(12), fwidth(12), qmass(6), lmass(6)
 
+  real(kind=default) :: wmass2
+
   ! quark masses
   real(kind=default), parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0
   real(kind=default), parameter :: dmass = 0.d0, smass = 0.d0, bmass = 4.18d0
@@ -128,6 +130,8 @@ subroutine initialise_standard_model
   end if
 
   fwidth(12) = bwidth
+
+  wmass2 = wmass * wmass
 
   ! call SM HELAS couplings
   call coup1x(s2w, gw, gwwa, gwwZ)

@@ -37,9 +37,9 @@ parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
 parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_option("-i", "--initial_state",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
+parser.add_option("-i", "--ppbar",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
 parser.add_option("-N", "--iterations",         default = 10,        type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--ncall",              default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-n", "--npoints",              default = 1000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 1,         type = int,         help = "specify interference")
@@ -55,7 +55,7 @@ parser.add_option("-c", "--cut",                default = False, action = "store
 
 if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
 if option.energy < 0: sys.exit("error: collider energy must be positive definite\n" % usage)
-if option.ncall < 2: sys.exit("error: must have at least 2 VEGAS points\n%s" % usage)
+if option.npoints < 2: sys.exit("error: must have at least 2 sampling points\n%s" % usage)
 if option.energy_low < 0 or option.energy_up < 0: sys.exit("error: energy bounds must be positive definite")
 if option.energy_low > option.energy or option.energy_up > option.energy: sys.exit("error: energy bounds cannot exceed collider energy")
 if (option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= option.energy_low): sys.exit("error: energy upper bound must be greater than lower bound")
@@ -100,7 +100,7 @@ if option.final_state < 1:
 executable = "generator"
 options = ""
 
-if option.initial_state == 1:
+if option.ppbar == 1:
     options += ".ppbar"
 
 pdf = ""
@@ -224,7 +224,7 @@ print >> config, '%s'                         % ntuple_file
 print >> config, '%s'                         % lhe_file
 print >> config, '%s'                         % logfile
 print >> config, '%s'                         % grid_file
-print >> config, '%i    ! initial state'      % option.initial_state
+print >> config, '%i    ! initial state'      % option.ppbar
 print >> config, '%i    ! final state'        % option.final_state
 print >> config, '%s    ! model'              % option.model
 print >> config, '%i    ! pdf'                % option.pdf
@@ -241,7 +241,7 @@ print >> config, '%i    ! interference'       % option.interference
 print >> config, '%r    ! use nwa'            % option.use_nwa
 print >> config, '%i.d3 ! energy'             % option.energy
 print >> config, '%i    ! iterations'         % option.iterations
-print >> config, '%i    ! ncall'              % option.ncall
+print >> config, '%i    ! npoints'              % option.npoints
 print >> config, '%i    ! nevents'            % option.nevents
 print >> config, '%r    ! unweighted'         % option.unweighted
 print >> config, '%r    ! use rambo'          % option.use_rambo

@@ -30,7 +30,7 @@ module configuration
   logical :: use_nwa
   logical :: multichannel
   logical :: use_rambo
-  logical :: map_phase_space
+  logical :: flatten_integrand
   logical :: verbose
   real(kind=default) :: ecm_low, ecm_up
   integer :: ncall
@@ -93,7 +93,7 @@ subroutine read_config
   read(5,*) nevents
   read(5,*) unweighted
   read(5,*) use_rambo
-  read(5,*) map_phase_space
+  read(5,*) flatten_integrand
   read(5,*) multichannel
   read(5,*) verbose
   read(5,*) ecm_low
@@ -200,7 +200,7 @@ subroutine print_config
   print*,                       "unweighted:      ", unweighted
   print*,                       "detector cuts:   ", cut
   print*,                       "multichannel:    ", multichannel
-  print*,                       "flatten PS:      ", map_phase_space
+  print*,                       "flatten PS:      ", flatten_integrand
   print*,                       "collider energy: ", sqrts
   if (ecm_low .ne. 0) print*,   "Ecm low:         ", ecm_low
   if (ecm_up .ne. 0) print*,    "Ecm up:          ", ecm_up
