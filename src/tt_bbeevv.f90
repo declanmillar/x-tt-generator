@@ -380,7 +380,7 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
     call iovxxx(w12, w14, w2, gg, amp(2))
     call iovxxx(w12, w11, w15, gg, amp(3))
 
-    ! new
+    ! full square matrix element
     atot2 = 0.d0
     do i = 1, neigen
         atmp = (0.d0, 0.d0)
@@ -392,20 +392,22 @@ function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel, channel)
 
     if (present(channel) .and. channel > 0) then
 
-        asum2 = 1.d0
-        ! do i = 1, neigen
-        !     atmp = (0.d0, 0.d0)
-        !     do j = 1, ngraphs
-        !         atmp = eigen_vec(j,i) * amp(j)
-        !         asum2 = asum2 + atmp * eigen_val(i) * conjg(atmp)
-        !     enddo
-        ! enddo
+        ! sum of individual square amplitudes
+        asum2 = 0.d0
+        do i = 1, neigen
+            atmp = (0.d0, 0.d0)
+            do j = 1, ngraphs
+                atmp = eigen_vec(j,i) * amp(j)
+                asum2 = asum2 + atmp * eigen_val(i) * conjg(atmp)
+            enddo
+        enddo
 
-        if (asum2 > 0) then
+        ! individual square amplitude for this channel
+        if (asum2 > 0.d0) then
             atmp2 = 0.d0
             do i = 1, neigen
                 atmp = eigen_vec(channel, i) * amp(channel)
-                atmp2 = atmp2 + atmp * eigen_val(i) * conjg(atmp) ! * atot2 / asum2
+                atmp2 = atmp2 + atmp * eigen_val(i) * conjg(atmp) * atot2 / asum2
             end do
             gg_tt_bbeevv = atmp2
         else

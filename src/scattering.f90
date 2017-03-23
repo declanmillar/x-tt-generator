@@ -128,7 +128,7 @@ function dsigma(x, data, weights, channel, grids)
     ! requirements:
     !     HELAS subroutines
     !     VAMP Monte Carlo integration
-    !     CT10, CTEQ6 and MRS99 PDF subroutines
+    !     CT14, CTEQ6 and MRS99 PDF subroutines
     !     RootTuple for filling n-tuples
 
     ! authors:
@@ -147,7 +147,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default), dimension(:), intent(in), optional :: weights
     integer, intent(in), optional :: channel
     type(vamp_grid), dimension(:), intent(in), optional :: grids
-    real(kind=default), parameter :: unit_conv = 0.38937966d9 ! GeV^{-2} to nb (pb?)
+    real(kind=default), parameter :: unit_conv = 0.38937966d9
 
     ! alphas
     real(kind=default) :: alfas, gs4, gs2, a_s
@@ -156,11 +156,10 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: suu1, suu2, sdd1, sdd2, sqq, sgg
     real(kind=default) :: sgg_tt, sqq_tt, sqq_ff
     real(kind=default) :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
-    real(kind=default) :: sgg_bbtatavtvt, sqq_bbtatavtvt, suu_bbtatavtvt, sdd_bbtatavtvt
 
     ! pdfs
     real(kind=default) :: ctq6pdf, ct14pdf
-    real(kind=default) :: fx1(13), fx2(13), x1, x2, xx1, xx2, x1x2(2,2)
+    real(kind=default) :: fx1(13), fx2(13), x1, x2
     real(kind=default) :: d1, u1, str1, chm1, btm1, glu1
     real(kind=default) :: d2, u2, str2, chm2, btm2, glu2
     real(kind=default) :: dbar1, ubar1, dbar2, ubar2
@@ -210,7 +209,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: spolqq(-1:1, -1:1), spolgg(-1:1, -1:1)
     real(kind=default) :: spoluu1(-1:1, -1:1), spoldd1(-1:1, -1:1), spolbb1(-1:1, -1:1)
     real(kind=default) :: spoluu2(-1:1, -1:1), spoldd2(-1:1, -1:1), spolbb2(-1:1, -1:1)
-    real(kind=default) :: weight_pol(-1:1, -1:1), dsigmapol(-1:1, -1:1)
+    real(kind=default) :: weight_pol(-1:1, -1:1), dsigma_pol(-1:1, -1:1)
 
     integer :: seed
     real(kind=default) :: random
@@ -310,39 +309,48 @@ function dsigma(x, data, weights, channel, grids)
         end if
 
         ! *x for compatibility with MRS which return xf(x)
-        u1 = x1 * ctq6pdf(1, x1, scale)
-        d1 = x1 * ctq6pdf(2, x1, scale)
-        ubar1 = x1 * ctq6pdf(-1, x1, scale)
-        dbar1 = x1 * ctq6pdf(-2, x1, scale)
-        str1 = x1 * ctq6pdf(3, x1, scale)
-        chm1 = x1 * ctq6pdf(4, x1, scale)
-        btm1 = x1 * ctq6pdf(5, x1, scale)
-        glu1 = x1 * ctq6pdf(0, x1, scale)
-        u2 = x2 * ctq6pdf(1, x2, scale)
-        d2 = x2 * ctq6pdf(2, x2, scale)
-        ubar2 = x2 * ctq6pdf(-1, x2, scale)
-        dbar2 = x2 * ctq6pdf(-2, x2, scale)
-        str2 = x2 * ctq6pdf(3, x2, scale)
-        chm2 = x2 * ctq6pdf(4, x2, scale)
-        btm2 = x2 * ctq6pdf(5, x2, scale)
-        glu2 = x2 * ctq6pdf(0, x2, scale)
+        u1 = ctq6pdf(1, x1, scale)
+        d1 = ctq6pdf(2, x1, scale)
+        ubar1 = ctq6pdf(-1, x1, scale)
+        dbar1 = ctq6pdf(-2, x1, scale)
+        str1 = ctq6pdf(3, x1, scale)
+        chm1 = ctq6pdf(4, x1, scale)
+        btm1 = ctq6pdf(5, x1, scale)
+        glu1 = ctq6pdf(0, x1, scale)
+        u2 = ctq6pdf(1, x2, scale)
+        d2 = ctq6pdf(2, x2, scale)
+        ubar2 = ctq6pdf(-1, x2, scale)
+        dbar2 = ctq6pdf(-2, x2, scale)
+        str2 = ctq6pdf(3, x2, scale)
+        chm2 = ctq6pdf(4, x2, scale)
+        btm2 = ctq6pdf(5, x2, scale)
+        glu2 = ctq6pdf(0, x2, scale)
 
     else if (pdf > 4 .and. pdf < 10) then
         if ((x1 <= 1.d-5) .or. (x1 >= 1.d0)) return
         if ((x2 <= 1.d-5) .or. (x2 >= 1.d0)) return
         if ((scale * scale <= 1.25d0) .or. (scale * scale >= 1.d7)) return
 
-        call mrs99(x1, scale, pdf-4, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
-        call mrs99(x2, scale, pdf-4, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
+        call mrs99(x1, scale, pdf - 4, u1, d1, usea1, dsea1, str1, chm1, btm1, glu1)
+        call mrs99(x2, scale, pdf - 4, u2, d2, usea2, dsea2, str2, chm2, btm2, glu2)
 
-        u1 = u1 + usea1
-        d1 = d1 + dsea1
-        u2 = u2 + usea2
-        d2 = d2 + dsea2
-        ubar1 = usea1
-        dbar1 = dsea1
-        ubar2 = usea2
-        dbar2 = dsea2
+        ! /x for compatibility, as MRS return xf(x)
+        u1 = (u1 + usea1) / x1
+        d1 = (d1 + dsea1) / x1
+        ubar1 = usea1 / x1
+        dbar1 = dsea1 / x1
+        str1 = str1 / x1 
+        chm1 = chm1 / x1 
+        btm1 = btm1 / x1 
+        glu1 = glu1 / x1
+        u2 = (u2 + usea2) / x2
+        d2 = (d2 + dsea2) / x2
+        ubar2 = usea2 / x2
+        dbar2 = dsea2 / x2
+        str2 = str2 / x2 
+        chm2 = chm2 / x2 
+        btm2 = btm2 / x2 
+        glu2 = glu2 / x2 
     else if (pdf > 9) then
         if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) then
             if (verbose) print*, "invalid x1"
@@ -357,23 +365,22 @@ function dsigma(x, data, weights, channel, grids)
             return
         end if
 
-        ! *x for compatibility with MRS which return xf(x)
-        u1 = x1 * ct14pdf(1, x1, scale)
-        d1 = x1 * ct14pdf(2, x1, scale)
-        ubar1 = x1 * ct14pdf(-1, x1, scale)
-        dbar1 = x1 * ct14pdf(-2, x1, scale)
-        str1 = x1 * ct14pdf(3, x1, scale)
-        chm1 = x1 * ct14pdf(4, x1, scale)
-        btm1 = x1 * ct14pdf(5, x1, scale)
-        glu1 = x1 * ct14pdf(0, x1, scale)
-        u2 = x2 * ct14pdf(1, x2, scale)
-        d2 = x2 * ct14pdf(2, x2, scale)
-        ubar2 = x2 * ct14pdf(-1, x2, scale)
-        dbar2 = x2 * ct14pdf(-2, x2, scale)
-        str2 = x2 * ct14pdf(3, x2, scale)
-        chm2 = x2 * ct14pdf(4, x2, scale)
-        btm2 = x2 * ct14pdf(5, x2, scale)
-        glu2 = x2 * ct14pdf(0, x2, scale)
+        u1 = ct14pdf(1, x1, scale)
+        d1 = ct14pdf(2, x1, scale)
+        ubar1 = ct14pdf(-1, x1, scale)
+        dbar1 = ct14pdf(-2, x1, scale)
+        str1 = ct14pdf(3, x1, scale)
+        chm1 = ct14pdf(4, x1, scale)
+        btm1 = ct14pdf(5, x1, scale)
+        glu1 = ct14pdf(0, x1, scale)
+        u2 = ct14pdf(1, x2, scale)
+        d2 = ct14pdf(2, x2, scale)
+        ubar2 = ct14pdf(-1, x2, scale)
+        dbar2 = ct14pdf(-2, x2, scale)
+        str2 = ct14pdf(3, x2, scale)
+        chm2 = ct14pdf(4, x2, scale)
+        btm2 = ct14pdf(5, x2, scale)
+        glu2 = ct14pdf(0, x2, scale)
     end if
 
     if (verbose) print*, "initialising pdfs..."
@@ -390,23 +397,19 @@ function dsigma(x, data, weights, channel, grids)
     fx1(11) = fx1(5)
     fx1(12) = fx1(6)
     fx1(13) = glu1
-    fx2(1) = d2 * (1 - initial_state) + dbar2 * initial_state
-    fx2(2) = u2 * (1 - initial_state) + ubar2 * initial_state
+    fx2(1) = d2 * (1 - ppbar) + dbar2 * ppbar
+    fx2(2) = u2 * (1 - ppbar) + ubar2 * ppbar
     fx2(3) = str2
     fx2(4) = chm2
     fx2(5) = btm2
     fx2(6) = 0.d0
-    fx2(7) = d2 * initial_state + dbar2 * (1 - initial_state)
-    fx2(8) = u2 * initial_state + ubar2 * (1 - initial_state)
+    fx2(7) = d2 * ppbar + dbar2 * (1 - ppbar)
+    fx2(8) = u2 * ppbar + ubar2 * (1 - ppbar)
     fx2(9) = fx2(3)
     fx2(10) = fx2(4)
     fx2(11) = fx2(5)
     fx2(12) = fx2(6)
     fx2(13) = glu2
-    do i = 1, 13
-        fx1(i) = fx1(i) / x1
-        fx2(i) = fx2(i) / x2
-    end do
 
     if (verbose) print*, "setting incoming 4-momenta ..."
     pcm = ecm / 2.d0
@@ -438,12 +441,12 @@ function dsigma(x, data, weights, channel, grids)
         else
             ! Calculate 2->2 final state momenta in the parton CoM frame manually
             call random_number(random)
-            phi = 2.d0 * pi * random
+            phi = twopi * random
             ct = x(1)
             st = sqrt(1.d0 - ct * ct)
 
             ! magnitude of 3 momentum for products in general two body decay
-            qcm2 = ((ecm * ecm - m3 * m3 - m4 * m4)**2 - (2.d0 * m3 * m4)**2) / (4.d0 * ecm * ecm)
+            qcm2 = ((shat - m3 * m3 - m4 * m4) ** 2 - (2.d0 * m3 * m4) ** 2) / (4.d0 * shat)
             if (qcm2 < 0.d0) then
                 if (verbose) print*, "invalid qcm2"
                 return
@@ -476,7 +479,7 @@ function dsigma(x, data, weights, channel, grids)
                 end do
             end do
         else
-            phi = 2.d0 * pi * x(16)
+            phi = twopi * x(16)
 
             m356min = m3 + m5 + m6
             m356max = ecm - m4 - m7 - m8
@@ -563,7 +566,7 @@ function dsigma(x, data, weights, channel, grids)
             sf7 = sin(x(1))
 
             ! two body decay of s-channel mediating boson
-            q2 = ((ecm * ecm - m356 * m356 - m478 * m478)**2 - (2.d0 * m356 * m478)**2) / (4.d0 * ecm * ecm)
+            q2 = ((shat - m356 * m356 - m478 * m478) ** 2 - (2.d0 * m356 * m478) ** 2) / (4.d0 * shat)
             if (q2 < 0.d0) then
                 if (verbose) print*, "invalid"
                 return
@@ -581,7 +584,7 @@ function dsigma(x, data, weights, channel, grids)
             p478(4) = sqrt(q2 + m478 * m478)
 
             ! two body decay of the top
-            rq562 = ((m356 * m356 - m3 * m3 - m56 * m56)**2 - (2.d0 * m3 * m56)**2) / (4.d0 * m356 * m356)
+            rq562 = ((m356 * m356 - m3 * m3 - m56 * m56) ** 2 - (2.d0 * m3 * m56) ** 2) / (4.d0 * m356 * m356)
             if (rq562 < 0.d0) then
                 if (verbose) print*, "invalid"
                 return
@@ -603,7 +606,7 @@ function dsigma(x, data, weights, channel, grids)
             end do
 
             ! two body decay of the anti-top
-            rq782 = ((m478 * m478 - m4 * m4 - m78 * m78)**2 - (2.d0 * m4 * m78)**2) / (4.d0 * m478 * m478)
+            rq782 = ((m478 * m478 - m4 * m4 - m78 * m78) ** 2 - (2.d0 * m4 * m78) ** 2) / (4.d0 * m478 * m478)
             if (rq782 < 0.d0) then
                 if (verbose) print*, "invalid"
                 return
@@ -625,7 +628,7 @@ function dsigma(x, data, weights, channel, grids)
             end do
 
             ! two body decay of the W+
-            rq52 = ((m56 * m56 - m5 * m5 - m6 * m6)**2 - (2.d0 * m5 * m6)**2) / (4.d0 * m56 * m56)
+            rq52 = ((m56 * m56 - m5 * m5 - m6 * m6) ** 2 - (2.d0 * m5 * m6) ** 2) / (4.d0 * m56 * m56)
             if (rq52 < 0.d0) then
                 if (verbose) print*, "invalid"
                 return
@@ -647,7 +650,7 @@ function dsigma(x, data, weights, channel, grids)
             end do
 
             ! two body decay of the W-
-            rq72 = ((m78 * m78 - m7 * m7 - m8 * m8)**2 - (2.d0 * m7 * m8)**2) / (4.d0 * m78 * m78)
+            rq72 = ((m78 * m78 - m7 * m7 - m8 * m8) ** 2 - (2.d0 * m7 * m8) ** 2) / (4.d0 * m78 * m78)
             if (rq72 < 0.d0) then
                 if (verbose) print*, "invalid"
                 return
@@ -740,7 +743,7 @@ function dsigma(x, data, weights, channel, grids)
         if (final_state < 1) then
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                  dsigmapol(i,j) = 1.d0 / (x1 * dsigma)
+                  dsigma_pol(i,j) = 1.d0 / (x1 * dsigma)
                 end do
             end do
         end if
@@ -766,7 +769,7 @@ function dsigma(x, data, weights, channel, grids)
             spoldd1(i, j) = 0.d0
             spoluu2(i, j) = 0.d0
             spoldd2(i, j) = 0.d0
-            dsigmapol(i, j) = 0.d0
+            dsigma_pol(i, j) = 0.d0
             weight_pol(i, j) = 0.d0
         end do
     end do
@@ -819,7 +822,7 @@ function dsigma(x, data, weights, channel, grids)
         if (verbose) print*, "scattering: summing over 2->2 |m|^2 with pdfs of initial partons ..."
         do i = -1, 1, 2
             do j = -1, 1, 2
-                dsigmapol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
+                dsigma_pol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
                                + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
                                + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
                                + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
@@ -830,8 +833,8 @@ function dsigma(x, data, weights, channel, grids)
                                + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
                                + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
                                + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
-                dsigmapol(i, j) = dsigmapol(i, j) / x1
-                dsigma = dsigma + dsigmapol(i, j)
+                dsigma_pol(i, j) = dsigma_pol(i, j) / x1
+                dsigma = dsigma + dsigma_pol(i, j)
             end do
         end do
     else if (final_state > 0) then
@@ -855,7 +858,7 @@ function dsigma(x, data, weights, channel, grids)
     if (final_state < 1) then
         do i = -1, 1, 2
             do j = -1, 1, 2
-                dsigmapol(i, j) = dsigmapol(i, j) / dsigma
+                dsigma_pol(i, j) = dsigma_pol(i, j) / dsigma
             end do
         end do
     end if 
@@ -873,33 +876,36 @@ function dsigma(x, data, weights, channel, grids)
         if (use_rambo) then
             dsigma = dsigma * wgtr
         else
-            dsigma = dsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * 2.d0 * pi
+            ! dsigma = dsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * twopi
+            dsigma = dsigma * qcm / (2.d0 * pcm) * (-4) * twopi
         end if
-        dsigma = dsigma / (2.d0 * ecm * ecm) * (2.d0 * pi) ** (4 - 3 * 2)
+        ! dsigma = dsigma / (2.d0 * shat) * twopi ** (4 - 3 * 2)
+        dsigma = dsigma / (2.d0 * shat) * twopi ** (-2)
 
     else if (final_state > 0) then
         if (use_rambo) then
             dsigma = dsigma * wgtr
         else
-            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * 2.d0 * pi
+            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
+            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 0.015625 * twopi
             if (map_phase_space) then
                 if (present(channel) .and. (include_dd .or. include_uu)) then
 
                     if (channel == 2) then
-                        dsigma = dsigma * ((ecm*ecm - zmass*zmass)**2 + zmass*zmass*zwidth*zwidth) &
+                        dsigma = dsigma * ((ecm*ecm - zmass*zmass) ** 2 + zmass*zmass*zwidth*zwidth) &
                                         * (at34max - at34min) / (ecm * zmass * zwidth * 2.d0)
                     else if (channel == 3) then
-                        dsigma = dsigma * ((ecm*ecm - xmass(1)*xmass(1))**2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
+                        dsigma = dsigma * ((ecm*ecm - xmass(1)*xmass(1)) ** 2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
                                         * (at34max - at34min) / (ecm * xmass(1) * xwidth(1) * 2.d0)
                     end if
                 end if
-                dsigma = dsigma * ((m356 * m356 - mt * mt)**2 + mt * mt * gamt * gamt) &
+                dsigma = dsigma * ((m356 * m356 - mt * mt) ** 2 + mt * mt * gamt * gamt) &
                                 * (at356max - at356min) / (m356 * mt * gamt * 2.d0)
-                dsigma = dsigma * ((m478 * m478 - mt * mt)**2 + mt * mt * gamt * gamt) &
+                dsigma = dsigma * ((m478 * m478 - mt * mt) ** 2 + mt * mt * gamt * gamt) &
                                 * (at478max - at478min) / (m478 * mt * gamt * 2.d0)
-                dsigma = dsigma * ((m56 * m56 - wmass * wmass)**2 + wmass * wmass * wwidth * wwidth) &
+                dsigma = dsigma * ((m56 * m56 - wmass * wmass) ** 2 + wmass * wmass * wwidth * wwidth) &
                                 * (at56max - at56min) / (m56 * wmass * wwidth * 2.d0)
-                dsigma = dsigma * ((m78 * m78 - wmass * wmass)**2 + wmass * wmass * wwidth * wwidth) &
+                dsigma = dsigma * ((m78 * m78 - wmass * wmass) ** 2 + wmass * wmass * wwidth * wwidth) &
                                 * (at78max - at78min) / (m78 * wmass * wwidth * 2.d0)
                 dsigma = dsigma * gamt * gamt / (gamma_t * gamma_t) ! nwa
             else
@@ -910,7 +916,7 @@ function dsigma(x, data, weights, channel, grids)
             end if
         end if
 
-        dsigma = dsigma / (2.d0 * ecm * ecm) * (2.d0 * pi)**(4 - 3 * (6))
+        dsigma = dsigma / (2.d0 * shat) * twopi ** (-14)
     end if
 
     if (verbose) print*, "dsigma: ", dsigma
@@ -941,8 +947,8 @@ function dsigma(x, data, weights, channel, grids)
                 ! Compute polarised event weightings
                 do i = -1, 1, 2
                     do j = -1, 1, 2
-                        sigma_pol(i, j) = sigma_pol(i, j) + dsigma * dsigmapol(i, j)
-                        weight_pol(i, j) = dsigma * dsigmapol(i, j)
+                        sigma_pol(i, j) = sigma_pol(i, j) + dsigma * dsigma_pol(i, j)
+                        weight_pol(i, j) = dsigma * dsigma_pol(i, j)
                         error_pol(i, j) = error_pol(i, j) + sigma_pol(i, j) * sigma_pol(i, j)
                     end do
                 end do
@@ -964,6 +970,7 @@ function dsigma(x, data, weights, channel, grids)
             do i = 11, 15, 2
                 do j = 11, 15, 2
                     call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+
                     if (include_gg) then
                         call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
                         call lhe_add_particle( 21, -1,  0,  0, 102, 103, pcol(1:4,2)) ! 2:  g

@@ -133,14 +133,13 @@ program generator
                 end do
                 do i = 4, 1, -1
                     domain(1, i) = 0.d0
-                    domain(2, i) = 2.d0 * pi
+                    domain(2, i) = twopi
                 end do
             end if
         end if
 
         calls(:, 1) = (/itmx, ncall / 10 /)
         calls(:, 2) = (/itmx, ncall / 10 /)
-        ! calls(:, 2) = (/0, 0 /)
         calls(:, 3) = (/itmx, ncall /)
 
         call cpu_time(integrate_start) 
@@ -164,7 +163,7 @@ program generator
             call vamp_print_history (histories, "multi")
 
             print *, "integration: integral = ", sigma, "+/-", error, " [pb]"
-            if (sigma < 1) stop
+            if (sigma <= 0) stop
 
             print*, "integration: discarding integral and re-sampling grid with ", calls(2, 2), "calls ..."
             call vamp_discard_integrals(grids, calls(2, 2))
@@ -184,7 +183,7 @@ program generator
             end do
 
             print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if (sigma < 1) stop
+            if (sigma <= 0) stop
 
             print*, "integration: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
             call vamp_discard_integrals(grids, calls(2, 3))
@@ -200,7 +199,7 @@ program generator
             call clear_exception(exc)
 
             print *, "integration: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if (sigma < 1) stop
+            if (sigma <= 0) stop
 
             call cpu_time(integrate_end)
             print *, "integration: time = ", (integrate_end - integrate_start) / 60, "[mins]"
@@ -270,7 +269,7 @@ program generator
         print*, "process: calculating beam info ..."
 
         idbm(1) = 2212
-        if (initial_state == 0) then
+        if (ppbar == 0) then
             idbm(2) = 2212
         else
             idbm(2) = -2212

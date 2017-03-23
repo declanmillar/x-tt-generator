@@ -9,7 +9,7 @@ module configuration
   logical :: lhef_out
   logical :: new_grid
   real(kind=default) :: sqrts
-  integer :: initial_state
+  integer :: ppbar
   integer :: final_state
   integer :: pdf
   character(50) :: model_name
@@ -54,6 +54,7 @@ module configuration
 
   ! constants
   real(kind=default), parameter :: pi = 3.14159265358979323846d0
+  real(kind=default), parameter :: twopi = 6.283185307179586d0
 
   ! methods
   public :: read_config
@@ -71,7 +72,7 @@ subroutine read_config
   read(5,"(a)") lhe_file
   read(5,"(a)") log_file
   read(5,"(a)") grid_file
-  read(5,*) initial_state ! 0 = pp, 1 = ppbar
+  read(5,*) ppbar ! 0 = pp, 1 = ppbar
   read(5,*) final_state ! 1 = no decay, 1 = dilepton, 2 = semilepton, 4 = full hadron
   read(5,*) model_name
   read(5,*) pdf
@@ -184,11 +185,11 @@ subroutine print_config
     print*, "input:  ", trim(grid_file)
   end if
 
-  if (initial_state == 0) then
+  if (ppbar == 0) then
     if (final_state == -1) print*, "process:         ", "p p -> l+ l-"
     if (final_state ==  0) print*, "process:         ", "p p -> t t~"
     if (final_state ==  1) print*, "process:         ", "p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
-  else if (initial_state == 1) then
+  else if (ppbar == 1) then
     if (final_state == -1) print*, "process:         ", "p p~ -> l+ l-"
     if (final_state ==  0) print*, "process:         ", "p p~ -> t t~"
     if (final_state ==  1) print*, "process:         ", "p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
