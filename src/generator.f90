@@ -244,16 +244,16 @@ program generator
         end if
     else
         if (multichannel) then
-            print*, "reading vamp grids from ", trim(grid_file)
+            print*, "input VAMP grid: ", trim(grid_file)
             call vamp_read_grids(grids, grid_file)
         else
-            print*, "reading vamp grid from ", trim(grid_file)
+            print*, "input VAMP grid: ", trim(grid_file)
             call vamp_read_grid(grid, grid_file)
         end if
     end if
 
     if (nevents > 0) then
-        print*, "process: calculating beam info ..."
+        if (verbose) print*, "process: calculating beam info ..."
 
         idbm(1) = 2212
         if (ppbar == 0) then
@@ -269,7 +269,7 @@ program generator
 
         if (ntuple_out) then
             print*, "n-tuple: ", trim(ntuple_file)
-            print*, "initiating n-tuple ..."
+            if (verbose) print*, "initiating n-tuple ..."
             call rootinit(ntuple_file)
         end if
 
@@ -281,7 +281,7 @@ program generator
             nweighted = nevents
         end if
 
-        print*, "generator: calculating integral with", nweighted, " weighted events ..."
+        print*, "weighted events: ", nweighted
         if (.not. batch) call set_total(nweighted)
         do i = 1,  nweighted
             if (.not. unweighted) record_events = .true.
@@ -305,7 +305,7 @@ program generator
         sigma = sigma * 9
         error = error * 9
 
-        print *, "generator: integral = ", sigma, "+/-", sqrt(error)
+        print *, "sigma = ", sigma, "+/-", sqrt(error)
 
         if (ntuple_out) then
             call rootaddprocessdouble(idbm(1), "idbm1")
@@ -328,7 +328,7 @@ program generator
         end if
 
         if (final_state < 1) then
-            print*, "initialisation: reset polarised arrays ..."
+            if (verbose) print*, "initialisation: reset polarised arrays ..."
             do i = -1, +1, 2
                 do j = -1, +1, 2
                     sigma_pol(i, j) = 0.d0
@@ -338,7 +338,7 @@ program generator
         end if
 
         if (unweighted) then
-            print*, "generator: generating", nevents, " unweighted events ..."
+            print*, "unweighted events: ", nevents
             call cpu_time(time1)
             if (.not. batch) call set_total(nevents)
             do i = 1, nevents
@@ -356,11 +356,11 @@ program generator
                 if (.not. batch) call progress_bar(i)
             end do
             call cpu_time(time2)
-            print *, "event generation: time = ", (time2 - time1) / 60, "[mins]"
+            print *, "event generation time = ", (time2 - time1) / 60, "[mins]"
         end if
 
         if (final_state < 1) then
-            print *, "finalisation: calculating asymmetries for polarized final state"
+            if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
             do i = -1, 1, 2
                 do j = -1, 1, 2
                     sigma_pol(i, j) = sigma_pol(i, j) * sigma
@@ -377,35 +377,35 @@ program generator
             apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
             error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
         
-            print*, "ALL:", all, ":", error_all
-            print*, "AL:", al, ":", error_al
-            print*, "APV:", apv, ":", error_apv
+            print*, "ALL = ", all, "+/-", error_all
+            print*, "AL = ", al, "+/-", error_al
+            print*, "APV = ", apv, "+/-", error_apv
         end if
 
         if (ntuple_out) then
-            print*, "n-tuple: closing ..."
+            if (verbose) print*, "n-tuple: closing ..."
             call rootclose
         end if
 
         if (lhef_out) then
-            print*, "lhe: printing footer ..."
+            if (verbose) print*, "lhe: printing footer ..."
             call lhe_footer()
-            print*, "lhe: closing file ..."
+            if (verbose) print*, "lhe: closing file ..."
             call lhe_close
         end if
     else
-        print*, "skipping event generation"
+        if (verbose) print*, "skipping event generation"
     end if
 
     if (multichannel) then
         ! print *, "deleting grids ..."
         ! call vamp_delete_grids(grids)
     else
-        print *, "deleting grid ..."
+        if (verbose) print *, "deleting grid ..."
         call vamp_delete_grid(grid)
     end if
 
     call cpu_time(time3)
-    print*, "runtime: ", (time3 - time0) / 60, "[mins]"
+    print*, "runtime = ", (time3 - time0) / 60, "[mins]"
     stop
 end program generator
