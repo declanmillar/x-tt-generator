@@ -37,9 +37,9 @@ parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
 parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_option("-i", "--ppbar",      default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
+parser.add_option("-i", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
 parser.add_option("-N", "--iterations",         default = 10,        type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--npoints",              default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-n", "--npoints",            default = 1000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 100000,    type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 1,         type = int,         help = "specify interference")
@@ -256,7 +256,7 @@ print >> config, '%r    ! detector cuts'      % option.cut
 try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        print " config: %s" % config_name
+        if (option.verbose): print " config: %s" % config_name
 except IOERROR:
     sys.exit("error: Cannot write to %s" % config_name)
 

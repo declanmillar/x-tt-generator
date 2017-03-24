@@ -424,9 +424,9 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> qq = ", widthqq, " [GeV]"
-      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> ll = ", widthll, " [GeV]"
-      write(*,"(a10,i1,a10,f7.2,a6)") " width Z'(", n, ") -> ff = ", width, " [GeV]"
+      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->qq = ", widthqq, " [GeV]"
+      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->ll = ", widthll, " [GeV]"
+      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->ff = ", width, " [GeV]"
 
       if (z_mixing == 1) then
         if (verbose) print*, "modelling: calculating Z' mixing ..."
@@ -450,6 +450,8 @@ subroutine width_zprimes
       xwidth(n) = width
     end if
   end do
+  if (verbose) print*, "modelling: calculated Z' -> ff widths"
+
   return
 end subroutine width_zprimes
 
@@ -459,41 +461,42 @@ subroutine print_model
 
   if (verbose) print*, "modelling: printing model parameters ..."
 
-  write(*,"(a16,f7.2)") " m_b = ", fmass(12)
-  write(*,"(a16,f6.1)") " Gamma_b = ", fwidth(12)
-  write(*,"(a16,f6.1)") " m_t = ", fmass(11)
-  write(*,"(a16,f6.1)") " Gamma_t = ", fwidth(11)
-  write(*,"(a16,f7.2)") " m_Z = ", zmass
-  write(*,"(a16,f6.1)") " Gamma_Z = ", zwidth
-  write(*,"(a16,f6.1)") " m_W = ", wmass
-  write(*,"(a16,f7.2)") " Gamma_W = ", wwidth
-  write(*,"(a16,f6.1)") " m_h = ", hmass
-  write(*,"(a16,f11.6)") " Gamma_h = ", hwidth
+  write(*,"(a19,f7.2)") " m_b = ", fmass(12)
+  write(*,"(a19,f6.1)") " Gamma_b = ", fwidth(12)
+  write(*,"(a19,f6.1)") " m_t = ", fmass(11)
+  write(*,"(a19,f6.1)") " Gamma_t = ", fwidth(11)
+  write(*,"(a19,f7.2)") " m_Z = ", zmass
+  write(*,"(a19,f6.1)") " Gamma_Z = ", zwidth
+  write(*,"(a19,f6.1)") " m_W = ", wmass
+  write(*,"(a19,f7.2)") " Gamma_W = ", wwidth
+  write(*,"(a19,f6.1)") " m_h = ", hmass
+  write(*,"(a19,f11.6)") " Gamma_h = ", hwidth
 
   if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
-        write(*,"(a10,i1,a4,f7.2)") "m_Z'(", i,") = ", xmass(i)
-        write(*,"(a10,i1,a4,f7.2)") "Gamma_Z'(", i, ") = ", xwidth(i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_uZ'(", i, ") = ", gxu(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_uZ'(", i, ") = ", gxu(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_dZ'(", i, ") = ", gxd(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_dZ'(", i, ") = ", gxd(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_lZ'(", i, ") = ", gxl(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_lZ'(", i, ") = ", gxl(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_nZ'(", i, ") = ", gxn(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_nZ'(", i, ") = ", gxn(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_tZ'(", i, ") = ", gxt(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_tZ'(", i, ") = ", gxt(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_bZ'(", i, ") = ", gxb(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_bZ'(", i, ") = ", gxb(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_taZ'(", i, ") = ", gxl3(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_taZ'(", i, ") = ", gxl3(2,i)
-        write(*,"(a10,i1,a4,f8.3)") "gL_vtZ'(", i, ") = ", gxn3(1,i)
-        write(*,"(a10,i1,a4,f8.3)") "gR_vtZ'(", i, ") = ", gxn3(2,i)
+        write(*,"(a14,i1,a4,f7.2)") "m_Z'(", i,") = ", xmass(i)
+        write(*,"(a14,i1,a4,f7.2)") "Gamma_Z'(", i, ") = ", xwidth(i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_uZ'(", i, ") = ", gxu(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_uZ'(", i, ") = ", gxu(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_dZ'(", i, ") = ", gxd(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_dZ'(", i, ") = ", gxd(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_lZ'(", i, ") = ", gxl(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_lZ'(", i, ") = ", gxl(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_nZ'(", i, ") = ", gxn(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_nZ'(", i, ") = ", gxn(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_tZ'(", i, ") = ", gxt(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_tZ'(", i, ") = ", gxt(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_bZ'(", i, ") = ", gxb(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_bZ'(", i, ") = ", gxb(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_taZ'(", i, ") = ", gxl3(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_taZ'(", i, ") = ", gxl3(2,i)
+        write(*,"(a14,i1,a4,f8.3)") "gL_vtZ'(", i, ") = ", gxn3(1,i)
+        write(*,"(a14,i1,a4,f8.3)") "gR_vtZ'(", i, ") = ", gxn3(2,i)
       end if
     end do
   end if
+  print*, ""
 end subroutine print_model
 
 end module modelling

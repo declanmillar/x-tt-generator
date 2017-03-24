@@ -49,17 +49,18 @@ program generator
 
     call cpu_time(time0) 
     call date_and_time(values = now)
-    write(*,"(a7,     i4,      a1, i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
-            "time: ", now(1), "-", now(2), "-", now(3), " ", now(5), ":", now(6), ":", now(7)
+    write(*,"(a8,     i4,      a1, i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
+            "time = ", now(1), "-", now(2), "-", now(3), " ", now(5), ":", now(6), ":", now(7)
 
     call read_config
     call modify_config
     call print_config
-    call initialise_model
-    call initialise_masses
     call initialise_s
     call set_energy_limits
     call initialise_pdfs
+    call initialise_model
+    call initialise_masses
+    
 
     if (verbose) print*, "generator: initialising MPI ..."
     call mpi90_init()
@@ -204,7 +205,7 @@ program generator
             call vamp_create_history(history)
 
             call cpu_time(time1)
-            print*, "sampling points: ", calls(2, 1)
+            print*, "preliminary sampling points: ", calls(2, 1)
             call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
 
             print*, "preliminary sampling iterations:", calls(1, 1)
@@ -218,10 +219,10 @@ program generator
             print *, "preliminary sampling time = ", (time2 - time1) / 60, "[mins]"
 
             call cpu_time(time1)
-            print*, "sampling points: ", calls(2, 3)
+            print*, "full sampling points: ", calls(2, 3)
             call vamp_discard_integral(grid, num_calls = calls(2, 3))
 
-            print*, "full sampling iterations = ", calls(1, 3) - 1
+            print*, "full sampling iterations = ", calls(1, 3)
             call clear_exception(exc)
             call vamp_sample_grid(rng, grid, dsigma, calls(1, 3) - 1, sigma, error, chi2, exc = exc, &
                                   history = history(calls(1, 1) + 1:))

@@ -46,7 +46,7 @@ subroutine initialise_pdfs
     if (pdf ==  9) lambdaqcd4 = 0.383d0
     if (pdf == 10) lambdaqcd4 = 0.326d0
     if (pdf == 11) lambdaqcd4 = 0.215d0
-    write(*,"(a16,f5.3)") "Lambda_QCD^4 = ", lambdaqcd4
+    write(*,"(a19,f5.3)") "Lambda_QCD^4 = ", lambdaqcd4
 
     if (verbose) print*, "scattering: setting n_loops ..."
     if (pdf <= 2 .or. pdf == 10) then
@@ -54,18 +54,18 @@ subroutine initialise_pdfs
     else
         nloops = 1
     end if
-    write(*,"(a16,i1)")   "loops = ", nloops
+    write(*,"(a19,i1)")   "loops = ", nloops
 
     if (verbose) print*, "scattering: calculating  alpha_s(zmass) ..."
     a_s = alfas(zmass, lambdaqcd4, nloops)
-    write(*,"(a16,f5.3)") "alpha_s(m_Z) = ", a_s
+    write(*,"(a19,f5.3)") "alpha_s(m_Z) = ", a_s
 
     ! scale for the pdfs
     if (final_state >= 0) then
-        write(*,"(a25)") "Q = 2 * m_top"
+        write(*,"(a28)") "Q = 2 * m_top"
         scale = 2.d0 * mt
     else
-        write(*,"(a25)") "Q = Ecm"
+        write(*,"(a28)") "Q = Ecm"
         scale = 0.d0
     end if
 
@@ -825,16 +825,16 @@ function dsigma(x, data, weights, channel, grids)
         do i = -1, 1, 2
             do j = -1, 1, 2
                 dsigma_pol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
-                               + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
-                               + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
-                               + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
-                               + fx1( 4) * fx2(10) * (spolqq(i, j) + spoluu1(i, j)) &
-                               + fx1( 5) * fx2(11) * (spolqq(i, j) + spoldd1(i, j)) &
-                               + fx1( 7) * fx2( 1) * (spolqq(i, j) + spoldd2(i, j)) &
-                               + fx1( 8) * fx2( 2) * (spolqq(i, j) + spoluu2(i, j)) &
-                               + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
-                               + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
-                               + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
+                                + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
+                                + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
+                                + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
+                                + fx1( 4) * fx2(10) * (spolqq(i, j) + spoluu1(i, j)) &
+                                + fx1( 5) * fx2(11) * (spolqq(i, j) + spoldd1(i, j)) &
+                                + fx1( 7) * fx2( 1) * (spolqq(i, j) + spoldd2(i, j)) &
+                                + fx1( 8) * fx2( 2) * (spolqq(i, j) + spoluu2(i, j)) &
+                                + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
+                                + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
+                                + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
                 dsigma_pol(i, j) = dsigma_pol(i, j) / x1
                 dsigma = dsigma + dsigma_pol(i, j)
             end do
@@ -888,8 +888,8 @@ function dsigma(x, data, weights, channel, grids)
         if (use_rambo) then
             dsigma = dsigma * wgtr
         else
-            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
-            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
+            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
+            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
             if (flatten_integrand) then
                 if (present(channel) .and. (include_dd .or. include_uu)) then
 
