@@ -19,7 +19,7 @@ module modelling
   ! fermion masses and widths
   real(kind=default) :: fmass(12), fwidth(12), qmass(6), lmass(6)
 
-  real(kind=default) :: wmass2
+  real(kind=default) :: tmass2, wmass2
 
   ! quark masses
   real(kind=default), parameter :: umass = 0.d0, cmass = 0.d0, tmass = 172.5d0
@@ -30,7 +30,7 @@ module modelling
   real(kind=default), parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
 
   ! quark widths
-  real(kind=default), parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.3d0 ! 1.55d0
+  real(kind=default), parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.3d0
   real(kind=default), parameter :: dwidth = 0.d0,  swidth = 0.d0, bwidth = 0.d0
 
   ! lepton widths
@@ -39,9 +39,7 @@ module modelling
 
   ! SM boson masses
   real(kind=default), parameter :: wmass = 80.4d0, zmass = 91.19d0, wwidth = 2.08d0, zwidth = 2.5d0
-  real(kind=default), parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 0.31278d-2
-
-  real(kind=default) :: Gamma_t = twidth
+  real(kind=default), parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 3.1278d-3
 
   ! Other SM parameters
   real(kind=default), parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
@@ -123,7 +121,7 @@ subroutine initialise_standard_model
   fwidth(9)  = tauwidth
   fwidth(10) = nutauwidth
 
-  if (use_NWA) then
+  if (nwa) then
     fwidth(11) = 1.d-5
   else
     fwidth(11) = twidth
@@ -131,6 +129,7 @@ subroutine initialise_standard_model
 
   fwidth(12) = bwidth
 
+  tmass2 = tmass * tmass
   wmass2 = wmass * wmass
 
   ! call SM HELAS couplings
@@ -150,21 +149,15 @@ end subroutine initialise_standard_model
 
 subroutine initialise_zprimes
 
-  integer :: imodel_name, i
+  integer :: i
   integer, parameter :: mdl = 30
 
   call reset_zprimes
 
   if (verbose) print*, "modelling: initialising Z' parameters ..."
 
-  ! Extract model name from filename (Remove white space.)
-  imodel_name = len(model_name)
-  do while(model_name(imodel_name:imodel_name) == '')
-    imodel_name = imodel_name - 1
-  end do
-
   ! read model file
-  open(unit = mdl, file = 'Models/'//model_name(1:imodel_name)//'.mdl', status = 'old')
+  open(unit = mdl, file = 'Models/'//trim(model_name)//'.mdl', status = 'old')
   read(mdl, *) model_type
   if (model_type == 0) then
     read(mdl, *) xmass
@@ -206,9 +199,6 @@ subroutine initialise_zprimes
   ! Calculate benchmark widths
   call width_zprimes
 
-  ! igw = 0 ! don't include w width effects
-  ! call topwid(fmass(11), wmass, fmass(12), wwidth, igw, fwidth(11))
-  ! call printconstants
   return
 
 end subroutine initialise_zprimes
@@ -267,17 +257,17 @@ subroutine initialise_non_universal
   ! leptons
   gxl(1,1) = e / 2 / st * (sp / cp + sp * sp * sp * cp / (x * ct * ct) * (1 - 2 * st * st))
   gxn(1,1) = e / 2 / st * (-sp / cp - sp * sp * sp * cp / (x * ct * ct))
-  gxl3(1,1) = gxl(1,1) - e / 2 / st / sp / cp
-  gxn3(1,1) = gxn(1,1) + e / 2 / st / sp / cp
+  gxl3(1,1) = gxl(1,1) - e / (2 * st * sp * cp)
+  gxn3(1,1) = gxn(1,1) + e / (2 * st * sp * cp)
 
   ! quarks
-  gxu(1,1) = e / 2 / st * (-sp / cp - sp * sp * sp * cp / (x * ct * ct) * (1 - 4 * st * st / 3))
-  gxd(1,1) = e / 2 / st * (sp / cp + sp * sp * sp * cp / (x * ct * ct) * (1 - 2 * st * st / 3))
-  gxt(1,1) = gxu(1,1) + e / 2 / st / sp / cp
-  gxb(1,1) = gxd(1,1) - e / 2 / st / sp / cp
+  gxu(1,1) = e / (2 * st) * (-sp / cp - sp * sp * sp * cp / (x * ct * ct) * (1 - 4 * st * st / 3))
+  gxd(1,1) = e / (2 * st) * (sp / cp + sp * sp * sp * cp / (x * ct * ct) * (1 - 2 * st * st / 3))
+  gxt(1,1) = gxu(1,1) + e / (2 * st * sp * cp)
+  gxb(1,1) = gxd(1,1) - e / (2 * st * sp * cp)
 
   ! right handed couplings
-  gxl(2,1) = e / 2 * st * 2 * st * st * sp * sp * sp * cp / x / ct / ct
+  gxl(2,1) = e / 2 * st * 2 * st * st * sp * sp * sp * cp / (x * ct * ct)
   gxn(2,1) = 0
   gxl3(2,1) = gxl(2,1)
   gxn3(2,1) = gxn(2,1)
@@ -355,7 +345,7 @@ subroutine width_zprimes
   ctmix = sqrt(1.d0 - s2mix)
 
   cotw = ct / st
-  gz = e / ct / st
+  gz = e / (ct * st)
 
   do n = 1, 5
     width = 0.d0
@@ -424,9 +414,9 @@ subroutine width_zprimes
 
       width = widthqq + widthll
 
-      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->qq = ", widthqq, " [GeV]"
-      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->ll = ", widthll, " [GeV]"
-      write(*,"(a10,i1,a8,f7.2,a6)") " Gamma_Z'(", n, ")->ff = ", width, " [GeV]"
+      print*, " Gamma_Z'(", n, ")->qq = ", widthqq, " [GeV]"
+      print*, " Gamma_Z'(", n, ")->ll = ", widthll, " [GeV]"
+      print*, " Gamma_Z'(", n, ")->ff = ", width, " [GeV]"
 
       if (z_mixing == 1) then
         if (verbose) print*, "modelling: calculating Z' mixing ..."
@@ -443,8 +433,8 @@ subroutine width_zprimes
 
         width = width + widthww + widthzh
 
-        print*, "width Z'(", n, ") -> WW = ", widthww, " [GeV]"
-        print*, "width Z'(", n, ") -> hZ = ", widthzh, " [GeV]"
+        print*, "Gamma_Z'(", n, ") -> WW = ", widthww, " [GeV]"
+        print*, "Gamma_Z'(", n, ") -> hZ = ", widthzh, " [GeV]"
       end if
 
       xwidth(n) = width
@@ -461,38 +451,38 @@ subroutine print_model
 
   if (verbose) print*, "modelling: printing model parameters ..."
 
-  write(*,"(a19,f7.2)") " m_b = ", fmass(12)
-  write(*,"(a19,f6.1)") " Gamma_b = ", fwidth(12)
-  write(*,"(a19,f6.1)") " m_t = ", fmass(11)
-  write(*,"(a19,f6.1)") " Gamma_t = ", fwidth(11)
-  write(*,"(a19,f7.2)") " m_Z = ", zmass
-  write(*,"(a19,f6.1)") " Gamma_Z = ", zwidth
-  write(*,"(a19,f6.1)") " m_W = ", wmass
-  write(*,"(a19,f7.2)") " Gamma_W = ", wwidth
-  write(*,"(a19,f6.1)") " m_h = ", hmass
-  write(*,"(a19,f11.6)") " Gamma_h = ", hwidth
+  print*, "m_b = ", fmass(12)
+  print*, "Gamma_b = ", fwidth(12)
+  print*, "m_t = ", fmass(11)
+  print*, "Gamma_t = ", fwidth(11)
+  print*, "m_Z = ", zmass
+  print*, "Gamma_Z = ", zwidth
+  print*, "m_W = ", wmass
+  print*, "Gamma_W = ", wwidth
+  print*, "m_h = ", hmass
+  print*, "Gamma_h = ", hwidth
 
   if (include_x) then
     do i = 1, 5
       if (xmass(i) > 0) then
-        write(*,"(a14,i1,a4,f7.2)") "m_Z'(", i,") = ", xmass(i)
-        write(*,"(a14,i1,a4,f7.2)") "Gamma_Z'(", i, ") = ", xwidth(i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_uZ'(", i, ") = ", gxu(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_uZ'(", i, ") = ", gxu(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_dZ'(", i, ") = ", gxd(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_dZ'(", i, ") = ", gxd(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_lZ'(", i, ") = ", gxl(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_lZ'(", i, ") = ", gxl(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_nZ'(", i, ") = ", gxn(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_nZ'(", i, ") = ", gxn(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_tZ'(", i, ") = ", gxt(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_tZ'(", i, ") = ", gxt(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_bZ'(", i, ") = ", gxb(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_bZ'(", i, ") = ", gxb(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_taZ'(", i, ") = ", gxl3(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_taZ'(", i, ") = ", gxl3(2,i)
-        write(*,"(a14,i1,a4,f8.3)") "gL_vtZ'(", i, ") = ", gxn3(1,i)
-        write(*,"(a14,i1,a4,f8.3)") "gR_vtZ'(", i, ") = ", gxn3(2,i)
+        print*, "m_Z'(", i,") = ", xmass(i)
+        print*, "Gamma_Z'(", i, ") = ", xwidth(i)
+        print*, "gL_uZ'(", i, ") = ", gxu(1,i)
+        print*, "gR_uZ'(", i, ") = ", gxu(2,i)
+        print*, "gL_dZ'(", i, ") = ", gxd(1,i)
+        print*, "gR_dZ'(", i, ") = ", gxd(2,i)
+        print*, "gL_lZ'(", i, ") = ", gxl(1,i)
+        print*, "gR_lZ'(", i, ") = ", gxl(2,i)
+        print*, "gL_nZ'(", i, ") = ", gxn(1,i)
+        print*, "gR_nZ'(", i, ") = ", gxn(2,i)
+        print*, "gL_tZ'(", i, ") = ", gxt(1,i)
+        print*, "gR_tZ'(", i, ") = ", gxt(2,i)
+        print*, "gL_bZ'(", i, ") = ", gxb(1,i)
+        print*, "gR_bZ'(", i, ") = ", gxb(2,i)
+        print*, "gL_taZ'(", i, ") = ", gxl3(1,i)
+        print*, "gR_taZ'(", i, ") = ", gxl3(2,i)
+        print*, "gL_vtZ'(", i, ") = ", gxn3(1,i)
+        print*, "gR_vtZ'(", i, ") = ", gxn3(2,i)
       end if
     end do
   end if

@@ -11,8 +11,8 @@ module scattering
     public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
     logical, public :: record_events
     real(kind=default), public :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
-    real(kind=default), private :: m3, m4, m5, m6, m7, m8, mt, gamt, mt2
-    real(kind=default), private :: s, ecm_max, ecm_min, scale, a_s
+    real(kind=default), private :: m3, m4, m5, m6, m7, m8, gamt
+    real(kind=default), private :: s, ecm_max, ecm_min, scale, a_s, gs2, gs4
 
 contains
 
@@ -46,7 +46,7 @@ subroutine initialise_pdfs
     if (pdf ==  9) lambdaqcd4 = 0.383d0
     if (pdf == 10) lambdaqcd4 = 0.326d0
     if (pdf == 11) lambdaqcd4 = 0.215d0
-    write(*,"(a19,f5.3)") "Lambda_QCD^4 = ", lambdaqcd4
+    print*, "Lambda_QCD^4 = ", lambdaqcd4
 
     if (verbose) print*, "scattering: setting n_loops ..."
     if (pdf <= 2 .or. pdf == 10) then
@@ -54,18 +54,21 @@ subroutine initialise_pdfs
     else
         nloops = 1
     end if
-    write(*,"(a19,i1)")   "loops = ", nloops
+    print*, "loops = ", nloops
 
     if (verbose) print*, "scattering: calculating  alpha_s(zmass) ..."
     a_s = alfas(zmass, lambdaqcd4, nloops)
-    write(*,"(a19,f5.3)") "alpha_s(m_Z) = ", a_s
+    print*, "alpha_s(m_Z) = ", a_s
 
     ! scale for the pdfs
     if (final_state >= 0) then
-        write(*,"(a28)") "Q = 2 * m_top"
-        scale = 2.d0 * mt
+        print*, "Q = 2 * m_top"
+        scale = 2.d0 * tmass
+        if (verbose) print*,  "matrix elements: calculate QCD coupling ..."
+        gs2 = 4.d0 * pi * alfas(scale, lambdaqcd4, nloops)
+        gs4 = gs2 * gs2
     else
-        write(*,"(a28)") "Q = Ecm"
+        print*, "Q = Ecm"
         scale = 0.d0
     end if
 
@@ -87,10 +90,7 @@ subroutine initialise_masses
     m8 = 0.d0
 
     ! store top parameters
-    mt = fmass(ffinal)
     gamt = fwidth(ffinal)
-
-    mt2 = mt * mt
 
 end subroutine initialise_masses
 
@@ -152,7 +152,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default), parameter :: unit_conv = 0.38937966d9
 
     ! alphas
-    real(kind=default) :: alfas, gs4, gs2, a_s
+    real(kind=default) :: alfas
 
     ! square matrix elements
     real(kind=default) :: suu1, suu2, sdd1, sdd2, sqq, sgg
@@ -271,7 +271,12 @@ function dsigma(x, data, weights, channel, grids)
     
     tau = shat / s
 
-    if (scale == 0.d0) scale = ecm
+    if (scale == 0.d0) then
+        if (verbose) print*,  "matrix elements: setting scale, calculating QCD coupling ..."
+        scale = ecm
+        gs2 = 4.d0 * pi * alfas(scale, lambdaqcd4, nloops)
+        gs4 = gs2 * gs2
+    end if
 
     ! x1 and x2 of the partons
     if (use_rambo) then
@@ -486,10 +491,10 @@ function dsigma(x, data, weights, channel, grids)
             m356min = m3 + m5 + m6
             m356max = ecm - m4 - m7 - m8
             if (flatten_integrand) then
-                at356min = atan((m356min * m356min - mt2) / (mt * gamt))
-                at356max = atan((m356max * m356max - mt2) / (mt * gamt))
+                at356min = atan((m356min * m356min - tmass2) / (tmass * gamt))
+                at356max = atan((m356max * m356max - tmass2) / (tmass * gamt))
                 at356 = x(13) * (at356max - at356min) + at356min
-                m356_2 = mt2 + tan(at356) * mt * gamt
+                m356_2 = tmass2 + tan(at356) * tmass * gamt
                 if (m356_2 < 0.d0) then
                     if (verbose) print*, "invalid"
                     return
@@ -502,10 +507,10 @@ function dsigma(x, data, weights, channel, grids)
             m478min = m4 + m7 + m8
             m478max = ecm - m356
             if (flatten_integrand) then
-                at478min = atan((m478min * m478min - mt2) / (mt * gamt))
-                at478max = atan((m478max * m478max - mt2) / (mt * gamt))
+                at478min = atan((m478min * m478min - tmass2) / (tmass * gamt))
+                at478max = atan((m478max * m478max - tmass2) / (tmass * gamt))
                 at478 = x(12) * (at478max - at478min) + at478min
-                m478_2 = mt2 + tan(at478) * mt * gamt
+                m478_2 = tmass2 + tan(at478) * tmass * gamt
                 if (m478_2 < 0.d0) then
                     if (verbose) print*, "invalid"
                     return
@@ -677,7 +682,7 @@ function dsigma(x, data, weights, channel, grids)
 
     if (verbose) print*, "kinematics: boost initial and final state momenta to the collider frame ..."
     v = (x1 - x2) / (x1 + x2)
-    gamma = (x1 + x2) / 2.d0 / sqrt(x1 * x2)
+    gamma = (x1 + x2) / (2.d0 * sqrt(x1 * x2))
     do i = 1, nfinal
         pcol(4,i) = gamma * (p(4,i) + v * p(3,i))
         pcol(3,i) = gamma * (p(3,i) + v * p(4,i))
@@ -888,8 +893,8 @@ function dsigma(x, data, weights, channel, grids)
         if (use_rambo) then
             dsigma = dsigma * wgtr
         else
-            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
-            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
+            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
+            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
             if (flatten_integrand) then
                 if (present(channel) .and. (include_dd .or. include_uu)) then
 
@@ -901,15 +906,15 @@ function dsigma(x, data, weights, channel, grids)
                                         * (at34max - at34min) / (2 * ecm * xmass(1) * xwidth(1))
                     end if
                 end if
-                dsigma = dsigma * ((m356 * m356 - mt2) ** 2 + mt2 * gamt * gamt) &
-                                * (at356max - at356min) / (2 * m356 * mt * gamt)
-                dsigma = dsigma * ((m478 * m478 - mt2) ** 2 + mt2 * gamt * gamt) &
-                                * (at478max - at478min) / (2 * m478 * mt * gamt)
+                dsigma = dsigma * ((m356 * m356 - tmass2) ** 2 + tmass2 * gamt * gamt) &
+                                * (at356max - at356min) / (2 * m356 * tmass * gamt)
+                dsigma = dsigma * ((m478 * m478 - tmass2) ** 2 + tmass2 * gamt * gamt) &
+                                * (at478max - at478min) / (2 * m478 * tmass * gamt)
                 dsigma = dsigma * ((m56 * m56 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
                                 * (at56max - at56min) / (2 * m56 * wmass * wwidth)
                 dsigma = dsigma * ((m78 * m78 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
                                 * (at78max - at78min) / (2 * m78 * wmass * wwidth)
-                dsigma = dsigma * gamt * gamt / (gamma_t * gamma_t) ! nwa
+                if (nwa) dsigma = dsigma * gamt * gamt / (twidth * twidth)
             else
                 dsigma = dsigma * (m356max - m356min)
                 dsigma = dsigma * (m478max - m478min)

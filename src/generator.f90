@@ -55,11 +55,11 @@ program generator
     call read_config
     call modify_config
     call print_config
-    call initialise_s
-    call set_energy_limits
     call initialise_pdfs
     call initialise_model
     call initialise_masses
+    call initialise_s
+    call set_energy_limits
     
 
     if (verbose) print*, "generator: initialising MPI ..."
@@ -92,7 +92,7 @@ program generator
         if (verbose) print*, "generator: allocating domain with", ndimensions, "dimensions ..."
         allocate(weights(3))
         allocate(domain(2, ndimensions))
-        allocate(history(3 * itmx))
+        allocate(history(2 * itmx -1))
         allocate(histories(3 * itmx, size(weights)))
 
         if (verbose) print*, "generator: setting VAMP limits ..."
@@ -205,10 +205,10 @@ program generator
             call vamp_create_history(history)
 
             call cpu_time(time1)
-            print*, "preliminary sampling points: ", calls(2, 1)
+            print*, "prelim points = ", calls(2, 1)
             call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
 
-            print*, "preliminary sampling iterations:", calls(1, 1)
+            print*, "prelim iterations = ", calls(1, 1)
             call clear_exception(exc)
             call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), sigma, error, chi2, exc = exc, history = history)
             call handle_exception(exc)
@@ -216,13 +216,13 @@ program generator
             if (sigma <= 0) stop
 
             call cpu_time(time2)
-            print *, "preliminary sampling time = ", (time2 - time1) / 60, "[mins]"
+            print *, "prelim time = ", (time2 - time1) / 60, "[mins]"
 
             call cpu_time(time1)
-            print*, "full sampling points: ", calls(2, 3)
+            print*, "full points = ", calls(2, 3)
             call vamp_discard_integral(grid, num_calls = calls(2, 3))
 
-            print*, "full sampling iterations = ", calls(1, 3)
+            print*, "full iterations = ", calls(1, 3)
             call clear_exception(exc)
             call vamp_sample_grid(rng, grid, dsigma, calls(1, 3) - 1, sigma, error, chi2, exc = exc, &
                                   history = history(calls(1, 1) + 1:))
@@ -245,10 +245,10 @@ program generator
         end if
     else
         if (multichannel) then
-            print*, "input VAMP grid: ", trim(grid_file)
+            print*, "input VAMP grids = ", trim(grid_file)
             call vamp_read_grids(grids, grid_file)
         else
-            print*, "input VAMP grid: ", trim(grid_file)
+            print*, "input VAMP grid = ", trim(grid_file)
             call vamp_read_grid(grid, grid_file)
         end if
     end if
@@ -276,6 +276,9 @@ program generator
 
         sigma = 0.0
         error = 0.0
+        sigma_pol = 0.d0
+        error_pol = 0.d0
+
         if (unweighted) then
             nweighted = ncall
         else
@@ -300,65 +303,13 @@ program generator
         end do
 
         sigma = sigma / nweighted
-        error = error / nweighted / nweighted
+        error = error / (nweighted * nweighted)
 
         ! dilepton full!!!
-        sigma = sigma * 9
-        error = error * 9
+        ! sigma = sigma * 9
+        ! error = error * 9
 
         print *, "sigma = ", sigma, "+/-", sqrt(error)
-
-        if (ntuple_out) then
-            call rootaddprocessdouble(idbm(1), "idbm1")
-            call rootaddprocessdouble(idbm(2), "idbm2")
-            call rootaddprocessdouble(ebm(1), "ebm1")
-            call rootaddprocessdouble(ebm(2), "ebm2")
-            call rootaddprocessdouble(pdfg(1), "pdfg1")
-            call rootaddprocessdouble(pdfg(2), "pdfg2")
-            call rootaddprocessdouble(pdfs(1), "pdfs1")
-            call rootaddprocessdouble(pdfs(2), "pdfs2")
-            call rootaddprocessdouble(sigma, "cross_section")
-            call rootaddprocessdouble(sqrt(error), "cross_section_uncertainty")
-        end if
-
-        if (lhef_out) then
-            call lhe_open(lhe_file)
-            call lhe_header()
-            call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
-            call lhe_process(sigma, sqrt(error), 1.d0, 9999)
-        end if
-
-        if (final_state < 1) then
-            if (verbose) print*, "initialisation: reset polarised arrays ..."
-            do i = -1, +1, 2
-                do j = -1, +1, 2
-                    sigma_pol(i, j) = 0.d0
-                    error_pol(i, j) = 0.d0
-                end do
-            end do
-        end if
-
-        if (unweighted) then
-            print*, "unweighted events: ", nevents
-            call cpu_time(time1)
-            if (.not. batch) call set_total(nevents)
-            do i = 1, nevents
-                call clear_exception(exc)
-                if (multichannel) then
-                    call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
-                else
-                    call vamp_next_event(x, rng, grid, dsigma, exc = exc)
-                end if
-                call handle_exception(exc)
-                record_events = .true.
-                weight = dsigma(x, no_data)
-                if (ntuple_out) call rootaddevent(1.d0)
-                record_events = .false.
-                if (.not. batch) call progress_bar(i)
-            end do
-            call cpu_time(time2)
-            print *, "event generation time = ", (time2 - time1) / 60, "[mins]"
-        end if
 
         if (final_state < 1) then
             if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
@@ -381,6 +332,48 @@ program generator
             print*, "ALL = ", all, "+/-", error_all
             print*, "AL = ", al, "+/-", error_al
             print*, "APV = ", apv, "+/-", error_apv
+        end if
+
+        if (ntuple_out) then
+            call rootaddprocessdouble(idbm(1), "idbm1")
+            call rootaddprocessdouble(idbm(2), "idbm2")
+            call rootaddprocessdouble(ebm(1), "ebm1")
+            call rootaddprocessdouble(ebm(2), "ebm2")
+            call rootaddprocessdouble(pdfg(1), "pdfg1")
+            call rootaddprocessdouble(pdfg(2), "pdfg2")
+            call rootaddprocessdouble(pdfs(1), "pdfs1")
+            call rootaddprocessdouble(pdfs(2), "pdfs2")
+            call rootaddprocessdouble(sigma, "cross_section")
+            call rootaddprocessdouble(sqrt(error), "cross_section_uncertainty")
+        end if
+
+        if (lhef_out) then
+            call lhe_open(lhe_file)
+            call lhe_header()
+            call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
+            call lhe_process(sigma, sqrt(error), 1.d0, 9999)
+        end if
+
+        if (unweighted) then
+            print*, "unweighted events: ", nevents
+            call cpu_time(time1)
+            if (.not. batch) call set_total(nevents)
+            do i = 1, nevents
+                call clear_exception(exc)
+                if (multichannel) then
+                    call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
+                else
+                    call vamp_next_event(x, rng, grid, dsigma, exc = exc)
+                end if
+                call handle_exception(exc)
+                record_events = .true.
+                weight = dsigma(x, no_data)
+                if (ntuple_out) call rootaddevent(1.d0)
+                record_events = .false.
+                if (.not. batch) call progress_bar(i)
+            end do
+            call cpu_time(time2)
+            print *, "event generation time = ", (time2 - time1) / 60, "[mins]"
         end if
 
         if (ntuple_out) then

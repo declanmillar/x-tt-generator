@@ -27,7 +27,7 @@ module configuration
   logical :: include_z
   logical :: include_x
   integer :: interference
-  logical :: use_nwa
+  logical :: nwa
   logical :: multichannel
   logical :: use_rambo
   logical :: flatten_integrand
@@ -86,7 +86,7 @@ subroutine read_config
   read(5,*) include_z
   read(5,*) include_x
   read(5,*) interference
-  read(5,*) use_nwa ! 0 = actual top widths, 1 = tops in NWA
+  read(5,*) nwa ! 0 = actual top widths, 1 = tops in NWA
   read(5,*) sqrts
   read(5,*) itmx
   read(5,*) ncall
@@ -186,52 +186,49 @@ subroutine print_config
   end if
 
   if (ppbar == 0) then
-  if (final_state == -1) write(*,"(a18,a)") "process =  ", "p p -> l+ l-"
-  if (final_state ==  0) write(*,"(a18,a)") "process = ", "p p -> t t~"
-  if (final_state ==  1) write(*,"(a18,a)") "process = ", "p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
+  if (final_state == -1) print*, "process = ", "p p -> l+ l-"
+  if (final_state ==  0) print*, "process = ", "p p -> t t~"
+  if (final_state ==  1) print*, "process = ", "p p -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
   else if (ppbar == 1) then
-  if (final_state == -1) write(*,"(a18,a)") "process = ", "p p~ -> l+ l-"
-  if (final_state ==  0) write(*,"(a18,a)") "process = ", "p p~ -> t t~"
-  if (final_state ==  1) write(*,"(a18,a)") "process = ", "p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
+  if (final_state == -1) print*, "process = ", "p p~ -> l+ l-"
+  if (final_state ==  0) print*, "process = ", "p p~ -> t t~"
+  if (final_state ==  1) print*, "process = ", "p p~ -> t t~ -> b b~ W+ W- -> b b~ l+ l- vl vl~"
   end if
-  ! print*,                        "iterations =     ", itmx
-  ! print*,                        "points =         ", ncall
-  ! print*,                        "events =         ", nevents
-  write(*,"(a18,a)")              "model = ", model_name
-  if (pdf ==  1) print*,         "PDF =            ", "CTEQ6M"
-  if (pdf ==  2) print*,         "PDF =            ", "CTEQ6D"
-  if (pdf ==  3) print*,         "PDF =            ", "CTEQ6L"
-  if (pdf ==  4) print*,         "PDF =            ", "CTEQ6L1"
-  if (pdf ==  5) print*,         "PDF =            ", "MRST 99 (g up)"
-  if (pdf ==  6) print*,         "PDF =            ", "MRST 99 (g down)"
-  if (pdf ==  7) print*,         "PDF =            ", "MRST 99 (g up)"
-  if (pdf ==  8) print*,         "PDF =            ", "MRST 99 (g up)"
-  if (pdf ==  9) print*,         "PDF =            ", "MRST 99 (g up)"
-  if (pdf == 10) print*,         "PDF =            ", "CT14LN"
-  if (pdf == 11) print*,         "PDF =            ", "CT14LL"
-  print*,                        "unweighted =     ", unweighted
-  print*,                        "detector cuts =  ", cut
-  print*,                        "multichannel =   ", multichannel
-  print*,                        "flatten PS =     ", flatten_integrand
-  if (ecm_low .ne. 0) print*,    "Ecm low =        ", ecm_low
-  if (ecm_up .ne. 0) print*,     "Ecm up =         ", ecm_up
-  print*,                        "NWA =            ", use_nwa
-  print*,                        "RAMBO =          ", use_rambo
-  print*,                        "include gg =     ", include_gg
-  print*,                        "include qq =     ", include_qq
-  print*,                        "include uu =     ", include_uu
-  print*,                        "include dd =     ", include_dd
-  print*,                        "include A =      ", include_a
-  print*,                        "include Z =      ", include_z
-  print*,                        "include Z' =     ", include_x
+  print*, "model = ", model_name
+  if (pdf ==  1) print*, "PDF = ", "CTEQ6M"
+  if (pdf ==  2) print*, "PDF = ", "CTEQ6D"
+  if (pdf ==  3) print*, "PDF = ", "CTEQ6L"
+  if (pdf ==  4) print*, "PDF = ", "CTEQ6L1"
+  if (pdf ==  5) print*, "PDF = ", "MRST 99 (g up)"
+  if (pdf ==  6) print*, "PDF = ", "MRST 99 (g down)"
+  if (pdf ==  7) print*, "PDF = ", "MRST 99 (g up)"
+  if (pdf ==  8) print*, "PDF = ", "MRST 99 (g up)"
+  if (pdf ==  9) print*, "PDF = ", "MRST 99 (g up)"
+  if (pdf == 10) print*, "PDF = ", "CT14LN"
+  if (pdf == 11) print*, "PDF = ", "CT14LL"
+  print*, "unweighted = ", unweighted
+  print*, "detector cuts = ", cut
+  print*, "multichannel = ", multichannel
+  print*, "flatten integrand = ", flatten_integrand
+  if (ecm_low .ne. 0) print*, "Ecm low = ", ecm_low
+  if (ecm_up .ne. 0) print*, "Ecm up = ", ecm_up
+  print*, "NWA = ", nwa
+  print*, "RAMBO = ", use_rambo
+  print*, "include gg = ", include_gg
+  print*, "include qq = ", include_qq
+  print*, "include uu = ", include_uu
+  print*, "include dd = ", include_dd
+  print*, "include A = ", include_a
+  print*, "include Z = ", include_z
+  print*, "include Z' = ", include_x
   if (include_dd .and. include_uu) then
-  if (interference == 0) print*, "interference =   ", "(gamma) + (Z) + (Z')"
-  if (interference == 1) print*, "interference =   ", "(gamma + Z + Z')"
-  if (interference == 2) print*, "interference =   ", "(gamma + Z) + (Z')"
-  if (interference == 3) print*, "interference =   ", "(gamma + Z + Z') - (gamma) - (Z)"
-  if (interference == 4) print*, "interference =   ", "(gamma + Z + Z') - (gamma) - (Z) - (Z')"
+  if (interference == 0) print*, "interference = ", "(gamma) + (Z) + (Z')"
+  if (interference == 1) print*, "interference = ", "(gamma + Z + Z')"
+  if (interference == 2) print*, "interference = ", "(gamma + Z) + (Z')"
+  if (interference == 3) print*, "interference = ", "(gamma + Z + Z') - (gamma) - (Z)"
+  if (interference == 4) print*, "interference = ", "(gamma + Z + Z') - (gamma) - (Z) - (Z')"
   end if
-  print*,                        "collider energy =", sqrts
+  print*,                        "collider energy = ", sqrts
 end subroutine print_config
 
 end module configuration
