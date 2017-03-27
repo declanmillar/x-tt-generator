@@ -228,7 +228,7 @@ subroutine print_config
   if (interference == 3) print*, "interference = ", "(gamma + Z + Z') - (gamma) - (Z)"
   if (interference == 4) print*, "interference = ", "(gamma + Z + Z') - (gamma) - (Z) - (Z')"
   end if
-  print*,                        "collider energy = ", sqrts
+  print*, "collider energy = ", sqrts
 end subroutine print_config
 
 end module configuration

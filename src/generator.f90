@@ -49,7 +49,7 @@ program generator
 
     call cpu_time(time0) 
     call date_and_time(values = now)
-    write(*,"(a8,     i4,      a1, i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
+    write(*,"(a8,     i4,      a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
             "time = ", now(1), "-", now(2), "-", now(3), " ", now(5), ":", now(6), ":", now(7)
 
     call read_config
@@ -92,7 +92,7 @@ program generator
         if (verbose) print*, "generator: allocating domain with", ndimensions, "dimensions ..."
         allocate(weights(3))
         allocate(domain(2, ndimensions))
-        allocate(history(2 * itmx -1))
+        allocate(history(2 * itmx - 1))
         allocate(histories(3 * itmx, size(weights)))
 
         if (verbose) print*, "generator: setting VAMP limits ..."
@@ -111,7 +111,7 @@ program generator
                     domain(1, i) = -1.d0
                     domain(2, i) = 1.d0
                 end do
-            else if (final_state > 0) then
+            else
                 do i = 16, 10, -1
                     domain(1, i) = 0.d0
                     domain(2, i) = 1.d0
@@ -181,8 +181,8 @@ program generator
             !                        history = history(calls(1, 1) + calls(1, 2) + 1:), &
             !                        histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
             call vamp_sample_grids(rng, grids, dsigma, calls(1, 3), sigma, error, chi2, &
-                                   history = history(calls(1, 1) + calls(1, 2) + 1:), &
-                                   histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
+                                   history = history(calls(1, 1) + calls(1, 2):), &
+                                   histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
 
             print *, "generator: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
@@ -302,14 +302,18 @@ program generator
             if (.not. batch) call progress_bar(i)
         end do
 
+        print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
+
         sigma = sigma / nweighted
-        error = error / (nweighted * nweighted)
+        error = error / nweighted / nweighted
+
+        print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
 
         ! dilepton full!!!
-        ! sigma = sigma * 9
-        ! error = error * 9
+        sigma = sigma * 9
+        error = error * 9
 
-        print *, "sigma = ", sigma, "+/-", sqrt(error)
+        print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
 
         if (final_state < 1) then
             if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
@@ -355,7 +359,7 @@ program generator
         end if
 
         if (unweighted) then
-            print*, "unweighted events: ", nevents
+            print*, "unweighted events = ", nevents
             call cpu_time(time1)
             if (.not. batch) call set_total(nevents)
             do i = 1, nevents

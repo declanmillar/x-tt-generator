@@ -486,7 +486,6 @@ subroutine print_model
       end if
     end do
   end if
-  print*, ""
 end subroutine print_model
 
 end module modelling
