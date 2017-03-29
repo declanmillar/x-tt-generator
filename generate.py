@@ -198,15 +198,15 @@ else:
     grid = "grid"
 
 if option.unweighted:
-    weight = "unweighted"
+    wgt = ""
 else:
-    weight = "weighted"
+    wgt = ".wgt"
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
 handler_name = "%s.sh" % filename
-ntuple_file = "%s/%s.%s.root" % (data_directory, filename, weight)
-lhe_file = "%s/%s.%s.lhef" % (data_directory, filename, weight)
+ntuple_file = "%s/%s%s.root" % (data_directory, filename, wgt)
+lhe_file = "%s/%s%s.lhef" % (data_directory, filename, wgt)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)
 
 if os.path.isfile(grid_file): 

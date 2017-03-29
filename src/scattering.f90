@@ -25,7 +25,7 @@ end function phi
 
 subroutine initialise_pdfs
 
-    character(40) tablefile
+    character(40) :: tablefile(40)
     real(kind=default) :: alfas
 
     if (verbose) print*, "scattering: opening pdf tables ..."
@@ -768,18 +768,14 @@ function dsigma(x, data, weights, channel, grids)
     sdd1 = 0.d0
     suu2 = 0.d0
     sdd2 = 0.d0
-    do i = -1, 1
-        do j = -1, 1
-            spolqq(i, j) = 0.d0
-            spolgg(i, j) = 0.d0
-            spoluu1(i, j) = 0.d0
-            spoldd1(i, j) = 0.d0
-            spoluu2(i, j) = 0.d0
-            spoldd2(i, j) = 0.d0
-            dsigma_pol(i, j) = 0.d0
-            weight_pol(i, j) = 0.d0
-        end do
-    end do
+    spolqq = 0.d0
+    spolgg = 0.d0
+    spoluu1 = 0.d0
+    spoldd1 = 0.d0
+    spoluu2 = 0.d0
+    spoldd2 = 0.d0
+    dsigma_pol = 0.d0
+    weight_pol = 0.d0
 
     if (final_state < 1) then
         if (verbose) print*, "matrix elements: calculating 2 -> 2 ..."
