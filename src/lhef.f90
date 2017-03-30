@@ -27,7 +27,7 @@ end function mass
 
 subroutine lhe_open(lhe_file)
   character(*) lhe_file
-  if (verbose) print*, "lhe: opening lhe file ", trim(lhe_file), " ..." 
+  if (verbose) print*, "lhef:", trim(lhe_file)
   open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
   if (verbose) print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
