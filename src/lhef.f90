@@ -28,12 +28,12 @@ end function mass
 
 subroutine lhe_open(lhe_file)
   character(*) lhe_file
-  print*, "lhe: opening lhe file ", trim(lhe_file), " ..." 
+  if (verbose) print*, "lhe: opening lhe file ", trim(lhe_file), " ..." 
   open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
 end subroutine lhe_open
 
 subroutine lhe_header()
-  print*, "lhe: printing header ..."
+  if (verbose) print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") 'File generated with zprime-top-generator'
@@ -46,7 +46,7 @@ subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
   integer :: pdfg1, pdfg2 ! author group for beam 1 and 2 according to Cernlib PDFlib
   integer :: pdfs1, pdfs2 ! PDF set ID for beam 1 and 2 according to Cernlib PDFlib
   integer :: idwt ! master switch dictating how the event weights (XWGTUP) are interpreted
-  print*, "lhe: printing beam info ..."
+  if (verbose) print*, "lhe: printing beam info ..."
   write(lhe, "(a)") "<init>"
   write(lhe, "(i8,    i8,    eS14.6, eS14.6, i5,    i5,    i6,    i6,    i5,   i5)") &
                idbm1, idbm2, ebm1,   ebm2,   pdfg1, pdfg1, pdfs1, pdfs2, idwt, npr
@@ -57,7 +57,7 @@ subroutine lhe_process(xsec, xerr, xmax, lpr)
   real(kind=default) :: xerr ! the statistical error associated with the cross section of process j in pb
   real(kind=default) :: xmax ! the maximum xwgt for process j
   integer :: lpr ! a list of all user process IDs that can appear in idpr of hepe for this run
-  print*, "lhe: printing process info ..."
+  if (verbose) print*, "lhe: printing process info ..."
   write(lhe, "(ES14.6, ES14.6, ES14.6, I5)") xsec, xerr, xmax, lpr
   write(lhe, "(a)") "</init>"
 end subroutine lhe_process
@@ -98,11 +98,10 @@ subroutine lhe_end_event
   write(lhe, "(a)") "</event>"
 end subroutine lhe_end_event
 
-subroutine lhe_footer
-  write(lhe, "(a)") "</LesHouchesEvents>"
-end subroutine lhe_footer
-
 subroutine lhe_close
+  if (verbose) print*, "lhe: printing footer ..."
+  write(lhe, "(a)") "</LesHouchesEvents>"
+  if (verbose) print*, "lhe: closing file ..."
   close(lhe)
 end subroutine lhe_close
 

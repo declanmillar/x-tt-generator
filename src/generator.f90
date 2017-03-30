@@ -385,12 +385,7 @@ program generator
             call rootclose
         end if
 
-        if (lhef_out) then
-            if (verbose) print*, "lhe: printing footer ..."
-            call lhe_footer()
-            if (verbose) print*, "lhe: closing file ..."
-            call lhe_close
-        end if
+        if (lhef_out) call lhe_close
     else
         if (verbose) print*, "skipping event generation"
     end if
