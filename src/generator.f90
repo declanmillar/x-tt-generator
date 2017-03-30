@@ -269,7 +269,7 @@ program generator
         end do
 
         if (ntuple_out) then
-            print*, "n-tuple: ", trim(ntuple_file)
+            print*, "n-tuple = ", trim(ntuple_file)
             if (verbose) print*, "initiating n-tuple ..."
             call rootinit(ntuple_file)
         end if
