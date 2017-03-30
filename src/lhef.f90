@@ -10,7 +10,6 @@ module lhef
 
   ! subroutines
   public :: lhe_open
-  public :: lhe_header
   public :: lhe_beam
   public :: lhe_process
   public :: lhe_add_event
@@ -30,15 +29,12 @@ subroutine lhe_open(lhe_file)
   character(*) lhe_file
   if (verbose) print*, "lhe: opening lhe file ", trim(lhe_file), " ..." 
   open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
-end subroutine lhe_open
-
-subroutine lhe_header()
   if (verbose) print*, "lhe: printing header ..."
   write(lhe, "(a)") '<LesHouchesEvents version="1.0">'
   write(lhe, "(a)") '<!--'
   write(lhe, "(a)") 'File generated with zprime-top-generator'
   write(lhe, "(a)") '-->'
-end subroutine lhe_header
+end subroutine lhe_open
 
 subroutine lhe_beam(idbm1, idbm2, ebm1, ebm2, pdfg1, pdfg2, pdfs1, pdfs2, idwt)
   integer :: idbm1, idbm2 ! ID of beam particle 1 and 2 according to the PDG

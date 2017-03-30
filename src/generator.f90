@@ -353,7 +353,6 @@ program generator
 
         if (lhef_out) then
             call lhe_open(lhe_file)
-            call lhe_header()
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
             call lhe_process(sigma, sqrt(error), 1.d0, 9999)
         end if
@@ -390,10 +389,7 @@ program generator
         if (verbose) print*, "skipping event generation"
     end if
 
-    if (multichannel) then
-        ! print *, "deleting grids ..."
-        ! call vamp_delete_grids(grids)
-    else
+    if (.not. multichannel) then
         if (verbose) print *, "deleting grid ..."
         call vamp_delete_grid(grid)
     end if
