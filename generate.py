@@ -116,6 +116,7 @@ if option.pdf ==  9: pdf = "MRS9905"
 if option.pdf == 10: pdf = "CT14LN"
 if option.pdf == 11: pdf = "CT14LL"
 
+if not option.weighted: option.lhef = False
 if option.interference != 1: options += ".int%i" % option.interference
 if option.use_nwa: options += ".nwa"
 if option.multichannel: options += ".multi"
