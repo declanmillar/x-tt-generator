@@ -201,7 +201,7 @@ else:
 if option.unweighted:
     wgt = ""
 else:
-    wgt = ".wgt"
+    wgt = ".wgt.10M"
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
