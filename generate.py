@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # python run script for the generator
-# generates a config file, runs generator using it 
+# generates a config file, runs generator using it
 # locally or submit to the lxplus/iridis/qmul batch system
 # declan.millar@cern.ch
 
@@ -201,7 +201,7 @@ else:
 if option.unweighted:
     wgt = ""
 else:
-    wgt = ".wgt.10M"
+    wgt = ".wgt.2M"
 
 config_name = '%s/%s.cfg' % (data_directory, filename)
 logfile = "%s/%s.log" % (data_directory, filename)
@@ -210,7 +210,7 @@ ntuple_file = "%s/%s%s.root" % (data_directory, filename, wgt)
 lhe_file = "%s/%s%s.lhef" % (data_directory, filename, wgt)
 grid_file = "%s/%s.%s" % (data_directory, filename, grid)
 
-if os.path.isfile(grid_file): 
+if os.path.isfile(grid_file):
     new_grid = False
 else:
     new_grid = True
@@ -295,7 +295,7 @@ if option.batch:
     if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s.sh' % (option.queue, logfile, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
-    else: 
+    else:
         print "error: hostname not recognised"
 else:
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
