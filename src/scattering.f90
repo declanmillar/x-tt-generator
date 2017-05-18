@@ -227,12 +227,12 @@ function dsigma(x, data, weights, channel, grids)
 
     if (present(channel) .and. (include_dd .or. include_uu) .and. (channel == 2 .or. channel == 3)) then
         if (channel == 2) then
-            if (verbose) print*, "dsigma: flattening Breit Wigner" 
+            if (verbose) print*, "dsigma: flattening Breit Wigner"
             at34min = atan((ecm_min * ecm_min - zmass * zmass) / (zmass * zwidth))
             at34max = atan((ecm_max * ecm_max - zmass * zmass) / (zmass * zwidth))
             if (use_rambo) then
                 at34 = x(1) * (at34max - at34min) + at34min
-            else 
+            else
                 at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
             end if
             shat = zmass * zmass + tan(at34) * zmass * zwidth
@@ -242,12 +242,12 @@ function dsigma(x, data, weights, channel, grids)
             end if
             ecm = sqrt(shat)
         else if (channel == 3) then
-            if (verbose) print*, "dsigma: flattening Breit Wigner" 
+            if (verbose) print*, "dsigma: flattening Breit Wigner"
             at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
             at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
             if (use_rambo) then
                 at34 = x(1) * (at34max - at34min) + at34min
-            else 
+            else
                 at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
             end if
             shat = xmass(1) * xmass(1) + tan(at34) * xmass(1) * xwidth(1)
@@ -258,17 +258,17 @@ function dsigma(x, data, weights, channel, grids)
             ecm = sqrt(shat)
         end if
     else
-        if (verbose) print*, "dsigma: not flattening Breit Wigner" 
+        if (verbose) print*, "dsigma: not flattening Breit Wigner"
         if (use_rambo) then
             ecm = x(1) * (ecm_max - ecm_min) + ecm_min
-        else 
+        else
             ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
         end if
         shat = ecm * ecm
     end if
 
-    if (verbose) print*, "dsigma: ecm calculated" 
-    
+    if (verbose) print*, "dsigma: ecm calculated"
+
     tau = shat / s
 
     if (scale == 0.d0) then
@@ -346,18 +346,18 @@ function dsigma(x, data, weights, channel, grids)
         d1 = (d1 + dsea1) / x1
         ubar1 = usea1 / x1
         dbar1 = dsea1 / x1
-        str1 = str1 / x1 
-        chm1 = chm1 / x1 
-        btm1 = btm1 / x1 
+        str1 = str1 / x1
+        chm1 = chm1 / x1
+        btm1 = btm1 / x1
         glu1 = glu1 / x1
         u2 = (u2 + usea2) / x2
         d2 = (d2 + dsea2) / x2
         ubar2 = usea2 / x2
         dbar2 = dsea2 / x2
-        str2 = str2 / x2 
-        chm2 = chm2 / x2 
-        btm2 = btm2 / x2 
-        glu2 = glu2 / x2 
+        str2 = str2 / x2
+        chm2 = chm2 / x2
+        btm2 = btm2 / x2
+        glu2 = glu2 / x2
     else if (pdf > 9) then
         if ((x1 <= 1.d-9) .or. (x1 >= 1.d0)) then
             if (verbose) print*, "invalid x1"
@@ -431,7 +431,7 @@ function dsigma(x, data, weights, channel, grids)
 
     if (use_rambo) then
         if (verbose) print*, "setting RAMBO random number seed ..."
-        call system_clock(seed) 
+        call system_clock(seed)
     end if
 
     if (final_state < 1) then
@@ -516,7 +516,7 @@ function dsigma(x, data, weights, channel, grids)
                     return
                 end if
                 m478 = sqrt(m478_2)
-            else 
+            else
                 m478 = x(12) * (m478max - m478min) + m478min
             end if
 
@@ -864,7 +864,7 @@ function dsigma(x, data, weights, channel, grids)
                 dsigma_pol(i, j) = dsigma_pol(i, j) / dsigma
             end do
         end do
-    end if 
+    end if
 
     666 continue
 
@@ -880,7 +880,7 @@ function dsigma(x, data, weights, channel, grids)
             dsigma = dsigma * wgtr
         else
             ! dsigma = dsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * twopi
-            dsigma = dsigma * qcm  * twopi / (8 * pcm) 
+            dsigma = dsigma * qcm  * twopi / (8 * pcm)
         end if
         ! dsigma = dsigma / (2.d0 * shat) * twopi ** (4 - 3 * 2)
         dsigma = dsigma / (2.d0 * shat * twopi * twopi)
@@ -969,9 +969,9 @@ function dsigma(x, data, weights, channel, grids)
             pcol78 = pcol(1:4, 7) + pcol(1:4, 8)
             pcol356 = pcol56 + pcol(1:4, 3)
             pcol478 = pcol78 + pcol(1:4, 4)
-             
-            do i = 11, 15, 2
-                do j = 11, 15, 2
+
+            do i = 11, 13, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
+                do j = 11, 13, 2 ! loop over leptons
                     call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
 
                     if (include_gg) then
