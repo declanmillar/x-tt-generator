@@ -12,7 +12,7 @@ program generator
     !
     ! authors
     !   Declan Millar <declan.millar@cern.ch>
-    !   Stefano Moretti 
+    !   Stefano Moretti
 
     use kinds
     use progress
@@ -47,7 +47,7 @@ program generator
     type(vamp_grids) :: grids
     type(vamp_history), allocatable :: history(:), histories(:,:)
 
-    call cpu_time(time0) 
+    call cpu_time(time0)
     call date_and_time(values = now)
     write(*,"(a8,     i4,      a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
             "time = ", now(1), "-", now(2), "-", now(3), " ", now(5), ":", now(6), ":", now(7)
@@ -60,7 +60,7 @@ program generator
     call initialise_masses
     call initialise_s
     call set_energy_limits
-    
+
 
     if (verbose) print*, "generator: initialising MPI ..."
     call mpi90_init()
@@ -88,7 +88,7 @@ program generator
     if (new_grid) then
         if (verbose) print*, "generator: integrating using VAMP ..."
         record_events = .false.
-        
+
         if (verbose) print*, "generator: allocating domain with", ndimensions, "dimensions ..."
         allocate(weights(3))
         allocate(domain(2, ndimensions))
@@ -131,7 +131,7 @@ program generator
         calls(:, 2) = (/itmx, ncall / 10 /)
         calls(:, 3) = (/itmx, ncall /)
 
-        call cpu_time(time1) 
+        call cpu_time(time1)
 
         if (multichannel) then
 
@@ -141,7 +141,7 @@ program generator
             print*, "VAMP sampling points: ", calls(2, 1)
 
             weights = 1
-            call vamp_create_grids(grids, domain, calls(2, 1), weights) 
+            call vamp_create_grids(grids, domain, calls(2, 1), weights)
 
             print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
@@ -201,12 +201,12 @@ program generator
             if (verbose) print*, "saving vamp grid to ", grid_file
             call vamp_write_grids(grids, grid_file)
 
-        else 
+        else
             call vamp_create_history(history)
 
             call cpu_time(time1)
             print*, "prelim points = ", calls(2, 1)
-            call vamp_create_grid(grid, domain, num_calls = calls(2, 1)) 
+            call vamp_create_grid(grid, domain, num_calls = calls(2, 1))
 
             print*, "prelim iterations = ", calls(1, 1)
             call clear_exception(exc)
@@ -310,8 +310,8 @@ program generator
         print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
 
         ! dilepton full!!!
-        sigma = sigma * 9
-        error = error * 9
+        sigma = sigma
+        error = error
 
         print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
 
@@ -323,16 +323,16 @@ program generator
                     error_pol(i, j) = sigma_pol(i, j) * error
                 end do
             end do
-        
+
             all = (sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1)) / sigma
             error_all = (sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1)) / 4.d0 * all
-        
+
             al = (sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
             error_al = (sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1)) / 4.d0 * al
-        
+
             apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
             error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
-        
+
             print*, "ALL = ", all, "+/-", error_all
             print*, "AL = ", al, "+/-", error_al
             print*, "APV = ", apv, "+/-", error_apv
