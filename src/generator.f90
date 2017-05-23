@@ -279,63 +279,64 @@ program generator
         sigma_pol = 0.d0
         error_pol = 0.d0
 
-        if (unweighted) then
-            nweighted = ncall
-        else
+        if (.not. unweighted) then
+        !     nweighted = ncall
+        ! else
             nweighted = nevents
-        end if
+        ! end if
 
-        print*, "weighted events: ", nweighted
-        if (.not. batch) call set_total(nweighted)
-        do i = 1,  nweighted
-            if (.not. unweighted) record_events = .true.
-            call clear_exception (exc)
-            if (multichannel) then
-               call vamp_next_event(x, rng, grids, dsigma, phi, weight, exc = exc)
-            else
-               call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
-            end if
-            call handle_exception (exc)
-            if (.not. unweighted) call rootaddevent(weight)
-            sigma = sigma + weight
-            error = error + weight * weight
-            if (.not. batch) call progress_bar(i)
-        end do
+          print*, "weighted events: ", nweighted
+          if (.not. batch) call set_total(nweighted)
+          do i = 1,  nweighted
+              if (.not. unweighted) record_events = .true.
+              call clear_exception (exc)
+              if (multichannel) then
+                 call vamp_next_event(x, rng, grids, dsigma, phi, weight, exc = exc)
+              else
+                 call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
+              end if
+              call handle_exception (exc)
+              if (.not. unweighted) call rootaddevent(weight)
+              sigma = sigma + weight
+              error = error + weight * weight
+              if (.not. batch) call progress_bar(i)
+          end do
 
-        print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
+          print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
 
-        sigma = sigma / nweighted
-        error = error / nweighted / nweighted
+          sigma = sigma / nweighted
+          error = error / nweighted / nweighted
 
-        print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
+          print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
 
-        ! dilepton full!!!
-        sigma = sigma
-        error = error
+          ! dilepton full!!!
+          sigma = sigma
+          error = error
 
-        print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
+          print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
 
-        if (final_state < 1) then
-            if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
-            do i = -1, 1, 2
-                do j = -1, 1, 2
-                    sigma_pol(i, j) = sigma_pol(i, j) * sigma
-                    error_pol(i, j) = sigma_pol(i, j) * error
-                end do
-            end do
+          if (final_state < 1) then
+              if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
+              do i = -1, 1, 2
+                  do j = -1, 1, 2
+                      sigma_pol(i, j) = sigma_pol(i, j) * sigma
+                      error_pol(i, j) = sigma_pol(i, j) * error
+                  end do
+              end do
 
-            all = (sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1)) / sigma
-            error_all = (sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1)) / 4.d0 * all
+              all = (sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1)) / sigma
+              error_all = (sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1)) / 4.d0 * all
 
-            al = (sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
-            error_al = (sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1)) / 4.d0 * al
+              al = (sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
+              error_al = (sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1)) / 4.d0 * al
 
-            apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
-            error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
+              apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
+              error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
 
-            print*, "ALL = ", all, "+/-", error_all
-            print*, "AL = ", al, "+/-", error_al
-            print*, "APV = ", apv, "+/-", error_apv
+              print*, "ALL = ", all, "+/-", error_all
+              print*, "AL = ", al, "+/-", error_al
+              print*, "APV = ", apv, "+/-", error_apv
+          end if
         end if
 
         if (ntuple_out) then
@@ -352,6 +353,8 @@ program generator
         end if
 
         if (lhef_out) then
+            print*, "lhef = ", trim(lhe_file)
+            if (verbose) print*, "initiating lhef file ..."
             call lhe_open(lhe_file)
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
             call lhe_process(sigma, sqrt(error), 1.d0, 9999)
@@ -385,6 +388,13 @@ program generator
         end if
 
         if (lhef_out) call lhe_close
+
+        if (verbose) print*, "generator: updating vamp grid at ", grid_file
+        if (multichannel) then
+            call vamp_write_grids(grids, grid_file)
+        else
+            call vamp_write_grid(grid, grid_file)
+        end if
     else
         if (verbose) print*, "skipping event generation"
     end if
