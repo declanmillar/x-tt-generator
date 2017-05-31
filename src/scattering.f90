@@ -970,8 +970,8 @@ function dsigma(x, data, weights, channel, grids)
             pcol356 = pcol56 + pcol(1:4, 3)
             pcol478 = pcol78 + pcol(1:4, 4)
 
-            do i = 11, 11, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
-                do j = 11, 11, 2 ! loop over leptons
+            do i = 13, 13, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
+                do j = 13, 13, 2 ! loop over leptons
                     call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
 
                     if (include_gg) then
