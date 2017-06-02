@@ -233,11 +233,11 @@ lhe_file = "%s.lhef" % (events_path)
 if (new_grid):
     config_name = '%s.cfg' % (grid_path)
     logfile = "%s.log" % (grid_path)
-    handler_name = "%s.sh" % (grid_path)
+    handler_name = "%s.sh" % (grid_name)
 else:
     config_name = '%s.cfg' % (events_path)
     logfile = "%s.log" % (events_path)
-    handler_name = "%s.sh" % (events_path)
+    handler_name = "%s.sh" % (events_name)
 
 
 config = StringIO.StringIO()
