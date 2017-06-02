@@ -15,6 +15,7 @@ import random
 import glob
 import socket
 import time
+import fnmatch
 
 parser = optparse.OptionParser()
 parser.add_option("-D", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid if present.")
@@ -38,8 +39,8 @@ parser.add_option("-W", "--use_nwa",            default = False, action = "store
 parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
 parser.add_option("-i", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
-parser.add_option("-N", "--iterations",         default = 10,        type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--npoints",            default = 1000000,   type = int,         help = "number of VAMP calls")
+parser.add_option("-N", "--iterations",         default = 20,        type = int,         help = "number of VAMP iterations")
+parser.add_option("-n", "--npoints",            default = 2000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 10000,     type = int,         help = "number of events")
 parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
 parser.add_option("-I", "--interference",       default = 1,         type = int,         help = "specify interference")
@@ -62,7 +63,7 @@ if (option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= optio
 if option.interference < 0 or option.interference > 4: sys.exit("error: interference must be 0 - 4")
 if option.pdf < 1 or option.pdf > 11: sys.exit("error: pdf id must be 1 - 11")
 if option.include_background == False and option.include_signal == False: sys.exit("error: signal and background both off")
-if option.final_state < -1 or option.final_state > 3: sys.exit("error: invalid final state id" % option.final_state)
+# if option.final_state < -1 or option.final_state > 3: sys.exit("error: invalid final state id" % option.final_state)
 
 initial_states = 0
 if option.include_gg: initial_states += 1
@@ -140,26 +141,28 @@ if option.include_uu:
 initial_partons += "-"
 
 intermediates = ""
-if option.final_state < 2:
-    if option.include_a: intermediates += "A"
-    if option.include_z: intermediates += "Z"
-    if option.include_x: intermediates += "X"
-else:
-    if option.include_background == False and option.include_signal == True:
-        intermediates += "tt"
-    if option.include_background == True and option.include_signal == False:
-        intermediates += ".bkg-only"
+# if option.final_state < 2:
+if option.include_a: intermediates += "A"
+if option.include_z: intermediates += "Z"
+if option.include_x: intermediates += "X"
+# else:
+#     if option.include_background == False and option.include_signal == True:
+#         intermediates += "tt"
+#     if option.include_background == True and option.include_signal == False:
+#         intermediates += ".bkg-only"
 
 if len(intermediates) > 0:
     intermediates = intermediates + "-"
 
+grid_state = "tt-bbllvv"
 final_state = ""
 if   option.final_state == -1: final_state = "ll"
-elif option.final_state == 0:  final_state = "tt"
-elif option.final_state == 1:  final_state = "tt-bbllvv"
-elif option.final_state == 2:  final_state = "tt-blvbqq"
-elif option.final_state == 11: final_state = "bbtatavtvt"
-elif option.final_state == 12: final_state = "bbemuvevm"
+elif option.final_state ==  0: final_state = "tt"
+elif option.final_state ==  1: final_state = "tt-bbllvv"
+elif option.final_state == 11: final_state = "tt-bbeevv"
+elif option.final_state == 22: final_state = "tt-bbmumuvv"
+elif option.final_state == 33: final_state = "tt-bbtatavv"
+# elif option.final_state == 12: final_state = "bbemuvevm"
 
 if initial_partons == "-" and option.final_state > 0:
     process = "2-6-phase-space"
@@ -167,8 +170,10 @@ elif initial_partons == "-" and option.final_state < 1:
     process = "2-2-phase-space"
 else:
     process = initial_partons + intermediates + final_state
+    gridproc = initial_partons + intermediates + grid_state
 
-filename = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
+grid_name = '%s.%s.%sTeV.%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
+events_name = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
 
 home_directory = "."
 data_directory = "."
@@ -188,43 +193,61 @@ else:
     exit("error: unknown host")
 run_directory = home_directory + "zprime-top-generator"
 data_directory = data_directory + "zprime"
+grid_path = data_directory + "/" + grid_name
+
+datafiles = [f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f))]
+filtered = fnmatch.filter(datafiles, events_name + ".??.lhef")
+new_index = len(filtered) + 1
+events_name = events_name + ".%02d" % (len(filtered) + 1)
+
+events_path = data_directory + "/" + events_name
 
 if os.path.isdir(data_directory) is False:
     sys.exit("error: specified run directory '%s' does not exist" % run_directory)
     sys.exit("error: specified data directory '%s' does not exist" % data_directory)
 
 if option.multichannel:
-    grid = "grids"
+    grid = ".grids"
 else:
-    grid = "grid"
+    grid = ".grid"
 
 if option.unweighted:
     wgt = ""
 else:
-    wgt = ".wgt.2M"
+    wgt = ".wgt"
 
-config_name = '%s/%s.cfg' % (data_directory, filename)
-logfile = "%s/%s.log" % (data_directory, filename)
-handler_name = "%s.sh" % filename
-ntuple_file = "%s/%s%s.root" % (data_directory, filename, wgt)
-lhe_file = "%s/%s%s.lhef" % (data_directory, filename, wgt)
-grid_file = "%s/%s.%s" % (data_directory, filename, grid)
+events_path = events_path + wgt
+grid_file = "%s%s" % (grid_path, grid)
 
 if os.path.isfile(grid_file):
     new_grid = False
 else:
     new_grid = True
+
 if option.overwrite:
     new_grid = True
+
+ntuple_file = "%s.root" % (events_path)
+lhe_file = "%s.lhef" % (events_path)
+
+if (new_grid):
+    config_name = '%s.cfg' % (grid_path)
+    logfile = "%s.log" % (grid_path)
+    handler_name = "%s.sh" % (grid_path)
+else:
+    config_name = '%s.cfg' % (events_path)
+    logfile = "%s.log" % (events_path)
+    handler_name = "%s.sh" % (events_path)
+
 
 config = StringIO.StringIO()
 print >> config, '%r    ! ntuple'             % option.ntuple
 print >> config, '%r    ! lhef'               % option.lhef
 print >> config, '%r    ! new_grid'           % new_grid
-print >> config, '%s'                         % ntuple_file
-print >> config, '%s'                         % lhe_file
-print >> config, '%s'                         % logfile
 print >> config, '%s'                         % grid_file
+print >> config, '%s'                         % logfile
+print >> config, '%s'                         % lhe_file
+print >> config, '%s'                         % ntuple_file
 print >> config, '%i    ! initial state'      % option.ppbar
 print >> config, '%i    ! final state'        % option.final_state
 print >> config, '%s    ! model'              % option.model
@@ -242,7 +265,7 @@ print >> config, '%i    ! interference'       % option.interference
 print >> config, '%r    ! use nwa'            % option.use_nwa
 print >> config, '%i.d3 ! energy'             % option.energy
 print >> config, '%i    ! iterations'         % option.iterations
-print >> config, '%i    ! npoints'              % option.npoints
+print >> config, '%i    ! npoints'            % option.npoints
 print >> config, '%i    ! nevents'            % option.nevents
 print >> config, '%r    ! unweighted'         % option.unweighted
 print >> config, '%r    ! use rambo'          % option.use_rambo
@@ -257,7 +280,7 @@ print >> config, '%r    ! detector cuts'      % option.cut
 try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        if (option.verbose): print " config: %s" % config_name
+        print " config: %s" % config_name
 except IOERROR:
     sys.exit("error: Cannot write to %s" % config_name)
 

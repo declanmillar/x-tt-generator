@@ -239,6 +239,7 @@ program generator
         call cpu_time(time2)
         print *, "generator: time = ", (time2 - time1) / 60, "[mins]"
         print *, "generator: complete"
+
     else
         if (multichannel) then
             print*, "input VAMP grids = ", trim(grid_file)
