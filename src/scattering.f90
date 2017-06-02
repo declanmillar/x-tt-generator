@@ -970,59 +970,159 @@ function dsigma(x, data, weights, channel, grids)
             pcol356 = pcol56 + pcol(1:4, 3)
             pcol478 = pcol78 + pcol(1:4, 4)
 
-            do i = 13, 13, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
-                do j = 13, 13, 2 ! loop over leptons
-                    call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+            ! do i = 13, 13, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
+            !     do j = 13, 13, 2 ! loop over leptons
+            !         call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+            !
+            !         if (include_gg) then
+            !             call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
+            !             call lhe_add_particle( 21, -1,  0,  0, 102, 103, pcol(1:4,2)) ! 2:  g
+            !             call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+            !             call lhe_add_particle( -6,  2,  1,  2,   0, 103, pcol478    ) ! 4:  t~
+            !             call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+            !             call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+            !             call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+            !             call lhe_add_particle( -5,  1,  4,  0,   0, 103, pcol(1:4,4)) ! 8:  b~
+            !         end if
+            !
+            !         if (include_qq) then
+            !             call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+            !             call lhe_add_particle( -1, -1,  0,  0,   0, 102, pcol(1:4,2)) ! 2:  d~
+            !             call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+            !             call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+            !             call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+            !             call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+            !             call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+            !             call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            !         end if
+            !
+            !         if (include_dd) then
+            !             call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+            !             call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  d~
+            !         end if
+            !
+            !         if (include_uu) then
+            !             call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  u
+            !             call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  u~
+            !         end if
+            !
+            !         if (include_dd .or. include_uu) then
+            !             call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    ) ! 3:  t
+            !             call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+            !             call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+            !             call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3)) ! 6:  b
+            !             call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+            !             call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            !         end if
+            !
+            !         call lhe_add_particle(-i,       1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
+            !         call lhe_add_particle( i + 1,   1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
+            !         call lhe_add_particle( j,       1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: e-,  mu-, ta-
+            !         call lhe_add_particle(-j - 1,   1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
+            !
+            !         call lhe_end_event
+            !     end do
+            ! end do
 
-                    if (include_gg) then
-                        call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
-                        call lhe_add_particle( 21, -1,  0,  0, 102, 103, pcol(1:4,2)) ! 2:  g
-                        call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
-                        call lhe_add_particle( -6,  2,  1,  2,   0, 103, pcol478    ) ! 4:  t~
-                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
-                        call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
-                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
-                        call lhe_add_particle( -5,  1,  4,  0,   0, 103, pcol(1:4,4)) ! 8:  b~
-                    end if
+            call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
 
-                    if (include_qq) then
-                        call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
-                        call lhe_add_particle( -1, -1,  0,  0,   0, 102, pcol(1:4,2)) ! 2:  d~
-                        call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
-                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
-                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
-                        call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
-                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
-                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
-                    end if
+            if (include_gg) then
+                call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
+                call lhe_add_particle( 21, -1,  0,  0, 102, 103, pcol(1:4,2)) ! 2:  g
+                call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 103, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 103, pcol(1:4,4)) ! 8:  b~
+            end if
 
-                    if (include_dd) then
-                        call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
-                        call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  d~
-                    end if
+            if (include_qq) then
+                call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+                call lhe_add_particle( -1, -1,  0,  0,   0, 102, pcol(1:4,2)) ! 2:  d~
+                call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            end if
 
-                    if (include_uu) then
-                        call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  u
-                        call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  u~
-                    end if
+            if (include_dd) then
+                call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+                call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  d~
+            end if
 
-                    if (include_dd .or. include_uu) then
-                        call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    ) ! 3:  t
-                        call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
-                        call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
-                        call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3)) ! 6:  b
-                        call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
-                        call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
-                    end if
+            if (include_uu) then
+                call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  u
+                call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  u~
+            end if
 
-                    call lhe_add_particle(-i,       1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
-                    call lhe_add_particle( i + 1,   1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
-                    call lhe_add_particle( j,       1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: e-,  mu-, ta-
-                    call lhe_add_particle(-j - 1,   1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
+            if (include_dd .or. include_uu) then
+                call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            end if
 
-                    call lhe_end_event
-                end do
-            end do
+            call lhe_add_particle(-13,      1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
+            call lhe_add_particle(14,       1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
+            call lhe_add_particle( 1,       1,  7,  0, 104,   0, pcol(1:4,7)) ! 11: d
+            call lhe_add_particle(-2,       1,  7,  0,   0, 104, pcol(1:4,8)) ! 12: u~
+
+            call lhe_end_event
+
+            call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+
+            if (include_gg) then
+                call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
+                call lhe_add_particle( 21, -1,  0,  0, 102, 103, pcol(1:4,2)) ! 2:  g
+                call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 103, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 103, pcol(1:4,4)) ! 8:  b~
+            end if
+
+            if (include_qq) then
+                call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+                call lhe_add_particle( -1, -1,  0,  0,   0, 102, pcol(1:4,2)) ! 2:  d~
+                call lhe_add_particle(  6,  2,  1,  2, 101,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 101,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            end if
+
+            if (include_dd) then
+                call lhe_add_particle(  1, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  d
+                call lhe_add_particle( -1, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  d~
+            end if
+
+            if (include_uu) then
+                call lhe_add_particle(  2, -1,  0,  0, 101,   0, pcol(1:4,1)) ! 1:  u
+                call lhe_add_particle( -2, -1,  0,  0,   0, 101, pcol(1:4,2)) ! 2:  u~
+            end if
+
+            if (include_dd .or. include_uu) then
+                call lhe_add_particle(  6,  2,  1,  2, 102,   0, pcol356    ) ! 3:  t
+                call lhe_add_particle( -6,  2,  1,  2,   0, 102, pcol478    ) ! 4:  t~
+                call lhe_add_particle( 24,  2,  3,  0,   0,   0, pcol56     ) ! 5:  W+
+                call lhe_add_particle(  5,  1,  3,  0, 102,   0, pcol(1:4,3)) ! 6:  b
+                call lhe_add_particle(-24,  2,  4,  0,   0,   0, pcol78     ) ! 7:  W-
+                call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
+            end if
+
+            call lhe_add_particle(-1,       1,  5,  0,   0, 104, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
+            call lhe_add_particle( 2,       1,  5,  0, 104,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
+            call lhe_add_particle(-14,      1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: d
+            call lhe_add_particle(13,       1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: u~
+
+            call lhe_end_event
         end if
     end if
     return
