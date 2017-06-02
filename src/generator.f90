@@ -188,10 +188,6 @@ program generator
             print *, "generator: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
             if (sigma <= 0) stop
 
-            call cpu_time(time2)
-            print *, "generator: time = ", (time2 - time1) / 60, "[mins]"
-            print *, "generator: complete"
-
             if (verbose) print*, "generator: printing history ..."
             call vamp_print_history(history, "history")
             call vamp_print_history(histories, "histories")
@@ -239,10 +235,10 @@ program generator
 
             if (verbose) print*, "generator: saving vamp grid to ", grid_file
             call vamp_write_grid(grid, grid_file)
-
-            call cpu_time(time2)
-            print *, "full sampling time = ", (time2 - time1) / 60, "[mins]"
         end if
+        call cpu_time(time2)
+        print *, "generator: time = ", (time2 - time1) / 60, "[mins]"
+        print *, "generator: complete"
     else
         if (multichannel) then
             print*, "input VAMP grids = ", trim(grid_file)
