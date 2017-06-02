@@ -239,6 +239,7 @@ else:
     logfile = "%s.log" % (events_path)
     handler_name = "%s.sh" % (events_name)
 
+print handler_name
 
 config = StringIO.StringIO()
 print >> config, '%r    ! ntuple'             % option.ntuple
