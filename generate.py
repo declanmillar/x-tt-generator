@@ -282,7 +282,7 @@ try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
         print " config: %s" % config_name
-except OSERROR:
+except OSError:
     sys.exit("error: Cannot write to %s" % config_name)
 
 if option.batch:
@@ -311,7 +311,7 @@ if option.batch:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
         print "Handler file written to %s.sh." % filename
-    except OSERROR:
+    except OSError:
         sys.exit("error: Cannot write handler file.")
 
     subprocess.call("chmod a+x %s.sh" % filename, shell = True)
