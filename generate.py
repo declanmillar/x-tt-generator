@@ -279,7 +279,7 @@ print >> config, '%r    ! batch mode'         % option.batch
 print >> config, '%r    ! detector cuts'      % option.cut
 
 # try:
-    with
+    # with
 open('%s' % config_name,'w') as config_file:
 config_file.write(config.getvalue())
 print " config: %s" % config_name
