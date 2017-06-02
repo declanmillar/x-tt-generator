@@ -310,11 +310,11 @@ if option.batch:
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
-        print "Handler file written to %s.sh." % filename
+        print "Handler file written to %s." % handler_name
     except OSError:
         sys.exit("error: Cannot write handler file.")
 
-    subprocess.call("chmod a+x %s.sh" % filename, shell = True)
+    subprocess.call("chmod a+x %s" % handler_name, shell = True)
     print "submitting batch job ..."
     if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s.sh' % (option.queue, logfile, run_directory, filename), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s.sh' % (option.walltime, run_directory, filename), shell = True)
