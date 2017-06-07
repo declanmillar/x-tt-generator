@@ -895,10 +895,10 @@ function dsigma(x, data, weights, channel, grids)
                 if (present(channel) .and. (include_dd .or. include_uu)) then
 
                     if (channel == 2) then
-                        dsigma = dsigma * ((ecm*ecm - zmass*zmass) ** 2 + zmass*zmass*zwidth*zwidth) &
+                        dsigma = dsigma * ((ecm * ecm - zmass * zmass) ** 2 + zmass * zmass * zwidth * zwidth) &
                                         * (at34max - at34min) / (2 * ecm * zmass * zwidth)
                     else if (channel == 3) then
-                        dsigma = dsigma * ((ecm*ecm - xmass(1)*xmass(1)) ** 2 + xmass(1)*xmass(1)*xwidth(1)*xwidth(1)) &
+                        dsigma = dsigma * ((ecm * ecm - xmass(1) * xmass(1)) ** 2 + xmass(1) * xmass(1) * xwidth(1) * xwidth(1)) &
                                         * (at34max - at34min) / (2 * ecm * xmass(1) * xwidth(1))
                     end if
                 end if
@@ -982,6 +982,7 @@ function dsigma(x, data, weights, channel, grids)
                 i = 15
                 j = 15
             end if
+
             call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
 
             if (include_gg) then
