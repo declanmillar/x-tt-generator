@@ -297,7 +297,7 @@ if option.batch:
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s > %s/%s.log' % (run_directory, executable, config_name, data_directory, filename)
+        print >> handler, '%s/bin/%s < %s > %s' % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
         print "h_rt = %s" % option.walltime
         print >> handler, "#!/bin/bash"
