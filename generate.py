@@ -191,7 +191,7 @@ elif "heppc" in hostname:
     data_directory = "/data/millar/"
 else:
     exit("error: unknown host")
-run_directory = home_directory + "zprime-top-generator"
+run_directory = home_directory + "apollo"
 data_directory = data_directory + "zprime"
 grid_path = data_directory + "/" + grid_name
 
