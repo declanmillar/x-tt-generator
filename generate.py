@@ -7,7 +7,7 @@
 # declan.millar@cern.ch
 
 import os
-import StringIO
+import io
 import optparse
 import subprocess
 import sys
@@ -241,7 +241,7 @@ else:
     logfile = "%s.log" % (events_path)
     handler_name = "%s.sh" % (events_name)
 
-config = StringIO.StringIO()
+config = io.StringIO()
 config.write('%r    ! ntuple'             % option.ntuple)
 config.write('%r    ! lhef'               % option.lhef)
 config.write('%r    ! new_grid'           % new_grid)
@@ -286,7 +286,7 @@ except OSError:
     sys.exit("error: Cannot write to %s" % config_name)
 
 if option.batch:
-    handler = StringIO.StringIO()
+    handler = io.StringIO()
     if "lxplus" in hostname:
         handler.write("#!/bin/bash")
         handler.write("source /afs/cern.ch/user/d/demillar/.bash_profile")
