@@ -219,6 +219,8 @@ else:
 events_path = events_path + wgt
 grid_file = "%s%s" % (grid_path, grid)
 
+print "looking for gridfile ", grid_file
+
 if os.path.isfile(grid_file):
     new_grid = False
 else:
