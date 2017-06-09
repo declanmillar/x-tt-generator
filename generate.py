@@ -172,8 +172,8 @@ else:
     process = initial_partons + intermediates + final_state
     gridproc = initial_partons + intermediates + grid_state
 
-grid_name = '%s.%s.%sTeV.%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
-events_name = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
+grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
+events_name = '%s_%s_%sTeV_%s%s' % (process, option.model, str(option.energy), pdf, options)
 
 home_directory = "."
 data_directory = "."
