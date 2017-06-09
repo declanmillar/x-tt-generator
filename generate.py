@@ -102,7 +102,7 @@ executable = "generator"
 options = ""
 
 if option.ppbar == 1:
-    options += ".ppbar"
+    options += "_ppbar"
 
 pdf = ""
 if option.pdf ==  1: pdf = "CTEQ6M"
@@ -118,14 +118,14 @@ if option.pdf == 10: pdf = "CT14LN"
 if option.pdf == 11: pdf = "CT14LL"
 
 if not option.unweighted: option.lhef = False
-if option.interference != 1: options += ".int%i" % option.interference
-if option.use_nwa: options += ".nwa"
-if option.multichannel: options += ".multi"
-if option.cut: options += ".cut"
-if option.use_rambo: options += ".rambo"
-if option.include_background == False and option.flatten_integrand == False: options += ".unmapped"
-if option.energy_low != 0 or option.energy_up != 0: options += ".%s-%s" % (option.energy_low, option.energy_up)
-if len(option.tag) > 0: options += "." + option.tag
+if option.interference != 1: options += "_int%i" % option.interference
+if option.use_nwa: options += "_nwa"
+if option.multichannel: options += "_multi"
+if option.cut: options += "_cut"
+if option.use_rambo: options += "_rambo"
+if option.include_background == False and option.flatten_integrand == False: options += "_unmapped"
+if option.energy_low != 0 or option.energy_up != 0: options += "_%s-%s" % (option.energy_low, option.energy_up)
+if len(option.tag) > 0: options += "_" + option.tag
 if option.final_state < 2: option.include_background = False
 if option.include_background: flatten_integrand = False
 
@@ -238,8 +238,6 @@ else:
     config_name = '%s.cfg' % (events_path)
     logfile = "%s.log" % (events_path)
     handler_name = "%s.sh" % (events_name)
-
-print handler_name
 
 config = StringIO.StringIO()
 print >> config, '%r    ! ntuple'             % option.ntuple
