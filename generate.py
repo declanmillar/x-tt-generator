@@ -198,7 +198,7 @@ grid_path = data_directory + "/" + grid_name
 datafiles = [f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f))]
 filtered = fnmatch.filter(datafiles, events_name + ".??.lhef")
 new_index = len(filtered) + 1
-events_name = events_name + ".%02d" % (len(filtered) + 1)
+events_name = events_name + "_%02d" % (len(filtered) + 1)
 
 events_path = data_directory + "/" + events_name
 
