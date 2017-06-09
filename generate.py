@@ -166,14 +166,16 @@ elif option.final_state == 33: final_state = "tt-bbtatavv"
 
 if initial_partons == "-" and option.final_state > 0:
     process = "2-6-phase-space"
+    gridproc = process
 elif initial_partons == "-" and option.final_state < 1:
     process = "2-2-phase-space"
+    gridproc = process
 else:
     process = initial_partons + intermediates + final_state
     gridproc = initial_partons + intermediates + grid_state
 
-grid_name = '%s.%s.%sTeV.%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
-events_name = '%s.%s.%sTeV.%s%s' % (process, option.model, str(option.energy), pdf, options)
+grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
+events_name = '%s_%s_%sTeV_%s%s' % (process, option.model, str(option.energy), pdf, options)
 
 home_directory = "."
 data_directory = "."
@@ -240,84 +242,84 @@ else:
     handler_name = "%s.sh" % (events_name)
 
 config = StringIO.StringIO()
-print >> config, '%r    ! ntuple'             % option.ntuple
-print >> config, '%r    ! lhef'               % option.lhef
-print >> config, '%r    ! new_grid'           % new_grid
-print >> config, '%s'                         % grid_file
-print >> config, '%s'                         % logfile
-print >> config, '%s'                         % lhe_file
-print >> config, '%s'                         % ntuple_file
-print >> config, '%i    ! initial state'      % option.ppbar
-print >> config, '%i    ! final state'        % option.final_state
-print >> config, '%s    ! model'              % option.model
-print >> config, '%i    ! pdf'                % option.pdf
-print >> config, '%r    ! include signal'     % option.include_signal
-print >> config, '%r    ! include background' % option.include_background
-print >> config, '%r    ! include gg'         % option.include_gg
-print >> config, '%r    ! include qq'         % option.include_qq
-print >> config, '%r    ! include uu'         % option.include_uu
-print >> config, '%r    ! include dd'         % option.include_dd
-print >> config, '%r    ! include a'          % option.include_a
-print >> config, '%r    ! include z'          % option.include_z
-print >> config, '%r    ! include x'          % option.include_x
-print >> config, '%i    ! interference'       % option.interference
-print >> config, '%r    ! use nwa'            % option.use_nwa
-print >> config, '%i.d3 ! energy'             % option.energy
-print >> config, '%i    ! iterations'         % option.iterations
-print >> config, '%i    ! npoints'            % option.npoints
-print >> config, '%i    ! nevents'            % option.nevents
-print >> config, '%r    ! unweighted'         % option.unweighted
-print >> config, '%r    ! use rambo'          % option.use_rambo
-print >> config, '%r    ! map phase space'    % option.flatten_integrand
-print >> config, '%r    ! multichannel'       % option.multichannel
-print >> config, '%r    ! verbose mode'       % option.verbose
-print >> config, '%i.d3 ! energy low'         % option.energy_low
-print >> config, '%i.d3 ! energy up'          % option.energy_up
-print >> config, '%r    ! batch mode'         % option.batch
-print >> config, '%r    ! detector cuts'      % option.cut
+config.write('%r    ! ntuple'             % option.ntuple)
+config.write('%r    ! lhef'               % option.lhef)
+config.write('%r    ! new_grid'           % new_grid)
+config.write('%s'                         % grid_file)
+config.write('%s'                         % logfile)
+config.write('%s'                         % lhe_file)
+config.write('%s'                         % ntuple_file)
+config.write('%i    ! initial state'      % option.ppbar)
+config.write('%i    ! final state'        % option.final_state)
+config.write('%s    ! model'              % option.model)
+config.write('%i    ! pdf'                % option.pdf)
+config.write('%r    ! include signal'     % option.include_signal)
+config.write('%r    ! include background' % option.include_background)
+config.write('%r    ! include gg'         % option.include_gg)
+config.write('%r    ! include qq'         % option.include_qq)
+config.write('%r    ! include uu'         % option.include_uu)
+config.write('%r    ! include dd'         % option.include_dd)
+config.write('%r    ! include a'          % option.include_a)
+config.write('%r    ! include z'          % option.include_z)
+config.write('%r    ! include x'          % option.include_x)
+config.write('%i    ! interference'       % option.interference)
+config.write('%r    ! use nwa'            % option.use_nwa)
+config.write('%i.d3 ! energy'             % option.energy)
+config.write('%i    ! iterations'         % option.iterations)
+config.write('%i    ! npoints'            % option.npoints)
+config.write('%i    ! nevents'            % option.nevents)
+config.write('%r    ! unweighted'         % option.unweighted)
+config.write('%r    ! use rambo'          % option.use_rambo)
+config.write('%r    ! map phase space'    % option.flatten_integrand)
+config.write('%r    ! multichannel'       % option.multichannel)
+config.write('%r    ! verbose mode'       % option.verbose)
+config.write('%i.d3 ! energy low'         % option.energy_low)
+config.write('%i.d3 ! energy up'          % option.energy_up)
+config.write('%r    ! batch mode'         % option.batch)
+config.write('%r    ! detector cuts'      % option.cut)
 
 try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
-        print " config: %s" % config_name
+        print(" config: %s" % config_name)
 except OSError:
     sys.exit("error: Cannot write to %s" % config_name)
 
 if option.batch:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
-        print >> handler, "#!/bin/bash"
-        print >> handler, "source /afs/cern.ch/user/d/demillar/.bash_profile"
-        print >> handler, "cd %s" % run_directory
-        print >> handler, "%s/bin/%s < %s" % (run_directory, executable, config_name)
+        handler.write("#!/bin/bash")
+        handler.write("source /afs/cern.ch/user/d/demillar/.bash_profile")
+        handler.write("cd %s" % run_directory)
+        handler.write("%s/bin/%s < %s" % (run_directory, executable, config_name))
     elif "cyan" in hostname:
-        print "walltime = %s" % option.walltime
-        print >> handler, "#!/bin/bash"
-        print >> handler, "source /home/dam1g09/.bash_profile"
-        print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s > %s' % (run_directory, executable, config_name, logfile)
+        print("walltime = %s" % option.walltime)
+        handler.write("#!/bin/bash")
+        handler.write("source /home/dam1g09/.bash_profile")
+        handler.write("cd %s" % run_directory)
+        handler.write('%s/bin/%s < %s > %s' % (run_directory, executable, config_name, logfile))
     elif "heppc" in hostname:
-        print "h_rt = %s" % option.walltime
-        print >> handler, "#!/bin/bash"
-        print >> handler, "source /users/millar/.bash_profile"
-        print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+        print("h_rt = %s" % option.walltime)
+        handler.write("#!/bin/bash")
+        handler.write("source /users/millar/.bash_profile")
+        handler.write("cd %s" % run_directory)
+        handler.write('%s/bin/%s < %s' % (run_directory, executable, config_name))
     else:
         sys.exit("error: hostname not recognised")
 
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
-        print "Handler file written to %s." % handler_name
+        print("Handler file written to %s." % handler_name)
     except OSError:
         sys.exit("error: Cannot write handler file.")
 
     subprocess.call("chmod a+x %s" % handler_name, shell = True)
-    print "submitting batch job ..."
+    print("submitting batch job ...")
     if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s' % (option.queue, logfile, run_directory, handler_name), shell = True)
     elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
     else:
-        print "error: hostname not recognised"
+        print("error: hostname not recognised")
 else:
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
