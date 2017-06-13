@@ -978,9 +978,12 @@ function dsigma(x, data, weights, channel, grids)
             else if (final_state == 22) then
                 i = 13
                 j = 13
-            else if (final_state == 33) then
-                i = 15
-                j = 15
+            else if (final_state == 12) then
+                i = 11
+                j = 13
+            else if (final_state == 21) then
+                i = 13
+                j = 11
             end if
 
             call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)

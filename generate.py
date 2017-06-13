@@ -161,8 +161,9 @@ elif option.final_state ==  0: final_state = "tt"
 elif option.final_state ==  1: final_state = "tt-bbllvv"
 elif option.final_state == 11: final_state = "tt-bbeevv"
 elif option.final_state == 22: final_state = "tt-bbmumuvv"
-elif option.final_state == 33: final_state = "tt-bbtatavv"
-# elif option.final_state == 12: final_state = "bbemuvevm"
+elif option.final_state == 12: final_state = "tt-bbemuvv"
+elif option.final_state == 21: final_state = "tt-bbmuevv"
+# elif option.final_state == 13: final_state = "bbtatavv"
 
 if initial_partons == "-" and option.final_state > 0:
     process = "2-6-phase-space"
