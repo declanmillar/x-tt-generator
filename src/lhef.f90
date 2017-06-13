@@ -5,9 +5,6 @@ module lhef
 
   implicit none
 
-  integer, parameter :: lhe = 20
-  integer, parameter :: npr = 1 ! the number of different user sub-processes (I fix at 1)
-
   ! subroutines
   public :: lhe_open
   public :: lhe_beam
@@ -17,6 +14,8 @@ module lhef
   public :: lhe_close
 
   private :: mass
+  integer, parameter, private :: lhe = 20
+  integer, parameter, private :: npr = 1 ! the number of different user sub-processes (I fix at 1)
 
 contains
 

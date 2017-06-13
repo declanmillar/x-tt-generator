@@ -47,6 +47,8 @@ program generator
     type(vamp_grids) :: grids
     type(vamp_history), allocatable :: history(:), histories(:,:)
 
+    real(kind = default) :: cross_section(2)
+
     call cpu_time(time0)
     call date_and_time(values = now)
     write(*,"(a8,     i4,      a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2,   a1,  i2.2)") &
@@ -248,6 +250,9 @@ program generator
             print*, "input VAMP grid = ", trim(grid_file)
             call vamp_read_grid(grid, grid_file)
         end if
+        cross_section = read_cross_section("/scratch/dam1g09/zprime/qq-tt-bbllvv_SM_13TeV_CT14LL.txt")
+        sigma = cross_section(1)
+        error = cross_section(2)
     end if
 
     if (nevents > 0) then

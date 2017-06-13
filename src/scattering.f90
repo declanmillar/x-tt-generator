@@ -9,12 +9,32 @@ module scattering
     implicit none
 
     public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
+    public :: read_cross_section !, write_cross_section
     logical, public :: record_events
     real(kind=default), public :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
     real(kind=default), private :: m3, m4, m5, m6, m7, m8, gamt
     real(kind=default), private :: s, ecm_max, ecm_min, scale, a_s, gs2, gs4
+    integer, parameter, private :: xsec = 88
 
 contains
+
+function read_cross_section(xsec_file) result(cross_section)
+      character(*) xsec_file
+      real(kind=default) :: cross_section(2)
+
+      if (verbose) print*, "reading ", trim(xsec_file)
+      open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
+      read(xsec, *) cross_section(1)
+      read(xsec, *) cross_section(2)
+end function read_cross_section
+
+! subroutine write_cross_section(lhe_file, cross_section, uncertainty)
+!       character(*) lhe_file
+!       if (verbose) print*, "lhef = ", trim(lhe_file)
+!       open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
+!       if (verbose) print*, "lhe: writing cross section ..."
+!       write(lhe,*) '<LesHouchesEvents version="1.0">'
+! end subroutine write_cross_section
 
 pure function phi (xi, channel) result (x)
     real(kind=default), dimension(:), intent(in) :: xi
