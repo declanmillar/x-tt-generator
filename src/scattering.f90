@@ -23,7 +23,7 @@ function read_cross_section(xsec_file) result(cross_section)
       real(kind=default) :: cross_section(2)
 
       if (verbose) print*, "reading ", trim(xsec_file)
-      open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
+      open(unit = xsec, file = trim(xsec_file), status = "old", action = "read")
       read(xsec, *) cross_section(1)
       read(xsec, *) cross_section(2)
 end function read_cross_section
