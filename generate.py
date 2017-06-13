@@ -325,4 +325,4 @@ if option.batch:
     else:
         print "error: hostname not recognised"
 else:
-    subprocess.call("mpirun --mca mpi_warn_on_fork 0 ./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+    subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
