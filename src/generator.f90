@@ -231,8 +231,6 @@ program generator
             call clear_exception(exc)
             call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
             call handle_exception(exc)
-            print *, "sigma = ", sigma, "+/-", error
-            if (sigma <= 0) stop
 
             if (verbose) print*, "generator: printing history ..."
             call vamp_print_history(history, "history")
@@ -257,6 +255,9 @@ program generator
         sigma = cross_section(1)
         error = cross_section(2)
     end if
+
+    print *, "sigma = ", sigma, "+/-", error
+    if (sigma <= 0) stop
 
     if (nevents > 0) then
         if (verbose) print*, "process: calculating beam info ..."
