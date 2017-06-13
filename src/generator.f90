@@ -87,6 +87,9 @@ program generator
     if (verbose) print*, "generator: allocating x with", ndimensions, "dimensions ..."
     allocate(x(ndimensions))
 
+    sigma = 1.0
+    error = 0.0
+
     if (new_grid) then
         if (verbose) print*, "generator: integrating using VAMP ..."
         record_events = .false.
@@ -276,69 +279,68 @@ program generator
             call rootinit(ntuple_file)
         end if
 
-        sigma = 0.0
-        error = 0.0
-        sigma_pol = 0.d0
-        error_pol = 0.d0
-
         if (.not. unweighted) then
-        !     nweighted = ncall
-        ! else
-            nweighted = nevents
-        ! end if
+            sigma = 0.0
+            error = 0.0
+            sigma_pol = 0.d0
+            error_pol = 0.d0
+            !     nweighted = ncall
+            ! else
+                nweighted = nevents
+            ! end if
 
-          print*, "weighted events: ", nweighted
-          if (.not. batch) call set_total(nweighted)
-          do i = 1,  nweighted
-              if (.not. unweighted) record_events = .true.
-              call clear_exception (exc)
-              if (multichannel) then
+            print*, "weighted events: ", nweighted
+            if (.not. batch) call set_total(nweighted)
+            do i = 1,  nweighted
+                if (.not. unweighted) record_events = .true.
+                call clear_exception (exc)
+                if (multichannel) then
                  call vamp_next_event(x, rng, grids, dsigma, phi, weight, exc = exc)
-              else
+                else
                  call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
-              end if
-              call handle_exception (exc)
-              if (.not. unweighted) call rootaddevent(weight)
-              sigma = sigma + weight
-              error = error + weight * weight
-              if (.not. batch) call progress_bar(i)
-          end do
+                end if
+                call handle_exception (exc)
+                if (.not. unweighted) call rootaddevent(weight)
+                sigma = sigma + weight
+                error = error + weight * weight
+                if (.not. batch) call progress_bar(i)
+            end do
 
-          print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
+            print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
 
-          sigma = sigma / nweighted
-          error = error / nweighted / nweighted
+            sigma = sigma / nweighted
+            error = error / nweighted / nweighted
 
-          print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
+            print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
 
-          ! dilepton full!!!
-          sigma = sigma
-          error = error
+            ! dilepton full!!!
+            sigma = sigma
+            error = error
 
-          print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
+            print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
 
-          if (final_state < 1) then
-              if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
-              do i = -1, 1, 2
-                  do j = -1, 1, 2
-                      sigma_pol(i, j) = sigma_pol(i, j) * sigma
-                      error_pol(i, j) = sigma_pol(i, j) * error
-                  end do
-              end do
+            if (final_state < 1) then
+                if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
+                do i = -1, 1, 2
+                    do j = -1, 1, 2
+                        sigma_pol(i, j) = sigma_pol(i, j) * sigma
+                        error_pol(i, j) = sigma_pol(i, j) * error
+                    end do
+                end do
 
-              all = (sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1)) / sigma
-              error_all = (sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1)) / 4.d0 * all
+                all = (sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1)) / sigma
+                error_all = (sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1)) / 4.d0 * all
 
-              al = (sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
-              error_al = (sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1)) / 4.d0 * al
+                al = (sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
+                error_al = (sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1)) / 4.d0 * al
 
-              apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
-              error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
+                apv = (sigma_pol(-1, -1) - sigma_pol(1, 1)) / sigma / 2.d0
+                error_apv = (sigma_pol(-1, -1) + sigma_pol(1, 1)) / 2.d0 * apv
 
-              print*, "ALL = ", all, "+/-", error_all
-              print*, "AL = ", al, "+/-", error_al
-              print*, "APV = ", apv, "+/-", error_apv
-          end if
+                print*, "ALL = ", all, "+/-", error_all
+                print*, "AL = ", al, "+/-", error_al
+                print*, "APV = ", apv, "+/-", error_apv
+            end if
         end if
 
         if (ntuple_out) then
