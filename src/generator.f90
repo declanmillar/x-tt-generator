@@ -305,19 +305,20 @@ program generator
                 error = error + weight * weight
                 if (.not. batch) call progress_bar(i)
             end do
-
-            print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
+            ! print *, "SIGMA(e+e-) = ", sigma, "+/-", sqrt(error)
 
             sigma = sigma / nweighted
             error = error / nweighted / nweighted
 
-            print *, "sigma(e+e-) = ", sigma, "+/-", sqrt(error)
+            error = sqrt(error)
+
+            print *, "sigma(e+e-) = ", sigma, "+/-", error
 
             ! dilepton full!!!
             sigma = sigma
             error = error
 
-            print *, "sigma(l+l-) = ", sigma, "+/-", sqrt(error)
+            print *, "sigma(l+l-) = ", sigma, "+/-", error
 
             if (final_state < 1) then
                 if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
@@ -353,7 +354,7 @@ program generator
             call rootaddprocessdouble(pdfs(1), "pdfs1")
             call rootaddprocessdouble(pdfs(2), "pdfs2")
             call rootaddprocessdouble(sigma, "cross_section")
-            call rootaddprocessdouble(sqrt(error), "cross_section_uncertainty")
+            call rootaddprocessdouble(error, "cross_section_uncertainty")
         end if
 
         if (lhef_out) then
@@ -361,7 +362,7 @@ program generator
             if (verbose) print*, "initiating lhef file ..."
             call lhe_open(lhe_file)
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
-            call lhe_process(sigma, sqrt(error), 1.d0, 9999)
+            call lhe_process(sigma, error, 1.d0, 9999)
         end if
 
         if (unweighted) then
