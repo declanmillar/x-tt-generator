@@ -28,13 +28,15 @@ function read_cross_section(xsec_file) result(cross_section)
       read(xsec, *) cross_section(2)
 end function read_cross_section
 
-! subroutine write_cross_section(lhe_file, cross_section, uncertainty)
-!       character(*) lhe_file
-!       if (verbose) print*, "lhef = ", trim(lhe_file)
-!       open(unit = lhe, file = trim(lhe_file), status = "replace", action = "write")
-!       if (verbose) print*, "lhe: writing cross section ..."
-!       write(lhe,*) '<LesHouchesEvents version="1.0">'
-! end subroutine write_cross_section
+subroutine write_cross_section(xsec_file, cross_section, uncertainty)
+      character(*) xsec_file
+      real(kind=default) :: cross_section, uncertainty
+      if (verbose) print*, "writing ", trim(xsec_file)
+      open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
+      write(xsec,*) cross_section, "! cross section"
+      write(xsec,*) cross_section, "! uncertainty"
+      close(xsec)
+end subroutine write_cross_section
 
 pure function phi (xi, channel) result (x)
     real(kind=default), dimension(:), intent(in) :: xi
@@ -1006,7 +1008,7 @@ function dsigma(x, data, weights, channel, grids)
                 j = 11
             end if
 
-            call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+            call lhe_add_event(12, final_state, 1.d0, scale, a_em, a_s)
 
             if (include_gg) then
                 call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
@@ -1058,7 +1060,7 @@ function dsigma(x, data, weights, channel, grids)
             !     end do
             ! end do
 
-            ! call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+            ! call lhe_add_event(12, final_state, 1.d0, scale, a_em, a_s)
             !
             ! if (include_gg) then
             !     call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g
@@ -1108,7 +1110,7 @@ function dsigma(x, data, weights, channel, grids)
             !
             ! call lhe_end_event
             !
-            ! call lhe_add_event(12, 9999, 1.d0, scale, a_em, a_s)
+            ! call lhe_add_event(12, final_state, 1.d0, scale, a_em, a_s)
             !
             ! if (include_gg) then
             !     call lhe_add_particle( 21, -1,  0,  0, 101, 102, pcol(1:4,1)) ! 1:  g

@@ -238,6 +238,8 @@ program generator
 
             if (verbose) print*, "generator: saving vamp grid to ", grid_file
             call vamp_write_grid(grid, grid_file)
+
+            call write_cross_section(xsec_file, sigma, error)
         end if
         call cpu_time(time2)
         print *, "generator: time = ", (time2 - time1) / 60, "[mins]"
@@ -363,7 +365,7 @@ program generator
             if (verbose) print*, "initiating lhef file ..."
             call lhe_open(lhe_file)
             call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
-            call lhe_process(sigma, error, 1.d0, 9999)
+            call lhe_process(sigma, error, 1.d0, final_state)
         end if
 
         if (unweighted) then
