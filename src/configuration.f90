@@ -18,6 +18,7 @@ module configuration
     character(100) :: log_file
     character(100) :: lhe_file
     character(100) :: grid_file
+    character(100) :: xsec_file
     logical :: include_signal
     logical :: include_background
     logical :: include_gg
@@ -70,6 +71,7 @@ subroutine read_config
     read(5,*) lhef_out
     read(5,*) new_grid
     read(5,"(a)") grid_file
+    read(5,"(a)") xsec_file
     read(5,"(a)") log_file
     read(5,"(a)") lhe_file
     read(5,"(a)") ntuple_file

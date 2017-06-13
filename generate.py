@@ -219,6 +219,7 @@ else:
 
 events_path = events_path + wgt
 grid_file = "%s%s" % (grid_path, grid)
+xsec_file = "%s.txt" % (grid_path)
 
 print "looking for gridfile ", grid_file
 
@@ -247,6 +248,7 @@ print >> config, '%r    ! ntuple'             % option.ntuple
 print >> config, '%r    ! lhef'               % option.lhef
 print >> config, '%r    ! new_grid'           % new_grid
 print >> config, '%s'                         % grid_file
+print >> config, '%s'                         % xsec_file
 print >> config, '%s'                         % logfile
 print >> config, '%s'                         % lhe_file
 print >> config, '%s'                         % ntuple_file
