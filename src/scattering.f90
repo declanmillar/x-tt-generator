@@ -19,23 +19,23 @@ module scattering
 contains
 
 function read_cross_section(xsec_file) result(cross_section)
-      character(*) xsec_file
-      real(kind=default) :: cross_section(2)
+    character(*) xsec_file
+    real(kind=default) :: cross_section(2)
 
-      if (verbose) print*, "reading ", trim(xsec_file)
-      open(unit = xsec, file = trim(xsec_file), status = "old", action = "read")
-      read(xsec, *) cross_section(1)
-      read(xsec, *) cross_section(2)
+    if (verbose) print*, "reading ", trim(xsec_file)
+    open(unit = xsec, file = trim(xsec_file), status = "old", action = "read")
+    read(xsec, *) cross_section(1)
+    read(xsec, *) cross_section(2)
 end function read_cross_section
 
 subroutine write_cross_section(xsec_file, cross_section, uncertainty)
-      character(*) xsec_file
-      real(kind=default) :: cross_section, uncertainty
-      if (verbose) print*, "writing ", trim(xsec_file)
-      open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
-      write(xsec,*) cross_section, "! cross section"
-      write(xsec,*) cross_section, "! uncertainty"
-      close(xsec)
+    character(*) xsec_file
+    real(kind=default) :: cross_section, uncertainty
+    if (verbose) print*, "writing ", trim(xsec_file)
+    open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
+    write(xsec,*) cross_section, "! cross section"
+    write(xsec,*) cross_section, "! uncertainty"
+    close(xsec)
 end subroutine write_cross_section
 
 pure function phi (xi, channel) result (x)
