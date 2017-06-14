@@ -253,9 +253,11 @@ program generator
             print*, "input VAMP grid = ", trim(grid_file)
             call vamp_read_grid(grid, grid_file)
         end if
-        cross_section = read_cross_section(xsec_file)
-        sigma = cross_section(1)
-        error = cross_section(2)
+        if (unweighted) then
+            cross_section = read_cross_section(xsec_file)
+            sigma = cross_section(1)
+            error = cross_section(2)
+        end if
     end if
 
     print *, "sigma = ", sigma, "+/-", error
