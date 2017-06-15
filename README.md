@@ -16,7 +16,7 @@ If run on `lxplus` or `iridis` the program will create a steering file and submi
 # Directory Structure
 
 * `bin/`: Folder containing compiled and linked `generator` binary executable.
-* `docs/`: Contains various Feynman diagrams representative of the generation processes.
+* `Diagrams/`: Contains various Feynman diagrams representative of the generation processes.
 * `lib/`: Contains the compilied library files.
 * `Models/`: Contains the input files for each BSM model.
 * `PDFs/`: Contains the tables for the available Parton Distribution functions.
