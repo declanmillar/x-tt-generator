@@ -6,7 +6,7 @@ A number of different PDF sets are available. The most recent of these are the [
 
 The program can write the minimal event information (event weight, PDG particle IDs, and 4-vectors) directly to a [ROOT](https://root.cern.ch) n-tuple, in binary format, which minimises storage space and eases a parton-level root analysis. Alternatively, if one wishes to further process the events with a parton shower/hadronisation tool (e.g. [pythial](http://home.thep.lu.se/~torbjorn/Pythia.html)), an output text file in the standard [Les Houches Event Format (LHEF)](https://arxiv.org/abs/hep-ph/0609017) can be produced.
 
-The full source code repository is stored [here](https://gitlab.cern.ch/demillar/apollo) (accessible to collaborators only).
+The full source code repository is stored [here](https://gitlab.cern.ch/demillar/apollo), but currently accessible to collaborators only.
 
 ## Running the program
 
