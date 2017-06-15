@@ -8,11 +8,12 @@ The program can write the minimal event information (event weight, PDG particle 
 
 The full source code repository is stored [here](https://gitlab.cern.ch/demillar/zprime-top-generator), but currently accessible to collaborators only.
 
-## Running the program
+# Running the program
 
 The program is executed via the `generate.py` run file. Do `generate -h` for the available options.
+If run on `lxplus` or `iridis` the program will create a steering file and submit a batch job.
 
-## Directory Structure
+# Directory Structure
 
 * `bin/`: Folder containing compiled and linked `generator` binary executable.
 * `docs/`: Contains various Feynman diagrams representative of the generation processes.
@@ -21,9 +22,9 @@ The program is executed via the `generate.py` run file. Do `generate -h` for the
 * `PDFs/`: Contains the tables for the available Parton Distribution functions.
 * `src/`: Contains the fortran (freeform `.f90`) source files.
 
-## Important Files
+# Important Files
 
-* `generate.py`: The steering file for execution. Do `generate -h` for the available options.
+* `generate.py`: The run file for execution. Do `generate -h` for the available options.
 * `generator.f90`: The main source file where the Fortran program lives.
 * `scattering.f90`: Contains the code for calculating the differential cross section.
 * `README.md`: This file!
