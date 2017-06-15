@@ -1,13 +1,29 @@
-# Z' -> tt Generator
+# Apollo Readme
 
----
+The generation tool employed for our study is a custom Monte Carlo (MC) program. The matrix element calculations are based on helicity amplitudes using [HELAS](http://inspirehep.net/record/336604?ln=en) subroutines, with Standard Model square matrix elements built up using [MagGraph](http://madgraph.physics.illinois.edu). Beyond the Standard Model amplitudes are then constructed by modifying these as required. [Vegas AMPlified (VAMP)](http://www.sciencedirect.com/science/article/pii/S001046559900209X?via%3Dihub), an enhanced version of the popular [VEGAS](https://en.wikipedia.org/wiki/VEGAS_algorithm) program, is used for the multi-dimensional numerical phase-space integration, and the generation of unweighted events.
 
-## Overview
+A number of different PDF sets are available. The most recent of these are the CT14 leading order tables, with CTEQ6 and MRS99 available for comparison. Generally we select the CT14LO(LL) table for our simulations, with a factorisation/renormalisation scale of $Q = mu = 2 m_t$. The $b$ and $t$ quarks are assigned masses of $4.18$ GeV and $172.5$ GeV, respectively, while the lighter quarks are treated in the massless limit.
 
-The generation tool employed for our study is a custom Monte Carlo (MC) program. The matrix element calculations are based on helicity amplitudes using HELAS subroutines, with Standard Model square matrix elements built up using MagGraph [hagiwara2000, Stelzer1994]. Beyond the Standard Model amplitudes are then constructed by modifying these as required. Vegas AMPliﬁed (VAMP), an enhanced version of the popular VEGAS program, is used for the multi-dimensional numerical phase-space integration, and the generation of unweighted events [Lepage1980].
+The program can write the minimal event information (event weight, PDG particle IDs, and 4-vectors) directly to a ROOT n-tuple, in binary format, using RootTuple, which minimises storage space and eases a parton-level root analysis. Alternatively, if one wishes to further process the events with a parton shower/hadronisation tool (e.g. pythia8), an output text file in the standard Les Houches Event Format (LHEF) can be produced.
 
-A number of diﬀerent PDF sets are available. The most recent of these are the CT14 leading order tables, with CTEQ6 and MRS99 available for comparison [Pumplin2002]. Generally we select the CT14LO(LL) table for our simulations, with a factorisation/renormalisation scale of Q=μ=2mt. The b and t quarks are assigned masses of 4.18 GeV and 172.5 GeV, respectively, while the lighter quarks are treated in the massless limit.
+The full source code repository is stored [here](https://gitlab.cern.ch/demillar/apollo) (accessible to collaborators only).
 
-The program can write the minimal event information (event weight, PDG particle IDs, and 4-vectors) directly to a ROOT n-tuple, in binary format, using RootTuple, which minimises storage space and eases a parton-level root analysis. Alternatively, if one wishes to further process the events with a parton shower/hadronisation tool, an output text ﬁle in the standard Les Houches Event can be produced.
+# Running the program
 
-The full source code repository is stored here: https://gitlab.cern.ch/demillar/zprime-top-generator (accessible to collaborators only).
+The program is executed via the `generate.py` run file. Do `generate -h` for the available options.
+
+# Directory Structure
+
+* `bin/`: Folder containing compiled and linked `generator` executable.
+* `docs/`: Contains various Feynman diagrams representative of the generation processes.
+* `lib/`: Contains the compilied library files.
+* `Models/`: Contains the input files for each BSM model.
+* `PDFs/`: Contains the tables for the available Parton Distribution functions.
+* `src/`: Contains the fortran (freeform `.f90`) source files.
+
+# Important Files
+
+* `generate.py`: The steering file for execution. Do `generate -h` for the available options.
+* `generator.f90`: The main source file where the Fortran program lives.
+* `scattering.f90`: Contains the code for calculating the differential cross section.
+* `README.md`: This file!
