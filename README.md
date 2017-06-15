@@ -10,7 +10,7 @@ The full source code repository is stored [here](https://gitlab.cern.ch/demillar
 
 # Running the program
 
-The program is executed via the `generate.py` run file. Do `generate -h` for the available options.
+The program is executed via the `generate.py` run file. Do `generate.py -h` for the available options.
 If run on `lxplus` or `iridis` the program will create a steering file and submit a batch job.
 
 # Directory Structure
