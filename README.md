@@ -14,7 +14,7 @@ The program is executed via the `generate.py` run file. Do `generate -h` for the
 
 ## Directory Structure
 
-* `bin/`: Folder containing compiled and linked `generator` executable.
+* `bin/`: Folder containing compiled and linked `generator` binary executable.
 * `docs/`: Contains various Feynman diagrams representative of the generation processes.
 * `lib/`: Contains the compilied library files.
 * `Models/`: Contains the input files for each BSM model.
