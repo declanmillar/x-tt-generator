@@ -24,7 +24,7 @@ If run on `lxplus` or `iridis` the program will create a steering file and submi
 
 # Important Files
 
-* `generate.py`: The run file for execution. Do `generate -h` for the available options.
+* `generate.py`: The run file for execution.
 * `generator.f90`: The main source file where the Fortran program lives.
 * `scattering.f90`: Contains the code for calculating the differential cross section.
 * `README.md`: This file!
