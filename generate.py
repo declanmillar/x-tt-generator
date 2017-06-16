@@ -179,7 +179,7 @@ events_name = '%s_%s_%sTeV_%s%s' % (process, option.model, str(option.energy), p
 home_directory = "."
 data_directory = "."
 if "Sunder" in hostname:
-    home_directory = "/Users/declan/Code/"
+    home_directory = "/Users/declan/Projects/"
     data_directory = "/Users/declan/Data/"
 elif "lxplus" in hostname:
     home_directory = "/afs/cern.ch/user/d/demillar/"
@@ -192,7 +192,7 @@ elif "heppc" in hostname:
     data_directory = "/data/millar/"
 else:
     exit("error: unknown host")
-run_directory = home_directory + "apollo"
+run_directory = home_directory + "perigee"
 data_directory = data_directory + "zprime"
 grid_path = data_directory + "/" + grid_name
 
