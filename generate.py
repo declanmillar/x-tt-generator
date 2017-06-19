@@ -130,7 +130,7 @@ if option.include_gg: initial_partons += "gg"
 if option.include_qq: initial_partons += "qq"
 if option.include_dd: initial_partons += "dd"
 if option.include_uu: initial_partons += "uu"
-if initial_partons = "": exit("Error: no initial partons specified")
+if initial_partons == "": exit("Error: no initial partons specified")
 initial_partons += "-"
 
 intermediates = ""
