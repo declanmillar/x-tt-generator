@@ -22,7 +22,7 @@ parser.add_option("-D", "--overwrite",          default = False, action = "store
 parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
 parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
 parser.add_option("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_option("-H", "--lhef",               default = True,  action = "store_false",  help = "write events to lhe file")
+parser.add_option("-H", "--lhef",               default = True,  action = "store_false", help = "write events to lhe file")
 parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
 parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
 parser.add_option("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
@@ -63,7 +63,6 @@ if (option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= optio
 if option.interference < 0 or option.interference > 4: sys.exit("error: interference must be 0 - 4")
 if option.pdf < 1 or option.pdf > 11: sys.exit("error: pdf id must be 1 - 11")
 if option.include_background == False and option.include_signal == False: sys.exit("error: signal and background both off")
-# if option.final_state < -1 or option.final_state > 3: sys.exit("error: invalid final state id" % option.final_state)
 
 initial_states = 0
 if option.include_gg: initial_states += 1
@@ -74,11 +73,9 @@ if option.include_uu: initial_states += 1
 if option.lhef and initial_states > 1: sys.exit("error: currently when outputting to LHEF, only one initial state can be active.")
 
 hostname = socket.gethostname()
-if not ("lxplus" in hostname or "cyan" in hostname):
-    option.batch = False
+if not ("lxplus" in hostname or "cyan" in hostname): option.batch = False
 
-if option.model == "SM":
-    option.include_x = False
+if option.model == "SM": option.include_x = False
 
 if option.final_state == -1:
     option.include_gg = False
@@ -262,8 +259,7 @@ try:
     with open('%s' % config_name,'w') as config_file:
         config_file.write(config.getvalue())
         print " config: %s" % config_name
-except OSError:
-    sys.exit("error: Cannot write to %s" % config_name)
+except OSError: sys.exit("error: Cannot write to %s" % config_name)
 
 if option.batch:
     handler = StringIO.StringIO()
@@ -301,5 +297,4 @@ if option.batch:
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
     else:
         print "error: hostname not recognised"
-else:
-    subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+else: subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
