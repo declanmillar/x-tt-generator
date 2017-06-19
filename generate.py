@@ -89,20 +89,16 @@ if option.include_uu == False and option.include_dd == False:
     option.include_z = False
     option.include_x = False
 
-if option.final_state == -1 and option.energy_low == 0:
-    option.energy_low = 0.5
+if option.final_state == -1 and option.energy_low == 0: option.energy_low = 0.5
 
-if option.use_rambo or option.include_background:
-    option.flatten_integrand = False
+if option.use_rambo or option.include_background: option.flatten_integrand = False
 
-if option.final_state < 1:
-    option.use_nwa = False
+if option.final_state < 1: option.use_nwa = False
 
 executable = "generator"
 options = ""
 
-if option.ppbar == 1:
-    options += "_ppbar"
+if option.ppbar == 1: options += "_ppbar"
 
 pdf = ""
 if option.pdf ==  1: pdf = "CTEQ6M"
@@ -130,31 +126,23 @@ if option.final_state < 2: option.include_background = False
 if option.include_background: flatten_integrand = False
 
 initial_partons = ""
-if option.include_gg:
-    initial_partons += "gg"
-if option.include_qq:
-    initial_partons += "qq"
-if option.include_dd:
-    initial_partons += "dd"
-if option.include_uu:
-    initial_partons += "uu"
+if option.include_gg: initial_partons += "gg"
+if option.include_qq: initial_partons += "qq"
+if option.include_dd: initial_partons += "dd"
+if option.include_uu: initial_partons += "uu"
+if initial_partons = "": exit("Error: no initial partons specified")
 initial_partons += "-"
 
 intermediates = ""
-# if option.final_state < 2:
 if option.include_a: intermediates += "A"
 if option.include_z: intermediates += "Z"
 if option.include_x: intermediates += "X"
-# else:
-#     if option.include_background == False and option.include_signal == True:
-#         intermediates += "tt"
-#     if option.include_background == True and option.include_signal == False:
-#         intermediates += ".bkg-only"
 
-if len(intermediates) > 0:
-    intermediates = intermediates + "-"
+if len(intermediates) > 0: intermediates = intermediates + "-"
 
 grid_state = "tt-bbllvv"
+gridproc = initial_partons + intermediates + grid_state
+
 final_state = ""
 if   option.final_state == -1: final_state = "ll"
 elif option.final_state ==  0: final_state = "tt"
@@ -163,15 +151,11 @@ elif option.final_state == 11: final_state = "tt-bbeevv"
 elif option.final_state == 22: final_state = "tt-bbmumuvv"
 elif option.final_state == 12: final_state = "tt-bbemuvv"
 elif option.final_state == 21: final_state = "tt-bbmuevv"
-# elif option.final_state == 13: final_state = "bbtatavv"
+elif option.final_state == 33: final_state = "bbtatavv"
 
-if initial_partons == "-" and option.final_state > 0:
-    process = "2-6-phase-space"
-elif initial_partons == "-" and option.final_state < 1:
-    process = "2-2-phase-space"
-else:
-    process = initial_partons + intermediates + final_state
-    gridproc = initial_partons + intermediates + grid_state
+if initial_partons == "-" and option.final_state > 0: process = "2-6-phase-space"
+elif initial_partons == "-" and option.final_state < 1: process = "2-2-phase-space"
+else: process = initial_partons + intermediates + final_state
 
 grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
 events_name = '%s_%s_%sTeV_%s%s' % (process, option.model, str(option.energy), pdf, options)
@@ -207,15 +191,11 @@ if os.path.isdir(data_directory) is False:
     sys.exit("error: specified run directory '%s' does not exist" % run_directory)
     sys.exit("error: specified data directory '%s' does not exist" % data_directory)
 
-if option.multichannel:
-    grid = ".grids"
-else:
-    grid = ".grid"
+if option.multichannel: grid = ".grids"
+else: grid = ".grid"
 
-if option.unweighted:
-    wgt = ""
-else:
-    wgt = ".wgt"
+if option.unweighted: wgt = ""
+else: wgt = ".wgt"
 
 events_path = events_path + wgt
 grid_file = "%s%s" % (grid_path, grid)
@@ -223,13 +203,10 @@ xsec_file = "%s.txt" % (grid_path)
 
 print "looking for gridfile ", grid_file
 
-if os.path.isfile(grid_file):
-    new_grid = False
-else:
-    new_grid = True
+if os.path.isfile(grid_file): new_grid = False
+else: new_grid = True
 
-if option.overwrite:
-    new_grid = True
+if option.overwrite: new_grid = True
 
 ntuple_file = "%s.root" % (events_path)
 lhe_file = "%s.lhef" % (events_path)
