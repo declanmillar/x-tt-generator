@@ -272,6 +272,8 @@ if option.batch:
         print "walltime = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
+        print >> handler, "module load gcc/6.1.0"
+        print >> handler, "module load openmpi/2.0.2/gcc"
         print >> handler, "cd %s" % run_directory
         print >> handler, '%s/bin/%s < %s > %s' % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
@@ -293,8 +295,12 @@ if option.batch:
     subprocess.call("chmod a+x %s" % handler_name, shell = True)
     print "submitting batch job ..."
     if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s' % (option.queue, logfile, run_directory, handler_name), shell = True)
-    elif "cyan03" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
+    elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
     else:
         print "error: hostname not recognised"
-else: subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+else:
+    if "cyan" in hostname:
+        print "loading openmpi module ..."
+        subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
+    subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
