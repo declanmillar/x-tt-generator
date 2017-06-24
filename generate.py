@@ -180,13 +180,12 @@ grid_path = data_directory + grid_name
 
 datafiles = [f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f))]
 filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
-print filtered
+# print filtered
 new_index = int(option.index) if option.index != "" else len(filtered) + 1
 events_name = events_name + "_%02d" % new_index
 events_path = data_directory + events_name
-print "index = ", new_index
+# print "index = ", new_index
 print "events name = ", events_name
-exit()
 
 if os.path.isdir(data_directory) is False:
     sys.exit("error: specified run directory '%s' does not exist" % run_directory)
