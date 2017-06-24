@@ -38,7 +38,7 @@ parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store
 parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
 parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
 parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_option("-i", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
+parser.add_option("-p", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
 parser.add_option("-N", "--iterations",         default = 20,        type = int,         help = "number of VAMP iterations")
 parser.add_option("-n", "--npoints",            default = 2000000,   type = int,         help = "number of VAMP calls")
 parser.add_option("-e", "--nevents",            default = 10000,     type = int,         help = "number of events")
@@ -52,6 +52,7 @@ parser.add_option("-k", "--walltime",           default = "60:00:00",           
 parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
 parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
 parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply detector cuts")
+parser.add_option("-i", "--index",              default = "",                            help = "overwrite index")
 (option, args) = parser.parse_args()
 
 if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
@@ -173,16 +174,19 @@ elif "heppc" in hostname:
     data_directory = "/data/millar/"
 else:
     exit("error: unknown host")
-run_directory = home_directory + "perigee"
-data_directory = data_directory + "zprime"
-grid_path = data_directory + "/" + grid_name
+run_directory = home_directory + "perigee/"
+data_directory = data_directory + "zprime/"
+grid_path = data_directory + grid_name
 
 datafiles = [f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f))]
-filtered = fnmatch.filter(datafiles, events_name + ".??.lhef")
-new_index = len(filtered) + 1
-events_name = events_name + "_%02d" % (len(filtered) + 1)
-
-events_path = data_directory + "/" + events_name
+filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
+print filtered
+new_index = int(option.index) if option.index != "" else len(filtered) + 1
+events_name = events_name + "_%02d" % new_index
+events_path = data_directory + events_name
+print "index = ", new_index
+print "events name = ", events_name
+exit()
 
 if os.path.isdir(data_directory) is False:
     sys.exit("error: specified run directory '%s' does not exist" % run_directory)
@@ -275,13 +279,13 @@ if option.batch:
         print >> handler, "module load gcc/6.1.0"
         print >> handler, "module load openmpi/2.0.2/gcc"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s > %s' % (run_directory, executable, config_name, logfile)
+        print >> handler, "%sbin/%s < %s > %s" % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
         print "h_rt = %s" % option.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /users/millar/.bash_profile"
         print >> handler, "cd %s" % run_directory
-        print >> handler, '%s/bin/%s < %s' % (run_directory, executable, config_name)
+        print >> handler, "%sbin/%s < %s" % (run_directory, executable, config_name)
     else:
         sys.exit("error: hostname not recognised")
 
