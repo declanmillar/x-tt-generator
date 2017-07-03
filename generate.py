@@ -74,7 +74,7 @@ if option.include_uu: initial_states += 1
 if option.lhef and initial_states > 1: sys.exit( "error: currently when outputting to LHEF, only one initial state can be active." )
 
 hostname = socket.gethostname()
-if not "lxplus" in hostname or not "cyan" in hostname: option.batch = False
+if not ("lxplus" in hostname or "cyan" in hostname): option.batch = False
 
 if option.model == "SM": option.include_x = False
 
@@ -292,7 +292,7 @@ if option.batch:
             handler_file.write( handler.getvalue() )
         print "Handler file written to %s." % handler_name
     except OSError:
-        sys.exit( "error: Cannot write handler file." )
+        sys.exit( "Error: Cannot write handler file." )
 
     subprocess.call( "chmod a+x %s" % handler_name, shell = True )
     print "submitting batch job ..."
