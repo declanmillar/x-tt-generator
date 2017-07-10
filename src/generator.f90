@@ -15,6 +15,7 @@ program generator
     !   Stefano Moretti
 
     use kinds
+    use runtime
     use progress
     use configuration
     use modelling
@@ -415,6 +416,6 @@ program generator
     end if
 
     call cpu_time(time3)
-    print*, "runtime = ", (time3 - time0) / 60, "[mins]"
+    call print_runtime(time3 - time0)
     stop
 end program generator
