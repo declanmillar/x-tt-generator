@@ -8,12 +8,12 @@ module runtime
 
 contains
 
-subroutine print_runtime( secs )
+subroutine print_runtime( seconds )
 
-    real( kind = default) :: secs
+    real( kind = default ) :: seconds
 
     write( *, "( a10, i2.2, a1, i2.2, a1, i2.2 )" ) &
-        "runtime = ", floor( secs / 3600 ), ":", floor( modulo( secs / 60 , 60.d0 ) ), ":", floor( modulo( secs, 60.d0 ) )
+        "runtime = ", floor( seconds / 3600 ), ":", floor( modulo( seconds / 60 , 60.d0 ) ), ":", floor( modulo( seconds, 60.d0 ) )
 
 end subroutine print_runtime
 
