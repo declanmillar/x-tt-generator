@@ -1,14 +1,8 @@
-# fortran makefile for zprime-top-generator
+# fortran makefile for perigee
 # requires: RootTuple
 # author: Declan Millar <declan.millar@cern.ch>
 
-# HOSTNAME := $(shell hostname)
-# ifneq (,$(findstring lxplus, $(HOSTNAME)))
-    # F = ifort
-# else
-F = gfortran
 F = mpifort
-# endif
 
 SRC = src
 LIB = lib
@@ -18,13 +12,11 @@ TUPLELIB = ../root-tuple/lib
 
 OBJ = vamp_kinds.o runtime.o mpi90.o constants.o specfun.o coordinates.o progress.o exceptions.o vamp_stat.o utils.o divisions.o histograms.o iso_fortran_env_stub.o linalg.o products.o specfun.o tao52_random_numbers.o tao_random_numbers.o vamp.o vampi.o vamp_tests.o vamp_test0.o rambo.o cteq61pdf.o ct14pdf.o mrs99.o configuration.o lhef.o helas.o modelling.o alpha_EWNG.o gg_tt.o qq_tt.o qq_ff.o tt_bbeevv.o gg_bbemuvevm.o qq_bbemuvevm.o uu_bbemuvevm.o dd_bbemuvevm.o scattering.o generator.o
 
-# ifneq (,$(findstring lxplus, $(HOSTNAME)))
-    # FFLAGS = -warn all
-# else
-FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
-# endif
+# $(shell root-config --libs)
+# ROOTLIBS = -L/usr/local/Cellar/root6/6.10.02/lib/root -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -lpthread -lm -ldl
 
-LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple $(shell root-config --libs)
+FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
+LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple
 
 $(LIB)/%.o: $(SRC)/%.f90
 	$(F) $(FFLAGS) -c -o $@ $<

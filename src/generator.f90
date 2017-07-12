@@ -29,7 +29,7 @@ program generator
     implicit none
 
     integer :: i, j
-    real( kind = default ) :: sigma, error, chi2, weight, all, error_all, al, error_al, apv, error_apv
+    real( kind = default ) :: cross_section, cross_section_uncertainty, chi2, weight, all, error_all, al, error_al, apv, error_apv
 
     ! time keeping
     integer :: ticks, proc_id, now(8)
@@ -48,7 +48,7 @@ program generator
     type( vamp_grids ) :: grids
     type( vamp_history ), allocatable :: history(:), histories(:, :)
 
-    real( kind = default ) :: cross_section(2)
+    real( kind = default ) :: input_cross_section(2)
 
     call cpu_time( time0 )
     call date_and_time( values = now )
@@ -63,7 +63,6 @@ program generator
     call initialise_masses
     call initialise_s
     call set_energy_limits
-
 
     if ( verbose ) print*, "generator: initialising MPI ..."
     call mpi90_init()
@@ -88,8 +87,8 @@ program generator
     if ( verbose ) print*, "generator: allocating x with", ndimensions, "dimensions ..."
     allocate( x( ndimensions ) )
 
-    sigma = 1.0
-    error = 0.0
+    cross_section = 1.0
+    cross_section_uncertainty = 0.0
 
     if ( new_grid ) then
         if ( verbose ) print*, "generator: integrating using VAMP ..."
@@ -151,14 +150,14 @@ program generator
 
             print*, "generator: initial sampling of VAMP grid with", calls( 1, 1 ), "iterations ..."
             call clear_exception( exc )
-            call vamp_sample_grids( rng, grids, dsigma, calls( 1, 1 ), sigma, error, chi2, exc = exc, &
+            call vamp_sample_grids( rng, grids, dsigma, calls( 1, 1 ), cross_section, cross_section_uncertainty, chi2, exc = exc, &
                 history = history, histories = histories )
             call clear_exception( exc )
             call vamp_print_history ( history, "multi" )
             call vamp_print_history ( histories, "multi" )
 
-            print *, "generator: integral = ", sigma, "+/-", error, " [pb]"
-            if ( sigma <= 0 ) stop
+            print *, "generator: integral = ", cross_section, "+/-", cross_section_uncertainty, " [pb]"
+            if ( cross_section <= 0 ) stop
 
             print*, "generator: discarding integral and re-sampling grid with ", calls( 2, 2 ), "calls ..."
             call vamp_discard_integrals( grids, calls( 2, 2 ) )
@@ -166,7 +165,7 @@ program generator
             print*, "generator: refining weights for VAMP grid with ", calls( 1, 2), "iterations ..."
             do i = 1, calls( 1, 2 )
                 call clear_exception( exc )
-                call vamp_sample_grids( rng, grids, dsigma, 1, sigma, error, chi2, exc = exc, &
+                call vamp_sample_grids( rng, grids, dsigma, 1, cross_section, cross_section_uncertainty, chi2, exc = exc, &
                     history = history( calls( 1, 1 ) + i: ), &
                     histories = histories( calls( 1, 1 ) + i:, : ) )
                 call handle_exception( exc )
@@ -175,8 +174,8 @@ program generator
                 call handle_exception( exc )
             end do
 
-            print *, "generator: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if ( sigma <= 0 ) stop
+            print *, "generator: integral = ", cross_section, "+/-", cross_section_uncertainty, " (chi^2 = ", chi2, ")"
+            if ( cross_section <= 0 ) stop
 
             print*, "generator: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
             call vamp_discard_integrals( grids, calls( 2, 3 ) )
@@ -186,13 +185,13 @@ program generator
             ! call vamp_warmup_grids(rng, grids, dsigma, calls(1, 3), &
             !                        history = history(calls(1, 1) + calls(1, 2) + 1:), &
             !                        histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
-            call vamp_sample_grids( rng, grids, dsigma, calls( 1, 3 ), sigma, error, chi2, &
+            call vamp_sample_grids( rng, grids, dsigma, calls( 1, 3 ), cross_section, cross_section_uncertainty, chi2, &
                 history = history( calls( 1, 1 ) + calls( 1, 2 ): ), &
                 histories = histories( calls( 1, 1 ) + calls( 1, 2 ):, : ) )
             call clear_exception( exc )
 
-            print *, "generator: integral = ", sigma, "+/-", error, " (chi^2 = ", chi2, ")"
-            if (sigma <= 0) stop
+            print *, "generator: integral = ", cross_section, "+/-", cross_section_uncertainty, " (chi^2 = ", chi2, ")"
+            if (cross_section <= 0) stop
 
             if ( verbose ) print*, "generator: printing history ..."
             call vamp_print_history( history, "history" )
@@ -212,10 +211,11 @@ program generator
 
             print*, "prelim iterations = ", calls( 1, 1 )
             call clear_exception( exc )
-            call vamp_sample_grid( rng, grid, dsigma, calls( 1, 1 ), sigma, error, chi2, exc = exc, history = history )
+            call vamp_sample_grid( rng, grid, dsigma, calls( 1, 1 ), &
+                cross_section, cross_section_uncertainty, chi2, exc = exc, history = history )
             call handle_exception( exc )
-            print *, "sigma = ", sigma, "+/-", error
-            if ( sigma <= 0 ) stop
+            print *, "cross_section = ", cross_section, "+/-", cross_section_uncertainty
+            if ( cross_section <= 0 ) stop
 
             call cpu_time( time2 )
             print *, "prelim time = ", ( time2 - time1 ) / 60, "[mins]"
@@ -226,21 +226,22 @@ program generator
 
             print*, "full iterations = ", calls( 1, 3 )
             call clear_exception( exc )
-            call vamp_sample_grid( rng, grid, dsigma, calls( 1, 3 ) - 1, sigma, error, chi2, exc = exc, &
-                                  history = history( calls( 1, 1 ) + 1:) )
+            call vamp_sample_grid( rng, grid, dsigma, calls( 1, 3 ) - 1, &
+                cross_section, cross_section_uncertainty, chi2, exc = exc, &
+                history = history( calls( 1, 1 ) + 1:) )
             call handle_exception( exc )
             call clear_exception( exc )
             call vamp_sample_grid0( rng, grid, dsigma, no_data, exc = exc )
             call handle_exception( exc )
 
             if ( verbose ) print*, "generator: printing history ..."
-            call vamp_print_history(history, "history")
-            call vamp_delete_history(history)
+            call vamp_print_history( history, "history" )
+            call vamp_delete_history( history )
 
             if ( verbose ) print*, "generator: saving vamp grid to ", grid_file
             call vamp_write_grid( grid, grid_file )
 
-            call write_cross_section( xsec_file, sigma, error )
+            call write_cross_section( xsec_file, cross_section, cross_section_uncertainty )
         end if
         call cpu_time( time2 )
         print *, "generator: time = ", ( time2 - time1 ) / 60, "[mins]"
@@ -255,14 +256,14 @@ program generator
             call vamp_read_grid( grid, grid_file )
         end if
         if ( unweighted ) then
-            cross_section = read_cross_section( xsec_file )
-            sigma = cross_section(1)
-            error = cross_section(2)
+            input_cross_section = read_cross_section( xsec_file )
+            cross_section = input_cross_section(1)
+            cross_section_uncertainty = input_cross_section(2)
         end if
     end if
 
-    print *, "sigma = ", sigma, "+/-", error
-    if ( sigma <= 0 ) stop
+    print *, "cross_section = ", cross_section, "+/-", cross_section_uncertainty
+    if ( cross_section <= 0 ) stop
 
     if ( nevents > 0 ) then
         if ( verbose ) print*, "process: calculating beam info ..."
@@ -286,8 +287,8 @@ program generator
         end if
 
         if ( .not. unweighted ) then
-            sigma = 0.0
-            error = 0.0
+            cross_section = 0.0
+            cross_section_uncertainty = 0.0
             sigma_pol = 0.d0
             error_pol = 0.d0
             nweighted = nevents
@@ -304,34 +305,34 @@ program generator
                 end if
                 call handle_exception ( exc )
                 if ( .not. unweighted ) call rootaddevent( weight )
-                sigma = sigma + weight
-                error = error + weight * weight
+                cross_section = cross_section + weight
+                cross_section_uncertainty = cross_section_uncertainty + weight * weight
                 if ( .not. batch ) call progress_bar(i)
             end do
 
-            sigma = sigma / nweighted
-            error = error / nweighted / nweighted
+            cross_section = cross_section / nweighted
+            cross_section_uncertainty = cross_section_uncertainty / nweighted / nweighted
 
-            error = sqrt( error )
+            cross_section_uncertainty = sqrt( cross_section_uncertainty )
 
-            print *, "sigma(e+e-) = ", sigma, "+/-", error
+            print *, "cross_section(e+e-) = ", cross_section, "+/-", cross_section_uncertainty
 
             if ( final_state < 1 ) then
                 if ( verbose ) print *, "finalisation: calculating asymmetries for polarized final state"
                 do i = -1, 1, 2
                     do j = -1, 1, 2
-                        sigma_pol( i, j ) = sigma_pol( i, j ) * sigma
-                        error_pol( i, j ) = sigma_pol( i, j ) * error
+                        sigma_pol( i, j ) = sigma_pol( i, j ) * cross_section
+                        error_pol( i, j ) = sigma_pol( i, j ) * cross_section_uncertainty
                     end do
                 end do
 
-                all = ( sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1) ) / sigma
+                all = ( sigma_pol(1, 1) - sigma_pol(1, -1) - sigma_pol(-1, 1) + sigma_pol(-1, -1) ) / cross_section
                 error_all = ( sigma_pol(1, 1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(-1, -1) ) / 4.d0 * all
 
-                al = ( sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / sigma
+                al = ( sigma_pol(-1, -1) - sigma_pol(1, -1) + sigma_pol(-1, 1) - sigma_pol(1, 1)) / cross_section
                 error_al = ( sigma_pol(-1, -1) + sigma_pol(1, -1) + sigma_pol(-1, 1) + sigma_pol(1, 1) ) / 4.d0 * al
 
-                apv = ( sigma_pol(-1, -1) - sigma_pol(1, 1) ) / sigma / 2.d0
+                apv = ( sigma_pol(-1, -1) - sigma_pol(1, 1) ) / cross_section / 2.d0
                 error_apv = ( sigma_pol(-1, -1) + sigma_pol(1, 1) ) / 2.d0 * apv
 
                 print*, "ALL = ", all, "+/-", error_all
@@ -349,8 +350,8 @@ program generator
             call rootaddprocessdouble( pdfg(2), "pdfg2" )
             call rootaddprocessdouble( pdfs(1), "pdfs1" )
             call rootaddprocessdouble( pdfs(2), "pdfs2" )
-            call rootaddprocessdouble( sigma, "cross_section" )
-            call rootaddprocessdouble( error, "cross_section_uncertainty" )
+            call rootaddprocessdouble( cross_section, "cross_section" )
+            call rootaddprocessdouble( cross_section_uncertainty, "cross_section_uncertainty" )
         end if
 
         if ( lhef_out ) then
@@ -358,7 +359,7 @@ program generator
             if ( verbose ) print*, "initiating lhef file ..."
             call lhe_open( lhe_file )
             call lhe_beam( idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw )
-            call lhe_process( sigma, error, 1.d0, final_state )
+            call lhe_process( cross_section, cross_section_uncertainty, 1.d0, final_state )
         end if
 
         if ( unweighted ) then
