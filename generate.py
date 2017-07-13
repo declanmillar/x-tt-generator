@@ -11,7 +11,6 @@ import StringIO
 import optparse
 import subprocess
 import sys
-import random
 import glob
 import socket
 import time
@@ -74,7 +73,7 @@ if option.include_uu: initial_states += 1
 if option.lhef and initial_states > 1: sys.exit( "error: currently when outputting to LHEF, only one initial state can be active." )
 
 hostname = socket.gethostname()
-if not ("lxplus" in hostname or "cyan" in hostname): option.batch = False
+if not ( "lxplus" in hostname or "cyan" in hostname ): option.batch = False
 
 if option.model == "SM": option.include_x = False
 

@@ -1,403 +1,100 @@
-# ./generate.py -q -f 11 -k 04:00:00 -i 00
-# ./generate.py -q -f 11 -k 04:00:00 -i 01
-# ./generate.py -q -f 11 -k 04:00:00 -i 02
-# ./generate.py -q -f 11 -k 04:00:00 -i 03
-# ./generate.py -q -f 11 -k 04:00:00 -i 04
-# ./generate.py -q -f 11 -k 04:00:00 -i 05
-# ./generate.py -q -f 11 -k 04:00:00 -i 06
-# ./generate.py -q -f 11 -k 04:00:00 -i 07
-# ./generate.py -q -f 11 -k 04:00:00 -i 08
-# ./generate.py -q -f 11 -k 04:00:00 -i 09
-# ./generate.py -q -f 11 -k 04:00:00 -i 10
-# ./generate.py -q -f 11 -k 04:00:00 -i 11
-# ./generate.py -q -f 11 -k 04:00:00 -i 12
-# ./generate.py -q -f 11 -k 04:00:00 -i 13
-# ./generate.py -q -f 11 -k 04:00:00 -i 14
-# ./generate.py -q -f 11 -k 04:00:00 -i 15
-# ./generate.py -q -f 11 -k 04:00:00 -i 16
-# ./generate.py -q -f 11 -k 04:00:00 -i 17
-# ./generate.py -q -f 11 -k 04:00:00 -i 18
-# ./generate.py -q -f 11 -k 04:00:00 -i 19
-# ./generate.py -q -f 11 -k 04:00:00 -i 20
-# ./generate.py -q -f 11 -k 04:00:00 -i 21
-# ./generate.py -q -f 11 -k 04:00:00 -i 22
-# ./generate.py -q -f 11 -k 04:00:00 -i 23
-# ./generate.py -q -f 11 -k 04:00:00 -i 24
-# ./generate.py -q -f 11 -k 04:00:00 -i 25
-# ./generate.py -q -f 11 -k 04:00:00 -i 26
-# ./generate.py -q -f 11 -k 04:00:00 -i 27
-# ./generate.py -q -f 11 -k 04:00:00 -i 28
-# ./generate.py -q -f 11 -k 04:00:00 -i 29
-# ./generate.py -q -f 11 -k 04:00:00 -i 30
-# ./generate.py -q -f 11 -k 04:00:00 -i 31
-# ./generate.py -q -f 11 -k 04:00:00 -i 32
-# ./generate.py -q -f 11 -k 04:00:00 -i 33
-# ./generate.py -q -f 11 -k 04:00:00 -i 34
-# ./generate.py -q -f 11 -k 04:00:00 -i 35
-# ./generate.py -q -f 11 -k 04:00:00 -i 36
-# ./generate.py -q -f 11 -k 04:00:00 -i 37
-# ./generate.py -q -f 11 -k 04:00:00 -i 38
-# ./generate.py -q -f 11 -k 04:00:00 -i 39
-# ./generate.py -q -f 11 -k 04:00:00 -i 40
-# ./generate.py -q -f 11 -k 04:00:00 -i 41
-# ./generate.py -q -f 11 -k 04:00:00 -i 42
-# ./generate.py -q -f 11 -k 04:00:00 -i 43
-# ./generate.py -q -f 11 -k 04:00:00 -i 44
-# ./generate.py -q -f 11 -k 04:00:00 -i 45
-# ./generate.py -q -f 11 -k 04:00:00 -i 46
-# ./generate.py -q -f 11 -k 04:00:00 -i 47
-# ./generate.py -q -f 11 -k 04:00:00 -i 48
-# ./generate.py -q -f 11 -k 04:00:00 -i 49
-# ./generate.py -q -f 11 -k 04:00:00 -i 50
-# ./generate.py -q -f 11 -k 04:00:00 -i 51
-# ./generate.py -q -f 11 -k 04:00:00 -i 52
-# ./generate.py -q -f 11 -k 04:00:00 -i 53
-# ./generate.py -q -f 11 -k 04:00:00 -i 54
-# ./generate.py -q -f 11 -k 04:00:00 -i 55
-# ./generate.py -q -f 11 -k 04:00:00 -i 56
-# ./generate.py -q -f 11 -k 04:00:00 -i 57
-# ./generate.py -q -f 11 -k 04:00:00 -i 58
-# ./generate.py -q -f 11 -k 04:00:00 -i 59
-# ./generate.py -q -f 11 -k 04:00:00 -i 60
-# ./generate.py -q -f 11 -k 04:00:00 -i 61
-# ./generate.py -q -f 11 -k 04:00:00 -i 62
-# ./generate.py -q -f 11 -k 04:00:00 -i 63
-# ./generate.py -q -f 11 -k 04:00:00 -i 64
-# ./generate.py -q -f 11 -k 04:00:00 -i 65
-# ./generate.py -q -f 11 -k 04:00:00 -i 66
-# ./generate.py -q -f 11 -k 04:00:00 -i 67
-# ./generate.py -q -f 11 -k 04:00:00 -i 68
-# ./generate.py -q -f 11 -k 04:00:00 -i 69
-# ./generate.py -q -f 11 -k 04:00:00 -i 70
-# ./generate.py -q -f 11 -k 04:00:00 -i 71
-# ./generate.py -q -f 11 -k 04:00:00 -i 72
-# ./generate.py -q -f 11 -k 04:00:00 -i 73
-# ./generate.py -q -f 11 -k 04:00:00 -i 74
-# ./generate.py -q -f 11 -k 04:00:00 -i 75
-# ./generate.py -q -f 11 -k 04:00:00 -i 76
-# ./generate.py -q -f 11 -k 04:00:00 -i 77
-# ./generate.py -q -f 11 -k 04:00:00 -i 78
-# ./generate.py -q -f 11 -k 04:00:00 -i 79
-# ./generate.py -q -f 11 -k 04:00:00 -i 80
-# ./generate.py -q -f 11 -k 04:00:00 -i 81
-# ./generate.py -q -f 11 -k 04:00:00 -i 82
-# ./generate.py -q -f 11 -k 04:00:00 -i 83
-# ./generate.py -q -f 11 -k 04:00:00 -i 84
-# ./generate.py -q -f 11 -k 04:00:00 -i 85
-# ./generate.py -q -f 11 -k 04:00:00 -i 86
-# ./generate.py -q -f 11 -k 04:00:00 -i 87
-# ./generate.py -q -f 11 -k 04:00:00 -i 88
-# ./generate.py -q -f 11 -k 04:00:00 -i 89
-# ./generate.py -q -f 11 -k 04:00:00 -i 90
-# ./generate.py -q -f 11 -k 04:00:00 -i 91
-# ./generate.py -q -f 11 -k 04:00:00 -i 92
-# ./generate.py -q -f 11 -k 04:00:00 -i 93
-# ./generate.py -q -f 11 -k 04:00:00 -i 94
-# ./generate.py -q -f 11 -k 04:00:00 -i 95
-# ./generate.py -q -f 11 -k 04:00:00 -i 96
-# ./generate.py -q -f 11 -k 04:00:00 -i 97
-# ./generate.py -q -f 11 -k 04:00:00 -i 98
-# ./generate.py -q -f 11 -k 04:00:00 -i 99
-
-# ./generate.py -g -f 11 -k 12:00:00 -i 00
-# ./generate.py -g -f 11 -k 12:00:00 -i 01
-# ./generate.py -g -f 11 -k 12:00:00 -i 02
-# ./generate.py -g -f 11 -k 12:00:00 -i 03
-# ./generate.py -g -f 11 -k 12:00:00 -i 04
-# ./generate.py -g -f 11 -k 12:00:00 -i 05
-# ./generate.py -g -f 11 -k 12:00:00 -i 06
-# ./generate.py -g -f 11 -k 12:00:00 -i 07
-# ./generate.py -g -f 11 -k 12:00:00 -i 08
-# ./generate.py -g -f 11 -k 12:00:00 -i 09
-# ./generate.py -g -f 11 -k 12:00:00 -i 10
-# ./generate.py -g -f 11 -k 12:00:00 -i 11
-# ./generate.py -g -f 11 -k 12:00:00 -i 12
-# ./generate.py -g -f 11 -k 12:00:00 -i 13
-# ./generate.py -g -f 11 -k 12:00:00 -i 14
-# ./generate.py -g -f 11 -k 12:00:00 -i 15
-# ./generate.py -g -f 11 -k 12:00:00 -i 16
-# ./generate.py -g -f 11 -k 12:00:00 -i 17
-# ./generate.py -g -f 11 -k 12:00:00 -i 18
-# ./generate.py -g -f 11 -k 12:00:00 -i 19
-# ./generate.py -g -f 11 -k 12:00:00 -i 20
-# ./generate.py -g -f 11 -k 12:00:00 -i 21
-# ./generate.py -g -f 11 -k 12:00:00 -i 22
-# ./generate.py -g -f 11 -k 12:00:00 -i 23
-# ./generate.py -g -f 11 -k 12:00:00 -i 24
-# ./generate.py -g -f 11 -k 12:00:00 -i 25
-# ./generate.py -g -f 11 -k 12:00:00 -i 26
-# ./generate.py -g -f 11 -k 12:00:00 -i 27
-# ./generate.py -g -f 11 -k 12:00:00 -i 28
-# ./generate.py -g -f 11 -k 12:00:00 -i 29
-# ./generate.py -g -f 11 -k 12:00:00 -i 30
-# ./generate.py -g -f 11 -k 12:00:00 -i 31
-# ./generate.py -g -f 11 -k 12:00:00 -i 32
-# ./generate.py -g -f 11 -k 12:00:00 -i 33
-# ./generate.py -g -f 11 -k 12:00:00 -i 34
-# ./generate.py -g -f 11 -k 12:00:00 -i 35
-# ./generate.py -g -f 11 -k 12:00:00 -i 36
-# ./generate.py -g -f 11 -k 12:00:00 -i 37
-# ./generate.py -g -f 11 -k 12:00:00 -i 38
-# ./generate.py -g -f 11 -k 12:00:00 -i 39
-# ./generate.py -g -f 11 -k 12:00:00 -i 40
-# ./generate.py -g -f 11 -k 12:00:00 -i 41
-# ./generate.py -g -f 11 -k 12:00:00 -i 42
-# ./generate.py -g -f 11 -k 12:00:00 -i 43
-# ./generate.py -g -f 11 -k 12:00:00 -i 44
-# ./generate.py -g -f 11 -k 12:00:00 -i 45
-# ./generate.py -g -f 11 -k 12:00:00 -i 46
-# ./generate.py -g -f 11 -k 12:00:00 -i 47
-# ./generate.py -g -f 11 -k 12:00:00 -i 48
-# ./generate.py -g -f 11 -k 12:00:00 -i 49
-# ./generate.py -g -f 11 -k 12:00:00 -i 50
-# ./generate.py -g -f 11 -k 12:00:00 -i 51
-# ./generate.py -g -f 11 -k 12:00:00 -i 52
-# ./generate.py -g -f 11 -k 12:00:00 -i 53
-# ./generate.py -g -f 11 -k 12:00:00 -i 54
-# ./generate.py -g -f 11 -k 12:00:00 -i 55
-# ./generate.py -g -f 11 -k 12:00:00 -i 56
-# ./generate.py -g -f 11 -k 12:00:00 -i 57
-# ./generate.py -g -f 11 -k 12:00:00 -i 58
-# ./generate.py -g -f 11 -k 12:00:00 -i 59
-# ./generate.py -g -f 11 -k 12:00:00 -i 60
-# ./generate.py -g -f 11 -k 12:00:00 -i 61
-# ./generate.py -g -f 11 -k 12:00:00 -i 62
-# ./generate.py -g -f 11 -k 12:00:00 -i 63
-# ./generate.py -g -f 11 -k 12:00:00 -i 64
-# ./generate.py -g -f 11 -k 12:00:00 -i 65
-# ./generate.py -g -f 11 -k 12:00:00 -i 66
-# ./generate.py -g -f 11 -k 12:00:00 -i 67
-# ./generate.py -g -f 11 -k 12:00:00 -i 68
-# ./generate.py -g -f 11 -k 12:00:00 -i 69
-# ./generate.py -g -f 11 -k 12:00:00 -i 70
-# ./generate.py -g -f 11 -k 12:00:00 -i 71
-# ./generate.py -g -f 11 -k 12:00:00 -i 72
-# ./generate.py -g -f 11 -k 12:00:00 -i 73
-# ./generate.py -g -f 11 -k 12:00:00 -i 74
-# ./generate.py -g -f 11 -k 12:00:00 -i 75
-# ./generate.py -g -f 11 -k 12:00:00 -i 76
-# ./generate.py -g -f 11 -k 12:00:00 -i 77
-# ./generate.py -g -f 11 -k 12:00:00 -i 78
-# ./generate.py -g -f 11 -k 12:00:00 -i 79
-# ./generate.py -g -f 11 -k 12:00:00 -i 80
-# ./generate.py -g -f 11 -k 12:00:00 -i 81
-# ./generate.py -g -f 11 -k 12:00:00 -i 82
-# ./generate.py -g -f 11 -k 12:00:00 -i 83
-# ./generate.py -g -f 11 -k 12:00:00 -i 84
-# ./generate.py -g -f 11 -k 12:00:00 -i 85
-# ./generate.py -g -f 11 -k 12:00:00 -i 86
-# ./generate.py -g -f 11 -k 12:00:00 -i 87
-# ./generate.py -g -f 11 -k 12:00:00 -i 88
-# ./generate.py -g -f 11 -k 12:00:00 -i 89
-# ./generate.py -g -f 11 -k 12:00:00 -i 90
-# ./generate.py -g -f 11 -k 12:00:00 -i 91
-# ./generate.py -g -f 11 -k 12:00:00 -i 92
-# ./generate.py -g -f 11 -k 12:00:00 -i 93
-# ./generate.py -g -f 11 -k 12:00:00 -i 94
-# ./generate.py -g -f 11 -k 12:00:00 -i 95
-# ./generate.py -g -f 11 -k 12:00:00 -i 96
-# ./generate.py -g -f 11 -k 12:00:00 -i 97
-# ./generate.py -g -f 11 -k 12:00:00 -i 98
-# ./generate.py -g -f 11 -k 12:00:00 -i 99
-#
-# ./generate.py -d -f 11 -k 30:00:00 -i 00
-# ./generate.py -d -f 11 -k 30:00:00 -i 01
-# ./generate.py -d -f 11 -k 30:00:00 -i 02
-# ./generate.py -d -f 11 -k 30:00:00 -i 03
-# ./generate.py -d -f 11 -k 30:00:00 -i 04
-# ./generate.py -d -f 11 -k 30:00:00 -i 05
-# ./generate.py -d -f 11 -k 30:00:00 -i 06
-# ./generate.py -d -f 11 -k 30:00:00 -i 07
-# ./generate.py -d -f 11 -k 30:00:00 -i 08
-# ./generate.py -d -f 11 -k 30:00:00 -i 09
-# ./generate.py -d -f 11 -k 30:00:00 -i 10
-# ./generate.py -d -f 11 -k 30:00:00 -i 11
-# ./generate.py -d -f 11 -k 30:00:00 -i 12
-# ./generate.py -d -f 11 -k 30:00:00 -i 13
-# ./generate.py -d -f 11 -k 30:00:00 -i 14
-# ./generate.py -d -f 11 -k 30:00:00 -i 15
-# ./generate.py -d -f 11 -k 30:00:00 -i 16
-# ./generate.py -d -f 11 -k 30:00:00 -i 17
-# ./generate.py -d -f 11 -k 30:00:00 -i 18
-# ./generate.py -d -f 11 -k 30:00:00 -i 19
-# ./generate.py -d -f 11 -k 30:00:00 -i 20
-# ./generate.py -d -f 11 -k 30:00:00 -i 21
-# ./generate.py -d -f 11 -k 30:00:00 -i 22
-# ./generate.py -d -f 11 -k 30:00:00 -i 23
-# ./generate.py -d -f 11 -k 30:00:00 -i 24
-# ./generate.py -d -f 11 -k 30:00:00 -i 25
-# ./generate.py -d -f 11 -k 30:00:00 -i 26
-# ./generate.py -d -f 11 -k 30:00:00 -i 27
-# ./generate.py -d -f 11 -k 30:00:00 -i 28
-# ./generate.py -d -f 11 -k 30:00:00 -i 29
-# ./generate.py -d -f 11 -k 30:00:00 -i 30
-# ./generate.py -d -f 11 -k 30:00:00 -i 31
-# ./generate.py -d -f 11 -k 30:00:00 -i 32
-# ./generate.py -d -f 11 -k 30:00:00 -i 33
-# ./generate.py -d -f 11 -k 30:00:00 -i 34
-# ./generate.py -d -f 11 -k 30:00:00 -i 35
-# ./generate.py -d -f 11 -k 30:00:00 -i 36
-# ./generate.py -d -f 11 -k 30:00:00 -i 37
-# ./generate.py -d -f 11 -k 30:00:00 -i 38
-# ./generate.py -d -f 11 -k 30:00:00 -i 39
-# ./generate.py -d -f 11 -k 30:00:00 -i 40
-# ./generate.py -d -f 11 -k 30:00:00 -i 41
-# ./generate.py -d -f 11 -k 30:00:00 -i 42
-# ./generate.py -d -f 11 -k 30:00:00 -i 43
-# ./generate.py -d -f 11 -k 30:00:00 -i 44
-./generate.py -d -f 11 -k 30:00:00 -i 45
-# ./generate.py -d -f 11 -k 30:00:00 -i 46
-# ./generate.py -d -f 11 -k 30:00:00 -i 47
-# ./generate.py -d -f 11 -k 30:00:00 -i 48
-./generate.py -d -f 11 -k 30:00:00 -i 49
-./generate.py -d -f 11 -k 30:00:00 -i 50
-./generate.py -d -f 11 -k 30:00:00 -i 51
-./generate.py -d -f 11 -k 30:00:00 -i 52
-./generate.py -d -f 11 -k 30:00:00 -i 53
-./generate.py -d -f 11 -k 30:00:00 -i 54
-./generate.py -d -f 11 -k 30:00:00 -i 55
-./generate.py -d -f 11 -k 30:00:00 -i 56
-./generate.py -d -f 11 -k 30:00:00 -i 57
-./generate.py -d -f 11 -k 30:00:00 -i 58
-./generate.py -d -f 11 -k 30:00:00 -i 59
-./generate.py -d -f 11 -k 30:00:00 -i 60
-./generate.py -d -f 11 -k 30:00:00 -i 61
-./generate.py -d -f 11 -k 30:00:00 -i 62
-./generate.py -d -f 11 -k 30:00:00 -i 63
-./generate.py -d -f 11 -k 30:00:00 -i 64
-./generate.py -d -f 11 -k 30:00:00 -i 65
-./generate.py -d -f 11 -k 30:00:00 -i 66
-./generate.py -d -f 11 -k 30:00:00 -i 67
-./generate.py -d -f 11 -k 30:00:00 -i 68
-./generate.py -d -f 11 -k 30:00:00 -i 69
-./generate.py -d -f 11 -k 30:00:00 -i 70
-./generate.py -d -f 11 -k 30:00:00 -i 71
-./generate.py -d -f 11 -k 30:00:00 -i 72
-./generate.py -d -f 11 -k 30:00:00 -i 73
-./generate.py -d -f 11 -k 30:00:00 -i 74
-# ./generate.py -d -f 11 -k 30:00:00 -i 75
-# ./generate.py -d -f 11 -k 30:00:00 -i 76
-# ./generate.py -d -f 11 -k 30:00:00 -i 77
-# ./generate.py -d -f 11 -k 30:00:00 -i 78
-# ./generate.py -d -f 11 -k 30:00:00 -i 79
-# ./generate.py -d -f 11 -k 30:00:00 -i 80
-# ./generate.py -d -f 11 -k 30:00:00 -i 81
-# ./generate.py -d -f 11 -k 30:00:00 -i 82
-# ./generate.py -d -f 11 -k 30:00:00 -i 83
-# ./generate.py -d -f 11 -k 30:00:00 -i 84
-# ./generate.py -d -f 11 -k 30:00:00 -i 85
-# ./generate.py -d -f 11 -k 30:00:00 -i 86
-# ./generate.py -d -f 11 -k 30:00:00 -i 87
-# ./generate.py -d -f 11 -k 30:00:00 -i 88
-# ./generate.py -d -f 11 -k 30:00:00 -i 89
-# ./generate.py -d -f 11 -k 30:00:00 -i 90
-# ./generate.py -d -f 11 -k 30:00:00 -i 91
-# ./generate.py -d -f 11 -k 30:00:00 -i 92
-# ./generate.py -d -f 11 -k 30:00:00 -i 93
-# ./generate.py -d -f 11 -k 30:00:00 -i 94
-# ./generate.py -d -f 11 -k 30:00:00 -i 95
-# ./generate.py -d -f 11 -k 30:00:00 -i 96
-# ./generate.py -d -f 11 -k 30:00:00 -i 97
-# ./generate.py -d -f 11 -k 30:00:00 -i 98
-# ./generate.py -d -f 11 -k 30:00:00 -i 99
-#
-# ./generate.py -u -f 11 -k 30:00:00 -i 00
-# ./generate.py -u -f 11 -k 30:00:00 -i 01
-# ./generate.py -u -f 11 -k 30:00:00 -i 02
-# ./generate.py -u -f 11 -k 30:00:00 -i 03
-# ./generate.py -u -f 11 -k 30:00:00 -i 04
-# ./generate.py -u -f 11 -k 30:00:00 -i 05
-# ./generate.py -u -f 11 -k 30:00:00 -i 06
-# ./generate.py -u -f 11 -k 30:00:00 -i 07
-# ./generate.py -u -f 11 -k 30:00:00 -i 08
-# ./generate.py -u -f 11 -k 30:00:00 -i 09
-# ./generate.py -u -f 11 -k 30:00:00 -i 10
-# ./generate.py -u -f 11 -k 30:00:00 -i 11
-# ./generate.py -u -f 11 -k 30:00:00 -i 12
-# ./generate.py -u -f 11 -k 30:00:00 -i 13
-# ./generate.py -u -f 11 -k 30:00:00 -i 14
-# ./generate.py -u -f 11 -k 30:00:00 -i 15
-# ./generate.py -u -f 11 -k 30:00:00 -i 16
-# ./generate.py -u -f 11 -k 30:00:00 -i 17
-# ./generate.py -u -f 11 -k 30:00:00 -i 18
-# ./generate.py -u -f 11 -k 30:00:00 -i 19
-# ./generate.py -u -f 11 -k 30:00:00 -i 20
-# ./generate.py -u -f 11 -k 30:00:00 -i 21
-# ./generate.py -u -f 11 -k 30:00:00 -i 22
-# ./generate.py -u -f 11 -k 30:00:00 -i 23
-# ./generate.py -u -f 11 -k 30:00:00 -i 24
-# ./generate.py -u -f 11 -k 30:00:00 -i 25
-# ./generate.py -u -f 11 -k 30:00:00 -i 26
-# ./generate.py -u -f 11 -k 30:00:00 -i 27
-# ./generate.py -u -f 11 -k 30:00:00 -i 28
-# ./generate.py -u -f 11 -k 30:00:00 -i 29
-# ./generate.py -u -f 11 -k 30:00:00 -i 30
-# ./generate.py -u -f 11 -k 30:00:00 -i 31
-# ./generate.py -u -f 11 -k 30:00:00 -i 32
-# ./generate.py -u -f 11 -k 30:00:00 -i 33
-# ./generate.py -u -f 11 -k 30:00:00 -i 34
-# ./generate.py -u -f 11 -k 30:00:00 -i 35
-# ./generate.py -u -f 11 -k 30:00:00 -i 36
-# ./generate.py -u -f 11 -k 30:00:00 -i 37
-# ./generate.py -u -f 11 -k 30:00:00 -i 38
-# ./generate.py -u -f 11 -k 30:00:00 -i 39
-# ./generate.py -u -f 11 -k 30:00:00 -i 40
-# ./generate.py -u -f 11 -k 30:00:00 -i 41
-# ./generate.py -u -f 11 -k 30:00:00 -i 42
-# ./generate.py -u -f 11 -k 30:00:00 -i 43
-# ./generate.py -u -f 11 -k 30:00:00 -i 44
-# ./generate.py -u -f 11 -k 30:00:00 -i 45
-# ./generate.py -u -f 11 -k 30:00:00 -i 46
-# ./generate.py -u -f 11 -k 30:00:00 -i 47
-# ./generate.py -u -f 11 -k 30:00:00 -i 48
-# ./generate.py -u -f 11 -k 30:00:00 -i 49
-# ./generate.py -u -f 11 -k 30:00:00 -i 50
-# ./generate.py -u -f 11 -k 30:00:00 -i 51
-# ./generate.py -u -f 11 -k 30:00:00 -i 52
-# ./generate.py -u -f 11 -k 30:00:00 -i 53
-# ./generate.py -u -f 11 -k 30:00:00 -i 54
-# ./generate.py -u -f 11 -k 30:00:00 -i 55
-# ./generate.py -u -f 11 -k 30:00:00 -i 56
-# ./generate.py -u -f 11 -k 30:00:00 -i 57
-# ./generate.py -u -f 11 -k 30:00:00 -i 58
-# ./generate.py -u -f 11 -k 30:00:00 -i 59
-# ./generate.py -u -f 11 -k 30:00:00 -i 60
-# ./generate.py -u -f 11 -k 30:00:00 -i 61
-# ./generate.py -u -f 11 -k 30:00:00 -i 62
-# ./generate.py -u -f 11 -k 30:00:00 -i 63
-# ./generate.py -u -f 11 -k 30:00:00 -i 64
-# ./generate.py -u -f 11 -k 30:00:00 -i 65
-# ./generate.py -u -f 11 -k 30:00:00 -i 66
-# ./generate.py -u -f 11 -k 30:00:00 -i 67
-# ./generate.py -u -f 11 -k 30:00:00 -i 68
-# ./generate.py -u -f 11 -k 30:00:00 -i 69
-# ./generate.py -u -f 11 -k 30:00:00 -i 70
-# ./generate.py -u -f 11 -k 30:00:00 -i 71
-# ./generate.py -u -f 11 -k 30:00:00 -i 72
-# ./generate.py -u -f 11 -k 30:00:00 -i 73
-# ./generate.py -u -f 11 -k 30:00:00 -i 74
-# ./generate.py -u -f 11 -k 30:00:00 -i 75
-# ./generate.py -u -f 11 -k 30:00:00 -i 76
-# ./generate.py -u -f 11 -k 30:00:00 -i 77
-# ./generate.py -u -f 11 -k 30:00:00 -i 78
-# ./generate.py -u -f 11 -k 30:00:00 -i 79
-# ./generate.py -u -f 11 -k 30:00:00 -i 80
-# ./generate.py -u -f 11 -k 30:00:00 -i 81
-# ./generate.py -u -f 11 -k 30:00:00 -i 82
-# ./generate.py -u -f 11 -k 30:00:00 -i 83
-# ./generate.py -u -f 11 -k 30:00:00 -i 84
-# ./generate.py -u -f 11 -k 30:00:00 -i 85
-# ./generate.py -u -f 11 -k 30:00:00 -i 86
-# ./generate.py -u -f 11 -k 30:00:00 -i 87
-# ./generate.py -u -f 11 -k 30:00:00 -i 88
-# ./generate.py -u -f 11 -k 30:00:00 -i 89
-# ./generate.py -u -f 11 -k 30:00:00 -i 90
-# ./generate.py -u -f 11 -k 30:00:00 -i 91
-# ./generate.py -u -f 11 -k 30:00:00 -i 92
-# ./generate.py -u -f 11 -k 30:00:00 -i 93
-# ./generate.py -u -f 11 -k 30:00:00 -i 94
-# ./generate.py -u -f 11 -k 30:00:00 -i 95
-# ./generate.py -u -f 11 -k 30:00:00 -i 96
-# ./generate.py -u -f 11 -k 30:00:00 -i 97
-# ./generate.py -u -f 11 -k 30:00:00 -i 98
-# ./generate.py -u -f 11 -k 30:00:00 -i 99
+./generate.py -d -f 11 -k 48:00:00 -i 00 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 01 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 02 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 03 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 04 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 05 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 06 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 07 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 08 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 09 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 10 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 11 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 12 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 13 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 14 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 15 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 16 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 17 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 18 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 19 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 20 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 21 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 22 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 23 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 24 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 25 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 26 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 27 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 28 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 29 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 30 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 31 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 32 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 33 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 34 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 35 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 36 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 37 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 38 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 39 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 40 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 41 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 42 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 43 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 44 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 45 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 46 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 47 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 48 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 49 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 50 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 51 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 52 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 53 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 54 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 55 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 56 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 57 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 58 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 59 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 60 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 61 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 62 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 63 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 64 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 65 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 66 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 67 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 68 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 69 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 70 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 71 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 72 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 73 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 74 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 75 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 76 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 77 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 78 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 79 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 80 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 81 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 82 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 83 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 84 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 85 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 86 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 87 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 88 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 89 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 90 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 91 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 92 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 93 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 94 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 95 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 96 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 97 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 98 -m GLR-R-2.5
+./generate.py -d -f 11 -k 48:00:00 -i 99 -m GLR-R-2.5
