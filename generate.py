@@ -159,7 +159,7 @@ events_name = '%s_%s_%sTeV_%s%s' % ( process, option.model, str( option.energy )
 
 home_directory = "."
 data_directory = "."
-if "Sunder" in hostname:
+if "Lorkhan" in hostname:
     home_directory = "/Users/declan/Projects/"
     data_directory = "/Users/declan/Data/"
 elif "lxplus" in hostname:
