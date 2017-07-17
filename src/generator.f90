@@ -181,8 +181,8 @@ program generator
             print*, "generator: warming up grid with ", calls(1, 3), "iterations ..."
             call clear_exception(exc)
             ! call vamp_warmup_grids(rng, grids, dsigma, calls(1, 3), &
-            !                        history = history(calls(1, 1) + calls(1, 2) + 1:), &
-            !                        histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
+                ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
+                ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
             call vamp_sample_grids(rng, grids, dsigma, calls(1, 3), cross_section, cross_section_uncertainty, chi2, &
                 history = history(calls(1, 1) + calls(1, 2):), &
                 histories = histories(calls(1, 1) + calls(1, 2):, :))
