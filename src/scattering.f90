@@ -8,7 +8,7 @@ module scattering
 
     implicit none
 
-    public :: dsigma, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
+    public :: event, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
     public :: read_cross_section !, write_cross_section
     logical, public :: record_events
     real(kind=default), public :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
@@ -142,8 +142,7 @@ subroutine initialise_s
 end subroutine initialise_s
 
 
-
-function dsigma(x, data, weights, channel, grids)
+function event(x, data, weights, channel, grids)
 
     ! computes the differential cross section for:
     !     p p -> f f~
@@ -165,7 +164,7 @@ function dsigma(x, data, weights, channel, grids)
 
     implicit none
 
-    real(kind=default) :: dsigma
+    real(kind=default) :: event
     real(kind=default), dimension(:), intent(in) :: x
     class(vamp_data_t), intent(in) :: data
     real(kind=default), dimension(:), intent(in), optional :: weights
@@ -233,7 +232,7 @@ function dsigma(x, data, weights, channel, grids)
     real(kind=default) :: spolqq(-1:1, -1:1), spolgg(-1:1, -1:1)
     real(kind=default) :: spoluu1(-1:1, -1:1), spoldd1(-1:1, -1:1), spolbb1(-1:1, -1:1)
     real(kind=default) :: spoluu2(-1:1, -1:1), spoldd2(-1:1, -1:1), spolbb2(-1:1, -1:1)
-    real(kind=default) :: weight_pol(-1:1, -1:1), dsigma_pol(-1:1, -1:1)
+    real(kind=default) :: weight_pol(-1:1, -1:1), event_pol(-1:1, -1:1)
 
     integer :: seed
     real(kind=default) :: random
@@ -243,13 +242,13 @@ function dsigma(x, data, weights, channel, grids)
 
     ! ---
 
-    if (verbose) print*, "dsigma: begin"
+    if (verbose) print*, "event: begin"
 
-    dsigma = 0
+    event = 0
 
     if (present(channel) .and. (include_dd .or. include_uu) .and. (channel == 2 .or. channel == 3)) then
         if (channel == 2) then
-            if (verbose) print*, "dsigma: flattening Breit Wigner"
+            if (verbose) print*, "event: flattening Breit Wigner"
             at34min = atan((ecm_min * ecm_min - zmass * zmass) / (zmass * zwidth))
             at34max = atan((ecm_max * ecm_max - zmass * zmass) / (zmass * zwidth))
             if (use_rambo) then
@@ -264,7 +263,7 @@ function dsigma(x, data, weights, channel, grids)
             end if
             ecm = sqrt(shat)
         else if (channel == 3) then
-            if (verbose) print*, "dsigma: flattening Breit Wigner"
+            if (verbose) print*, "event: flattening Breit Wigner"
             at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
             at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
             if (use_rambo) then
@@ -280,7 +279,7 @@ function dsigma(x, data, weights, channel, grids)
             ecm = sqrt(shat)
         end if
     else
-        if (verbose) print*, "dsigma: not flattening Breit Wigner"
+        if (verbose) print*, "event: not flattening Breit Wigner"
         if (use_rambo) then
             ecm = x(1) * (ecm_max - ecm_min) + ecm_min
         else
@@ -289,7 +288,7 @@ function dsigma(x, data, weights, channel, grids)
         shat = ecm * ecm
     end if
 
-    if (verbose) print*, "dsigma: ecm calculated"
+    if (verbose) print*, "event: ecm calculated"
 
     tau = shat / s
 
@@ -768,11 +767,11 @@ function dsigma(x, data, weights, channel, grids)
 
     if (.not. include_gg .and. .not. include_qq .and. .not. include_uu .and. .not. include_dd) then
         if (verbose) print*, "matrix elements: setting |M|^2 = 1 and skipping ..."
-        dsigma = 1.d0 / x1
+        event = 1.d0 / x1
         if (final_state < 1) then
             do i = -1, 1, 2
                 do j = -1, 1, 2
-                  dsigma_pol(i,j) = 1.d0 / (x1 * dsigma)
+                  event_pol(i,j) = 1.d0 / (x1 * event)
                 end do
             end do
         end if
@@ -796,7 +795,7 @@ function dsigma(x, data, weights, channel, grids)
     spoldd1 = 0.d0
     spoluu2 = 0.d0
     spoldd2 = 0.d0
-    dsigma_pol = 0.d0
+    event_pol = 0.d0
     weight_pol = 0.d0
 
     if (final_state < 1) then
@@ -842,12 +841,12 @@ function dsigma(x, data, weights, channel, grids)
     sqq = sqq * gs4
     sgg = sgg * gs4
 
-    dsigma = 0.d0
+    event = 0.d0
     if (final_state < 1) then
         if (verbose) print*, "scattering: summing over 2->2 |m|^2 with pdfs of initial partons ..."
         do i = -1, 1, 2
             do j = -1, 1, 2
-                dsigma_pol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
+                event_pol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
                                 + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
                                 + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
                                 + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
@@ -858,13 +857,13 @@ function dsigma(x, data, weights, channel, grids)
                                 + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
                                 + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
                                 + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
-                dsigma_pol(i, j) = dsigma_pol(i, j) / x1
-                dsigma = dsigma + dsigma_pol(i, j)
+                event_pol(i, j) = event_pol(i, j) / x1
+                event = event + event_pol(i, j)
             end do
         end do
     else
         if (verbose) print*, "scattering: summing over 2->6 |m|^2 with PDFs of initial partons ..."
-        dsigma = fx1(13) * fx2(13) *  sgg &
+        event = fx1(13) * fx2(13) *  sgg &
                + fx1( 1) * fx2( 7) * (sqq + sdd1) &
                + fx1( 2) * fx2( 8) * (sqq + suu1) &
                + fx1( 3) * fx2( 9) * (sqq + sdd1) &
@@ -875,15 +874,15 @@ function dsigma(x, data, weights, channel, grids)
                + fx1( 9) * fx2( 3) * (sqq + sdd2) &
                + fx1(10) * fx2( 4) * (sqq + suu2) &
                + fx1(11) * fx2( 5) * (sqq + sdd2)
-        dsigma = dsigma / x1
+        event = event / x1
     end if
 
-    if (dsigma == 0.d0) return
+    if (event == 0.d0) return
 
     if (final_state < 1) then
         do i = -1, 1, 2
             do j = -1, 1, 2
-                dsigma_pol(i, j) = dsigma_pol(i, j) / dsigma
+                event_pol(i, j) = event_pol(i, j) / event
             end do
         end do
     end if
@@ -891,60 +890,60 @@ function dsigma(x, data, weights, channel, grids)
     666 continue
 
     if (verbose) print*, "scattering: multiplying by Jacobian for dx1 dx2 -> dx(2) dx(3) ..."
-    dsigma = dsigma * (1.d0 - tau) * 2.d0 * ecm / s * (ecm_max - ecm_min)
+    event = event * (1.d0 - tau) * 2.d0 * ecm / s * (ecm_max - ecm_min)
 
     if (verbose) print*, "scattering: applying unit conversion ..."
-    dsigma = dsigma * unit_conv
+    event = event * unit_conv
 
     if (verbose) print*, "scattering: multiply by phase space, azimuthal integration and flux factors ..."
     if (final_state < 1) then
         if (use_rambo) then
-            dsigma = dsigma * wgtr
+            event = event * wgtr
         else
-            ! dsigma = dsigma * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * twopi
-            dsigma = dsigma * qcm  * twopi / (8 * pcm)
+            ! event = event * qcm / (2.d0 * pcm) * 2.d0 ** (4 - 3 * 2) * twopi
+            event = event * qcm  * twopi / (8 * pcm)
         end if
-        ! dsigma = dsigma / (2.d0 * shat) * twopi ** (4 - 3 * 2)
-        dsigma = dsigma / (2.d0 * shat * twopi * twopi)
+        ! event = event / (2.d0 * shat) * twopi ** (4 - 3 * 2)
+        event = event / (2.d0 * shat * twopi * twopi)
 
     else
         if (use_rambo) then
-            dsigma = dsigma * wgtr
+            event = event * wgtr
         else
-            ! dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
-            dsigma = dsigma * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
+            ! event = event * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
+            event = event * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
             if (flatten_integrand) then
                 if (present(channel) .and. (include_dd .or. include_uu)) then
 
                     if (channel == 2) then
-                        dsigma = dsigma * ((ecm * ecm - zmass * zmass) ** 2 + zmass * zmass * zwidth * zwidth) &
+                        event = event * ((ecm * ecm - zmass * zmass) ** 2 + zmass * zmass * zwidth * zwidth) &
                                         * (at34max - at34min) / (2 * ecm * zmass * zwidth)
                     else if (channel == 3) then
-                        dsigma = dsigma * ((ecm * ecm - xmass(1) * xmass(1)) ** 2 + xmass(1) * xmass(1) * xwidth(1) * xwidth(1)) &
+                        event = event * ((ecm * ecm - xmass(1) * xmass(1)) ** 2 + xmass(1) * xmass(1) * xwidth(1) * xwidth(1)) &
                                         * (at34max - at34min) / (2 * ecm * xmass(1) * xwidth(1))
                     end if
                 end if
-                dsigma = dsigma * ((m356 * m356 - tmass2) ** 2 + tmass2 * gamt * gamt) &
+                event = event * ((m356 * m356 - tmass2) ** 2 + tmass2 * gamt * gamt) &
                                 * (at356max - at356min) / (2 * m356 * tmass * gamt)
-                dsigma = dsigma * ((m478 * m478 - tmass2) ** 2 + tmass2 * gamt * gamt) &
+                event = event * ((m478 * m478 - tmass2) ** 2 + tmass2 * gamt * gamt) &
                                 * (at478max - at478min) / (2 * m478 * tmass * gamt)
-                dsigma = dsigma * ((m56 * m56 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
+                event = event * ((m56 * m56 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
                                 * (at56max - at56min) / (2 * m56 * wmass * wwidth)
-                dsigma = dsigma * ((m78 * m78 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
+                event = event * ((m78 * m78 - wmass2) ** 2 + wmass2 * wwidth * wwidth) &
                                 * (at78max - at78min) / (2 * m78 * wmass * wwidth)
-                if (nwa) dsigma = dsigma * gamt * gamt / (twidth * twidth)
+                if (nwa) event = event * gamt * gamt / (twidth * twidth)
             else
-                dsigma = dsigma * (m356max - m356min)
-                dsigma = dsigma * (m478max - m478min)
-                dsigma = dsigma * (m56max - m56min)
-                dsigma = dsigma * (m78max - m78min)
+                event = event * (m356max - m356min)
+                event = event * (m478max - m478min)
+                event = event * (m56max - m56min)
+                event = event * (m78max - m78min)
             end if
         end if
 
-        dsigma = dsigma / (2 * shat * twopi ** 14)
+        event = event / (2 * shat * twopi ** 14)
     end if
 
-    if (verbose) print*, "dsigma: ", dsigma
+    if (verbose) print*, "event: ", event
 
     if (record_events) then
         if (ntuple_out) then
@@ -972,8 +971,8 @@ function dsigma(x, data, weights, channel, grids)
                 ! Compute polarised event weightings
                 do i = -1, 1, 2
                     do j = -1, 1, 2
-                        sigma_pol(i, j) = sigma_pol(i, j) + dsigma * dsigma_pol(i, j)
-                        weight_pol(i, j) = dsigma * dsigma_pol(i, j)
+                        sigma_pol(i, j) = sigma_pol(i, j) + event * event_pol(i, j)
+                        weight_pol(i, j) = event * event_pol(i, j)
                         error_pol(i, j) = error_pol(i, j) + sigma_pol(i, j) * sigma_pol(i, j)
                     end do
                 end do
@@ -1162,6 +1161,6 @@ function dsigma(x, data, weights, channel, grids)
         end if
     end if
     return
-end function dsigma
+end function event
 
 end module scattering

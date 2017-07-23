@@ -148,7 +148,7 @@ program generator
 
             print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, dsigma, calls(1, 1), cross_section, cross_section_uncertainty, chi2, exc = exc, &
+            call vamp_sample_grids(rng, grids, event, calls(1, 1), cross_section, cross_section_uncertainty, chi2, exc = exc, &
                 history = history, histories = histories)
             call clear_exception(exc)
             call vamp_print_history (history, "multi")
@@ -163,7 +163,7 @@ program generator
             print*, "generator: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
             do i = 1, calls(1, 2)
                 call clear_exception(exc)
-                call vamp_sample_grids(rng, grids, dsigma, 1, cross_section, cross_section_uncertainty, chi2, exc = exc, &
+                call vamp_sample_grids(rng, grids, event, 1, cross_section, cross_section_uncertainty, chi2, exc = exc, &
                     history = history(calls(1, 1) + i:), &
                     histories = histories(calls(1, 1) + i:, :))
                 call handle_exception(exc)
@@ -180,10 +180,10 @@ program generator
 
             print*, "generator: warming up grid with ", calls(1, 3), "iterations ..."
             call clear_exception(exc)
-            ! call vamp_warmup_grids(rng, grids, dsigma, calls(1, 3), &
+            ! call vamp_warmup_grids(rng, grids, event, calls(1, 3), &
                 ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
                 ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
-            call vamp_sample_grids(rng, grids, dsigma, calls(1, 3), cross_section, cross_section_uncertainty, chi2, &
+            call vamp_sample_grids(rng, grids, event, calls(1, 3), cross_section, cross_section_uncertainty, chi2, &
                 history = history(calls(1, 1) + calls(1, 2):), &
                 histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
@@ -209,7 +209,7 @@ program generator
 
             print*, "prelim iterations = ", calls(1, 1)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, dsigma, calls(1, 1), &
+            call vamp_sample_grid(rng, grid, event, calls(1, 1), &
                 cross_section, cross_section_uncertainty, chi2, exc = exc, history = history)
             call handle_exception(exc)
             print *, "cross_section = ", cross_section, "+/-", cross_section_uncertainty
@@ -221,12 +221,12 @@ program generator
 
             print*, "full iterations = ", calls(1, 3)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, dsigma, calls(1, 3) - 1, &
+            call vamp_sample_grid(rng, grid, event, calls(1, 3) - 1, &
                 cross_section, cross_section_uncertainty, chi2, exc = exc, &
                 history = history(calls(1, 1) + 1:))
             call handle_exception(exc)
             call clear_exception(exc)
-            call vamp_sample_grid0(rng, grid, dsigma, no_data, exc = exc)
+            call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
             call handle_exception(exc)
 
             if (verbose) print*, "generator: printing history ..."
@@ -291,9 +291,9 @@ program generator
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
                 if (multichannel) then
-                 call vamp_next_event(x, rng, grids, dsigma, phi, weight, exc = exc)
+                 call vamp_next_event(x, rng, grids, event, phi, weight, exc = exc)
                 else
-                 call vamp_next_event(x, rng, grid, dsigma, weight, exc = exc)
+                 call vamp_next_event(x, rng, grid, event, weight, exc = exc)
                 end if
                 call handle_exception (exc)
                 if (.not. unweighted) call rootaddevent(weight)
@@ -361,13 +361,13 @@ program generator
             do i = 1, nevents
                 call clear_exception(exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, dsigma, phi, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, phi, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, dsigma, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, exc = exc)
                 end if
                 call handle_exception(exc)
                 record_events = .true.
-                weight = dsigma(x, no_data)
+                weight = event(x, no_data)
                 if (ntuple_out) call rootaddevent(1.d0)
                 record_events = .false.
                 if (.not. batch) call progress_bar(i)
