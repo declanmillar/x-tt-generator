@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# python run script for the generator
-# generates a config file, runs generator using it
-# locally or submit to the lxplus/iridis/qmul batch system
+# python run script for the event generator fortran executable
+# generates a config file and runs the executable using it
+# runs locally or submits a job to the lxplus/iridis/qmul batch system
 # declan.millar@cern.ch
 
 import os
@@ -17,145 +17,184 @@ import time
 import fnmatch
 
 parser = argparse.ArgumentParser(description="generate ttbar events")
-parser.add_argument("-a", "--include_a",          default = True,  action = "store_false", help = "include photon mediated interaction")
-parser.add_argument("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
-parser.add_argument("-c", "--cut",                default = False, action = "store_true",  help = "apply detector cuts")
-parser.add_argument("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
-parser.add_argument("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
-parser.add_argument("-e", "--nevents",            default = 10000,     type = int,         help = "number of events")
-parser.add_argument("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
-parser.add_argument("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_argument("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
-parser.add_argument("-H", "--lhef",               default = True,  action = "store_false", help = "write events to an LHEF file")
-parser.add_argument("-I", "--interference",       default = 1,         type = int,         help = "specify interference (default = full)")
-parser.add_argument("-i", "--index",              default = "",                            help = "append specified file index")
-parser.add_argument("-j", "--job",                default = True,  action = "store_false", help = "submit as a batch job")
-parser.add_argument("-k", "--walltime",           default = "60:00:00",                    help = "set walltime 'hh:mm:ss'")
-parser.add_argument("-L", "--energy_low",         default = 0,         type = int,         help = "set Ecm lower limit")
-parser.add_argument("-M", "--multichannel",       default = False, action = "store_true",  help = "use multichannel integration")
-parser.add_argument("-m", "--model",              default = "SM",                          help = "set physics model (default = SM)")
-parser.add_argument("-N", "--iterations",         default = 20,        type = int,         help = "number of VAMP iterations")
-parser.add_argument("-n", "--npoints",            default = 2000000,   type = int,         help = "number of VAMP calls")
-parser.add_argument("-o", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid file")
-parser.add_argument("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
-parser.add_argument("-p", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
-parser.add_argument("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue")
-parser.add_argument("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
-parser.add_argument("-r", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
-parser.add_argument("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
-parser.add_argument("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_argument("-t", "--tag",                default = "",                            help = "set name tag for output files")
-parser.add_argument("-U", "--energy_up",          default = 0,         type = int,         help = "Ecm upper limit")
-parser.add_argument("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
-parser.add_argument("-v", "--verbose",            default = False, action = "store_true",  help = "print extra run information")
-parser.add_argument("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
-parser.add_argument("-w", "--unweighted",         default = True,  action = "store_false", help = "generate unweighted events")
-parser.add_argument("-x", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
-parser.add_argument("-z", "--include_z",          default = True,  action = "store_false", help = "include Z boson mediated interaction")
+parser.add_argument("-a", "--include_a", help = "include photon mediated interaction", default = True, action = "store_false")
+parser.add_argument("-b", "--include_background", help = "include tt background", default = False, action = "store_true")
+parser.add_argument("-c", "--cut", help = "apply detector cuts", default = False, action = "store_true")
+parser.add_argument("-d", "--include_dd", help = "include down-down initiated interactions", default = False, action = "store_true")
+parser.add_argument("-E", "--energy", help = "set collider energy", type = int, default = 13)
+parser.add_argument("-e", "--nevents", help = "set number of events", type = int, default = 10000)
+parser.add_argument("-F", "--flatten_integrand", help = "flatten resonances in integrand", default = True, action = "store_false")
+parser.add_argument("-f", "--final_state", help = "set final state id", type = int, default = 1)
+parser.add_argument("-g", "--include_gg", help = "include gluon-gluon initiated interactions", default = False, action = "store_true")
+parser.add_argument("-H", "--lhef", help = "write events to an LHEF file", default = True, action = "store_false")
+parser.add_argument("-I", "--interference", help = "set interference (default = full)", type = int, default = 1)
+parser.add_argument("-i", "--index", help = "append specified file index", default = "")
+parser.add_argument("-j", "--job", help = "submit as a batch job", default = True,  action = "store_false")
+parser.add_argument("-k", "--walltime", help = "set walltime in 'hh:mm:ss' format", default = "60:00:00")
+parser.add_argument("-L", "--energy_low", help = "set an upper limit on the collider energy", type = int, default = 0)
+parser.add_argument("-M", "--multichannel", help = "use multichannel integration", default = False, action = "store_true")
+parser.add_argument("-m", "--model", help = "set physics model", default = "SM")
+parser.add_argument("-N", "--iterations", help = "number of VAMP iterations", type = int, default = 20)
+parser.add_argument("-n", "--npoints", help = "number of VAMP calls", type = int, default = 2000000)
+parser.add_argument("-o", "--overwrite", help = "overwrite existing grid file", default = False, action = "store_true")
+parser.add_argument("-P", "--pdf", help = "structure_functions", type = int, default = 11)
+parser.add_argument("-p", "--ppbar", help = "set initial state: 0 = pp, 1 = pp~", type = int, default = 0)
+parser.add_argument("-Q", "--queue", help = "lxbatch queue", default = "1nw")
+parser.add_argument("-q", "--include_qq", help = "include quark-quark initiated interactions", default = False, action = "store_true")
+parser.add_argument("-r", "--use_rambo", help = "use RAMBO for phase space", default = False, action = "store_true")
+parser.add_argument("-s", "--include_signal", help = "include tt signal", default = True,  action = "store_false")
+parser.add_argument("-T", "--ntuple", help = "write events to ROOT n-tuple", default = True,  action = "store_false")
+parser.add_argument("-t", "--tag", help = "add a name tag to output files", default = "")
+parser.add_argument("-U", "--energy_up", help = "set an upper limit on the collider energy", type = int, default = 0)
+parser.add_argument("-u", "--include_uu", help = "include up-up initiated interactions", default = False, action = "store_true")
+parser.add_argument("-v", "--verbose", help = "print extra run information", default = False, action = "store_true")
+parser.add_argument("-W", "--use_nwa", help = "use Narrow Width Approximation", default = False, action = "store_true")
+parser.add_argument("-w", "--unweighted", help = "generate unweighted events", default = True,  action = "store_false")
+parser.add_argument("-x", "--include_x", help = "include Z' boson mediated interactions", default = True,  action = "store_false")
+parser.add_argument("-z", "--include_z", help = "include Z boson mediated interaction", default = True,  action = "store_false")
 args = parser.parse_args()
 
-if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
-if option.energy < 0: sys.exit("error: collider energy must be positive definite\n" % usage)
-if option.npoints < 2: sys.exit("error: must have at least 2 sampling points\n%s" % usage)
-if option.energy_low < 0 or option.energy_up < 0: sys.exit("error: energy bounds must be positive definite")
-if option.energy_low > option.energy or option.energy_up > option.energy: sys.exit("error: energy bounds cannot exceed collider energy")
-if option.energy_low > 0 and option.energy_up > 0 and option.energy_up <= option.energy_low: sys.exit("error: energy upper bound must be greater than lower bound")
-if option.interference < 0 or option.interference > 4: sys.exit("error: interference must be 0 - 4")
-if option.pdf < 1 or option.pdf > 11: sys.exit("error: pdf id must be 1 - 11")
-if option.include_background == False and option.include_signal == False: sys.exit("error: signal and background both off")
+# check model file exists
+if os.path.isfile("Models/%s.mdl" % args.model) is False:
+    print "ERROR: %s is not a valid model" % args.model
+    print "available models:"
+    for name in glob.glob("Models/*.mdl"):
+        print "\t", name[7:-4]
+    sys.exit()
+
+if args.energy < 0:
+    sys.exit("ERROR: collider energy must be positive definite")
+
+if args.npoints < 2:
+    sys.exit("ERROR: must have at least 2 sampling points")
+
+if args.energy_low < 0 or args.energy_up < 0:
+    sys.exit("ERROR: collider energy bounds must be positive definite")
+
+if args.energy_low > args.energy or args.energy_up > args.energy:
+    sys.exit("ERROR: energy bounds cannot exceed collider energy")
+
+if args.energy_low > 0 and args.energy_up > 0 and args.energy_up <= args.energy_low:
+    sys.exit("ERROR: energy upper bound must be greater than lower bound")
+
+if args.interference < 0 or args.interference > 4:
+    sys.exit("ERROR: interference must be between 0 and 4")
+
+if args.pdf < 1 or args.pdf > 11:
+    sys.exit("ERROR: PDF ID must be between 1 and 11")
+
+if args.include_background == False and args.include_signal == False:
+    sys.exit("ERROR: signal and background both off")
 
 initial_states = 0
-if option.include_gg: initial_states += 1
-if option.include_qq: initial_states += 1
-if option.include_dd: initial_states += 1
-if option.include_uu: initial_states += 1
+if args.include_gg: initial_states += 1
+if args.include_qq: initial_states += 1
+if args.include_dd: initial_states += 1
+if args.include_uu: initial_states += 1
 
-if option.lhef and initial_states > 1: sys.exit("error: currently when outputting to LHEF, only one initial state can be active.")
+if args.lhef and initial_states > 1:
+    sys.exit("ERROR: currently when outputting to LHEF, only one initial state can be active")
+
+if initial_states == 0:
+    print "WARNING: no initial states specified; will integrate phase space only"
 
 hostname = socket.gethostname()
-if not ("lxplus" in hostname or "cyan" in hostname): option.job = False
+if not ("lxplus" in hostname or "cyan" in hostname):
+    args.job = False
 
-if option.model == "SM": option.include_x = False
+if args.model == "SM":
+    args.include_x = False
 
-if option.final_state == -1:
-    option.include_gg = False
-    option.include_qq = False
+if args.final_state == -1:
+    args.include_gg = False
+    args.include_qq = False
 
-if option.include_uu == False and option.include_dd == False:
-    option.include_a = False
-    option.include_z = False
-    option.include_x = False
+if args.include_uu == False and args.include_dd == False:
+    args.include_a = False
+    args.include_z = False
+    args.include_x = False
 
-if option.final_state == -1 and option.energy_low == 0: option.energy_low = 0.5
+if args.final_state == -1 and args.energy_low == 0:
+    # avoid divergence in Drell-Yan
+    args.energy_low = 0.5
 
-if option.use_rambo or option.include_background: option.flatten_integrand = False
+if args.use_rambo or args.include_background:
+    args.flatten_integrand = False
 
-if option.final_state < 1: option.use_nwa = False
+if args.final_state < 1:
+    args.use_nwa = False
 
 executable = "generator"
 options = ""
 
-if option.ppbar == 1: options += "_ppbar"
+if args.ppbar == 1:
+    options += "_ppbar"
 
 pdf = ""
-if option.pdf ==  1: pdf = "CTEQ6M"
-if option.pdf ==  2: pdf = "CTEQ6D"
-if option.pdf ==  3: pdf = "CTEQ6L"
-if option.pdf ==  4: pdf = "CTEQ6L1"
-if option.pdf ==  5: pdf = "MRS9901"
-if option.pdf ==  6: pdf = "MRS9902"
-if option.pdf ==  7: pdf = "MRS9903"
-if option.pdf ==  8: pdf = "MRS9904"
-if option.pdf ==  9: pdf = "MRS9905"
-if option.pdf == 10: pdf = "CT14LN"
-if option.pdf == 11: pdf = "CT14LL"
+if args.pdf ==  1: pdf = "CTEQ6M"
+if args.pdf ==  2: pdf = "CTEQ6D"
+if args.pdf ==  3: pdf = "CTEQ6L"
+if args.pdf ==  4: pdf = "CTEQ6L1"
+if args.pdf ==  5: pdf = "MRS9901"
+if args.pdf ==  6: pdf = "MRS9902"
+if args.pdf ==  7: pdf = "MRS9903"
+if args.pdf ==  8: pdf = "MRS9904"
+if args.pdf ==  9: pdf = "MRS9905"
+if args.pdf == 10: pdf = "CT14LN"
+if args.pdf == 11: pdf = "CT14LL"
 
-if not option.unweighted: option.lhef = False
-if option.interference != 1: options += "_int%i" % option.interference
-if option.use_nwa: options += "_nwa"
-if option.multichannel: options += "_multi"
-if option.cut: options += "_cut"
-if option.use_rambo: options += "_rambo"
-if option.include_background == False and option.flatten_integrand == False: options += "_unmapped"
-if option.energy_low != 0 or option.energy_up != 0: options += "_%s-%s" % (option.energy_low, option.energy_up)
-if len(option.tag) > 0: options += "_" + option.tag
-if option.final_state < 2: option.include_background = False
-if option.include_background: flatten_integrand = False
+if not args.unweighted:
+    args.lhef = False
+
+if args.final_state < 2:
+    args.include_background = False
+
+if args.include_background:
+    flatten_integrand = False
+
+# include non-default major options in output file name
+if args.interference != 1: options += "_int%i" % args.interference
+if args.use_nwa: options += "_nwa"
+if args.multichannel: options += "_multi"
+if args.cut: options += "_cut"
+if args.use_rambo: options += "_rambo"
+if args.include_background == False and args.flatten_integrand == False: options += "_unmapped"
+if args.energy_low != 0 or args.energy_up != 0: options += "_%s-%s" % (args.energy_low, args.energy_up)
+if len(args.tag) > 0: options += "_" + args.tag
 
 initial_partons = ""
-if option.include_gg: initial_partons += "gg"
-if option.include_qq: initial_partons += "qq"
-if option.include_dd: initial_partons += "dd"
-if option.include_uu: initial_partons += "uu"
-if initial_partons == "": exit("Error: no initial partons specified")
+if args.include_gg: initial_partons += "gg"
+if args.include_qq: initial_partons += "qq"
+if args.include_dd: initial_partons += "dd"
+if args.include_uu: initial_partons += "uu"
+if initial_partons == "": initial_partons = "phase-space"
 initial_partons += "-"
 
 intermediates = ""
-if option.include_a: intermediates += "A"
-if option.include_z: intermediates += "Z"
-if option.include_x: intermediates += "X"
-
+if args.include_a: intermediates += "A"
+if args.include_z: intermediates += "Z"
+if args.include_x: intermediates += "X"
 if len(intermediates) > 0: intermediates = intermediates + "-"
 
 grid_state = "tt-bbllvv"
 gridproc = initial_partons + intermediates + grid_state
 
 final_state = ""
-if   option.final_state == -1: final_state = "ll"
-elif option.final_state ==  0: final_state = "tt"
-elif option.final_state ==  1: final_state = "tt-bbllvv"
-elif option.final_state == 11: final_state = "tt-bbeevv"
-elif option.final_state == 22: final_state = "tt-bbmumuvv"
-elif option.final_state == 12: final_state = "tt-bbemuvv"
-elif option.final_state == 21: final_state = "tt-bbmuevv"
-elif option.final_state == 33: final_state = "bbtatavv"
+if   args.final_state == -1: final_state = "ll"
+elif args.final_state ==  0: final_state = "tt"
+elif args.final_state ==  1: final_state = "tt-bbllvv"
+elif args.final_state == 11: final_state = "tt-bbeevv"
+elif args.final_state == 22: final_state = "tt-bbmumuvv"
+elif args.final_state == 12: final_state = "tt-bbemuvv"
+elif args.final_state == 21: final_state = "tt-bbmuevv"
+elif args.final_state == 33: final_state = "bbtatavv"
 
-if initial_partons == "-" and option.final_state > 0: process = "2-6-phase-space"
-elif initial_partons == "-" and option.final_state < 1: process = "2-2-phase-space"
+if initial_partons == "-" and args.final_state > 0: process = "2-6-phase-space"
+elif initial_partons == "-" and args.final_state < 1: process = "2-2-phase-space"
 else: process = initial_partons + intermediates + final_state
 
-grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, option.model, str(option.energy), pdf, options)
-events_name = '%s_%s_%sTeV_%s%s' % (process, option.model, str(option.energy), pdf, options)
+grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, args.model, str(args.energy), pdf, options)
+events_name = '%s_%s_%sTeV_%s%s' % (process, args.model, str(args.energy), pdf, options)
 
 home_directory = "."
 data_directory = "."
@@ -172,7 +211,7 @@ elif "heppc" in hostname:
     home_directory = "/users/millar/"
     data_directory = "/data/millar/"
 else:
-    exit("error: unknown host")
+    exit("ERROR: unknown host")
 run_directory = home_directory + "perigee/"
 data_directory = data_directory + "zprime/"
 grid_path = data_directory + grid_name
@@ -180,19 +219,19 @@ grid_path = data_directory + grid_name
 datafiles = [ f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f)) ]
 filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
 # print filtered
-new_index = int(option.index) if option.index != "" else len(filtered) + 1
+new_index = int(args.index) if args.index != "" else len(filtered) + 1
 events_name = events_name + "_%02d" % new_index
 events_path = data_directory + events_name
 print "events name = ", events_name
 
 if os.path.isdir(data_directory) is False:
-    sys.exit("error: specified run directory '%s' does not exist" % run_directory)
-    sys.exit("error: specified data directory '%s' does not exist" % data_directory)
+    sys.exit("ERROR: specified run directory '%s' does not exist" % run_directory)
+    sys.exit("ERROR: specified data directory '%s' does not exist" % data_directory)
 
-if option.multichannel: grid = ".grids"
+if args.multichannel: grid = ".grids"
 else: grid = ".grid"
 
-if option.unweighted: wgt = ""
+if args.unweighted: wgt = ""
 else: wgt = ".wgt"
 
 events_path = events_path + wgt
@@ -204,7 +243,7 @@ print "looking for gridfile ", grid_file
 if os.path.isfile(grid_file): new_grid = False
 else: new_grid = True
 
-if option.overwrite: new_grid = True
+if args.overwrite: new_grid = True
 
 ntuple_file = "%s.root" % (events_path)
 lhe_file = "%s.lhef" % (events_path)
@@ -219,50 +258,50 @@ else:
     handler_name = "%s.sh" % (events_name)
 
 config = StringIO.StringIO()
-print >> config, '%r    ! ntuple'             % option.ntuple
-print >> config, '%r    ! lhef'               % option.lhef
+print >> config, '%r    ! ntuple'             % args.ntuple
+print >> config, '%r    ! lhef'               % args.lhef
 print >> config, '%r    ! new_grid'           % new_grid
 print >> config, '%s'                         % grid_file
 print >> config, '%s'                         % xsec_file
 print >> config, '%s'                         % logfile
 print >> config, '%s'                         % lhe_file
 print >> config, '%s'                         % ntuple_file
-print >> config, '%i    ! initial state'      % option.ppbar
-print >> config, '%i    ! final state'        % option.final_state
-print >> config, '%s    ! model'              % option.model
-print >> config, '%i    ! pdf'                % option.pdf
-print >> config, '%r    ! include signal'     % option.include_signal
-print >> config, '%r    ! include background' % option.include_background
-print >> config, '%r    ! include gg'         % option.include_gg
-print >> config, '%r    ! include qq'         % option.include_qq
-print >> config, '%r    ! include uu'         % option.include_uu
-print >> config, '%r    ! include dd'         % option.include_dd
-print >> config, '%r    ! include a'          % option.include_a
-print >> config, '%r    ! include z'          % option.include_z
-print >> config, '%r    ! include x'          % option.include_x
-print >> config, '%i    ! interference'       % option.interference
-print >> config, '%r    ! use nwa'            % option.use_nwa
-print >> config, '%i.d3 ! energy'             % option.energy
-print >> config, '%i    ! iterations'         % option.iterations
-print >> config, '%i    ! npoints'            % option.npoints
-print >> config, '%i    ! nevents'            % option.nevents
-print >> config, '%r    ! unweighted'         % option.unweighted
-print >> config, '%r    ! use rambo'          % option.use_rambo
-print >> config, '%r    ! map phase space'    % option.flatten_integrand
-print >> config, '%r    ! multichannel'       % option.multichannel
-print >> config, '%r    ! verbose mode'       % option.verbose
-print >> config, '%i.d3 ! energy low'         % option.energy_low
-print >> config, '%i.d3 ! energy up'          % option.energy_up
-print >> config, '%r    ! batch mode'         % option.job
-print >> config, '%r    ! detector cuts'      % option.cut
+print >> config, '%i    ! initial state'      % args.ppbar
+print >> config, '%i    ! final state'        % args.final_state
+print >> config, '%s    ! model'              % args.model
+print >> config, '%i    ! pdf'                % args.pdf
+print >> config, '%r    ! include signal'     % args.include_signal
+print >> config, '%r    ! include background' % args.include_background
+print >> config, '%r    ! include gg'         % args.include_gg
+print >> config, '%r    ! include qq'         % args.include_qq
+print >> config, '%r    ! include uu'         % args.include_uu
+print >> config, '%r    ! include dd'         % args.include_dd
+print >> config, '%r    ! include a'          % args.include_a
+print >> config, '%r    ! include z'          % args.include_z
+print >> config, '%r    ! include x'          % args.include_x
+print >> config, '%i    ! interference'       % args.interference
+print >> config, '%r    ! use nwa'            % args.use_nwa
+print >> config, '%i.d3 ! energy'             % args.energy
+print >> config, '%i    ! iterations'         % args.iterations
+print >> config, '%i    ! npoints'            % args.npoints
+print >> config, '%i    ! nevents'            % args.nevents
+print >> config, '%r    ! unweighted'         % args.unweighted
+print >> config, '%r    ! use rambo'          % args.use_rambo
+print >> config, '%r    ! map phase space'    % args.flatten_integrand
+print >> config, '%r    ! multichannel'       % args.multichannel
+print >> config, '%r    ! verbose mode'       % args.verbose
+print >> config, '%i.d3 ! energy low'         % args.energy_low
+print >> config, '%i.d3 ! energy up'          % args.energy_up
+print >> config, '%r    ! batch mode'         % args.job
+print >> config, '%r    ! detector cuts'      % args.cut
 
 try:
     with open('%s' % config_name, 'w') as config_file:
         config_file.write(config.getvalue())
         print " config: %s" % config_name
-except OSError: sys.exit("error: Cannot write to %s" % config_name)
+except OSError: sys.exit("ERROR: Cannot write to %s" % config_name)
 
-if option.job:
+if args.job:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
         print >> handler, "#!/bin/bash"
@@ -270,7 +309,7 @@ if option.job:
         print >> handler, "cd %s" % run_directory
         print >> handler, "%s/bin/%s < %s" % (run_directory, executable, config_name)
     elif "cyan" in hostname:
-        print "walltime = %s" % option.walltime
+        print "walltime = %s" % args.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
         print >> handler, "module load gcc/6.1.0"
@@ -278,13 +317,13 @@ if option.job:
         print >> handler, "cd %s" % run_directory
         print >> handler, "%sbin/%s < %s > %s" % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
-        print "h_rt = %s" % option.walltime
+        print "h_rt = %s" % args.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /users/millar/.bash_profile"
         print >> handler, "cd %s" % run_directory
         print >> handler, "%sbin/%s < %s" % (run_directory, executable, config_name)
     else:
-        sys.exit("error: hostname not recognised")
+        sys.exit("ERROR: hostname not recognised")
 
     try:
         with open('%s' % handler_name, 'w') as handler_file:
@@ -295,11 +334,11 @@ if option.job:
 
     subprocess.call("chmod a+x %s" % handler_name, shell = True)
     print "submitting batch job ..."
-    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s' % (option.queue, logfile, run_directory, handler_name), shell = True)
-    elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
-    elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (option.walltime, run_directory, handler_name), shell = True)
+    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s' % (args.queue, logfile, run_directory, handler_name), shell = True)
+    elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
+    elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
     else:
-        print "error: hostname not recognised"
+        print "ERROR: hostname not recognised"
 else:
     if "cyan" in hostname:
         print "loading openmpi module ..."
