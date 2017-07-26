@@ -1,100 +1,100 @@
-./generate.py -g -f 22 -k 08:00:00 -i 00
-./generate.py -g -f 22 -k 08:00:00 -i 01
-./generate.py -g -f 22 -k 08:00:00 -i 02
-./generate.py -g -f 22 -k 08:00:00 -i 03
-./generate.py -g -f 22 -k 08:00:00 -i 04
-./generate.py -g -f 22 -k 08:00:00 -i 05
-./generate.py -g -f 22 -k 08:00:00 -i 06
-./generate.py -g -f 22 -k 08:00:00 -i 07
-./generate.py -g -f 22 -k 08:00:00 -i 08
-./generate.py -g -f 22 -k 08:00:00 -i 09
-./generate.py -g -f 22 -k 08:00:00 -i 10
-./generate.py -g -f 22 -k 08:00:00 -i 11
-./generate.py -g -f 22 -k 08:00:00 -i 12
-./generate.py -g -f 22 -k 08:00:00 -i 13
-./generate.py -g -f 22 -k 08:00:00 -i 14
-./generate.py -g -f 22 -k 08:00:00 -i 15
-./generate.py -g -f 22 -k 08:00:00 -i 16
-./generate.py -g -f 22 -k 08:00:00 -i 17
-./generate.py -g -f 22 -k 08:00:00 -i 18
-./generate.py -g -f 22 -k 08:00:00 -i 19
-./generate.py -g -f 22 -k 08:00:00 -i 20
-./generate.py -g -f 22 -k 08:00:00 -i 21
-./generate.py -g -f 22 -k 08:00:00 -i 22
-./generate.py -g -f 22 -k 08:00:00 -i 23
-./generate.py -g -f 22 -k 08:00:00 -i 24
-./generate.py -g -f 22 -k 08:00:00 -i 25
-./generate.py -g -f 22 -k 08:00:00 -i 26
-./generate.py -g -f 22 -k 08:00:00 -i 27
-./generate.py -g -f 22 -k 08:00:00 -i 28
-./generate.py -g -f 22 -k 08:00:00 -i 29
-./generate.py -g -f 22 -k 08:00:00 -i 30
-./generate.py -g -f 22 -k 08:00:00 -i 31
-./generate.py -g -f 22 -k 08:00:00 -i 32
-./generate.py -g -f 22 -k 08:00:00 -i 33
-./generate.py -g -f 22 -k 08:00:00 -i 34
-./generate.py -g -f 22 -k 08:00:00 -i 35
-./generate.py -g -f 22 -k 08:00:00 -i 36
-./generate.py -g -f 22 -k 08:00:00 -i 37
-./generate.py -g -f 22 -k 08:00:00 -i 38
-./generate.py -g -f 22 -k 08:00:00 -i 39
-./generate.py -g -f 22 -k 08:00:00 -i 40
-./generate.py -g -f 22 -k 08:00:00 -i 41
-./generate.py -g -f 22 -k 08:00:00 -i 42
-./generate.py -g -f 22 -k 08:00:00 -i 43
-./generate.py -g -f 22 -k 08:00:00 -i 44
-./generate.py -g -f 22 -k 08:00:00 -i 45
-./generate.py -g -f 22 -k 08:00:00 -i 46
-./generate.py -g -f 22 -k 08:00:00 -i 47
-./generate.py -g -f 22 -k 08:00:00 -i 48
-./generate.py -g -f 22 -k 08:00:00 -i 49
-./generate.py -g -f 22 -k 08:00:00 -i 50
-./generate.py -g -f 22 -k 08:00:00 -i 51
-./generate.py -g -f 22 -k 08:00:00 -i 52
-./generate.py -g -f 22 -k 08:00:00 -i 53
-./generate.py -g -f 22 -k 08:00:00 -i 54
-./generate.py -g -f 22 -k 08:00:00 -i 55
-./generate.py -g -f 22 -k 08:00:00 -i 56
-./generate.py -g -f 22 -k 08:00:00 -i 57
-./generate.py -g -f 22 -k 08:00:00 -i 58
-./generate.py -g -f 22 -k 08:00:00 -i 59
-./generate.py -g -f 22 -k 08:00:00 -i 60
-./generate.py -g -f 22 -k 08:00:00 -i 61
-./generate.py -g -f 22 -k 08:00:00 -i 62
-./generate.py -g -f 22 -k 08:00:00 -i 63
-./generate.py -g -f 22 -k 08:00:00 -i 64
-./generate.py -g -f 22 -k 08:00:00 -i 65
-./generate.py -g -f 22 -k 08:00:00 -i 66
-./generate.py -g -f 22 -k 08:00:00 -i 67
-./generate.py -g -f 22 -k 08:00:00 -i 68
-./generate.py -g -f 22 -k 08:00:00 -i 69
-./generate.py -g -f 22 -k 08:00:00 -i 70
-./generate.py -g -f 22 -k 08:00:00 -i 71
-./generate.py -g -f 22 -k 08:00:00 -i 72
-./generate.py -g -f 22 -k 08:00:00 -i 73
-./generate.py -g -f 22 -k 08:00:00 -i 74
-./generate.py -g -f 22 -k 08:00:00 -i 75
-./generate.py -g -f 22 -k 08:00:00 -i 76
-./generate.py -g -f 22 -k 08:00:00 -i 77
-./generate.py -g -f 22 -k 08:00:00 -i 78
-./generate.py -g -f 22 -k 08:00:00 -i 79
-./generate.py -g -f 22 -k 08:00:00 -i 80
-./generate.py -g -f 22 -k 08:00:00 -i 81
-./generate.py -g -f 22 -k 08:00:00 -i 82
-./generate.py -g -f 22 -k 08:00:00 -i 83
-./generate.py -g -f 22 -k 08:00:00 -i 84
-./generate.py -g -f 22 -k 08:00:00 -i 85
-./generate.py -g -f 22 -k 08:00:00 -i 86
-./generate.py -g -f 22 -k 08:00:00 -i 87
-./generate.py -g -f 22 -k 08:00:00 -i 88
-./generate.py -g -f 22 -k 08:00:00 -i 89
-./generate.py -g -f 22 -k 08:00:00 -i 90
-./generate.py -g -f 22 -k 08:00:00 -i 91
-./generate.py -g -f 22 -k 08:00:00 -i 92
-./generate.py -g -f 22 -k 08:00:00 -i 93
-./generate.py -g -f 22 -k 08:00:00 -i 94
-./generate.py -g -f 22 -k 08:00:00 -i 95
-./generate.py -g -f 22 -k 08:00:00 -i 96
-./generate.py -g -f 22 -k 08:00:00 -i 97
-./generate.py -g -f 22 -k 08:00:00 -i 98
-./generate.py -g -f 22 -k 08:00:00 -i 99
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 00
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 01
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 02
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 03
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 04
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 05
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 06
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 07
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 08
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 09
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 10
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 11
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 12
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 13
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 14
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 15
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 16
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 17
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 18
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 19
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 20
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 21
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 22
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 23
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 24
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 25
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 26
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 27
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 28
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 29
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 30
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 31
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 32
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 33
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 34
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 35
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 36
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 37
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 38
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 39
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 40
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 41
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 42
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 43
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 44
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 45
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 46
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 47
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 48
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 49
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 50
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 51
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 52
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 53
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 54
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 55
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 56
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 57
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 58
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 59
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 60
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 61
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 62
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 63
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 64
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 65
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 66
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 67
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 68
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 69
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 70
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 71
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 72
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 73
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 74
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 75
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 76
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 77
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 78
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 79
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 80
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 81
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 82
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 83
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 84
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 85
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 86
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 87
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 88
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 89
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 90
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 91
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 92
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 93
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 94
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 95
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 96
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 97
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 98
+./generate.py -g -f 12 -k 08:00:00 -Q 8nh -i 99
