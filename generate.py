@@ -332,9 +332,9 @@ if args.job:
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
-        print "Handler file written to %s." % handler_name
+        print "handler file written to %s" % handler_name
     except OSError:
-        sys.exit("Error: Cannot write handler file.")
+        sys.exit("ERROR: cannot write handler file")
 
     subprocess.call("chmod a+x %s" % handler_name, shell = True)
     print "submitting batch job ..."
@@ -342,7 +342,7 @@ if args.job:
     elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
     elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
     else:
-        print "ERROR: hostname not recognised"
+        sys.exit("ERROR: hostname not recognised")
 else:
     if "cyan" in hostname:
         print "loading openmpi module ..."
