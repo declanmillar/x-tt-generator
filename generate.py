@@ -8,7 +8,7 @@
 
 import os
 import StringIO
-import optparse
+import argparse
 import subprocess
 import sys
 import glob
@@ -16,43 +16,43 @@ import socket
 import time
 import fnmatch
 
-parser = optparse.OptionParser()
-parser.add_option("-D", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid if present.")
-parser.add_option("-v", "--verbose",            default = False, action = "store_true",  help = "run in verbose mode.")
-parser.add_option("-B", "--batch",              default = True,  action = "store_false", help = "run in batch mode")
-parser.add_option("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
-parser.add_option("-H", "--lhef",               default = True,  action = "store_false", help = "write events to lhe file")
-parser.add_option("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
-parser.add_option("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
-parser.add_option("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
-parser.add_option("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
-parser.add_option("-A", "--include_a",          default = True,  action = "store_false", help = "include photon mediated interaction")
-parser.add_option("-Z", "--include_z",          default = True,  action = "store_false", help = "include Z boson mediated interaction")
-parser.add_option("-X", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
-parser.add_option("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
-parser.add_option("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
-parser.add_option("-M", "--multichannel",       default = False, action = "store_true",  help = "use multichannel integration")
-parser.add_option("-R", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
-parser.add_option("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
-parser.add_option("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
-parser.add_option("-w", "--unweighted",         default = True,  action = "store_false", help = "unweighted events")
-parser.add_option("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
-parser.add_option("-p", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
-parser.add_option("-N", "--iterations",         default = 20,        type = int,         help = "number of VAMP iterations")
-parser.add_option("-n", "--npoints",            default = 2000000,   type = int,         help = "number of VAMP calls")
-parser.add_option("-e", "--nevents",            default = 10000,     type = int,         help = "number of events")
-parser.add_option("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
-parser.add_option("-I", "--interference",       default = 1,         type = int,         help = "specify interference")
-parser.add_option("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
-parser.add_option("-L", "--energy_low",         default = 0,         type = int,         help = "Ecm lower limit")
-parser.add_option("-U", "--energy_up",          default = 0,         type = int,         help = "Ecm upper limit")
-parser.add_option("-t", "--tag",                default = "",                            help = "add a name tag to output files")
-parser.add_option("-k", "--walltime",           default = "60:00:00",                    help = "walltime 'hh:mm:ss'")
-parser.add_option("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue'")
-parser.add_option("-m", "--model",              default = "SM",                          help = "set model")
-parser.add_option("-c", "--cut",                default = False, action = "store_true",  help = "apply detector cuts")
-parser.add_option("-i", "--index",              default = "",                            help = "overwrite index")
-(option, args) = parser.parse_args()
+parser = argparse.ArgumentParser(description="generate ttbar events")
+parser.add_argument("-a", "--include_a",          default = True,  action = "store_false", help = "include photon mediated interaction")
+parser.add_argument("-b", "--include_background", default = False, action = "store_true",  help = "include tt background")
+parser.add_argument("-c", "--cut",                default = False, action = "store_true",  help = "apply detector cuts")
+parser.add_argument("-d", "--include_dd",         default = False, action = "store_true",  help = "include down-down initiated interactions")
+parser.add_argument("-E", "--energy",             default = 13,        type = int,         help = "collider energy")
+parser.add_argument("-e", "--nevents",            default = 10000,     type = int,         help = "number of events")
+parser.add_argument("-F", "--flatten_integrand",  default = True,  action = "store_false", help = "flatten resonances")
+parser.add_argument("-f", "--final_state",        default = 1,         type = int,         help = "set final state")
+parser.add_argument("-g", "--include_gg",         default = False, action = "store_true",  help = "include gluon-gluon initiated interactions")
+parser.add_argument("-H", "--lhef",               default = True,  action = "store_false", help = "write events to an LHEF file")
+parser.add_argument("-I", "--interference",       default = 1,         type = int,         help = "specify interference (default = full)")
+parser.add_argument("-i", "--index",              default = "",                            help = "append specified file index")
+parser.add_argument("-j", "--job",                default = True,  action = "store_false", help = "submit as a batch job")
+parser.add_argument("-k", "--walltime",           default = "60:00:00",                    help = "set walltime 'hh:mm:ss'")
+parser.add_argument("-L", "--energy_low",         default = 0,         type = int,         help = "set Ecm lower limit")
+parser.add_argument("-M", "--multichannel",       default = False, action = "store_true",  help = "use multichannel integration")
+parser.add_argument("-m", "--model",              default = "SM",                          help = "set physics model (default = SM)")
+parser.add_argument("-N", "--iterations",         default = 20,        type = int,         help = "number of VAMP iterations")
+parser.add_argument("-n", "--npoints",            default = 2000000,   type = int,         help = "number of VAMP calls")
+parser.add_argument("-o", "--overwrite",          default = False, action = "store_true",  help = "overwrite existing grid file")
+parser.add_argument("-P", "--pdf",                default = 11,        type = int,         help = "structure_functions")
+parser.add_argument("-p", "--ppbar",              default = 0,         type = int,         help = "initial state: 0 = pp, 1 = pp~")
+parser.add_argument("-Q", "--queue",              default = "1nw",                         help = "lxbatch queue")
+parser.add_argument("-q", "--include_qq",         default = False, action = "store_true",  help = "include quark-quark initiated interactions")
+parser.add_argument("-r", "--use_rambo",          default = False, action = "store_true",  help = "use RAMBO for phase space")
+parser.add_argument("-s", "--include_signal",     default = True,  action = "store_false", help = "include tt signal")
+parser.add_argument("-T", "--ntuple",             default = True,  action = "store_false", help = "write events to ROOT n-tuple")
+parser.add_argument("-t", "--tag",                default = "",                            help = "set name tag for output files")
+parser.add_argument("-U", "--energy_up",          default = 0,         type = int,         help = "Ecm upper limit")
+parser.add_argument("-u", "--include_uu",         default = False, action = "store_true",  help = "include up-up initiated interactions")
+parser.add_argument("-v", "--verbose",            default = False, action = "store_true",  help = "print extra run information")
+parser.add_argument("-W", "--use_nwa",            default = False, action = "store_true",  help = "use Narrow Width Approximation")
+parser.add_argument("-w", "--unweighted",         default = True,  action = "store_false", help = "generate unweighted events")
+parser.add_argument("-x", "--include_x",          default = True,  action = "store_false", help = "include Z' boson mediated interactions")
+parser.add_argument("-z", "--include_z",          default = True,  action = "store_false", help = "include Z boson mediated interaction")
+args = parser.parse_args()
 
 if os.path.isfile("Models/%s.mdl" % option.model) is False: sys.exit("error: %s is not a valid model.\n Available model files: %s" % (option.model, glob.glob("Models/*.mdl")))
 if option.energy < 0: sys.exit("error: collider energy must be positive definite\n" % usage)
@@ -73,7 +73,7 @@ if option.include_uu: initial_states += 1
 if option.lhef and initial_states > 1: sys.exit("error: currently when outputting to LHEF, only one initial state can be active.")
 
 hostname = socket.gethostname()
-if not ("lxplus" in hostname or "cyan" in hostname): option.batch = False
+if not ("lxplus" in hostname or "cyan" in hostname): option.job = False
 
 if option.model == "SM": option.include_x = False
 
@@ -253,7 +253,7 @@ print >> config, '%r    ! multichannel'       % option.multichannel
 print >> config, '%r    ! verbose mode'       % option.verbose
 print >> config, '%i.d3 ! energy low'         % option.energy_low
 print >> config, '%i.d3 ! energy up'          % option.energy_up
-print >> config, '%r    ! batch mode'         % option.batch
+print >> config, '%r    ! batch mode'         % option.job
 print >> config, '%r    ! detector cuts'      % option.cut
 
 try:
@@ -262,7 +262,7 @@ try:
         print " config: %s" % config_name
 except OSError: sys.exit("error: Cannot write to %s" % config_name)
 
-if option.batch:
+if option.job:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
         print >> handler, "#!/bin/bash"
