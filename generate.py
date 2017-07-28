@@ -238,7 +238,7 @@ events_path = events_path + wgt
 grid_file = "%s%s" % (grid_path, grid)
 xsec_file = "%s.txt" % (grid_path)
 
-print "looking for gridfile ", grid_file
+print "gridfile = ", grid_file
 
 if os.path.isfile(grid_file): new_grid = False
 else: new_grid = True
@@ -298,7 +298,7 @@ print >> config, '%r    ! detector cuts'      % args.cut
 try:
     with open('%s' % config_name, 'w') as config_file:
         config_file.write(config.getvalue())
-        print " config: %s" % config_name
+        print "config = %s" % config_name
 except OSError: sys.exit("ERROR: Cannot write to %s" % config_name)
 
 if args.job:
@@ -332,7 +332,7 @@ if args.job:
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
-        print "handler file written to %s" % handler_name
+        print "handler = %s" % handler_name
     except OSError:
         sys.exit("ERROR: cannot write handler file")
 
