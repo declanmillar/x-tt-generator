@@ -222,7 +222,6 @@ filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
 new_index = int(args.index) if args.index != "" else len(filtered) + 1
 events_name = events_name + "_%02d" % new_index
 events_path = data_directory + events_name
-print "events name = ", events_name
 
 if os.path.isdir(data_directory) is False:
     sys.exit("ERROR: specified run directory '%s' does not exist" % run_directory)
