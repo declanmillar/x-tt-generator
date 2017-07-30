@@ -337,9 +337,10 @@ if args.job:
 
     subprocess.call("chmod a+x %s" % handler_name, shell = True)
     print "submitting batch job ..."
-    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s/%s' % (args.queue, logfile, run_directory, handler_name), shell = True)
-    elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
-    elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s/%s' % (args.walltime, run_directory, handler_name), shell = True)
+    if "lxplus" in hostname: print "queue = ", args.queue
+    if "lxplus" in hostname: subprocess.call('bsub -q %s -o %s %s%s' % (args.queue, logfile, run_directory, handler_name), shell = True)
+    elif "cyan" in hostname: subprocess.call('qsub -l walltime=%s %s%s' % (args.walltime, run_directory, handler_name), shell = True)
+    elif "heppc" in hostname: subprocess.call('qsub -l h_rt=%s %s%s' % (args.walltime, run_directory, handler_name), shell = True)
     else:
         sys.exit("ERROR: hostname not recognised")
 else:
