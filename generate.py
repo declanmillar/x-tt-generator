@@ -328,6 +328,8 @@ if args.job:
     else:
         sys.exit("ERROR: hostname not recognised")
 
+    print >> handler, "gzip -v9 %s.lhef >> %s" % (lhe_file, logfile)
+
     try:
         with open('%s' % handler_name, 'w') as handler_file:
             handler_file.write(handler.getvalue())
@@ -348,3 +350,4 @@ else:
         print "loading openmpi module ..."
         subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+    subprocess.call("gzip -v9 %s.lhef >> %s" % (lhe_file, logfile))
