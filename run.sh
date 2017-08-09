@@ -1,505 +1,100 @@
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 00
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 01
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 02
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 03
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 04
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 05
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 06
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 07
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 08
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 09
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 10
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 11
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 12
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 13
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 14
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 15
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 16
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 17
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 18
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 19
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 20
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 21
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 22
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 23
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 24
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 25
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 26
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 27
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 28
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 29
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 30
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 31
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 32
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 33
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 34
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 35
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 36
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 37
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 38
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 39
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 40
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 41
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 42
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 43
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 44
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 45
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 46
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 47
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 48
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 49
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 50
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 51
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 52
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 53
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 54
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 55
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 56
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 57
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 58
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 59
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 60
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 61
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 62
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 63
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 64
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 65
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 66
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 67
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 68
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 69
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 70
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 71
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 72
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 73
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 74
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 75
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 76
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 77
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 78
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 79
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 80
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 81
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 82
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 83
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 84
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 85
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 86
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 87
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 88
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 89
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 90
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 91
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 92
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 93
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 94
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 95
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 96
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 97
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 98
-./generate.py -g -L 0 -U 1 -f 22 -Q 8nh -i 99
-
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 00
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 01
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 02
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 03
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 04
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 05
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 06
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 07
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 08
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 09
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 10
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 11
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 12
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 13
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 14
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 15
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 16
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 17
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 18
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 19
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 20
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 21
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 22
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 23
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 24
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 25
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 26
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 27
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 28
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 29
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 30
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 31
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 32
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 33
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 34
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 35
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 36
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 37
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 38
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 39
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 40
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 41
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 42
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 43
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 44
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 45
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 46
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 47
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 48
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 49
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 50
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 51
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 52
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 53
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 54
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 55
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 56
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 57
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 58
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 59
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 60
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 61
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 62
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 63
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 64
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 65
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 66
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 67
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 68
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 69
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 70
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 71
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 72
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 73
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 74
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 75
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 76
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 77
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 78
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 79
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 80
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 81
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 82
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 83
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 84
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 85
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 86
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 87
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 88
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 89
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 90
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 91
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 92
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 93
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 94
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 95
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 96
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 97
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 98
-./generate.py -g -L 1 -U 2 -f 22 -Q 8nh -i 99
-
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 00
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 01
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 02
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 03
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 04
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 05
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 06
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 07
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 08
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 09
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 10
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 11
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 12
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 13
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 14
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 15
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 16
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 17
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 18
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 19
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 20
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 21
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 22
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 23
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 24
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 25
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 26
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 27
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 28
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 29
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 30
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 31
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 32
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 33
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 34
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 35
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 36
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 37
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 38
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 39
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 40
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 41
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 42
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 43
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 44
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 45
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 46
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 47
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 48
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 49
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 50
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 51
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 52
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 53
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 54
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 55
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 56
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 57
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 58
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 59
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 60
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 61
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 62
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 63
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 64
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 65
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 66
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 67
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 68
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 69
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 70
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 71
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 72
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 73
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 74
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 75
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 76
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 77
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 78
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 79
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 80
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 81
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 82
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 83
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 84
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 85
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 86
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 87
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 88
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 89
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 90
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 91
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 92
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 93
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 94
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 95
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 96
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 97
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 98
-./generate.py -g -L 2 -U 3 -f 22 -Q 8nh -i 99
-
-
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 00
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 01
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 02
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 03
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 04
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 05
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 06
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 07
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 08
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 09
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 10
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 11
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 12
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 13
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 14
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 15
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 16
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 17
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 18
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 19
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 20
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 21
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 22
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 23
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 24
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 25
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 26
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 27
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 28
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 29
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 30
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 31
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 32
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 33
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 34
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 35
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 36
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 37
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 38
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 39
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 40
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 41
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 42
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 43
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 44
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 45
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 46
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 47
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 48
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 49
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 50
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 51
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 52
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 53
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 54
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 55
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 56
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 57
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 58
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 59
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 60
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 61
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 62
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 63
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 64
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 65
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 66
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 67
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 68
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 69
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 70
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 71
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 72
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 73
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 74
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 75
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 76
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 77
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 78
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 79
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 80
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 81
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 82
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 83
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 84
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 85
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 86
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 87
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 88
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 89
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 90
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 91
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 92
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 93
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 94
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 95
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 96
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 97
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 98
-./generate.py -g -L 3 -U 4 -f 22 -Q 8nh -i 99
-
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 00
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 01
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 02
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 03
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 04
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 05
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 06
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 07
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 08
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 09
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 10
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 11
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 12
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 13
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 14
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 15
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 16
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 17
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 18
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 19
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 20
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 21
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 22
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 23
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 24
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 25
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 26
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 27
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 28
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 29
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 30
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 31
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 32
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 33
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 34
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 35
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 36
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 37
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 38
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 39
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 40
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 41
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 42
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 43
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 44
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 45
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 46
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 47
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 48
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 49
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 50
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 51
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 52
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 53
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 54
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 55
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 56
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 57
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 58
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 59
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 60
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 61
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 62
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 63
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 64
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 65
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 66
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 67
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 68
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 69
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 70
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 71
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 72
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 73
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 74
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 75
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 76
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 77
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 78
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 79
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 80
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 81
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 82
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 83
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 84
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 85
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 86
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 87
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 88
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 89
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 90
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 91
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 92
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 93
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 94
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 95
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 96
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 97
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 98
-./generate.py -g -L 4 -U 5 -f 22 -Q 8nh -i 99
+./generate.py -q -f 22 -Q 8nh -i 100
+./generate.py -q -f 22 -Q 8nh -i 101
+./generate.py -q -f 22 -Q 8nh -i 102
+./generate.py -q -f 22 -Q 8nh -i 103
+./generate.py -q -f 22 -Q 8nh -i 104
+./generate.py -q -f 22 -Q 8nh -i 105
+./generate.py -q -f 22 -Q 8nh -i 106
+./generate.py -q -f 22 -Q 8nh -i 107
+./generate.py -q -f 22 -Q 8nh -i 108
+./generate.py -q -f 22 -Q 8nh -i 109
+./generate.py -q -f 22 -Q 8nh -i 110
+./generate.py -q -f 22 -Q 8nh -i 111
+./generate.py -q -f 22 -Q 8nh -i 112
+./generate.py -q -f 22 -Q 8nh -i 113
+./generate.py -q -f 22 -Q 8nh -i 114
+./generate.py -q -f 22 -Q 8nh -i 115
+./generate.py -q -f 22 -Q 8nh -i 116
+./generate.py -q -f 22 -Q 8nh -i 117
+./generate.py -q -f 22 -Q 8nh -i 118
+./generate.py -q -f 22 -Q 8nh -i 119
+./generate.py -q -f 22 -Q 8nh -i 120
+./generate.py -q -f 22 -Q 8nh -i 121
+./generate.py -q -f 22 -Q 8nh -i 122
+./generate.py -q -f 22 -Q 8nh -i 123
+./generate.py -q -f 22 -Q 8nh -i 124
+./generate.py -q -f 22 -Q 8nh -i 125
+./generate.py -q -f 22 -Q 8nh -i 126
+./generate.py -q -f 22 -Q 8nh -i 127
+./generate.py -q -f 22 -Q 8nh -i 128
+./generate.py -q -f 22 -Q 8nh -i 129
+./generate.py -q -f 22 -Q 8nh -i 130
+./generate.py -q -f 22 -Q 8nh -i 131
+./generate.py -q -f 22 -Q 8nh -i 132
+./generate.py -q -f 22 -Q 8nh -i 133
+./generate.py -q -f 22 -Q 8nh -i 134
+./generate.py -q -f 22 -Q 8nh -i 135
+./generate.py -q -f 22 -Q 8nh -i 136
+./generate.py -q -f 22 -Q 8nh -i 137
+./generate.py -q -f 22 -Q 8nh -i 138
+./generate.py -q -f 22 -Q 8nh -i 139
+./generate.py -q -f 22 -Q 8nh -i 140
+./generate.py -q -f 22 -Q 8nh -i 141
+./generate.py -q -f 22 -Q 8nh -i 142
+./generate.py -q -f 22 -Q 8nh -i 143
+./generate.py -q -f 22 -Q 8nh -i 144
+./generate.py -q -f 22 -Q 8nh -i 145
+./generate.py -q -f 22 -Q 8nh -i 146
+./generate.py -q -f 22 -Q 8nh -i 147
+./generate.py -q -f 22 -Q 8nh -i 148
+./generate.py -q -f 22 -Q 8nh -i 149
+./generate.py -q -f 22 -Q 8nh -i 150
+./generate.py -q -f 22 -Q 8nh -i 151
+./generate.py -q -f 22 -Q 8nh -i 152
+./generate.py -q -f 22 -Q 8nh -i 153
+./generate.py -q -f 22 -Q 8nh -i 154
+./generate.py -q -f 22 -Q 8nh -i 155
+./generate.py -q -f 22 -Q 8nh -i 156
+./generate.py -q -f 22 -Q 8nh -i 157
+./generate.py -q -f 22 -Q 8nh -i 158
+./generate.py -q -f 22 -Q 8nh -i 159
+./generate.py -q -f 22 -Q 8nh -i 160
+./generate.py -q -f 22 -Q 8nh -i 161
+./generate.py -q -f 22 -Q 8nh -i 162
+./generate.py -q -f 22 -Q 8nh -i 163
+./generate.py -q -f 22 -Q 8nh -i 164
+./generate.py -q -f 22 -Q 8nh -i 165
+./generate.py -q -f 22 -Q 8nh -i 166
+./generate.py -q -f 22 -Q 8nh -i 167
+./generate.py -q -f 22 -Q 8nh -i 168
+./generate.py -q -f 22 -Q 8nh -i 169
+./generate.py -q -f 22 -Q 8nh -i 170
+./generate.py -q -f 22 -Q 8nh -i 171
+./generate.py -q -f 22 -Q 8nh -i 172
+./generate.py -q -f 22 -Q 8nh -i 173
+./generate.py -q -f 22 -Q 8nh -i 174
+./generate.py -q -f 22 -Q 8nh -i 175
+./generate.py -q -f 22 -Q 8nh -i 176
+./generate.py -q -f 22 -Q 8nh -i 177
+./generate.py -q -f 22 -Q 8nh -i 178
+./generate.py -q -f 22 -Q 8nh -i 179
+./generate.py -q -f 22 -Q 8nh -i 180
+./generate.py -q -f 22 -Q 8nh -i 181
+./generate.py -q -f 22 -Q 8nh -i 182
+./generate.py -q -f 22 -Q 8nh -i 183
+./generate.py -q -f 22 -Q 8nh -i 184
+./generate.py -q -f 22 -Q 8nh -i 185
+./generate.py -q -f 22 -Q 8nh -i 186
+./generate.py -q -f 22 -Q 8nh -i 187
+./generate.py -q -f 22 -Q 8nh -i 188
+./generate.py -q -f 22 -Q 8nh -i 189
+./generate.py -q -f 22 -Q 8nh -i 190
+./generate.py -q -f 22 -Q 8nh -i 191
+./generate.py -q -f 22 -Q 8nh -i 192
+./generate.py -q -f 22 -Q 8nh -i 193
+./generate.py -q -f 22 -Q 8nh -i 194
+./generate.py -q -f 22 -Q 8nh -i 195
+./generate.py -q -f 22 -Q 8nh -i 196
+./generate.py -q -f 22 -Q 8nh -i 197
+./generate.py -q -f 22 -Q 8nh -i 198
+./generate.py -q -f 22 -Q 8nh -i 199
