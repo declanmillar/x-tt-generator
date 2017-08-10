@@ -238,7 +238,7 @@ function event(x, data, weights, channel, grids)
     real(kind=default) :: random
 
     ! temporary iterators
-    integer :: i, j
+    integer :: i, j, l1, l2
 
     ! ---
 
@@ -946,6 +946,21 @@ function event(x, data, weights, channel, grids)
     if (verbose) print*, "event: ", event
 
     if (record_events) then
+
+        if (final_state == 11) then
+            l1 = 11
+            l2 = 11
+        else if (final_state == 22) then
+            l1 = 13
+            l2 = 13
+        else if (final_state == 12) then
+            l1 = 11
+            l2 = 13
+        else if (final_state == 21) then
+            l1 = 13
+            l2 = 11
+        end if
+
         if (ntuple_out) then
             if (verbose) print*, "scattering: write final particle collider frame momenta to n-tuple..."
 
@@ -958,12 +973,12 @@ function event(x, data, weights, channel, grids)
                 call rootaddparticle(-6,  pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
 
             else
-                call rootaddparticle(5,   pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
-                call rootaddparticle(-5,  pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
-                call rootaddparticle(-11, pcol(1, 5), pcol(2, 5), pcol(3, 5), pcol(4, 5))
-                call rootaddparticle(12,  pcol(1, 6), pcol(2, 6), pcol(3, 6), pcol(4, 6))
-                call rootaddparticle(11,  pcol(1, 7), pcol(2, 7), pcol(3, 7), pcol(4, 7))
-                call rootaddparticle(-12, pcol(1, 8), pcol(2, 8), pcol(3, 8), pcol(4, 8))
+                call rootaddparticle(5,       pcol(1, 3), pcol(2, 3), pcol(3, 3), pcol(4, 3))
+                call rootaddparticle(-5,      pcol(1, 4), pcol(2, 4), pcol(3, 4), pcol(4, 4))
+                call rootaddparticle(-l1,     pcol(1, 5), pcol(2, 5), pcol(3, 5), pcol(4, 5))
+                call rootaddparticle( l1 + 1, pcol(1, 6), pcol(2, 6), pcol(3, 6), pcol(4, 6))
+                call rootaddparticle( l2,     pcol(1, 7), pcol(2, 7), pcol(3, 7), pcol(4, 7))
+                call rootaddparticle(-l2 - 1, pcol(1, 8), pcol(2, 8), pcol(3, 8), pcol(4, 8))
             end if
 
             if (final_state < 1) then
@@ -993,19 +1008,6 @@ function event(x, data, weights, channel, grids)
 
             ! do i = 13, 13, 2 ! loop over leptons; 11 = electron, 13 = muon, 15 = tau
             !     do j = 13, 13, 2 ! loop over leptons
-            if (final_state == 11) then
-                i = 11
-                j = 11
-            else if (final_state == 22) then
-                i = 13
-                j = 13
-            else if (final_state == 12) then
-                i = 11
-                j = 13
-            else if (final_state == 21) then
-                i = 13
-                j = 11
-            end if
 
             call lhe_add_event(12, final_state, 1.d0, scale, a_em, a_s)
 
@@ -1050,10 +1052,10 @@ function event(x, data, weights, channel, grids)
                 call lhe_add_particle( -5,  1,  4,  0,   0, 102, pcol(1:4,4)) ! 8:  b~
             end if
 
-            call lhe_add_particle(-i,       1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
-            call lhe_add_particle( i + 1,   1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
-            call lhe_add_particle( j,       1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: e-,  mu-, ta-
-            call lhe_add_particle(-j - 1,   1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
+            call lhe_add_particle(-l1,       1,  5,  0,   0,   0, pcol(1:4,5)) ! 9:  e+,  mu,  ta+
+            call lhe_add_particle( l1 + 1,   1,  5,  0,   0,   0, pcol(1:4,6)) ! 10: ve,  vm,  vt
+            call lhe_add_particle( l2,       1,  7,  0,   0,   0, pcol(1:4,7)) ! 11: e-,  mu-, ta-
+            call lhe_add_particle(-l2 - 1,   1,  7,  0,   0,   0, pcol(1:4,8)) ! 12: ve~, vm~, vt~
 
             call lhe_end_event
             !     end do
