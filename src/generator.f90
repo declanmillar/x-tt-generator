@@ -334,14 +334,14 @@ program generator
         end if
 
         if (ntuple_out) then
-            call rootaddprocessdouble(idbm(1), "idbm1")
-            call rootaddprocessdouble(idbm(2), "idbm2")
+            call rootaddprocessint(idbm(1), "idbm1")
+            call rootaddprocessint(idbm(2), "idbm2")
             call rootaddprocessdouble(ebm(1), "ebm1")
             call rootaddprocessdouble(ebm(2), "ebm2")
-            call rootaddprocessdouble(pdfg(1), "pdfg1")
-            call rootaddprocessdouble(pdfg(2), "pdfg2")
-            call rootaddprocessdouble(pdfs(1), "pdfs1")
-            call rootaddprocessdouble(pdfs(2), "pdfs2")
+            call rootaddprocessint(pdfg(1), "pdfg1")
+            call rootaddprocessint(pdfg(2), "pdfg2")
+            call rootaddprocessint(pdfs(1), "pdfs1")
+            call rootaddprocessint(pdfs(2), "pdfs2")
             call rootaddprocessdouble(cross_section, "cross_section")
             call rootaddprocessdouble(cross_section_uncertainty, "cross_section_uncertainty")
         end if
