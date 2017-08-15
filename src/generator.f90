@@ -24,7 +24,7 @@ program generator
     use mpi90
     use exceptions
     use tao_random_numbers
-    use vamp
+    use vampi
 
     implicit none
 
