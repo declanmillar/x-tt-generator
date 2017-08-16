@@ -11,7 +11,7 @@ TUPLELIB = ../root-tuple/lib
 HOSTNAME := $(shell hostname)
 ifeq ($(HOSTNAME), cyan03)
 	F = mpif90
-	FFLAGS = -f90=ifort -module $(LIB)
+	FFLAGS = -compiler ifort -module $(LIB)
 else
 	F = mpifort
 	FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
