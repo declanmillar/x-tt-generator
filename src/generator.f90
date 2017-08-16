@@ -148,7 +148,7 @@ program generator
 
             print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+            call vamp_sample_grids(rng, grids, event, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                 exc = exc, history = history, histories = histories)
             call clear_exception(exc)
             call vamp_print_history (history, "multi")
@@ -163,7 +163,7 @@ program generator
             print*, "generator: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
             do i = 1, calls(1, 2)
                 call clear_exception(exc)
-                call vamp_sample_grids(rng, grids, event, no_data, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                call vamp_sample_grids(rng, grids, event, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                     exc = exc, history = history(calls(1, 1) + i:), histories = histories(calls(1, 1) + i:, :))
                 call handle_exception(exc)
                 call clear_exception(exc)
@@ -182,7 +182,7 @@ program generator
             ! call vamp_warmup_grids(rng, grids, event, calls(1, 3), &
                 ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
                 ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
-            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+            call vamp_sample_grids(rng, grids, event, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                 exc = exc, history = history(calls(1, 1) + calls(1, 2):), histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
 
@@ -199,41 +199,37 @@ program generator
             call vamp_write_grids(grids, grid_file)
 
         else
+            call cpu_time(time1)
+
             call vamp_create_history(history)
 
-            call cpu_time(time1)
-            print*, "prelim points = ", calls(2, 1)
+            ! preliminary sampling
             call vamp_create_grid(grid, domain, num_calls = calls(2, 1))
-
-            print*, "prelim iterations = ", calls(1, 1)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-            exc = exc, history = history)
+            call vamp_sample_grid(rng, grid, event, calls(1, 1), &
+                                  integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                                  exc = exc, history = history)
             call handle_exception(exc)
-            print *, "xsec = ", xsec, "+/-", xerr
+            call vamp_print_history(history, "prelim")
+
             if (xsec <= 0) stop
 
-            call cpu_time(time1)
-            print*, "full points = ", calls(2, 3)
+            ! full sampling
             call vamp_discard_integral(grid, num_calls = calls(2, 3))
-
-            print*, "full iterations = ", calls(1, 3)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 3) - 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                exc = exc, history = history(calls(1, 1) + 1:))
+            call vamp_sample_grid(rng, grid, event, calls(1, 3) - 1, &
+                                  integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                                  exc = exc, history = history(calls(1, 1) + 1:))
             call handle_exception(exc)
+            call vamp_print_history(history(calls(1, 1) + 1:), "full")
+            call vamp_delete_history(history)
+            call write_cross_section(xsec_file, xsec, xerr)
+
+            ! final refinement
             call clear_exception(exc)
             call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
             call handle_exception(exc)
-
-            if (verbose) print*, "generator: printing history ..."
-            call vamp_print_history(history, "history")
-            call vamp_delete_history(history)
-
-            if (verbose) print*, "generator: saving vamp grid to ", grid_file
             call vamp_write_grid(grid, grid_file)
-
-            call write_cross_section(xsec_file, xsec, xerr)
         end if
 
     else
@@ -288,9 +284,9 @@ program generator
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, no_data, phi, weight = weight, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, phi, weight = weight, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, event, no_data, weight = weight, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, weight = weight, exc = exc)
                 end if
                 call handle_exception (exc)
                 if (.not. unweighted) call rootaddevent(weight)
@@ -358,9 +354,9 @@ program generator
             do i = 1, nevents
                 call clear_exception(exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, no_data, phi, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, phi, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, event, no_data, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, exc = exc)
                 end if
                 call handle_exception(exc)
                 record_events = .true.
