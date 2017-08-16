@@ -11,9 +11,11 @@ TUPLELIB = ../root-tuple/lib
 HOSTNAME := $(shell hostname)
 ifeq ($(HOSTNAME), cyan03)
 	F = mpif90
+	L = ifort
 	FFLAGS = -f90=ifort -module $(LIB)
 else
 	F = mpifort
+	L = mpifort
 	FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
 endif
 
@@ -25,7 +27,7 @@ $(LIB)/%.o: $(SRC)/%.f90
 	$(F) $(FFLAGS) -c -o $@ $<
 
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
-	$(F) $(LFLAGS) -o $@ $^
+	$(L) $(LFLAGS) -o $@ $^
 
 clean:
 	rm -f $(LIB)/*.o $(LIB)/*.mod $(OUT)/$(BIN)
