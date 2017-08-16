@@ -148,7 +148,7 @@ program generator
 
             print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, event, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                 exc = exc, history = history, histories = histories)
             call clear_exception(exc)
             call vamp_print_history (history, "multi")
@@ -163,7 +163,7 @@ program generator
             print*, "generator: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
             do i = 1, calls(1, 2)
                 call clear_exception(exc)
-                call vamp_sample_grids(rng, grids, event, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                call vamp_sample_grids(rng, grids, event, no_data, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                     exc = exc, history = history(calls(1, 1) + i:), histories = histories(calls(1, 1) + i:, :))
                 call handle_exception(exc)
                 call clear_exception(exc)
@@ -179,10 +179,10 @@ program generator
 
             print*, "generator: warming up grid with ", calls(1, 3), "iterations ..."
             call clear_exception(exc)
-            ! call vamp_warmup_grids(rng, grids, event, calls(1, 3), &
+            ! call vamp_warmup_grids(rng, grids, event, no_data, calls(1, 3), &
                 ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
                 ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
-            call vamp_sample_grids(rng, grids, event, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                 exc = exc, history = history(calls(1, 1) + calls(1, 2):), histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
 
@@ -206,7 +206,7 @@ program generator
             ! preliminary sampling
             call vamp_create_grid(grid, domain, num_calls = calls(2, 1))
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, calls(1, 1), &
+            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 1), &
                                   integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                                   exc = exc, history = history)
             call handle_exception(exc)
@@ -217,7 +217,7 @@ program generator
             ! full sampling
             call vamp_discard_integral(grid, num_calls = calls(2, 3))
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, calls(1, 3) - 1, &
+            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 3) - 1, &
                                   integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                                   exc = exc, history = history(calls(1, 1) + 1:))
             call handle_exception(exc)
@@ -284,9 +284,9 @@ program generator
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, phi, weight = weight, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, no_data, phi, weight = weight, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, event, weight = weight, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, no_data, weight = weight, exc = exc)
                 end if
                 call handle_exception (exc)
                 if (.not. unweighted) call rootaddevent(weight)
@@ -354,9 +354,9 @@ program generator
             do i = 1, nevents
                 call clear_exception(exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, phi, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, no_data, phi, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, event, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, no_data, exc = exc)
                 end if
                 call handle_exception(exc)
                 record_events = .true.
