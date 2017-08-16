@@ -317,10 +317,10 @@ if args.job:
         print "walltime = %s" % args.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
-        print >> handler, "module load gcc/6.1.0"
-        print >> handler, "module load openmpi/2.0.2/gcc"
-        # print >> handler, "module load intel/2017"
-        # print >> handler, "module load intel/mpi/2017"
+        # print >> handler, "module load gcc/6.1.0"
+        # print >> handler, "module load openmpi/2.0.2/gcc"
+        print >> handler, "module load intel/2017"
+        print >> handler, "module load intel/mpi/2017"
         print >> handler, "cd %s" % run_directory
         print >> handler, "%sbin/%s < %s > %s" % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
