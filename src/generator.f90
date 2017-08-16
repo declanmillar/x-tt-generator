@@ -64,9 +64,9 @@ program generator
     call initialise_s
     call set_energy_limits
 
-    if (verbose) print*, "generator: initialising MPI ..."
-    call mpi90_init()
-    call mpi90_rank(proc_id)
+    ! if (verbose) print*, "generator: initialising MPI ..."
+    ! call mpi90_init()
+    ! call mpi90_rank(proc_id)
 
     if (verbose) print*, "generator: creating random number seed ..."
     call system_clock(ticks)
@@ -148,8 +148,8 @@ program generator
 
             print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
             call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, event, calls(1, 1), xsec, xerr, chi2, exc = exc, &
-                history = history, histories = histories)
+            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                exc = exc, history = history, histories = histories)
             call clear_exception(exc)
             call vamp_print_history (history, "multi")
             call vamp_print_history (histories, "multi")
@@ -163,9 +163,8 @@ program generator
             print*, "generator: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
             do i = 1, calls(1, 2)
                 call clear_exception(exc)
-                call vamp_sample_grids(rng, grids, event, 1, xsec, xerr, chi2, exc = exc, &
-                    history = history(calls(1, 1) + i:), &
-                    histories = histories(calls(1, 1) + i:, :))
+                call vamp_sample_grids(rng, grids, event, no_data, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                    exc = exc, history = history(calls(1, 1) + i:), histories = histories(calls(1, 1) + i:, :))
                 call handle_exception(exc)
                 call clear_exception(exc)
                 call vamp_refine_weights(grids)
@@ -183,9 +182,8 @@ program generator
             ! call vamp_warmup_grids(rng, grids, event, calls(1, 3), &
                 ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
                 ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
-            call vamp_sample_grids(rng, grids, event, calls(1, 3), xsec, xerr, chi2, &
-                history = history(calls(1, 1) + calls(1, 2):), &
-                histories = histories(calls(1, 1) + calls(1, 2):, :))
+            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                exc = exc, history = history(calls(1, 1) + calls(1, 2):), histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
 
             print *, "generator: integral = ", xsec, "+/-", xerr, " (chi^2 = ", chi2, ")"
@@ -209,8 +207,8 @@ program generator
 
             print*, "prelim iterations = ", calls(1, 1)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, calls(1, 1), &
-                xsec, xerr, chi2, exc = exc, history = history)
+            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+            exc = exc, history = history)
             call handle_exception(exc)
             print *, "xsec = ", xsec, "+/-", xerr
             if (xsec <= 0) stop
@@ -221,9 +219,8 @@ program generator
 
             print*, "full iterations = ", calls(1, 3)
             call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, calls(1, 3) - 1, &
-                xsec, xerr, chi2, exc = exc, &
-                history = history(calls(1, 1) + 1:))
+            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 3) - 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                exc = exc, history = history(calls(1, 1) + 1:))
             call handle_exception(exc)
             call clear_exception(exc)
             call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
@@ -291,9 +288,9 @@ program generator
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
                 if (multichannel) then
-                 call vamp_next_event(x, rng, grids, event, phi, weight, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, no_data, phi, weight = weight, exc = exc)
                 else
-                 call vamp_next_event(x, rng, grid, event, weight, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, no_data, weight = weight, exc = exc)
                 end if
                 call handle_exception (exc)
                 if (.not. unweighted) call rootaddevent(weight)
@@ -361,9 +358,9 @@ program generator
             do i = 1, nevents
                 call clear_exception(exc)
                 if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, phi, exc = exc)
+                    call vamp_next_event(x, rng, grids, event, no_data, phi, exc = exc)
                 else
-                    call vamp_next_event(x, rng, grid, event, exc = exc)
+                    call vamp_next_event(x, rng, grid, event, no_data, exc = exc)
                 end if
                 call handle_exception(exc)
                 record_events = .true.
