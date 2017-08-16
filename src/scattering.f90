@@ -4,7 +4,7 @@ module scattering
     use configuration
     use modelling
     use tt_bbeevv
-    use vampi
+    use vamp
 
     implicit none
 
