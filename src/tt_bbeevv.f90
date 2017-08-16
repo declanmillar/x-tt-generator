@@ -4,7 +4,7 @@ module tt_bbeevv
 
     implicit none
 
-    real(kind=default), public :: sgg_tt_bbeevv
+    public :: sgg_tt_bbeevv
     real(kind=default), private :: gg_tt_bbeevv
     real(kind=default), public :: sqq_tt_bbeevv
     real(kind=default), private :: qq_tt_bbeevv
@@ -13,7 +13,7 @@ module tt_bbeevv
 
 contains
 
-function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, channel)
+real(kind=default) function sgg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, channel)
 
     ! returns amplitude squared summed/avg over colors and helicities
     ! for the point in phase space p1, p2, p3, p4, ...
