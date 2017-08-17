@@ -1449,7 +1449,7 @@ contains
           s = ""
        end if
        print "(1X,A8,1X,I2,I9,A1,1X,E11.4,A1,E9.2,A1," &
-                             // "1X,E11.6,A1,E7.2,A1,F8.1,1X,F11.3)", pfx, &
+                             // "1X,E13.6,A1,E7.2,A1,F8.1,1X,F11.3)", pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
@@ -1523,8 +1523,8 @@ contains
        else
           s = ""
        end if
-       write (u, "(1X,A8,1X,I2,I9,A1,1X,ES11.4,A1,ES8.2,A1," &
-            // "1X,ES13.6,A1,ES8.2,A1,F8.1,1X,F10.3)") pfx, &
+       write (u, "(1X,A8,1X,I2,I9,A1,1X,ES11.4,A1,ES9.2,A1," &
+            // "1X,ES13.6,A1,ES9.2,A1,F8.1,1X,F10.3)") pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
