@@ -305,10 +305,11 @@ if args.job:
     if "lxplus" in hostname:
         print >> handler, "#!/bin/bash"
         print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/6.2/x86_64-slc6/setup.sh"
-        # print >> handler, "source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/bin/thisroot.sh"
         print >> handler, "source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.10.04-22868/x86_64-slc6-gcc62-opt/bin/thisroot.sh"
         # print >> handler, "export PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/bin:$PATH"
         # print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/lib:$LD_LIBRARY_PATH"
+        print >> handler, "export PATH=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt/bin:$PATH"
+        print >> handler, "export LD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt/lib:$LD_LIBRARY_PATH"
         print >> handler, "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/cern.ch/user/d/demillar/root-tuple/lib"
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/setup.sh"
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/x86_64/xe2017/bin/compilervars.sh intel64"
@@ -351,8 +352,8 @@ if args.job:
     else:
         sys.exit("ERROR: hostname not recognised")
 else:
-    if "cyan" in hostname:
-        print "loading openmpi module ..."
-        subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
+    # if "cyan" in hostname:
+        # print "loading openmpi module ..."
+        # subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
-    subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile))
+    subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile), shell = True)
