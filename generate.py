@@ -306,7 +306,7 @@ if args.job:
         print >> handler, "#!/bin/bash"
         print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/6.2/x86_64-slc6/setup.sh"
         # print >> handler, "source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/bin/thisroot.sh"
-        print >> handler, "source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.10.04-22868/x86_64-slc6-gcc62-opt/bin/thisroot.sh
+        print >> handler, "source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.10.04-22868/x86_64-slc6-gcc62-opt/bin/thisroot.sh"
         # print >> handler, "export PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/bin:$PATH"
         # print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/lib:$LD_LIBRARY_PATH"
         print >> handler, "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/cern.ch/user/d/demillar/root-tuple/lib"
