@@ -29,10 +29,10 @@ program generator
     implicit none
 
     integer :: i, j
-    real(kind = default) :: xsec, xerr, chi2, weight, all, error_all, al, error_al, apv, error_apv
+    real(kind = default) :: input_xsec(2), xsec, xerr, chi2, weight, all, error_all, al, error_al, apv, error_apv
 
     ! time keeping
-    integer :: ticks, proc_id, now(8)
+    integer :: ticks, now(8)
     real(kind = default) :: time0, time1
 
     ! lhe
@@ -48,8 +48,6 @@ program generator
     type(vamp_grids) :: grids
     type(vamp_history), allocatable :: history(:), histories(:, :)
 
-    real(kind = default) :: input_cross_section(2)
-
     call cpu_time(time0)
     call date_and_time(values = now)
     write(*, "(a8, i4, a1, i2.2, a1, i2.2, a1, i2.2, a1, i2.2, a1, i2.2)") &
@@ -64,14 +62,10 @@ program generator
     call initialise_s
     call set_energy_limits
 
-    ! if (verbose) print*, "generator: initialising MPI ..."
-    ! call mpi90_init()
-    ! call mpi90_rank(proc_id)
-
     if (verbose) print*, "generator: creating random number seed ..."
     call system_clock(ticks)
     call tao_random_create(rng, 0)
-    call tao_random_seed(rng, ticks + proc_id)
+    call tao_random_seed(rng, ticks)
 
     if (verbose) print*, "generator: setting dimensions ..."
     if (use_rambo) then
@@ -179,9 +173,6 @@ program generator
 
             print*, "generator: warming up grid with ", calls(1, 3), "iterations ..."
             call clear_exception(exc)
-            ! call vamp_warmup_grids(rng, grids, event, no_data, calls(1, 3), &
-                ! history = history(calls(1, 1) + calls(1, 2) + 1:), &
-                ! histories = histories(calls(1, 1) + calls(1, 2) + 1:, :))
             call vamp_sample_grids(rng, grids, event, no_data, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
                 exc = exc, history = history(calls(1, 1) + calls(1, 2):), histories = histories(calls(1, 1) + calls(1, 2):, :))
             call clear_exception(exc)
@@ -241,9 +232,9 @@ program generator
             call vamp_read_grid(grid, grid_file)
         end if
         if (unweighted) then
-            input_cross_section = read_cross_section(xsec_file)
-            xsec = input_cross_section(1)
-            xerr = input_cross_section(2)
+            input_xsec = read_cross_section(xsec_file)
+            xsec = input_xsec(1)
+            xerr = input_xsec(2)
         end if
     end if
 
@@ -380,14 +371,9 @@ program generator
         else
             call vamp_write_grid(grid, grid_file)
         end if
-    else
-        if (verbose) print*, "skipping event generation"
     end if
 
-    if (.not. multichannel) then
-        if (verbose) print *, "deleting grid ..."
-        call vamp_delete_grid(grid)
-    end if
+    if (.not. multichannel) call vamp_delete_grid(grid)
 
     call cpu_time(time1)
     call print_runtime(time1 - time0)

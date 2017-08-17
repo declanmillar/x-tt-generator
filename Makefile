@@ -15,7 +15,7 @@ ifeq ($(HOSTNAME), Lorkhan)
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple
 else
 	F = ifort
-	FFLAGS = -module $(LIB) -parallel -qopenmp
+	FFLAGS = -module $(LIB) -stand 08 -parallel -qopenmp
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple -parallel -qopenmp
 endif
 
