@@ -304,8 +304,9 @@ if args.job:
     handler = StringIO.StringIO()
     if "lxplus" in hostname:
         print >> handler, "#!/bin/bash"
-        print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/4.8/x86_64-slc6/setup.sh"
-        print >> handler, "source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/bin/thisroot.sh"
+        print >> handler, "source /afs/cern.ch/sw/lcg/external/gcc/6.2/x86_64-slc6/setup.sh"
+        # print >> handler, "source /afs/cern.ch/sw/lcg/app/releases/ROOT/6.06.08/x86_64-slc6-gcc48-opt/root/bin/thisroot.sh"
+        print >> handler, "source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.10.04-22868/x86_64-slc6-gcc62-opt/bin/thisroot.sh
         # print >> handler, "export PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/bin:$PATH"
         # print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/lib:$LD_LIBRARY_PATH"
         print >> handler, "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/cern.ch/user/d/demillar/root-tuple/lib"
@@ -317,8 +318,8 @@ if args.job:
         print "walltime = %s" % args.walltime
         print >> handler, "#!/bin/bash"
         print >> handler, "source /home/dam1g09/.bash_profile"
-        # print >> handler, "module load gcc/6.1.0"
-        # print >> handler, "module load openmpi/2.0.2/gcc"
+        print >> handler, "module load gcc/6.1.0"
+        print >> handler, "module load openmpi/2.0.2/gcc"
         print >> handler, "module load intel/2017"
         print >> handler, "module load intel/mpi/2017"
         print >> handler, "cd %s" % run_directory
