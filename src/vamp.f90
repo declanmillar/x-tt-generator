@@ -401,9 +401,9 @@ module vamp_rest
        integer_fmt =       "(1x,a17,1x,i15)", &
        integer_array_fmt = "(1x,i17,1x,i15)", &
        logical_fmt =       "(1x,a17,1x,l1)", &
-       double_fmt =        "(1x,a17,1x,e30.22e4)", &
-       double_array_fmt =  "(1x,i17,1x,e30.22e4)", &
-       double_array2_fmt =  "(2(1x,i8),1x,e30.22e4)"
+       double_fmt =        "(1x,a17,1x,e31.22e4)", &
+       double_array_fmt =  "(1x,i17,1x,e31.22e4)", &
+       double_array2_fmt =  "(2(1x,i8),1x,e31.22e4)"
   character(len=*), public, parameter :: VAMP_RCS_ID = &
        "$Id: vamp.nw 317 2010-04-18 00:31:03Z ohl $"
 contains
@@ -1449,7 +1449,7 @@ contains
           s = ""
        end if
        print "(1X,A8,1X,I2,I9,A1,1X,E11.4,A1,E9.2,A1," &
-                             // "1X,E13.6,A1,E9.2,A1,F8.1,1X,F11.3)", pfx, &
+                             // "1X,E11.6,A1,E7.2,A1,F8.1,1X,F11.3)", pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
@@ -1524,7 +1524,7 @@ contains
           s = ""
        end if
        write (u, "(1X,A8,1X,I2,I9,A1,1X,ES11.4,A1,ES8.2,A1," &
-            // "1X,ES13.6,A1,ES8.2,A1,F5.1,1X,F5.3)") pfx, &
+            // "1X,ES13.6,A1,ES8.2,A1,F8.1,1X,F10.3)") pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
