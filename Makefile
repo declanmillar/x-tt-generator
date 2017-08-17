@@ -11,12 +11,10 @@ TUPLELIB = ../root-tuple/lib
 HOSTNAME := $(shell hostname)
 ifeq ($(HOSTNAME), Lorkhan)
 	F = gfortran
-	L = gfortran
 	FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple
 else
 	F = ifort
-	L = ifort
 	FFLAGS = -module $(LIB) -parallel -qopenmp
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple -parallel -qopenmp
 endif
@@ -27,7 +25,7 @@ $(LIB)/%.o: $(SRC)/%.f90
 	$(F) $(FFLAGS) -c -o $@ $<
 
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
-	$(L) $(LFLAGS) -o $@ $^
+	$(F) $(LFLAGS) -o $@ $^
 
 clean:
 	rm -f $(LIB)/*.o $(LIB)/*.mod $(OUT)/$(BIN)
