@@ -1,4 +1,6 @@
-for file in $(ls -1 qq*.lhef)
+if [ $# != 2 ] echo "usage: check-lhef.sh <wildcard>"
+
+for file in $(ls -1 $1)
 do
     lastline=$(tail -1 $file)
     # echo $lastline
