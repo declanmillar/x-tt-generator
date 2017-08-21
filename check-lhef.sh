@@ -1,4 +1,9 @@
-if [ $# != 2 ] echo "usage: check-lhef.sh <wildcard>"
+#!/bin/bash
+
+if [ $# != 1 ]
+then
+    echo "usage: check-lhef.sh <wildcard>"
+fi
 
 for file in $(ls -1 $1)
 do
