@@ -1,100 +1,100 @@
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 200
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 201
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 202
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 203
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 204
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 205
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 206
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 207
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 208
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 209
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 210
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 211
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 212
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 213
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 214
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 215
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 216
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 217
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 218
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 219
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 220
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 221
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 222
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 223
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 224
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 225
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 226
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 227
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 228
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 229
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 230
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 231
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 232
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 233
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 234
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 235
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 236
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 237
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 238
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 239
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 240
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 241
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 242
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 243
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 244
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 245
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 246
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 247
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 248
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 249
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 250
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 251
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 252
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 253
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 254
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 255
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 256
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 257
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 258
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 259
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 260
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 261
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 262
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 263
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 264
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 265
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 266
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 267
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 268
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 269
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 270
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 271
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 272
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 273
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 274
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 275
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 276
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 277
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 278
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 279
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 280
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 281
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 282
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 283
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 284
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 285
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 286
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 287
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 288
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 289
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 290
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 291
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 292
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 293
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 294
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 295
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 296
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 297
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 298
-./generate.py -q -f 22 -Q 1nw -k 60:00:00 -i 299
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 000
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 001
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 002
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 003
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 004
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 005
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 006
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 007
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 008
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 009
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 010
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 011
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 012
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 013
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 014
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 015
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 016
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 017
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 018
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 019
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 020
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 021
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 022
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 023
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 024
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 025
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 026
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 027
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 028
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 029
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 030
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 031
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 032
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 033
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 034
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 035
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 036
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 037
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 038
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 039
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 040
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 041
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 042
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 043
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 044
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 045
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 046
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 047
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 048
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 049
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 050
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 051
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 052
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 053
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 054
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 055
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 056
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 057
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 058
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 059
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 060
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 061
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 062
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 063
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 064
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 065
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 066
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 067
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 068
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 069
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 070
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 071
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 072
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 073
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 074
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 075
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 076
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 077
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 078
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 079
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 080
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 081
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 082
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 083
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 084
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 085
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 086
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 087
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 088
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 089
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 090
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 091
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 092
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 093
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 094
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 095
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 096
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 097
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 098
+./generate.py -q -f 11 -L 4 -U 5 -Q 1nd -k 60:00:00 -i 099

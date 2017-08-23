@@ -220,7 +220,7 @@ datafiles = [ f for f in os.listdir(data_directory) if os.path.isfile(os.path.jo
 filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
 # print filtered
 new_index = int(args.index) if args.index != "" else len(filtered) + 1
-events_name = events_name + "_%02d" % new_index
+events_name = events_name + "_%03d" % new_index
 events_path = data_directory + events_name
 
 if os.path.isdir(data_directory) is False:
