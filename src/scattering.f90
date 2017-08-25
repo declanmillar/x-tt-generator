@@ -711,6 +711,11 @@ function event(x, data, weights, channel, grids)
         pcol(1,i) = p(1,i)
     end do
 
+    do i = 3, nfinal
+        eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
+        if (abs(eta) > 100) return
+    end do
+
     if (cut) then
         if (verbose) print*, "kinematics: applying detector cuts ..."
         do i = 3, nfinal
