@@ -34,7 +34,7 @@ subroutine write_cross_section(xsec_file, cross_section, uncertainty)
     if (verbose) print*, "writing ", trim(xsec_file)
     open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
     write(xsec,*) cross_section, "! cross section"
-    write(xsec,*) cross_section, "! uncertainty"
+    write(xsec,*) uncertainty, "! uncertainty"
     close(xsec)
 end subroutine write_cross_section
 
