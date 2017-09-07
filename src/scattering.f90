@@ -713,7 +713,7 @@ function event(x, data, weights, channel, grids)
 
     do i = 3, nfinal
         eta = atanh(pcol(3,i) / sqrt(pcol(1,i) * pcol(1,i) + pcol(2,i) * pcol(2,i) + pcol(3,i) * pcol(3,i)))
-        if (abs(eta) > 100) return
+        if (abs(eta) > 10) return
     end do
 
     if (cut) then
