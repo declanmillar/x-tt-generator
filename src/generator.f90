@@ -220,7 +220,7 @@ program generator
             call clear_exception(exc)
             call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
             call handle_exception(exc)
-            call vamp_write_grid(grid, grid_file)
+            ! call vamp_write_grid(grid, grid_file)
         end if
 
     else
