@@ -851,17 +851,17 @@ function event(x, data, weights, channel, grids)
         if (verbose) print*, "scattering: summing over 2->2 |m|^2 with pdfs of initial partons ..."
         do i = -1, 1, 2
             do j = -1, 1, 2
-                event_pol(i,j) = fx1(13) * fx2(13) *  spolgg(i, j) &
-                                + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
-                                + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
-                                + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
-                                + fx1( 4) * fx2(10) * (spolqq(i, j) + spoluu1(i, j)) &
-                                + fx1( 5) * fx2(11) * (spolqq(i, j) + spoldd1(i, j)) &
-                                + fx1( 7) * fx2( 1) * (spolqq(i, j) + spoldd2(i, j)) &
-                                + fx1( 8) * fx2( 2) * (spolqq(i, j) + spoluu2(i, j)) &
-                                + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
-                                + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
-                                + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
+                event_pol(i,j) = fx1(13) * fx2(13) * spolgg(i, j) &
+                               + fx1( 1) * fx2( 7) * (spolqq(i, j) + spoldd1(i, j)) &
+                               + fx1( 2) * fx2( 8) * (spolqq(i, j) + spoluu1(i, j)) &
+                               + fx1( 3) * fx2( 9) * (spolqq(i, j) + spoldd1(i, j)) &
+                               + fx1( 4) * fx2(10) * (spolqq(i, j) + spoluu1(i, j)) &
+                               + fx1( 5) * fx2(11) * (spolqq(i, j) + spoldd1(i, j)) &
+                               + fx1( 7) * fx2( 1) * (spolqq(i, j) + spoldd2(i, j)) &
+                               + fx1( 8) * fx2( 2) * (spolqq(i, j) + spoluu2(i, j)) &
+                               + fx1( 9) * fx2( 3) * (spolqq(i, j) + spoldd2(i, j)) &
+                               + fx1(10) * fx2( 4) * (spolqq(i, j) + spoluu2(i, j)) &
+                               + fx1(11) * fx2( 5) * (spolqq(i, j) + spoldd2(i, j))
                 event_pol(i, j) = event_pol(i, j) / x1
                 event = event + event_pol(i, j)
             end do
