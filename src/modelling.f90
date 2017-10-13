@@ -27,7 +27,7 @@ module modelling
 
   ! leptons masses
   real(kind=default), parameter :: emass = 0.d0, mumass = 0.d0, taumass = 1.78d0
-  real(kind=default), parameter :: nuemass = 0d0, numumass = 0d0, nutaumass = 0d0
+  real(kind=default), parameter :: nuemass = 0.d0, numumass = 0.d0, nutaumass = 0.d0
 
   ! quark widths
   real(kind=default), parameter :: uwidth = 0.d0,  cwidth = 0.d0, twidth = 1.3d0
@@ -39,10 +39,10 @@ module modelling
 
   ! SM boson masses
   real(kind=default), parameter :: wmass = 80.4d0, zmass = 91.19d0, wwidth = 2.08d0, zwidth = 2.5d0
-  real(kind=default), parameter :: amass = 0d0, awidth = 0d0, hmass = 125.d0, hwidth = 3.1278d-3
+  real(kind=default), parameter :: amass = 0.d0, awidth = 0.d0, hmass = 125.d0, hwidth = 3.1278d-3
 
   ! Other SM parameters
-  real(kind=default), parameter :: a_em = 0.0078125, s2w = 0.2320d0, vev = 246.d0
+  real(kind=default), parameter :: a_em = 0.0078125d0, s2w = 0.2320d0, vev = 246.d0
   real(kind=default) :: cotw
 
   ! zprime parameters
