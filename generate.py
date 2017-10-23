@@ -356,4 +356,4 @@ else:
         # print "loading openmpi module ..."
         # subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
     subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
-    subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile), shell = True)
+    # subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile), shell = True)

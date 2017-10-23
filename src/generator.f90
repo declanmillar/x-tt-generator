@@ -220,7 +220,7 @@ program generator
             call clear_exception(exc)
             call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
             call handle_exception(exc)
-            ! call vamp_write_grid(grid, grid_file)
+            call vamp_write_grid(grid, grid_file)
         end if
 
     else
@@ -365,12 +365,12 @@ program generator
 
         if (lhef_out) call lhe_close
 
-        if (verbose) print*, "generator: updating vamp grid at ", grid_file
-        if (multichannel) then
-            call vamp_write_grids(grids, grid_file)
-        else
-            call vamp_write_grid(grid, grid_file)
-        end if
+        ! if (verbose) print*, "generator: updating vamp grid at ", grid_file
+        ! if (multichannel) then
+        !     call vamp_write_grids(grids, grid_file)
+        ! else
+        !     call vamp_write_grid(grid, grid_file)
+        ! end if
     end if
 
     if (.not. multichannel) call vamp_delete_grid(grid)
