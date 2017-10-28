@@ -198,7 +198,7 @@
 ./generate.py -u -m GLR-R-2.5-20pc -f 11 -Q 1nd -i 097
 ./generate.py -u -m GLR-R-2.5-20pc -f 11 -Q 1nd -i 098
 ./generate.py -u -m GLR-R-2.5-20pc -f 11 -Q 1nd -i 099
-./generate.py -d -m GLR-R-2.5-20pc -f 11 -Q 1nd -i 000
+./generate.py -d -m GLR-R-2.5-20pc -f 12 -Q 1nd -i 000
 ./generate.py -d -m GLR-R-2.5-20pc -f 12 -Q 1nd -i 001
 ./generate.py -d -m GLR-R-2.5-20pc -f 12 -Q 1nd -i 002
 ./generate.py -d -m GLR-R-2.5-20pc -f 12 -Q 1nd -i 003
