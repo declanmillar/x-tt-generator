@@ -33,8 +33,8 @@ subroutine write_cross_section(xsec_file, cross_section, uncertainty)
     real(kind=default) :: cross_section, uncertainty
     if (verbose) print*, "writing ", trim(xsec_file)
     open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
-    write(xsec,*) cross_section, "! cross section"
-    write(xsec,*) uncertainty, "! uncertainty"
+    write(xsec,*) cross_section, "! cross section [pb]"
+    write(xsec,*) uncertainty, "! uncertainty [pb]"
     close(xsec)
 end subroutine write_cross_section
 
@@ -170,7 +170,7 @@ function event(x, data, weights, channel, grids)
     real(kind=default), dimension(:), intent(in), optional :: weights
     integer, intent(in), optional :: channel
     type(vamp_grid), dimension(:), intent(in), optional :: grids
-    real(kind=default), parameter :: unit_conv = 0.38937966d9
+    real(kind=default), parameter :: unit_conv = 0.38937966d9 ! GeV−2 = 0.38937966d9 pb
 
     ! alphas
     real(kind=default) :: alfas
