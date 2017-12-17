@@ -1,4 +1,6 @@
-# Perigee Readme
+# Prophet
+
+Produce ResOnant Particles to High Energy Tops
 
 The generation tool employed for our study is a custom Monte Carlo (MC) program. The matrix element calculations are based on helicity amplitudes using [HELAS](http://inspirehep.net/record/336604?ln=en) subroutines, with Standard Model square matrix elements built up using [MagGraph](http://madgraph.physics.illinois.edu). Beyond the Standard Model amplitudes are then constructed by modifying these as required. [Vegas AMPlified (VAMP)](http://www.sciencedirect.com/science/article/pii/S001046559900209X?via%3Dihub), an enhanced version of the popular [VEGAS](https://en.wikipedia.org/wiki/VEGAS_algorithm) program, is used for the multi-dimensional numerical phase-space integration, and the generation of unweighted events.
 
@@ -8,21 +10,22 @@ The program can write the minimal event information (event weight, PDG particle 
 
 The full source code repository is stored [here](https://gitlab.cern.ch/demillar/zprime-top-generator), but currently accessible to collaborators only.
 
-# Running the program
+## Running the program
 
 The program is executed via the `generate.py` run file. Do `generate.py -h` for the available options.
 If run on `lxplus` or `iridis` the program will create a steering file and submit a batch job.
 
-# Directory Structure
+## Directory Structure
 
-* `bin/`: Folder containing compiled and linked `generator` binary executable.
-* `Diagrams/`: Contains various Feynman diagrams representative of the generation processes.
-* `lib/`: Contains the compiled library files.
-* `Models/`: Contains the input files for each BSM model.
-* `PDFs/`: Contains the tables for the available Parton Distribution functions.
-* `src/`: Contains the fortran (freeform `.f90`) source files.
+* `bin/`: compiled and linked `generator` binary executable
+* `Diagrams/`: Feynman diagrams for the generation processes
+* `lib/`: compiled library files
+* `macros/`: scripts for running program and more
+* `Models/`: the input files for each BSM model
+* `PDFs/`: the tables for the available Parton Distribution functions
+* `src/`: the fortran (freeform `.f90`) source files
 
-# Important Files
+## Important Files
 
 * `generate.py`: The run file for execution.
 * `generator.f90`: The main source file where the Fortran program lives.

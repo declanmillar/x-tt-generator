@@ -54,8 +54,28 @@ parser.add_argument("-x", "--include_x", help = "include Z' boson mediated inter
 parser.add_argument("-z", "--include_z", help = "include Z boson mediated interaction", default = True,  action = "store_false")
 args = parser.parse_args()
 
+hostname = socket.gethostname()
+home_directory = "."
+data_directory = "."
+if "Lorkhan" in hostname:
+    home_directory = "/Users/declan/Projects/"
+    data_directory = "/Users/declan/Data/"
+elif "lxplus" in hostname:
+    home_directory = "/afs/cern.ch/user/d/demillar/"
+    data_directory = "/afs/cern.ch/work/d/demillar/"
+elif "cyan" in hostname:
+    home_directory = "/home/dam1g09/"
+    data_directory = "/scratch/dam1g09/"
+elif "heppc" in hostname:
+    home_directory = "/users/millar/"
+    data_directory = "/data/millar/"
+else:
+    exit("ERROR: unknown host")
+run_directory = home_directory + "perigee/"
+data_directory = data_directory + "zprime/"
+
 # check model file exists
-if os.path.isfile("Models/%s.mdl" % args.model) is False:
+if os.path.isfile(run_directory + "Models/%s.mdl" % args.model) is False:
     print "ERROR: %s is not a valid model" % args.model
     print "available models:"
     for name in glob.glob("Models/*.mdl"):
@@ -98,7 +118,6 @@ if args.lhef and initial_states > 1:
 if initial_states == 0:
     print "WARNING: no initial states specified; will integrate phase space only"
 
-hostname = socket.gethostname()
 if not ("lxplus" in hostname or "cyan" in hostname):
     args.job = False
 
@@ -196,24 +215,6 @@ else: process = initial_partons + intermediates + final_state
 grid_name = '%s_%s_%sTeV_%s%s' % (gridproc, args.model, str(args.energy), pdf, options)
 events_name = '%s_%s_%sTeV_%s%s' % (process, args.model, str(args.energy), pdf, options)
 
-home_directory = "."
-data_directory = "."
-if "Lorkhan" in hostname:
-    home_directory = "/Users/declan/Projects/"
-    data_directory = "/Users/declan/Data/"
-elif "lxplus" in hostname:
-    home_directory = "/afs/cern.ch/user/d/demillar/"
-    data_directory = "/afs/cern.ch/work/d/demillar/"
-elif "cyan" in hostname:
-    home_directory = "/home/dam1g09/"
-    data_directory = "/scratch/dam1g09/"
-elif "heppc" in hostname:
-    home_directory = "/users/millar/"
-    data_directory = "/data/millar/"
-else:
-    exit("ERROR: unknown host")
-run_directory = home_directory + "perigee/"
-data_directory = data_directory + "zprime/"
 grid_path = data_directory + grid_name
 
 datafiles = [ f for f in os.listdir(data_directory) if os.path.isfile(os.path.join(data_directory, f)) ]
@@ -355,5 +356,5 @@ else:
     # if "cyan" in hostname:
         # print "loading openmpi module ..."
         # subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
-    subprocess.call("./bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+    subprocess.call(run_directory + "bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
     # subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile), shell = True)
