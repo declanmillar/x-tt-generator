@@ -71,7 +71,7 @@ elif "heppc" in hostname:
     data_directory = "/data/millar/"
 else:
     exit("ERROR: unknown host")
-run_directory = home_directory + "perigee/"
+run_directory = home_directory + "prophet/"
 data_directory = data_directory + "zprime/"
 
 # check model file exists
