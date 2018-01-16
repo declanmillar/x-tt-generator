@@ -1,800 +1,300 @@
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 000
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 001
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 002
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 003
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 004
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 005
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 006
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 007
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 008
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 009
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 010
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 011
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 012
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 013
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 014
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 015
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 016
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 017
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 018
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 019
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 020
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 021
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 022
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 023
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 024
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 025
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 026
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 027
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 028
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 029
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 030
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 031
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 032
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 033
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 034
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 035
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 036
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 037
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 038
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 039
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 040
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 041
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 042
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 043
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 044
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 045
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 046
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 047
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 048
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 049
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 050
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 051
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 052
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 053
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 054
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 055
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 056
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 057
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 058
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 059
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 060
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 061
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 062
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 063
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 064
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 065
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 066
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 067
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 068
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 069
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 070
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 071
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 072
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 073
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 074
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 075
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 076
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 077
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 078
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 079
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 080
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 081
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 082
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 083
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 084
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 085
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 086
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 087
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 088
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 089
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 090
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 091
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 092
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 093
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 094
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 095
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 096
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 097
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 098
-./generate.py -d -m NUSU2-80-0.15 -f 11 -Q 1nd -i 099
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 000
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 001
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 002
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 003
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 004
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 005
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 006
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 007
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 008
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 009
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 010
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 011
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 012
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 013
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 014
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 015
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 016
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 017
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 018
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 019
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 020
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 021
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 022
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 023
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 024
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 025
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 026
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 027
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 028
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 029
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 030
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 031
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 032
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 033
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 034
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 035
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 036
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 037
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 038
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 039
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 040
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 041
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 042
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 043
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 044
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 045
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 046
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 047
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 048
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 049
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 050
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 051
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 052
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 053
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 054
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 055
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 056
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 057
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 058
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 059
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 060
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 061
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 062
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 063
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 064
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 065
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 066
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 067
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 068
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 069
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 070
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 071
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 072
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 073
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 074
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 075
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 076
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 077
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 078
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 079
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 080
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 081
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 082
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 083
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 084
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 085
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 086
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 087
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 088
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 089
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 090
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 091
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 092
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 093
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 094
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 095
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 096
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 097
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 098
-./generate.py -u -m NUSU2-80-0.15 -f 11 -Q 1nd -i 099
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 000
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 001
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 002
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 003
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 004
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 005
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 006
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 007
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 008
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 009
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 010
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 011
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 012
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 013
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 014
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 015
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 016
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 017
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 018
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 019
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 020
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 021
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 022
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 023
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 024
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 025
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 026
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 027
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 028
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 029
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 030
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 031
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 032
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 033
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 034
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 035
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 036
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 037
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 038
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 039
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 040
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 041
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 042
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 043
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 044
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 045
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 046
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 047
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 048
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 049
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 050
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 051
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 052
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 053
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 054
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 055
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 056
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 057
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 058
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 059
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 060
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 061
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 062
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 063
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 064
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 065
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 066
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 067
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 068
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 069
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 070
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 071
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 072
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 073
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 074
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 075
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 076
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 077
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 078
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 079
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 080
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 081
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 082
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 083
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 084
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 085
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 086
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 087
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 088
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 089
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 090
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 091
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 092
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 093
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 094
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 095
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 096
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 097
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 098
-./generate.py -d -m NUSU2-80-0.15 -f 12 -Q 1nd -i 099
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 000
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 001
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 002
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 003
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 004
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 005
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 006
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 007
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 008
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 009
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 010
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 011
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 012
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 013
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 014
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 015
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 016
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 017
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 018
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 019
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 020
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 021
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 022
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 023
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 024
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 025
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 026
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 027
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 028
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 029
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 030
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 031
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 032
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 033
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 034
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 035
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 036
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 037
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 038
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 039
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 040
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 041
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 042
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 043
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 044
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 045
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 046
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 047
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 048
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 049
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 050
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 051
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 052
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 053
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 054
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 055
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 056
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 057
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 058
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 059
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 060
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 061
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 062
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 063
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 064
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 065
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 066
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 067
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 068
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 069
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 070
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 071
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 072
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 073
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 074
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 075
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 076
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 077
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 078
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 079
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 080
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 081
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 082
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 083
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 084
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 085
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 086
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 087
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 088
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 089
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 090
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 091
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 092
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 093
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 094
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 095
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 096
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 097
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 098
-./generate.py -u -m NUSU2-80-0.15 -f 12 -Q 1nd -i 099
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 000
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 001
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 002
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 003
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 004
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 005
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 006
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 007
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 008
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 009
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 010
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 011
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 012
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 013
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 014
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 015
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 016
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 017
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 018
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 019
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 020
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 021
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 022
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 023
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 024
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 025
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 026
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 027
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 028
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 029
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 030
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 031
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 032
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 033
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 034
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 035
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 036
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 037
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 038
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 039
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 040
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 041
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 042
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 043
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 044
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 045
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 046
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 047
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 048
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 049
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 050
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 051
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 052
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 053
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 054
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 055
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 056
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 057
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 058
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 059
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 060
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 061
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 062
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 063
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 064
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 065
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 066
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 067
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 068
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 069
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 070
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 071
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 072
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 073
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 074
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 075
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 076
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 077
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 078
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 079
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 080
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 081
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 082
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 083
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 084
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 085
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 086
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 087
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 088
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 089
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 090
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 091
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 092
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 093
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 094
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 095
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 096
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 097
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 098
-./generate.py -d -m NUSU2-80-0.15 -f 21 -Q 1nd -i 099
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 000
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 001
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 002
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 003
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 004
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 005
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 006
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 007
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 008
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 009
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 010
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 011
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 012
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 013
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 014
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 015
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 016
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 017
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 018
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 019
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 020
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 021
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 022
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 023
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 024
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 025
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 026
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 027
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 028
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 029
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 030
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 031
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 032
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 033
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 034
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 035
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 036
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 037
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 038
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 039
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 040
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 041
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 042
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 043
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 044
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 045
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 046
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 047
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 048
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 049
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 050
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 051
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 052
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 053
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 054
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 055
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 056
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 057
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 058
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 059
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 060
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 061
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 062
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 063
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 064
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 065
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 066
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 067
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 068
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 069
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 070
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 071
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 072
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 073
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 074
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 075
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 076
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 077
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 078
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 079
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 080
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 081
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 082
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 083
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 084
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 085
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 086
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 087
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 088
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 089
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 090
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 091
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 092
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 093
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 094
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 095
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 096
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 097
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 098
-./generate.py -u -m NUSU2-80-0.15 -f 21 -Q 1nd -i 099
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 000
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 001
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 002
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 003
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 004
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 005
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 006
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 007
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 008
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 009
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 010
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 011
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 012
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 013
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 014
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 015
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 016
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 017
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 018
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 019
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 020
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 021
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 022
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 023
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 024
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 025
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 026
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 027
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 028
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 029
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 030
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 031
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 032
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 033
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 034
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 035
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 036
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 037
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 038
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 039
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 040
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 041
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 042
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 043
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 044
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 045
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 046
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 047
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 048
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 049
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 050
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 051
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 052
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 053
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 054
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 055
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 056
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 057
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 058
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 059
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 060
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 061
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 062
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 063
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 064
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 065
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 066
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 067
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 068
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 069
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 070
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 071
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 072
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 073
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 074
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 075
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 076
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 077
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 078
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 079
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 080
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 081
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 082
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 083
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 084
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 085
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 086
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 087
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 088
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 089
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 090
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 091
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 092
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 093
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 094
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 095
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 096
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 097
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 098
-./generate.py -d -m NUSU2-80-0.15 -f 22 -Q 1nd -i 099
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 000
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 001
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 002
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 003
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 004
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 005
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 006
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 007
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 008
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 009
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 010
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 011
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 012
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 013
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 014
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 015
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 016
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 017
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 018
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 019
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 020
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 021
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 022
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 023
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 024
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 025
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 026
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 027
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 028
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 029
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 030
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 031
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 032
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 033
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 034
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 035
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 036
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 037
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 038
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 039
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 040
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 041
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 042
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 043
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 044
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 045
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 046
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 047
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 048
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 049
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 050
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 051
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 052
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 053
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 054
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 055
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 056
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 057
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 058
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 059
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 060
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 061
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 062
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 063
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 064
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 065
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 066
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 067
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 068
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 069
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 070
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 071
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 072
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 073
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 074
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 075
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 076
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 077
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 078
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 079
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 080
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 081
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 082
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 083
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 084
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 085
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 086
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 087
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 088
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 089
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 090
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 091
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 092
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 093
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 094
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 095
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 096
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 097
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 098
-./generate.py -u -m NUSU2-80-0.15 -f 22 -Q 1nd -i 099
+./generate.py -u -f 22 -Q 1nd -i 000
+./generate.py -u -f 22 -Q 1nd -i 001
+./generate.py -u -f 22 -Q 1nd -i 002
+./generate.py -u -f 22 -Q 1nd -i 003
+./generate.py -u -f 22 -Q 1nd -i 004
+./generate.py -u -f 22 -Q 1nd -i 005
+./generate.py -u -f 22 -Q 1nd -i 006
+./generate.py -u -f 22 -Q 1nd -i 007
+./generate.py -u -f 22 -Q 1nd -i 008
+./generate.py -u -f 22 -Q 1nd -i 009
+./generate.py -u -f 22 -Q 1nd -i 010
+./generate.py -u -f 22 -Q 1nd -i 011
+./generate.py -u -f 22 -Q 1nd -i 012
+./generate.py -u -f 22 -Q 1nd -i 013
+./generate.py -u -f 22 -Q 1nd -i 014
+./generate.py -u -f 22 -Q 1nd -i 015
+./generate.py -u -f 22 -Q 1nd -i 016
+./generate.py -u -f 22 -Q 1nd -i 017
+./generate.py -u -f 22 -Q 1nd -i 018
+./generate.py -u -f 22 -Q 1nd -i 019
+./generate.py -u -f 22 -Q 1nd -i 020
+./generate.py -u -f 22 -Q 1nd -i 021
+./generate.py -u -f 22 -Q 1nd -i 022
+./generate.py -u -f 22 -Q 1nd -i 023
+./generate.py -u -f 22 -Q 1nd -i 024
+./generate.py -u -f 22 -Q 1nd -i 025
+./generate.py -u -f 22 -Q 1nd -i 026
+./generate.py -u -f 22 -Q 1nd -i 027
+./generate.py -u -f 22 -Q 1nd -i 028
+./generate.py -u -f 22 -Q 1nd -i 029
+./generate.py -u -f 22 -Q 1nd -i 030
+./generate.py -u -f 22 -Q 1nd -i 031
+./generate.py -u -f 22 -Q 1nd -i 032
+./generate.py -u -f 22 -Q 1nd -i 033
+./generate.py -u -f 22 -Q 1nd -i 034
+./generate.py -u -f 22 -Q 1nd -i 035
+./generate.py -u -f 22 -Q 1nd -i 036
+./generate.py -u -f 22 -Q 1nd -i 037
+./generate.py -u -f 22 -Q 1nd -i 038
+./generate.py -u -f 22 -Q 1nd -i 039
+./generate.py -u -f 22 -Q 1nd -i 040
+./generate.py -u -f 22 -Q 1nd -i 041
+./generate.py -u -f 22 -Q 1nd -i 042
+./generate.py -u -f 22 -Q 1nd -i 043
+./generate.py -u -f 22 -Q 1nd -i 044
+./generate.py -u -f 22 -Q 1nd -i 045
+./generate.py -u -f 22 -Q 1nd -i 046
+./generate.py -u -f 22 -Q 1nd -i 047
+./generate.py -u -f 22 -Q 1nd -i 048
+./generate.py -u -f 22 -Q 1nd -i 049
+./generate.py -u -f 22 -Q 1nd -i 050
+./generate.py -u -f 22 -Q 1nd -i 051
+./generate.py -u -f 22 -Q 1nd -i 052
+./generate.py -u -f 22 -Q 1nd -i 053
+./generate.py -u -f 22 -Q 1nd -i 054
+./generate.py -u -f 22 -Q 1nd -i 055
+./generate.py -u -f 22 -Q 1nd -i 056
+./generate.py -u -f 22 -Q 1nd -i 057
+./generate.py -u -f 22 -Q 1nd -i 058
+./generate.py -u -f 22 -Q 1nd -i 059
+./generate.py -u -f 22 -Q 1nd -i 060
+./generate.py -u -f 22 -Q 1nd -i 061
+./generate.py -u -f 22 -Q 1nd -i 062
+./generate.py -u -f 22 -Q 1nd -i 063
+./generate.py -u -f 22 -Q 1nd -i 064
+./generate.py -u -f 22 -Q 1nd -i 065
+./generate.py -u -f 22 -Q 1nd -i 066
+./generate.py -u -f 22 -Q 1nd -i 067
+./generate.py -u -f 22 -Q 1nd -i 068
+./generate.py -u -f 22 -Q 1nd -i 069
+./generate.py -u -f 22 -Q 1nd -i 070
+./generate.py -u -f 22 -Q 1nd -i 071
+./generate.py -u -f 22 -Q 1nd -i 072
+./generate.py -u -f 22 -Q 1nd -i 073
+./generate.py -u -f 22 -Q 1nd -i 074
+./generate.py -u -f 22 -Q 1nd -i 075
+./generate.py -u -f 22 -Q 1nd -i 076
+./generate.py -u -f 22 -Q 1nd -i 077
+./generate.py -u -f 22 -Q 1nd -i 078
+./generate.py -u -f 22 -Q 1nd -i 079
+./generate.py -u -f 22 -Q 1nd -i 080
+./generate.py -u -f 22 -Q 1nd -i 081
+./generate.py -u -f 22 -Q 1nd -i 082
+./generate.py -u -f 22 -Q 1nd -i 083
+./generate.py -u -f 22 -Q 1nd -i 084
+./generate.py -u -f 22 -Q 1nd -i 085
+./generate.py -u -f 22 -Q 1nd -i 086
+./generate.py -u -f 22 -Q 1nd -i 087
+./generate.py -u -f 22 -Q 1nd -i 088
+./generate.py -u -f 22 -Q 1nd -i 089
+./generate.py -u -f 22 -Q 1nd -i 090
+./generate.py -u -f 22 -Q 1nd -i 091
+./generate.py -u -f 22 -Q 1nd -i 092
+./generate.py -u -f 22 -Q 1nd -i 093
+./generate.py -u -f 22 -Q 1nd -i 094
+./generate.py -u -f 22 -Q 1nd -i 095
+./generate.py -u -f 22 -Q 1nd -i 096
+./generate.py -u -f 22 -Q 1nd -i 097
+./generate.py -u -f 22 -Q 1nd -i 098
+./generate.py -u -f 22 -Q 1nd -i 099
+./generate.py -u -f 22 -Q 1nd -i 100
+./generate.py -u -f 22 -Q 1nd -i 101
+./generate.py -u -f 22 -Q 1nd -i 102
+./generate.py -u -f 22 -Q 1nd -i 103
+./generate.py -u -f 22 -Q 1nd -i 104
+./generate.py -u -f 22 -Q 1nd -i 105
+./generate.py -u -f 22 -Q 1nd -i 106
+./generate.py -u -f 22 -Q 1nd -i 107
+./generate.py -u -f 22 -Q 1nd -i 108
+./generate.py -u -f 22 -Q 1nd -i 109
+./generate.py -u -f 22 -Q 1nd -i 110
+./generate.py -u -f 22 -Q 1nd -i 111
+./generate.py -u -f 22 -Q 1nd -i 112
+./generate.py -u -f 22 -Q 1nd -i 113
+./generate.py -u -f 22 -Q 1nd -i 114
+./generate.py -u -f 22 -Q 1nd -i 115
+./generate.py -u -f 22 -Q 1nd -i 116
+./generate.py -u -f 22 -Q 1nd -i 117
+./generate.py -u -f 22 -Q 1nd -i 118
+./generate.py -u -f 22 -Q 1nd -i 119
+./generate.py -u -f 22 -Q 1nd -i 120
+./generate.py -u -f 22 -Q 1nd -i 121
+./generate.py -u -f 22 -Q 1nd -i 122
+./generate.py -u -f 22 -Q 1nd -i 123
+./generate.py -u -f 22 -Q 1nd -i 124
+./generate.py -u -f 22 -Q 1nd -i 125
+./generate.py -u -f 22 -Q 1nd -i 126
+./generate.py -u -f 22 -Q 1nd -i 127
+./generate.py -u -f 22 -Q 1nd -i 128
+./generate.py -u -f 22 -Q 1nd -i 129
+./generate.py -u -f 22 -Q 1nd -i 130
+./generate.py -u -f 22 -Q 1nd -i 131
+./generate.py -u -f 22 -Q 1nd -i 132
+./generate.py -u -f 22 -Q 1nd -i 133
+./generate.py -u -f 22 -Q 1nd -i 134
+./generate.py -u -f 22 -Q 1nd -i 135
+./generate.py -u -f 22 -Q 1nd -i 136
+./generate.py -u -f 22 -Q 1nd -i 137
+./generate.py -u -f 22 -Q 1nd -i 138
+./generate.py -u -f 22 -Q 1nd -i 139
+./generate.py -u -f 22 -Q 1nd -i 140
+./generate.py -u -f 22 -Q 1nd -i 141
+./generate.py -u -f 22 -Q 1nd -i 142
+./generate.py -u -f 22 -Q 1nd -i 143
+./generate.py -u -f 22 -Q 1nd -i 144
+./generate.py -u -f 22 -Q 1nd -i 145
+./generate.py -u -f 22 -Q 1nd -i 146
+./generate.py -u -f 22 -Q 1nd -i 147
+./generate.py -u -f 22 -Q 1nd -i 148
+./generate.py -u -f 22 -Q 1nd -i 149
+./generate.py -u -f 22 -Q 1nd -i 150
+./generate.py -u -f 22 -Q 1nd -i 151
+./generate.py -u -f 22 -Q 1nd -i 152
+./generate.py -u -f 22 -Q 1nd -i 153
+./generate.py -u -f 22 -Q 1nd -i 154
+./generate.py -u -f 22 -Q 1nd -i 155
+./generate.py -u -f 22 -Q 1nd -i 156
+./generate.py -u -f 22 -Q 1nd -i 157
+./generate.py -u -f 22 -Q 1nd -i 158
+./generate.py -u -f 22 -Q 1nd -i 159
+./generate.py -u -f 22 -Q 1nd -i 160
+./generate.py -u -f 22 -Q 1nd -i 161
+./generate.py -u -f 22 -Q 1nd -i 162
+./generate.py -u -f 22 -Q 1nd -i 163
+./generate.py -u -f 22 -Q 1nd -i 164
+./generate.py -u -f 22 -Q 1nd -i 165
+./generate.py -u -f 22 -Q 1nd -i 166
+./generate.py -u -f 22 -Q 1nd -i 167
+./generate.py -u -f 22 -Q 1nd -i 168
+./generate.py -u -f 22 -Q 1nd -i 169
+./generate.py -u -f 22 -Q 1nd -i 170
+./generate.py -u -f 22 -Q 1nd -i 171
+./generate.py -u -f 22 -Q 1nd -i 172
+./generate.py -u -f 22 -Q 1nd -i 173
+./generate.py -u -f 22 -Q 1nd -i 174
+./generate.py -u -f 22 -Q 1nd -i 175
+./generate.py -u -f 22 -Q 1nd -i 176
+./generate.py -u -f 22 -Q 1nd -i 177
+./generate.py -u -f 22 -Q 1nd -i 178
+./generate.py -u -f 22 -Q 1nd -i 179
+./generate.py -u -f 22 -Q 1nd -i 180
+./generate.py -u -f 22 -Q 1nd -i 181
+./generate.py -u -f 22 -Q 1nd -i 182
+./generate.py -u -f 22 -Q 1nd -i 183
+./generate.py -u -f 22 -Q 1nd -i 184
+./generate.py -u -f 22 -Q 1nd -i 185
+./generate.py -u -f 22 -Q 1nd -i 186
+./generate.py -u -f 22 -Q 1nd -i 187
+./generate.py -u -f 22 -Q 1nd -i 188
+./generate.py -u -f 22 -Q 1nd -i 189
+./generate.py -u -f 22 -Q 1nd -i 190
+./generate.py -u -f 22 -Q 1nd -i 191
+./generate.py -u -f 22 -Q 1nd -i 192
+./generate.py -u -f 22 -Q 1nd -i 193
+./generate.py -u -f 22 -Q 1nd -i 194
+./generate.py -u -f 22 -Q 1nd -i 195
+./generate.py -u -f 22 -Q 1nd -i 196
+./generate.py -u -f 22 -Q 1nd -i 197
+./generate.py -u -f 22 -Q 1nd -i 198
+./generate.py -u -f 22 -Q 1nd -i 199
+./generate.py -u -f 22 -Q 1nd -i 300
+./generate.py -u -f 22 -Q 1nd -i 301
+./generate.py -u -f 22 -Q 1nd -i 302
+./generate.py -u -f 22 -Q 1nd -i 303
+./generate.py -u -f 22 -Q 1nd -i 304
+./generate.py -u -f 22 -Q 1nd -i 305
+./generate.py -u -f 22 -Q 1nd -i 306
+./generate.py -u -f 22 -Q 1nd -i 307
+./generate.py -u -f 22 -Q 1nd -i 308
+./generate.py -u -f 22 -Q 1nd -i 309
+./generate.py -u -f 22 -Q 1nd -i 310
+./generate.py -u -f 22 -Q 1nd -i 311
+./generate.py -u -f 22 -Q 1nd -i 312
+./generate.py -u -f 22 -Q 1nd -i 313
+./generate.py -u -f 22 -Q 1nd -i 314
+./generate.py -u -f 22 -Q 1nd -i 315
+./generate.py -u -f 22 -Q 1nd -i 316
+./generate.py -u -f 22 -Q 1nd -i 317
+./generate.py -u -f 22 -Q 1nd -i 318
+./generate.py -u -f 22 -Q 1nd -i 319
+./generate.py -u -f 22 -Q 1nd -i 320
+./generate.py -u -f 22 -Q 1nd -i 321
+./generate.py -u -f 22 -Q 1nd -i 322
+./generate.py -u -f 22 -Q 1nd -i 323
+./generate.py -u -f 22 -Q 1nd -i 324
+./generate.py -u -f 22 -Q 1nd -i 325
+./generate.py -u -f 22 -Q 1nd -i 326
+./generate.py -u -f 22 -Q 1nd -i 327
+./generate.py -u -f 22 -Q 1nd -i 328
+./generate.py -u -f 22 -Q 1nd -i 329
+./generate.py -u -f 22 -Q 1nd -i 330
+./generate.py -u -f 22 -Q 1nd -i 331
+./generate.py -u -f 22 -Q 1nd -i 332
+./generate.py -u -f 22 -Q 1nd -i 333
+./generate.py -u -f 22 -Q 1nd -i 334
+./generate.py -u -f 22 -Q 1nd -i 335
+./generate.py -u -f 22 -Q 1nd -i 336
+./generate.py -u -f 22 -Q 1nd -i 337
+./generate.py -u -f 22 -Q 1nd -i 338
+./generate.py -u -f 22 -Q 1nd -i 339
+./generate.py -u -f 22 -Q 1nd -i 340
+./generate.py -u -f 22 -Q 1nd -i 341
+./generate.py -u -f 22 -Q 1nd -i 342
+./generate.py -u -f 22 -Q 1nd -i 343
+./generate.py -u -f 22 -Q 1nd -i 344
+./generate.py -u -f 22 -Q 1nd -i 345
+./generate.py -u -f 22 -Q 1nd -i 346
+./generate.py -u -f 22 -Q 1nd -i 347
+./generate.py -u -f 22 -Q 1nd -i 348
+./generate.py -u -f 22 -Q 1nd -i 349
+./generate.py -u -f 22 -Q 1nd -i 350
+./generate.py -u -f 22 -Q 1nd -i 351
+./generate.py -u -f 22 -Q 1nd -i 352
+./generate.py -u -f 22 -Q 1nd -i 353
+./generate.py -u -f 22 -Q 1nd -i 354
+./generate.py -u -f 22 -Q 1nd -i 355
+./generate.py -u -f 22 -Q 1nd -i 356
+./generate.py -u -f 22 -Q 1nd -i 357
+./generate.py -u -f 22 -Q 1nd -i 358
+./generate.py -u -f 22 -Q 1nd -i 359
+./generate.py -u -f 22 -Q 1nd -i 360
+./generate.py -u -f 22 -Q 1nd -i 361
+./generate.py -u -f 22 -Q 1nd -i 362
+./generate.py -u -f 22 -Q 1nd -i 363
+./generate.py -u -f 22 -Q 1nd -i 364
+./generate.py -u -f 22 -Q 1nd -i 365
+./generate.py -u -f 22 -Q 1nd -i 366
+./generate.py -u -f 22 -Q 1nd -i 367
+./generate.py -u -f 22 -Q 1nd -i 368
+./generate.py -u -f 22 -Q 1nd -i 369
+./generate.py -u -f 22 -Q 1nd -i 370
+./generate.py -u -f 22 -Q 1nd -i 371
+./generate.py -u -f 22 -Q 1nd -i 372
+./generate.py -u -f 22 -Q 1nd -i 373
+./generate.py -u -f 22 -Q 1nd -i 374
+./generate.py -u -f 22 -Q 1nd -i 375
+./generate.py -u -f 22 -Q 1nd -i 376
+./generate.py -u -f 22 -Q 1nd -i 377
+./generate.py -u -f 22 -Q 1nd -i 378
+./generate.py -u -f 22 -Q 1nd -i 379
+./generate.py -u -f 22 -Q 1nd -i 380
+./generate.py -u -f 22 -Q 1nd -i 381
+./generate.py -u -f 22 -Q 1nd -i 382
+./generate.py -u -f 22 -Q 1nd -i 383
+./generate.py -u -f 22 -Q 1nd -i 384
+./generate.py -u -f 22 -Q 1nd -i 385
+./generate.py -u -f 22 -Q 1nd -i 386
+./generate.py -u -f 22 -Q 1nd -i 387
+./generate.py -u -f 22 -Q 1nd -i 388
+./generate.py -u -f 22 -Q 1nd -i 389
+./generate.py -u -f 22 -Q 1nd -i 390
+./generate.py -u -f 22 -Q 1nd -i 391
+./generate.py -u -f 22 -Q 1nd -i 392
+./generate.py -u -f 22 -Q 1nd -i 393
+./generate.py -u -f 22 -Q 1nd -i 394
+./generate.py -u -f 22 -Q 1nd -i 395
+./generate.py -u -f 22 -Q 1nd -i 396
+./generate.py -u -f 22 -Q 1nd -i 397
+./generate.py -u -f 22 -Q 1nd -i 398
+./generate.py -u -f 22 -Q 1nd -i 399
