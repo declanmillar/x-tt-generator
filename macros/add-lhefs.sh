@@ -55,8 +55,7 @@ count3=$(($count1 + $count2))
 echo "$1 will have: $count3 events"
 if (($count3 != 10000))
 then
-    echo "$1 will not have 10,000 events; exiting"
-    exit
+    echo "WARNING $1 will not have 10,000 events"
 fi
 
 if [ $count2 = 10000 ]
