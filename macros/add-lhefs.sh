@@ -19,7 +19,7 @@ declare -i count1
 declare -i count2
 declare -i count3
 
-# count target events
+echo "counting events in 1st file ..."
 count1=0
 for i in $(cat < $1)
 do
@@ -35,7 +35,7 @@ then
     exit
 fi
 
-# count source events
+echo "counting events in 2nd file ..."
 count2=0
 for i in $(cat < $2)
 do
@@ -58,12 +58,7 @@ then
     echo "WARNING $1 will not have 10,000 events"
 fi
 
-if [ $count2 = 10000 ]
-then
-    echo "source file has 10,000 events; exiting"
-    exit
-fi
-
+echo "cropping end of 1st file ..."
 while true; do
     lastline=$(tail -1 $1 | head -1)
     # echo $lastline
@@ -88,7 +83,7 @@ while true; do
     fi
 done
 
-echo "copying events from $2 to $1"
+echo "copying events from $2 to $1 ..."
 copy=false
 for i in $(cat $2)
 do
@@ -103,7 +98,7 @@ do
     fi
 done
 
-# count final events
+echo "counting events in final file ..."
 count3=0
 for i in $(cat < $1)
 do
