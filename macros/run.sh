@@ -1,200 +1,200 @@
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 200
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 201
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 202
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 203
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 204
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 205
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 206
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 207
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 208
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 209
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 210
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 211
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 212
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 213
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 214
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 215
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 216
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 217
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 218
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 219
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 220
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 221
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 222
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 223
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 224
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 225
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 226
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 227
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 228
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 229
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 230
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 231
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 232
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 233
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 234
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 235
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 236
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 237
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 238
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 239
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 240
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 241
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 242
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 243
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 244
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 245
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 246
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 247
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 248
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 249
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 250
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 251
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 252
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 253
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 254
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 255
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 256
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 257
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 258
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 259
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 260
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 261
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 262
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 263
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 264
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 265
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 266
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 267
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 268
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 269
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 270
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 271
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 272
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 273
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 274
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 275
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 276
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 277
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 278
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 279
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 280
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 281
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 282
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 283
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 284
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 285
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 286
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 287
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 288
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 289
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 290
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 291
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 292
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 293
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 294
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 295
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 296
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 297
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 298
-./macros/generate.py -d -m SM -f 22 -Q 1nw -i 299
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 200
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 201
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 202
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 203
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 204
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 205
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 206
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 207
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 208
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 209
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 210
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 211
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 212
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 213
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 214
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 215
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 216
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 217
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 218
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 219
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 220
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 221
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 222
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 223
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 224
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 225
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 226
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 227
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 228
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 229
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 230
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 231
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 232
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 233
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 234
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 235
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 236
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 237
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 238
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 239
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 240
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 241
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 242
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 243
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 244
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 245
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 246
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 247
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 248
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 249
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 250
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 251
-# ./macros/generate.py -u -m SM -f 22 -Q 1nw -i 252
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 253
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 254
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 255
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 256
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 257
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 258
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 259
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 260
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 261
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 262
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 263
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 264
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 265
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 266
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 267
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 268
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 269
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 270
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 271
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 272
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 273
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 274
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 275
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 276
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 277
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 278
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 279
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 280
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 281
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 282
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 283
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 284
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 285
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 286
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 287
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 288
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 289
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 290
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 291
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 292
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 293
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 294
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 295
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 296
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 297
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 298
-./macros/generate.py -u -m SM -f 22 -Q 1nw -i 299
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 100
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 101
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 102
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 103
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 104
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 105
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 106
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 107
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 108
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 109
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 110
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 111
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 112
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 113
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 114
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 115
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 116
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 117
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 118
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 119
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 120
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 121
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 122
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 123
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 124
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 125
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 126
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 127
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 128
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 129
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 130
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 131
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 132
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 133
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 134
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 135
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 136
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 137
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 138
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 139
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 140
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 141
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 142
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 143
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 144
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 145
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 146
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 147
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 148
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 149
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 150
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 151
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 152
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 153
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 154
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 155
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 156
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 157
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 158
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 159
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 160
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 161
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 162
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 163
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 164
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 165
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 166
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 167
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 168
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 169
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 170
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 171
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 172
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 173
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 174
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 175
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 176
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 177
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 178
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 179
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 180
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 181
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 182
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 183
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 184
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 185
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 186
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 187
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 188
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 189
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 190
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 191
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 192
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 193
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 194
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 195
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 196
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 197
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 198
+./macros/generate.py -d -m GLR-R-2 -f 22 -Q 1nw -i 199
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 100
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 101
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 102
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 103
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 104
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 105
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 106
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 107
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 108
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 109
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 110
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 111
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 112
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 113
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 114
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 115
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 116
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 117
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 118
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 119
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 120
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 121
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 122
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 123
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 124
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 125
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 126
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 127
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 128
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 129
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 130
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 131
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 132
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 133
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 134
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 135
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 136
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 137
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 138
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 139
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 140
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 141
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 142
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 143
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 144
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 145
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 146
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 147
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 148
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 149
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 150
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 151
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 152
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 153
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 154
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 155
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 156
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 157
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 158
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 159
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 160
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 161
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 162
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 163
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 164
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 165
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 166
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 167
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 168
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 169
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 170
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 171
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 172
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 173
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 174
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 175
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 176
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 177
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 178
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 179
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 180
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 181
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 182
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 183
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 184
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 185
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 186
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 187
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 188
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 189
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 190
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 191
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 192
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 193
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 194
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 195
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 196
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 197
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 198
+./macros/generate.py -u -m GLR-R-2 -f 22 -Q 1nw -i 199
