@@ -1,200 +1,129 @@
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 000
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 001
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 002
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 003
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 004
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 005
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 006
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 007
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 008
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 009
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 010
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 011
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 012
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 013
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 014
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 015
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 016
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 017
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 018
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 019
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 020
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 021
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 022
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 023
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 024
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 025
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 026
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 027
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 028
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 029
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 030
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 031
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 032
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 033
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 034
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 035
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 036
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 037
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 038
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 039
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 040
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 041
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 042
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 043
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 044
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 045
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 046
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 047
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 048
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 049
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 050
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 051
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 052
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 053
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 054
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 055
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 056
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 057
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 058
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 059
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 060
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 061
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 062
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 063
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 064
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 065
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 066
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 067
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 068
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 069
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 070
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 071
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 072
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 073
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 074
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 075
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 076
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 077
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 078
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 079
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 080
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 081
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 082
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 083
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 084
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 085
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 086
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 087
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 088
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 089
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 090
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 091
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 092
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 093
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 094
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 095
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 096
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 097
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 098
-./macros/generate.py -u -m SM -f 12 -Q 1nw -i 099
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 000
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 001
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 002
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 003
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 004
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 005
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 006
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 007
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 008
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 009
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 010
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 011
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 012
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 013
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 014
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 015
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 016
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 017
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 018
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 019
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 020
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 021
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 022
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 023
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 024
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 025
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 026
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 027
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 028
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 029
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 030
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 031
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 032
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 033
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 034
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 035
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 036
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 037
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 038
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 039
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 040
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 041
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 042
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 043
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 044
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 045
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 046
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 047
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 048
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 049
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 050
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 051
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 052
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 053
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 054
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 055
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 056
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 057
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 058
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 059
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 060
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 061
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 062
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 063
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 064
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 065
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 066
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 067
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 068
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 069
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 070
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 071
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 072
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 073
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 074
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 075
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 076
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 077
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 078
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 079
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 080
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 081
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 082
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 083
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 084
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 085
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 086
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 087
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 088
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 089
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 090
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 091
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 092
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 093
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 094
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 095
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 096
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 097
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 098
-./macros/generate.py -u -m SM -f 21 -Q 1nw -i 099
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10100 -e 81
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10102 -e 1996
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10103 -e 258
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10104 -e 1748
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10106 -e 731
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10107 -e 770
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10108 -e 1892
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10109 -e 49
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10110 -e 1051
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10112 -e 1488
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10113 -e 2004
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10117 -e 571
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10118 -e 1453
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10119 -e 786
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10120 -e 257
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10121 -e 765
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10122 -e 1635
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10123 -e 2444
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10124 -e 1136
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10127 -e 1241
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10128 -e 1018
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10129 -e 1409
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10131 -e 1962
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10132 -e 1568
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10133 -e 1145
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10135 -e 1396
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10137 -e 1989
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10138 -e 1515
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10139 -e 1938
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10140 -e 1688
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10141 -e 768
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10142 -e 760
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10144 -e 662
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10145 -e 36
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10147 -e 942
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10148 -e 1705
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10149 -e 1111
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10150 -e 1010
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10151 -e 1988
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10153 -e 841
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10158 -e 1357
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10160 -e 1318
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10161 -e 4033
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10162 -e 1138
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10164 -e 2333
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10165 -e 311
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10168 -e 1945
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10169 -e 1412
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10171 -e 1026
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10172 -e 1042
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10173 -e 1423
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10174 -e 62
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10175 -e 114
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10176 -e 815
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10177 -e 974
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10178 -e 631
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10179 -e 1222
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10181 -e 1504
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10182 -e 655
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10183 -e 1356
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10184 -e 1921
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10186 -e 265
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10187 -e 1330
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10188 -e 934
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10190 -e 686
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10191 -e 113
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10193 -e 579
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10195 -e 1514
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10197 -e 60
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10198 -e 1736
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10200 -e 849
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10201 -e 1986
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10203 -e 1372
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10205 -e 1113
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10208 -e 1793
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10209 -e 1067
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10210 -e 1904
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10212 -e 142
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10213 -e 144
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10215 -e 319
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10216 -e 1809
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10217 -e 1616
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10218 -e 496
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10219 -e 1564
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10221 -e 1308
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10224 -e 2473
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10225 -e 1422
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10226 -e 2070
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10228 -e 856
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10231 -e 514
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10232 -e 517
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10233 -e 881
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10234 -e 627
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10239 -e 955
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10242 -e 153
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10244 -e 562
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10246 -e 1088
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10250 -e 1233
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10252 -e 2064
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10256 -e 1972
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10257 -e 1252
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10260 -e 4117
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10261 -e 1284
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10264 -e 1140
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10265 -e 487
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10266 -e 964
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10267 -e 1368
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10268 -e 364
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10269 -e 1455
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10270 -e 1343
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10273 -e 1336
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10274 -e 1441
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10275 -e 1539
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10276 -e 1794
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10278 -e 828
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10279 -e 1433
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10281 -e 551
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10282 -e 122
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10283 -e 518
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10284 -e 2298
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10285 -e 2089
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10286 -e 1333
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10288 -e 1361
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10289 -e 1377
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10292 -e 48
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10293 -e 1084
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10294 -e 391
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10297 -e 1173
+./macros/generate.py -d -m SM -f 11 -Q 1nw -i 10298 -e 1793
