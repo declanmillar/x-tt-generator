@@ -1,7 +1,7 @@
 image: aergus/latex
 before_script:
  - apt-get update --yes
- - apt-get install --yes g++ cmake ghostscript latex2html gfortran
+ - apt-get install --yes g++ make cmake ghostscript latex2html gfortran
 build:
   script:
   - make util
