@@ -1,0 +1,21 @@
+#!/bin/sh
+
+case $1 in
+    --version)
+        echo 1.0.0;;
+    --prefix)
+        echo /usr/local;;
+    --libs)
+        rootlibs=$(echo "-L/usr/local/Cellar/root/6.14.06/lib/root -lGui -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTDataFrame -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -lpthread -stdlib=libc++ -lm -ldl;-lTreePlayer" | tr ';' ' ');
+        echo -L/usr/local/lib -lRootTuple $rootlibs;;
+    --libdir)
+        echo /usr/local/lib /usr/local/Cellar/root/6.14.06/lib;;
+    *)
+        echo "RootTuple-config: configuration tool for RootTuple library";
+        echo;
+        echo "Options:";
+        echo "  RootTuple-config --version : returns RootTuple version";
+        echo "  RootTuple-config --prefix  : returns installation path";
+        echo "  RootTuple-config --libs    : returns the relevant linker line";
+        echo "  RootTuple-config --libdir  : returns library path";;
+esac

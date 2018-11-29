@@ -7,7 +7,7 @@ BIN = generator
 SRC = src
 LIB = lib
 OUT = bin
-TUPLELIB = ../root-tuple/lib
+TUPLELIB = util/build/src
 
 IFORT := $(shell command -v ifort 2> /dev/null)
 GFORTRAN := $(shell command -v gfortran 2> /dev/null)
@@ -29,6 +29,16 @@ $(LIB)/%.o: $(SRC)/%.f90
 
 $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
 	$(F) $(LFLAGS) -o $@ $^
-
+	
+.PHONY: clean
 clean:
 	rm -f $(LIB)/*.o $(LIB)/*.mod $(OUT)/$(BIN)
+	
+.PHONY: util
+util:
+	cd util && mkdir -p build && cd build && cmake .. && $(MAKE)$
+	
+.PHONY: cleanutil
+cleanutil:
+	cd util && rm -rf build
+

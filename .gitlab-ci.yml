@@ -2,6 +2,7 @@ image: gcc
 
 build:
   script:
+  - make util
   - make
   artifacts:
     paths:
