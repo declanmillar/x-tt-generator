@@ -2,6 +2,7 @@ image: aergus/latex
 before_script:
  - apt-get update --yes
  - apt-get install --yes g++ make cmake ghostscript latex2html gfortran
+ - cd ..
  - wget https://root.cern.ch/download/root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
  - tar xvfz root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
  - pwd
