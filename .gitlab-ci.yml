@@ -4,7 +4,7 @@ before_script:
  - apt-get install --yes g++ make cmake ghostscript latex2html gfortran
  - wget https://root.cern.ch/download/root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
  - tar xvfz root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
- - ./root/bin/thisroot.sh
+ - source /root/bin/thisroot.sh
 build:
   script:
   - make util
