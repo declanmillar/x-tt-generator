@@ -1,7 +1,7 @@
 image: gcc
 before_script:
  - apt-get update --yes
- - apt-get install --yes cmake texlive-full ps2pdf pdftops latex2html
+ - apt-get install --yes cmake texlive-full ghostscript latex2html
 build:
   script:
   - make util
