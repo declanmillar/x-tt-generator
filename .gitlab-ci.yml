@@ -1,7 +1,7 @@
-image: ubuntu18
+image: ubuntu
 before_script:
  - apt-get update --yes
- - apt-get install --yes cmake texlive ghostscript latex2html root
+ - apt-get install --yes cmake texlive ghostscript latex2html
 build:
   script:
   - make util
