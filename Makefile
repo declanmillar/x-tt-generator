@@ -36,7 +36,7 @@ clean:
 	
 .PHONY: util
 util:
-	cd util && mkdir -p build && cd build && cmake .. && $(MAKE)$
+	cd util && mkdir -p build && cd build && cmake .. && $(MAKE)
 	
 .PHONY: cleanutil
 cleanutil:
