@@ -12,8 +12,20 @@ The full source code repository is stored [here](https://gitlab.cern.ch/demillar
 
 ## Running the program
 
+The program should be built by running `make util` followed by 'make'.
+The util path should be added to the library path:
+
+```bash
+    export LD_LIBRARY_PATH="<path to repo>/util/build:$LD_LIBRARY_PATH"
+```
+
 The program is executed via the `generate.py` run file. Do `generate.py -h` for the available options.
 If run on `lxplus` or `iridis` the program will create a steering file and submit a batch job.
+
+Example for submitting multiple jobs
+```bash
+    for i in `seq 400 499`; do ./macros/generate.py -i $i -u -f 11; done
+```
 
 ## Directory Structure
 
@@ -24,6 +36,7 @@ If run on `lxplus` or `iridis` the program will create a steering file and submi
 * `Models/`: the input files for each BSM model
 * `PDFs/`: the tables for the available Parton Distribution functions
 * `src/`: the fortran (freeform `.f90`) source files
+* `util/`: contains dependencies necessary to directly write events to ROOT files
 
 ## Important Files
 
@@ -31,3 +44,4 @@ If run on `lxplus` or `iridis` the program will create a steering file and submi
 * `generator.f90`: The main source file where the Fortran program lives.
 * `scattering.f90`: Contains the code for calculating the differential cross section.
 * `README.md`: This file!
+
