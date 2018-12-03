@@ -16,7 +16,7 @@ The program should be built by running `make util` followed by 'make'.
 The util path should be added to the library path:
 
 ```bash
-    export LD_LIBRARY_PATH="<path to repo>/util/build:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="<path to repo>/util/build/src:$LD_LIBRARY_PATH"
 ```
 
 The program is executed via the `generate.py` run file. Do `generate.py -h` for the available options.
