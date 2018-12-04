@@ -1,7 +1,7 @@
 image: rootproject/root-ubuntu16
 before_script:
  - sudo apt-get update --yes
- - sudo apt-get install --yes texlive g++ make cmake ghostscript latex2html gfortran pdftops
+ - sudo apt-get install --yes texlive g++ make cmake ghostscript latex2html gfortran xpdf
  # - cd ..
  # - wget https://root.cern.ch/download/root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
  # - tar xvfz root_v6.14.06.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
