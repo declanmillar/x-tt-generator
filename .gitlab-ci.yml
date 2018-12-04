@@ -1,4 +1,4 @@
-image: aergus/latex
+image: rootproject/root-ubuntu16
 before_script:
  - apt-get update --yes
  - apt-get install --yes g++ make cmake ghostscript latex2html gfortran
