@@ -6,7 +6,7 @@ before_script:
 build:
   script:
   - make util
-  - ls util/build/src
+  - nm -Ca util/build/src/libRootTuple.so
   - make
   artifacts:
     paths:
