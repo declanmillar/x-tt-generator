@@ -1,7 +1,7 @@
 image: rootproject/root-ubuntu16
 before_script:
  - sudo apt-get update --yes
- - sudo apt-get install --yes texlive g++ make cmake ghostscript latex2html gfortran xpdf imagemagick
+ - sudo apt-get install --yes texlive gcc g++ make cmake ghostscript latex2html gfortran xpdf imagemagick
  - echo "Finished before script"
 build:
   script:
