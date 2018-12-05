@@ -6,19 +6,18 @@ SRC = src
 LIB = lib
 OUT = bin
 TUPLELIB = util/build/src
-TUPLEEXT = util/external
 
 IFORT := $(shell command -v ifort 2> /dev/null)
 GFORTRAN := $(shell command -v gfortran 2> /dev/null)
 
 ifdef IFORT
 	F = ifort
-	FFLAGS = -module $(LIB) -stand f08 -parallel -qopenmp -O3
-	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple -parallel -qopenmp
+	FFLAGS = -stand f08 -parallel -qopenmp -O3 -module $(LIB)
+	LFLAGS = -parallel -qopenmp -L$(TUPLELIB) -lRootTuple -L$(LIB)
 else ifdef GFORTRAN
 	F = gfortran
-	FFLAGS = -J$(LIB) -I$(TUPLELIB) -I$(TUPLEEXT) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
-	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple
+	FFLAGS = -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal -J$(LIB)
+	LFLAGS = -L$(TUPLELIB) -lRootTuple -L$(LIB)
 else
 	$(error "ifort/gfortran not found. install ifort or gfortran")
 endif
