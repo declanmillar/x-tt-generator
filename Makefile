@@ -16,7 +16,7 @@ ifdef IFORT
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple -parallel -qopenmp
 else ifdef GFORTRAN
 	F = gfortran
-	FFLAGS = -J$(LIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
+	FFLAGS = -J$(LIB) -I$(TUPLELIB) -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal
 	LFLAGS = -L$(LIB) -L$(TUPLELIB) -lRootTuple
 else
 	$(error "ifort/gfortran not found. install ifort or gfortran")

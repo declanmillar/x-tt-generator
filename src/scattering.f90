@@ -15,8 +15,6 @@ module scattering
     real(kind=default), private :: m3, m4, m5, m6, m7, m8, gamt
     real(kind=default), private :: s, ecm_max, ecm_min, scale, a_s, gs2, gs4
     integer, parameter, private :: xsec = 88
-    external :: rootadddouble
-    external :: rootaddparticle
 
 contains
 
