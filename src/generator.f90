@@ -222,8 +222,7 @@ program generator
             call handle_exception(exc)
             call vamp_write_grid(grid, grid_file)
         end if
-
-    else
+    else ! read grid file
         if (multichannel) then
             print*, "input VAMP grids = ", trim(grid_file)
             call vamp_read_grids(grids, grid_file)
