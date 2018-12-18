@@ -9,6 +9,3 @@ build:
   - export LD_LIBRARY_PATH="util/build/src:$LD_LIBRARY_PATH"
   - nm -Ca util/build/src/libRootTuple.so
   - make
-  artifacts:
-    paths:
-    - bin/generator
