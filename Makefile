@@ -5,7 +5,7 @@ BIN = generator
 SRC = src
 LIB = lib
 OUT = bin
-TUPLELIB = util/build/src
+TUPLELIB = /builds/declan.millar/prophet/util/build/src
 
 IFORT := $(shell command -v ifort 2> /dev/null)
 GFORTRAN := $(shell command -v gfortran 2> /dev/null)
@@ -17,7 +17,7 @@ ifdef IFORT
 else ifdef GFORTRAN
 	F = gfortran
 	FFLAGS = -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal -J$(LIB) -I$(TUPLELIB)
-	LFLAGS = -L$(TUPLELIB) -lRootTuple -L$(LIB) -rpath=$(TUPLELIB)
+	LFLAGS = -L$(TUPLELIB) -lRootTuple -L$(LIB)
 else
 	$(error "ifort/gfortran not found. install ifort or gfortran")
 endif
