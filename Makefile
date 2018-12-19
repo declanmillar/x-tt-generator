@@ -5,7 +5,7 @@ BIN = generator
 SRC = src
 LIB = lib
 OUT = bin
-TUPLELIB = /builds/declan.millar/prophet/util/build/src
+TUPLELIB = util/build/src
 
 IFORT := $(shell command -v ifort 2> /dev/null)
 GFORTRAN := $(shell command -v gfortran 2> /dev/null)
