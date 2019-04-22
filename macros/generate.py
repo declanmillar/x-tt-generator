@@ -53,24 +53,20 @@ parser.add_argument("-z", "--include_z", help = "include Z boson mediated intera
 args = parser.parse_args()
 
 hostname = socket.gethostname()
-home_directory = "."
-data_directory = "."
-if "Lorkhan" in hostname:
-    home_directory = "/Users/declan/Projects/"
-    data_directory = "/Users/declan/Data/"
-elif "lxplus" in hostname:
-    home_directory = "/afs/cern.ch/user/d/demillar/"
-    data_directory = "/afs/cern.ch/work/d/demillar/"
+run_directory = "./"
+data_directory = "./"
+
+# TODO this should be done with environment variables
+if "lxplus" in hostname:
+    run_directory = "/afs/cern.ch/user/d/demillar/generator/"
+    data_directory = "/afs/cern.ch/work/d/demillar/zprime/"
 elif "cyan" in hostname:
-    home_directory = "/home/dam1g09/"
-    data_directory = "/scratch/dam1g09/"
+    run_directory = "/home/dam1g09/generator/"
+    data_directory = "/scratch/dam1g09/zprime/"
 elif "heppc" in hostname:
-    home_directory = "/users/millar/"
-    data_directory = "/data/millar/"
-else:
-    exit("ERROR: unknown host")
-run_directory = home_directory + "prophet/"
-data_directory = data_directory + "zprime/"
+    run_directory = "/users/millar/generator/"
+    data_directory = "/data/millar/zprime/"
+
 
 # check model file exists
 if os.path.isfile(run_directory + "Models/%s.mdl" % args.model) is False:
@@ -110,7 +106,7 @@ if args.include_qq: initial_states += 1
 if args.include_dd: initial_states += 1
 if args.include_uu: initial_states += 1
 
-if args.lhef and initial_states > 1:
+if initial_states > 1:
     sys.exit("ERROR: currently when outputting to LHEF, only one initial state can be active")
 
 if initial_states == 0:
@@ -240,7 +236,6 @@ print "gridfile = ", grid_file
 
 if os.path.isfile(grid_file): new_grid = False
 else: new_grid = True
-
 if args.overwrite: new_grid = True
 
 lhe_file = "%s.lhef" % (events_path)

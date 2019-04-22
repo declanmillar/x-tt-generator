@@ -180,7 +180,7 @@ subroutine print_config
     else if (verbose) then
         print*, "input = ", trim(grid_file)
     end if
-
+    print*, "nevent", nevents
     if (ppbar == 0) then
         if (final_state == -1) print*, "process = ", "p p -> l+ l-"
         if (final_state ==  0) print*, "process = ", "p p -> t t~"

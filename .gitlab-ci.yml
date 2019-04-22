@@ -1,7 +1,11 @@
 image: gcc
-before_script:
- # - yum update -y
- # - yum install -y gcc-gfortran make
+# before_script:
 build:
   script:
-  - make
+    - make
+test:
+  script:
+    - ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
+  artifacts:
+  paths:
+    - *.cfg *.grid *.log *.txt
