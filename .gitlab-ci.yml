@@ -1,4 +1,7 @@
-image: gfortran
+image: centos:latest
+before_script:
+ - yum update -y
+ - yum install -y gcc-gfortran make
 build:
   script:
   - make
