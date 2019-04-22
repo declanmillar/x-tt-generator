@@ -1,19 +1,11 @@
 image: gcc
-
-stages:
-  - build
-  - test
-
-compile:
-  stage: build
-  script: make
-    
-run:
-  stage: test
-  script: ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
+generator:
+  script:
+    - make
+    - ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
   artifacts:
     paths:
-      - ./*.cfg
-      - ./*.grid
-      - ./*.log
-      - ./*.txt
+      - "*.cfg" 
+      - "*.grid" 
+      - "*.log"
+      - "*.txt"
