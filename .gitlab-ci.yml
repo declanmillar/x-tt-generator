@@ -7,5 +7,5 @@ test:
   script:
     - ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
   artifacts:
-  paths:
-    - ./*.cfg ./*.grid ./*.log ./*.txt
+    paths:
+      - ./*.cfg ./*.grid ./*.log ./*.txt
