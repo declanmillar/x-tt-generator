@@ -7,7 +7,7 @@ build:
   script:
     - make
 
-test_results:
+test1:
   stage: test
   dependencies:
     - build
@@ -19,3 +19,17 @@ test_results:
       - "*.grid" 
       - "*.log"
       - "*.txt"
+
+test2:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - ./macros/generate.py -q -N 10 -n 1000000 -e 10 -o
+  artifacts:
+    paths:
+      - "*.cfg" 
+      - "*.grid" 
+      - "*.log"
+      - "*.txt"
+      - "*.lhef"
