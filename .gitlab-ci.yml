@@ -1,11 +1,7 @@
-image: rootproject/root-ubuntu16
+image: gcc
 before_script:
  - sudo apt-get update --yes
- - sudo apt-get install --yes texlive gcc g++ make cmake ghostscript latex2html gfortran xpdf imagemagick
- - echo "Finished before script"
+ - sudo apt-get install --yes gfortran
 build:
   script:
-  - make util
-  - export LD_LIBRARY_PATH="/builds/declan.millar/prophet/util/build/src:$LD_LIBRARY_PATH"
-  - nm -Ca util/build/src/libRootTuple.so
   - make

@@ -5,8 +5,6 @@ module configuration
     implicit none
 
     ! provide config
-    logical :: ntuple_out
-    logical :: lhef_out
     logical :: new_grid
     real(kind=default) :: sqrts
     integer :: ppbar
@@ -14,7 +12,6 @@ module configuration
     integer :: pdf
     character(50) :: model_name
     character(100) :: filename
-    character(100) :: ntuple_file
     character(100) :: log_file
     character(100) :: lhe_file
     character(100) :: grid_file
@@ -67,14 +64,11 @@ contains
 
 subroutine read_config
     if (verbose) print*, "config: reading ..."
-    read(5,*) ntuple_out
-    read(5,*) lhef_out
     read(5,*) new_grid
     read(5,"(a)") grid_file
     read(5,"(a)") xsec_file
     read(5,"(a)") log_file
     read(5,"(a)") lhe_file
-    read(5,"(a)") ntuple_file
     read(5,*) ppbar ! 0 = pp, 1 = ppbar
     read(5,*) final_state ! 1 = no decay, 1 = dilepton
     read(5,*) model_name
@@ -180,8 +174,7 @@ subroutine print_config
 
     if (verbose) print*, "config: printing ..."
 
-    if (verbose .and. lhef_out) print*, "output =", trim(lhe_file)
-    if (verbose .and. ntuple_out) print*, "output =", trim(ntuple_file)
+    if (verbose) print*, "output =", trim(lhe_file)
     if (verbose .and. new_grid) then
     print*, "output =", trim(grid_file)
     else if (verbose) then

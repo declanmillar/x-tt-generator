@@ -26,7 +26,6 @@ parser.add_argument("-e", "--nevents", help = "set number of events", type = int
 parser.add_argument("-F", "--flatten_integrand", help = "flatten resonances in integrand", default = True, action = "store_false")
 parser.add_argument("-f", "--final_state", help = "set final state id", type = int, default = 1)
 parser.add_argument("-g", "--include_gg", help = "include gluon-gluon initiated interactions", default = False, action = "store_true")
-parser.add_argument("-H", "--lhef", help = "write events to an LHEF file", default = True, action = "store_false")
 parser.add_argument("-I", "--interference", help = "set interference (default = full)", type = int, default = 1)
 parser.add_argument("-i", "--index", help = "append specified file index", default = "")
 parser.add_argument("-j", "--job", help = "submit as a batch job", default = True,  action = "store_false")
@@ -43,7 +42,6 @@ parser.add_argument("-Q", "--queue", help = "lxbatch queue", default = "1nw")
 parser.add_argument("-q", "--include_qq", help = "include quark-quark initiated interactions", default = False, action = "store_true")
 parser.add_argument("-r", "--use_rambo", help = "use RAMBO for phase space", default = False, action = "store_true")
 parser.add_argument("-s", "--include_signal", help = "include tt signal", default = True,  action = "store_false")
-parser.add_argument("-T", "--ntuple", help = "write events to ROOT n-tuple", default = False,  action = "store_true")
 parser.add_argument("-t", "--tag", help = "add a name tag to output files", default = "")
 parser.add_argument("-U", "--energy_up", help = "set an upper limit on the collider energy", type = int, default = 0)
 parser.add_argument("-u", "--include_uu", help = "include up-up initiated interactions", default = False, action = "store_true")
@@ -245,7 +243,6 @@ else: new_grid = True
 
 if args.overwrite: new_grid = True
 
-ntuple_file = "%s.root" % (events_path)
 lhe_file = "%s.lhef" % (events_path)
 
 if new_grid:
@@ -258,14 +255,11 @@ else:
     handler_name = "%s.sh" % (events_name)
 
 config = StringIO.StringIO()
-print >> config, '%r    ! ntuple'             % args.ntuple
-print >> config, '%r    ! lhef'               % args.lhef
 print >> config, '%r    ! new_grid'           % new_grid
 print >> config, '%s'                         % grid_file
 print >> config, '%s'                         % xsec_file
 print >> config, '%s'                         % logfile
 print >> config, '%s'                         % lhe_file
-print >> config, '%s'                         % ntuple_file
 print >> config, '%i    ! initial state'      % args.ppbar
 print >> config, '%i    ! final state'        % args.final_state
 print >> config, '%s    ! model'              % args.model
@@ -311,7 +305,6 @@ if args.job:
         # print >> handler, "export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/openmpi/1.8.1/x86_64-slc6-gcc48-opt/lib:$LD_LIBRARY_PATH"
         print >> handler, "export PATH=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt/bin:$PATH"
         print >> handler, "export LD_LIBRARY_PATH=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt/lib:$LD_LIBRARY_PATH"
-        print >> handler, "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/afs/cern.ch/user/d/demillar/root-tuple/lib"
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/setup.sh"
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/x86_64/xe2017/bin/compilervars.sh intel64"
         print >> handler, "cd %s" % run_directory

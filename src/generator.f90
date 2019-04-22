@@ -8,7 +8,6 @@ program generator
     !   HELAS for probability amplitudes
     !   VAMP for Monte Carlo integration and event generation
     !   MRS99, CTEQ6, CT14 PDFs
-    !   RootTuple for filling n-tuples
     !
     ! authors
     !   Declan Millar <declan.millar@cern.ch>
@@ -255,12 +254,6 @@ program generator
             pdfs(i) = pdf_set
         end do
 
-        if (ntuple_out) then
-            print*, "n-tuple = ", trim(ntuple_file)
-            if (verbose) print*, "initiating n-tuple ..."
-            call rootinit(ntuple_file)
-        end if
-
         if (.not. unweighted) then
             xsec = 0.0
             xerr = 0.0
@@ -279,7 +272,7 @@ program generator
                     call vamp_next_event(x, rng, grid, event, no_data, weight = weight, exc = exc)
                 end if
                 call handle_exception (exc)
-                if (.not. unweighted) call rootaddevent(weight)
+                ! if (.not. unweighted) call rootaddevent(weight) // TODO might need to write weighted events to LHEF in future
                 xsec = xsec + weight
                 xerr = xerr + weight * weight
                 if (.not. batch) call progress_bar(i)
@@ -316,26 +309,11 @@ program generator
             end if
         end if
 
-        if (ntuple_out) then
-            call rootaddprocessint(idbm(1), "idbm1")
-            call rootaddprocessint(idbm(2), "idbm2")
-            call rootaddprocessdouble(ebm(1), "ebm1")
-            call rootaddprocessdouble(ebm(2), "ebm2")
-            call rootaddprocessint(pdfg(1), "pdfg1")
-            call rootaddprocessint(pdfg(2), "pdfg2")
-            call rootaddprocessint(pdfs(1), "pdfs1")
-            call rootaddprocessint(pdfs(2), "pdfs2")
-            call rootaddprocessdouble(xsec, "cross_section")
-            call rootaddprocessdouble(xerr, "cross_section_uncertainty")
-        end if
-
-        if (lhef_out) then
-            print*, "lhef = ", trim(lhe_file)
-            if (verbose) print*, "initiating lhef file ..."
-            call lhe_open(lhe_file)
-            call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
-            call lhe_process(xsec, xerr, 1.d0, final_state)
-        end if
+        print*, "lhef = ", trim(lhe_file)
+        if (verbose) print*, "initiating lhef file ..."
+        call lhe_open(lhe_file)
+        call lhe_beam(idbm(1), idbm(2), ebm(1), ebm(2), pdfg(1), pdfg(2), pdfs(1), pdfs(2), idw)
+        call lhe_process(xsec, xerr, 1.d0, final_state)
 
         if (unweighted) then
             print*, "unweighted events = ", nevents
@@ -351,18 +329,12 @@ program generator
                 call handle_exception(exc)
                 record_events = .true.
                 weight = event(x, no_data)
-                if (ntuple_out) call rootaddevent(1.d0)
                 record_events = .false.
                 if (.not. batch) call progress_bar(i)
             end do
         end if
 
-        if (ntuple_out) then
-            if (verbose) print*, "n-tuple: closing ..."
-            call rootclose
-        end if
-
-        if (lhef_out) call lhe_close
+        call lhe_close
 
         ! if (verbose) print*, "generator: updating vamp grid at ", grid_file
         ! if (multichannel) then
