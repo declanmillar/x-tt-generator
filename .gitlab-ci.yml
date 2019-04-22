@@ -1,8 +1,15 @@
 image: gcc
-generator:
-  script:
-    - make
-    - ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
+
+build:
+  stage: build
+  artifacts:
+    untracked: true
+  script: make
+
+test_results:
+  stage: test
+  dependencies: build
+  script: ./macros/generate.py -q -N 1 -n 10000 -e 10 -o
   artifacts:
     paths:
       - "*.cfg" 
