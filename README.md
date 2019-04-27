@@ -8,7 +8,7 @@ The most recent of these are the [CT14](http://hep.pa.msu.edu/cteq/public/index.
 
 The program can write the minimal event information (event weight, PDG particle IDs, and 4-vectors) directly to a [ROOT](https://root.cern.ch) n-tuple, in binary format, which minimises storage space and eases a parton-level root analysis. Alternatively, if one wishes to further process the events with a parton shower/hadronisation tool (e.g. [pythia](http://home.thep.lu.se/~torbjorn/Pythia.html)), an output text file in the standard [Les Houches Event Format (LHEF)](https://arxiv.org/abs/hep-ph/0609017) can be produced.
 
-## Research Pipeline
+## Research pipeline
 
 Generator -> 
 [Delphes](https://gitlab.com/zprime-ttbar-phenomenology/delphes) -> 
@@ -26,18 +26,18 @@ Example for submitting multiple jobs
     for i in `seq 400 499`; do ./generate.py -i $i -u -f 11; done
 ```
 
-## Directory Structure
+## Directory structure
 
-* `Diagrams/` -  Feynman diagrams for the generation processes
-* `Models/`   -  input model files for each BSM model
-* `PDFs/`     -  data for the Parton Distribution Functions
-* `lib/`      -  compiled object and Fortran module files
-* `scripts/`  -  shell scripts for checking and modifying output
-* `src/`      -  Fortran source files
-
-## Important Files
-
-* `generate.py` - run file for execution
-* `src/generator.f90` - main source file where the Fortran program lives
-* `src/scattering.f90` - contains the code for calculating the differential cross section
+```
+statistics
+├── Diagrams/           ─ Feynman diagrams for the generation processes
+├── Models/             ─ input model files for each BSM model
+├── PDFs/               ─ data for the Parton Distribution Functions
+├── lib/                ─ compiled object and Fortran module files
+├── scripts/            ─ shell scripts for checking and modifying output
+├── src/                ─ Fortran source files
+    ├── generator.f90   ─ main source file 
+    ├── scattering.f90` ─ code for calculating the differential cross section
+├── generate.py         ─ run file for execution
+```
 
