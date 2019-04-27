@@ -303,7 +303,7 @@ if args.job:
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/setup.sh"
         print >> handler, "source /afs/cern.ch/sw/IntelSoftware/linux/x86_64/xe2017/bin/compilervars.sh intel64"
         print >> handler, "cd %s" % run_directory
-        print >> handler, "%s/bin/%s < %s" % (run_directory, executable, config_name)
+        print >> handler, "%s/%s < %s" % (run_directory, executable, config_name)
     elif "cyan" in hostname:
         print "walltime = %s" % args.walltime
         print >> handler, "#!/bin/bash"
@@ -313,7 +313,7 @@ if args.job:
         print >> handler, "module load intel/2017"
         print >> handler, "module load intel/mpi/2017"
         print >> handler, "cd %s" % run_directory
-        print >> handler, "%sbin/%s < %s > %s" % (run_directory, executable, config_name, logfile)
+        print >> handler, "%s%s < %s > %s" % (run_directory, executable, config_name, logfile)
     elif "heppc" in hostname:
         print "h_rt = %s" % args.walltime
         print >> handler, "#!/bin/bash"
@@ -344,5 +344,5 @@ else:
     # if "cyan" in hostname:
         # print "loading openmpi module ..."
         # subprocess.call("module load gcc/6.1.0; module load openmpi/2.0.2/gcc")
-    subprocess.call(run_directory + "bin/%s < %s | tee %s" % (executable, config_name, logfile), shell = True)
+    subprocess.call("%s%s < %s | tee %s" % (run_directory, executable, config_name, logfile), shell = True)
     # subprocess.call("gzip -v9 %s >> %s" % (lhe_file, logfile), shell = True)

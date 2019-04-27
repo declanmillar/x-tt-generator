@@ -1,4 +1,4 @@
-# Prophet
+# Zprime ttbar phenomenology/Generator
 
 The generation tool employed for our study is a custom Monte Carlo (MC) program.
 The matrix element calculations are based on helicity amplitudes using [HELAS](http://inspirehep.net/record/336604?ln=en) subroutines, with Standard Model square matrix elements built up using [MagGraph](http://madgraph.physics.illinois.edu). Beyond the Standard Model amplitudes are then constructed by modifying these as required. [Vegas AMPlified (VAMP)](http://www.sciencedirect.com/science/article/pii/S001046559900209X?via%3Dihub), an enhanced version of the popular [VEGAS](https://en.wikipedia.org/wiki/VEGAS_algorithm) program, is used for the multi-dimensional numerical phase-space integration, and the generation of unweighted events.
@@ -22,24 +22,22 @@ Do `generate.py -h` for the available options.
 If run on `lxplus` or `iridis` this will create a script and submit a batch job.
 
 Example for submitting multiple jobs
-```bash
+```sh
     for i in `seq 400 499`; do ./macros/generate.py -i $i -u -f 11; done
 ```
 
 ## Directory Structure
 
-* `bin/`: compiled and linked `generator` binary executable
-* `Diagrams/`: Feynman diagrams for the generation processes
-* `lib/`: compiled library files
-* `macros/`: scripts for running program and more
-* `Models/`: the input files for each BSM model
-* `PDFs/`: the tables for the available Parton Distribution functions
-* `src/`: the fortran (freeform `.f90`) source files
+* `Diagrams/` --  Feynman diagrams for the generation processes
+* `Models/` --  the input model files for each BSM model
+* `PDFs/` --  the tables for the available Parton Distribution functions
+* `lib/` --  compiled library files
+* `scripts/` --  shell scripts for checking and modifying ".lhef" output
+* `src/` --  the fortran `.f90` source files
 
 ## Important Files
 
-* `generate.py`: The run file for execution.
-* `generator.f90`: The main source file where the Fortran program lives.
-* `scattering.f90`: Contains the code for calculating the differential cross section.
-* `README.md`: This file!
+* `generate.py` -- The run file for execution
+* `src/generator.f90` -- The main source file where the Fortran program lives
+* `src/scattering.f90` -- Contains the code for calculating the differential cross section
 

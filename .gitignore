@@ -1,6 +1,6 @@
-.__afs*
-*.root
-LSFJOB_*
-*-tt-*.sh*
-*.so
-.DS_Store
+/*.root
+/LSFJOB_*
+/*.sh*
+/*.cfg
+/*.log
+*.DS_Store

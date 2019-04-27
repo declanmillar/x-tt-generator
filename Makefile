@@ -30,11 +30,3 @@ $(OUT)/$(BIN): $(patsubst %, $(LIB)/%, $(OBJ))
 .PHONY: clean
 clean:
 	rm -f $(LIB)/*.o $(LIB)/*.mod $(OUT)/$(BIN)
-	
-.PHONY: util
-util:
-	cd util && mkdir -p build && cd build && cmake .. && $(MAKE)
-	
-.PHONY: cleanutil
-cleanutil:
-	cd util && rm -rf build
