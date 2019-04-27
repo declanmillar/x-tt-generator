@@ -28,16 +28,16 @@ Example for submitting multiple jobs
 
 ## Directory Structure
 
-* `Diagrams/` --  Feynman diagrams for the generation processes
-* `Models/` --  the input model files for each BSM model
-* `PDFs/` --  the tables for the available Parton Distribution functions
-* `lib/` --  compiled library files
-* `scripts/` --  shell scripts for checking and modifying ".lhef" output
-* `src/` --  the fortran `.f90` source files
+* `Diagrams/` -  Feynman diagrams for the generation processes
+* `Models/`   -  input model files for each BSM model
+* `PDFs/`     -  data for the Parton Distribution Functions
+* `lib/`      -  compiled object and Fortran module files
+* `scripts/`  -  shell scripts for checking and modifying output
+* `src/`      -  Fortran source files
 
 ## Important Files
 
-* `generate.py` -- The run file for execution
-* `src/generator.f90` -- The main source file where the Fortran program lives
-* `src/scattering.f90` -- Contains the code for calculating the differential cross section
+* `generate.py` - run file for execution
+* `src/generator.f90` - main source file where the Fortran program lives
+* `src/scattering.f90` - contains the code for calculating the differential cross section
 
