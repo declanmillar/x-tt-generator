@@ -25,9 +25,9 @@ Example for submitting multiple jobs:
 
 ```sh
 for i in `seq 400 499`
-    do
-        ./generate.py -i $i -u -f 11
-    done
+  do
+    ./generate.py -i $i -u -f 11
+  done
 ```
 
 ## Directory structure
