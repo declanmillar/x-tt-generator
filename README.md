@@ -42,5 +42,5 @@ generator/
 ├── src/                ─ Fortran source files
 │    ├── generator.f90   ─ main source file 
 │    └── scattering.f90  ─ code for calculating the differential cross section
-├── generate.py         ─ run file for execution
+└── generate.py         ─ run file for execution
 ```
