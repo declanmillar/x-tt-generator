@@ -12,7 +12,7 @@ test1:
   dependencies:
     - build
   script:
-    - .generate.py -q -N 1 -n 10000 -e 10 -o
+    - ./generate.py -q -N 1 -n 10000 -e 10 -o
   artifacts:
     paths:
       - "*.cfg" 
