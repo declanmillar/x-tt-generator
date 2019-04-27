@@ -37,7 +37,7 @@ Example for submitting multiple jobs
 
 ## Important Files
 
-* `generate.py` - The run file for execution
-* `src/generator.f90` - The main source file where the Fortran program lives
-* `src/scattering.f90` - Contains the code for calculating the differential cross section
+* `generate.py` - run file for execution
+* `src/generator.f90` - main source file where the Fortran program lives
+* `src/scattering.f90` - contains the code for calculating the differential cross section
 
