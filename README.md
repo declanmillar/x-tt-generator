@@ -44,4 +44,3 @@ generator
     ├── scattering.f90  ─ code for calculating the differential cross section
 ├── generate.py         ─ run file for execution
 ```
-
