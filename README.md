@@ -29,7 +29,7 @@ Example for submitting multiple jobs
 ## Directory structure
 
 ```
-statistics
+generator
 ├── Diagrams/           ─ Feynman diagrams for the generation processes
 ├── Models/             ─ input model files for each BSM model
 ├── PDFs/               ─ data for the Parton Distribution Functions
