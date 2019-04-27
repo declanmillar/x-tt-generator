@@ -19,7 +19,7 @@ Generator ->
 
 The program is executed via the `generate.py` run file.
 Do `generate.py -h` for the available options.
-If run on `lxplus` or `iridis` this will create a script and submit a batch job.
+If run on [LXPLUS](http://information-technology.web.cern.ch/services/lxplus-service) or [Iridis](https://www.southampton.ac.uk/isolutions/staff/iridis.page) this will create a script and submit a batch job.
 
 Example for submitting multiple jobs
 ```sh
