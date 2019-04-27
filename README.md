@@ -32,7 +32,7 @@ Example for submitting multiple jobs
 * `Models/` --  the input model files for each BSM model
 * `PDFs/` --  the tables for the available Parton Distribution functions
 * `lib/` --  compiled library files
-* `scripts/` --  shell scripts for checking and modifying ".lhef" output
+* `scripts/` --  shell scripts for checking and modifying `.lhef` output
 * `src/` --  the fortran `.f90` source files
 
 ## Important Files
