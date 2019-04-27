@@ -33,14 +33,14 @@ for i in `seq 400 499`
 ## Directory structure
 
 ```
-generator
+generator/
 ├── Diagrams/           ─ Feynman diagrams for the generation processes
 ├── Models/             ─ input model files for each BSM model
 ├── PDFs/               ─ data for the Parton Distribution Functions
 ├── lib/                ─ compiled object and Fortran module files
 ├── scripts/            ─ shell scripts for checking and modifying output
 ├── src/                ─ Fortran source files
-    ├── generator.f90   ─ main source file 
-    ├── scattering.f90  ─ code for calculating the differential cross section
+│    ├── generator.f90   ─ main source file 
+│    └── scattering.f90  ─ code for calculating the differential cross section
 ├── generate.py         ─ run file for execution
 ```
