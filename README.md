@@ -24,10 +24,10 @@ If run on [LXPLUS](http://information-technology.web.cern.ch/services/lxplus-ser
 Example for submitting multiple jobs:
 
 ```sh
-    for i in `seq 400 499`
-        do
-            ./generate.py -i $i -u -f 11
-        done
+for i in `seq 400 499`
+    do
+        ./generate.py -i $i -u -f 11
+    done
 ```
 
 ## Directory structure
