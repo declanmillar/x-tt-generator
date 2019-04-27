@@ -21,9 +21,13 @@ The program is executed via the `generate.py` run file.
 Do `generate.py -h` for the available options.
 If run on [LXPLUS](http://information-technology.web.cern.ch/services/lxplus-service) or [Iridis](https://www.southampton.ac.uk/isolutions/staff/iridis.page) this will create a script and submit a batch job.
 
-Example for submitting multiple jobs
+Example for submitting multiple jobs:
+
 ```sh
-    for i in `seq 400 499`; do ./generate.py -i $i -u -f 11; done
+    for i in `seq 400 499`
+        do
+            ./generate.py -i $i -u -f 11
+        done
 ```
 
 ## Directory structure
@@ -37,7 +41,7 @@ generator
 ├── scripts/            ─ shell scripts for checking and modifying output
 ├── src/                ─ Fortran source files
     ├── generator.f90   ─ main source file 
-    ├── scattering.f90` ─ code for calculating the differential cross section
+    ├── scattering.f90  ─ code for calculating the differential cross section
 ├── generate.py         ─ run file for execution
 ```
 
