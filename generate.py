@@ -14,10 +14,7 @@ import os
 import io
 import argparse
 import subprocess
-import sys
 import glob
-import socket
-import time
 import fnmatch
 
 def main():
