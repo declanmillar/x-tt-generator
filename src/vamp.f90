@@ -1,16 +1,16 @@
 ! vamp.f90 --
 ! Copyright (C) 1998 by Thorsten Ohl <ohl@hep.tu-darmstadt.de>
-!
+! 
 ! VAMP is free software; you can redistribute it and/or modify it
-! under the terms of the GNU General Public License as published by
+! under the terms of the GNU General Public License as published by 
 ! the Free Software Foundation; either version 2, or (at your option)
 ! any later version.
-!
+! 
 ! VAMP is distributed in the hope that it will be useful, but
 ! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
 ! GNU General Public License for more details.
-!
+! 
 ! You should have received a copy of the GNU General Public License
 ! along with this program; if not, write to the Free Software
 ! Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -56,7 +56,7 @@ module vamp_equivalences
   public :: vamp_equivalences_init
   public :: vamp_equivalences_final
   public :: vamp_equivalences_write
-  public :: vamp_equivalence_set
+  public :: vamp_equivalence_set 
   public :: vamp_equivalences_complete
   integer, parameter, public :: &
        VEQ_IDENTITY = 0, VEQ_INVERT = 1, VEQ_SYMMETRIC = 2, VEQ_INVARIANT = 3
@@ -401,9 +401,9 @@ module vamp_rest
        integer_fmt =       "(1x,a17,1x,i15)", &
        integer_array_fmt = "(1x,i17,1x,i15)", &
        logical_fmt =       "(1x,a17,1x,l1)", &
-       double_fmt =        "(1x,a17,1x,e31.22e4)", &
-       double_array_fmt =  "(1x,i17,1x,e31.22e4)", &
-       double_array2_fmt =  "(2(1x,i8),1x,e31.22e4)"
+       double_fmt =        "(1x,a17,1x,e30.22e4)", &
+       double_array_fmt =  "(1x,i17,1x,e30.22e4)", &
+       double_array2_fmt =  "(2(1x,i8),1x,e30.22e4)"
   character(len=*), public, parameter :: VAMP_RCS_ID = &
        "$Id: vamp.nw 317 2010-04-18 00:31:03Z ohl $"
 contains
@@ -569,7 +569,7 @@ contains
     num_cells = product (rigid_division (g%div))
     g%calls_per_cell = max (g%num_calls / num_cells, 2)
     g%calls = real (g%calls_per_cell) * real (num_cells)
-    g%jacobi = product (volume_division (g%div)) / g%calls
+    g%jacobi = product (volume_division (g%div)) / g%calls 
     g%dv2g = (g%calls / num_cells)**2 &
          / g%calls_per_cell / g%calls_per_cell / (g%calls_per_cell - 1.0)
     call vamp_nullify_f_limits (g)
@@ -768,13 +768,13 @@ contains
          var_f = sum_f2 * g%calls_per_cell - sum_f**2
          var_f_plus = sum_f2_plus * g%calls_per_cell - sum_f_plus**2
          var_f_minus = sum_f2_minus * g%calls_per_cell - sum_f_minus**2
-         if (var_f <= 0.0) then
+         if (var_f <= 0.0) then 
             var_f = tiny (1.0_default)
          end if
-         if (sum_f_plus /= 0 .and. var_f_plus <= 0) then
+         if (sum_f_plus /= 0 .and. var_f_plus <= 0) then 
             var_f_plus = tiny (1.0_default)
          end if
-         if (sum_f_minus /= 0 .and. var_f_minus <= 0) then
+         if (sum_f_minus /= 0 .and. var_f_minus <= 0) then 
             var_f_minus = tiny (1.0_default)
          end if
          g%mu = g%mu + (/ sum_f, var_f /)
@@ -1448,8 +1448,8 @@ contains
        else
           s = ""
        end if
-       print "(1X,A8,1X,I2,I9,A1,1X,E11.4,A1,E9.2,A1," &
-                             // "1X,E13.6,A1,E9.2,A1,F8.1,1X,F11.3)", pfx, &
+       print "(1X,A8,1X,I2,I9,A1,1X,E11.4,A1,E8.2,A1," &
+                             // "1X,E13.6,A1,E8.2,A1,F5.1,1X,F5.3)", pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
@@ -1523,8 +1523,8 @@ contains
        else
           s = ""
        end if
-       write (u, "(1X,A8,1X,I2,I9,A1,1X,ES11.4,A1,ES9.2,A1," &
-            // "1X,ES13.6,A1,ES9.2,A1,F8.1,1X,F10.3)") pfx, &
+       write (u, "(1X,A8,1X,I2,I9,A1,1X,ES11.4,A1,ES8.2,A1," &
+            // "1X,ES13.6,A1,ES8.2,A1,F5.1,1X,F5.3)") pfx, &
             i, h(i)%calls, s, h(i)%integral, "(", h(i)%std_dev, ")", &
             h(i)%avg_integral, "(", h(i)%avg_std_dev, ")", h(i)%avg_chi2, &
             h(i)%integral / h(i)%f_max
@@ -2051,7 +2051,7 @@ contains
   pure subroutine vamp_refine_weights (g, power)
     type(vamp_grids), intent(inout) :: g
     real(kind=default), intent(in), optional :: power
-    real(kind=default) :: local_power
+    real(kind=default) :: local_power 
     real(kind=default), parameter :: DEFAULT_POWER = 0.5_default
     if (present (power)) then
        local_power = power
@@ -2382,7 +2382,6 @@ contains
        end if
     end do rejection
   end subroutine vamp_next_event_single
-
   subroutine vamp_next_event_multi &
        (x, rng, g, func, data, phi, weight, excess, positive, exc)
     real(kind=default), dimension(:), intent(out) :: x
@@ -2463,7 +2462,6 @@ contains
     end do rejection
     x = phi (xi, channel)
   end subroutine vamp_next_event_multi
-
   subroutine vamp_warmup_grid &
        (rng, g, func, data, iterations, exc, history)
     type(tao_random_state), intent(inout) :: rng
@@ -3125,7 +3123,7 @@ contains
        if (associated (g%sum_mu_xx)) then
           deallocate (g%sum_mu_xx)
        end if
-    else
+    else 
        print *, FN, " fatal: expecting magic ", MAGIC_GRID_EMPTY, &
                     " or ", MAGIC_GRID_MU_X, ", found ", magic
        stop

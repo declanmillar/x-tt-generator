@@ -8,7 +8,7 @@ module scattering
 
     implicit none
 
-    public :: event, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits, phi
+    public :: event, initialise_masses, initialise_s, initialise_pdfs, set_energy_limits
     public :: read_cross_section !, write_cross_section
     logical, public :: record_events
     real(kind=default), public :: sigma_pol(-1:1, -1:1), error_pol(-1:1, -1:1)
@@ -18,8 +18,7 @@ module scattering
 
 contains
 
-function read_cross_section(xsec_file) result(cross_section)
-    character(*) xsec_file
+function read_cross_section() result(cross_section)
     real(kind=default) :: cross_section(2)
 
     if (verbose) print*, "reading ", trim(xsec_file)
@@ -28,8 +27,7 @@ function read_cross_section(xsec_file) result(cross_section)
     read(xsec, *) cross_section(2)
 end function read_cross_section
 
-subroutine write_cross_section(xsec_file, cross_section, uncertainty)
-    character(*) xsec_file
+subroutine write_cross_section(cross_section, uncertainty)
     real(kind=default) :: cross_section, uncertainty
     if (verbose) print*, "writing ", trim(xsec_file)
     open(unit = xsec, file = trim(xsec_file), status = "replace", action = "write")
@@ -37,13 +35,6 @@ subroutine write_cross_section(xsec_file, cross_section, uncertainty)
     write(xsec,*) uncertainty, "! uncertainty [pb]"
     close(xsec)
 end subroutine write_cross_section
-
-pure function phi (xi, channel) result (x)
-    real(kind=default), dimension(:), intent(in) :: xi
-    integer, intent(in) :: channel
-    real(kind=default), dimension(size(xi)) :: x
-    x = xi
-end function phi
 
 subroutine initialise_pdfs
 
@@ -245,47 +236,13 @@ function event(x, data, weights, channel, grids)
 
     event = 0
 
-    if (present(channel) .and. (include_dd .or. include_uu) .and. (channel == 2 .or. channel == 3)) then
-        if (channel == 2) then
-            if (verbose) print*, "event: flattening Breit Wigner"
-            at34min = atan((ecm_min * ecm_min - zmass * zmass) / (zmass * zwidth))
-            at34max = atan((ecm_max * ecm_max - zmass * zmass) / (zmass * zwidth))
-            if (use_rambo) then
-                at34 = x(1) * (at34max - at34min) + at34min
-            else
-                at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
-            end if
-            shat = zmass * zmass + tan(at34) * zmass * zwidth
-            if (shat < 0.d0) then
-                if (verbose) print*, "invalid"
-                return
-            end if
-            ecm = sqrt(shat)
-        else if (channel == 3) then
-            if (verbose) print*, "event: flattening Breit Wigner"
-            at34min = atan((ecm_min * ecm_min - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
-            at34max = atan((ecm_max * ecm_max - xmass(1) * xmass(1)) / (xmass(1) * xwidth(1)))
-            if (use_rambo) then
-                at34 = x(1) * (at34max - at34min) + at34min
-            else
-                at34 = x(2 + 12 * tops_decay) * (at34max - at34min) + at34min
-            end if
-            shat = xmass(1) * xmass(1) + tan(at34) * xmass(1) * xwidth(1)
-            if (shat < 0.d0) then
-                if (verbose) print*, "invalid"
-                return
-            end if
-            ecm = sqrt(shat)
-        end if
+    if (verbose) print*, "event: not flattening Breit Wigner"
+    if (use_rambo) then
+        ecm = x(1) * (ecm_max - ecm_min) + ecm_min
     else
-        if (verbose) print*, "event: not flattening Breit Wigner"
-        if (use_rambo) then
-            ecm = x(1) * (ecm_max - ecm_min) + ecm_min
-        else
-            ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
-        end if
-        shat = ecm * ecm
+        ecm = x(2 + 12 * tops_decay) * (ecm_max - ecm_min) + ecm_min
     end if
+    shat = ecm * ecm
 
     if (verbose) print*, "event: ecm calculated"
 
@@ -826,18 +783,18 @@ function event(x, data, weights, channel, grids)
     else
         if (verbose) print*, "matrix elements: calculating 2 -> 6 ..."
         if (include_gg) then
-            sgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8, channel)
+            sgg = sgg_tt_bbeevv(p1, p2, p3, p4, p5, p7, p6, p8)
         end if
         if (include_qq) then
             sqq = sqq_tt_bbeevv(3, p1, p2, p3, p4, p5, p7, p6, p8)
         end if
         if (include_uu) then
-            suu1 = sqq_tt_bbeevv_ew(3, 11, p1, p2, p3, p4, p5, p7, p6, p8, channel)
-            suu2 = sqq_tt_bbeevv_ew(3, 11, p2, p1, p3, p4, p5, p7, p6, p8, channel)
+            suu1 = sqq_tt_bbeevv_ew(3, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+            suu2 = sqq_tt_bbeevv_ew(3, 11, p2, p1, p3, p4, p5, p7, p6, p8)
         end if
         if (include_dd) then
-            sdd1 = sqq_tt_bbeevv_ew(4, 11, p1, p2, p3, p4, p5, p7, p6, p8, channel)
-            sdd2 = sqq_tt_bbeevv_ew(4, 11, p2, p1, p3, p4, p5, p7, p6, p8, channel)
+            sdd1 = sqq_tt_bbeevv_ew(4, 11, p1, p2, p3, p4, p5, p7, p6, p8)
+            sdd2 = sqq_tt_bbeevv_ew(4, 11, p2, p1, p3, p4, p5, p7, p6, p8)
         end if
     end if
 
@@ -917,16 +874,6 @@ function event(x, data, weights, channel, grids)
             ! event = event * q * rq56 * rq78 * rq5 * rq7 / ecm * 256.d0 * 2.d0 ** (4 - 3 * 6) * twopi
             event = event * q * rq56 * rq78 * rq5 * rq7 * 0.015625 * twopi / ecm
             if (flatten_integrand) then
-                if (present(channel) .and. (include_dd .or. include_uu)) then
-
-                    if (channel == 2) then
-                        event = event * ((ecm * ecm - zmass * zmass) ** 2 + zmass * zmass * zwidth * zwidth) &
-                                        * (at34max - at34min) / (2 * ecm * zmass * zwidth)
-                    else if (channel == 3) then
-                        event = event * ((ecm * ecm - xmass(1) * xmass(1)) ** 2 + xmass(1) * xmass(1) * xwidth(1) * xwidth(1)) &
-                                        * (at34max - at34min) / (2 * ecm * xmass(1) * xwidth(1))
-                    end if
-                end if
                 event = event * ((m356 * m356 - tmass2) ** 2 + tmass2 * gamt * gamt) &
                                 * (at356max - at356min) / (2 * m356 * tmass * gamt)
                 event = event * ((m478 * m478 - tmass2) ** 2 + tmass2 * gamt * gamt) &

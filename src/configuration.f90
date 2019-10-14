@@ -91,7 +91,6 @@ subroutine read_config
     read(5,*) unweighted
     read(5,*) use_rambo
     read(5,*) flatten_integrand
-    read(5,*) multichannel
     read(5,*) verbose
     read(5,*) ecm_low
     read(5,*) ecm_up

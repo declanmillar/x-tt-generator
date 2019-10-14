@@ -10,7 +10,7 @@ program generator
     !   MRS99, CTEQ6, CT14 PDFs
     !
     ! authors
-    !   Declan Millar <declan.millar@cern.ch>
+    !   Declan Millar
     !   Stefano Moretti
 
     use kinds
@@ -129,108 +129,42 @@ program generator
         calls(:, 2) = (/ itmx, ncall / 10 /)
         calls(:, 3) = (/ itmx, ncall /)
 
-        if (multichannel) then
+        call cpu_time(time1)
 
-            call vamp_create_history(history)
-            call vamp_create_history(histories)
+        call vamp_create_history(history)
 
-            print*, "VAMP sampling points: ", calls(2, 1)
+        ! preliminary sampling
+        call vamp_create_grid(grid, domain, num_calls = calls(2, 1))
+        call clear_exception(exc)
+        call vamp_sample_grid(rng, grid, event, no_data, calls(1, 1), &
+                                integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                                exc = exc, history = history)
+        call handle_exception(exc)
+        call vamp_print_history(history, "prelim")
 
-            weights = 1
-            call vamp_create_grids(grids, domain, calls(2, 1), weights)
+        if (xsec <= 0) stop
 
-            print*, "generator: initial sampling of VAMP grid with", calls(1, 1), "iterations ..."
-            call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 1), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                exc = exc, history = history, histories = histories)
-            call clear_exception(exc)
-            call vamp_print_history (history, "multi")
-            call vamp_print_history (histories, "multi")
+        ! full sampling
+        call vamp_discard_integral(grid, num_calls = calls(2, 3))
+        call clear_exception(exc)
+        call vamp_sample_grid(rng, grid, event, no_data, calls(1, 3) - 1, &
+                                integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
+                                exc = exc, history = history(calls(1, 1) + 1:))
+        call handle_exception(exc)
+        call vamp_print_history(history(calls(1, 1) + 1:), "full")
+        call vamp_delete_history(history)
+        call write_cross_section(xsec, xerr)
 
-            print *, "generator: integral = ", xsec, "+/-", xerr, " [pb]"
-            if (xsec <= 0) stop
-
-            print*, "generator: discarding integral and re-sampling grid with ", calls(2, 2), "calls ..."
-            call vamp_discard_integrals(grids, calls(2, 2))
-
-            print*, "generator: refining weights for VAMP grid with ", calls(1, 2), "iterations ..."
-            do i = 1, calls(1, 2)
-                call clear_exception(exc)
-                call vamp_sample_grids(rng, grids, event, no_data, 1, integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                    exc = exc, history = history(calls(1, 1) + i:), histories = histories(calls(1, 1) + i:, :))
-                call handle_exception(exc)
-                call clear_exception(exc)
-                call vamp_refine_weights(grids)
-                call handle_exception(exc)
-            end do
-
-            print *, "generator: integral = ", xsec, "+/-", xerr, " (chi^2 = ", chi2, ")"
-            if (xsec <= 0) stop
-
-            print*, "generator: discarding integral and re-sampling grid with ", calls(2, 3), "calls ..."
-            call vamp_discard_integrals(grids, calls(2, 3))
-
-            print*, "generator: warming up grid with ", calls(1, 3), "iterations ..."
-            call clear_exception(exc)
-            call vamp_sample_grids(rng, grids, event, no_data, calls(1, 3), integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                exc = exc, history = history(calls(1, 1) + calls(1, 2):), histories = histories(calls(1, 1) + calls(1, 2):, :))
-            call clear_exception(exc)
-
-            print *, "generator: integral = ", xsec, "+/-", xerr, " (chi^2 = ", chi2, ")"
-            if (xsec <= 0) stop
-
-            if (verbose) print*, "generator: printing history ..."
-            call vamp_print_history(history, "history")
-            call vamp_print_history(histories, "histories")
-            call vamp_delete_history(history(itmx:))
-            call vamp_delete_history(histories(itmx:, :))
-
-            if (verbose) print*, "saving vamp grid to ", grid_file
-            call vamp_write_grids(grids, grid_file)
-
-        else
-            call cpu_time(time1)
-
-            call vamp_create_history(history)
-
-            ! preliminary sampling
-            call vamp_create_grid(grid, domain, num_calls = calls(2, 1))
-            call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 1), &
-                                  integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                                  exc = exc, history = history)
-            call handle_exception(exc)
-            call vamp_print_history(history, "prelim")
-
-            if (xsec <= 0) stop
-
-            ! full sampling
-            call vamp_discard_integral(grid, num_calls = calls(2, 3))
-            call clear_exception(exc)
-            call vamp_sample_grid(rng, grid, event, no_data, calls(1, 3) - 1, &
-                                  integral = xsec, std_dev = xerr, avg_chi2 = chi2, &
-                                  exc = exc, history = history(calls(1, 1) + 1:))
-            call handle_exception(exc)
-            call vamp_print_history(history(calls(1, 1) + 1:), "full")
-            call vamp_delete_history(history)
-            call write_cross_section(xsec_file, xsec, xerr)
-
-            ! final refinement
-            call clear_exception(exc)
-            call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
-            call handle_exception(exc)
-            call vamp_write_grid(grid, grid_file)
-        end if
+        ! final refinement
+        call clear_exception(exc)
+        call vamp_sample_grid0(rng, grid, event, no_data, exc = exc)
+        call handle_exception(exc)
+        call vamp_write_grid(grid, grid_file)
     else ! read grid file
-        if (multichannel) then
-            print*, "input VAMP grids = ", trim(grid_file)
-            call vamp_read_grids(grids, grid_file)
-        else
-            print*, "input VAMP grid = ", trim(grid_file)
-            call vamp_read_grid(grid, grid_file)
-        end if
+        print*, "input VAMP grid = ", trim(grid_file)
+        call vamp_read_grid(grid, grid_file)
         if (unweighted) then
-            input_xsec = read_cross_section(xsec_file)
+            input_xsec = read_cross_section()
             xsec = input_xsec(1)
             xerr = input_xsec(2)
         end if
@@ -266,11 +200,7 @@ program generator
             do i = 1,  nweighted
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
-                if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, no_data, phi, weight = weight, exc = exc)
-                else
-                    call vamp_next_event(x, rng, grid, event, no_data, weight = weight, exc = exc)
-                end if
+                call vamp_next_event_single(x, rng, grid, event, no_data)
                 call handle_exception (exc)
                 ! if (.not. unweighted) call rootaddevent(weight) // TODO might need to write weighted events to LHEF in future
                 xsec = xsec + weight
@@ -283,7 +213,7 @@ program generator
 
             xerr = sqrt(xerr)
 
-            print *, "xsec(e+e-) = ", xsec, "+/-", xerr
+            print *, "xsec(e+e-)", xsec, "+/-", xerr
 
             if (final_state < 1) then
                 if (verbose) print *, "finalisation: calculating asymmetries for polarized final state"
@@ -321,11 +251,7 @@ program generator
             if (.not. batch) call set_total(nevents)
             do i = 1, nevents
                 call clear_exception(exc)
-                if (multichannel) then
-                    call vamp_next_event(x, rng, grids, event, no_data, phi, exc = exc)
-                else
-                    call vamp_next_event(x, rng, grid, event, no_data, exc = exc)
-                end if
+                call vamp_next_event_single(x, rng, grid, event)
                 call handle_exception(exc)
                 record_events = .true.
                 weight = event(x, no_data)
@@ -335,16 +261,9 @@ program generator
         end if
 
         call lhe_close
-
-        ! if (verbose) print*, "generator: updating vamp grid at ", grid_file
-        ! if (multichannel) then
-        !     call vamp_write_grids(grids, grid_file)
-        ! else
-        !     call vamp_write_grid(grid, grid_file)
-        ! end if
     end if
 
-    if (.not. multichannel) call vamp_delete_grid(grid)
+    call vamp_delete_grid(grid)
 
     call cpu_time(time1)
     call print_runtime(time1 - time0)

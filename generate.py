@@ -33,7 +33,6 @@ def main():
     parser.add_argument("-j", "--job", help="submit as a batch job", default=True, action="store_false")
     parser.add_argument("-k", "--walltime", help="set walltime in 'hh:mm:ss' format", default="60:00:00")
     parser.add_argument("-L", "--energy_low", help="set an upper limit on the collider energy", type=int, default=0)
-    parser.add_argument("-M", "--multichannel", help="use multichannel integration", default=False, action="store_true")
     parser.add_argument("-m", "--model", help="set physics model", default="SM")
     parser.add_argument("-N", "--iterations", help="number of VAMP iterations", type=int, default=16)
     parser.add_argument("-n", "--npoints", help="number of VAMP calls", type=int, default=16000000)
@@ -54,8 +53,10 @@ def main():
     parser.add_argument("-z", "--include_z", help="include Z boson mediated interaction", default=True, action="store_false")
     args = parser.parse_args()
 
-    run_directory = "./bin/"
-    data_directory = "../data/"
+    executable = "generator"
+    pwd = os.getcwd()
+    run_directory = pwd + "/bin/"
+    data_directory = pwd + "/../data/"
 
     # check model file exists
     if os.path.isfile("Models/%s.mdl" % args.model) is False:
@@ -131,9 +132,7 @@ def main():
     if args.final_state < 1:
         args.use_nwa = False
 
-    executable = "generator"
     options = ""
-
     if args.ppbar == 1:
         options += "_ppbar"
 
@@ -175,8 +174,6 @@ def main():
         options += "_int%i" % args.interference
     if args.use_nwa:
         options += "_nwa"
-    if args.multichannel:
-        options += "_multi"
     if args.cut:
         options += "_cut"
     if args.use_rambo:
@@ -199,6 +196,7 @@ def main():
         initial_partons += "uu"
     if initial_partons == "":
         initial_partons = "phase-space"
+
     initial_partons += "-"
 
     intermediates = ""
@@ -224,11 +222,11 @@ def main():
     elif args.final_state == 11:
         final_state = "tt-bbeevv"
     elif args.final_state == 22:
-        final_state = "tt-bbmumuvv"
+        final_state = "tt-bbmmvv"
     elif args.final_state == 12:
-        final_state = "tt-bbemuvv"
+        final_state = "tt-bbemvv"
     elif args.final_state == 21:
-        final_state = "tt-bbmuevv"
+        final_state = "tt-bbmevv"
     elif args.final_state == 33:
         final_state = "bbtatavv"
 
@@ -253,21 +251,18 @@ def main():
     if os.path.isdir(data_directory) is False:
         exit("ERROR: Specified data directory '{}' does not exist".format(data_directory))
 
-    if args.multichannel:
-        grid = ".grids"
-    else:
-        grid = ".grid"
+    grid = "_grid"
 
     if args.unweighted:
         wgt = ""
     else:
-        wgt = ".wgt"
+        wgt = "_wgt"
 
     events_path = events_path + wgt
     grid_file = "{}{}".format(grid_path, grid)
     xsec_file = "{}.txt".format(grid_path)
 
-    print("gridfile = ", grid_file)
+    print("gridfile:", grid_file)
 
     if os.path.isfile(grid_file) or args.overwrite:
         new_grid = False
@@ -313,7 +308,6 @@ def main():
     print("%r    ! unweighted" % args.unweighted, file=config)
     print("%r    ! use rambo" % args.use_rambo, file=config)
     print("%r    ! map phase space" % args.flatten_integrand, file=config)
-    print("%r    ! multichannel" % args.multichannel, file=config)
     print("%r    ! verbose mode" % args.verbose, file=config)
     print("%i.d3 ! energy low" % args.energy_low, file=config)
     print("%i.d3 ! energy up" % args.energy_up, file=config)
@@ -380,8 +374,7 @@ def main():
         # #     exit("ERROR: hostname not recognised")
     # else:
 
-    subprocess.call("{}{} < {} | tee {}".format(run_directory, executable, config_name, logfile), shell=True)
-    subprocess.call("gzip -v9 {} >> {}".format(lhe_file, logfile), shell = True)
+    subprocess.call("{}{} < {} | tee {} && gzip -v9 {} >> {}".format(run_directory, executable, config_name, logfile, lhe_file, logfile), shell=True)
 
 if __name__ == "__main__":
     main()

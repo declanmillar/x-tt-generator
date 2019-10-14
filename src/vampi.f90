@@ -234,14 +234,14 @@ contains
        if (proc_id == VAMP_ROOT) then
           if (num_workers > 1) then
              call vamp_sample_grid0 &
-                  (rng, gs(1), func, NO_DATA, channel, weights, grids, exc)
+                  (rng, gs(1), func, channel, weights, grids, exc)
           else
              call vamp_sample_grid0 &
-                  (rng, g, func, NO_DATA, channel, weights, grids, exc)
+                  (rng, g, func, channel, weights, grids, exc)
           end if
        else if (proc_id < num_workers) then
           call vamp_sample_grid0 &
-               (rng, g, func, NO_DATA, channel, weights, grids, exc)
+               (rng, g, func, channel, weights, grids, exc)
        end if
        if (proc_id == VAMP_ROOT) then
           do i = 2, num_workers
@@ -437,7 +437,7 @@ contains
                 if (proc_id == g%proc(ch)) then
                    call vamp0_discard_integral (g%g0%grids(ch))
                    call vamp_sample_grid0 &
-                        (rng, g%g0%grids(ch), func, NO_DATA, ch, weights, g%g0%grids, exc)
+                        (rng, g%g0%grids(ch), func, ch, weights, g%g0%grids, exc)
                    call vamp_average_iterations &
                         (g%g0%grids(ch), iteration, g%integrals(ch), g%std_devs(ch), local_avg_chi2)
                    if (present (histories)) then
@@ -448,7 +448,7 @@ contains
                       else
                          call raise_exception (exc, EXC_WARN, FN, "history too short")
                       end if
-                      call vamp_terminate_history (histories(iteration+1:,ch))
+                      call vamp`'_terminate_history (histories(iteration+1:,ch))
                    end if
                 end if
              else
@@ -529,7 +529,7 @@ contains
                 else
                    call raise_exception (exc, EXC_WARN, FN, "history too short")
                 end if
-                call vamp_terminate_history (history(iteration+1:))
+                call vamp`'_terminate_history (history(iteration+1:))
              end if
           end if
        end if
@@ -613,7 +613,7 @@ contains
     call mpi90_rank (proc_id)
     if (proc_id == VAMP_ROOT) then
        call vamp0_next_event &
-            (x, rng, g, func, NO_DATA, weight, channel, weights, grids, exc = exc)
+            (x, rng, g, func, weight, channel, weights, grids, exc)
     end if
   end subroutine vamp_next_event_single
   subroutine vamp_next_event_multi (x, rng, g, func, phi, weight, exc)
@@ -646,7 +646,7 @@ contains
     integer :: proc_id
     call mpi90_rank (proc_id)
     if (proc_id == VAMP_ROOT) then
-       call vamp0_next_event (x, rng, g%g0, func, NO_DATA, phi, weight, exc = exc)
+       call vamp0_next_event (x, rng, g%g0, func, phi, weight, exc)
     end if
   end subroutine vamp_next_event_multi
   subroutine vamp_warmup_grid (rng, g, func, iterations, exc, history)
@@ -670,7 +670,7 @@ contains
     end interface
     call vamp_sample_grid &
        (rng, g, func, iterations - 1, exc = exc, history = history)
-    call vamp_sample_grid0 (rng, g, func, NO_DATA, exc = exc)
+    call vamp_sample_grid0 (rng, g, func, exc = exc)
   end subroutine vamp_warmup_grid
   subroutine vamp_warmup_grids &
        (rng, g, func, iterations, history, histories, exc)
@@ -694,11 +694,11 @@ contains
        end function func
     end interface
     integer :: ch
-    call vamp0_sample_grids (rng, g%g0, func, NO_DATA, iterations - 1, exc = exc, &
+    call vamp0_sample_grids (rng, g%g0, func, iterations - 1, exc = exc, &
                              history = history, histories = histories)
     do ch = 1, size (g%g0%grids)
        ! if (g%g0%grids(ch)%num_calls >= 2) then
-          call vamp_sample_grid0 (rng, g%g0%grids(ch), func, NO_DATA, exc = exc)
+          call vamp_sample_grid0 (rng, g%g0%grids(ch), func, exc = exc)
        ! end if
     end do
   end subroutine vamp_warmup_grids
