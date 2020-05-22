@@ -20,7 +20,6 @@ program generator
     use modelling
     use scattering
     use lhef
-    ! use mpi90
     use exceptions
     use tao_random_numbers
     use vamp
@@ -44,7 +43,6 @@ program generator
     type(exception) :: exc
     type(tao_random_state) :: rng
     type(vamp_grid) :: grid
-    type(vamp_grids) :: grids
     type(vamp_history), allocatable :: history(:), histories(:, :)
 
     call cpu_time(time0)
@@ -200,7 +198,7 @@ program generator
             do i = 1,  nweighted
                 if (.not. unweighted) record_events = .true.
                 call clear_exception (exc)
-                call vamp_next_event_single(x, rng, grid, event, no_data)
+                call vamp_next_event(x, rng, grid, event, no_data)
                 call handle_exception (exc)
                 ! if (.not. unweighted) call rootaddevent(weight) // TODO might need to write weighted events to LHEF in future
                 xsec = xsec + weight
@@ -251,7 +249,7 @@ program generator
             if (.not. batch) call set_total(nevents)
             do i = 1, nevents
                 call clear_exception(exc)
-                call vamp_next_event_single(x, rng, grid, event)
+                call vamp_next_event(x, rng, grid, event, no_data)
                 call handle_exception(exc)
                 record_events = .true.
                 weight = event(x, no_data)
