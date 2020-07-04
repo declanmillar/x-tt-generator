@@ -210,15 +210,15 @@ def main():
     if args.job:
         print(f"walltime: {args.walltime}")
         handler = (
-            "#!/bin/bash"
-            "source /home/dam1g09/.bash_profile"
-            "module load gcc/6.1.0"
-            "module load openmpi/2.0.2/gcc"
-            "module load intel/2017"
-            "module load intel/mpi/2017"
-            f"cd {run_directory}"
-            f"{run_directory}{executable} < {config_name} > {logfile}"
-            f"gzip -v9 {lhe_file} >> {logfile}"
+            "#!/bin/bash\n"
+            "source /home/dam1g09/.bash_profile\n"
+            "module load gcc/6.1.0\n"
+            "module load openmpi/2.0.2/gcc\n"
+            "module load intel/2017\n"
+            "module load intel/mpi/2017\n"
+            f"cd {run_directory}\n"
+            f"{run_directory}{executable} < {config_name} > {logfile}\n"
+            f"gzip -v9 {lhe_file} >> {logfile}\n"
         )
 
         with open(handler_name, "w") as handler_file:
