@@ -1,5 +1,6 @@
 bin/
 lib/
+data/
 
 *.vscode
 *.root
