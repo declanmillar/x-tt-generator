@@ -18,7 +18,7 @@ else ifdef GFORTRAN
 	FFLAGS = -std=f2008 -ffpe-trap=invalid,zero,overflow,underflow,denormal -pedantic -Wall -J$(LIB_DIR)
 	LFLAGS = -L$(LIB_DIR)
 else
-	$(error "ifort/gfortran not found. install ifort or gfortran")
+	$(error "Found neither ifort nor gfortran. Install ifort or gfortran.")
 endif
 
 $(LIB_DIR)%.o: $(SRC_DIR)%.f90
