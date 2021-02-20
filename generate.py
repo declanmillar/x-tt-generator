@@ -242,11 +242,11 @@ def parse_args():
     # File and directory options
     parser.add_argument("-f",
                         "--file",
-                        help="Executable file name."
+                        help="Executable file name.",
                         default="./bin/generator")
     parser.add_argument("-d",
                         "--data_dir",
-                        help="Executable file name."
+                        help="Executable file name.",
                         default="./data")
 
     # Job options
