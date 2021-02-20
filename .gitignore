@@ -1,9 +1,10 @@
-*.vscode
-/*.root
-/LSFJOB_*
-/*.sh*
-/*.cfg
-/*.log
-*.DS_Store
 bin/
 lib/
+
+*.vscode
+*.root
+*LSFJOB_*
+*.sh*
+*.cfg
+*.log
+*.DS_Store
