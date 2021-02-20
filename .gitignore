@@ -5,3 +5,5 @@
 /*.cfg
 /*.log
 *.DS_Store
+bin/
+lib/

@@ -42,4 +42,4 @@ module vamp_kinds
     integer, parameter, public :: default = double
     integer, parameter, public :: complex = extended
     character(len=*), public, parameter :: KINDS_RCS_ID = "$Id: Declan Millar$"
-end module kinds
+end module vamp_kinds
