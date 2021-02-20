@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # make newlines the only separator
-IFS=$'\n'
+IFS = $'\n'
 
 # disable globbing
 set -f
@@ -9,16 +9,13 @@ set -f
 # declare count as an integer
 declare -i count
 
-for file
-do
-    count=0
+for file; do
+    count = 0
 
-    for i in $(cat < $file)
-    do
-        # echo "tester: $i"
-        if [ $i == "</event>" ]
-        then
-            count+=1
+    for i in $(cat <$file); do
+        # echo "i: $i"
+        if [ $i == "</event>" ]; then
+            count += 1
         fi
     done
 
