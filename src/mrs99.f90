@@ -1,5 +1,5 @@
     subroutine mrs99(x,q,mode,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
 !****************************************************************C
 !       C
 !     This is a package for the new **corrected** MRST parton    C
@@ -79,7 +79,7 @@
     end subroutine mrs99
 
     subroutine mrs991(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -169,7 +169,7 @@
     end subroutine mrs991
 
     subroutine mrs992(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -259,7 +259,7 @@
     end subroutine mrs992
 
     subroutine mrs993(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -350,7 +350,7 @@
 
 
     subroutine mrs994(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -440,7 +440,7 @@
     end subroutine mrs994
 
     subroutine mrs995(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -531,7 +531,7 @@
 
 
     subroutine mrs996(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -621,7 +621,7 @@
     end subroutine mrs996
 
     subroutine mrs997(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -713,7 +713,7 @@
 
 
     subroutine mrs998(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -803,7 +803,7 @@
     end subroutine mrs998
 
     subroutine mrs999(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -895,7 +895,7 @@
 
 
     subroutine mrs9910(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -985,7 +985,7 @@
     end subroutine mrs9910
 
     subroutine mrs9911(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)
@@ -1076,7 +1076,7 @@
 
 
     subroutine mrs9912(x,qsq,upv,dnv,usea,dsea,str,chm,bot,glu)
-    use kinds
+    use vamp_kinds
     implicit real(a-h,o-z)
     parameter(nx=49,nq=37,ntenth=23,np=8)
     real(kind=default) :: f(np,nx,nq+1),qq(nq),xx(nx),g(np),n0(np)

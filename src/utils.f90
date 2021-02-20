@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module utils
-  use kinds
+  use vamp_kinds
   implicit none
   private
   public :: create_array_pointer

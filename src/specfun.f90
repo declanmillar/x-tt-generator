@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module specfun
-  use kinds
+  use vamp_kinds
 ! use constants
   implicit none
   private

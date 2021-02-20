@@ -5,7 +5,7 @@ function sqq_tt(iq, p1, p2, p3, p4, lam3, lam4)
   ! for the point in phase space p1, p2, p3, p4, lam3, lam4
   ! for process: q q~ -> t t~
 
-  use kinds
+  use vamp_kinds
   use helas
 
   implicit none
@@ -71,7 +71,7 @@ function qq_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: q q~ -> t t~
 
-  use kinds
+  use vamp_kinds
   use helas
   use modelling, only: g, gg, fmass, fwidth
 

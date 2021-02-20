@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module mpi90
-  use kinds
+  use vamp_kinds
   use mpi
   implicit none
   private

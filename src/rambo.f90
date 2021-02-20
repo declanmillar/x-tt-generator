@@ -1,5 +1,5 @@
     subroutine rambo(iseed,n,et,xm,p,wt)
-    use kinds
+    use vamp_kinds
 !------------------------------------------------------
 
 !                       rambo
@@ -176,7 +176,7 @@
     end subroutine rambo
 
     function random(seed)
-    use kinds
+    use vamp_kinds
 !     -----------------
 ! ref.: k. park and k.w. miller, comm. of the acm 31 (1988) p.1192
 ! use seed = 1 as first value.
@@ -194,7 +194,7 @@
     end function random
 
     function rn(dummy)
-    use kinds
+    use vamp_kinds
     integer :: dummy,seed
     common/mag/ seed
     real(kind=default) :: rn,random

@@ -1,6 +1,6 @@
 module helas
 
-    use kinds
+    use vamp_kinds
 
     implicit none
 

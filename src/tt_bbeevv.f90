@@ -1,6 +1,6 @@
 module tt_bbeevv
 
-    use kinds
+    use vamp_kinds
     use configuration, only: verbose
 
     implicit none
@@ -767,7 +767,7 @@ real(kind=default) function sqq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7,
   ! for the point in phase space p1, p2, p3, p4, p5, p6, p7, p8
   ! for process: q q -> A, Z, Z' -> b b~ e+ e- v v~
 
-  use kinds
+  use vamp_kinds
 
   implicit none
 
@@ -1066,7 +1066,7 @@ real(kind=default) function qq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7, 
   ! and helicity nhel(1), nhel(2)
   ! for process: q q~ -> A, Z, Z' -> b b~ e+ e- v v~
 
-  use kinds
+  use vamp_kinds
   use configuration, only: include_a, include_z, include_x, interference
   use modelling
 

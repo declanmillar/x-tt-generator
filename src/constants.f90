@@ -21,9 +21,9 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module constants
-    use kinds
-    implicit none
-    private
-    real(kind=default), public, parameter :: PI = 3.1415926535897932384626433832795028841972_default
-    character(len=*), public, parameter :: CONSTANTS_RCS_ID = "$Id: constants.nw 314 2010-04-17 20:32:33Z ohl $"
+  use vamp_kinds
+  implicit none
+  private
+  real(kind=default), public, parameter :: PI = 3.1415926535897932384626433832795028841972_default
+  character(len=*), public, parameter :: CONSTANTS_RCS_ID = "$Id: constants.nw 314 2010-04-17 20:32:33Z ohl $"
 end module constants

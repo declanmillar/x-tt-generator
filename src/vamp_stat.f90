@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module vamp_stat
-  use kinds
+  use vamp_kinds
   implicit none
   private
   public :: average, standard_deviation, value_spread

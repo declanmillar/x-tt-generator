@@ -5,7 +5,7 @@ function sgg_tt(p1, p2, p3, p4, lam3, lam4)
   ! for the point in phase space p1, p2, p3, p4, lam3, lam4
   ! for process: g g -> t t~
 
-  use kinds
+  use vamp_kinds
   use helas
 
   implicit none
@@ -27,39 +27,38 @@ function sgg_tt(p1, p2, p3, p4, lam3, lam4)
   real(kind=default) :: t
   integer :: ihel
   logical :: goodhel(ncomb)
-  data goodhel /ncomb*.false./
-  data ntry /0/
-  data (nhel(ihel,  1), ihel = 1, 4) /-1, -1, -1, -1/
-  data (nhel(ihel,  2), ihel = 1, 4) /-1, -1, -1,  1/
-  data (nhel(ihel,  3), ihel = 1, 4) /-1, -1,  1, -1/
-  data (nhel(ihel,  4), ihel = 1, 4) /-1, -1,  1,  1/
-  data (nhel(ihel,  5), ihel = 1, 4) /-1,  1, -1, -1/
-  data (nhel(ihel,  6), ihel = 1, 4) /-1,  1, -1,  1/
-  data (nhel(ihel,  7), ihel = 1, 4) /-1,  1,  1, -1/
-  data (nhel(ihel,  8), ihel = 1, 4) /-1,  1,  1,  1/
-  data (nhel(ihel,  9), ihel = 1, 4) / 1, -1, -1, -1/
-  data (nhel(ihel, 10), ihel = 1, 4) / 1, -1, -1,  1/
-  data (nhel(ihel, 11), ihel = 1, 4) / 1, -1,  1, -1/
-  data (nhel(ihel, 12), ihel = 1, 4) / 1, -1,  1,  1/
-  data (nhel(ihel, 13), ihel = 1, 4) / 1,  1, -1, -1/
-  data (nhel(ihel, 14), ihel = 1, 4) / 1,  1, -1,  1/
-  data (nhel(ihel, 15), ihel = 1, 4) / 1,  1,  1, -1/
-  data (nhel(ihel, 16), ihel = 1, 4) / 1,  1,  1,  1/
+  data goodhel/ncomb*.false./
+  data ntry/0/
+  data(nhel(ihel, 1), ihel=1, 4)/-1, -1, -1, -1/
+  data(nhel(ihel, 2), ihel=1, 4)/-1, -1, -1, 1/
+  data(nhel(ihel, 3), ihel=1, 4)/-1, -1, 1, -1/
+  data(nhel(ihel, 4), ihel=1, 4)/-1, -1, 1, 1/
+  data(nhel(ihel, 5), ihel=1, 4)/-1, 1, -1, -1/
+  data(nhel(ihel, 6), ihel=1, 4)/-1, 1, -1, 1/
+  data(nhel(ihel, 7), ihel=1, 4)/-1, 1, 1, -1/
+  data(nhel(ihel, 8), ihel=1, 4)/-1, 1, 1, 1/
+  data(nhel(ihel, 9), ihel=1, 4)/1, -1, -1, -1/
+  data(nhel(ihel, 10), ihel=1, 4)/1, -1, -1, 1/
+  data(nhel(ihel, 11), ihel=1, 4)/1, -1, 1, -1/
+  data(nhel(ihel, 12), ihel=1, 4)/1, -1, 1, 1/
+  data(nhel(ihel, 13), ihel=1, 4)/1, 1, -1, -1/
+  data(nhel(ihel, 14), ihel=1, 4)/1, 1, -1, 1/
+  data(nhel(ihel, 15), ihel=1, 4)/1, 1, 1, -1/
+  data(nhel(ihel, 16), ihel=1, 4)/1, 1, 1, 1/
 
   sgg_tt = 0d0
   ntry = ntry + 1
   do ihel = 1, ncomb
     ! if (goodhel(ihel) .or. ntry < 10) then
-      t = gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
-      sgg_tt = sgg_tt + t
-      ! if (t > 0d0 .and. .not. goodhel(ihel)) then
-          ! goodhel(ihel)= .true.
-      ! endif
+    t = gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel(1, ihel))
+    sgg_tt = sgg_tt + t
+    ! if (t > 0d0 .and. .not. goodhel(ihel)) then
+    ! goodhel(ihel)= .true.
+    ! endif
     ! end if
-  enddo
+  end do
   sgg_tt = sgg_tt/4d0
 end function sgg_tt
-
 
 function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
 
@@ -69,7 +68,7 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1), nhel(2)
   ! for process: g g -> t t~
 
-  use kinds
+  use vamp_kinds
   use helas
   use modelling, only: gg, g, fmass, fwidth
 
@@ -96,14 +95,14 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
   complex(kind=complex) w1(6), w2(6), w3(6), w4(6), w5(6), w6(6), w7(6)
 
   ! color data
-  data eigen_val(1) /7.2916666666666588e-02/
-  data eigen_vec(1, 1) /7.0710678118654768e-01/
-  data eigen_vec(2, 1) /7.0710678118654735e-01/
-  data eigen_vec(3, 1) /0.0000000000000000e+00/
-  data eigen_val(2) /2.8125000000000000e-01/
-  data eigen_vec(1, 2) /-4.0824829046386313e-01/
-  data eigen_vec(2, 2) /4.0824829046386285e-01/
-  data eigen_vec(3, 2) /8.1649658092772603e-01/
+  data eigen_val(1)/7.2916666666666588e-02/
+  data eigen_vec(1, 1)/7.0710678118654768e-01/
+  data eigen_vec(2, 1)/7.0710678118654735e-01/
+  data eigen_vec(3, 1)/0.0000000000000000e+00/
+  data eigen_val(2)/2.8125000000000000e-01/
+  data eigen_vec(1, 2)/-4.0824829046386313e-01/
+  data eigen_vec(2, 2)/4.0824829046386285e-01/
+  data eigen_vec(3, 2)/8.1649658092772603e-01/
 
   if ((nhel(3) == lam3) .and. (nhel(4) == lam4)) then
     continue
@@ -133,8 +132,8 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
     ztemp = (0.d0, 0.d0)
     do j = 1, ngraphs
       ztemp = ztemp + eigen_vec(j, i)*amp(j)
-    enddo
+    end do
     gg_tt = gg_tt + ztemp*eigen_val(i)*conjg(ztemp)
-  enddo
+  end do
   ! call gaugecheck(amp, ztemp, eigen_vec, eigen_val, ngraphs, neigen)
 end function gg_tt

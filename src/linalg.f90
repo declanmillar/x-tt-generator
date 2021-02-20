@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module linalg
-  use kinds
+  use vamp_kinds
   use utils
   implicit none
   private

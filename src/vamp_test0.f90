@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module vamp_test0_functions
-  use kinds
+  use vamp_kinds
   use vamp, only: vamp_grid, vamp_multi_channel0
   use vamp, only: vamp_data_t
   implicit none
@@ -229,7 +229,7 @@ contains
 end module vamp_test0_functions
 
 module vamp_tests0
-  use kinds
+  use vamp_kinds
   use exceptions
   use histograms
   use tao_random_numbers
@@ -462,7 +462,7 @@ contains
   end subroutine multi_channel_generator
 end module vamp_tests0
 ! program vamp_test0
-!   use kinds
+!   use vamp_kinds
 !   use tao_random_numbers
 !   use divisions, only: DIVISIONS_RCS_ID
 !   use vamp, only: VAMP_RCS_ID

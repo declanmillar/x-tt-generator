@@ -1,6 +1,6 @@
 module integration
 
-  use kinds
+  use vamp_kinds
 
   ! store information from vegas
 
@@ -29,7 +29,7 @@ subroutine vegas(ndim,fxn,avgi,sd,chi2a)
   ! - by g.p. lepage    sept 1976/(rev)aug 1979
   ! - algorithm described in j comp phys 27,192(1978)
 
-  use kinds
+  use vamp_kinds
   use integration
 
   implicit double precision(a-h,o-z)

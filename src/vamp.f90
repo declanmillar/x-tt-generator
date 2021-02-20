@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module vamp_grid_type
-  use kinds
+  use vamp_kinds
   use divisions
   private
   type, public :: vamp_grid
@@ -48,7 +48,7 @@ module vamp_grid_type
   end type vamp_grid
 end module vamp_grid_type
 module vamp_equivalences
-  use kinds
+  use vamp_kinds
   use divisions
   use vamp_grid_type !NODEP!
   implicit none
@@ -211,7 +211,7 @@ contains
   end subroutine vamp_equivalences_complete
 end module vamp_equivalences
 module vamp_rest
-  use kinds
+  use vamp_kinds
   use utils
   use exceptions
   use divisions
@@ -666,7 +666,7 @@ contains
       type(exception), intent(inout), optional :: exc
       interface
          function func (xi, data, weights, channel, grids) result (f)
-           use kinds
+           use vamp_kinds
            use vamp_grid_type !NODEP!
            import vamp_data_t
            real(kind=default), dimension(:), intent(in) :: xi
@@ -956,7 +956,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -1250,7 +1250,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -1578,7 +1578,7 @@ contains
     type(vamp_grid), dimension(:), intent(in) :: grids
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -1591,7 +1591,7 @@ contains
     end interface
     interface
        pure function phi (xi, channel) result (x)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
          real(kind=default), dimension(size(xi)) :: x
@@ -1599,7 +1599,7 @@ contains
     end interface
     interface
        pure function ihp (x, channel) result (xi)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: x
          integer, intent(in) :: channel
          real(kind=default), dimension(size(x)) :: xi
@@ -1607,7 +1607,7 @@ contains
     end interface
     interface
        pure function jacobian (x, data, channel) result (j)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: x
@@ -1642,7 +1642,7 @@ contains
     integer, intent(in) :: channel
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -1655,7 +1655,7 @@ contains
     end interface
     interface
        pure function phi (xi, channel) result (x)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
          real(kind=default), dimension(size(xi)) :: x
@@ -1663,7 +1663,7 @@ contains
     end interface
     interface
        pure function jacobian (x, data, channel) result (j)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: x
@@ -1690,7 +1690,7 @@ contains
     real(kind=default), intent(in), optional :: delta_x
     interface
        pure function phi (xi, channel) result (x)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
          real(kind=default), dimension(size(xi)) :: x
@@ -1734,7 +1734,7 @@ contains
     real(kind=default), dimension(:), intent(out), optional :: x_delta
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -1747,7 +1747,7 @@ contains
     end interface
     interface
        pure function phi (xi, channel) result (x)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
          real(kind=default), dimension(size(xi)) :: x
@@ -1904,7 +1904,7 @@ contains
       logical, intent(in), optional :: warn_error, negative_weights
       interface
          function func (xi, data, weights, channel, grids) result (f)
-           use kinds
+           use vamp_kinds
            use vamp_grid_type !NODEP!
            import vamp_data_t
            real(kind=default), dimension(:), intent(in) :: xi
@@ -2087,7 +2087,7 @@ contains
     type(vamp_grid), dimension(:), intent(in), optional :: grids
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2331,7 +2331,7 @@ contains
     type(exception), intent(inout), optional :: exc
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2394,7 +2394,7 @@ contains
     type(exception), intent(inout), optional :: exc
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2407,7 +2407,7 @@ contains
     end interface
     interface
        pure function phi (xi, channel) result (x)
-         use kinds
+         use vamp_kinds
          real(kind=default), dimension(:), intent(in) :: xi
          integer, intent(in) :: channel
          real(kind=default), dimension(size(xi)) :: x
@@ -2472,7 +2472,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2499,7 +2499,7 @@ contains
     type(exception), intent(inout), optional :: exc
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2545,7 +2545,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2595,7 +2595,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi
@@ -2637,7 +2637,7 @@ contains
     type(vamp_history), dimension(:), intent(inout), optional :: history
     interface
        function func (xi, data, weights, channel, grids) result (f)
-         use kinds
+         use vamp_kinds
          use vamp_grid_type !NODEP!
          import vamp_data_t
          real(kind=default), dimension(:), intent(in) :: xi

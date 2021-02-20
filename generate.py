@@ -31,7 +31,7 @@ def main():
         raise FileNotFoundError(f"Specified data directory '{data_directory}' does not exist")
 
     # Check model_name file exists
-    model_path = f"Models/{args.model_name}.mdl"
+    model_path = f"models/{args.model_name}.mdl"
     if not os.path.isfile(model_path):
         raise FileNotFoundError(f"{model_path} does not exist.")
 

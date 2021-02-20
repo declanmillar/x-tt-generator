@@ -7,7 +7,7 @@ function sqq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8)
 
     ! for process : q q~  -> b b~ e+ mu- ve vm~
 
-    use kinds
+    use vamp_kinds
     use helas
 
     implicit none
@@ -312,7 +312,7 @@ function qq_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
 
     ! for process : u u~  -> b b~ e+ mu- ve vm~
 
-    use kinds
+    use vamp_kinds
     use helas
     use modelling
     use configuration, only: include_signal, include_background

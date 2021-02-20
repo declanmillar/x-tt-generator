@@ -5,7 +5,7 @@ function sqq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4)
   ! for the point in phase space p1, p2, p3, p4, lam3, lam4
   ! for process: q q~  -> A, Z, Z' -> t t~
 
-  use kinds
+  use vamp_kinds
 
   implicit none
 
@@ -71,7 +71,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
   ! and helicity nhel(1),nhel(2)
   ! for process: q q~  -> A, Z, Z' -> t t~
 
-  use kinds
+  use vamp_kinds
   use configuration, only: include_a, include_z, include_x, interference
   use modelling
 

@@ -20,7 +20,7 @@
 ! received a copy of the literate `noweb' sources of vamp that
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-module kinds
+module vamp_kinds
     implicit none
     ! integer, parameter, private :: single = &
     !     & selected_real_kind (precision(1.0), range(1.0))

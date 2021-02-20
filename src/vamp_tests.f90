@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module vamp_test_functions
-  use kinds
+  use vamp_kinds
   use constants, only: PI
   use coordinates
   use vamp, only: vamp_grid, vamp_multi_channel
@@ -177,7 +177,7 @@ end module vamp_test_functions
 
 
 module vamp_tests
-  use kinds
+  use vamp_kinds
   use exceptions
   use histograms
   use tao_random_numbers

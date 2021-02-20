@@ -1,6 +1,6 @@
 module scattering
 
-    use kinds
+    use vamp_kinds
     use configuration
     use modelling
     use tt_bbeevv

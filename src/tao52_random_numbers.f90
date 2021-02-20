@@ -21,7 +21,7 @@
 ! contain the documentation in full detail.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 module tao52_random_numbers
-  use kinds
+  use vamp_kinds
   implicit none
   integer, parameter, private :: tao_i32 = selected_int_kind (9)
   integer, parameter, private :: tao_r64 = selected_real_kind (15)
