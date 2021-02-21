@@ -11,7 +11,6 @@ __version__ = "dev"
 __license__ = "MIT"
 
 import os
-import io
 import argparse
 import subprocess
 import fnmatch
@@ -19,12 +18,16 @@ import enum
 
 
 def main():
+    """
+    Generates a config file and runs the executable using it.
+    Runs locally or submits a job to the lxplus/iridis/qmul batch system.
+    """
+
     args = parse_args()
 
     # Check executable exists
     if not os.path.isfile(f"{args.filename}"):
-        raise FileNotFoundError(
-            f"Executable '{args.filename}' does not exist")
+        raise FileNotFoundError(f"Executable '{args.filename}' does not exist")
 
     if not os.path.isdir(args.data_dir):
         raise FileNotFoundError(
@@ -72,14 +75,6 @@ def main():
         intermediates += "X"
     if len(intermediates) > 0:
         intermediates += "-"
-
-    interference = {
-        0: "(gamma) + (Z) + (Z')",
-        1: "(gamma + Z + Z')",
-        2: "(gamma + Z) + (Z')",
-        3: "(gamma + Z + Z') - (gamma) - (Z)",
-        4: "(gamma + Z + Z') - (gamma) - (Z) - (Z')",
-    }
 
     initial_states = ""
     if args.gg:
@@ -141,23 +136,23 @@ def main():
 
     # Get new file index
     datafiles = [
-        f for f in os.listdir(data_directory)
-        if os.path.isfile(os.path.join(data_directory, f))
+        f for f in os.listdir(args.data_dir)
+        if os.path.isfile(os.path.join(args.data_dir, f))
     ]
     filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
     new_index = int(
         args.index) if args.index is not None else len(filtered) + 1
     events_name = events_name + f"_{new_index:03d}"
 
-    events_path = data_directory + events_name
-    grid_path = data_directory + grid_name
+    events_path = args.data_dir + events_name
+    grid_path = args.data_dir + grid_name
 
     wgt = "" if args.unweighted else "_wgt"
 
     grid_file = f"{grid_path}.grid"
     xsec_file = f"{grid_path}.txt"
 
-    new_grid = False if os.path.isfile(grid_file) or args.overwrite else True
+    new_grid = not os.path.isfile(grid_file) or args.overwrite
 
     events_path = events_path + wgt
     lhe_file = events_path + ".lhef"
@@ -218,8 +213,9 @@ def main():
                    "module load openmpi/2.0.2/gcc\n"
                    "module load intel/2017\n"
                    "module load intel/mpi/2017\n"
-                   f"cd {run_directory}\n"
-                   f"{run_directory}{executable} < {config_name} > {logfile}\n"
+                #    f"cd {run_directory}\n"
+                #    f"{run_directory}{executable} < {config_name} > {logfile}\n"
+                   f"{args.executable} < {config_name} > {logfile}\n"
                    f"gzip -v9 {lhe_file} >> {logfile}\n")
 
         with open(handler_name, "w") as handler_file:
@@ -229,177 +225,141 @@ def main():
 
         subprocess.call(f"chmod a+x {handler_name}", shell=True)
         subprocess.call(
-            f"qsub -l walltime={args.walltime} {run_directory}{handler_name}",
+            f"qsub -l walltime={args.walltime} {handler_name}",
             shell=True)
     else:
-        command = f"{run_directory}{executable} < {config_name} | tee {logfile} && gzip -v9 {lhe_file} >> {logfile}"
+        command = (
+            f"{args.executable} < {config_name} | tee {logfile}"
+            f" && gzip -v9 {lhe_file} >> {logfile}")
         subprocess.call(command, shell=True)
 
 
 def parse_args():
+    """
+    Process command line arguments.
+
+    Interference
+    0: (gamma) + (Z) + (Z')
+    1: (gamma + Z + Z')
+    2: (gamma + Z) + (Z')
+    3: (gamma + Z + Z') - (gamma) - (Z)
+    4: (gamma + Z + Z') - (gamma) - (Z) - (Z')
+    """
+
     parser = argparse.ArgumentParser(description="Generate X-tt events.")
 
     # File and directory options
-    parser.add_argument("-f",
-                        "--file",
-                        help="Executable file name.",
+    parser.add_argument("-f", "--file", help="Executable file name.",
                         default="./bin/generator")
-    parser.add_argument("-d",
-                        "--data_dir",
-                        help="Executable file name.",
+    parser.add_argument("-d", "--data_dir", help="Executable file name.",
                         default="./data")
 
     # Job options
-    parser.add_argument("-w",
-                        "--walltime",
+    parser.add_argument("-w", "--walltime",
                         help="Set Iridis walltime in 'hh:mm:ss' format",
                         default="60:00:00")
-    parser.add_argument("-j",
-                        "--job",
-                        help="Submit as a batch job.",
+    parser.add_argument("-j", "--job", help="Submit as a batch job.",
                         action="store_true")
-    parser.add_argument("-o",
-                        "--overwrite",
+    parser.add_argument("-o", "--overwrite",
                         help="Overwrite existing grid file.",
                         action="store_true")
-    parser.add_argument("-v",
-                        "--verbose",
-                        help="Print extra run information.",
+    parser.add_argument("-v", "--verbose", help="Print extra run information.",
                         action="store_true")
-    parser.add_argument("--tag",
-                        help="Add a name tag to output files.",
+    parser.add_argument("--tag", help="Add a name tag to output files.",
                         default=None)
-    parser.add_argument("--index",
-                        help="Overwrite filename index tag.",
+    parser.add_argument("--index", help="Overwrite filename index tag.",
                         default=None)
-     parser.add_argument("--index",
-                        help="Overwrite filename index tag.",
+    parser.add_argument("--index", help="Overwrite filename index tag.",
                         default=None)
-    # parser.add_argument("-q", 
-    #                     "--queue",     
-    #                     help="lxbatch queue", 
+    # parser.add_argument("-q",
+    #                     "--queue",
+    #                     help="lxbatch queue",
     #                     default="1nw") # No access to lxplus
 
     # Collider options
-    parser.add_argument("-s",
-                        "--sqrts",
-                        help="Set collider energy (s hat).",
-                        type=int,
-                        default=13)
+    parser.add_argument("-s", "--sqrts", help="Set collider energy (s hat).",
+                        type=int, default=13)
     parser.add_argument("--ecm_low",
                         help="Set a lower limit on the collider energy.",
-                        type=int,
-                        default=None)
+                        type=int, default=None)
     parser.add_argument("--ecm_up",
                         help="Set an upper limit on the collider energy",
-                        type=int,
-                        default=None)
+                        type=int, default=None)
     parser.add_argument("--ppbar",
                         help="Set initial collider state. 0: pp, 1: pp~",
                         default=0)
 
     # Physics model
-    parser.add_argument("-m",
-                        "--model_name",
-                        help="Set the physics model name.",
-                        default="SM")
+    parser.add_argument("-m", "--model_name",
+                        help="Set the physics model name.", default="SM")
 
     # Final/initial state
-    parser.add_argument("-F",
-                        "--final_state",
-                        help="Set final state ID.",
-                        type=int,
-                        default=1)
-    parser.add_argument("-I",
-                        "--initial_state",
-                        help="Set ititial state ID.",
-                        type=int,
-                        default=1)
-    parser.add_argument("-G",
-                        "--gg",
+    parser.add_argument("-F", "--final_state", help="Set final state ID.",
+                        type=int, default=1)
+    parser.add_argument("-I", "--initial_state", help="Set ititial state ID.",
+                        type=int, default=1)
+    parser.add_argument("-G", "--gg",
                         help="Include gluon-gluon initial state.",
                         action="store_true")
-    parser.add_argument("-Q",
-                        "--qq",
+    parser.add_argument("-Q", "--qq",
                         help="Include quark-quark initial state.",
                         action="store_true")
-    parser.add_argument("-U",
-                        "--uu",
-                        help="Include up-up initial state.",
+    parser.add_argument("-U", "--uu", help="Include up-up initial state.",
                         action="store_true")
-    parser.add_argument("-D",
-                        "--dd",
-                        help="Include down-down initial state.",
+    parser.add_argument("-D", "--dd", help="Include down-down initial state.",
                         action="store_true")
 
     # Mediators
-    parser.add_argument("-A",
-                        "--a",
+    parser.add_argument("-A", "--a",
                         help="Include photon mediated interaction.",
                         action="store_false")
-    parser.add_argument("-Z",
-                        "--z",
+    parser.add_argument("-Z", "--z",
                         help="Include Z boson mediated interaction.",
                         action="store_false")
-    parser.add_argument("-X",
-                        "--x",
+    parser.add_argument("-X", "--x",
                         help="Include Z' boson mediated interactions.",
                         action="store_false")
 
     # QFT interference
-    parser.add_argument("--interference",
-                        help="Set interference",
-                        type=int,
+    parser.add_argument("--interference", help="Set interference", type=int,
                         default=1)
 
     # 2to6 signal and background
-    parser.add_argument("--signal",
-                        help="Include ttbar 2to6 signal.",
+    parser.add_argument("--signal", help="Include ttbar 2to6 signal.",
                         action="store_false")
-    parser.add_argument("--background",
-                        help="Include ttbar 2to6 background.",
+    parser.add_argument("--background", help="Include ttbar 2to6 background.",
                         action="store_true")
 
     # Parton Distribution Functions
-    parser.add_argument("--pdf",
-                        help="Parton Density Function ID.",
-                        type=int,
+    parser.add_argument("--pdf", help="Parton Density Function ID.", type=int,
                         default=11)
 
     # Integration options
-    parser.add_argument("-N",
-                        "--itmx",
-                        help="Number of VAMP iterations.",
-                        type=int,
-                        default=16)
-    parser.add_argument("-n",
-                        "--ncall",
-                        help="Number of VAMP calls.",
-                        type=vamp_calls_type,
-                        default=16000000)
-    parser.add_argument("-e",
-                        "--nevents",
-                        help="Number of unweighted events.",
+    parser.add_argument("-N", "--itmx", help="Number of VAMP iterations.",
+                        type=int, default=16)
+    parser.add_argument("-n", "--ncall", help="Number of VAMP calls.",
+                        type=int, default=16000000)
+    parser.add_argument("-e", "--nevents", help="Number of unweighted events.",
                         default=10000)
-    parser.add_argument("--flatten_integrand",
-                        help="Flatten integrand.",
+    parser.add_argument("--flatten_integrand", help="Flatten integrand.",
                         action="store_false")
-    parser.add_argument("--unweighted",
-                        help="Generate unweighted events.",
+    parser.add_argument("--unweighted", help="Generate unweighted events.",
                         action="store_false")
-    parser.add_argument("--rambo",
-                        help="Use RAMBO for phase space.",
+    parser.add_argument("--rambo", help="Use RAMBO for phase space.",
                         action="store_true")
-    parser.add_argument("--nwa",
-                        help="Use the Narrow Width Approximation.",
+    parser.add_argument("--nwa", help="Use the Narrow Width Approximation.",
                         action="store_true")
-    parser.add_argument("--cut",
-                        help="Apply detector cuts.",
+    parser.add_argument("--cut", help="Apply detector cuts.",
                         action="store_true")
 
     return parser.parse_args()
 
+
 class PDF(enum.Enum):
+    """
+    Parton distribution function enum.
+    """
+
     CTEQ6M = 1
     CTEQ6D = 2
     CTEQ6L = 3
