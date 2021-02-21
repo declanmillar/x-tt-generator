@@ -38,7 +38,7 @@ program generator
   real(kind=default) :: ebm(2)
 
   ! VAMP
-  integer :: ndimensions, nweighted, calls(2, 3)
+  integer :: num_dim, num_weighted, calls(2, 3)
   real(kind=default), allocatable :: x(:), domain(:, :), weights(:)
   type(exception) :: exc
   type(tao_random_state) :: rng
@@ -66,28 +66,29 @@ program generator
 
   if (verbose) print *, "generator: setting dimensions ..."
   if (use_rambo) then
-    ndimensions = 2
+    num_dim = 2
   else
     if (final_state < 1) then
-      ndimensions = 3
+      num_dim = 3
     else
-      ndimensions = 16
+      num_dim = 16
     end if
   end if
 
-  if (verbose) print *, "generator: allocating x with", ndimensions, "dimensions ..."
-  allocate (x(ndimensions))
+  if (verbose) print *, "generator: allocating x with", num_dim, "dimensions ..."
+  allocate (x(num_dim))
 
   xsec = 1.0
   xerr = 0.0
+  weight = 1.0
 
   if (new_grid) then
     if (verbose) print *, "generator: integrating using VAMP ..."
     record_events = .false.
 
-    if (verbose) print *, "generator: allocating domain with", ndimensions, "dimensions ..."
+    if (verbose) print *, "generator: allocating domain with", num_dim, "dimensions ..."
     allocate (weights(3))
-    allocate (domain(2, ndimensions))
+    allocate (domain(2, num_dim))
     allocate (history(2*itmx - 1))
     allocate (histories(3*itmx, size(weights)))
 
@@ -191,14 +192,14 @@ program generator
       xerr = 0.0
       sigma_pol = 0.d0
       error_pol = 0.d0
-      nweighted = nevents
+      num_weighted = nevents
 
-      print *, "weighted events: ", nweighted
-      if (.not. batch) call set_total(nweighted)
-      do i = 1, nweighted
+      print *, "weighted events: ", num_weighted
+      if (.not. batch) call set_total(num_weighted)
+      do i = 1, num_weighted
         if (.not. unweighted) record_events = .true.
         call clear_exception(exc)
-        call vamp_next_event(x, rng, grid, event, no_data)
+        call vamp_next_event(x, rng, grid, event, no_data, weight)
         call handle_exception(exc)
         ! if (.not. unweighted) call rootaddevent(weight) // TODO might need to write weighted events to LHEF in future
         xsec = xsec + weight
@@ -206,8 +207,8 @@ program generator
         if (.not. batch) call progress_bar(i)
       end do
 
-      xsec = xsec/nweighted
-      xerr = xerr/nweighted/nweighted
+      xsec = xsec/num_weighted
+      xerr = xerr/num_weighted/num_weighted
 
       xerr = sqrt(xerr)
 
