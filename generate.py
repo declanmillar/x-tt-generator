@@ -30,7 +30,8 @@ def main():
         raise FileNotFoundError(f"Executable '{args.filename}' does not exist")
 
     if not os.path.isdir(args.data_dir):
-        print(f"Warning: '{args.data_dir}' does not exist; it will be created.")
+        print(
+            f"Warning: '{args.data_dir}' does not exist; it will be created.")
         os.makedirs(args.data_dir)
 
     # Check model_name file exists
@@ -207,16 +208,17 @@ def main():
 
     if args.job:
         print(f"walltime: {args.walltime}")
-        handler = ("#!/bin/bash\n"
-                   "source /home/dam1g09/.bash_profile\n"
-                   "module load gcc/6.1.0\n"
-                   "module load openmpi/2.0.2/gcc\n"
-                   "module load intel/2017\n"
-                   "module load intel/mpi/2017\n"
-                #    f"cd {run_directory}\n"
-                #    f"{run_directory}{executable} < {config_name} > {logfile}\n"
-                   f"{args.filename} < {config_name} > {logfile}\n"
-                   f"gzip -v9 {lhe_file} >> {logfile}\n")
+        handler = (
+            "#!/bin/bash\n"
+            "source /home/dam1g09/.bash_profile\n"
+            "module load gcc/6.1.0\n"
+            "module load openmpi/2.0.2/gcc\n"
+            "module load intel/2017\n"
+            "module load intel/mpi/2017\n"
+            #    f"cd {run_directory}\n"
+            #    f"{run_directory}{executable} < {config_name} > {logfile}\n"
+            f"{args.filename} < {config_name} > {logfile}\n"
+            f"gzip -v9 {lhe_file} >> {logfile}\n")
 
         with open(handler_name, "w") as handler_file:
             handler_file.write(handler)
@@ -224,13 +226,11 @@ def main():
         print(f"handler: {handler_name}")
 
         subprocess.call(f"chmod a+x {handler_name}", shell=True)
-        subprocess.call(
-            f"qsub -l walltime={args.walltime} {handler_name}",
-            shell=True)
+        subprocess.call(f"qsub -l walltime={args.walltime} {handler_name}",
+                        shell=True)
     else:
-        command = (
-            f"{args.filename} < {config_name} | tee {logfile}")
-            # f" && gzip -v9 {lhe_file} >> {logfile}")
+        command = (f"{args.filename} < {config_name} | tee {logfile}")
+        # f" && gzip -v9 {lhe_file} >> {logfile}")
         subprocess.call(command, shell=True)
 
 
@@ -267,7 +267,7 @@ def parse_args():
                         action="store_true")
     parser.add_argument("--tag", help="Add a name tag to output files.",
                         default=None)
-    parser.add_argument("--index", help="Overwrite filename index tag.",
+    parser.add_argument("-i", "--index", help="Overwrite filename index tag.",
                         default=None)
     # parser.add_argument("-q",
     #                     "--queue",
