@@ -30,8 +30,8 @@ def main():
         raise FileNotFoundError(f"Executable '{args.filename}' does not exist")
 
     if not os.path.isdir(args.data_dir):
-        raise FileNotFoundError(
-            f"Specified data directory '{args.data_dir}' does not exist")
+        print(f"Warning: '{args.data_dir}' does not exist; it will be created.")
+        os.makedirs(args.data_dir)
 
     # Check model_name file exists
     model_path = f"./models/{args.model_name}.mdl"
@@ -215,7 +215,7 @@ def main():
                    "module load intel/mpi/2017\n"
                 #    f"cd {run_directory}\n"
                 #    f"{run_directory}{executable} < {config_name} > {logfile}\n"
-                   f"{args.executable} < {config_name} > {logfile}\n"
+                   f"{args.filename} < {config_name} > {logfile}\n"
                    f"gzip -v9 {lhe_file} >> {logfile}\n")
 
         with open(handler_name, "w") as handler_file:
@@ -229,8 +229,8 @@ def main():
             shell=True)
     else:
         command = (
-            f"{args.executable} < {config_name} | tee {logfile}"
-            f" && gzip -v9 {lhe_file} >> {logfile}")
+            f"{args.filename} < {config_name} | tee {logfile}")
+            # f" && gzip -v9 {lhe_file} >> {logfile}")
         subprocess.call(command, shell=True)
 
 
@@ -249,10 +249,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Generate X-tt events.")
 
     # File and directory options
-    parser.add_argument("-f", "--file", help="Executable file name.",
+    parser.add_argument("-f", "--filename", help="Executable file name.",
                         default="./bin/generator")
     parser.add_argument("-d", "--data_dir", help="Executable file name.",
-                        default="./data")
+                        default="./data/")
 
     # Job options
     parser.add_argument("-w", "--walltime",
@@ -266,8 +266,6 @@ def parse_args():
     parser.add_argument("-v", "--verbose", help="Print extra run information.",
                         action="store_true")
     parser.add_argument("--tag", help="Add a name tag to output files.",
-                        default=None)
-    parser.add_argument("--index", help="Overwrite filename index tag.",
                         default=None)
     parser.add_argument("--index", help="Overwrite filename index tag.",
                         default=None)
