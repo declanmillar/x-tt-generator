@@ -313,7 +313,7 @@ function gg_bbemuvevm(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
 
   use vamp_kinds
   use helas
-  use modelling
+  use models
   use configuration, only: include_signal, include_background
 
   implicit none

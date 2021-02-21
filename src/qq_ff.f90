@@ -73,7 +73,7 @@ function qq_ff(iq, jf, p1, p2, p3, p4, lam3, lam4, nhel)
 
   use vamp_kinds
   use configuration, only: include_a, include_z, include_x, interference
-  use modelling
+  use models
 
   implicit none
 

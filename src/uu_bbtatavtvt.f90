@@ -304,7 +304,7 @@ function qq_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     ! for process : u u~  -> b b~ e+ e- v v~
 
     use configuration, only: include_signal, include_background, include_a, include_z, include_x, interference
-    use modelling
+    use models
 
     implicit none
 

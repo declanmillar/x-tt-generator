@@ -2,7 +2,7 @@ module scattering
 
     use vamp_kinds
     use configuration
-    use modelling
+    use models
     use tt_bbeevv
     use vamp
 

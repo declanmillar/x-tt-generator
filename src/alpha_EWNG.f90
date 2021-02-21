@@ -8,7 +8,7 @@ function alfas(mu, lam, nloop)
   ! above mu = mb,mu = mt
 
   use vamp_kinds
-  use modelling, only: cmass, bmass, tmass
+  use models, only: cmass, bmass, tmass
 
   implicit none
 

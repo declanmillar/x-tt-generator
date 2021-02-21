@@ -70,7 +70,7 @@ function gg_tt(iq, p1, p2, p3, p4, lam3, lam4, nhel)
 
   use vamp_kinds
   use helas
-  use modelling, only: gg, g, fmass, fwidth
+  use models, only: gg, g, fmass, fwidth
 
   implicit none
 

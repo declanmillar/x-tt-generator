@@ -17,7 +17,7 @@ program generator
   use runtime
   use progress
   use configuration
-  use modelling
+  use models
   use scattering
   use lhef
   use exceptions

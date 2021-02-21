@@ -312,7 +312,7 @@ function qq_bbtatavtvt(p1, p2, p3, p4, p5, p6, p7, p8,nhel)
     ! for process : q q~  -> b b~ e+ e- v v~
 
     use configuration, only: include_signal, include_background
-    use modelling
+    use models
 
     implicit none
 

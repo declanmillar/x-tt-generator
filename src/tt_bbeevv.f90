@@ -319,7 +319,7 @@ real(kind=default) function gg_tt_bbeevv(p1, p2, p3, p4, p5, p6, p7, p8, nhel)
     ! for process : g g  -> t t~ -> b b~ ta+ ta- vt vt~
 
     use helas
-    use modelling
+    use models
 
     implicit none
 
@@ -703,7 +703,7 @@ real(kind=default) function qq_tt_bbeevv(iq, p1, p2, p3, p4, p5, p6, p7, p8, nhe
     ! for process : q q~ t t~ -> b b~ ta+ ta- vt vt~
 
     use helas
-    use modelling
+    use models
 
     implicit none
 
@@ -1068,7 +1068,7 @@ real(kind=default) function qq_tt_bbeevv_ew(iq, jf, p1, p2, p3, p4, p5, p6, p7, 
 
   use vamp_kinds
   use configuration, only: include_a, include_z, include_x, interference
-  use modelling
+  use models
 
   implicit none
 
