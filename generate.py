@@ -17,77 +17,87 @@ import fnmatch
 import enum
 
 
-def main():
+def check_config(config) -> None:
     """
-    Generates a config file and runs the executable using it.
-    Runs locally or submits a job to the lxplus/iridis/qmul batch system.
+    Check that config is valid
     """
-
-    args = parse_args()
 
     # Check executable exists
-    if not os.path.isfile(f"{args.filename}"):
-        raise FileNotFoundError(f"Executable '{args.filename}' does not exist")
+    if not os.path.isfile(config["filename"]):
+        raise FileNotFoundError(
+            f"Executable {config['filename']} does not exist")
 
-    if not os.path.isdir(args.data_dir):
+    if not os.path.isdir(config["data_dir"]):
         print(
-            f"Warning: '{args.data_dir}' does not exist; it will be created.")
-        os.makedirs(args.data_dir)
+            f"Warning: {config['data_dir']} does not exist; it will be created."
+        )
+        os.makedirs(config["data_dir"])
 
     # Check model_name file exists
-    model_path = f"./models/{args.model_name}.mdl"
+    model_path = f"./models/{config['model_name']}.mdl"
     if not os.path.isfile(model_path):
         raise FileNotFoundError(f"{model_path} does not exist.")
 
     # Drell-Yan has no gluon-mediated channels
-    if args.final_state == -1 and (args.initial_state == 1
-                                   or args.initial_state == 2):
+    if config["final_state"] == -1 and (config["initial_state"] == 1
+                                        or config["initial_state"] == 2):
         raise ValueError("Drell-Yan has no gluon-mediated channels.")
 
-    # No Z' boson in the Standard Model
-    if args.model_name == "SM":
-        args.include_x = False
 
-    # No electroweak mediators for gluon-interactions
-    if args.initial_state == 1 or args.initial_state == 2:
-        args.a, args.z, args.x = False, False, False
+def attune_config(config) -> None:
+    """
+    Ensure config is consistent
+    """
+
+    # No Z' boson in the Standard Model
+    if config["model_name"] == "SM":
+        config["include_x"] = False
+
+    # No electroweak mediators for gluon interactions
+    if config["initial_state"] == 1 or config["initial_state"] == 2:
+        config["A"], config["Z"], config["X"] = False, False, False
 
     # Avoid divergence in Drell-Yan
-    if args.final_state == -1 and args.ecm_low == 0:
-        args.ecm_low = 0.5
+    if config["final_state"] == -1 and config["ecm_low"] == 0:
+        config["ecm_low"] = 0.5
 
     # No change of variables to flatten Breit-Wigner peak
-    if args.rambo or args.background:
-        args.flatten_integrand = False
+    if config["rambo"] or config["background"]:
+        config["flatten_integrand"] = False
 
     # Do not use the Narrow Width Approximation for stable-tops Drell-Yan
-    if args.final_state < 1:
-        args.nwa = False
+    if config["final_state"] < 1:
+        config["nwa"] = False
 
-    if args.final_state < 2:
-        args.background = False
+    if config["final_state"] < 2:
+        config["background"] = False
 
-    intermediates = ""
-    if args.a:
-        intermediates += "A"
-    if args.z:
-        intermediates += "Z"
-    if args.x:
-        intermediates += "X"
-    if len(intermediates) > 0:
-        intermediates += "-"
 
-    initial_states = ""
-    if args.gg:
-        initial_states += "gg"
-    if args.qq:
-        initial_states += "qq"
-    if args.uu:
-        initial_states += "uu"
-    if args.dd:
-        initial_states += "dd"
-    if len(initial_states) > 0:
-        initial_states += "-"
+def create_output_names(config):
+    """
+    Create names for all output files.
+    """
+
+    initial_states = ["gg", "qq", "uu", "dd"]
+    process = ""
+
+    for state in initial_states:
+        if config[state]:
+            process += state
+
+    process += "-"
+
+    intermediates = ["A", "Z", "X"]
+
+    for state in initial_states:
+        if config[state]:
+            process += state
+
+    for state in intermediates:
+        if config[state]:
+            process += state
+
+    process += "-"
 
     final_state_names = {
         -1: "ll",
@@ -100,108 +110,125 @@ def main():
         33: "bbtatavv",
     }
 
-    final_state_name = final_state_names[args.final_state]
+    if config["final_state"] > 0:
+        grid_proc = process + final_state_names[1]
 
-    if args.initial_state == 0 and args.final_state > 0:
-        process = "2-6-phase-space"
-    elif args.initial_state == 0 and args.final_state < 1:
-        process = "2-2-phase-space"
-    else:
-        process = initial_states + intermediates + final_state_name
+    process = process + final_state_names[config["final_state"]]
 
-    gridproc = initial_states + intermediates + "tt-bbllvv"
+    pdf_name = PDF(config['pdf']).name
 
-    pdf_name = PDF(args.pdf).name
+    # Include non-default major tag in output file name
+    tag = ""
+    if config['ppbar'] == 1:
+        tag += "_ppbar"
+    if config['interference'] != 1:
+        tag += f"_int{config['interference']}"
+    if config['nwa']:
+        tag += "_nwa"
+    if config['cut']:
+        tag += "_cut"
+    if config['rambo']:
+        tag += "_rambo"
+    if config['background'] is False and config['flatten_integrand'] is False:
+        tag += "_unmapped"
+    if config['ecm_low'] is not None or config['ecm_up'] is not None:
+        tag += f"_{config['ecm_low']}-{config['ecm_up']}"
+    if config['tag'] is not None:
+        tag += "_" + config['tag']
 
-    # Include non-default major options_label in output file name
-    options_label = ""
-    if args.ppbar == 1:
-        options_label += "_ppbar"
-    if args.interference != 1:
-        options_label += f"_int{args.interference}"
-    if args.nwa:
-        options_label += "_nwa"
-    if args.cut:
-        options_label += "_cut"
-    if args.rambo:
-        options_label += "_rambo"
-    if args.background is False and args.flatten_integrand is False:
-        options_label += "_unmapped"
-    if args.ecm_low is not None or args.ecm_up is not None:
-        options_label += f"_{args.ecm_low}-{args.ecm_up}"
-    if args.tag is not None:
-        options_label += "_" + args.tag
-
-    events_name = f"{process}_{args.model_name}_{str(args.sqrts)}TeV_{pdf_name}{options_label}"
-    grid_name = f"{gridproc}_{args.model_name}_{str(args.sqrts)}TeV_{pdf_name}{options_label}"
+    events_name = f"{process}_{config['model_name']}_{str(config['sqrts'])}TeV_{pdf_name}{tag}"
+    grid_name = f"{grid_proc}_{config['model_name']}_{str(config['sqrts'])}TeV_{pdf_name}{tag}"
 
     # Get new file index
     datafiles = [
-        f for f in os.listdir(args.data_dir)
-        if os.path.isfile(os.path.join(args.data_dir, f))
+        f for f in os.listdir(config['data_dir'])
+        if os.path.isfile(os.path.join(config['data_dir'], f))
     ]
     filtered = fnmatch.filter(datafiles, events_name + "_??.lhef")
     new_index = int(
-        args.index) if args.index is not None else len(filtered) + 1
+        config['index']) if config['index'] is not None else len(filtered) + 1
     events_name = events_name + f"_{new_index:03d}"
 
-    events_path = args.data_dir + events_name
-    grid_path = args.data_dir + grid_name
+    events_path = config['data_dir'] + events_name
+    grid_path = config['data_dir'] + grid_name
 
-    wgt = "" if args.unweighted else "_wgt"
+    wgt = "" if config['unweighted'] else "_wgt"
 
-    grid_file = f"{grid_path}.grid"
+    grid_name = f"{grid_path}.grid"
     xsec_file = f"{grid_path}.txt"
 
-    new_grid = not os.path.isfile(grid_file) or args.overwrite
+    new_grid = not os.path.isfile(grid_name) or config['overwrite']
 
     events_path = events_path + wgt
-    lhe_file = events_path + ".lhef"
+    lhef = events_path + ".lhef"
 
     if new_grid:
         config_name = grid_path + ".cfg"
-        logfile = grid_path + ".log"
-        handler_name = grid_path + ".sh"
+        log = grid_path + ".log"
+        handler = grid_path + ".sh"
     else:
         config_name = events_path + ".cfg"
-        logfile = events_path + ".log"
-        handler_name = events_path + ".sh"
+        log = events_path + ".log"
+        handler = events_path + ".sh"
 
-    config = (f"{new_grid} ! new_grid\n"
-              f"{grid_file}\n"
-              f"{xsec_file}\n"
-              f"{logfile}\n"
-              f"{lhe_file}\n"
-              f"{args.ppbar} ! initial_state\n"
-              f"{args.final_state} ! final_state\n"
-              f"{args.model_name} ! model_name\n"
-              f"{args.pdf} ! pdf\n"
-              f"{args.signal} ! include_signal\n"
-              f"{args.background} ! include_background\n"
-              f"{args.gg} ! include_gg\n"
-              f"{args.qq} ! include_qq\n"
-              f"{args.uu} ! include_uu\n"
-              f"{args.dd} ! include_dd\n"
-              f"{args.a} ! include_a\n"
-              f"{args.z} ! include_z\n"
-              f"{args.x} ! include_x\n"
-              f"{args.interference} ! interference\n"
-              f"{args.nwa} ! nwa\n"
-              f"{args.sqrts}.d3 ! sqrts\n"
-              f"{args.itmx} ! itmx\n"
-              f"{args.ncall} ! ncall\n"
-              f"{args.nevents} ! nevents\n"
-              f"{args.unweighted} ! unweighted\n"
-              f"{args.rambo} ! use_rambo\n"
-              f"{args.flatten_integrand} ! flatten_integrand\n"
-              f"{args.verbose} ! verbose\n"
-              f"{0 if args.ecm_low is None else args.ecm_low}.d3 ! ecm_low\n"
-              f"{0 if args.ecm_up is None else args.ecm_up}.d3 ! ecm_up\n"
-              f"{args.job} ! batch\n"
-              f"{args.cut} ! cut\n")
+    return config_name, handler, new_grid, grid_name, xsec_file, log, lhef
+
+
+def main():
+    """
+    Generates a config file and runs the executable using it.
+    Runs locally or submits a job to the lxplus/iridis/qmul batch system.
+    """
+
+    args = parse_args()
+
+    config = vars(args)
+    print("initial config:\n", config)
+
+    check_config(config)
+    attune_config(config)
+
+    print("checked config:\n", config)
+
+    config_name, handler, new_grid, grid_name, xsec_file, log, lhef = create_output_names(
+        config)
+
+    config_string = (
+        f"{new_grid} ! new_grid\n"
+        f"{grid_name}\n"
+        f"{xsec_file}\n"
+        f"{log}\n"
+        f"{lhef}\n"
+        f"{config['ppbar']} ! initial_state\n"
+        f"{config['final_state']} ! final_state\n"
+        f"{config['model_name']} ! model_name\n"
+        f"{config['pdf']} ! pdf\n"
+        f"{config['signal']} ! include_signal\n"
+        f"{config['background']} ! include_background\n"
+        f"{config['gg']} ! include_gg\n"
+        f"{config['qq']} ! include_qq\n"
+        f"{config['uu']} ! include_uu\n"
+        f"{config['dd']} ! include_dd\n"
+        f"{config['A']} ! include_a\n"
+        f"{config['Z']} ! include_z\n"
+        f"{config['X']} ! include_x\n"
+        f"{config['interference']} ! interference\n"
+        f"{config['nwa']} ! nwa\n"
+        f"{config['sqrts']}.d3 ! sqrts\n"
+        f"{config['itmx']} ! itmx\n"
+        f"{config['ncall']} ! ncall\n"
+        f"{config['nevents']} ! nevents\n"
+        f"{config['unweighted']} ! unweighted\n"
+        f"{config['rambo']} ! use_rambo\n"
+        f"{config['flatten_integrand']} ! flatten_integrand\n"
+        f"{config['verbose']} ! verbose\n"
+        f"{0 if config['ecm_low'] is None else config['ecm_low']}.d3 ! ecm_low\n"
+        f"{0 if config['ecm_up'] is None else config['ecm_up']}.d3 ! ecm_up\n"
+        f"{config['job']} ! batch\n"
+        f"{config['cut']} ! cut\n")
 
     with open(config_name, "w") as config_file:
-        config_file.write(config)
+        config_file.write(config_string)
 
     print(f"Config: {config_name}")
     print(config)
@@ -216,21 +243,21 @@ def main():
             "module load intel/2017\n"
             "module load intel/mpi/2017\n"
             #    f"cd {run_directory}\n"
-            #    f"{run_directory}{executable} < {config_name} > {logfile}\n"
-            f"{args.filename} < {config_name} > {logfile}\n"
-            f"gzip -v9 {lhe_file} >> {logfile}\n")
+            #    f"{run_directory}{executable} < {config_name} > {log}\n"
+            f"{args.filename} < {config_name} > {log}\n"
+            f"gzip -v9 {lhef} >> {log}\n")
 
-        with open(handler_name, "w") as handler_file:
+        with open(handler, "w") as handler_file:
             handler_file.write(handler)
 
-        print(f"handler: {handler_name}")
+        print(f"handler: {handler}")
 
-        subprocess.call(f"chmod a+x {handler_name}", shell=True)
-        subprocess.call(f"qsub -l walltime={args.walltime} {handler_name}",
+        subprocess.call(f"chmod a+x {handler}", shell=True)
+        subprocess.call(f"qsub -l walltime={args.walltime} {handler}",
                         shell=True)
     else:
-        command = (f"{args.filename} < {config_name} | tee {logfile}")
-        # f" && gzip -v9 {lhe_file} >> {logfile}")
+        command = (f"{args.filename} < {config_name} | tee {log}")
+        # f" && gzip -v9 {lhef} >> {log}")
         subprocess.call(command, shell=True)
 
 
@@ -308,14 +335,11 @@ def parse_args():
                         action="store_true")
 
     # Mediators
-    parser.add_argument("-A", "--a",
-                        help="Include photon mediated interaction.",
+    parser.add_argument("-A", help="Include photon mediated interaction.",
                         action="store_false")
-    parser.add_argument("-Z", "--z",
-                        help="Include Z boson mediated interaction.",
+    parser.add_argument("-Z", help="Include Z boson mediated interaction.",
                         action="store_false")
-    parser.add_argument("-X", "--x",
-                        help="Include Z' boson mediated interactions.",
+    parser.add_argument("-X", help="Include Z' boson mediated interactions.",
                         action="store_false")
 
     # QFT interference
