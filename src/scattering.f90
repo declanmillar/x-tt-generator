@@ -168,7 +168,6 @@ function event(x, data, weights, channel, grids)
     ! square matrix elements
     real(kind=default) :: suu1, suu2, sdd1, sdd2, sqq, sgg
     real(kind=default) :: sgg_tt, sqq_tt, sqq_ff
-    real(kind=default) :: sgg_bbemuvevm, sqq_bbemuvevm, suu_bbemuvevm, sdd_bbemuvevm
 
     ! pdfs
     real(kind=default) :: ctq6pdf, ct14pdf
@@ -182,8 +181,7 @@ function event(x, data, weights, channel, grids)
     real(kind=default) :: shat, tau, ecm
 
     real(kind=default) :: qcm, pcm, qcm2
-    real(kind=default) :: pq5, pq52, pq56, pq7, pq78
-    real(kind=default) :: rps, rps356, rps478
+    real(kind=default) :: pq5, pq56, pq7, pq78
 
     ! transfer invariant masses
     real(kind=default) :: q, q2, rq5, rq52, rq56, rq562, rq7, rq72, rq78, rq782
@@ -206,8 +204,8 @@ function event(x, data, weights, channel, grids)
     real(kind=default) :: eta, pt
 
     ! arctan
-    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min, at34min, at34
-    real(kind=default) :: at478, at478max, at478min, at78, at78max, at78min, at34max
+    real(kind=default) :: at356, at356max, at356min, at56, at56max, at56min
+    real(kind=default) :: at478, at478max, at478min, at78, at78max, at78min
 
     ! 4-momenta
     real(kind=default) :: p(4,8), p356(4), p478(4), q56(4), q78(4), p56(4), p78(4), q5(4), q7(4)
@@ -220,8 +218,8 @@ function event(x, data, weights, channel, grids)
 
     ! polarised
     real(kind=default) :: spolqq(-1:1, -1:1), spolgg(-1:1, -1:1)
-    real(kind=default) :: spoluu1(-1:1, -1:1), spoldd1(-1:1, -1:1), spolbb1(-1:1, -1:1)
-    real(kind=default) :: spoluu2(-1:1, -1:1), spoldd2(-1:1, -1:1), spolbb2(-1:1, -1:1)
+    real(kind=default) :: spoluu1(-1:1, -1:1), spoldd1(-1:1, -1:1)
+    real(kind=default) :: spoluu2(-1:1, -1:1), spoldd2(-1:1, -1:1)
     real(kind=default) :: weight_pol(-1:1, -1:1), event_pol(-1:1, -1:1)
 
     integer :: seed
