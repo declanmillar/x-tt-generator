@@ -56,7 +56,7 @@ Run `generate.py -h` to see all the available options.
 ## Directory structure
 
 ```txt
-generator/
+x-tt-generator/
 ├── diagrams/            ─ Feynman diagrams for the generation processes
 ├── models/              ─ Input model files for each BSM model
 ├── pdfs/                ─ Data for the Parton Distribution Functions
