@@ -1,6 +1,6 @@
 # Z' ttbar Generator
 
-*NOTE: Currently undergoing refactoring and cleanup.*
+*NOTE: Currently undergoing refactoring and cleanup. Not guaranteed to be in a working state.*
 
 A custom Monte Carlo (MC) program using matrix element calculations based on helicity amplitudes
 that use [HELAS](https://inspirehep.net/record/336604?ln=en) subroutines. The Standard Model (SM)
@@ -15,7 +15,7 @@ the multi-dimensional numerical phase-space integration, and the generation of u
 ## Installation
 
 Compilation requires `gfortran`. On macOS, one can install this using [homebrew](https://brew.sh/)'s
-[gcc] formulae.
+`gcc` formulae.
 
 ```sh
 brew install gcc
