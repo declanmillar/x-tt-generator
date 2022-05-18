@@ -81,7 +81,7 @@ respectively, while the lighter quarks are treated in the massless limit.
 ## Output
 
 Output can be written to a plain text file in the standard Les Houches Event Format
-([LHEF](https://arxiv.org/abs/hep-ph/0609017). This allows further processing of the events with a
+([LHEF](https://arxiv.org/abs/hep-ph/0609017)). This allows further processing of the events with a
 parton shower and hadronization tool, such as
 [pythia](http://home.thep.lu.se/~torbjorn/Pythia.html).
 
