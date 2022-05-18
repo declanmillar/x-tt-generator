@@ -29,7 +29,7 @@ make
 
 ## Usage
 
-The executable can be run directly.
+The executable can be run directly by passing in a suitable config file.
 
 ```sh
 ./bin/generator < <your-config-file>.cfg
